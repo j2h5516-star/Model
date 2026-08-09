@@ -9,13 +9,14 @@ config.py — 대시보드 전체 설정값 모음
 from __future__ import annotations
 
 import os
+import re
 
 # 설정 파일의 판 번호.
 # 코드를 업데이트했는데 앱이 옛 설정 파일을 메모리에 붙들고 있으면
 # "그런 항목이 없다(AttributeError)"며 앱이 죽습니다.
 # app.py가 이 번호를 확인해, 그런 경우 빨간 오류 대신 재시작 안내를 보여줍니다.
 # ⚠️ config에 새 항목을 추가하고 app.py가 그것을 쓰기 시작하면 이 번호를 1 올리세요.
-CONFIG_VERSION = 4
+CONFIG_VERSION = 5
 
 # ---------------------------------------------------------------------------
 # 분석 대상
@@ -75,21 +76,36 @@ MAX_TICKERS = 30
 
 # SEC 전자공시(EDGAR)는 요청자 신원을 헤더에 담아 보내도록 요구합니다.
 #
-# 저장소가 공개되어 있으므로 개인 이메일을 코드에 직접 적지 않습니다.
-# 대신 아래 순서로 찾습니다:
-#   ① 환경변수 SEC_IDENTITY (Streamlit Cloud의 Secrets에 넣으면 비공개로 유지됩니다)
-#   ② 없으면 아래 기본값 (프로젝트 주소를 연락처로 사용)
+# ⚠️ SEC는 요청자 신원에 **연락 가능한 이메일 주소가 반드시 포함**되어야 합니다.
+#    (공식 정책: "Declare your user agent ... with a contact email")
+#    이메일이 없는 신원으로 요청하면 SEC가 자동화 도구로 간주해 차단(403)하고,
+#    그 결과 앱의 모든 종목에서 실적 수집이 실패합니다.
 #
-# 💡 Streamlit Cloud에서 본인 이메일을 비공개로 설정하는 방법:
-#    앱 화면 오른쪽 아래 ⋮ → Settings → Secrets 에 아래 한 줄을 넣고 저장
+# 찾는 순서:
+#   ① 환경변수 SEC_IDENTITY (Streamlit Cloud의 Secrets에 넣으면 비공개로 유지됩니다)
+#   ② 없으면 아래 기본값
+#
+# 💡 이메일을 비공개로 두고 싶으시면:
+#    앱 화면 오른쪽 아래 ⋮ → Settings → Secrets 에 아래 한 줄을 넣고 저장하면
+#    아래 기본값 대신 그 값이 쓰이며, Secrets는 저장소에 올라가지 않습니다.
 #        SEC_IDENTITY = "이름 본인이메일@example.com"
-#    Secrets는 저장소에 올라가지 않아 다른 사람이 볼 수 없습니다.
-DEFAULT_SEC_IDENTITY = "Trend Dashboard (github.com/j2h5516-star/Model)"
+DEFAULT_SEC_IDENTITY = "Trend Dashboard j2h5516@gmail.com"
+
+
+def _has_email(identity: str) -> bool:
+    """신원 문자열에 이메일 주소가 들어 있는지 확인합니다 (SEC 필수 조건)."""
+    return bool(re.search(r"[^\s@]+@[^\s@]+\.[^\s@]+", identity or ""))
 
 
 def get_sec_identity() -> str:
-    """SEC에 보낼 요청자 신원을 돌려줍니다 (환경변수 우선)."""
-    return os.environ.get("SEC_IDENTITY", "").strip() or DEFAULT_SEC_IDENTITY
+    """SEC에 보낼 요청자 신원을 돌려줍니다 (환경변수 우선).
+
+    환경변수 값에 이메일이 없으면 SEC가 차단하므로 기본값으로 되돌립니다.
+    """
+    from_env = os.environ.get("SEC_IDENTITY", "").strip()
+    if from_env and _has_email(from_env):
+        return from_env
+    return DEFAULT_SEC_IDENTITY
 
 
 # 예전 이름 호환용 (다른 파일에서 참조하던 코드가 깨지지 않도록)

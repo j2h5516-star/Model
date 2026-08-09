@@ -20,6 +20,7 @@ app.py — 추세추종 대시보드 v2 (Streamlit)
 from __future__ import annotations
 
 import os
+import time
 
 import pandas as pd
 import plotly.graph_objects as go
@@ -37,7 +38,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 4
+REQUIRED_CONFIG_VERSION = 5
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -300,26 +301,32 @@ def load_all(tickers: list[str], include_current_week: bool, use_cache: bool = T
 
     price_map, weekly_map = pipeline.prices_from_store(store, tickers, include_current_week)
 
-    # 실적: 여러 종목을 동시에 받습니다 (순차 처리는 종목이 많으면 수 분 걸립니다)
-    from concurrent.futures import ThreadPoolExecutor, as_completed
-
+    # 실적: 한 종목씩 차례로 받습니다.
+    #
+    # ⚠️ 동시에 여러 종목을 받으면 안 됩니다.
+    #    SEC는 초당 요청 수를 제한하고 있어, 동시에 여러 종목을 받으면 요청이
+    #    거부되어 **모든 종목의 실적이 비는** 문제가 생깁니다.
+    #    (실제로 4개 동시 수집으로 바꾼 뒤 전 종목 실적 수집이 실패했습니다)
+    #    종목별로 하루치 캐시가 있어 처음 한 번만 느리고 이후는 즉시 표시됩니다.
     bundles: dict[str, dict] = {}
     todo = list(tickers)
     progress = st.progress(0.0, text="실적 자료를 모으는 중...")
-    done_count = 0
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        futures = {pool.submit(load_one_ticker, t, use_cache): t for t in todo}
-        for future in as_completed(futures):
-            ticker = futures[future]
-            done_count += 1
-            progress.progress(
-                done_count / max(len(todo), 1),
-                text=f"실적 자료를 모으는 중... ({done_count}/{len(todo)})",
+    for done_count, ticker in enumerate(todo, start=1):
+        progress.progress(
+            (done_count - 1) / max(len(todo), 1),
+            text=f"실적 자료를 모으는 중... ({done_count}/{len(todo)}) {ticker}",
+        )
+        started = time.monotonic()
+        try:
+            bundles[ticker] = load_one_ticker(ticker, use_cache)
+        except Exception as exc:
+            bundles[ticker] = pipeline.empty_bundle(
+                ticker, f"{type(exc).__name__}: {str(exc)[:120]}"
             )
-            try:
-                bundles[ticker] = future.result()
-            except Exception as exc:
-                bundles[ticker] = pipeline.empty_bundle(ticker, str(exc)[:120])
+        # 진단용: 종목별 수집에 걸린 시간을 기록합니다 (어디서 막히는지 추적)
+        report = (bundles.get(ticker) or {}).get("report")
+        if isinstance(report, dict):
+            report["seconds"] = round(time.monotonic() - started, 1)
     progress.empty()
 
     return pipeline.assemble(tickers, price_map, weekly_map, bundles, failed)
@@ -384,23 +391,34 @@ def ticker_exists(symbol: str) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# 사이드바
+# 종목 관리 (추가 · 삭제 · 저장)
 # ---------------------------------------------------------------------------
 # 현재 종목 목록 (주소에서 읽어옵니다)
 if "tickers" not in st.session_state:
     st.session_state.tickers = read_tickers_from_url()
 
-with st.sidebar:
-    st.header("📌 종목 관리")
 
-    # --- 종목 추가 ---
-    new_symbol = st.text_input(
-        "티커 입력 후 Enter",
-        placeholder="예: NVDA",
-        key="new_ticker_input",
-    ).strip().upper()
+def render_ticker_manager() -> None:
+    """메인 화면 맨 위에 종목 관리 칸을 그립니다.
 
-    if st.button("➕ 추가", width="stretch", disabled=not new_symbol):
+    사이드바(서브 메뉴) 안에 있으면 모바일에서 한 번 더 들어가야 해서,
+    순위 표 바로 위 메인 화면에 그대로 펼쳐 둡니다.
+    """
+    st.markdown("#### 📌 종목 관리")
+
+    # --- 종목 추가 (입력칸 + 버튼을 한 줄에) ---
+    add_cols = st.columns([3, 1])
+    with add_cols[0]:
+        new_symbol = st.text_input(
+            "티커 입력",
+            placeholder="예: NVDA",
+            key="new_ticker_input",
+            label_visibility="collapsed",
+        ).strip().upper()
+    with add_cols[1]:
+        add_clicked = st.button("➕ 추가", width="stretch", disabled=not new_symbol)
+
+    if add_clicked:
         if new_symbol in st.session_state.tickers:
             st.warning(f"{new_symbol}은(는) 이미 목록에 있습니다")
         elif len(st.session_state.tickers) >= cfg.MAX_TICKERS:
@@ -417,13 +435,18 @@ with st.sidebar:
             st.rerun()
 
     # --- 현재 목록 + 삭제 ---
-    st.caption(f"현재 {len(st.session_state.tickers)}개 (누르면 삭제)")
-    remove_target = None
-    chip_cols = st.columns(3)
-    for index, symbol in enumerate(st.session_state.tickers):
-        with chip_cols[index % 3]:
-            if st.button(f"{symbol} ✕", key=f"del_{symbol}", width="stretch"):
-                remove_target = symbol
+    # 모바일에서 세로로 길게 늘어지지 않도록 가로로 감기는 알약(pills) 모양으로 그립니다.
+    # (버튼 13개를 세로로 쌓으면 순위 표까지 한참 내려야 합니다)
+    st.caption(f"현재 {len(st.session_state.tickers)}개 — 종목을 누르면 삭제됩니다")
+    remove_target = st.pills(
+        "삭제할 종목",
+        options=list(st.session_state.tickers),
+        selection_mode="single",
+        default=None,
+        # 목록이 바뀌면 키도 바뀌게 해서 지운 종목이 선택된 채로 남지 않게 합니다
+        key="del_pills_" + "_".join(st.session_state.tickers),
+        label_visibility="collapsed",
+    )
 
     if remove_target:
         if len(st.session_state.tickers) <= 1:
@@ -433,21 +456,28 @@ with st.sidebar:
             write_tickers_to_url(st.session_state.tickers)
             st.rerun()
 
-    if st.session_state.tickers != list(cfg.TICKERS):
-        if st.button("↩️ 기본 목록으로 되돌리기", width="stretch"):
-            st.session_state.tickers = list(cfg.TICKERS)
-            write_tickers_to_url(st.session_state.tickers)
-            # 저장 파일도 기본 목록으로 덮어써야 다음에 켰을 때 진짜로 되돌아갑니다
-            storage.save_tickers_local(cfg.TICKERS)
-            st.rerun()
+    # --- 저장 / 되돌리기 ---
+    is_custom = st.session_state.tickers != list(cfg.TICKERS)
+    save_cols = st.columns([1, 1]) if is_custom else st.columns([1])
+    with save_cols[0]:
+        save_clicked = st.button("💾 이 목록 저장", width="stretch")
+    reset_clicked = False
+    if is_custom:
+        with save_cols[1]:
+            reset_clicked = st.button("↩️ 기본 목록", width="stretch")
 
-    # --- 저장 버튼: 다음에 앱을 켜도 이 목록이 유지되게 합니다 ---
-    if st.button("💾 이 목록 저장", width="stretch"):
+    if reset_clicked:
+        st.session_state.tickers = list(cfg.TICKERS)
+        write_tickers_to_url(st.session_state.tickers)
+        # 저장 파일도 기본 목록으로 덮어써야 다음에 켰을 때 진짜로 되돌아갑니다
+        storage.save_tickers_local(cfg.TICKERS)
+        st.rerun()
+
+    if save_clicked:
         write_tickers_to_url(st.session_state.tickers)
         local_ok = storage.save_tickers_local(st.session_state.tickers)
 
         # GitHub 토큰이 Secrets에 있으면 저장소에도 커밋 (완전 영구)
-        github_message = ""
         try:
             token = str(st.secrets.get("GITHUB_TOKEN", "")).strip()
             repo = str(st.secrets.get("GITHUB_REPO", "j2h5516-star/Model")).strip()
@@ -474,12 +504,17 @@ with st.sidebar:
                 "Settings → Secrets 에 `GITHUB_TOKEN` 을 넣어 주세요 (README 참고)."
             )
 
-    st.info(
-        "💡 지금 주소를 **홈 화면에 추가**해두면 이 종목 목록이 그대로 유지됩니다.",
-        icon="💡",
+    st.caption(
+        "💡 지금 주소를 홈 화면에 추가해두면 이 목록이 그대로 유지됩니다. "
+        "추가한 종목도 기존 종목과 **완전히 같은 기준**으로 비교됩니다."
     )
-
     st.divider()
+
+
+# ---------------------------------------------------------------------------
+# 사이드바 — 설정만 (종목 관리는 메인 화면으로 옮겼습니다)
+# ---------------------------------------------------------------------------
+with st.sidebar:
     st.header("⚙️ 설정")
 
     include_current = st.checkbox(
@@ -522,6 +557,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# 종목 추가/삭제 칸 — 순위 표 위 메인 화면에 바로 보이게 둡니다
+render_ticker_manager()
+
 with st.spinner("SEC 공시와 주가 데이터를 모으는 중입니다... (첫 실행은 1~3분 걸릴 수 있습니다)"):
     try:
         result = load_all(st.session_state.tickers, include_current, True)
@@ -552,9 +590,28 @@ if result["failed"]:
         "야후가 일시적으로 거부했을 수 있습니다. 잠시 후 🔄 새로고침을 눌러 주세요."
     )
 if result["no_fundamentals"]:
-    st.info(
-        f"실적 데이터를 찾지 못해 주가 지표만 반영된 종목: {', '.join(result['no_fundamentals'])}"
-    )
+    missing = result["no_fundamentals"]
+    all_missing = len(missing) >= len(st.session_state.tickers)
+
+    if all_missing:
+        # 전 종목 실적이 비면 대시보드의 절반(펀더멘털)이 통째로 죽은 상태입니다.
+        # 접힌 진단 패널에 묻히지 않도록 맨 위에 크게 알리고 원인을 바로 보여줍니다.
+        first_errors = [
+            f"**{r.get('ticker')}**: {r.get('first_error')}"
+            for r in (result.get("reports") or [])
+            if r.get("first_error")
+        ]
+        st.error(
+            "🚨 **모든 종목의 실적 자료를 가져오지 못했습니다.**\n\n"
+            "지금 화면의 점수는 **주가 추세만 반영된 값**이라 원래 모델과 다릅니다.\n\n"
+            "가장 흔한 원인은 SEC가 요청을 거부한 경우입니다. "
+            "아래 **🔧 데이터 수집 진단**을 펼쳐 `첫 오류` 열을 확인해 주세요."
+            + ("\n\n첫 오류:\n\n- " + "\n- ".join(first_errors[:3]) if first_errors else "")
+        )
+    else:
+        st.info(
+            f"실적 데이터를 찾지 못해 주가 지표만 반영된 종목: {', '.join(missing)}"
+        )
 
 # 방금 추가한 종목의 수집 결과를 바로 보여줍니다 (데이터 없이 등록만 되는 것 방지)
 last_added = st.session_state.pop("last_added", None)
@@ -864,6 +921,25 @@ c4.metric(
     delta_color="off",
 )
 
+# --- 델타(이익 증가 속도) 한 줄 요약: 현재 방향 · 다음 분기 · 2분기 경로 ---
+# 순위 표의 '델타방향 / 델타예측 / 델타가속예측' 세 열과 같은 값입니다.
+forecast_detail = detail.get("forecast_detail") or {}
+next_qoq = forecast_detail.get("next_qoq")
+d1, d2, d3 = st.columns(3)
+d1.metric("델타 방향 (현재)", detail["delta_direction"], "실제 실적 기준", delta_color="off")
+d2.metric(
+    "델타예측 (다음 분기)",
+    detail.get("delta_forecast") or cfg.F_NONE,
+    "예상 증가율 -" if next_qoq is None else f"예상 증가율 {next_qoq:+.1f}%",
+    delta_color="off",
+)
+d3.metric(
+    "델타가속예측 (2분기 경로)",
+    detail.get("accel_forecast") or cfg.F2_NONE,
+    detail.get("forward_basis") or "근거 없음",
+    delta_color="off",
+)
+
 # --- 눌러서 보는 상세 설명 버튼들 ---
 st.markdown(
     '<div class="section-note">🔎 아래 버튼을 누르면 <b>그 항목이 어떻게 계산됐는지</b> '
@@ -887,7 +963,7 @@ with row2[0]:
     with st.popover(f"📊 GM% 드라이버: {detail['gm_type']}", width="stretch"):
         render_explanation(explain.explain_gm_driver(detail))
 with row2[1]:
-    with st.popover(f"⚡ 델타: {detail['delta_direction']} → {detail['accel_forecast']}", width="stretch"):
+    with st.popover("⚡ 델타 계산·예측 근거", width="stretch"):
         render_explanation(explain.explain_delta(detail))
 with row2[2]:
     with st.popover(f"📈 기술 점수: {detail['tech_score']:.0f}점", width="stretch"):
@@ -1169,6 +1245,19 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
         "`직접공시`가 나오지 않을 때 **어느 단계에서 막히는지** 확인할 수 있습니다."
     )
 
+    # SEC는 요청자 신원에 이메일이 없으면 접속을 막습니다. 지금 무엇을 쓰고 있는지 표시합니다.
+    _identity = cfg.get_sec_identity()
+    _has_mail = "@" in _identity
+    if _has_mail:
+        _local, _, _domain = _identity.rpartition("@")
+        _masked = f"{_local[:3]}***@{_domain}"
+        st.caption(f"SEC 요청자 신원: `{_masked}` — ✅ 이메일 포함 (정상)")
+    else:
+        st.caption(
+            f"SEC 요청자 신원: `{_identity}` — 🚨 **이메일이 없어 SEC가 차단합니다.** "
+            "Settings → Secrets 에 `SEC_IDENTITY = \"이름 이메일@주소\"` 를 넣어 주세요."
+        )
+
     reports = result.get("reports") or []
     if not reports:
         st.caption("진단 기록이 없습니다.")
@@ -1186,6 +1275,7 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
                     "짝못찾음": r.get("unpaired_press", 0),
                     "텍스트출처": r.get("text_source", "") or "-",
                     "전망수집": r.get("forward_note", "") or "정상",
+                    "소요(초)": r.get("seconds", "-"),
                     "첫 오류": r.get("first_error", "") or "-",
                     "비고": (r.get("pair_note") or r.get("note") or "-"),
                 }

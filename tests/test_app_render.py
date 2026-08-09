@@ -192,11 +192,53 @@ def test_ticker_switching():
 
 
 def test_renders_without_fundamentals():
-    """실적 데이터를 하나도 못 받아도 주가 지표만으로 화면이 그려져야 함"""
+    """실적을 전 종목에서 못 받으면 접힌 진단이 아니라 맨 위에 크게 경고해야 함"""
     at = _run_app(False)
 
     assert not at.exception, [e.value for e in at.exception]
-    assert any("실적 데이터를 찾지 못" in i.value for i in at.info), "실적 없음 안내가 없음"
+    assert any(
+        "모든 종목의 실적 자료를 가져오지 못했습니다" in e.value for e in at.error
+    ), "전 종목 실적 실패 경고가 없음"
+
+
+def test_sec_identity_has_contact_email():
+    """SEC는 이메일 없는 신원을 차단하므로 기본 신원에 이메일이 있어야 함"""
+    import config as cfg
+
+    assert cfg._has_email(cfg.get_sec_identity()), "SEC 신원에 이메일이 없음"
+
+    # 환경변수에 이메일 없는 값이 들어와도 기본값으로 되돌아가야 함
+    with patch.dict("os.environ", {"SEC_IDENTITY": "그냥 이름"}):
+        assert cfg._has_email(cfg.get_sec_identity())
+    with patch.dict("os.environ", {"SEC_IDENTITY": "홍길동 hong@example.com"}):
+        assert cfg.get_sec_identity() == "홍길동 hong@example.com"
+
+
+def test_ticker_manager_is_on_main_screen():
+    """종목 추가칸이 사이드바가 아니라 메인 화면(순위표 위)에 있어야 함"""
+    at = _run_app(True)
+
+    assert not at.exception, [e.value for e in at.exception]
+    main_buttons = [b.label for b in at.main.button]
+    assert any("추가" in label for label in main_buttons), "메인 화면에 ➕ 추가 버튼이 없음"
+    assert any("저장" in label for label in main_buttons), "메인 화면에 저장 버튼이 없음"
+    # 삭제 칩(pills)에 현재 종목이 모두 들어 있어야 함
+    pill_options = [opt for pill in at.main.pills for opt in pill.options]
+    for symbol in FAKE_TICKERS:
+        assert symbol in pill_options, f"메인 화면 삭제 칩에 {symbol}이 없음"
+    # 사이드바에는 설정만 남아 있어야 함
+    sidebar_buttons = [b.label for b in at.sidebar.button]
+    assert not any("추가" in label for label in sidebar_buttons), "사이드바에 추가 버튼이 남아 있음"
+
+
+def test_detail_shows_both_delta_forecasts():
+    """종목 상세에 델타예측(다음 분기)과 델타가속예측(2분기)이 모두 보여야 함"""
+    at = _run_app(True)
+
+    assert not at.exception, [e.value for e in at.exception]
+    labels = [m.label for m in at.metric]
+    assert any("델타예측" in label for label in labels), "델타예측 표시가 없음"
+    assert any("델타가속예측" in label for label in labels), "델타가속예측 표시가 없음"
 
 
 def test_empty_scores_shows_message():
