@@ -156,14 +156,20 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
     if df.empty:
         return df
 
-    # 매수 후보는 상대강도(RS)가 높은 순으로 위에 오도록,
-    # 그 외에는 최종점수 순으로 정렬합니다.
-    df["_buy"] = (df["판정"] == cfg.V_BUY).astype(int)
+    # 정렬 규칙:
+    #   · 매수 후보를 맨 위에 모으고, 그 안에서는 상대강도(RS)가 높은 순
+    #   · 나머지 종목은 최종점수가 높은 순
     df["_rs"] = df["RS"].fillna(-999)
-    df = df.sort_values(
-        by=["_buy", "_rs", "최종점수"], ascending=[False, False, False]
-    ).drop(columns=["_buy", "_rs"])
-    return df.reset_index(drop=True)
+
+    buy = df[df["판정"] == cfg.V_BUY].sort_values(
+        by=["_rs", "최종점수"], ascending=[False, False]
+    )
+    others = df[df["판정"] != cfg.V_BUY].sort_values(
+        by=["최종점수", "_rs"], ascending=[False, False]
+    )
+
+    ordered = pd.concat([buy, others]).drop(columns=["_rs"])
+    return ordered.reset_index(drop=True)
 
 
 def quarters_to_frame(quarters: list[dict]) -> pd.DataFrame:

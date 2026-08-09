@@ -233,6 +233,7 @@ def parse_press_release(text: str) -> dict:
         "gross_margin_pct": None,
         "source": None,
         "gm_is_gaap": False,
+        "derivation": "",   # 어떻게 구한 값인지 사람이 읽을 수 있는 설명
     }
     if not text:
         return result
@@ -252,6 +253,10 @@ def parse_press_release(text: str) -> dict:
     if op is not None:
         result["op_income"] = op
         result["source"] = cfg.SRC_DIRECT
+        result["derivation"] = (
+            "보도자료의 GAAP→non-GAAP 조정표에 적힌 "
+            f"non-GAAP 영업이익 값을 그대로 사용했습니다 (${op/1e6:,.1f}M)."
+        )
         return result
 
     # ③ 없으면 역산: 매출 × GM% − 논갭 영업비용
@@ -260,6 +265,13 @@ def parse_press_release(text: str) -> dict:
         gross_profit = result["revenue"] * (gm / 100.0)
         result["op_income"] = gross_profit - abs(opex)
         result["source"] = cfg.SRC_DERIVED
+        result["derivation"] = (
+            "보도자료에 non-GAAP 영업이익이 없어 아래 식으로 역산했습니다.\n\n"
+            f"매출 ${result['revenue']/1e6:,.1f}M × GM {gm:.1f}% "
+            f"= 매출총이익 ${gross_profit/1e6:,.1f}M\n\n"
+            f"매출총이익 ${gross_profit/1e6:,.1f}M − 영업비용 ${abs(opex)/1e6:,.1f}M "
+            f"= **${result['op_income']/1e6:,.1f}M**"
+        )
 
     return result
 
@@ -274,17 +286,26 @@ _QUARTER_RE_SHORT = re.compile(r"\bQ([1-4])\s*(?:of\s*)?(?:FY\s*)?(20\d{2}|\d{2}
 
 
 def extract_period_label(text: str, filing_date: str) -> str:
-    """보도자료에서 "몇 년 몇 분기"인지 알아냅니다. 못 찾으면 제출일로 대신합니다."""
+    """보도자료에서 "몇 년 몇 분기"인지 알아냅니다. 못 찾으면 제출일로 대신합니다.
+
+    차트 가로축에 들어가므로 최대한 짧게 만듭니다 (예: "25 Q3").
+    """
     if text:
         match = _QUARTER_RE.search(text)
         if match:
-            return f"FY{match.group(2)} Q{_QUARTER_WORDS[match.group(1).lower()]}"
+            return f"{match.group(2)[2:]} Q{_QUARTER_WORDS[match.group(1).lower()]}"
         match = _QUARTER_RE_SHORT.search(text)
         if match:
             year = match.group(2)
-            year = year if len(year) == 4 else f"20{year}"
-            return f"FY{year} Q{match.group(1)}"
-    return f"{filing_date} 발표"
+            year = year[2:] if len(year) == 4 else year
+            return f"{year} Q{match.group(1)}"
+    # 분기 표현을 못 찾으면 제출 연월만 짧게 표시 (예: "25/05")
+    return f"{filing_date[2:4]}/{filing_date[5:7]}"
+
+
+def period_end_label(period_end: str) -> str:
+    """기간종료일(2026-01-31)을 짧은 표시로 바꿉니다 → "26/01" """
+    return f"{period_end[2:4]}/{period_end[5:7]}"
 
 
 # ---------------------------------------------------------------------------
@@ -360,18 +381,8 @@ def fetch_earnings_8k(ticker: str, start_date: str | None = None) -> list[dict]:
     filings = company.get_filings(form="8-K", filing_date=f"{start_date}:")
 
     for filing in filings:
-        try:
-            eightk = filing.obj()
-        except Exception:
-            continue
-
-        # Item 2.02(실적발표)가 포함된 공시만 대상으로 합니다
-        items = getattr(eightk, "items", None) or []
-        if not any("2.02" in str(item) for item in items):
-            continue
-
-        text = _press_release_text(eightk)
-        if not text:
+        text = _earnings_text(filing)
+        if not text or not _looks_like_earnings(text):
             continue
 
         parsed = parse_press_release(text)
@@ -389,6 +400,9 @@ def fetch_earnings_8k(ticker: str, start_date: str | None = None) -> list[dict]:
                 "gross_margin_pct": parsed["gross_margin_pct"],
                 "source": parsed["source"] or cfg.SRC_DERIVED,
                 "gm_is_gaap": parsed["gm_is_gaap"],
+                # 화면의 "원문 보기" 링크에 사용 (사용자가 직접 공시를 확인할 수 있도록)
+                "filing_url": _safe_filing_url(filing),
+                "derivation": parsed.get("derivation", ""),  # 어떻게 계산했는지 설명
                 "guidance_text": text[-6000:],  # 가이던스는 보도자료 뒷부분에 나옵니다
             }
         )
@@ -397,27 +411,99 @@ def fetch_earnings_8k(ticker: str, start_date: str | None = None) -> list[dict]:
     return quarters
 
 
-def _press_release_text(eightk) -> str:
-    """8-K에 첨부된 실적 보도자료의 글자만 뽑아냅니다."""
+def _safe_filing_url(filing) -> str:
+    """공시 원문 주소를 가져옵니다 (실패해도 앱이 멈추지 않도록 감쌉니다)."""
+    for attr in ("filing_url", "url", "homepage_url"):
+        try:
+            value = getattr(filing, attr, None)
+            if value:
+                return str(value)
+        except Exception:
+            continue
+    return ""
+
+
+# 실적발표 공시인지 알아보는 신호들 (회사마다 표현이 달라 여러 개를 봅니다)
+_EARNINGS_HINTS = [
+    "item 2.02",
+    "results of operations and financial condition",
+    "financial results",
+    "reports first quarter",
+    "reports second quarter",
+    "reports third quarter",
+    "reports fourth quarter",
+    "announces first quarter",
+    "announces second quarter",
+    "announces third quarter",
+    "announces fourth quarter",
+    "quarterly results",
+    "non-gaap",
+]
+
+
+def _looks_like_earnings(text: str) -> bool:
+    """이 공시가 실적발표인지 대략 판별합니다."""
+    lowered = text[:20000].lower()
+    return any(hint in lowered for hint in _EARNINGS_HINTS)
+
+
+def _earnings_text(filing) -> str:
+    """8-K에서 실적 보도자료 텍스트를 최대한 확보합니다.
+
+    회사마다 첨부 방식이 달라 아래 순서로 시도합니다:
+      ① edgartools가 인식한 보도자료(press release) 첨부
+      ② EX-99 계열 첨부파일을 직접 뒤져서 읽기
+      ③ 공시 본문 전체
+    """
+    # ① edgartools의 보도자료 인식 기능
     try:
-        releases = eightk.press_releases
-        if releases:
-            parts = []
-            for release in releases:
-                try:
-                    parts.append(release.text())
-                except Exception:
-                    continue
-            if parts:
-                return "\n".join(parts)
+        eightk = filing.obj()
+    except Exception:
+        eightk = None
+
+    if eightk is not None:
+        try:
+            releases = eightk.press_releases
+            if releases:
+                parts = []
+                for release in releases:
+                    try:
+                        parts.append(release.text())
+                    except Exception:
+                        continue
+                if parts:
+                    return "\n".join(parts)
+        except Exception:
+            pass
+
+    # ② EX-99 첨부파일을 직접 찾아 읽기
+    try:
+        exhibits = filing.attachments.exhibits
+        for attachment in exhibits:
+            doc_type = str(getattr(attachment, "document_type", "") or "")
+            description = str(getattr(attachment, "display_description", "") or "")
+            if "99" not in doc_type and "99" not in description:
+                continue
+            try:
+                content = attachment.text()
+            except Exception:
+                continue
+            if content and len(content) > 500:
+                return content
     except Exception:
         pass
 
-    # 보도자료를 못 찾으면 공시 본문 전체에서 시도
-    try:
-        return eightk.text() or ""
-    except Exception:
-        return ""
+    # ③ 마지막 수단: 공시 본문 전체
+    for source in (eightk, filing):
+        if source is None:
+            continue
+        try:
+            content = source.text()
+            if content:
+                return content
+        except Exception:
+            continue
+    return ""
 
 
 # ---------------------------------------------------------------------------
@@ -493,16 +579,26 @@ def fetch_xbrl_approximation(ticker: str, start_date: str | None = None) -> list
         if revenue and gross_profit is not None and revenue > 0:
             gm_pct = gross_profit / revenue * 100.0
 
+        approx_op = gaap_op + sbc + amort
         quarters.append(
             {
                 "ticker": ticker,
                 "filing_date": period_end,   # 실제 제출일 대신 기간종료일 사용
-                "period_label": f"{period_end} 분기",
+                "period_label": period_end_label(period_end),
                 "revenue": revenue,
-                "op_income": gaap_op + sbc + amort,   # 논갭 근사
+                "op_income": approx_op,   # 논갭 근사
                 "gross_margin_pct": gm_pct,
                 "source": cfg.SRC_APPROX,
                 "gm_is_gaap": True,
+                "filing_url": f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company={ticker}&type=8-K",
+                "derivation": (
+                    "보도자료를 읽지 못해 SEC XBRL 회계데이터로 근사했습니다.\n\n"
+                    f"GAAP 영업이익 ${gaap_op/1e6:,.1f}M\n\n"
+                    f"+ 주식보상비 ${sbc/1e6:,.1f}M\n\n"
+                    f"+ 무형자산상각 ${amort/1e6:,.1f}M\n\n"
+                    f"= **${approx_op/1e6:,.1f}M** (근사치)\n\n"
+                    "※ GM%는 GAAP 값(매출총이익 ÷ 매출)을 사용했습니다."
+                ),
                 "guidance_text": "",
             }
         )

@@ -106,15 +106,26 @@ def test_garbage_text_is_safe():
 # 분기 이름 뽑기
 # ---------------------------------------------------------------------------
 def test_period_label_from_text():
-    """"third quarter of fiscal 2025" → "FY2025 Q3" 로 변환해야 함"""
+    """"third quarter of fiscal 2025" → "25 Q3" (차트 축에 들어가도록 짧게)"""
     label = sf.extract_period_label(PR_TABLE_THOUSANDS, "2025-03-04")
-    assert label == "FY2025 Q3", label
+    assert label == "25 Q3", label
 
 
 def test_period_label_fallback():
-    """분기 표현이 없으면 제출일을 대신 써야 함"""
+    """분기 표현이 없으면 제출 연월을 짧게 표시해야 함"""
     label = sf.extract_period_label("no quarter mentioned here", "2025-05-20")
-    assert "2025-05-20" in label, label
+    assert label == "25/05", label
+
+
+def test_period_end_label():
+    """XBRL 기간종료일도 짧은 형식으로 바뀌어야 함"""
+    assert sf.period_end_label("2026-01-31") == "26/01"
+
+
+def test_earnings_detection():
+    """실적발표 공시인지 알아보는 판별이 동작해야 함"""
+    assert sf._looks_like_earnings(PR_TABLE_THOUSANDS) is True
+    assert sf._looks_like_earnings("Notice of annual meeting of shareholders") is False
 
 
 # ---------------------------------------------------------------------------

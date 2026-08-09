@@ -69,8 +69,12 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
         return {
             "score": max_score * 0.4,   # 판단할 데이터가 부족하면 중간보다 약간 아래
             "direction": "판단불가",
-            "detail": "분기 데이터가 부족해 가속/감속을 판단할 수 없습니다",
+            "detail": (
+                "가속/감속을 판단하려면 QoQ 증가율이 최소 2개 필요한데 "
+                f"{len(growths)}개만 계산됐습니다. (분기 데이터 부족 또는 직전 분기 적자)"
+            ),
             "capped": False,
+            "trace": {"growths": growths, "insufficient": True},
         }
 
     recent = growths[-3:]           # 최근 최대 3개 분기의 증가율
@@ -86,9 +90,20 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
         direction, ratio = "유지", 0.6
         detail = f"이익 증가율이 비슷한 수준을 유지하고 있습니다({delta:+.1f}%p)"
 
+    # 화면의 "계산 과정 보기"에 쓸 자료
+    trace = {
+        "growths": growths,                 # 분기별 QoQ 증가율 전체 이력
+        "recent": recent,                   # 판정에 실제로 쓴 최근 값들
+        "delta_pp": delta,                  # 증가율의 변화(%p) — 가속/감속의 근거
+        "ratio": ratio,                     # 배점에 곱한 비율
+        "threshold": 3.0,                   # 가속/감속을 가르는 기준(%p)
+    }
+
     # 최근 증가율 자체가 마이너스(이익 감소)면 추가 감점
     if recent[-1] < 0:
         ratio *= 0.5
+        trace["ratio"] = ratio
+        trace["shrink_penalty"] = True
         detail += " · 다만 최근 분기 이익은 전분기보다 줄었습니다"
 
     score = max_score * ratio
@@ -107,12 +122,15 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
                 f" · 이익 규모가 작아(${latest_op/1e6:,.0f}M) 이 항목 점수를 "
                 f"{int(cfg.LOW_BASE_CAP_RATIO*100)}%로 제한했습니다"
             )
+    trace["latest_op"] = latest_op
+    trace["capped"] = capped
 
     return {
         "score": round(score, 1),
         "direction": direction,
         "detail": detail,
         "capped": capped,
+        "trace": trace,
     }
 
 
@@ -138,7 +156,12 @@ def score_gm_driver(quarters: list[dict]) -> dict:
             "score": max_score * 0.4,
             "type": "판단불가",
             "delta_pp": None,
-            "detail": "매출총이익률 데이터가 부족합니다",
+            "latest_gm": margins[-1] if margins else None,
+            "detail": (
+                "마진 성격을 판단하려면 GM% 데이터가 최소 2개 분기 필요한데 "
+                f"{len(margins)}개만 수집됐습니다"
+            ),
+            "trace": {"margins": margins, "insufficient": True},
         }
 
     latest = margins[-1]
@@ -165,6 +188,13 @@ def score_gm_driver(quarters: list[dict]) -> dict:
         "delta_pp": round(delta, 2),
         "latest_gm": round(latest, 2),
         "detail": detail,
+        "trace": {
+            "margins": margins,                  # GM% 전체 이력
+            "latest": latest,                    # 최근 분기 GM%
+            "baseline": baseline,                # 직전 4개 분기 평균
+            "baseline_values": baseline_values,  # 평균 계산에 쓴 값들
+            "delta_pp": delta,
+        },
     }
 
 
@@ -213,6 +243,15 @@ def score_revenue_quality(quarters: list[dict]) -> dict:
         "score": round(growth_score + accel_score, 1),
         "yoy": round(yoy, 1) if yoy is not None else None,
         "detail": f"1년 전 대비 매출 {yoy_text}{accel_text}",
+        "trace": {
+            "revenues": revenues,
+            "base": base,
+            "latest": revenues[-1],
+            "yoy": yoy,
+            "qoq": qoq,
+            "growth_score": growth_score,
+            "accel_score": accel_score,
+        },
     }
 
 
@@ -249,6 +288,16 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
         "growth_pct": round(growth_pct, 1) if growth_pct is not None else None,
         "revision": revision,
         "detail": f"{growth_text} · {revision_text}",
+        "trace": {
+            "latest_op": latest_op,
+            "forward_op": forward_op,
+            "growth_pct": growth_pct,
+            "forward_score": forward_score,
+            "revision_score": revision_score,
+            "revision_text": revision_text,
+            "basis": forward.get("basis"),
+            "basis_detail": forward.get("detail", ""),
+        },
     }
 
 
@@ -325,18 +374,68 @@ def decide_verdict(fund_total: float, trend_stage: int) -> str:
 
     추세 단계: 1=완전 정배열, 2=준정배열, 3=중립, 4=추세 훼손, 5=완전 역배열
     """
+    return explain_verdict(fund_total, trend_stage)["verdict"]
+
+
+def explain_verdict(fund_total: float, trend_stage: int) -> dict:
+    """판정 결과와 함께 "왜 그 판정이 나왔는지"를 돌려줍니다.
+
+    화면에서 판정을 눌렀을 때 보여줄 근거로 사용합니다.
+    """
     strong_trend = trend_stage in (1, 2)
     weak_trend = trend_stage in (4, 5)
 
+    fund_text = (
+        f"펀더멘털 {fund_total:.0f}점"
+        + (
+            f" (기준 {cfg.FUND_STRONG:.0f}점 이상 → 강함)"
+            if fund_total >= cfg.FUND_STRONG
+            else f" (기준 {cfg.FUND_WEAK:.0f}점 이상 → 보통)"
+            if fund_total >= cfg.FUND_WEAK
+            else f" (기준 {cfg.FUND_WEAK:.0f}점 미만 → 약함)"
+        )
+    )
+    stage_text = (
+        f"추세 {trend_stage}단계"
+        + (" (1~2단계 → 양호)" if strong_trend else " (4~5단계 → 꺾임)" if weak_trend else " (3단계 → 중립)")
+    )
+
     if fund_total >= cfg.FUND_STRONG and strong_trend:
-        return cfg.V_BUY          # 실적도 좋고 추세도 좋음
-    if fund_total >= cfg.FUND_STRONG and weak_trend:
-        return cfg.V_WARN         # 실적은 좋은데 주가가 꺾임 → 정점 신호일 수 있음
-    if cfg.FUND_WEAK <= fund_total < cfg.FUND_STRONG and strong_trend:
-        return cfg.V_WATCH        # 추세는 좋은데 실적 확신 부족
-    if fund_total < cfg.FUND_WEAK and strong_trend:
-        return cfg.V_MOMENTUM     # 실적 근거 없이 주가만 오르는 중
-    return cfg.V_EXCLUDE
+        verdict = cfg.V_BUY
+        rule = f"펀더 {cfg.FUND_STRONG:.0f}점 이상 **그리고** 추세 1~2단계"
+        meaning = "실적도 좋아지고 주가 흐름도 좋습니다. 매수 후보끼리는 상대강도(RS)가 높은 순으로 정렬됩니다."
+    elif fund_total >= cfg.FUND_STRONG and weak_trend:
+        verdict = cfg.V_WARN
+        rule = f"펀더 {cfg.FUND_STRONG:.0f}점 이상 **그러나** 추세 4~5단계"
+        meaning = (
+            "실적은 좋은데 주가가 먼저 꺾인 상태입니다. "
+            "시장이 이미 정점을 반영했을 가능성이 있어 주의가 필요합니다."
+        )
+    elif cfg.FUND_WEAK <= fund_total < cfg.FUND_STRONG and strong_trend:
+        verdict = cfg.V_WATCH
+        rule = f"펀더 {cfg.FUND_WEAK:.0f}~{cfg.FUND_STRONG:.0f}점 **그리고** 추세 1~2단계"
+        meaning = "주가 흐름은 좋지만 실적 근거가 아직 확실하지 않습니다. 다음 실적발표를 지켜볼 구간입니다."
+    elif fund_total < cfg.FUND_WEAK and strong_trend:
+        verdict = cfg.V_MOMENTUM
+        rule = f"펀더 {cfg.FUND_WEAK:.0f}점 미만 **그러나** 추세 1~2단계"
+        meaning = (
+            "실적이 뒷받침되지 않는데 주가만 오르고 있습니다. "
+            "기대감이나 수급으로 움직이는 구간일 수 있어 변동성이 클 수 있습니다."
+        )
+    else:
+        verdict = cfg.V_EXCLUDE
+        rule = "위 네 가지 조건 어디에도 해당하지 않음"
+        meaning = "실적과 주가 조합이 뚜렷한 특징을 보이지 않아 관심 목록에서 제외됩니다."
+
+    return {
+        "verdict": verdict,
+        "rule": rule,
+        "meaning": meaning,
+        "fund_text": fund_text,
+        "stage_text": stage_text,
+        "fund_total": fund_total,
+        "trend_stage": trend_stage,
+    }
 
 
 def build_score(ticker: str, quarters: list[dict], forward: dict, price_info: dict) -> dict:
@@ -346,10 +445,12 @@ def build_score(ticker: str, quarters: list[dict], forward: dict, price_info: di
 
     final = fundamental["total"] * cfg.WEIGHT_FUNDAMENTAL + technical["total"] * cfg.WEIGHT_TECHNICAL
     stage = price_info.get("stage", cfg.TREND_STAGE[cfg.S_UNKNOWN])
-    verdict = decide_verdict(fundamental["total"], stage)
+    verdict_info = explain_verdict(fundamental["total"], stage)
+    verdict = verdict_info["verdict"]
 
     # 데이터 출처 배지 (가장 최근 분기 기준)
-    data_source = quarters[-1]["source"] if quarters else None
+    latest_quarter = quarters[-1] if quarters else None
+    data_source = latest_quarter["source"] if latest_quarter else None
 
     return {
         "ticker": ticker,
@@ -372,8 +473,11 @@ def build_score(ticker: str, quarters: list[dict], forward: dict, price_info: di
         "forward_op_income": forward.get("forward_op_income"),
         "revision": forward.get("revision", 0),
         "data_source": data_source,
+        "source_derivation": (latest_quarter or {}).get("derivation", ""),
+        "filing_url": (latest_quarter or {}).get("filing_url", ""),
         "quarters": quarters,
         "fundamental": fundamental,
         "technical": technical,
         "forward_detail": forward.get("detail", ""),
+        "verdict_info": verdict_info,
     }
