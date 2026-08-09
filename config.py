@@ -8,6 +8,8 @@ config.py — 대시보드 전체 설정값 모음
 
 from __future__ import annotations
 
+import os
+
 # ---------------------------------------------------------------------------
 # 분석 대상
 # ---------------------------------------------------------------------------
@@ -51,9 +53,27 @@ EARNINGS_START_DATE = HISTORY_START_DATE
 # 매우 느립니다. 실적발표는 분기 1회이므로 이 정도면 3년치를 충분히 덮습니다.
 MAX_8K_SCAN = 45
 
-# SEC 전자공시(EDGAR)는 요청자 신원(이메일)을 헤더에 요구합니다.
-# 실제 배포 시 본인 이메일로 바꿔도 되고, 그대로 두어도 동작합니다.
-SEC_IDENTITY = "Trend Dashboard j2h5516@gmail.com"
+# SEC 전자공시(EDGAR)는 요청자 신원을 헤더에 담아 보내도록 요구합니다.
+#
+# 저장소가 공개되어 있으므로 개인 이메일을 코드에 직접 적지 않습니다.
+# 대신 아래 순서로 찾습니다:
+#   ① 환경변수 SEC_IDENTITY (Streamlit Cloud의 Secrets에 넣으면 비공개로 유지됩니다)
+#   ② 없으면 아래 기본값 (프로젝트 주소를 연락처로 사용)
+#
+# 💡 Streamlit Cloud에서 본인 이메일을 비공개로 설정하는 방법:
+#    앱 화면 오른쪽 아래 ⋮ → Settings → Secrets 에 아래 한 줄을 넣고 저장
+#        SEC_IDENTITY = "이름 본인이메일@example.com"
+#    Secrets는 저장소에 올라가지 않아 다른 사람이 볼 수 없습니다.
+DEFAULT_SEC_IDENTITY = "Trend Dashboard (github.com/j2h5516-star/Model)"
+
+
+def get_sec_identity() -> str:
+    """SEC에 보낼 요청자 신원을 돌려줍니다 (환경변수 우선)."""
+    return os.environ.get("SEC_IDENTITY", "").strip() or DEFAULT_SEC_IDENTITY
+
+
+# 예전 이름 호환용 (다른 파일에서 참조하던 코드가 깨지지 않도록)
+SEC_IDENTITY = get_sec_identity()
 
 # 내려받은 SEC 파일을 저장해 둘 폴더 (재실행 시 다시 받지 않음)
 CACHE_DIR = "data"

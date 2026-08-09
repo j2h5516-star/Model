@@ -19,6 +19,8 @@ app.py — 추세추종 대시보드 v2 (Streamlit)
 
 from __future__ import annotations
 
+import os
+
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
@@ -27,6 +29,15 @@ from plotly.subplots import make_subplots
 import config as cfg
 import explain
 import pipeline
+
+# SEC에 보낼 요청자 신원을 Streamlit Secrets에서 읽어옵니다.
+# Secrets는 저장소에 올라가지 않아 개인 이메일을 비공개로 유지할 수 있습니다.
+# (설정하지 않아도 기본값으로 동작합니다)
+try:
+    if "SEC_IDENTITY" in st.secrets:
+        os.environ["SEC_IDENTITY"] = str(st.secrets["SEC_IDENTITY"])
+except Exception:
+    pass  # Secrets 파일이 없어도 앱은 정상 동작해야 합니다
 
 # ---------------------------------------------------------------------------
 # 페이지 기본 설정
