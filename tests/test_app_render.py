@@ -29,13 +29,26 @@ M = 1_000_000
 FAKE_TICKERS = ["AAA", "BBB"]
 
 
-def _fake_prices(tickers, include_current_week=True):
-    """pipeline.fetch_prices 를 대신할 가상 주가 계산"""
-    daily_map = {
+def _fake_daily(tickers):
+    """market_data.fetch_daily_data 를 대신할 가상 일봉 데이터.
+
+    CCC는 일부러 빼서 "주가를 못 받은 종목" 경로를 검증합니다.
+    (앱은 이제 증분 저장소 → fetch_daily_data 경로로 주가를 받습니다)
+    """
+    available = {
         "AAA": trending_daily(900, 0.004),                      # 강한 상승
         "BBB": trending_daily(900, -0.003, start_price=100.0),  # 하락
         cfg.BENCHMARK: trending_daily(900, 0.001),
     }
+    wanted = list(tickers) + [cfg.BENCHMARK]
+    daily_map = {t: available[t] for t in wanted if t in available}
+    failed = [t for t in wanted if t not in available]
+    return daily_map, failed
+
+
+def _fake_prices(tickers, include_current_week=True):
+    """(호환용) pipeline.fetch_prices 를 대신할 가상 주가 계산"""
+    daily_map, _ = _fake_daily(tickers)
     wanted = [t for t in tickers if t in daily_map]
     price_map, weekly_map = md.analyze_prices(daily_map, tickers=wanted)
     return price_map, weekly_map, ["CCC"]
@@ -80,24 +93,38 @@ def _fake_bundle(ticker, use_cache=True, with_fundamentals=True):
     }
 
 
+def _clear_streamlit_caches():
+    """테스트 사이에 cache_data와 cache_resource(주가 저장소)를 모두 비웁니다."""
+    st.cache_data.clear()
+    try:
+        st.cache_resource.clear()
+    except Exception:
+        pass
+
+
+def _no_sleep(_seconds):
+    """재시도 대기를 건너뛰어 테스트를 빠르게 합니다."""
+
+
 def _run_app(with_fundamentals=True, tickers=None):
     """가상 데이터를 넣고 앱을 실행합니다."""
-    st.cache_data.clear()
+    _clear_streamlit_caches()
     at = AppTest.from_file(APP_PATH)
     at.query_params["tickers"] = ",".join(tickers or FAKE_TICKERS)
 
     def bundle(ticker, use_cache=True):
         return _fake_bundle(ticker, use_cache, with_fundamentals)
 
-    with patch("pipeline.fetch_prices", side_effect=_fake_prices), \
+    with patch("market_data.fetch_daily_data", side_effect=_fake_daily), \
+         patch("time.sleep", side_effect=_no_sleep), \
          patch("pipeline.collect_one_ticker", side_effect=bundle):
         at.run(timeout=120)
     return at
 
 
 def test_renders_with_full_data():
-    """정상 데이터로 화면 전체가 에러 없이 그려져야 함"""
-    at = _run_app(True)
+    """정상 데이터로 화면 전체가 에러 없이 그려져야 함 (CCC는 주가 실패 경로)"""
+    at = _run_app(True, tickers=["AAA", "BBB", "CCC"])
 
     assert not at.exception, [e.value for e in at.exception]
     assert len(at.dataframe) >= 1, "순위 표가 없음"
@@ -110,7 +137,7 @@ def test_renders_with_full_data():
     # 상세 설명 팝오버 내용
     for keyword in ("이게 무슨 뜻인가요", "계산 방법", "이 종목의 실제 숫자", "앞으로의 예측"):
         assert keyword in all_text, f"상세 설명에 '{keyword}'가 없음"
-    # 주가 실패 안내
+    # 주가 실패 안내 (재시도까지 실패한 종목)
     assert any("CCC" in w.value for w in at.warning), "실패 종목 안내가 없음"
 
 
@@ -132,7 +159,7 @@ def test_confidence_and_diagnostics_sections():
 
 
 def test_ranking_table_has_new_columns():
-    """순위 표에 신뢰도·델타예측 열이 있어야 함"""
+    """순위 표에 주가($)·신뢰도·델타예측·델타가속예측 열이 있어야 함"""
     at = _run_app(True)
 
     assert not at.exception, [e.value for e in at.exception]
@@ -140,8 +167,10 @@ def test_ranking_table_has_new_columns():
     for df in at.dataframe:
         columns = list(getattr(df.value, "columns", []))
         if "최종점수" in columns:
+            assert "주가($)" in columns, columns
             assert "신뢰도" in columns, columns
             assert "델타예측" in columns, columns
+            assert "델타가속예측" in columns, columns
             ranking_found = True
             break
     assert ranking_found, "순위 표를 찾지 못함"
@@ -149,11 +178,12 @@ def test_ranking_table_has_new_columns():
 
 def test_ticker_switching():
     """다른 종목을 선택해도 에러 없이 다시 그려져야 함"""
-    st.cache_data.clear()
+    _clear_streamlit_caches()
     at = AppTest.from_file(APP_PATH)
     at.query_params["tickers"] = ",".join(FAKE_TICKERS)
 
-    with patch("pipeline.fetch_prices", side_effect=_fake_prices), \
+    with patch("market_data.fetch_daily_data", side_effect=_fake_daily), \
+         patch("time.sleep", side_effect=_no_sleep), \
          patch("pipeline.collect_one_ticker", side_effect=_fake_bundle):
         at.run(timeout=120)
         at.selectbox[0].select("BBB")
@@ -171,11 +201,12 @@ def test_renders_without_fundamentals():
 
 def test_empty_scores_shows_message():
     """분석 가능한 종목이 0개면 에러 화면 대신 안내를 보여줘야 함"""
-    st.cache_data.clear()
+    _clear_streamlit_caches()
     at = AppTest.from_file(APP_PATH)
-    at.query_params["tickers"] = "ZZZ"
+    at.query_params["tickers"] = "ZZZ"   # 가상 데이터에 없는 종목 → 주가 실패
 
-    with patch("pipeline.fetch_prices", return_value=({}, {}, ["ZZZ"])), \
+    with patch("market_data.fetch_daily_data", side_effect=_fake_daily), \
+         patch("time.sleep", side_effect=_no_sleep), \
          patch("pipeline.collect_one_ticker", side_effect=_fake_bundle):
         at.run(timeout=120)
 
@@ -185,11 +216,11 @@ def test_empty_scores_shows_message():
 
 def test_pipeline_failure_is_handled():
     """주가 수집이 예외를 던져도 앱이 죽지 않고 안내를 보여줘야 함"""
-    st.cache_data.clear()
+    _clear_streamlit_caches()
     at = AppTest.from_file(APP_PATH)
     at.query_params["tickers"] = ",".join(FAKE_TICKERS)
 
-    with patch("pipeline.fetch_prices", side_effect=RuntimeError("네트워크 오류")):
+    with patch("market_data.fetch_daily_data", side_effect=RuntimeError("네트워크 오류")):
         at.run(timeout=120)
 
     assert not at.exception, [e.value for e in at.exception]
@@ -211,7 +242,7 @@ def test_stale_config_shows_reboot_guide():
     original = cfg.CONFIG_VERSION
     try:
         cfg.CONFIG_VERSION = 0   # 옛 설정 파일이 붙들려 있는 상황을 흉내
-        with patch("pipeline.fetch_prices", side_effect=_fake_prices), \
+        with patch("market_data.fetch_daily_data", side_effect=_fake_daily), \
              patch("pipeline.collect_one_ticker", side_effect=_fake_bundle):
             at.run(timeout=120)
     finally:

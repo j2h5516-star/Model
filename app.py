@@ -29,6 +29,7 @@ from plotly.subplots import make_subplots
 import config as cfg
 import explain
 import pipeline
+import storage
 
 # ---------------------------------------------------------------------------
 # 설정 파일이 최신인지 먼저 확인합니다
@@ -36,7 +37,7 @@ import pipeline
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 3
+REQUIRED_CONFIG_VERSION = 4
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -264,26 +265,61 @@ def load_one_ticker(ticker: str, use_cache: bool):
     return pipeline.collect_one_ticker(ticker, use_cache)
 
 
-@st.cache_data(ttl=3600, show_spinner=False)
-def load_prices(tickers: tuple[str, ...], include_current_week: bool):
-    """주가는 여러 종목을 한 번에 받는 편이 빨라 묶어서 캐시합니다."""
-    return pipeline.fetch_prices(list(tickers), include_current_week)
+@st.cache_resource
+def _price_store() -> dict:
+    """종목별 주가 저장소 — 종목을 추가해도 새 종목만 받아옵니다.
+
+    여러 사용자 세션이 같은 저장소를 공유하므로, 동시에 갱신해도
+    중복 다운로드·데이터 역행이 없도록 락을 함께 둡니다.
+    """
+    import threading
+
+    return {"data": {}, "ts": {}, "lock": threading.Lock()}
 
 
 def load_all(tickers: list[str], include_current_week: bool, use_cache: bool = True):
     """종목별 캐시를 모아 최종 결과를 만듭니다."""
-    price_map, weekly_map, failed = load_prices(tuple(tickers), include_current_week)
+    # 주가: 저장소에 없는 종목만 받아옵니다 (야후 거부 시 자동 재시도 포함)
+    store = _price_store()
+    with st.spinner("주가 데이터를 확인하는 중..."):
+        failed, stale = pipeline.refresh_price_store(store, tickers)
 
-    bundles = {}
-    progress = st.progress(0.0, text="실적 자료를 모으는 중...")
-    for index, ticker in enumerate(tickers, start=1):
-        progress.progress(
-            index / max(len(tickers), 1), text=f"실적 자료를 모으는 중... ({ticker})"
+    # 기준 지수(SPY)는 종목 목록이 아니므로 실패 경고에서 분리해 별도 안내
+    if cfg.BENCHMARK in failed or cfg.BENCHMARK in stale:
+        st.info(
+            f"기준 지수({cfg.BENCHMARK}) 갱신에 실패해 상대강도(RS)가 "
+            "이전 데이터 기준이거나 비어 있을 수 있습니다."
         )
-        try:
-            bundles[ticker] = load_one_ticker(ticker, use_cache)
-        except Exception as exc:
-            bundles[ticker] = pipeline.empty_bundle(ticker, str(exc)[:120])
+    failed = [t for t in failed if t != cfg.BENCHMARK]
+    stale = [t for t in stale if t != cfg.BENCHMARK]
+    if stale:
+        st.info(
+            f"다음 종목은 갱신에 실패해 **이전 시점의 주가**로 표시 중입니다: "
+            f"{', '.join(stale)} (5분 후 자동 재시도)"
+        )
+
+    price_map, weekly_map = pipeline.prices_from_store(store, tickers, include_current_week)
+
+    # 실적: 여러 종목을 동시에 받습니다 (순차 처리는 종목이 많으면 수 분 걸립니다)
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    bundles: dict[str, dict] = {}
+    todo = list(tickers)
+    progress = st.progress(0.0, text="실적 자료를 모으는 중...")
+    done_count = 0
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        futures = {pool.submit(load_one_ticker, t, use_cache): t for t in todo}
+        for future in as_completed(futures):
+            ticker = futures[future]
+            done_count += 1
+            progress.progress(
+                done_count / max(len(todo), 1),
+                text=f"실적 자료를 모으는 중... ({done_count}/{len(todo)})",
+            )
+            try:
+                bundles[ticker] = future.result()
+            except Exception as exc:
+                bundles[ticker] = pipeline.empty_bundle(ticker, str(exc)[:120])
     progress.empty()
 
     return pipeline.assemble(tickers, price_map, weekly_map, bundles, failed)
@@ -292,24 +328,39 @@ def load_all(tickers: list[str], include_current_week: bool, use_cache: bool = T
 def clear_all_caches():
     """저장된 자료를 모두 비웁니다 (새로고침 버튼용)."""
     load_one_ticker.clear()
-    load_prices.clear()
+    _price_store.clear()
 
 
 # ---------------------------------------------------------------------------
 # 종목 목록 관리 — 주소(URL)에 저장해 다음에 열어도 유지됩니다
 # ---------------------------------------------------------------------------
-def read_tickers_from_url() -> list[str]:
-    """주소의 ?tickers=... 를 읽습니다. 없으면 기본 목록을 씁니다."""
-    raw = st.query_params.get("tickers", "")
-    if not raw:
-        return list(cfg.TICKERS)
+import re as _re
 
-    tickers = []
-    for piece in raw.replace(" ", "").split(","):
-        symbol = piece.strip().upper()
-        if symbol and symbol not in tickers:
-            tickers.append(symbol)
-    return tickers or list(cfg.TICKERS)
+# 티커로 인정하는 형식: 영문 대문자·숫자·점·하이픈 1~10자 (예: BRK.B, MOG-A)
+# 주소(URL)는 누구나 편집할 수 있으므로 이상한 값이 목록에 들어오지 않게 거릅니다.
+_TICKER_RE = _re.compile(r"^[A-Z0-9.\-]{1,10}$")
+
+
+def read_tickers_from_url() -> list[str]:
+    """종목 목록을 정합니다: 주소(URL) → 저장 파일 → 기본 목록 순서."""
+    raw = st.query_params.get("tickers", "")
+    if raw:
+        tickers = []
+        for piece in str(raw).replace(" ", "").split(","):
+            symbol = piece.strip().upper()
+            if symbol and _TICKER_RE.match(symbol) and symbol not in tickers:
+                tickers.append(symbol)
+            if len(tickers) >= cfg.MAX_TICKERS:   # 주소로 상한을 우회하지 못하게
+                break
+        if tickers:
+            return tickers
+
+    # 주소에 없으면 저장 버튼으로 남긴 목록을 찾습니다
+    saved = storage.load_saved_tickers()
+    if saved:
+        return saved[: cfg.MAX_TICKERS]
+
+    return list(cfg.TICKERS)
 
 
 def write_tickers_to_url(tickers: list[str]) -> None:
@@ -352,10 +403,16 @@ with st.sidebar:
     if st.button("➕ 추가", width="stretch", disabled=not new_symbol):
         if new_symbol in st.session_state.tickers:
             st.warning(f"{new_symbol}은(는) 이미 목록에 있습니다")
+        elif len(st.session_state.tickers) >= cfg.MAX_TICKERS:
+            st.error(
+                f"종목은 최대 {cfg.MAX_TICKERS}개까지입니다. "
+                "수집 시간이 길어지고 야후가 요청을 거부할 수 있어 제한을 둡니다."
+            )
         elif not ticker_exists(new_symbol):
             st.error(f"{new_symbol}을(를) 찾을 수 없습니다. 티커를 다시 확인해 주세요")
         else:
             st.session_state.tickers.append(new_symbol)
+            st.session_state.last_added = new_symbol   # 추가 직후 수집 결과를 보여주기 위해
             write_tickers_to_url(st.session_state.tickers)
             st.rerun()
 
@@ -380,7 +437,42 @@ with st.sidebar:
         if st.button("↩️ 기본 목록으로 되돌리기", width="stretch"):
             st.session_state.tickers = list(cfg.TICKERS)
             write_tickers_to_url(st.session_state.tickers)
+            # 저장 파일도 기본 목록으로 덮어써야 다음에 켰을 때 진짜로 되돌아갑니다
+            storage.save_tickers_local(cfg.TICKERS)
             st.rerun()
+
+    # --- 저장 버튼: 다음에 앱을 켜도 이 목록이 유지되게 합니다 ---
+    if st.button("💾 이 목록 저장", width="stretch"):
+        write_tickers_to_url(st.session_state.tickers)
+        local_ok = storage.save_tickers_local(st.session_state.tickers)
+
+        # GitHub 토큰이 Secrets에 있으면 저장소에도 커밋 (완전 영구)
+        github_message = ""
+        try:
+            token = str(st.secrets.get("GITHUB_TOKEN", "")).strip()
+            repo = str(st.secrets.get("GITHUB_REPO", "j2h5516-star/Model")).strip()
+        except Exception:
+            token, repo = "", ""
+        if token:
+            ok, github_message = storage.commit_tickers_github(
+                st.session_state.tickers, token, repo
+            )
+            (st.success if ok else st.warning)(github_message)
+            if ok:
+                st.caption(
+                    "ℹ️ 저장소에 커밋되면 앱이 1~2분간 자동 재시작될 수 있습니다. "
+                    "재시작 후에도 목록은 그대로 유지됩니다."
+                )
+
+        if local_ok:
+            st.success("저장했습니다. 앱을 다시 켜도 이 목록으로 시작합니다.")
+        else:
+            st.warning("서버 파일 저장에 실패했습니다. 주소(URL) 저장은 유지됩니다.")
+        if not token:
+            st.caption(
+                "🔒 코드를 새로 올려도 유지되는 **완전 영구 저장**을 원하시면 "
+                "Settings → Secrets 에 `GITHUB_TOKEN` 을 넣어 주세요 (README 참고)."
+            )
 
     st.info(
         "💡 지금 주소를 **홈 화면에 추가**해두면 이 종목 목록이 그대로 유지됩니다.",
@@ -455,11 +547,40 @@ if not scores:
 st.caption(f"🕐 마지막 업데이트: **{result['updated_at'].strftime('%Y-%m-%d %H:%M')}**")
 
 if result["failed"]:
-    st.warning(f"주가 데이터를 받지 못한 종목: {', '.join(result['failed'])}")
+    st.warning(
+        f"주가 데이터를 받지 못한 종목: {', '.join(result['failed'])} — "
+        "야후가 일시적으로 거부했을 수 있습니다. 잠시 후 🔄 새로고침을 눌러 주세요."
+    )
 if result["no_fundamentals"]:
     st.info(
         f"실적 데이터를 찾지 못해 주가 지표만 반영된 종목: {', '.join(result['no_fundamentals'])}"
     )
+
+# 방금 추가한 종목의 수집 결과를 바로 보여줍니다 (데이터 없이 등록만 되는 것 방지)
+last_added = st.session_state.pop("last_added", None)
+if last_added:
+    added_report = next(
+        (r for r in (result.get("reports") or []) if r.get("ticker") == last_added), None
+    )
+    if last_added in result["failed"]:
+        st.error(f"➕ {last_added}: 주가를 받지 못했습니다. 🔄 새로고침으로 다시 시도해 주세요.")
+    elif added_report is None or last_added not in scores:
+        st.warning(f"➕ {last_added}: 수집 결과를 확인하지 못했습니다. 아래 진단 패널을 봐 주세요.")
+    else:
+        quarters_count = len(scores[last_added]["quarters"])
+        direct_count = added_report.get("merged_direct", 0)
+        if quarters_count > 0:
+            st.success(
+                f"➕ {last_added} 추가 완료 — 분기 {quarters_count}개 수집 "
+                f"(공시 기반 {direct_count}개), 신뢰도 {scores[last_added]['confidence']:.0f}%. "
+                "다른 종목과 완전히 같은 조건으로 비교됩니다."
+            )
+        else:
+            st.warning(
+                f"➕ {last_added}: 주가는 받았지만 SEC 실적을 찾지 못했습니다 "
+                "(신규 상장이거나 공시 형식이 특이할 수 있습니다). "
+                "기술 점수만 반영되며, 아래 🔧 진단 패널에서 원인을 볼 수 있습니다."
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -575,10 +696,11 @@ styled = (
     ranking.style.map(_style_verdict, subset=["판정"])
     .map(_style_score, subset=["최종점수", "펀더", "기술"])
     .map(_style_confidence, subset=["신뢰도"])
-    .map(_style_delta, subset=["델타방향", "델타예측"])
+    .map(_style_delta, subset=["델타방향", "델타예측", "델타가속예측"])
     .map(_style_rs, subset=["RS"])
     .format(
         {
+            "주가($)": "{:,.2f}",
             "최종점수": "{:.0f}", "펀더": "{:.0f}", "기술": "{:.0f}",
             "신뢰도": "{:.0f}%", "RS": "{:+.1f}%p",
         },
@@ -765,7 +887,7 @@ with row2[0]:
     with st.popover(f"📊 GM% 드라이버: {detail['gm_type']}", width="stretch"):
         render_explanation(explain.explain_gm_driver(detail))
 with row2[1]:
-    with st.popover(f"⚡ 델타: {detail['delta_direction']} → {detail['delta_forecast']}", width="stretch"):
+    with st.popover(f"⚡ 델타: {detail['delta_direction']} → {detail['accel_forecast']}", width="stretch"):
         render_explanation(explain.explain_delta(detail))
 with row2[2]:
     with st.popover(f"📈 기술 점수: {detail['tech_score']:.0f}점", width="stretch"):
@@ -817,11 +939,22 @@ else:
     labels = quarters_df["period_label"].tolist()
     op_values = quarters_df["op_income"].tolist()
 
+    # 미래 구간: 다음 분기(가이던스/추정) + 다다음 분기(컨센서스)
     forward_op = detail["forward_op_income"]
+    forward_op_2 = detail.get("forward_op_income_2")
+    future_labels = []
+    future_values = []
     if forward_op is not None:
-        labels = labels + ["다음(전망)"]
-        forward_bar = [None] * len(op_values) + [forward_op]
-        op_bar = op_values + [None]
+        future_labels.append("다음(전망)")
+        future_values.append(forward_op)
+        if forward_op_2 is not None:
+            future_labels.append("다다음(전망)")
+            future_values.append(forward_op_2)
+
+    if future_labels:
+        labels = labels + future_labels
+        forward_bar = [None] * len(op_values) + future_values
+        op_bar = op_values + [None] * len(future_labels)
     else:
         forward_bar = None
         op_bar = op_values
@@ -863,7 +996,7 @@ else:
     if "qoq_pct" in quarters_df.columns:
         qoq_values = quarters_df["qoq_pct"].tolist()
         if forward_bar is not None:
-            qoq_values = qoq_values + [None]
+            qoq_values = qoq_values + [None] * len(future_labels)
         fig.add_trace(
             go.Scatter(
                 x=labels,
@@ -877,6 +1010,34 @@ else:
             ),
             secondary_y=True,
         )
+
+        # 미래 증가율 경로를 점선으로 이어 그립니다 (델타가속예측의 시각화)
+        forecast_info = detail.get("forecast_detail") or {}
+        next_qoq = forecast_info.get("next_qoq")
+        next2_qoq = forecast_info.get("next2_qoq")
+        # None뿐 아니라 NaN(pandas 빈 값)도 걸러야 점선이 정상적으로 그려집니다
+        last_actual_qoq = next(
+            (v for v in reversed(qoq_values) if v is not None and pd.notna(v)), None
+        )
+        if next_qoq is not None and last_actual_qoq is not None and future_labels:
+            last_actual_label = quarters_df["period_label"].tolist()[-1]
+            future_x = [last_actual_label, future_labels[0]]
+            future_y = [last_actual_qoq, next_qoq]
+            if next2_qoq is not None and len(future_labels) >= 2:
+                future_x.append(future_labels[1])
+                future_y.append(next2_qoq)
+            fig.add_trace(
+                go.Scatter(
+                    x=future_x,
+                    y=future_y,
+                    name="증가율 예측 경로",
+                    mode="lines+markers",
+                    line=dict(color="#f59e0b", width=2, dash="dot"),
+                    marker=dict(size=7, symbol="diamond-open"),
+                    hovertemplate="%{x}<br>예상 QoQ %{y:+.1f}%<extra></extra>",
+                ),
+                secondary_y=True,
+            )
 
     fig.update_layout(
         template="plotly_dark",
@@ -902,8 +1063,8 @@ else:
     st.plotly_chart(fig, width="stretch", config=PLOTLY_CONFIG)
 
     st.markdown(
-        '<div class="chart-note">초록 막대가 이익 크기, 주황 선이 "전분기 대비 얼마나 빨리 늘고 있는가"입니다. '
-        "주황 선이 우상향이면 가속(성장에 탄력), 우하향이면 감속입니다. "
+        '<div class="chart-note">초록 막대가 이익 크기, 주황 실선이 "전분기 대비 얼마나 빨리 늘고 있는가"입니다. '
+        "주황 <b>점선</b>은 다음·다다음 분기의 <b>예상 경로</b>(가이던스·월가 컨센서스 기반 추정)입니다. "
         "빗금 무늬 막대는 아직 발표되지 않은 <b>추정치</b>입니다.</div>",
         unsafe_allow_html=True,
     )
@@ -1022,9 +1183,11 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
                     "실적판별": r.get("gate_passed", 0),
                     "숫자추출": r.get("parsed_ok", 0),
                     "공시반영": r.get("merged_direct", 0),
+                    "짝못찾음": r.get("unpaired_press", 0),
                     "텍스트출처": r.get("text_source", "") or "-",
+                    "전망수집": r.get("forward_note", "") or "정상",
                     "첫 오류": r.get("first_error", "") or "-",
-                    "비고": r.get("note", "") or "-",
+                    "비고": (r.get("pair_note") or r.get("note") or "-"),
                 }
                 for r in reports
             ]

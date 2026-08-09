@@ -393,10 +393,22 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
     revision = forward.get("revision", 0)
 
     # 전망 자체 점수 (최대 10점)
-    if forward_op is None or latest_op is None or latest_op <= 0:
+    if forward_op is None or latest_op is None:
         forward_score = max_score * 0.4
         growth_text = "다음 분기 전망치를 구하지 못했습니다"
         growth_pct = None
+    elif latest_op <= 0:
+        # 적자 기저에서는 증가율(%)이 의미가 없으므로 전환/개선 여부로 평가합니다
+        growth_pct = None
+        if forward_op > 0:
+            forward_score = max_score * 0.67 * 0.9
+            growth_text = f"적자에서 흑자 전환 전망({ '$%.0fM' % (forward_op/1e6) })"
+        elif forward_op > latest_op:
+            forward_score = max_score * 0.67 * 0.5
+            growth_text = "적자 축소 전망 (기저가 적자라 증가율 대신 개선 여부로 평가)"
+        else:
+            forward_score = max_score * 0.67 * 0.1
+            growth_text = "적자 확대 전망"
     else:
         growth_pct = (forward_op / latest_op - 1.0) * 100.0
         # −10% ~ +30% 구간을 0~10점으로 환산
@@ -405,8 +417,19 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
         growth_text = f"다음 분기 영업이익 전망이 이번 분기 대비 {growth_pct:+.1f}%"
 
     # 리비전 점수 (최대 5점)
-    revision_score = {1: max_score * 0.33, 0: max_score * 0.17, -1: 0.0}[revision]
-    revision_text = {1: "애널리스트 전망 상향 ↗", 0: "전망 변화 없음 →", -1: "전망 하향 ↘"}[revision]
+    # 추정치가 30일간 몇 % 움직였는지(속도)가 있으면 그것으로 정밀하게,
+    # 없으면 상향/하향 방향만으로 계산합니다.
+    import math
+
+    velocity = forward.get("revision_velocity_pct")
+    if velocity is not None and math.isfinite(velocity):
+        full = cfg.REVISION_VELOCITY_FULL_PCT   # ±5%에서 최저/최고점
+        ratio = _clamp((velocity + full) / (2 * full), 0.0, 1.0)
+        revision_score = ratio * (max_score * 0.33)
+        revision_text = f"애널리스트 추정치 30일간 {velocity:+.1f}% 변화"
+    else:
+        revision_score = {1: max_score * 0.33, 0: max_score * 0.17, -1: 0.0}[revision]
+        revision_text = {1: "애널리스트 전망 상향 ↗", 0: "전망 변화 없음 →", -1: "전망 하향 ↘"}[revision]
 
     return {
         "score": round(forward_score + revision_score, 1),
@@ -430,35 +453,41 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
 # 기술 점수 (100점)
 # ---------------------------------------------------------------------------
 def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> dict:
-    """다음 분기 전망치로 "앞으로 가속이 이어질지"를 미리 봅니다.
+    """전망치로 "앞으로 가속이 이어질지"를 미리 봅니다.
 
-    다음 분기 예상 QoQ 증가율을 계산해 최근 실제 증가율과 비교합니다.
-      예상이 더 높다  → 가속 지속 ↗↗
-      가속이었는데 낮아짐 → 가속 둔화 ↗↘
-      감속인데 계속 낮음  → 감속 지속 ↘↘
-      감속이었는데 높아짐 → 반등 ↘↗
+    두 단계로 봅니다:
+      · 델타예측 (다음 분기): 다음 분기 예상 QoQ vs 최근 실제 QoQ
+      · 델타가속예측 (2분기 경로): 가이던스(다음 분기) + 월가 컨센서스(다다음 분기)로
+        증가율이 두 분기에 걸쳐 어떤 길을 갈지 판정
     """
     growths = delta_result.get("trace", {}).get("growths", [])
     latest_op = next(
         (q["op_income"] for q in reversed(quarters) if q.get("op_income") is not None), None
     )
     forward_op = forward.get("forward_op_income")
+    forward_op_2 = forward.get("forward_op_income_2")
 
+    empty = {
+        "label": cfg.F_NONE,
+        "accel_label": cfg.F2_NONE,
+        "next_qoq": None,
+        "next2_qoq": None,
+        "change_pp": None,
+        "basis": forward.get("basis"),
+        "basis_2": forward.get("basis_2"),
+        "confidence": cfg.CONFIDENCE_PCT.get(forward.get("basis"), 0),
+        "detail": "다음 분기 전망치가 없어 예측할 수 없습니다",
+        "accel_detail": "",
+    }
     if forward_op is None or latest_op is None or latest_op <= 0 or not growths:
-        return {
-            "label": cfg.F_NONE,
-            "next_qoq": None,
-            "change_pp": None,
-            "basis": forward.get("basis"),
-            "confidence": cfg.CONFIDENCE_PCT.get(forward.get("basis"), 0),
-            "detail": "다음 분기 전망치가 없어 예측할 수 없습니다",
-        }
+        return empty
 
-    next_qoq = (forward_op / latest_op - 1.0) * 100.0
-    last_qoq = growths[-1]
-    change = next_qoq - last_qoq
     threshold = cfg.DELTA_THRESHOLD_PP
+    last_qoq = growths[-1]
 
+    # --- 델타예측 (다음 분기 하나) ---
+    next_qoq = (forward_op / latest_op - 1.0) * 100.0
+    change = next_qoq - last_qoq
     was_rising = last_qoq >= 0
 
     if change > threshold:
@@ -468,17 +497,60 @@ def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> di
     else:
         label = cfg.F_FLAT
 
+    # --- 델타가속예측 (2분기 경로) ---
+    next2_qoq = None
+    if forward_op_2 is not None and forward_op > 0:
+        next2_qoq = (forward_op_2 / forward_op - 1.0) * 100.0
+
+    if next2_qoq is None:
+        # 다다음 분기 자료가 없으면 다음 분기 예측을 그대로 씁니다
+        accel_label = label if label != cfg.F_NONE else cfg.F2_NONE
+        accel_detail = "다다음 분기 컨센서스가 없어 다음 분기까지만 예측했습니다"
+    else:
+        # 1단계 변화(실제→다음)와 2단계 변화(다음→다다음)의 방향을 조합합니다.
+        # 단분기 판정과 마찬가지로 "지금 증가 중인가(was_rising)"를 함께 봅니다:
+        # 감익 중인 종목이 회복되는 경로는 '가속'이 아니라 '반등'이기 때문입니다.
+        step1 = 1 if change > threshold else (-1 if change < -threshold else 0)
+        change2 = next2_qoq - next_qoq
+        step2 = 1 if change2 > threshold else (-1 if change2 < -threshold else 0)
+
+        if not was_rising and step1 > 0:
+            # 감익(-QoQ)에서 좋아지는 경로 = 반등 (정점 신호인 '가속 후 둔화'와 구분)
+            accel_label = cfg.F2_REBOUND
+        elif step1 > 0 and step2 >= 0:
+            accel_label = cfg.F2_ACCEL_KEEP
+        elif step1 > 0 and step2 < 0:
+            accel_label = cfg.F2_ACCEL_SLOW
+        elif step1 < 0 and step2 <= 0:
+            accel_label = cfg.F2_DECEL_KEEP
+        elif step1 < 0 and step2 > 0:
+            accel_label = cfg.F2_REBOUND
+        elif step1 == 0 and step2 > 0:
+            accel_label = cfg.F2_ACCEL_KEEP      # 유지하다가 후반 가속
+        elif step1 == 0 and step2 < 0:
+            accel_label = cfg.F2_DECEL_KEEP      # 유지하다가 후반 둔화
+        else:
+            accel_label = cfg.F2_FLAT
+        accel_detail = (
+            f"증가율 경로: 실제 {last_qoq:+.1f}% → 다음 {next_qoq:+.1f}% → "
+            f"다다음 {next2_qoq:+.1f}%"
+        )
+
     return {
         "label": label,
+        "accel_label": accel_label,
         "next_qoq": round(next_qoq, 1),
+        "next2_qoq": round(next2_qoq, 1) if next2_qoq is not None else None,
         "last_qoq": round(last_qoq, 1),
         "change_pp": round(change, 1),
         "basis": forward.get("basis"),
+        "basis_2": forward.get("basis_2"),
         "confidence": cfg.CONFIDENCE_PCT.get(forward.get("basis"), 0),
         "detail": (
             f"최근 실제 증가율 {last_qoq:+.1f}% → 다음 분기 예상 {next_qoq:+.1f}% "
             f"({change:+.1f}%p)"
         ),
+        "accel_detail": accel_detail,
     }
 
 
@@ -656,6 +728,9 @@ def build_score(ticker: str, quarters: list[dict], forward: dict, price_info: di
         "confidence": confidence["total"],
         "confidence_detail": confidence,
         "delta_forecast": forecast["label"],
+        "accel_forecast": forecast["accel_label"],
+        "forward_op_income_2": forward.get("forward_op_income_2"),
+        "forward_consensus": forward.get("consensus", {}),
         "forecast_detail": forecast,
         "source_derivation": (latest_quarter or {}).get("derivation", ""),
         "filing_url": (latest_quarter or {}).get("filing_url", ""),

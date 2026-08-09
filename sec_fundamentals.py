@@ -385,6 +385,9 @@ def new_report(ticker: str) -> dict:
         "merged_direct": 0,        # 8-K 값으로 덮어쓴 분기 수
         "text_source": "",         # 텍스트를 어디서 얻었나 (보도자료/첨부/본문)
         "first_error": "",         # 첫 예외 (원인 파악의 핵심)
+        "unpaired_press": 0,       # 분기와 짝을 못 찾은 8-K 건수
+        "pair_note": "",           # 짝짓기 실패 설명
+        "forward_note": "",        # 전망(컨센서스) 수집 실패 사유
         "note": "",
     }
 
@@ -413,6 +416,10 @@ def fetch_earnings_8k(
 
     scanned = 0
     for filing in filings:
+        # 필요한 만큼 숫자를 확보했으면 더 내려받지 않습니다 (속도)
+        if report["parsed_ok"] >= cfg.EARLY_STOP_PARSED:
+            report["note"] = f"실적 {report['parsed_ok']}건 확보 후 조기 종료"
+            break
         # 8-K는 실적 외 사유로도 자주 올라오므로 살펴볼 건수를 제한합니다
         if scanned >= cfg.MAX_8K_SCAN:
             report["note"] = f"8-K {cfg.MAX_8K_SCAN}건까지만 확인했습니다"
@@ -436,6 +443,12 @@ def fetch_earnings_8k(
         parsed = parse_press_release(text)
         if parsed["revenue"] is None and parsed["op_income"] is None:
             continue  # 실적 숫자가 전혀 없으면 실적발표가 아닐 가능성
+
+        # 보도자료 첨부가 아니라 공시 본문에서 읽은 경우에는 기준을 높입니다.
+        # (실적과 무관한 8-K 본문에서 엉뚱한 금액을 주워 담아
+        #  분기 짝짓기를 오염시키는 것을 실전에서 확인했습니다)
+        if not had_exhibit and parsed["op_income"] is None:
+            continue
         report["parsed_ok"] += 1
 
         filing_date = str(filing.filing_date)
@@ -800,7 +813,32 @@ def _period_series(facts, concept: str, months: int) -> dict[str, float]:
 # ---------------------------------------------------------------------------
 # 바깥에서 호출하는 함수
 # ---------------------------------------------------------------------------
-def merge_quarters(xbrl_quarters: list[dict], press_quarters: list[dict]) -> list[dict]:
+def _apply_press_to_row(row: dict, press: dict) -> None:
+    """8-K에서 실제로 뽑힌 값만 XBRL 행에 덮어씁니다 (없는 값은 XBRL 값 유지)."""
+    if press.get("op_income") is not None:
+        row["op_income"] = press["op_income"]
+        row["source"] = press.get("source") or cfg.SRC_DERIVED
+        row["derivation"] = press.get("derivation", "")
+        row["gm_is_gaap"] = press.get("gm_is_gaap", False)
+    if press.get("revenue") is not None:
+        row["revenue"] = press["revenue"]
+    if press.get("gross_margin_pct") is not None:
+        row["gross_margin_pct"] = press["gross_margin_pct"]
+    if press.get("period_label"):
+        row["period_label"] = press["period_label"]
+    if press.get("filing_url"):
+        row["filing_url"] = press["filing_url"]
+    if press.get("guidance_text"):
+        row["guidance_text"] = press["guidance_text"]
+    # 발표일 기준 정렬을 위해 8-K 제출일을 따로 남깁니다
+    row["announced_date"] = press.get("filing_date", "")
+
+
+def merge_quarters(
+    xbrl_quarters: list[dict],
+    press_quarters: list[dict],
+    report: dict | None = None,
+) -> list[dict]:
     """XBRL로 만든 뼈대에 8-K에서 뽑은 공식 논갭 수치를 덮어씁니다.
 
     예전에는 "8-K가 되면 8-K만, 안 되면 XBRL만" 이라서 하나라도 실패하면
@@ -826,21 +864,39 @@ def merge_quarters(xbrl_quarters: list[dict], press_quarters: list[dict]) -> lis
     merged = [dict(q) for q in xbrl_quarters]
     used_press: set[int] = set()
 
+    # --- 짝짓기 대상과 승격 대상 구분 ---
+    # 마지막 XBRL 분기보다 "한 분기 이상 뒤"(약 91일 + 최소 발표 간격 14일)에
+    # 제출된 8-K는 아직 XBRL에 없는 새 분기의 발표입니다. 이것을 과거 분기에
+    # 역방향으로 짝지으면 다른 분기 숫자로 덮어쓰는 오염이 생기므로,
+    # 짝짓기에서 빼고 아래 승격 단계에서 새 분기 행으로 추가합니다.
+    PROMOTE_AFTER_DAYS = 105
+    last_period = max(
+        (d for d in (_to_date(r.get("filing_date", "")) for r in merged) if d is not None),
+        default=None,
+    )
+    promote_only: set[int] = set()
+    if last_period is not None:
+        for index, press in enumerate(press_quarters):
+            press_date = _to_date(press.get("filing_date", ""))
+            if press_date is not None and (press_date - last_period).days > PROMOTE_AFTER_DAYS:
+                promote_only.add(index)
+
     for row in merged:
         period_date = _to_date(row.get("filing_date", ""))
         if period_date is None:
             continue
 
-        # 이 분기 종료 후 0~90일 사이에 나온 8-K 중 가장 가까운 것을 짝짓습니다
+        # 이 분기 종료 후 일정 기간 안에 나온 8-K 중 가장 가까운 것을 짝짓습니다
+        # (연말 분기는 10-K와 함께 늦게 발표하는 회사가 있어 창을 넉넉히 둡니다)
         best_index, best_gap = None, None
         for index, press in enumerate(press_quarters):
-            if index in used_press:
+            if index in used_press or index in promote_only:
                 continue
             press_date = _to_date(press.get("filing_date", ""))
             if press_date is None:
                 continue
             gap = (press_date - period_date).days
-            if 0 <= gap <= 90 and (best_gap is None or gap < best_gap):
+            if 0 <= gap <= cfg.PAIRING_WINDOW_DAYS and (best_gap is None or gap < best_gap):
                 best_index, best_gap = index, gap
 
         if best_index is None:
@@ -848,25 +904,89 @@ def merge_quarters(xbrl_quarters: list[dict], press_quarters: list[dict]) -> lis
 
         press = press_quarters[best_index]
         used_press.add(best_index)
+        _apply_press_to_row(row, press)
 
-        # 8-K에서 실제로 뽑힌 값만 덮어씁니다 (없는 값은 XBRL 값을 유지)
-        if press.get("op_income") is not None:
-            row["op_income"] = press["op_income"]
-            row["source"] = press.get("source") or cfg.SRC_DERIVED
-            row["derivation"] = press.get("derivation", "")
-            row["gm_is_gaap"] = press.get("gm_is_gaap", False)
-        if press.get("revenue") is not None:
-            row["revenue"] = press["revenue"]
-        if press.get("gross_margin_pct") is not None:
-            row["gross_margin_pct"] = press["gross_margin_pct"]
-        if press.get("period_label"):
-            row["period_label"] = press["period_label"]
-        if press.get("filing_url"):
-            row["filing_url"] = press["filing_url"]
-        if press.get("guidance_text"):
-            row["guidance_text"] = press["guidance_text"]
-        # 발표일 기준 정렬을 위해 8-K 제출일을 따로 남깁니다
-        row["announced_date"] = press.get("filing_date", "")
+    # --- 늦은 발표 흡수 (이중 계상 방지 ①) ---
+    # 마지막 XBRL 분기의 발표가 106~120일 뒤에 나온 경우(늦은 연간 보고),
+    # 승격 규칙에 걸려 새 분기로 추가되면 같은 분기가 근사치 행과 직접공시 행
+    # 두 개로 이중 계상됩니다(QoQ가 0% 부근으로 왜곡됨).
+    # → 마지막 XBRL 행이 아직 짝이 없고, 승격 후보의 매출이 그 행과 ±10% 이내로
+    #   거의 같으면(같은 분기의 GAAP vs 논갭 매출은 사실상 동일) 승격 대신 흡수합니다.
+    #   매출이 10% 넘게 다르면 다음 분기의 발표로 보고 승격을 유지합니다.
+    if merged and last_period is not None:
+        last_row = max(
+            (r for r in merged if _to_date(r.get("filing_date", "")) is not None),
+            key=lambda r: _to_date(r["filing_date"]),
+        )
+        if not last_row.get("announced_date"):
+            for index in sorted(
+                promote_only, key=lambda i: press_quarters[i].get("filing_date", "")
+            ):
+                if index in used_press:
+                    continue
+                press = press_quarters[index]
+                press_date = _to_date(press.get("filing_date", ""))
+                if press_date is None:
+                    continue
+                gap = (press_date - last_period).days
+                row_revenue = last_row.get("revenue")
+                press_revenue = press.get("revenue")
+                revenues_match = (
+                    row_revenue and press_revenue
+                    and abs(press_revenue / row_revenue - 1.0) <= 0.10
+                )
+                if 0 <= gap <= cfg.PAIRING_WINDOW_DAYS and revenues_match:
+                    _apply_press_to_row(last_row, press)
+                    used_press.add(index)
+                    break
+
+    # --- 최신 8-K 승격 (이중 계상 방지 ② 포함) ---
+    # 실적 8-K는 10-Q(XBRL)보다 몇 주 먼저 나옵니다. 그 사이에는 최신 분기의
+    # XBRL 행이 아직 없어 8-K가 짝을 못 찾는데, 이걸 버리면
+    #   · 가장 신선한 분기 실적이 사라지고
+    #   · 그 안의 최신 가이던스(다음 분기 전망)도 함께 사라집니다.
+    # → 모든 XBRL 분기보다 뒤에 제출됐고 영업이익이 있는 8-K는
+    #   새 분기 행으로 승격시킵니다.
+    # 같은 분기에 8-K가 2건(원본 + 정정 발표)인 경우를 대비해:
+    #   · 제출일 오름차순으로 돌아 최초 발표가 우선 채택되고
+    #   · 이미 승격한 발표와 60일 미만 간격(분기 간격은 ~91일)이면 같은 분기로
+    #     보고 건너뜁니다.
+    promoted_dates: list = []
+    for index in sorted(
+        range(len(press_quarters)), key=lambda i: press_quarters[i].get("filing_date", "")
+    ):
+        if index in used_press:
+            continue
+        press = press_quarters[index]
+        press_date = _to_date(press.get("filing_date", ""))
+        if press_date is None or press.get("op_income") is None:
+            continue
+        if last_period is not None and press_date <= last_period:
+            continue
+        if any(abs((press_date - d).days) < 60 for d in promoted_dates):
+            continue   # 같은 분기의 두 번째 발표 → 이중 계상 방지
+        promoted = dict(press)
+        promoted["announced_date"] = press.get("filing_date", "")
+        merged.append(promoted)
+        promoted_dates.append(press_date)
+        used_press.add(index)
+
+    merged.sort(key=lambda r: r.get("filing_date", ""))
+
+    # 짝을 못 찾은 8-K가 있으면 진단에 남깁니다 (짝짓기 실패 원인 추적용)
+    if report is not None:
+        unpaired = [
+            press.get("filing_date", "?")
+            for index, press in enumerate(press_quarters)
+            if index not in used_press
+        ]
+        report["unpaired_press"] = len(unpaired)
+        if unpaired:
+            report["pair_note"] = (
+                f"짝 못 찾은 8-K {len(unpaired)}건 (예: {unpaired[0]}) — "
+                f"분기 종료일과 {cfg.PAIRING_WINDOW_DAYS}일 넘게 떨어져 있거나 "
+                "실적발표가 아닐 수 있습니다"
+            )
 
     return merged
 
@@ -913,7 +1033,7 @@ def get_fundamentals(
         _record_error(report, "8-K", exc)
 
     # ③ 합치기
-    quarters = merge_quarters(xbrl_quarters, press_quarters)
+    quarters = merge_quarters(xbrl_quarters, press_quarters, report)
     report["merged_direct"] = sum(
         1 for q in quarters if q.get("source") in (cfg.SRC_DIRECT, cfg.SRC_DERIVED)
     )

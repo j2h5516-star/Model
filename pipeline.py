@@ -51,12 +51,21 @@ def collect_one_ticker(ticker: str, use_cache: bool = True) -> dict:
 
     try:
         forward = fe.estimate_forward(ticker, quarters)
+        # 컨센서스 수집 실패 사유를 진단에 남깁니다 (전망이 비는 원인 추적용)
+        errors = (forward.get("consensus") or {}).get("errors") or []
+        if errors:
+            report["forward_note"] = " · ".join(errors[:3])
     except Exception as exc:
         forward = {
             "forward_op_income": None,
             "basis": None,
+            "forward_op_income_2": None,
+            "basis_2": None,
             "revision": 0,
+            "revision_velocity_pct": None,
+            "consensus": {},
             "detail": "전망 계산 중 문제가 발생했습니다",
+            "detail_2": "",
         }
         if not report.get("first_error"):
             report["first_error"] = f"[전망] {type(exc).__name__}: {str(exc)[:180]}"
@@ -82,10 +91,126 @@ def empty_bundle(ticker: str, reason: str = "") -> dict:
 
 
 # ---------------------------------------------------------------------------
-# 2) 주가 (여러 종목을 한 번에 받는 편이 빨라 묶어서 처리)
+# 2) 주가 — 종목 단위 증분 저장소
 # ---------------------------------------------------------------------------
+# 예전에는 종목 목록 전체를 통째로 캐시해서, 티커를 하나만 추가해도
+# 전 종목을 다시 내려받았습니다. 그때 야후가 요청 폭주로 일부를 거부하면
+# 새 종목이 데이터 없이 등록되는 문제가 있었습니다.
+# 이제는 저장소(store)에 종목별로 담아 두고 "없는 종목만" 받아옵니다.
+
+PRICE_TTL_SEC = 3600.0        # 종목별 주가를 1시간 동안 재사용
+PRICE_RETRY_BACKOFF_SEC = 300.0   # 갱신 실패 시 5분 뒤에만 재시도 (야후 폭주 방지)
+PRICE_STORE_CAP = 80          # 저장소에 담아 둘 최대 종목 수 (삭제한 종목 정리)
+
+
+def refresh_price_store(
+    store: dict,
+    tickers: list[str],
+    fetch=None,
+    now: float | None = None,
+    sleep=None,
+) -> tuple[list[str], list[str]]:
+    """저장소에 없는(또는 오래된) 종목을 받아 채웁니다.
+
+    반환: (failed, stale)
+      failed = 데이터가 아예 없는 종목 (화면에서 제외됨)
+      stale  = 갱신에는 실패했지만 이전 데이터로 계속 표시 중인 종목 (안내 필요)
+
+    설계 메모:
+      · 만료된 종목이 하나라도 있으면 목록 전체를 함께 다시 받습니다.
+        종목마다 시점이 다른 주가가 한 순위표에 섞이면 상대강도(RS)가 왜곡되어
+        매수 후보 정렬이 뒤집힐 수 있기 때문입니다. (한 번의 일괄 요청이라 저렴)
+      · 새 종목만 추가된 경우에는 그 종목만 받습니다 (티커 추가가 빨라야 하므로)
+      · 여러 사용자가 동시에 접속해도 중복 다운로드가 나지 않게 락으로 감쌉니다.
+    """
+    import contextlib
+    import time as _time
+
+    if fetch is None:
+        fetch = md.fetch_daily_data
+    if now is None:
+        now = _time.time()
+    if sleep is None:
+        sleep = _time.sleep
+
+    store.setdefault("data", {})
+    store.setdefault("ts", {})
+    lock = store.get("lock") or contextlib.nullcontext()
+
+    with lock:
+        wanted = list(dict.fromkeys(list(tickers) + [cfg.BENCHMARK]))
+        missing = [t for t in wanted if t not in store["data"]]
+        expired = [
+            t for t in wanted
+            if t in store["data"] and now - store["ts"].get(t, 0) > PRICE_TTL_SEC
+        ]
+
+        # 삭제·이탈한 종목이 저장소에 무한히 쌓이지 않게 오래된 것부터 정리
+        # (요청이 없는 조용한 실행에서도 정리되도록 fetch 전에 수행합니다)
+        if len(store["data"]) > PRICE_STORE_CAP:
+            keep = set(wanted)
+            removable = sorted(
+                (t for t in store["data"] if t not in keep),
+                key=lambda t: store["ts"].get(t, 0),
+            )
+            for ticker in removable[: len(store["data"]) - PRICE_STORE_CAP]:
+                store["data"].pop(ticker, None)
+                store["ts"].pop(ticker, None)
+
+        # 만료가 하나라도 있으면 전체를 함께 갱신 (시점 혼재 방지),
+        # 만료가 없으면 새로 추가된 종목만 (티커 추가 고속 경로)
+        need = wanted if expired else missing
+        if not need:
+            return [], []
+
+        daily_map, _ = fetch(need)
+
+        # 야후는 요청이 몰리면 일부 종목을 조용히 거부합니다 → 한 번 더 시도
+        not_received = [t for t in need if t not in daily_map]
+        if not_received:
+            sleep(2.0)
+            retry_map, _ = fetch(not_received)
+            daily_map.update(retry_map)
+
+        failed: list[str] = []
+        stale: list[str] = []
+        for ticker in need:
+            fresh = daily_map.get(ticker)
+            if fresh is not None and not fresh.empty:
+                store["data"][ticker] = fresh
+                store["ts"][ticker] = now
+            elif ticker in store["data"]:
+                # 갱신 실패 — 이전 데이터로 계속 표시하되 사용자에게 알리고,
+                # 매 화면 새로고침마다 재시도하지 않도록 5분 뒤로 미룹니다
+                stale.append(ticker)
+                store["ts"][ticker] = now - PRICE_TTL_SEC + PRICE_RETRY_BACKOFF_SEC
+            else:
+                failed.append(ticker)
+
+        return failed, stale
+
+
+def prices_from_store(
+    store: dict,
+    tickers: list[str],
+    include_current_week: bool = True,
+):
+    """저장소의 일봉으로 추세·상대강도를 계산합니다.
+
+    반환: (price_map, weekly_map)
+    """
+    daily_map = {
+        t: store.get("data", {})[t]
+        for t in list(tickers) + [cfg.BENCHMARK]
+        if t in store.get("data", {})
+    }
+    return md.analyze_prices(
+        daily_map, tickers=list(tickers), include_current_week=include_current_week
+    )
+
+
 def fetch_prices(tickers: list[str], include_current_week: bool = True):
-    """주가를 받아 추세·상대강도까지 계산합니다.
+    """주가를 받아 추세·상대강도까지 계산합니다 (단독 실행·테스트용 일괄 경로).
 
     반환: (price_map, weekly_map, failed)
     """
@@ -192,6 +317,7 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
         rows.append(
             {
                 "종목": score["ticker"],
+                "주가($)": score.get("close"),
                 "최종점수": score["final_score"],
                 "펀더": score["fund_score"],
                 "기술": score["tech_score"],
@@ -200,6 +326,7 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
                 "GM%드라이버": score["gm_type"],
                 "델타방향": arrow.get(score["delta_direction"], score["delta_direction"]),
                 "델타예측": score["delta_forecast"],
+                "델타가속예측": score.get("accel_forecast", "-"),
                 "RS": score["rs"],
                 "판정": score["verdict"],
             }
