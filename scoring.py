@@ -47,6 +47,85 @@ def _clamp(value: float, low: float, high: float) -> float:
     return max(low, min(high, value))
 
 
+def _linear_slope(values: list[float]) -> float | None:
+    """숫자들이 전체적으로 올라가는 추세인지 내려가는 추세인지를 기울기로 냅니다.
+
+    최소제곱법(회귀)으로 직선을 그었을 때의 기울기입니다.
+    한 값만 튀어도 판정이 뒤집히는 것을 막기 위해 사용합니다.
+    """
+    n = len(values)
+    if n < 3:
+        return None
+
+    mean_x = (n - 1) / 2.0
+    mean_y = sum(values) / n
+
+    numerator = sum((i - mean_x) * (y - mean_y) for i, y in enumerate(values))
+    denominator = sum((i - mean_x) ** 2 for i in range(n))
+    if denominator == 0:
+        return None
+    return numerator / denominator
+
+
+# ---------------------------------------------------------------------------
+# 데이터 신뢰도 (점수에는 반영하지 않고 표시만 합니다)
+# ---------------------------------------------------------------------------
+def compute_confidence(quarters: list[dict], forward: dict) -> dict:
+    """이 종목의 숫자를 얼마나 믿을 수 있는지 백분율로 계산합니다.
+
+    실적 신뢰도 : 분기별 출처의 가중평균 (최근 분기일수록 큰 가중치)
+    전망 신뢰도 : 가이던스 85% / 추정 40% / 없음 0%
+    종합 신뢰도 : 실적 × 0.7 + 전망 × 0.3
+    """
+    # --- 실적 신뢰도 ---
+    breakdown: list[dict] = []
+    weighted_sum = 0.0
+    weight_total = 0.0
+
+    # 최근 분기부터 거슬러 올라가며 가중치를 줄여 갑니다
+    for steps_back, quarter in enumerate(reversed(quarters)):
+        source = quarter.get("source") or cfg.SRC_NONE
+        pct = cfg.CONFIDENCE_PCT.get(source, 0)
+        weight = cfg.CONF_RECENCY_DECAY ** steps_back
+
+        weighted_sum += pct * weight
+        weight_total += weight
+        breakdown.append(
+            {
+                "분기": quarter.get("period_label", "-"),
+                "출처": source,
+                "신뢰도(%)": pct,
+                "가중치": round(weight, 3),
+            }
+        )
+
+    actual_conf = (weighted_sum / weight_total) if weight_total > 0 else 0.0
+    breakdown.reverse()   # 화면에는 오래된 분기부터 보여줍니다
+
+    # --- 전망 신뢰도 ---
+    forward_basis = forward.get("basis") or cfg.SRC_NONE
+    forward_conf = float(cfg.CONFIDENCE_PCT.get(forward_basis, 0))
+
+    # --- 종합 ---
+    total = actual_conf * cfg.CONF_WEIGHT_ACTUAL + forward_conf * cfg.CONF_WEIGHT_FORWARD
+
+    # 출처별 분기 개수 (화면 요약용)
+    counts: dict[str, int] = {}
+    for quarter in quarters:
+        source = quarter.get("source") or cfg.SRC_NONE
+        counts[source] = counts.get(source, 0) + 1
+
+    return {
+        "total": round(total, 1),
+        "actual": round(actual_conf, 1),
+        "forward": round(forward_conf, 1),
+        "forward_basis": forward_basis,
+        "breakdown": breakdown,
+        "counts": counts,
+        "quarter_count": len(quarters),
+    }
+
+
 # ---------------------------------------------------------------------------
 # 펀더멘털 ① 델타 가속 (40점)
 # ---------------------------------------------------------------------------
@@ -68,7 +147,7 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
     if len(growths) < 2:
         return {
             "score": max_score * 0.4,   # 판단할 데이터가 부족하면 중간보다 약간 아래
-            "direction": "판단불가",
+            "direction": cfg.D_UNKNOWN,
             "detail": (
                 "가속/감속을 판단하려면 QoQ 증가율이 최소 2개 필요한데 "
                 f"{len(growths)}개만 계산됐습니다. (분기 데이터 부족 또는 직전 분기 적자)"
@@ -77,26 +156,72 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
             "trace": {"growths": growths, "insufficient": True},
         }
 
-    recent = growths[-3:]           # 최근 최대 3개 분기의 증가율
+    recent = growths[-3:]            # 최근 최대 3개 분기의 증가율
     delta = recent[-1] - recent[-2]  # 증가율이 얼마나 더 빨라졌는가(%p)
 
-    if delta > 3.0:
-        direction, ratio = "가속", 1.0
-        detail = f"이익 증가율이 직전 분기보다 {delta:+.1f}%p 빨라졌습니다(가속)"
-    elif delta < -3.0:
-        direction, ratio = "감속", 0.25
-        detail = f"이익 증가율이 직전 분기보다 {delta:+.1f}%p 느려졌습니다(감속)"
+    # --- 신호 ① 단기: 직전 분기와의 비교 (민감함) ---
+    if delta > cfg.DELTA_THRESHOLD_PP:
+        short_signal = 1
+    elif delta < -cfg.DELTA_THRESHOLD_PP:
+        short_signal = -1
     else:
-        direction, ratio = "유지", 0.6
-        detail = f"이익 증가율이 비슷한 수준을 유지하고 있습니다({delta:+.1f}%p)"
+        short_signal = 0
+
+    # --- 신호 ② 추세: 최근 여러 분기 증가율의 회귀 기울기 (안정적) ---
+    window = growths[-cfg.DELTA_TREND_WINDOW :]
+    slope = _linear_slope(window)
+    if slope is None:
+        trend_signal = None
+    elif slope > cfg.DELTA_TREND_THRESHOLD:
+        trend_signal = 1
+    elif slope < -cfg.DELTA_TREND_THRESHOLD:
+        trend_signal = -1
+    else:
+        trend_signal = 0
+
+    # --- 두 신호를 합쳐 최종 방향 결정 ---
+    if trend_signal is None:
+        # 추세를 낼 만큼 자료가 없으면 단기 신호만 사용합니다
+        direction = {1: cfg.D_ACCEL, -1: cfg.D_DECEL, 0: cfg.D_STEADY}[short_signal]
+        detail = (
+            f"이익 증가율이 직전 분기 대비 {delta:+.1f}%p 변했습니다"
+            f" (분기가 적어 추세는 아직 계산하지 못했습니다)"
+        )
+    elif short_signal == trend_signal:
+        # 두 신호가 같은 방향 → 확신 있는 판정
+        direction = {1: cfg.D_ACCEL, -1: cfg.D_DECEL, 0: cfg.D_STEADY}[short_signal]
+        detail = (
+            f"단기({delta:+.1f}%p)와 추세(기울기 {slope:+.1f})가 같은 방향을 가리킵니다"
+        )
+    elif short_signal == 0 or trend_signal == 0:
+        # 한쪽만 방향이 있음 → 방향이 있는 쪽을 따르되 확신은 낮춤
+        active = short_signal if short_signal != 0 else trend_signal
+        direction = {1: cfg.D_ACCEL, -1: cfg.D_DECEL}[active]
+        detail = (
+            f"한 신호만 방향을 보입니다 (단기 {delta:+.1f}%p, 추세 기울기 {slope:+.1f})"
+        )
+    else:
+        # 두 신호가 정반대 → 혼조 (억지로 한쪽으로 밀지 않습니다)
+        direction = cfg.D_MIXED
+        detail = (
+            f"단기({delta:+.1f}%p)와 추세(기울기 {slope:+.1f})가 서로 반대라 "
+            "방향을 단정하기 어렵습니다"
+        )
+
+    ratio = cfg.DELTA_RATIO[direction]
 
     # 화면의 "계산 과정 보기"에 쓸 자료
     trace = {
         "growths": growths,                 # 분기별 QoQ 증가율 전체 이력
         "recent": recent,                   # 판정에 실제로 쓴 최근 값들
-        "delta_pp": delta,                  # 증가율의 변화(%p) — 가속/감속의 근거
-        "ratio": ratio,                     # 배점에 곱한 비율
-        "threshold": 3.0,                   # 가속/감속을 가르는 기준(%p)
+        "delta_pp": delta,                  # 증가율의 변화(%p) — 단기 신호 근거
+        "slope": slope,                     # 회귀 기울기 — 추세 신호 근거
+        "window": window,                   # 기울기 계산에 쓴 값들
+        "short_signal": short_signal,
+        "trend_signal": trend_signal,
+        "ratio": ratio,
+        "threshold": cfg.DELTA_THRESHOLD_PP,
+        "trend_threshold": cfg.DELTA_TREND_THRESHOLD,
     }
 
     # 최근 증가율 자체가 마이너스(이익 감소)면 추가 감점
@@ -304,6 +429,59 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
 # ---------------------------------------------------------------------------
 # 기술 점수 (100점)
 # ---------------------------------------------------------------------------
+def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> dict:
+    """다음 분기 전망치로 "앞으로 가속이 이어질지"를 미리 봅니다.
+
+    다음 분기 예상 QoQ 증가율을 계산해 최근 실제 증가율과 비교합니다.
+      예상이 더 높다  → 가속 지속 ↗↗
+      가속이었는데 낮아짐 → 가속 둔화 ↗↘
+      감속인데 계속 낮음  → 감속 지속 ↘↘
+      감속이었는데 높아짐 → 반등 ↘↗
+    """
+    growths = delta_result.get("trace", {}).get("growths", [])
+    latest_op = next(
+        (q["op_income"] for q in reversed(quarters) if q.get("op_income") is not None), None
+    )
+    forward_op = forward.get("forward_op_income")
+
+    if forward_op is None or latest_op is None or latest_op <= 0 or not growths:
+        return {
+            "label": cfg.F_NONE,
+            "next_qoq": None,
+            "change_pp": None,
+            "basis": forward.get("basis"),
+            "confidence": cfg.CONFIDENCE_PCT.get(forward.get("basis"), 0),
+            "detail": "다음 분기 전망치가 없어 예측할 수 없습니다",
+        }
+
+    next_qoq = (forward_op / latest_op - 1.0) * 100.0
+    last_qoq = growths[-1]
+    change = next_qoq - last_qoq
+    threshold = cfg.DELTA_THRESHOLD_PP
+
+    was_rising = last_qoq >= 0
+
+    if change > threshold:
+        label = cfg.F_ACCEL_KEEP if was_rising else cfg.F_REBOUND
+    elif change < -threshold:
+        label = cfg.F_ACCEL_SLOW if was_rising else cfg.F_DECEL_KEEP
+    else:
+        label = cfg.F_FLAT
+
+    return {
+        "label": label,
+        "next_qoq": round(next_qoq, 1),
+        "last_qoq": round(last_qoq, 1),
+        "change_pp": round(change, 1),
+        "basis": forward.get("basis"),
+        "confidence": cfg.CONFIDENCE_PCT.get(forward.get("basis"), 0),
+        "detail": (
+            f"최근 실제 증가율 {last_qoq:+.1f}% → 다음 분기 예상 {next_qoq:+.1f}% "
+            f"({change:+.1f}%p)"
+        ),
+    }
+
+
 def score_technical(price_info: dict) -> dict:
     """주가 추세·기울기·이격도·상대강도를 합쳐 기술 점수를 냅니다."""
     state = price_info.get("state", cfg.S_UNKNOWN)
@@ -442,6 +620,8 @@ def build_score(ticker: str, quarters: list[dict], forward: dict, price_info: di
     """한 종목의 모든 점수를 계산해 화면에서 쓸 형태로 정리합니다."""
     fundamental = score_fundamental(quarters, forward)
     technical = score_technical(price_info)
+    confidence = compute_confidence(quarters, forward)
+    forecast = predict_delta(quarters, forward, fundamental["delta"])
 
     final = fundamental["total"] * cfg.WEIGHT_FUNDAMENTAL + technical["total"] * cfg.WEIGHT_TECHNICAL
     stage = price_info.get("stage", cfg.TREND_STAGE[cfg.S_UNKNOWN])
@@ -473,6 +653,10 @@ def build_score(ticker: str, quarters: list[dict], forward: dict, price_info: di
         "forward_op_income": forward.get("forward_op_income"),
         "revision": forward.get("revision", 0),
         "data_source": data_source,
+        "confidence": confidence["total"],
+        "confidence_detail": confidence,
+        "delta_forecast": forecast["label"],
+        "forecast_detail": forecast,
         "source_derivation": (latest_quarter or {}).get("derivation", ""),
         "filing_url": (latest_quarter or {}).get("filing_url", ""),
         "quarters": quarters,

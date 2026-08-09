@@ -365,6 +365,176 @@ def test_ranking_buy_candidates_come_first():
         assert table.iloc[0]["판정"] == cfg.V_BUY, table
 
 
+# ---------------------------------------------------------------------------
+# 데이터 신뢰도 (점수에는 반영하지 않고 표시만)
+# ---------------------------------------------------------------------------
+def test_confidence_all_direct():
+    """전부 직접공시 + 가이던스면 신뢰도가 가장 높아야 함"""
+    quarters = make_quarters([100 * M] * 3, source=cfg.SRC_DIRECT)
+    conf = scoring.compute_confidence(quarters, {"basis": cfg.SRC_GUIDANCE})
+
+    assert conf["actual"] == 95.0, conf
+    assert conf["forward"] == 85.0, conf
+    # 95 × 0.7 + 85 × 0.3 = 92
+    assert abs(conf["total"] - 92.0) < 0.05, conf
+
+
+def test_confidence_all_approx():
+    """전부 근사치 + 추정이면 신뢰도가 낮아야 함"""
+    quarters = make_quarters([100 * M] * 3, source=cfg.SRC_APPROX)
+    conf = scoring.compute_confidence(quarters, {"basis": cfg.SRC_ESTIMATE})
+
+    # 55 × 0.7 + 40 × 0.3 = 50.5
+    assert abs(conf["total"] - 50.5) < 0.05, conf
+
+
+def test_confidence_weights_recent_quarters_more():
+    """최근 분기가 직접공시면 과거가 근사치여도 신뢰도가 올라가야 함"""
+    old_approx = make_quarters([100 * M] * 3, source=cfg.SRC_APPROX)
+    recent_direct = [dict(q) for q in old_approx]
+    recent_direct[-1]["source"] = cfg.SRC_DIRECT   # 최근 분기만 직접공시
+
+    low = scoring.compute_confidence(old_approx, {"basis": cfg.SRC_ESTIMATE})
+    high = scoring.compute_confidence(recent_direct, {"basis": cfg.SRC_ESTIMATE})
+
+    assert high["actual"] > low["actual"], (low, high)
+
+
+def test_confidence_empty_is_zero():
+    """실적이 없으면 신뢰도 0"""
+    conf = scoring.compute_confidence([], {})
+    assert conf["total"] == 0.0, conf
+
+
+def test_confidence_does_not_change_score():
+    """신뢰도는 점수에 영향을 주면 안 됨 (표시 전용)"""
+    price = {
+        "state": cfg.S_FULL_UP, "slope": "상승", "disparity": 10.0, "rs": 20.0,
+        "stage": 1, "close": 50.0,
+    }
+    ops, margins = [100 * M, 115 * M, 140 * M], [50.0] * 3
+    forward = {"forward_op_income": 170 * M, "revision": 1, "basis": cfg.SRC_GUIDANCE}
+
+    direct = scoring.build_score("A", make_quarters(ops, margins=margins, source=cfg.SRC_DIRECT),
+                                 forward, price)
+    approx = scoring.build_score("B", make_quarters(ops, margins=margins, source=cfg.SRC_APPROX),
+                                 forward, price)
+
+    assert direct["final_score"] == approx["final_score"], (direct, approx)
+    assert direct["confidence"] > approx["confidence"], (direct, approx)
+
+
+# ---------------------------------------------------------------------------
+# 두 신호(단기 + 추세) 기반 델타 판정
+# ---------------------------------------------------------------------------
+def test_delta_mixed_when_signals_disagree():
+    """단기와 추세가 반대 방향이면 '혼조'로 표시해야 함"""
+    # 증가율: +60% → +25% → +10% → +13.6%  (추세는 급락, 마지막만 반등)
+    quarters = make_quarters([100 * M, 160 * M, 200 * M, 220 * M, 250 * M])
+    result = scoring.score_delta_acceleration(quarters)
+
+    assert result["direction"] == cfg.D_MIXED, result
+    trace = result["trace"]
+    assert trace["short_signal"] * trace["trend_signal"] < 0, trace
+
+
+def test_delta_uses_regression_slope():
+    """회귀 기울기가 계산되어 추세 신호로 쓰여야 함"""
+    quarters = make_quarters([100 * M, 110 * M, 130 * M, 160 * M, 200 * M])
+    result = scoring.score_delta_acceleration(quarters)
+
+    trace = result["trace"]
+    assert trace["slope"] is not None, trace
+    assert trace["slope"] > 0, trace          # 증가율이 커지는 중이므로 양수
+    assert result["direction"] == cfg.D_ACCEL, result
+
+
+def test_linear_slope_math():
+    """회귀 기울기 계산이 정확해야 함"""
+    # 0, 2, 4, 6 → 기울기 2
+    assert abs(scoring._linear_slope([0, 2, 4, 6]) - 2.0) < 1e-9
+    # 내려가면 음수
+    assert scoring._linear_slope([10, 7, 4, 1]) < 0
+    # 값이 부족하면 None
+    assert scoring._linear_slope([1, 2]) is None
+
+
+def test_mixed_scores_between_accel_and_decel():
+    """혼조 점수는 가속보다 낮고 감속보다 높아야 함"""
+    assert cfg.DELTA_RATIO[cfg.D_DECEL] < cfg.DELTA_RATIO[cfg.D_MIXED]
+    assert cfg.DELTA_RATIO[cfg.D_MIXED] < cfg.DELTA_RATIO[cfg.D_ACCEL]
+
+
+# ---------------------------------------------------------------------------
+# 델타 예측 (다음 분기 전망 기반)
+# ---------------------------------------------------------------------------
+def _forecast(ops, forward_op, basis=cfg.SRC_GUIDANCE):
+    quarters = make_quarters(ops)
+    delta = scoring.score_delta_acceleration(quarters)
+    return scoring.predict_delta(
+        quarters, {"forward_op_income": forward_op, "basis": basis}, delta
+    )
+
+
+def test_forecast_accel_keeps():
+    """전망 증가율이 최근보다 크게 높으면 '가속 지속'"""
+    # 최근 QoQ = 140/115−1 = +21.7%, 전망 = 200/140−1 = +42.9% (+21%p)
+    result = _forecast([100 * M, 115 * M, 140 * M], 200 * M)
+    assert result["label"] == cfg.F_ACCEL_KEEP, result
+
+
+def test_forecast_accel_slows():
+    """오르는 중인데 전망 증가율이 크게 낮으면 '가속 둔화'"""
+    result = _forecast([100 * M, 115 * M, 140 * M], 142 * M)
+    assert result["label"] == cfg.F_ACCEL_SLOW, result
+
+
+def test_forecast_rebound():
+    """줄어드는 중인데 전망이 크게 좋아지면 '반등'"""
+    # 최근 QoQ = 70/100−1 = −30%, 전망 = 84/70−1 = +20% (+50%p)
+    result = _forecast([120 * M, 100 * M, 70 * M], 84 * M)
+    assert result["label"] == cfg.F_REBOUND, result
+
+
+def test_forecast_decel_keeps():
+    """줄어드는 중이고 전망도 더 나쁘면 '감속 지속'"""
+    # 최근 QoQ = 90/100−1 = −10%, 전망 = 63/90−1 = −30% (−20%p)
+    result = _forecast([120 * M, 100 * M, 90 * M], 63 * M)
+    assert result["label"] == cfg.F_DECEL_KEEP, result
+
+
+def test_forecast_none_without_data():
+    """전망치가 없으면 '-' 로 표시해야 함"""
+    result = _forecast([100 * M, 115 * M, 140 * M], None)
+    assert result["label"] == cfg.F_NONE, result
+    assert result["next_qoq"] is None
+
+
+def test_forecast_carries_confidence():
+    """예측에 전망 근거의 신뢰도가 함께 담겨야 함"""
+    guidance = _forecast([100 * M, 115 * M, 140 * M], 200 * M, cfg.SRC_GUIDANCE)
+    estimate = _forecast([100 * M, 115 * M, 140 * M], 200 * M, cfg.SRC_ESTIMATE)
+
+    assert guidance["confidence"] == 85, guidance
+    assert estimate["confidence"] == 40, estimate
+
+
+def test_ranking_table_has_confidence_and_forecast():
+    """순위 표에 신뢰도·델타예측 열이 있어야 함"""
+    price = {
+        "state": cfg.S_FULL_UP, "slope": "상승", "disparity": 10.0, "rs": 20.0,
+        "stage": 1, "close": 50.0,
+    }
+    quarters = make_quarters([100 * M, 115 * M, 140 * M], source=cfg.SRC_DIRECT)
+    forward = {"forward_op_income": 200 * M, "revision": 1, "basis": cfg.SRC_GUIDANCE}
+    scores = {"A": scoring.build_score("A", quarters, forward, price)}
+
+    table = pipeline.build_ranking_table(scores)
+    assert "신뢰도" in table.columns, table.columns
+    assert "델타예측" in table.columns, table.columns
+    assert table.iloc[0]["신뢰도"] > 0
+
+
 def test_ranking_table_empty_is_safe():
     """점수가 하나도 없으면 빈 표를 돌려줘야 함 (크래시 금지)"""
     table = pipeline.build_ranking_table({})

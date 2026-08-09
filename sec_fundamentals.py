@@ -365,13 +365,40 @@ def _ensure_identity() -> None:
     _identity_configured = True
 
 
-def fetch_earnings_8k(ticker: str, start_date: str | None = None) -> list[dict]:
+def new_report(ticker: str) -> dict:
+    """수집 과정을 기록할 '진단 리포트'를 만듭니다.
+
+    8-K 수집이 실패해도 예외가 조용히 삼켜져 원인을 알 수 없던 문제를 해결하기 위해,
+    각 단계에서 몇 건이 통과했는지를 남깁니다. 화면의 '데이터 수집 진단'에 표시됩니다.
+    """
+    return {
+        "ticker": ticker,
+        "filings_found": 0,        # 8-K 공시를 몇 건 찾았나
+        "text_ok": 0,              # 보도자료 텍스트를 확보한 건수
+        "gate_passed": 0,          # 실적발표로 판별된 건수
+        "parsed_ok": 0,            # 숫자 추출에 성공한 건수
+        "xbrl_quarters": 0,        # XBRL로 만든 분기 수
+        "merged_direct": 0,        # 8-K 값으로 덮어쓴 분기 수
+        "text_source": "",         # 텍스트를 어디서 얻었나 (보도자료/첨부/본문)
+        "first_error": "",         # 첫 예외 (원인 파악의 핵심)
+        "note": "",
+    }
+
+
+def fetch_earnings_8k(
+    ticker: str,
+    start_date: str | None = None,
+    report: dict | None = None,
+) -> list[dict]:
     """한 종목의 8-K 실적발표를 모두 찾아 숫자를 뽑아냅니다.
 
     반환: 분기별 실적 목록 (오래된 것부터 순서대로)
+    report: 진단 리포트 (전달하면 단계별 건수를 기록합니다)
     """
     if start_date is None:
-        start_date = cfg.EARNINGS_START_DATE
+        start_date = cfg.HISTORY_START_DATE
+    if report is None:
+        report = new_report(ticker)
 
     _ensure_identity()
     from edgar import Company
@@ -380,14 +407,32 @@ def fetch_earnings_8k(ticker: str, start_date: str | None = None) -> list[dict]:
     company = Company(ticker)
     filings = company.get_filings(form="8-K", filing_date=f"{start_date}:")
 
+    scanned = 0
     for filing in filings:
-        text = _earnings_text(filing)
-        if not text or not _looks_like_earnings(text):
+        # 8-K는 실적 외 사유로도 자주 올라오므로 살펴볼 건수를 제한합니다
+        if scanned >= cfg.MAX_8K_SCAN:
+            report["note"] = f"8-K {cfg.MAX_8K_SCAN}건까지만 확인했습니다"
+            break
+        scanned += 1
+        report["filings_found"] += 1
+
+        text, text_source, had_exhibit = _earnings_text(filing, report)
+        if not text:
             continue
+        report["text_ok"] += 1
+        if text_source and not report["text_source"]:
+            report["text_source"] = text_source
+
+        # EX-99 첨부(보도자료)를 확보했다면 표지 문구 판별은 건너뜁니다.
+        # 표지에는 숫자가 없어 실적발표인데도 탈락하는 경우가 있기 때문입니다.
+        if not had_exhibit and not _looks_like_earnings(text):
+            continue
+        report["gate_passed"] += 1
 
         parsed = parse_press_release(text)
         if parsed["revenue"] is None and parsed["op_income"] is None:
             continue  # 실적 숫자가 전혀 없으면 실적발표가 아닐 가능성
+        report["parsed_ok"] += 1
 
         filing_date = str(filing.filing_date)
         quarters.append(
@@ -447,18 +492,27 @@ def _looks_like_earnings(text: str) -> bool:
     return any(hint in lowered for hint in _EARNINGS_HINTS)
 
 
-def _earnings_text(filing) -> str:
+def _record_error(report: dict | None, where: str, exc: Exception) -> None:
+    """첫 번째 예외만 진단 리포트에 남깁니다 (원인 파악용)."""
+    if report is not None and not report.get("first_error"):
+        report["first_error"] = f"[{where}] {type(exc).__name__}: {str(exc)[:180]}"
+
+
+def _earnings_text(filing, report: dict | None = None) -> tuple[str, str, bool]:
     """8-K에서 실적 보도자료 텍스트를 최대한 확보합니다.
 
     회사마다 첨부 방식이 달라 아래 순서로 시도합니다:
       ① edgartools가 인식한 보도자료(press release) 첨부
       ② EX-99 계열 첨부파일을 직접 뒤져서 읽기
       ③ 공시 본문 전체
+
+    반환: (텍스트, 어디서 얻었는지, 보도자료 첨부였는지)
     """
     # ① edgartools의 보도자료 인식 기능
     try:
         eightk = filing.obj()
-    except Exception:
+    except Exception as exc:
+        _record_error(report, "filing.obj", exc)
         eightk = None
 
     if eightk is not None:
@@ -469,41 +523,45 @@ def _earnings_text(filing) -> str:
                 for release in releases:
                     try:
                         parts.append(release.text())
-                    except Exception:
-                        continue
+                    except Exception as exc:
+                        _record_error(report, "press_release.text", exc)
                 if parts:
-                    return "\n".join(parts)
-        except Exception:
-            pass
+                    return "\n".join(parts), "보도자료", True
+        except Exception as exc:
+            _record_error(report, "press_releases", exc)
 
-    # ② EX-99 첨부파일을 직접 찾아 읽기
+    # ② EX-99 계열 첨부파일을 직접 찾아 읽기
+    # 회사마다 표기가 달라 종류·설명·파일명·용도를 모두 확인합니다.
     try:
-        exhibits = filing.attachments.exhibits
-        for attachment in exhibits:
-            doc_type = str(getattr(attachment, "document_type", "") or "")
-            description = str(getattr(attachment, "display_description", "") or "")
-            if "99" not in doc_type and "99" not in description:
+        for attachment in filing.attachments.exhibits:
+            haystack = " ".join(
+                str(getattr(attachment, field, "") or "")
+                for field in ("document_type", "description", "display_description",
+                              "document", "purpose")
+            ).lower()
+            if "99" not in haystack and "press" not in haystack:
                 continue
             try:
                 content = attachment.text()
-            except Exception:
+            except Exception as exc:
+                _record_error(report, "attachment.text", exc)
                 continue
             if content and len(content) > 500:
-                return content
-    except Exception:
-        pass
+                return content, "EX-99 첨부", True
+    except Exception as exc:
+        _record_error(report, "attachments.exhibits", exc)
 
-    # ③ 마지막 수단: 공시 본문 전체
-    for source in (eightk, filing):
+    # ③ 마지막 수단: 공시 본문 전체 (표지만 있을 수 있어 첨부 여부는 False)
+    for source, label in ((eightk, "공시 본문"), (filing, "공시 원문")):
         if source is None:
             continue
         try:
             content = source.text()
             if content:
-                return content
-        except Exception:
-            continue
-    return ""
+                return content, label, False
+        except Exception as exc:
+            _record_error(report, "filing.text", exc)
+    return "", "", False
 
 
 # ---------------------------------------------------------------------------
@@ -534,13 +592,20 @@ _XBRL_CONCEPTS = {
 }
 
 
-def fetch_xbrl_approximation(ticker: str, start_date: str | None = None) -> list[dict]:
-    """XBRL에서 분기 실적 근사치를 만듭니다 (8-K 파싱이 실패했을 때 사용).
+def fetch_xbrl_approximation(
+    ticker: str,
+    start_date: str | None = None,
+    report: dict | None = None,
+) -> list[dict]:
+    """XBRL에서 분기 실적 근사치를 만듭니다.
+
+    이 결과가 전체 분기의 "뼈대"가 되고, 8-K 파싱에 성공한 분기만
+    나중에 공식 논갭 수치로 덮어씁니다.
 
     화면에는 "근사치" 배지가 붙습니다.
     """
     if start_date is None:
-        start_date = cfg.EARNINGS_START_DATE
+        start_date = cfg.HISTORY_START_DATE
 
     _ensure_identity()
     from edgar import Company
@@ -549,15 +614,23 @@ def fetch_xbrl_approximation(ticker: str, start_date: str | None = None) -> list
         facts = Company(ticker).get_facts()
         if facts is None:
             return []
-    except Exception:
+    except Exception as exc:
+        _record_error(report, "get_facts", exc)
         return []
 
-    # 개념별로 "분기(3개월)" 데이터만 뽑아 {기간종료일: 값} 형태로 정리
+    # 개념별로 "분기(3개월)" 데이터를 뽑고, 빠진 4분기를 채워 넣습니다
     series: dict[str, dict[str, float]] = {}
     for key, concept_names in _XBRL_CONCEPTS.items():
         merged: dict[str, float] = {}
         for concept in concept_names:
             merged.update(_quarterly_series(facts, concept))
+
+        # 연간(12개월) 값도 함께 가져와 빠진 4분기를 계산해 채웁니다
+        annual: dict[str, float] = {}
+        for concept in concept_names:
+            annual.update(_annual_series(facts, concept))
+        merged = _fill_missing_q4(merged, annual)
+
         series[key] = merged
 
     period_ends = sorted(
@@ -609,11 +682,93 @@ def fetch_xbrl_approximation(ticker: str, start_date: str | None = None) -> list
 
 def _quarterly_series(facts, concept: str) -> dict[str, float]:
     """XBRL에서 특정 항목의 분기(3개월) 값들을 {기간종료일: 값}으로 뽑습니다."""
+    return _period_series(facts, concept, months=3)
+
+
+def _annual_series(facts, concept: str) -> dict[str, float]:
+    """XBRL에서 특정 항목의 연간(12개월) 값들을 {기간종료일: 값}으로 뽑습니다.
+
+    4분기(Q4)는 10-K에 연간으로만 신고되는 경우가 많아, 이 값이 필요합니다.
+    """
+    return _period_series(facts, concept, months=12)
+
+
+def _fill_missing_q4(
+    quarterly: dict[str, float],
+    annual: dict[str, float],
+) -> dict[str, float]:
+    """빠져 있는 4분기를 `연간 − (1분기 + 2분기 + 3분기)` 로 계산해 채웁니다.
+
+    왜 필요한가:
+      회사는 1~3분기는 10-Q에 "3개월" 단위로 신고하지만,
+      4분기는 10-K에 "연간(12개월)"으로만 신고하는 경우가 대부분입니다.
+      그래서 3개월짜리만 모으면 매년 4분기가 통째로 빠지고,
+      가속/감속을 판단할 표본이 25%나 줄어듭니다.
+    """
+    if not annual:
+        return quarterly
+
+    filled = dict(quarterly)
+
+    for fy_end, annual_value in annual.items():
+        if fy_end in filled:
+            continue  # 이미 4분기 값이 있으면 건드리지 않습니다
+
+        # 회계연도 종료일로부터 거슬러 올라가며 앞선 세 분기를 찾습니다
+        prior = _find_prior_three_quarters(quarterly, fy_end)
+        if prior is None:
+            continue
+
+        q4_value = annual_value - sum(prior)
+        filled[fy_end] = q4_value
+
+    return filled
+
+
+def _find_prior_three_quarters(
+    quarterly: dict[str, float],
+    fy_end: str,
+) -> list[float] | None:
+    """회계연도 종료일 직전의 3개 분기 값을 찾습니다 (없으면 None).
+
+    분기 종료일은 회사마다 다르므로, 연도 종료일보다 앞서면서
+    1년 이내에 있는 분기 3개를 시간 역순으로 고릅니다.
+    """
+    from datetime import date
+
+    def _to_date(text: str):
+        try:
+            return date(int(text[0:4]), int(text[5:7]), int(text[8:10]))
+        except (ValueError, IndexError):
+            return None
+
+    fy_date = _to_date(fy_end)
+    if fy_date is None:
+        return None
+
+    candidates = []
+    for period_end, value in quarterly.items():
+        period_date = _to_date(period_end)
+        if period_date is None or period_date >= fy_date:
+            continue
+        days_before = (fy_date - period_date).days
+        if 0 < days_before <= 330:   # 1년 이내 (약간의 여유를 둡니다)
+            candidates.append((period_date, value))
+
+    if len(candidates) < 3:
+        return None
+
+    candidates.sort(reverse=True)          # 최근 분기부터
+    return [value for _, value in candidates[:3]]
+
+
+def _period_series(facts, concept: str, months: int) -> dict[str, float]:
+    """XBRL에서 특정 항목을 지정한 기간 길이로 뽑아 {기간종료일: 값}으로 만듭니다."""
     try:
         df = (
             facts.query()
             .by_concept(concept)
-            .by_period_length(3)     # 3개월 = 한 분기
+            .by_period_length(months)
             .to_dataframe()
         )
     except Exception:
@@ -641,35 +796,124 @@ def _quarterly_series(facts, concept: str) -> dict[str, float]:
 # ---------------------------------------------------------------------------
 # 바깥에서 호출하는 함수
 # ---------------------------------------------------------------------------
+def merge_quarters(xbrl_quarters: list[dict], press_quarters: list[dict]) -> list[dict]:
+    """XBRL로 만든 뼈대에 8-K에서 뽑은 공식 논갭 수치를 덮어씁니다.
+
+    예전에는 "8-K가 되면 8-K만, 안 되면 XBRL만" 이라서 하나라도 실패하면
+    전 분기가 근사치가 됐습니다. 이제는 **분기 단위로** 성공한 것만 올려서,
+    일부만 성공해도 그 분기는 '직접공시'가 됩니다.
+
+    같은 분기인지는 기간종료일과 8-K 제출일의 간격으로 판단합니다.
+    (실적발표는 보통 분기 종료 후 2~8주 안에 이뤄집니다)
+    """
+    from datetime import date
+
+    def _to_date(text: str):
+        try:
+            return date(int(text[0:4]), int(text[5:7]), int(text[8:10]))
+        except (ValueError, IndexError, TypeError):
+            return None
+
+    if not xbrl_quarters:
+        return sorted(press_quarters, key=lambda q: q["filing_date"])
+    if not press_quarters:
+        return xbrl_quarters
+
+    merged = [dict(q) for q in xbrl_quarters]
+    used_press: set[int] = set()
+
+    for row in merged:
+        period_date = _to_date(row.get("filing_date", ""))
+        if period_date is None:
+            continue
+
+        # 이 분기 종료 후 0~90일 사이에 나온 8-K 중 가장 가까운 것을 짝짓습니다
+        best_index, best_gap = None, None
+        for index, press in enumerate(press_quarters):
+            if index in used_press:
+                continue
+            press_date = _to_date(press.get("filing_date", ""))
+            if press_date is None:
+                continue
+            gap = (press_date - period_date).days
+            if 0 <= gap <= 90 and (best_gap is None or gap < best_gap):
+                best_index, best_gap = index, gap
+
+        if best_index is None:
+            continue
+
+        press = press_quarters[best_index]
+        used_press.add(best_index)
+
+        # 8-K에서 실제로 뽑힌 값만 덮어씁니다 (없는 값은 XBRL 값을 유지)
+        if press.get("op_income") is not None:
+            row["op_income"] = press["op_income"]
+            row["source"] = press.get("source") or cfg.SRC_DERIVED
+            row["derivation"] = press.get("derivation", "")
+            row["gm_is_gaap"] = press.get("gm_is_gaap", False)
+        if press.get("revenue") is not None:
+            row["revenue"] = press["revenue"]
+        if press.get("gross_margin_pct") is not None:
+            row["gross_margin_pct"] = press["gross_margin_pct"]
+        if press.get("period_label"):
+            row["period_label"] = press["period_label"]
+        if press.get("filing_url"):
+            row["filing_url"] = press["filing_url"]
+        if press.get("guidance_text"):
+            row["guidance_text"] = press["guidance_text"]
+        # 발표일 기준 정렬을 위해 8-K 제출일을 따로 남깁니다
+        row["announced_date"] = press.get("filing_date", "")
+
+    return merged
+
+
 def get_fundamentals(
     ticker: str,
     start_date: str | None = None,
     use_cache: bool = True,
-) -> list[dict]:
-    """한 종목의 분기별 논갭 실적을 가져옵니다 (캐시 → 8-K → XBRL 순).
+) -> tuple[list[dict], dict]:
+    """한 종목의 분기별 논갭 실적을 가져옵니다.
 
-    어떤 방법으로도 실패하면 빈 목록을 돌려줍니다.
+    수집 순서:
+      ① XBRL로 전체 분기 뼈대를 만든다 (빠진 4분기도 계산해 채움)
+      ② 8-K 보도자료에서 공식 논갭 수치를 뽑는다
+      ③ 성공한 분기만 ①에 덮어쓴다
+
+    반환: (분기 목록, 진단 리포트)
     """
+    report = new_report(ticker)
+
     if use_cache:
         cached = load_cache(ticker)
         if cached is not None:
-            return cached
+            report["note"] = "저장된 데이터를 재사용했습니다"
+            report["xbrl_quarters"] = len(cached)
+            report["merged_direct"] = sum(
+                1 for q in cached if q.get("source") in (cfg.SRC_DIRECT, cfg.SRC_DERIVED)
+            )
+            return cached, report
 
-    quarters: list[dict] = []
+    # ① XBRL 뼈대
+    xbrl_quarters: list[dict] = []
     try:
-        quarters = fetch_earnings_8k(ticker, start_date)
-    except Exception:
-        quarters = []
+        xbrl_quarters = fetch_xbrl_approximation(ticker, start_date, report)
+    except Exception as exc:
+        _record_error(report, "xbrl", exc)
+    report["xbrl_quarters"] = len(xbrl_quarters)
 
-    # 8-K에서 영업이익을 하나도 못 건졌으면 XBRL 근사치로 대체
-    if not any(q.get("op_income") is not None for q in quarters):
-        try:
-            approx = fetch_xbrl_approximation(ticker, start_date)
-            if approx:
-                quarters = approx
-        except Exception:
-            pass
+    # ② 8-K 보도자료
+    press_quarters: list[dict] = []
+    try:
+        press_quarters = fetch_earnings_8k(ticker, start_date, report)
+    except Exception as exc:
+        _record_error(report, "8-K", exc)
+
+    # ③ 합치기
+    quarters = merge_quarters(xbrl_quarters, press_quarters)
+    report["merged_direct"] = sum(
+        1 for q in quarters if q.get("source") in (cfg.SRC_DIRECT, cfg.SRC_DERIVED)
+    )
 
     if quarters:
         save_cache(ticker, quarters)
-    return quarters
+    return quarters, report
