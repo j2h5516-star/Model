@@ -251,12 +251,14 @@ def fetch_consensus(ticker: str) -> dict:
         out["errors"].append(f"EPS 컨센서스: {type(exc).__name__}")
 
     # --- 리비전 속도: 추정치가 30일 전 대비 몇 % 움직였나 ---
+    # 분모가 5센트 미만이면 계산하지 않습니다: 손익분기 근처 EPS에서는
+    # 2센트 이동(반올림 노이즈)이 +200% 같은 극단값을 만들기 때문입니다.
     try:
         trend = stock.eps_trend
         if trend is not None and len(trend) > 0 and "0q" in trend.index:
             current = _safe_number(trend, "0q", ["current"])
             past_30d = _safe_number(trend, "0q", ["30daysAgo", "30DaysAgo"])
-            if current is not None and past_30d is not None and abs(past_30d) > 1e-9:
+            if current is not None and past_30d is not None and abs(past_30d) >= 0.05:
                 out["revision_velocity_pct"] = (current - past_30d) / abs(past_30d) * 100.0
     except Exception as exc:
         out["errors"].append(f"추정 추이: {type(exc).__name__}")
@@ -288,24 +290,40 @@ def fetch_yf_forward(ticker: str) -> dict:
 
 
 def _safe_number(df, row_key, column_candidates: list[str]) -> float | None:
-    """표에서 값을 꺼냅니다 (열 이름이 버전마다 달라 여러 후보를 시도)."""
+    """표에서 값을 꺼냅니다 (열 이름이 버전마다 달라 여러 후보를 시도).
+
+    yfinance 표에는 빈 값이 NaN으로 들어오는데, NaN이 그대로 흘러가면
+    비교·클램프가 엉뚱하게 동작합니다(예: 리비전 점수 만점). 여기서 차단합니다.
+    """
+    import math
+
     for column in column_candidates:
         if column in df.columns:
             try:
                 value = df.loc[row_key, column]
-                if value is not None:
-                    return float(value)
+                if value is None:
+                    continue
+                number = float(value)
+                if not math.isfinite(number):
+                    continue
+                return number
             except (KeyError, TypeError, ValueError):
                 continue
     return None
 
 
 def average_operating_margin(quarters: list[dict], n: int = 4) -> float | None:
-    """최근 n개 분기의 평균 논갭 영업마진(%)을 계산합니다."""
+    """최근 n개 분기의 평균 논갭 영업마진(%)을 계산합니다.
+
+    ⚠️ 적자 분기는 평균에서 뺍니다. 턴어라운드(적자→흑자 전환) 종목에서
+    적자 분기가 평균을 음수로 끌어내리면 "미래 전망 = 매출 × 음수 마진"이 되어
+    개선 중인 회사에 적자 전망을 붙이는 오류가 생기기 때문입니다.
+    흑자 분기가 하나도 없으면 None (전망을 만들지 않는 편이 정직합니다).
+    """
     margins = []
     for q in quarters[-n:]:
         revenue, op_income = q.get("revenue"), q.get("op_income")
-        if revenue and op_income is not None and revenue > 0:
+        if revenue and op_income is not None and revenue > 0 and op_income > 0:
             margins.append(op_income / revenue * 100.0)
     if not margins:
         return None
@@ -316,20 +334,21 @@ def average_operating_margin(quarters: list[dict], n: int = 4) -> float | None:
 # 바깥에서 호출하는 함수
 # ---------------------------------------------------------------------------
 def find_latest_guidance_text(quarters: list[dict]) -> str:
-    """가장 최근의 가이던스 문단을 찾습니다.
+    """"아직 발표되지 않은 다음 분기"를 겨냥한 가이던스만 찾습니다.
 
-    ⚠️ 과거 버그: 마지막 분기 행에서만 찾았는데, XBRL·8-K 병합 구조에서는
-    마지막 행이 XBRL 뼈대(가이던스 없음)인 경우가 많아 전망이 통째로 비었습니다.
-    → 최근 분기부터 거슬러 올라가되, 너무 오래된 가이던스(2분기 넘게 과거)는
-      이미 지난 분기 전망이므로 쓰지 않습니다.
+    가이던스는 그 발표 분기의 **바로 다음 분기** 전망입니다. 따라서:
+      · 마지막 분기 행에 가이던스가 있으면 → 다음(미발표) 분기 전망 = 사용 ✅
+      · 마지막 행이 XBRL 뼈대(가이던스 없음)인데 그 앞 행에서 가져오면
+        → 그 가이던스는 "이미 발표된 마지막 분기"의 전망 = 낡음 = 사용 ❌
+          (낡은 가이던스를 쓰면 가속 중인 종목을 '둔화'로 오판합니다)
+
+    낡은 경우에는 빈 문자열을 돌려 컨센서스 경로로 넘깁니다.
+    ※ 최신 8-K가 XBRL보다 먼저 나온 경우는 merge_quarters가 그 8-K를
+      새 분기 행으로 승격시키므로, 신선한 가이던스는 마지막 행에 오게 됩니다.
     """
-    for steps_back, quarter in enumerate(reversed(quarters)):
-        if steps_back >= 2:      # 마지막 2개 분기 안에서만 찾습니다
-            break
-        text = quarter.get("guidance_text") or ""
-        if text.strip():
-            return text
-    return ""
+    if not quarters:
+        return ""
+    return (quarters[-1].get("guidance_text") or "").strip()
 
 
 def estimate_forward(ticker: str, quarters: list[dict]) -> dict:
@@ -366,14 +385,39 @@ def estimate_forward(ticker: str, quarters: list[dict]) -> dict:
     if not quarters:
         return output
 
+    # --- 컨센서스 시점 보정 (롤오버 확인) ---
+    # 실적발표 직후 며칠간 야후의 '0q'가 방금 발표된 분기를 그대로 가리키는
+    # 경우가 있습니다. '0q' 매출이 마지막 실제 분기 매출과 ±1% 이내로 거의
+    # 같으면 아직 안 넘어간 것으로 보고 한 분기씩 당깁니다.
+    # (±1%로 좁게 잡는 이유: 분기 성장이 거의 없는 회사의 정상적인 다음 분기
+    #  전망을 낡은 것으로 오판해 버리면 안 되기 때문입니다. 서프라이즈가 커서
+    #  추정과 실적이 1% 넘게 어긋난 미롤오버는 잡지 못하지만, 그 상태는
+    #  며칠이면 지나가므로 오탐 없는 쪽을 택합니다.)
+    latest_revenue = next(
+        (q["revenue"] for q in reversed(quarters) if q.get("revenue")), None
+    )
+    if (
+        latest_revenue
+        and consensus["revenue_0q"]
+        and abs(consensus["revenue_0q"] / latest_revenue - 1.0) <= 0.01
+    ):
+        consensus["errors"].append("컨센서스가 발표 분기를 가리켜 한 분기 당김")
+        consensus["revenue_0q"] = consensus["revenue_1q"]
+        consensus["revenue_1q"] = None
+        consensus["eps_0q"] = consensus["eps_1q"]
+        consensus["eps_1q"] = None
+
     avg_margin = average_operating_margin(quarters, n=4)
 
     # --- 다음 분기: ① 가이던스 우선 ---
     guidance = parse_guidance(find_latest_guidance_text(quarters))
     forward = forward_from_guidance(guidance)
+    guidance_margin_pct = None   # 가이던스에 내재된 마진 (다다음 분기에도 같은 기준 적용)
     if forward is not None:
         output["forward_op_income"] = forward
         output["basis"] = cfg.SRC_GUIDANCE
+        if guidance.get("revenue"):
+            guidance_margin_pct = forward / guidance["revenue"] * 100.0
         revenue_text = f"${guidance['revenue']/1e6:,.0f}M" if guidance.get("revenue") else "-"
         output["detail"] = f"회사가 제시한 다음 분기 전망(매출 {revenue_text} 기준)으로 계산했습니다"
     # --- 다음 분기: ② 컨센서스 매출 × 평균 마진 ---
@@ -389,13 +433,18 @@ def estimate_forward(ticker: str, quarters: list[dict]) -> dict:
             f"최근 4개 분기 평균 영업마진({avg_margin:.1f}%)을 곱한 추정치입니다"
         )
 
-    # --- 다다음 분기: 컨센서스 매출 × 평균 마진 (가이던스는 여기까지 안 나옵니다) ---
-    if consensus["revenue_1q"] and avg_margin is not None:
-        output["forward_op_income_2"] = consensus["revenue_1q"] * avg_margin / 100.0
+    # --- 다다음 분기: 컨센서스 매출 × 마진 ---
+    # ⚠️ 다음 분기가 가이던스 기반이면 다다음 분기도 "가이던스에 내재된 마진"을
+    #    씁니다. 마진 기준이 분기마다 다르면(가이던스 26% vs 과거 평균 31%),
+    #    매출이 그대로여도 이익이 튀는 것처럼 보여 가짜 반등/꺾임 신호가 생깁니다.
+    margin_for_q2 = guidance_margin_pct if guidance_margin_pct is not None else avg_margin
+    if consensus["revenue_1q"] and margin_for_q2 is not None:
+        output["forward_op_income_2"] = consensus["revenue_1q"] * margin_for_q2 / 100.0
         output["basis_2"] = cfg.SRC_ESTIMATE
+        margin_label = "가이던스 내재 마진" if guidance_margin_pct is not None else "평균 영업마진"
         output["detail_2"] = (
             f"다다음 분기는 월가 매출 컨센서스(${consensus['revenue_1q']/1e6:,.0f}M) × "
-            f"평균 영업마진({avg_margin:.1f}%)으로 추정했습니다"
+            f"{margin_label}({margin_for_q2:.1f}%)으로 추정했습니다"
         )
 
     return output

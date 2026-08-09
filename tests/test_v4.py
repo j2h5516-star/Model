@@ -109,24 +109,57 @@ def test_consensus_empty_records_errors():
 # ---------------------------------------------------------------------------
 # 가이던스 역탐색 (전망이 통째로 비던 버그의 수정)
 # ---------------------------------------------------------------------------
-def test_guidance_found_in_previous_quarter():
-    """마지막 분기 행(XBRL 뼈대)에 가이던스가 없어도 그 앞 행에서 찾아야 함"""
+def test_guidance_from_last_row_is_used():
+    """마지막 분기 행의 가이던스 = 다음(미발표) 분기 전망이므로 사용해야 함"""
     quarters = make_quarters([100 * M, 115 * M, 140 * M])
-    quarters[-2]["guidance_text"] = "We expect revenue of $180 million to $190 million."
-    quarters[-1]["guidance_text"] = ""   # 최근 행은 XBRL 뼈대 (과거 버그의 원인)
+    quarters[-1]["guidance_text"] = "We expect revenue of $180 million to $190 million."
 
     text = fe.find_latest_guidance_text(quarters)
     assert "180 million" in text, text
 
 
-def test_guidance_too_old_is_ignored():
-    """2분기 넘게 과거의 가이던스는 이미 지난 분기 전망이므로 쓰지 않아야 함"""
-    quarters = make_quarters([100 * M, 115 * M, 140 * M, 175 * M])
-    quarters[0]["guidance_text"] = "We expect revenue of $120 million."   # 4분기 전
-    quarters[-1]["guidance_text"] = ""
-    quarters[-2]["guidance_text"] = ""
+def test_stale_guidance_is_rejected():
+    """마지막 행이 XBRL 뼈대일 때 그 앞 행의 가이던스는 '이미 발표된 분기'의
+    전망이므로 절대 쓰면 안 됨 — 쓰면 가속 중인 종목을 둔화로 오판함 (critical 수정)"""
+    quarters = make_quarters([100 * M, 115 * M, 140 * M])
+    quarters[-2]["guidance_text"] = "We expect revenue of $500 million."   # 낡은 가이던스
+    quarters[-1]["guidance_text"] = ""   # 마지막 행 = XBRL 뼈대
 
     assert fe.find_latest_guidance_text(quarters) == ""
+
+
+def test_stale_guidance_falls_back_to_consensus():
+    """낡은 가이던스를 버리면 컨센서스 경로가 전망을 대신 만들어야 함"""
+    quarters = make_quarters([100 * M, 110 * M, 120 * M, 130 * M])
+    quarters[-2]["guidance_text"] = "We expect revenue of $500 million."
+    quarters[-1]["guidance_text"] = ""
+
+    with patch.dict(sys.modules, {"yfinance": _fake_yf(_FakeTicker)}):
+        out = fe.estimate_forward("TEST", quarters)
+
+    assert out["basis"] == cfg.SRC_ESTIMATE, out   # 가이던스가 아니라 추정
+    assert out["forward_op_income"] is not None
+
+
+def test_promoted_latest_8k_carries_fresh_guidance():
+    """XBRL보다 늦게 나온 최신 8-K는 새 분기 행으로 승격되어
+    그 안의 신선한 가이던스가 마지막 행에 와야 함"""
+    xbrl = [_xbrl_row("2025-03-31", 100.0), _xbrl_row("2025-06-30", 120.0)]
+    press = [{
+        "ticker": "T", "filing_date": "2025-10-25", "period_label": "25 Q3",
+        "revenue": 700.0, "op_income": 140.0, "gross_margin_pct": 55.0,
+        "source": cfg.SRC_DIRECT, "gm_is_gaap": False, "filing_url": "u",
+        "derivation": "d",
+        "guidance_text": "We expect revenue of $800 million to $840 million.",
+    }]
+
+    merged = sf.merge_quarters(xbrl, press)
+
+    assert len(merged) == 3, [r["filing_date"] for r in merged]
+    assert merged[-1]["source"] == cfg.SRC_DIRECT
+    assert merged[-1]["op_income"] == 140.0
+    # 승격된 마지막 행의 가이던스가 실제로 전망에 쓰이는지
+    assert "800 million" in fe.find_latest_guidance_text(merged)
 
 
 def test_estimate_forward_uses_consensus_for_q2():
@@ -229,13 +262,15 @@ def test_price_store_fetches_only_missing():
     calls = []
     fetch = _daily_fetch_counter(calls)
 
-    failed = pipeline.refresh_price_store(store, ["AAA", "BBB"], fetch=fetch, now=1000.0)
-    assert failed == []
+    failed, stale = pipeline.refresh_price_store(store, ["AAA", "BBB"], fetch=fetch, now=1000.0)
+    assert failed == [] and stale == []
     assert set(calls[0]) == {"AAA", "BBB", cfg.BENCHMARK}
 
     # 종목 하나 추가 → 새 종목만 요청해야 함 (핵심!)
-    failed = pipeline.refresh_price_store(store, ["AAA", "BBB", "NEW"], fetch=fetch, now=1010.0)
-    assert failed == []
+    failed, stale = pipeline.refresh_price_store(
+        store, ["AAA", "BBB", "NEW"], fetch=fetch, now=1010.0
+    )
+    assert failed == [] and stale == []
     assert calls[1] == ["NEW"], calls[1]
 
 
@@ -252,10 +287,10 @@ def test_price_store_retries_missing():
 
     slept = []
     store = {}
-    failed = pipeline.refresh_price_store(
+    failed, stale = pipeline.refresh_price_store(
         store, ["AAA", "BBB"], fetch=flaky_fetch, now=0.0, sleep=slept.append
     )
-    assert failed == []
+    assert failed == [] and stale == []
     assert "BBB" in store["data"], store["data"].keys()
     assert slept == [2.0], slept          # 재시도 전 대기했는지
 
@@ -269,6 +304,100 @@ def test_price_store_expires_after_ttl():
     pipeline.refresh_price_store(store, ["AAA"], fetch=fetch, now=0.0)
     pipeline.refresh_price_store(store, ["AAA"], fetch=fetch, now=pipeline.PRICE_TTL_SEC + 1)
     assert len(calls) == 2, calls
+
+
+def test_price_store_batch_refresh_on_expiry():
+    """하나라도 만료되면 전체를 함께 갱신해야 함 (시점 혼재 → RS 왜곡 방지)"""
+    store = {}
+    calls = []
+    fetch = _daily_fetch_counter(calls)
+
+    pipeline.refresh_price_store(store, ["AAA", "BBB"], fetch=fetch, now=0.0)
+    # 30분 뒤 NEW 추가 → NEW만
+    pipeline.refresh_price_store(store, ["AAA", "BBB", "NEW"], fetch=fetch, now=1800.0)
+    assert calls[1] == ["NEW"], calls[1]
+    # 70분 시점: AAA/BBB/SPY는 만료, NEW는 아직 유효 —
+    # 그래도 전체(NEW 포함)를 함께 받아 같은 시점의 주가로 맞춰야 함
+    pipeline.refresh_price_store(store, ["AAA", "BBB", "NEW"], fetch=fetch, now=4200.0)
+    assert set(calls[2]) == {"AAA", "BBB", "NEW", cfg.BENCHMARK}, calls[2]
+
+
+def test_price_store_reports_stale_and_backs_off():
+    """갱신 실패 시: 이전 데이터 유지 + stale로 보고 + 5분 뒤에만 재시도"""
+
+    def dead_fetch(tickers):
+        return {}, list(tickers)   # 야후 완전 장애
+
+    calls = []
+    fetch_ok = _daily_fetch_counter(calls)
+
+    store = {}
+    pipeline.refresh_price_store(store, ["AAA"], fetch=fetch_ok, now=0.0)
+
+    # TTL 만료 후 장애 → stale 보고 + 데이터는 유지
+    failed, stale = pipeline.refresh_price_store(
+        store, ["AAA"], fetch=dead_fetch, now=4000.0, sleep=lambda s: None
+    )
+    assert failed == [], failed
+    assert set(stale) == {"AAA", cfg.BENCHMARK}, stale
+    assert "AAA" in store["data"]
+
+    # 직후 재실행 → 백오프 때문에 fetch를 다시 부르면 안 됨 (rerun 폭주 방지)
+    counter = {"n": 0}
+
+    def counting_dead(tickers):
+        counter["n"] += 1
+        return {}, list(tickers)
+
+    pipeline.refresh_price_store(store, ["AAA"], fetch=counting_dead, now=4010.0)
+    assert counter["n"] == 0, "백오프 중인데 재시도함"
+
+    # 5분(백오프) 경과 후에는 다시 시도해야 함
+    pipeline.refresh_price_store(
+        store, ["AAA"], fetch=counting_dead, now=4000.0 + pipeline.PRICE_RETRY_BACKOFF_SEC + 1,
+        sleep=lambda s: None,
+    )
+    assert counter["n"] >= 1
+
+
+def test_price_store_lock_prevents_duplicate_fetch():
+    """두 세션이 동시에 갱신해도 다운로드는 한 번만 일어나야 함"""
+    import threading
+
+    store = {"lock": threading.Lock()}
+    calls = []
+    barrier = threading.Barrier(2)
+
+    def slow_fetch(tickers):
+        calls.append(list(tickers))
+        return {t: make_daily([10, 11, 12]) for t in tickers}, []
+
+    def worker():
+        barrier.wait()
+        pipeline.refresh_price_store(store, ["AAA"], fetch=slow_fetch, now=0.0)
+
+    threads = [threading.Thread(target=worker) for _ in range(2)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    # 락 덕분에 두 번째 세션은 이미 채워진 저장소를 보고 그냥 지나가야 함
+    assert len(calls) == 1, calls
+
+
+def test_price_store_evicts_removed_tickers():
+    """삭제한 종목이 저장소에 무한히 쌓이지 않아야 함"""
+    store = {}
+    calls = []
+    fetch = _daily_fetch_counter(calls)
+
+    many = [f"T{i:03d}" for i in range(pipeline.PRICE_STORE_CAP + 10)]
+    pipeline.refresh_price_store(store, many, fetch=fetch, now=0.0)
+    # 이제 소수만 사용 → 저장소가 상한 이하로 정리돼야 함
+    pipeline.refresh_price_store(store, ["T000"], fetch=fetch, now=10.0)
+    assert len(store["data"]) <= pipeline.PRICE_STORE_CAP, len(store["data"])
+    assert "T000" in store["data"]
 
 
 # ---------------------------------------------------------------------------
@@ -333,18 +462,162 @@ def test_pairing_window_covers_late_annual_filers():
 
 
 def test_unpaired_press_recorded_in_report():
-    """짝을 못 찾은 8-K는 진단 리포트에 건수와 사유가 남아야 함"""
-    xbrl = [_xbrl_row("2025-03-31", 100.0)]
+    """짝을 못 찾은 '과거' 8-K는 진단 리포트에 건수와 사유가 남아야 함
+
+    (최신 8-K는 새 분기로 승격되므로, 과거 시점의 짝 없는 8-K로 검증합니다)
+    """
+    xbrl = [_xbrl_row("2025-06-30", 100.0)]
     press = [
-        _press_row("2025-04-25", 111.0),          # 짝지어짐
-        _press_row("2025-09-20", 999.0),          # 어느 분기와도 안 맞음
+        _press_row("2025-07-25", 111.0),          # 6월 분기와 짝지어짐
+        _press_row("2025-01-10", 999.0),          # 과거인데 어느 분기와도 안 맞음
     ]
     report = sf.new_report("T")
     merged = sf.merge_quarters(xbrl, press, report)
 
-    assert merged[0]["source"] == cfg.SRC_DIRECT
+    assert merged[-1]["source"] == cfg.SRC_DIRECT
     assert report["unpaired_press"] == 1, report
-    assert "2025-09-20" in report["pair_note"], report["pair_note"]
+    assert "2025-01-10" in report["pair_note"], report["pair_note"]
+
+
+# ---------------------------------------------------------------------------
+# 리뷰에서 확정된 나머지 수정들
+# ---------------------------------------------------------------------------
+def test_nan_velocity_is_filtered():
+    """eps_trend에 NaN이 섞여도 리비전 속도가 오염되지 않아야 함"""
+
+    class _NanTicker(_FakeTicker):
+        def __init__(self, symbol):
+            super().__init__(symbol)
+            self.eps_trend = pd.DataFrame(
+                {"current": [float("nan")], "30daysAgo": [0.50]}, index=["0q"]
+            )
+            self.eps_revisions = pd.DataFrame(
+                {"upLast30days": [0], "downLast30days": [3]}, index=["0q"]
+            )
+
+    with patch.dict(sys.modules, {"yfinance": _fake_yf(_NanTicker)}):
+        out = fe.fetch_consensus("TEST")
+
+    assert out["revision_velocity_pct"] is None, out
+    assert out["revision"] == -1, out   # 건수 폴백으로 하향이 잡혀야 함
+
+
+def test_tiny_eps_denominator_skips_velocity():
+    """EPS 분모가 5센트 미만이면 속도를 계산하지 않아야 함 (노이즈 폭주 방지)"""
+
+    class _TinyTicker(_FakeTicker):
+        def __init__(self, symbol):
+            super().__init__(symbol)
+            self.eps_trend = pd.DataFrame(
+                {"current": [0.03], "30daysAgo": [0.01]}, index=["0q"]
+            )
+
+    with patch.dict(sys.modules, {"yfinance": _fake_yf(_TinyTicker)}):
+        out = fe.fetch_consensus("TEST")
+
+    assert out["revision_velocity_pct"] is None, out
+
+
+def test_margin_excludes_loss_quarters():
+    """턴어라운드 종목: 적자 분기가 평균 마진을 오염시키면 안 됨"""
+    # 적자 3분기 + 흑자 1분기(마진 10/135≈7.4%)
+    quarters = make_quarters(
+        [-80 * M, -60 * M, -40 * M, 10 * M],
+        revenues=[100 * M, 110 * M, 120 * M, 135 * M],
+    )
+    avg = fe.average_operating_margin(quarters, n=4)
+    assert avg is not None and avg > 0, avg          # 음수 마진이 아니어야 함
+    assert abs(avg - (10 / 135 * 100)) < 0.01, avg   # 흑자 분기만 반영
+
+    # 흑자 분기가 하나도 없으면 None (억지 전망 금지)
+    all_loss = make_quarters([-80 * M, -60 * M], revenues=[100 * M, 110 * M])
+    assert fe.average_operating_margin(all_loss) is None
+
+
+def test_rollover_shift_when_consensus_points_at_reported_quarter():
+    """컨센서스 '0q'가 방금 발표된 분기를 가리키면 한 분기 당겨야 함"""
+
+    class _StaleTicker(_FakeTicker):
+        def __init__(self, symbol):
+            super().__init__(symbol)
+            # 0q 매출 = 마지막 실제 분기 매출(650M)과 거의 동일 → 미롤오버 상황
+            self.revenue_estimate = pd.DataFrame(
+                {"avg": [650 * M, 720 * M], "numberOfAnalysts": [20, 18]},
+                index=["0q", "+1q"],
+            )
+
+    quarters = make_quarters(
+        [100 * M, 110 * M, 120 * M, 130 * M],
+        revenues=[500 * M, 550 * M, 600 * M, 650 * M],
+    )
+    with patch.dict(sys.modules, {"yfinance": _fake_yf(_StaleTicker)}):
+        out = fe.estimate_forward("TEST", quarters)
+
+    # 시프트 후: 다음 분기 = 720M × 평균마진(20%) = 144M, 다다음은 없음
+    assert abs(out["forward_op_income"] - 144 * M) < 1, out["forward_op_income"]
+    assert out["forward_op_income_2"] is None, out
+    assert any("당김" in e for e in out["consensus"]["errors"]), out["consensus"]["errors"]
+
+
+def test_q2_uses_guidance_implied_margin():
+    """다음 분기가 가이던스 기반이면 다다음 분기도 같은 마진 기준을 써야 함
+    (마진 기준이 다르면 매출이 그대로여도 가짜 반등 신호가 생김)"""
+    quarters = make_quarters(
+        [158 * M, 158 * M, 158 * M, 158 * M],
+        revenues=[500 * M, 500 * M, 500 * M, 500 * M],   # 평균 마진 31.6%
+    )
+    # 가이던스: 매출 $510M, 영업마진 26% (보수적)
+    quarters[-1]["guidance_text"] = (
+        "Business Outlook. We expect revenue of $505 million to $515 million "
+        "and non-GAAP operating margin of approximately 26%."
+    )
+
+    class _FlatTicker(_FakeTicker):
+        def __init__(self, symbol):
+            super().__init__(symbol)
+            self.revenue_estimate = pd.DataFrame(
+                {"avg": [510 * M, 510 * M], "numberOfAnalysts": [15, 14]},
+                index=["0q", "+1q"],
+            )
+
+    with patch.dict(sys.modules, {"yfinance": _fake_yf(_FlatTicker)}):
+        out = fe.estimate_forward("TEST", quarters)
+
+    assert out["basis"] == cfg.SRC_GUIDANCE, out
+    # 두 분기 모두 가이던스 내재 마진(26%) 기준 → 매출이 같으니 이익도 같아야 함
+    assert abs(out["forward_op_income"] - out["forward_op_income_2"]) < 1e-3, (
+        out["forward_op_income"], out["forward_op_income_2"],
+    )
+
+
+def test_recovery_path_labeled_rebound_not_accel():
+    """감익 중인 종목의 회복 경로는 '가속 후 둔화'(정점 신호)가 아니라
+    '둔화 후 반등'(바닥 신호)으로 표시해야 함"""
+    quarters = make_quarters([100 * M, 111 * M, 100 * M])   # 최근 QoQ −9.9%
+    delta = scoring.score_delta_acceleration(quarters)
+    forward = {
+        "forward_op_income": 105 * M,      # 다음 +5.0% (회복)
+        "forward_op_income_2": 105 * M,    # 다다음 0.0%
+        "basis": cfg.SRC_ESTIMATE, "basis_2": cfg.SRC_ESTIMATE,
+    }
+    result = scoring.predict_delta(quarters, forward, delta)
+
+    assert result["label"] == cfg.F_REBOUND, result           # 단분기: 반등
+    assert result["accel_label"] == cfg.F2_REBOUND, result    # 2분기: 반등 (모순 제거)
+
+
+def test_loss_base_forward_scoring():
+    """최근 분기가 적자일 때: 흑자 전환 전망 > 적자 축소 > 적자 확대 순으로
+    점수가 달라야 하고, '전망을 구하지 못했다'는 거짓 문구가 나오면 안 됨"""
+    quarters = make_quarters([50 * M, 20 * M, -10 * M])
+
+    turn = scoring.score_forward(quarters, {"forward_op_income": 18 * M, "revision": 0})
+    shrink = scoring.score_forward(quarters, {"forward_op_income": -3 * M, "revision": 0})
+    worse = scoring.score_forward(quarters, {"forward_op_income": -25 * M, "revision": 0})
+
+    assert turn["score"] > shrink["score"] > worse["score"], (turn, shrink, worse)
+    assert "구하지 못했습니다" not in turn["detail"], turn["detail"]
+    assert "흑자 전환" in turn["detail"], turn["detail"]
 
 
 if __name__ == "__main__":

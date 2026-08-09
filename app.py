@@ -267,8 +267,14 @@ def load_one_ticker(ticker: str, use_cache: bool):
 
 @st.cache_resource
 def _price_store() -> dict:
-    """종목별 주가 저장소 — 종목을 추가해도 새 종목만 받아옵니다."""
-    return {"data": {}, "ts": {}}
+    """종목별 주가 저장소 — 종목을 추가해도 새 종목만 받아옵니다.
+
+    여러 사용자 세션이 같은 저장소를 공유하므로, 동시에 갱신해도
+    중복 다운로드·데이터 역행이 없도록 락을 함께 둡니다.
+    """
+    import threading
+
+    return {"data": {}, "ts": {}, "lock": threading.Lock()}
 
 
 def load_all(tickers: list[str], include_current_week: bool, use_cache: bool = True):
@@ -276,7 +282,22 @@ def load_all(tickers: list[str], include_current_week: bool, use_cache: bool = T
     # 주가: 저장소에 없는 종목만 받아옵니다 (야후 거부 시 자동 재시도 포함)
     store = _price_store()
     with st.spinner("주가 데이터를 확인하는 중..."):
-        failed = pipeline.refresh_price_store(store, tickers)
+        failed, stale = pipeline.refresh_price_store(store, tickers)
+
+    # 기준 지수(SPY)는 종목 목록이 아니므로 실패 경고에서 분리해 별도 안내
+    if cfg.BENCHMARK in failed or cfg.BENCHMARK in stale:
+        st.info(
+            f"기준 지수({cfg.BENCHMARK}) 갱신에 실패해 상대강도(RS)가 "
+            "이전 데이터 기준이거나 비어 있을 수 있습니다."
+        )
+    failed = [t for t in failed if t != cfg.BENCHMARK]
+    stale = [t for t in stale if t != cfg.BENCHMARK]
+    if stale:
+        st.info(
+            f"다음 종목은 갱신에 실패해 **이전 시점의 주가**로 표시 중입니다: "
+            f"{', '.join(stale)} (5분 후 자동 재시도)"
+        )
+
     price_map, weekly_map = pipeline.prices_from_store(store, tickers, include_current_week)
 
     # 실적: 여러 종목을 동시에 받습니다 (순차 처리는 종목이 많으면 수 분 걸립니다)
@@ -313,22 +334,31 @@ def clear_all_caches():
 # ---------------------------------------------------------------------------
 # 종목 목록 관리 — 주소(URL)에 저장해 다음에 열어도 유지됩니다
 # ---------------------------------------------------------------------------
+import re as _re
+
+# 티커로 인정하는 형식: 영문 대문자·숫자·점·하이픈 1~10자 (예: BRK.B, MOG-A)
+# 주소(URL)는 누구나 편집할 수 있으므로 이상한 값이 목록에 들어오지 않게 거릅니다.
+_TICKER_RE = _re.compile(r"^[A-Z0-9.\-]{1,10}$")
+
+
 def read_tickers_from_url() -> list[str]:
     """종목 목록을 정합니다: 주소(URL) → 저장 파일 → 기본 목록 순서."""
     raw = st.query_params.get("tickers", "")
     if raw:
         tickers = []
-        for piece in raw.replace(" ", "").split(","):
+        for piece in str(raw).replace(" ", "").split(","):
             symbol = piece.strip().upper()
-            if symbol and symbol not in tickers:
+            if symbol and _TICKER_RE.match(symbol) and symbol not in tickers:
                 tickers.append(symbol)
+            if len(tickers) >= cfg.MAX_TICKERS:   # 주소로 상한을 우회하지 못하게
+                break
         if tickers:
             return tickers
 
     # 주소에 없으면 저장 버튼으로 남긴 목록을 찾습니다
     saved = storage.load_saved_tickers()
     if saved:
-        return saved
+        return saved[: cfg.MAX_TICKERS]
 
     return list(cfg.TICKERS)
 
@@ -407,6 +437,8 @@ with st.sidebar:
         if st.button("↩️ 기본 목록으로 되돌리기", width="stretch"):
             st.session_state.tickers = list(cfg.TICKERS)
             write_tickers_to_url(st.session_state.tickers)
+            # 저장 파일도 기본 목록으로 덮어써야 다음에 켰을 때 진짜로 되돌아갑니다
+            storage.save_tickers_local(cfg.TICKERS)
             st.rerun()
 
     # --- 저장 버튼: 다음에 앱을 켜도 이 목록이 유지되게 합니다 ---
@@ -426,6 +458,11 @@ with st.sidebar:
                 st.session_state.tickers, token, repo
             )
             (st.success if ok else st.warning)(github_message)
+            if ok:
+                st.caption(
+                    "ℹ️ 저장소에 커밋되면 앱이 1~2분간 자동 재시작될 수 있습니다. "
+                    "재시작 후에도 목록은 그대로 유지됩니다."
+                )
 
         if local_ok:
             st.success("저장했습니다. 앱을 다시 켜도 이 목록으로 시작합니다.")
@@ -978,8 +1015,9 @@ else:
         forecast_info = detail.get("forecast_detail") or {}
         next_qoq = forecast_info.get("next_qoq")
         next2_qoq = forecast_info.get("next2_qoq")
+        # None뿐 아니라 NaN(pandas 빈 값)도 걸러야 점선이 정상적으로 그려집니다
         last_actual_qoq = next(
-            (v for v in reversed(qoq_values) if v is not None), None
+            (v for v in reversed(qoq_values) if v is not None and pd.notna(v)), None
         )
         if next_qoq is not None and last_actual_qoq is not None and future_labels:
             last_actual_label = quarters_df["period_label"].tolist()[-1]

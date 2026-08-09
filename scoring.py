@@ -393,10 +393,22 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
     revision = forward.get("revision", 0)
 
     # 전망 자체 점수 (최대 10점)
-    if forward_op is None or latest_op is None or latest_op <= 0:
+    if forward_op is None or latest_op is None:
         forward_score = max_score * 0.4
         growth_text = "다음 분기 전망치를 구하지 못했습니다"
         growth_pct = None
+    elif latest_op <= 0:
+        # 적자 기저에서는 증가율(%)이 의미가 없으므로 전환/개선 여부로 평가합니다
+        growth_pct = None
+        if forward_op > 0:
+            forward_score = max_score * 0.67 * 0.9
+            growth_text = f"적자에서 흑자 전환 전망({ '$%.0fM' % (forward_op/1e6) })"
+        elif forward_op > latest_op:
+            forward_score = max_score * 0.67 * 0.5
+            growth_text = "적자 축소 전망 (기저가 적자라 증가율 대신 개선 여부로 평가)"
+        else:
+            forward_score = max_score * 0.67 * 0.1
+            growth_text = "적자 확대 전망"
     else:
         growth_pct = (forward_op / latest_op - 1.0) * 100.0
         # −10% ~ +30% 구간을 0~10점으로 환산
@@ -407,8 +419,10 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
     # 리비전 점수 (최대 5점)
     # 추정치가 30일간 몇 % 움직였는지(속도)가 있으면 그것으로 정밀하게,
     # 없으면 상향/하향 방향만으로 계산합니다.
+    import math
+
     velocity = forward.get("revision_velocity_pct")
-    if velocity is not None:
+    if velocity is not None and math.isfinite(velocity):
         full = cfg.REVISION_VELOCITY_FULL_PCT   # ±5%에서 최저/최고점
         ratio = _clamp((velocity + full) / (2 * full), 0.0, 1.0)
         revision_score = ratio * (max_score * 0.33)
@@ -493,12 +507,17 @@ def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> di
         accel_label = label if label != cfg.F_NONE else cfg.F2_NONE
         accel_detail = "다다음 분기 컨센서스가 없어 다음 분기까지만 예측했습니다"
     else:
-        # 1단계 변화(실제→다음)와 2단계 변화(다음→다다음)의 방향을 조합합니다
+        # 1단계 변화(실제→다음)와 2단계 변화(다음→다다음)의 방향을 조합합니다.
+        # 단분기 판정과 마찬가지로 "지금 증가 중인가(was_rising)"를 함께 봅니다:
+        # 감익 중인 종목이 회복되는 경로는 '가속'이 아니라 '반등'이기 때문입니다.
         step1 = 1 if change > threshold else (-1 if change < -threshold else 0)
         change2 = next2_qoq - next_qoq
         step2 = 1 if change2 > threshold else (-1 if change2 < -threshold else 0)
 
-        if step1 > 0 and step2 >= 0:
+        if not was_rising and step1 > 0:
+            # 감익(-QoQ)에서 좋아지는 경로 = 반등 (정점 신호인 '가속 후 둔화'와 구분)
+            accel_label = cfg.F2_REBOUND
+        elif step1 > 0 and step2 >= 0:
             accel_label = cfg.F2_ACCEL_KEEP
         elif step1 > 0 and step2 < 0:
             accel_label = cfg.F2_ACCEL_SLOW

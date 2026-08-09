@@ -20,8 +20,12 @@ from __future__ import annotations
 import base64
 import json
 import os
+import re
 
 import config as cfg
+
+# 티커로 인정하는 형식 (저장 파일이 손으로 편집되거나 깨져도 안전하도록)
+_TICKER_RE = re.compile(r"^[A-Z0-9.\-]{1,10}$")
 
 # 서버 파일 (재배포 전까지 유지)
 LOCAL_FILE = os.path.join(cfg.CACHE_DIR, "saved_tickers.json")
@@ -31,12 +35,14 @@ REPO_FILE = "user_tickers.json"
 
 
 def _clean(tickers: list[str]) -> list[str]:
-    """대문자로 통일하고 중복·빈 값을 제거합니다."""
+    """대문자로 통일하고 중복·빈 값·이상한 형식을 제거하며 상한을 지킵니다."""
     out: list[str] = []
     for piece in tickers:
         symbol = str(piece).strip().upper()
-        if symbol and symbol not in out:
+        if symbol and _TICKER_RE.match(symbol) and symbol not in out:
             out.append(symbol)
+        if len(out) >= cfg.MAX_TICKERS:
+            break
     return out
 
 

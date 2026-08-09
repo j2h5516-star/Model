@@ -843,6 +843,23 @@ def merge_quarters(
     merged = [dict(q) for q in xbrl_quarters]
     used_press: set[int] = set()
 
+    # --- 짝짓기 대상과 승격 대상 구분 ---
+    # 마지막 XBRL 분기보다 "한 분기 이상 뒤"(약 91일 + 최소 발표 간격 14일)에
+    # 제출된 8-K는 아직 XBRL에 없는 새 분기의 발표입니다. 이것을 과거 분기에
+    # 역방향으로 짝지으면 다른 분기 숫자로 덮어쓰는 오염이 생기므로,
+    # 짝짓기에서 빼고 아래 승격 단계에서 새 분기 행으로 추가합니다.
+    PROMOTE_AFTER_DAYS = 105
+    last_period = max(
+        (d for d in (_to_date(r.get("filing_date", "")) for r in merged) if d is not None),
+        default=None,
+    )
+    promote_only: set[int] = set()
+    if last_period is not None:
+        for index, press in enumerate(press_quarters):
+            press_date = _to_date(press.get("filing_date", ""))
+            if press_date is not None and (press_date - last_period).days > PROMOTE_AFTER_DAYS:
+                promote_only.add(index)
+
     for row in merged:
         period_date = _to_date(row.get("filing_date", ""))
         if period_date is None:
@@ -852,7 +869,7 @@ def merge_quarters(
         # (연말 분기는 10-K와 함께 늦게 발표하는 회사가 있어 창을 넉넉히 둡니다)
         best_index, best_gap = None, None
         for index, press in enumerate(press_quarters):
-            if index in used_press:
+            if index in used_press or index in promote_only:
                 continue
             press_date = _to_date(press.get("filing_date", ""))
             if press_date is None:
@@ -885,6 +902,27 @@ def merge_quarters(
             row["guidance_text"] = press["guidance_text"]
         # 발표일 기준 정렬을 위해 8-K 제출일을 따로 남깁니다
         row["announced_date"] = press.get("filing_date", "")
+
+    # --- 최신 8-K 승격 ---
+    # 실적 8-K는 10-Q(XBRL)보다 몇 주 먼저 나옵니다. 그 사이에는 최신 분기의
+    # XBRL 행이 아직 없어 8-K가 짝을 못 찾는데, 이걸 버리면
+    #   · 가장 신선한 분기 실적이 사라지고
+    #   · 그 안의 최신 가이던스(다음 분기 전망)도 함께 사라집니다.
+    # → 모든 XBRL 분기보다 뒤에 제출됐고 영업이익이 있는 8-K는
+    #   새 분기 행으로 승격시킵니다.
+    for index, press in enumerate(press_quarters):
+        if index in used_press:
+            continue
+        press_date = _to_date(press.get("filing_date", ""))
+        if press_date is None or press.get("op_income") is None:
+            continue
+        if last_period is None or press_date > last_period:
+            promoted = dict(press)
+            promoted["announced_date"] = press.get("filing_date", "")
+            merged.append(promoted)
+            used_press.add(index)
+
+    merged.sort(key=lambda r: r.get("filing_date", ""))
 
     # 짝을 못 찾은 8-K가 있으면 진단에 남깁니다 (짝짓기 실패 원인 추적용)
     if report is not None:
