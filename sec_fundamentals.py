@@ -385,6 +385,9 @@ def new_report(ticker: str) -> dict:
         "merged_direct": 0,        # 8-K 값으로 덮어쓴 분기 수
         "text_source": "",         # 텍스트를 어디서 얻었나 (보도자료/첨부/본문)
         "first_error": "",         # 첫 예외 (원인 파악의 핵심)
+        "unpaired_press": 0,       # 분기와 짝을 못 찾은 8-K 건수
+        "pair_note": "",           # 짝짓기 실패 설명
+        "forward_note": "",        # 전망(컨센서스) 수집 실패 사유
         "note": "",
     }
 
@@ -413,6 +416,10 @@ def fetch_earnings_8k(
 
     scanned = 0
     for filing in filings:
+        # 필요한 만큼 숫자를 확보했으면 더 내려받지 않습니다 (속도)
+        if report["parsed_ok"] >= cfg.EARLY_STOP_PARSED:
+            report["note"] = f"실적 {report['parsed_ok']}건 확보 후 조기 종료"
+            break
         # 8-K는 실적 외 사유로도 자주 올라오므로 살펴볼 건수를 제한합니다
         if scanned >= cfg.MAX_8K_SCAN:
             report["note"] = f"8-K {cfg.MAX_8K_SCAN}건까지만 확인했습니다"
@@ -436,6 +443,12 @@ def fetch_earnings_8k(
         parsed = parse_press_release(text)
         if parsed["revenue"] is None and parsed["op_income"] is None:
             continue  # 실적 숫자가 전혀 없으면 실적발표가 아닐 가능성
+
+        # 보도자료 첨부가 아니라 공시 본문에서 읽은 경우에는 기준을 높입니다.
+        # (실적과 무관한 8-K 본문에서 엉뚱한 금액을 주워 담아
+        #  분기 짝짓기를 오염시키는 것을 실전에서 확인했습니다)
+        if not had_exhibit and parsed["op_income"] is None:
+            continue
         report["parsed_ok"] += 1
 
         filing_date = str(filing.filing_date)
@@ -800,7 +813,11 @@ def _period_series(facts, concept: str, months: int) -> dict[str, float]:
 # ---------------------------------------------------------------------------
 # 바깥에서 호출하는 함수
 # ---------------------------------------------------------------------------
-def merge_quarters(xbrl_quarters: list[dict], press_quarters: list[dict]) -> list[dict]:
+def merge_quarters(
+    xbrl_quarters: list[dict],
+    press_quarters: list[dict],
+    report: dict | None = None,
+) -> list[dict]:
     """XBRL로 만든 뼈대에 8-K에서 뽑은 공식 논갭 수치를 덮어씁니다.
 
     예전에는 "8-K가 되면 8-K만, 안 되면 XBRL만" 이라서 하나라도 실패하면
@@ -831,7 +848,8 @@ def merge_quarters(xbrl_quarters: list[dict], press_quarters: list[dict]) -> lis
         if period_date is None:
             continue
 
-        # 이 분기 종료 후 0~90일 사이에 나온 8-K 중 가장 가까운 것을 짝짓습니다
+        # 이 분기 종료 후 일정 기간 안에 나온 8-K 중 가장 가까운 것을 짝짓습니다
+        # (연말 분기는 10-K와 함께 늦게 발표하는 회사가 있어 창을 넉넉히 둡니다)
         best_index, best_gap = None, None
         for index, press in enumerate(press_quarters):
             if index in used_press:
@@ -840,7 +858,7 @@ def merge_quarters(xbrl_quarters: list[dict], press_quarters: list[dict]) -> lis
             if press_date is None:
                 continue
             gap = (press_date - period_date).days
-            if 0 <= gap <= 90 and (best_gap is None or gap < best_gap):
+            if 0 <= gap <= cfg.PAIRING_WINDOW_DAYS and (best_gap is None or gap < best_gap):
                 best_index, best_gap = index, gap
 
         if best_index is None:
@@ -867,6 +885,21 @@ def merge_quarters(xbrl_quarters: list[dict], press_quarters: list[dict]) -> lis
             row["guidance_text"] = press["guidance_text"]
         # 발표일 기준 정렬을 위해 8-K 제출일을 따로 남깁니다
         row["announced_date"] = press.get("filing_date", "")
+
+    # 짝을 못 찾은 8-K가 있으면 진단에 남깁니다 (짝짓기 실패 원인 추적용)
+    if report is not None:
+        unpaired = [
+            press.get("filing_date", "?")
+            for index, press in enumerate(press_quarters)
+            if index not in used_press
+        ]
+        report["unpaired_press"] = len(unpaired)
+        if unpaired:
+            report["pair_note"] = (
+                f"짝 못 찾은 8-K {len(unpaired)}건 (예: {unpaired[0]}) — "
+                f"분기 종료일과 {cfg.PAIRING_WINDOW_DAYS}일 넘게 떨어져 있거나 "
+                "실적발표가 아닐 수 있습니다"
+            )
 
     return merged
 
@@ -913,7 +946,7 @@ def get_fundamentals(
         _record_error(report, "8-K", exc)
 
     # ③ 합치기
-    quarters = merge_quarters(xbrl_quarters, press_quarters)
+    quarters = merge_quarters(xbrl_quarters, press_quarters, report)
     report["merged_direct"] = sum(
         1 for q in quarters if q.get("source") in (cfg.SRC_DIRECT, cfg.SRC_DERIVED)
     )

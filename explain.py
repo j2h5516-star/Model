@@ -137,12 +137,12 @@ def explain_forward(score: dict) -> dict:
         source_text = "8-K 실적 보도자료의 'Business Outlook / Guidance' 문단"
     elif basis == cfg.SRC_ESTIMATE:
         meaning = (
-            "회사가 전망을 밝히지 않아 **통계적으로 추정한 값**입니다. "
-            "무료 데이터로는 진짜 월가 컨센서스를 구할 수 없어서 쓰는 대체 방법입니다. "
-            "실제 결과와 다를 수 있습니다."
+            "회사가 전망을 밝히지 않아 **월가 컨센서스 기반 추정치**를 사용했습니다. "
+            "야후 파이낸스의 애널리스트 매출 컨센서스(LSEG 집계)에 과거 평균 마진을 곱한 "
+            "값이라 실제 결과와 다를 수 있습니다."
         )
-        formula = "`애널리스트 다음 분기 매출 전망 × 최근 4개 분기 평균 non-GAAP 영업마진`"
-        source_text = "Yahoo Finance의 애널리스트 매출 추정치(revenue estimate)"
+        formula = "`월가 다음 분기 매출 컨센서스 × 최근 4개 분기 평균 non-GAAP 영업마진`"
+        source_text = "Yahoo Finance 애널리스트 컨센서스 (LSEG 집계)"
     else:
         meaning = "다음 분기 전망을 만들 자료를 찾지 못했습니다. 이 경우 포워드 항목은 기본 점수만 받습니다."
         formula = ""
@@ -159,6 +159,19 @@ def explain_forward(score: dict) -> dict:
         calc_lines.append(f"- 가장 최근 분기 실제 영업이익: {_m(latest_op)}")
     if growth is not None:
         calc_lines.append(f"- 변화율: {_pct(growth)} ({'증가' if growth > 0 else '감소'} 전망)")
+
+    # 다다음 분기(월가 컨센서스)와 컨센서스의 무게(애널리스트 수)도 보여줍니다
+    forward_op_2 = score.get("forward_op_income_2")
+    if forward_op_2 is not None:
+        calc_lines.append(f"- 다다음 분기 예상(컨센서스): {_m(forward_op_2)}")
+    forecast = score.get("forecast_detail") or {}
+    consensus = (score.get("forward_consensus") or {})
+    analysts = consensus.get("analysts_0q")
+    if analysts:
+        calc_lines.append(f"- 컨센서스 참여 애널리스트: **{analysts}명**")
+    velocity = consensus.get("revision_velocity_pct")
+    if velocity is not None:
+        calc_lines.append(f"- 추정치 30일 변화(리비전 속도): **{velocity:+.1f}%**")
 
     return {
         "title": f"다음 분기 전망 근거: {basis or '없음'}",
@@ -277,12 +290,23 @@ def explain_delta(score: dict) -> dict:
     forecast = score.get("forecast_detail") or {}
     forecast_lines = []
     if forecast.get("next_qoq") is not None:
-        forecast_lines.append(f"- 예측: **{forecast.get('label')}**")
+        forecast_lines.append(f"- 다음 분기 예측: **{forecast.get('label')}**")
         forecast_lines.append(
             f"- 최근 실제 증가율 {forecast.get('last_qoq'):+.1f}% → "
             f"다음 분기 예상 **{forecast.get('next_qoq'):+.1f}%** "
             f"({forecast.get('change_pp'):+.1f}%p)"
         )
+        # 델타가속예측 (2분기 경로)
+        if forecast.get("next2_qoq") is not None:
+            forecast_lines.append(
+                f"- **델타가속예측: {forecast.get('accel_label')}** — "
+                f"{forecast.get('accel_detail', '')}"
+            )
+            forecast_lines.append(
+                "- 다다음 분기는 월가 컨센서스 매출 × 평균 마진으로 계산한 값입니다"
+            )
+        elif forecast.get("accel_detail"):
+            forecast_lines.append(f"- {forecast.get('accel_detail')}")
         forecast_lines.append(
             f"- ⚠️ 이 예측은 **{forecast.get('basis') or '추정'}** 기반"
             f"(신뢰도 {forecast.get('confidence', 0)}%)이며 실제 결과와 다를 수 있습니다"

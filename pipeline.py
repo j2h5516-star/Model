@@ -51,12 +51,21 @@ def collect_one_ticker(ticker: str, use_cache: bool = True) -> dict:
 
     try:
         forward = fe.estimate_forward(ticker, quarters)
+        # 컨센서스 수집 실패 사유를 진단에 남깁니다 (전망이 비는 원인 추적용)
+        errors = (forward.get("consensus") or {}).get("errors") or []
+        if errors:
+            report["forward_note"] = " · ".join(errors[:3])
     except Exception as exc:
         forward = {
             "forward_op_income": None,
             "basis": None,
+            "forward_op_income_2": None,
+            "basis_2": None,
             "revision": 0,
+            "revision_velocity_pct": None,
+            "consensus": {},
             "detail": "전망 계산 중 문제가 발생했습니다",
+            "detail_2": "",
         }
         if not report.get("first_error"):
             report["first_error"] = f"[전망] {type(exc).__name__}: {str(exc)[:180]}"
@@ -82,10 +91,86 @@ def empty_bundle(ticker: str, reason: str = "") -> dict:
 
 
 # ---------------------------------------------------------------------------
-# 2) 주가 (여러 종목을 한 번에 받는 편이 빨라 묶어서 처리)
+# 2) 주가 — 종목 단위 증분 저장소
 # ---------------------------------------------------------------------------
+# 예전에는 종목 목록 전체를 통째로 캐시해서, 티커를 하나만 추가해도
+# 전 종목을 다시 내려받았습니다. 그때 야후가 요청 폭주로 일부를 거부하면
+# 새 종목이 데이터 없이 등록되는 문제가 있었습니다.
+# 이제는 저장소(store)에 종목별로 담아 두고 "없는 종목만" 받아옵니다.
+
+PRICE_TTL_SEC = 3600.0   # 종목별 주가를 1시간 동안 재사용
+
+
+def refresh_price_store(
+    store: dict,
+    tickers: list[str],
+    fetch=None,
+    now: float | None = None,
+    sleep=None,
+) -> list[str]:
+    """저장소에 없는(또는 오래된) 종목만 받아 채웁니다.
+
+    반환: 끝내 받지 못한 종목 목록
+    fetch/now/sleep 은 테스트에서 갈아끼울 수 있게 열어 둡니다.
+    """
+    import time as _time
+
+    if fetch is None:
+        fetch = md.fetch_daily_data
+    if now is None:
+        now = _time.time()
+    if sleep is None:
+        sleep = _time.sleep
+
+    store.setdefault("data", {})
+    store.setdefault("ts", {})
+
+    wanted = list(dict.fromkeys(list(tickers) + [cfg.BENCHMARK]))
+    need = [
+        t for t in wanted
+        if t not in store["data"] or now - store["ts"].get(t, 0) > PRICE_TTL_SEC
+    ]
+    if not need:
+        return []
+
+    daily_map, _ = fetch(need)
+
+    # 야후는 요청이 몰리면 일부 종목을 조용히 거부합니다 → 한 번 더 시도
+    missing = [t for t in need if t not in daily_map]
+    if missing:
+        sleep(2.0)
+        retry_map, _ = fetch(missing)
+        daily_map.update(retry_map)
+
+    for ticker in need:
+        if ticker in daily_map and not daily_map[ticker].empty:
+            store["data"][ticker] = daily_map[ticker]
+            store["ts"][ticker] = now
+
+    return [t for t in need if t not in store["data"]]
+
+
+def prices_from_store(
+    store: dict,
+    tickers: list[str],
+    include_current_week: bool = True,
+):
+    """저장소의 일봉으로 추세·상대강도를 계산합니다.
+
+    반환: (price_map, weekly_map)
+    """
+    daily_map = {
+        t: store.get("data", {})[t]
+        for t in list(tickers) + [cfg.BENCHMARK]
+        if t in store.get("data", {})
+    }
+    return md.analyze_prices(
+        daily_map, tickers=list(tickers), include_current_week=include_current_week
+    )
+
+
 def fetch_prices(tickers: list[str], include_current_week: bool = True):
-    """주가를 받아 추세·상대강도까지 계산합니다.
+    """주가를 받아 추세·상대강도까지 계산합니다 (단독 실행·테스트용 일괄 경로).
 
     반환: (price_map, weekly_map, failed)
     """
@@ -192,6 +277,7 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
         rows.append(
             {
                 "종목": score["ticker"],
+                "주가($)": score.get("close"),
                 "최종점수": score["final_score"],
                 "펀더": score["fund_score"],
                 "기술": score["tech_score"],
@@ -200,6 +286,7 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
                 "GM%드라이버": score["gm_type"],
                 "델타방향": arrow.get(score["delta_direction"], score["delta_direction"]),
                 "델타예측": score["delta_forecast"],
+                "델타가속예측": score.get("accel_forecast", "-"),
                 "RS": score["rs"],
                 "판정": score["verdict"],
             }

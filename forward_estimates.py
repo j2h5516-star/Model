@@ -188,51 +188,103 @@ def forward_from_guidance(guidance: dict) -> float | None:
 
 
 # ---------------------------------------------------------------------------
-# ② yfinance 매출 컨센서스로 추정
+# ② 월가 컨센서스 (야후 파이낸스 = LSEG 집계 컨센서스)
 # ---------------------------------------------------------------------------
-def fetch_yf_forward(ticker: str) -> dict:
-    """yfinance에서 다음 분기 매출 컨센서스와 EPS 리비전 정보를 가져옵니다.
+# 야후 파이낸스 애널리스트 탭의 숫자는 LSEG(옛 레피니트)가 집계한
+# 실제 월가 컨센서스입니다. yfinance로 무료로 가져올 수 있습니다.
+#   · revenue_estimate : 매출 컨센서스 (0q=다음 발표 분기, +1q=그다음 분기)
+#   · earnings_estimate: EPS 컨센서스 + 참여 애널리스트 수
+#   · eps_trend        : 추정치가 7/30/60/90일 전 대비 어떻게 움직였나 (리비전 속도)
+#   · eps_revisions    : 상향/하향 건수 (리비전 속도의 보조)
 
-    반환: {"next_q_revenue": 달러 or None, "revision": +1/0/-1}
-    """
-    result = {"next_q_revenue": None, "revision": 0}
+
+def fetch_consensus(ticker: str) -> dict:
+    """월가 컨센서스를 최대한 가져옵니다. 실패한 항목은 errors에 사유를 남깁니다."""
+    out = {
+        "revenue_0q": None,      # 다음 발표 분기 매출 컨센서스 (달러)
+        "revenue_1q": None,      # 그다음 분기 매출 컨센서스
+        "eps_0q": None,          # 다음 발표 분기 EPS 컨센서스
+        "eps_1q": None,
+        "analysts_0q": None,     # 참여 애널리스트 수 (컨센서스의 무게)
+        "revision": 0,           # 방향: +1 상향 / 0 중립 / -1 하향
+        "revision_velocity_pct": None,   # 30일간 추정치가 몇 % 움직였나
+        "errors": [],            # 진단 패널에 보여줄 실패 사유
+    }
+
     try:
         import yfinance as yf
 
         stock = yf.Ticker(ticker)
-    except Exception:
-        return result
+    except Exception as exc:
+        out["errors"].append(f"yfinance 초기화: {type(exc).__name__}")
+        return out
 
-    # --- 다음 분기 매출 컨센서스 ---
+    # --- 매출 컨센서스 (두 분기) ---
     try:
         revenue_est = stock.revenue_estimate
-        if revenue_est is not None and len(revenue_est) > 0 and "avg" in revenue_est.columns:
-            # 인덱스 "0q" = 이번(다음 발표) 분기, "+1q" = 그다음 분기
-            for key in ("0q", "+1q"):
-                if key in revenue_est.index:
-                    value = revenue_est.loc[key, "avg"]
-                    if value is not None and float(value) > 0:
-                        result["next_q_revenue"] = float(value)
-                        break
-    except Exception:
-        pass
+        if revenue_est is None or len(revenue_est) == 0:
+            out["errors"].append("매출 컨센서스 없음")
+        else:
+            value = _safe_number(revenue_est, "0q", ["avg"])
+            if value and value > 0:
+                out["revenue_0q"] = value
+            value = _safe_number(revenue_est, "+1q", ["avg"])
+            if value and value > 0:
+                out["revenue_1q"] = value
+            analysts = _safe_number(revenue_est, "0q", ["numberOfAnalysts"])
+            if analysts and analysts > 0:
+                out["analysts_0q"] = int(analysts)
+    except Exception as exc:
+        out["errors"].append(f"매출 컨센서스: {type(exc).__name__}")
 
-    # --- EPS 추정치 리비전 방향 (최근 30일 상향/하향 건수) ---
+    # --- EPS 컨센서스 (교차검증용) ---
     try:
-        revisions = stock.eps_revisions
-        if revisions is not None and len(revisions) > 0:
-            row_key = "0q" if "0q" in revisions.index else revisions.index[0]
-            up = _safe_number(revisions, row_key, ["upLast30days", "upLast30Days"])
-            down = _safe_number(revisions, row_key, ["downLast30days", "downLast30Days"])
-            if up is not None and down is not None:
-                if up > down:
-                    result["revision"] = 1
-                elif down > up:
-                    result["revision"] = -1
-    except Exception:
-        pass
+        eps_est = stock.earnings_estimate
+        if eps_est is not None and len(eps_est) > 0:
+            out["eps_0q"] = _safe_number(eps_est, "0q", ["avg"])
+            out["eps_1q"] = _safe_number(eps_est, "+1q", ["avg"])
+            if out["analysts_0q"] is None:
+                analysts = _safe_number(eps_est, "0q", ["numberOfAnalysts"])
+                if analysts and analysts > 0:
+                    out["analysts_0q"] = int(analysts)
+    except Exception as exc:
+        out["errors"].append(f"EPS 컨센서스: {type(exc).__name__}")
 
-    return result
+    # --- 리비전 속도: 추정치가 30일 전 대비 몇 % 움직였나 ---
+    try:
+        trend = stock.eps_trend
+        if trend is not None and len(trend) > 0 and "0q" in trend.index:
+            current = _safe_number(trend, "0q", ["current"])
+            past_30d = _safe_number(trend, "0q", ["30daysAgo", "30DaysAgo"])
+            if current is not None and past_30d is not None and abs(past_30d) > 1e-9:
+                out["revision_velocity_pct"] = (current - past_30d) / abs(past_30d) * 100.0
+    except Exception as exc:
+        out["errors"].append(f"추정 추이: {type(exc).__name__}")
+
+    # --- 리비전 방향 ---
+    # 속도가 있으면 속도의 부호로, 없으면 상향/하향 건수로 정합니다
+    velocity = out["revision_velocity_pct"]
+    if velocity is not None:
+        out["revision"] = 1 if velocity > 0.5 else (-1 if velocity < -0.5 else 0)
+    else:
+        try:
+            revisions = stock.eps_revisions
+            if revisions is not None and len(revisions) > 0:
+                row_key = "0q" if "0q" in revisions.index else revisions.index[0]
+                up = _safe_number(revisions, row_key, ["upLast30days", "upLast30Days"])
+                down = _safe_number(revisions, row_key, ["downLast30days", "downLast30Days"])
+                if up is not None and down is not None:
+                    out["revision"] = 1 if up > down else (-1 if down > up else 0)
+        except Exception as exc:
+            out["errors"].append(f"리비전: {type(exc).__name__}")
+
+    return out
+
+
+# 예전 이름 호환 (테스트·외부 코드가 깨지지 않도록)
+def fetch_yf_forward(ticker: str) -> dict:
+    consensus = fetch_consensus(ticker)
+    return {"next_q_revenue": consensus["revenue_0q"], "revision": consensus["revision"]}
 
 
 def _safe_number(df, row_key, column_candidates: list[str]) -> float | None:
@@ -263,46 +315,87 @@ def average_operating_margin(quarters: list[dict], n: int = 4) -> float | None:
 # ---------------------------------------------------------------------------
 # 바깥에서 호출하는 함수
 # ---------------------------------------------------------------------------
+def find_latest_guidance_text(quarters: list[dict]) -> str:
+    """가장 최근의 가이던스 문단을 찾습니다.
+
+    ⚠️ 과거 버그: 마지막 분기 행에서만 찾았는데, XBRL·8-K 병합 구조에서는
+    마지막 행이 XBRL 뼈대(가이던스 없음)인 경우가 많아 전망이 통째로 비었습니다.
+    → 최근 분기부터 거슬러 올라가되, 너무 오래된 가이던스(2분기 넘게 과거)는
+      이미 지난 분기 전망이므로 쓰지 않습니다.
+    """
+    for steps_back, quarter in enumerate(reversed(quarters)):
+        if steps_back >= 2:      # 마지막 2개 분기 안에서만 찾습니다
+            break
+        text = quarter.get("guidance_text") or ""
+        if text.strip():
+            return text
+    return ""
+
+
 def estimate_forward(ticker: str, quarters: list[dict]) -> dict:
-    """다음 분기 논갭 영업이익 전망을 만듭니다.
+    """다음 분기(그리고 가능하면 다다음 분기까지) 논갭 영업이익 전망을 만듭니다.
 
     반환:
-      forward_op_income  포워드 논갭 영업이익 (달러) — 못 구하면 None
-      basis              "가이던스" / "추정" / None
-      revision           +1(상향) / 0(중립) / −1(하향)
-      detail             화면에 보여줄 설명 문장
+      forward_op_income    다음 분기 전망 (달러) — 못 구하면 None
+      basis                "가이던스" / "추정" / None
+      forward_op_income_2  다다음 분기 전망 (컨센서스 기반) — 못 구하면 None
+      basis_2              "추정" / None
+      revision             +1(상향) / 0(중립) / −1(하향)
+      revision_velocity_pct  추정치의 30일 변화율(%)
+      consensus            수집한 컨센서스 원본 (애널리스트 수 등)
+      detail / detail_2    화면에 보여줄 설명 문장
     """
     output = {
         "forward_op_income": None,
         "basis": None,
+        "forward_op_income_2": None,
+        "basis_2": None,
         "revision": 0,
+        "revision_velocity_pct": None,
+        "consensus": {},
         "detail": "다음 분기 전망 데이터를 찾지 못했습니다",
+        "detail_2": "",
     }
+
+    # 컨센서스는 분기 실적이 없어도 가져와 둡니다 (진단·리비전에 사용)
+    consensus = fetch_consensus(ticker)
+    output["consensus"] = consensus
+    output["revision"] = consensus["revision"]
+    output["revision_velocity_pct"] = consensus["revision_velocity_pct"]
+
     if not quarters:
         return output
 
-    # 리비전 방향과 매출 컨센서스는 두 방법 모두에서 쓰이므로 먼저 가져옵니다
-    yf_data = fetch_yf_forward(ticker)
-    output["revision"] = yf_data["revision"]
+    avg_margin = average_operating_margin(quarters, n=4)
 
-    # --- ① 가이던스 기반 ---
-    latest = quarters[-1]
-    guidance = parse_guidance(latest.get("guidance_text", "") or "")
+    # --- 다음 분기: ① 가이던스 우선 ---
+    guidance = parse_guidance(find_latest_guidance_text(quarters))
     forward = forward_from_guidance(guidance)
     if forward is not None:
         output["forward_op_income"] = forward
         output["basis"] = cfg.SRC_GUIDANCE
         revenue_text = f"${guidance['revenue']/1e6:,.0f}M" if guidance.get("revenue") else "-"
         output["detail"] = f"회사가 제시한 다음 분기 전망(매출 {revenue_text} 기준)으로 계산했습니다"
-        return output
-
-    # --- ② yfinance 매출 컨센서스 × 최근 4분기 평균 마진 ---
-    avg_margin = average_operating_margin(quarters, n=4)
-    if yf_data["next_q_revenue"] and avg_margin is not None:
-        output["forward_op_income"] = yf_data["next_q_revenue"] * avg_margin / 100.0
+    # --- 다음 분기: ② 컨센서스 매출 × 평균 마진 ---
+    elif consensus["revenue_0q"] and avg_margin is not None:
+        output["forward_op_income"] = consensus["revenue_0q"] * avg_margin / 100.0
         output["basis"] = cfg.SRC_ESTIMATE
+        analysts_text = (
+            f", 애널리스트 {consensus['analysts_0q']}명"
+            if consensus.get("analysts_0q") else ""
+        )
         output["detail"] = (
-            f"애널리스트 매출 전망(${yf_data['next_q_revenue']/1e6:,.0f}M)에 "
+            f"월가 매출 컨센서스(${consensus['revenue_0q']/1e6:,.0f}M{analysts_text})에 "
             f"최근 4개 분기 평균 영업마진({avg_margin:.1f}%)을 곱한 추정치입니다"
         )
+
+    # --- 다다음 분기: 컨센서스 매출 × 평균 마진 (가이던스는 여기까지 안 나옵니다) ---
+    if consensus["revenue_1q"] and avg_margin is not None:
+        output["forward_op_income_2"] = consensus["revenue_1q"] * avg_margin / 100.0
+        output["basis_2"] = cfg.SRC_ESTIMATE
+        output["detail_2"] = (
+            f"다다음 분기는 월가 매출 컨센서스(${consensus['revenue_1q']/1e6:,.0f}M) × "
+            f"평균 영업마진({avg_margin:.1f}%)으로 추정했습니다"
+        )
+
     return output
