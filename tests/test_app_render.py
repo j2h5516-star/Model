@@ -79,6 +79,12 @@ def test_renders_with_full_data():
         assert any("card-grid" in m.value for m in at.markdown), "종목 카드가 없음"
         # 데이터 실패 안내가 떴는지 확인
         assert any("CCC" in w.value for w in at.warning), "실패 종목 안내가 없음"
+        # 상세 설명 팝오버 6개가 모두 있는지 확인
+        all_text = " ".join(m.value for m in at.markdown)
+        for keyword in ("이게 무슨 뜻인가요", "계산 방법", "이 종목의 실제 숫자"):
+            assert keyword in all_text, f"상세 설명에 '{keyword}'가 없음"
+        # 예측 섹션이 실제로 렌더링되는지 확인
+        assert "앞으로의 예측" in all_text, "델타 예측 설명이 없음"
 
 
 def test_ticker_switching():

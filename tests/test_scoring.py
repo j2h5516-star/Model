@@ -320,6 +320,51 @@ def test_build_score_with_no_fundamentals():
     )
 
 
+def test_ranking_non_buy_sorted_by_final_score():
+    """매수 후보가 아닌 종목은 RS가 아니라 최종점수 내림차순으로 정렬돼야 함"""
+    def build(ticker, rs, state, stage, ops):
+        quarters = make_quarters(ops, margins=[50.0] * len(ops))
+        price = {
+            "state": state, "slope": "하락", "disparity": -10.0, "rs": rs,
+            "stage": stage, "close": 50.0, "week_change": -1.0,
+        }
+        return scoring.build_score(ticker, quarters, {}, price)
+
+    # 둘 다 완전 역배열(제외권). LOW는 RS가 높지만 최종점수는 낮음
+    scores = {
+        "LOW": build("LOW", -5.0, cfg.S_FULL_DOWN, 5, [20 * M, 18 * M, 15 * M]),
+        "HIGH": build("HIGH", -40.0, cfg.S_FULL_DOWN, 5, [100 * M, 120 * M, 150 * M]),
+    }
+    table = pipeline.build_ranking_table(scores)
+
+    assert (table["판정"] != cfg.V_BUY).all(), table
+    # RS는 LOW가 높지만, 매수 후보가 아니므로 최종점수가 높은 HIGH가 위에 와야 함
+    assert table.iloc[0]["최종점수"] >= table.iloc[1]["최종점수"], table
+    assert table.iloc[0]["종목"] == "HIGH", table
+
+
+def test_ranking_buy_candidates_come_first():
+    """매수 후보는 최종점수가 낮아도 맨 위에 모여야 함"""
+    def build(ticker, state, stage, ops, rs):
+        quarters = make_quarters(ops, margins=[50.0] * len(ops))
+        forward = {"forward_op_income": ops[-1] * 1.3, "revision": 1}
+        price = {
+            "state": state, "slope": "상승" if stage <= 2 else "하락",
+            "disparity": 10.0 if stage <= 2 else -10.0,
+            "rs": rs, "stage": stage, "close": 50.0, "week_change": 1.0,
+        }
+        return scoring.build_score(ticker, quarters, forward, price)
+
+    scores = {
+        "BUY": build("BUY", cfg.S_FULL_UP, 1, [100 * M, 115 * M, 140 * M], 5.0),
+        "WARN": build("WARN", cfg.S_FULL_DOWN, 5, [100 * M, 115 * M, 140 * M], 50.0),
+    }
+    table = pipeline.build_ranking_table(scores)
+
+    if (table["판정"] == cfg.V_BUY).any():
+        assert table.iloc[0]["판정"] == cfg.V_BUY, table
+
+
 def test_ranking_table_empty_is_safe():
     """점수가 하나도 없으면 빈 표를 돌려줘야 함 (크래시 금지)"""
     table = pipeline.build_ranking_table({})
