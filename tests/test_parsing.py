@@ -129,6 +129,125 @@ def test_earnings_detection():
 
 
 # ---------------------------------------------------------------------------
+# 빠진 4분기(Q4) 채우기 — 표본 부족의 주요 원인이었던 버그
+# ---------------------------------------------------------------------------
+def test_fill_missing_q4():
+    """Q4 = 연간 − (Q1+Q2+Q3) 로 계산해 채워야 함"""
+    # 1~3분기는 3개월 단위로 있고, 4분기(연말)는 비어 있는 상태
+    quarterly = {
+        "2025-03-31": 100.0,
+        "2025-06-30": 110.0,
+        "2025-09-30": 120.0,
+    }
+    annual = {"2025-12-31": 500.0}   # 연간 500 → Q4 = 500 − 330 = 170
+
+    filled = sf._fill_missing_q4(quarterly, annual)
+
+    assert "2025-12-31" in filled, filled
+    assert abs(filled["2025-12-31"] - 170.0) < 1e-9, filled["2025-12-31"]
+    # 기존 분기는 그대로여야 함
+    assert filled["2025-03-31"] == 100.0
+
+
+def test_fill_q4_does_not_overwrite_existing():
+    """이미 4분기 값이 있으면 건드리지 않아야 함"""
+    quarterly = {
+        "2025-03-31": 100.0, "2025-06-30": 110.0,
+        "2025-09-30": 120.0, "2025-12-31": 999.0,
+    }
+    filled = sf._fill_missing_q4(quarterly, {"2025-12-31": 500.0})
+    assert filled["2025-12-31"] == 999.0
+
+
+def test_fill_q4_skips_when_quarters_missing():
+    """앞선 세 분기를 못 찾으면 계산하지 않아야 함 (엉뚱한 값 방지)"""
+    quarterly = {"2025-03-31": 100.0, "2025-06-30": 110.0}   # 2개뿐
+    filled = sf._fill_missing_q4(quarterly, {"2025-12-31": 500.0})
+    assert "2025-12-31" not in filled, filled
+
+
+def test_fill_q4_non_calendar_fiscal_year():
+    """회계연도가 12월이 아닌 회사(예: 1월 결산)도 계산돼야 함"""
+    quarterly = {
+        "2025-04-30": 50.0,
+        "2025-07-31": 60.0,
+        "2025-10-31": 70.0,
+    }
+    annual = {"2026-01-31": 250.0}   # Q4 = 250 − 180 = 70
+
+    filled = sf._fill_missing_q4(quarterly, annual)
+    assert abs(filled["2026-01-31"] - 70.0) < 1e-9, filled
+
+
+# ---------------------------------------------------------------------------
+# XBRL 뼈대 + 8-K 덮어쓰기 병합
+# ---------------------------------------------------------------------------
+def _xbrl_row(period_end, op_income):
+    return {
+        "ticker": "T", "filing_date": period_end, "period_label": period_end[2:7],
+        "revenue": op_income * 5, "op_income": op_income, "gross_margin_pct": 50.0,
+        "source": "근사치", "gm_is_gaap": True, "filing_url": "", "derivation": "",
+        "guidance_text": "",
+    }
+
+
+def _press_row(filing_date, op_income):
+    return {
+        "ticker": "T", "filing_date": filing_date, "period_label": "25 Q1",
+        "revenue": op_income * 5, "op_income": op_income, "gross_margin_pct": 55.0,
+        "source": "직접공시", "gm_is_gaap": False, "filing_url": "https://sec.gov/x",
+        "derivation": "원문 그대로", "guidance_text": "outlook...",
+    }
+
+
+def test_merge_overwrites_matching_quarter_only():
+    """8-K가 성공한 분기만 '직접공시'로 올라가고 나머지는 근사치를 유지해야 함"""
+    xbrl = [_xbrl_row("2025-03-31", 100.0), _xbrl_row("2025-06-30", 120.0)]
+    press = [_press_row("2025-04-25", 111.0)]   # 3월 분기 발표 (25일 뒤)
+
+    merged = sf.merge_quarters(xbrl, press)
+
+    assert merged[0]["source"] == "직접공시", merged[0]
+    assert merged[0]["op_income"] == 111.0
+    assert merged[0]["gross_margin_pct"] == 55.0
+    assert merged[0]["announced_date"] == "2025-04-25"
+    # 짝이 없는 분기는 그대로 근사치
+    assert merged[1]["source"] == "근사치", merged[1]
+    assert merged[1]["op_income"] == 120.0
+
+
+def test_merge_ignores_far_away_filing():
+    """분기 종료일과 90일 넘게 떨어진 8-K는 짝짓지 않아야 함"""
+    xbrl = [_xbrl_row("2025-03-31", 100.0)]
+    press = [_press_row("2025-09-01", 111.0)]   # 5개월 뒤 → 다른 분기
+
+    merged = sf.merge_quarters(xbrl, press)
+    assert merged[0]["source"] == "근사치", merged[0]
+
+
+def test_merge_without_xbrl_uses_press_only():
+    """XBRL이 비어 있으면 8-K 결과만으로 구성해야 함"""
+    press = [_press_row("2025-04-25", 111.0)]
+    merged = sf.merge_quarters([], press)
+    assert len(merged) == 1 and merged[0]["source"] == "직접공시"
+
+
+def test_merge_without_press_keeps_xbrl():
+    """8-K가 하나도 없으면 XBRL 뼈대를 그대로 유지해야 함"""
+    xbrl = [_xbrl_row("2025-03-31", 100.0)]
+    merged = sf.merge_quarters(xbrl, [])
+    assert len(merged) == 1 and merged[0]["source"] == "근사치"
+
+
+def test_diagnostic_report_shape():
+    """진단 리포트에 단계별 항목이 모두 있어야 함"""
+    report = sf.new_report("TEST")
+    for key in ("filings_found", "text_ok", "gate_passed", "parsed_ok",
+                "xbrl_quarters", "merged_direct", "first_error"):
+        assert key in report, key
+
+
+# ---------------------------------------------------------------------------
 # 가이던스 파싱
 # ---------------------------------------------------------------------------
 def test_guidance_range_with_gm_and_opex():

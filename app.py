@@ -70,6 +70,21 @@ st.markdown(
            font-size: .66rem; font-weight: 700; white-space: nowrap; }
   .badge-src { background: #263042; color: #93c5fd; border: 1px solid #33415a; }
 
+  /* 데이터 신뢰도 게이지 (카드 맨 아래) */
+  .conf-row { display: flex; align-items: center; gap: 6px; margin-top: 7px; }
+  .conf-bar { flex: 1; height: 5px; border-radius: 3px; background: #2b3241; overflow: hidden; }
+  .conf-fill { height: 100%; border-radius: 3px; }
+  .conf-text { font-size: .66rem; font-weight: 700; white-space: nowrap; }
+
+  /* 매트릭스 아래 번호↔종목명 범례 */
+  .legend-grid { display: grid; gap: 4px 10px;
+                 grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+                 margin: 2px 0 10px 0; }
+  .legend-item { font-size: .76rem; color: #cbd5e1; white-space: nowrap; }
+  .legend-no { display: inline-block; min-width: 17px; height: 17px; line-height: 17px;
+               text-align: center; border-radius: 50%; font-size: .64rem;
+               font-weight: 700; color: #0e1117; margin-right: 5px; }
+
   /* 차트 위 제목 — plotly 안에 넣지 않고 밖에 두어 겹침을 막습니다 */
   .chart-title { color: #f3f4f6; font-size: 1rem; font-weight: 700;
                  margin: 14px 0 2px 0; }
@@ -206,19 +221,140 @@ def render_explanation(data: dict) -> None:
 
 
 # ---------------------------------------------------------------------------
-# 데이터 실행 (캐시: 같은 조건이면 1시간 재사용)
+# 데이터 실행 — 종목 단위로 따로 캐시합니다
 # ---------------------------------------------------------------------------
+# 종목을 하나 추가했을 때 나머지까지 전부 다시 받으면 1~3분이 걸립니다.
+# 종목마다 따로 캐시해 두면 새로 추가한 종목만 받으면 되어 몇 초면 끝납니다.
 @st.cache_data(ttl=3600, show_spinner=False)
-def load_all(include_current_week: bool, use_cache: bool):
-    return pipeline.run_pipeline(
-        include_current_week=include_current_week, use_cache=use_cache
-    )
+def load_one_ticker(ticker: str, use_cache: bool):
+    """종목 하나의 실적·전망 (1시간 캐시)"""
+    return pipeline.collect_one_ticker(ticker, use_cache)
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def load_prices(tickers: tuple[str, ...], include_current_week: bool):
+    """주가는 여러 종목을 한 번에 받는 편이 빨라 묶어서 캐시합니다."""
+    return pipeline.fetch_prices(list(tickers), include_current_week)
+
+
+def load_all(tickers: list[str], include_current_week: bool, use_cache: bool = True):
+    """종목별 캐시를 모아 최종 결과를 만듭니다."""
+    price_map, weekly_map, failed = load_prices(tuple(tickers), include_current_week)
+
+    bundles = {}
+    progress = st.progress(0.0, text="실적 자료를 모으는 중...")
+    for index, ticker in enumerate(tickers, start=1):
+        progress.progress(
+            index / max(len(tickers), 1), text=f"실적 자료를 모으는 중... ({ticker})"
+        )
+        try:
+            bundles[ticker] = load_one_ticker(ticker, use_cache)
+        except Exception as exc:
+            bundles[ticker] = pipeline.empty_bundle(ticker, str(exc)[:120])
+    progress.empty()
+
+    return pipeline.assemble(tickers, price_map, weekly_map, bundles, failed)
+
+
+def clear_all_caches():
+    """저장된 자료를 모두 비웁니다 (새로고침 버튼용)."""
+    load_one_ticker.clear()
+    load_prices.clear()
+
+
+# ---------------------------------------------------------------------------
+# 종목 목록 관리 — 주소(URL)에 저장해 다음에 열어도 유지됩니다
+# ---------------------------------------------------------------------------
+def read_tickers_from_url() -> list[str]:
+    """주소의 ?tickers=... 를 읽습니다. 없으면 기본 목록을 씁니다."""
+    raw = st.query_params.get("tickers", "")
+    if not raw:
+        return list(cfg.TICKERS)
+
+    tickers = []
+    for piece in raw.replace(" ", "").split(","):
+        symbol = piece.strip().upper()
+        if symbol and symbol not in tickers:
+            tickers.append(symbol)
+    return tickers or list(cfg.TICKERS)
+
+
+def write_tickers_to_url(tickers: list[str]) -> None:
+    """현재 종목 목록을 주소에 저장합니다 (홈 화면에 추가해두면 유지됩니다)."""
+    if list(tickers) == list(cfg.TICKERS):
+        st.query_params.pop("tickers", None)   # 기본 목록이면 주소를 깔끔하게 유지
+    else:
+        st.query_params["tickers"] = ",".join(tickers)
+
+
+@st.cache_data(ttl=86400, show_spinner=False)
+def ticker_exists(symbol: str) -> bool:
+    """야후 파이낸스에 실제로 있는 티커인지 확인합니다 (오타 방지)."""
+    try:
+        import yfinance as yf
+
+        history = yf.Ticker(symbol).history(period="5d")
+        return history is not None and not history.empty
+    except Exception:
+        return False
 
 
 # ---------------------------------------------------------------------------
 # 사이드바
 # ---------------------------------------------------------------------------
+# 현재 종목 목록 (주소에서 읽어옵니다)
+if "tickers" not in st.session_state:
+    st.session_state.tickers = read_tickers_from_url()
+
 with st.sidebar:
+    st.header("📌 종목 관리")
+
+    # --- 종목 추가 ---
+    new_symbol = st.text_input(
+        "티커 입력 후 Enter",
+        placeholder="예: NVDA",
+        key="new_ticker_input",
+    ).strip().upper()
+
+    if st.button("➕ 추가", width="stretch", disabled=not new_symbol):
+        if new_symbol in st.session_state.tickers:
+            st.warning(f"{new_symbol}은(는) 이미 목록에 있습니다")
+        elif not ticker_exists(new_symbol):
+            st.error(f"{new_symbol}을(를) 찾을 수 없습니다. 티커를 다시 확인해 주세요")
+        else:
+            st.session_state.tickers.append(new_symbol)
+            write_tickers_to_url(st.session_state.tickers)
+            st.rerun()
+
+    # --- 현재 목록 + 삭제 ---
+    st.caption(f"현재 {len(st.session_state.tickers)}개 (누르면 삭제)")
+    remove_target = None
+    chip_cols = st.columns(3)
+    for index, symbol in enumerate(st.session_state.tickers):
+        with chip_cols[index % 3]:
+            if st.button(f"{symbol} ✕", key=f"del_{symbol}", width="stretch"):
+                remove_target = symbol
+
+    if remove_target:
+        if len(st.session_state.tickers) <= 1:
+            st.warning("최소 한 종목은 남아 있어야 합니다")
+        else:
+            st.session_state.tickers.remove(remove_target)
+            write_tickers_to_url(st.session_state.tickers)
+            st.rerun()
+
+    if st.session_state.tickers != list(cfg.TICKERS):
+        if st.button("↩️ 기본 목록으로 되돌리기", width="stretch"):
+            st.session_state.tickers = list(cfg.TICKERS)
+            write_tickers_to_url(st.session_state.tickers)
+            st.rerun()
+
+    st.info(
+        "💡 지금 주소를 **홈 화면에 추가**해두면 이 종목 목록이 그대로 유지됩니다.",
+        icon="💡",
+    )
+
+    st.divider()
     st.header("⚙️ 설정")
 
     include_current = st.checkbox(
@@ -230,19 +366,24 @@ with st.sidebar:
         ),
     )
 
+    show_full_history = st.checkbox(
+        "전체 이력 보기 (3년)",
+        value=False,
+        help=(
+            f"기본은 {cfg.DISPLAY_START_DATE[:4]}년부터 보여줍니다. "
+            "체크하면 수집한 3년치를 모두 표시합니다."
+        ),
+    )
+
     if st.button("🔄 데이터 새로고침", width="stretch"):
-        load_all.clear()
+        clear_all_caches()
         st.rerun()
 
     st.caption(
         "새로고침을 누르면 저장된 데이터를 지우고 SEC·야후에서 다시 받아옵니다. "
         "종목이 많아 1~3분 걸릴 수 있습니다."
     )
-    st.divider()
-    st.caption(
-        f"**대상 종목** {len(cfg.TICKERS)}개\n\n{', '.join(cfg.TICKERS)}\n\n"
-        f"**비교 지수** {cfg.BENCHMARK}"
-    )
+    st.caption(f"비교 지수: **{cfg.BENCHMARK}**")
 
 
 # ---------------------------------------------------------------------------
@@ -258,7 +399,7 @@ st.markdown(
 
 with st.spinner("SEC 공시와 주가 데이터를 모으는 중입니다... (첫 실행은 1~3분 걸릴 수 있습니다)"):
     try:
-        result = load_all(include_current, True)
+        result = load_all(st.session_state.tickers, include_current, True)
     except Exception as exc:
         st.error(
             "데이터를 불러오지 못했습니다.\n\n"
@@ -310,6 +451,13 @@ for ticker in ordered_tickers:
         badges.append(f'<span class="badge badge-src">{score["forward_basis"]}</span>')
 
     rs_text = f"RS {score['rs']:+.0f}" if score["rs"] is not None else "RS -"
+
+    # 데이터 신뢰도 게이지 (점수와는 별개인 참고 지표)
+    conf = score["confidence"]
+    conf_color = (
+        "#22c55e" if conf >= cfg.CONF_HIGH else "#eab308" if conf >= cfg.CONF_MID else "#6b7280"
+    )
+
     cards_html.append(
         f"""<div class="card" style="border-left-color:{color};">
   <div class="card-top">
@@ -320,6 +468,10 @@ for ticker in ordered_tickers:
   <div class="card-badges">{''.join(badges)}</div>
   <div class="card-sub">펀더 {score['fund_score']:.0f} · 기술 {score['tech_score']:.0f}</div>
   <div class="card-sub">{score['trend_state']}</div>
+  <div class="conf-row">
+    <div class="conf-bar"><div class="conf-fill" style="width:{conf:.0f}%;background:{conf_color};"></div></div>
+    <span class="conf-text" style="color:{conf_color};">신뢰도 {conf:.0f}%</span>
+  </div>
 </div>"""
     )
 cards_html.append("</div>")
@@ -361,12 +513,42 @@ def _style_rs(value):
     return "color:#22c55e" if value > 0 else "color:#ef4444"
 
 
+def _style_confidence(value):
+    """신뢰도: 80%+ 초록 / 55~80% 노랑 / 그 미만 회색"""
+    if pd.isna(value):
+        return ""
+    if value >= cfg.CONF_HIGH:
+        return "color:#22c55e; font-weight:700"
+    if value >= cfg.CONF_MID:
+        return "color:#eab308"
+    return "color:#9ca3af"
+
+
+def _style_delta(value):
+    """델타 방향·예측: 가속 계열 초록, 감속 계열 빨강, 혼조 노랑"""
+    text = str(value)
+    if "가속" in text and "둔화" not in text:
+        return "color:#22c55e; font-weight:700"
+    if "반등" in text:
+        return "color:#22c55e"
+    if "감속" in text or "둔화" in text:
+        return "color:#ef4444"
+    if "혼조" in text:
+        return "color:#eab308"
+    return "color:#9ca3af"
+
+
 styled = (
     ranking.style.map(_style_verdict, subset=["판정"])
     .map(_style_score, subset=["최종점수", "펀더", "기술"])
+    .map(_style_confidence, subset=["신뢰도"])
+    .map(_style_delta, subset=["델타방향", "델타예측"])
     .map(_style_rs, subset=["RS"])
     .format(
-        {"최종점수": "{:.0f}", "펀더": "{:.0f}", "기술": "{:.0f}", "RS": "{:+.1f}%p"},
+        {
+            "최종점수": "{:.0f}", "펀더": "{:.0f}", "기술": "{:.0f}",
+            "신뢰도": "{:.0f}%", "RS": "{:+.1f}%p",
+        },
         na_rep="-",
     )
 )
@@ -429,31 +611,30 @@ for x0, x1, y0, y1, color, label, lx, ly, xanchor, yanchor in quadrants:
         font=dict(color=color, size=10), opacity=0.9,
     )
 
-# 종목명이 차트 오른쪽 끝에서 잘리지 않도록, 오른쪽에 있는 점은 글자를 왼쪽에 붙입니다
-_text_positions = [
-    "middle left" if scores[t]["tech_score"] >= 82
-    else "middle right" if scores[t]["tech_score"] <= 12
-    else "top center"
-    for t in ordered_tickers
-]
-
+# 종목명을 점 옆에 쓰면 종목이 많을 때 글자끼리 겹칩니다.
+# 그래서 점 안에는 "순위 번호"만 넣고, 종목명은 그래프 아래 범례로 뺍니다.
 matrix.add_trace(
     go.Scatter(
         x=[scores[t]["tech_score"] for t in ordered_tickers],
         y=[scores[t]["fund_score"] for t in ordered_tickers],
         mode="markers+text",
-        text=ordered_tickers,
-        textposition=_text_positions,
-        textfont=dict(size=9, color="#d1d5db"),
+        text=[str(i) for i in range(1, len(ordered_tickers) + 1)],
+        textposition="middle center",
+        textfont=dict(size=8, color="#0e1117", family="Arial Black"),
         marker=dict(
-            size=13,
+            # 점수가 비슷한 종목끼리 점이 겹칠 수 있어, 크기를 작게 하고
+            # 진한 테두리를 둘러 서로 구분되게 합니다
+            size=18,
             color=[cfg.VERDICT_COLORS.get(scores[t]["verdict"], "#6b7280") for t in ordered_tickers],
-            line=dict(width=1, color="#0e1117"),
+            line=dict(width=1.5, color="#0e1117"),
+            opacity=0.94,
         ),
-        customdata=[[scores[t]["verdict"], scores[t]["final_score"]] for t in ordered_tickers],
+        customdata=[
+            [t, scores[t]["verdict"], scores[t]["final_score"]] for t in ordered_tickers
+        ],
         hovertemplate=(
-            "<b>%{text}</b><br>기술 %{x:.0f} · 펀더 %{y:.0f}"
-            "<br>최종 %{customdata[1]:.0f} · %{customdata[0]}<extra></extra>"
+            "<b>%{customdata[0]}</b><br>기술 %{x:.0f} · 펀더 %{y:.0f}"
+            "<br>최종 %{customdata[2]:.0f} · %{customdata[1]}<extra></extra>"
         ),
         showlegend=False,
         cliponaxis=False,
@@ -478,6 +659,23 @@ matrix.update_yaxes(
     dtick=25, gridcolor="#2b3241", zeroline=False,
 )
 st.plotly_chart(matrix, width="stretch", config=PLOTLY_CONFIG)
+
+# 번호 ↔ 종목명 범례 (순위 표와 같은 순서라 눈으로 연결하기 쉽습니다)
+legend_items = []
+for number, ticker in enumerate(ordered_tickers, start=1):
+    color = cfg.VERDICT_COLORS.get(scores[ticker]["verdict"], "#6b7280")
+    legend_items.append(
+        f'<span class="legend-item">'
+        f'<span class="legend-no" style="background:{color};">{number}</span>{ticker}</span>'
+    )
+st.markdown(
+    '<div class="legend-grid">' + "".join(legend_items) + "</div>",
+    unsafe_allow_html=True,
+)
+st.markdown(
+    '<div class="section-note">번호는 순위 표와 같은 순서입니다 · 점을 누르면 종목명이 나옵니다</div>',
+    unsafe_allow_html=True,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -534,11 +732,16 @@ with row2[0]:
     with st.popover(f"📊 GM% 드라이버: {detail['gm_type']}", width="stretch"):
         render_explanation(explain.explain_gm_driver(detail))
 with row2[1]:
-    with st.popover(f"⚡ 델타 방향: {detail['delta_direction']}", width="stretch"):
+    with st.popover(f"⚡ 델타: {detail['delta_direction']} → {detail['delta_forecast']}", width="stretch"):
         render_explanation(explain.explain_delta(detail))
 with row2[2]:
     with st.popover(f"📈 기술 점수: {detail['tech_score']:.0f}점", width="stretch"):
         render_explanation(explain.explain_technical(detail))
+
+row3 = st.columns(3)
+with row3[0]:
+    with st.popover(f"🎯 신뢰도: {detail['confidence']:.0f}%", width="stretch"):
+        render_explanation(explain.explain_confidence(detail))
 
 # --- 점수 구성 요약 ---
 fundamental = detail["fundamental"]
@@ -566,7 +769,11 @@ with st.expander("🔍 점수 전체 구성 한눈에 보기"):
     )
 
 # --- 분기별 실적 차트 ---
-quarters_df = pipeline.quarters_to_frame(detail["quarters"])
+# 기본은 2025년부터, 사이드바에서 '전체 이력 보기'를 켜면 수집한 3년치 전부
+quarters_df = pipeline.quarters_to_frame(
+    detail["quarters"],
+    start_date=None if show_full_history else cfg.DISPLAY_START_DATE,
+)
 
 if quarters_df.empty:
     st.info(
@@ -731,7 +938,84 @@ else:
 
 
 # ---------------------------------------------------------------------------
-# ⑤ 지표 해석 가이드
+# ⑤ 데이터 신뢰도 등급표
+# ---------------------------------------------------------------------------
+st.divider()
+with st.expander("📚 데이터 신뢰도 등급표 — 어떤 종류가 있고 얼마나 믿을 만한가"):
+    st.markdown(
+        "숫자를 **어떻게 구했는지**에 따라 신뢰도가 다릅니다. "
+        "회사가 직접 발표한 값일수록 높고, 계산으로 만든 근사치일수록 낮습니다."
+    )
+    st.dataframe(
+        pd.DataFrame(explain.confidence_tier_table()),
+        hide_index=True,
+        width="stretch",
+    )
+    st.markdown(
+        f"""
+**종합 신뢰도 계산**
+
+`실적 신뢰도 × {cfg.CONF_WEIGHT_ACTUAL} + 전망 신뢰도 × {cfg.CONF_WEIGHT_FORWARD}`
+
+- 실적 신뢰도는 분기별 출처의 **가중평균**입니다. 최근 분기일수록 큰 가중치를 줍니다
+  (한 분기 과거로 갈 때마다 × {cfg.CONF_RECENCY_DECAY}).
+- 신뢰도는 **점수에 반영하지 않습니다.** 순위는 그대로 두고 참고용으로만 표시합니다.
+
+> ⚠️ 이 퍼센티지는 자료의 성격을 고려해 정한 값이며 **통계적으로 검증된 수치가 아닙니다.**
+> `config.py`의 `CONFIDENCE_TIERS`에서 조정할 수 있습니다.
+        """
+    )
+
+# ---------------------------------------------------------------------------
+# ⑥ 데이터 수집 진단 (8-K 파싱이 어디서 막히는지 확인)
+# ---------------------------------------------------------------------------
+with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지 가져왔나"):
+    st.markdown(
+        "SEC에서 자료를 모으는 각 단계에서 몇 건이 통과했는지 보여줍니다. "
+        "`직접공시`가 나오지 않을 때 **어느 단계에서 막히는지** 확인할 수 있습니다."
+    )
+
+    reports = result.get("reports") or []
+    if not reports:
+        st.caption("진단 기록이 없습니다.")
+    else:
+        diag = pd.DataFrame(
+            [
+                {
+                    "종목": r.get("ticker", "-"),
+                    "XBRL분기": r.get("xbrl_quarters", 0),
+                    "8-K찾음": r.get("filings_found", 0),
+                    "본문확보": r.get("text_ok", 0),
+                    "실적판별": r.get("gate_passed", 0),
+                    "숫자추출": r.get("parsed_ok", 0),
+                    "공시반영": r.get("merged_direct", 0),
+                    "텍스트출처": r.get("text_source", "") or "-",
+                    "첫 오류": r.get("first_error", "") or "-",
+                    "비고": r.get("note", "") or "-",
+                }
+                for r in reports
+            ]
+        )
+        st.dataframe(diag, hide_index=True, width="stretch")
+
+        st.markdown(
+            """
+**읽는 법**
+
+| 어디서 0이 되는가 | 무슨 뜻인가 |
+|---|---|
+| `8-K찾음`이 0 | SEC에서 8-K 공시 자체를 못 찾음 (접속 문제 또는 티커 문제) |
+| `본문확보`가 0 | 공시는 찾았지만 보도자료 텍스트를 못 읽음 (첨부 형식 문제) |
+| `실적판별`이 0 | 텍스트는 읽었지만 실적발표로 인식하지 못함 |
+| `숫자추출`이 0 | 실적발표는 맞지만 숫자 표기를 못 읽음 (파싱 규칙 보강 필요) |
+| `공시반영`이 0 | 숫자는 뽑았지만 분기 짝짓기에 실패 |
+
+`첫 오류` 열에 내용이 있으면 그 메시지를 알려주시면 정확히 조준해서 고칠 수 있습니다.
+            """
+        )
+
+# ---------------------------------------------------------------------------
+# ⑦ 지표 해석 가이드
 # ---------------------------------------------------------------------------
 st.divider()
 with st.expander("📖 지표 해석 가이드 (처음 보신다면 여기부터)"):

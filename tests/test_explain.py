@@ -154,18 +154,34 @@ def test_delta_explanation_has_history_and_forecast():
     assert all("QoQ 증가율(%)" in row for row in data["history"])
 
     forecast = " ".join(data["forecast_lines"])
-    assert "다음 분기 예상 QoQ" in forecast, forecast
+    assert "다음 분기 예상" in forecast, forecast
     # 140M → 170M = +21.4%
     assert "+21.4%" in forecast, forecast
     assert "실제 결과와 다를 수 있" in forecast
+    # 전망 근거의 신뢰도가 함께 표시돼야 함
+    assert "신뢰도 85%" in forecast, forecast
 
 
-def test_delta_forecast_detects_deceleration():
-    """전망이 최근 증가율보다 낮으면 '감속으로 돌아설 수 있다'고 알려야 함"""
+def test_delta_forecast_detects_slowdown():
+    """전망이 최근 증가율보다 크게 낮으면 '가속 둔화'로 표시해야 함"""
     # 최근 QoQ = 140/115 - 1 = +21.7%, 다음 분기 전망 = 142M → +1.4% (크게 둔화)
     data = explain.explain_delta(_score(forward_op=142 * M))
     forecast = " ".join(data["forecast_lines"])
-    assert "감속으로 돌아설" in forecast, forecast
+    assert cfg.F_ACCEL_SLOW in forecast, forecast
+
+
+def test_delta_explanation_shows_two_signals():
+    """델타 설명에 단기·추세 두 신호가 모두 나와야 함"""
+    score = _score(
+        op_incomes=(100 * M, 115 * M, 140 * M, 175 * M, 220 * M),
+        margins=(50.0,) * 5,
+    )
+    data = explain.explain_delta(score)
+
+    joined = " ".join(data["calc_lines"])
+    assert "신호① 단기" in joined, joined
+    assert "신호② 추세" in joined, joined
+    assert "회귀 기울기" in data["formula"] or "기울기" in data["formula"]
 
 
 def test_delta_forecast_missing():
@@ -230,6 +246,51 @@ def test_technical_explanation_breakdown():
         assert keyword in joined, joined
 
 
+def test_confidence_explanation():
+    """신뢰도 설명은 실적·전망·종합 계산 과정을 모두 보여줘야 함"""
+    data = explain.explain_confidence(_score(source=cfg.SRC_DIRECT, basis=cfg.SRC_GUIDANCE))
+
+    joined = " ".join(data["calc_lines"])
+    assert "실적 신뢰도" in joined and "95%" in joined, joined
+    assert "전망 신뢰도" in joined and "85%" in joined, joined
+    # 95 × 0.7 + 85 × 0.3 = 92
+    assert "92%" in data["title"], data["title"]
+    assert "점수에는 반영하지 않고" in data["meaning"]
+    assert len(data["history"]) == 3   # 분기별 출처 내역
+
+
+def test_confidence_tier_table():
+    """등급표는 6단계 전부를 순위·신뢰도와 함께 담아야 함"""
+    table = explain.confidence_tier_table()
+
+    assert len(table) == 6, table
+    assert table[0]["종류"] == cfg.SRC_DIRECT
+    assert table[0]["신뢰도"] == "95%"
+    assert table[-1]["종류"] == cfg.SRC_NONE
+    # 순위가 1부터 차례대로인지
+    assert [row["순위"] for row in table] == [1, 2, 3, 4, 5, 6]
+
+
+def test_confidence_low_when_approximate():
+    """근사치 + 추정이면 신뢰도가 낮게 나와야 함"""
+    data = explain.explain_confidence(_score(source=cfg.SRC_APPROX, basis=cfg.SRC_ESTIMATE))
+    # 55 × 0.7 + 40 × 0.3 = 50.5
+    assert "50" in data["title"] or "51" in data["title"], data["title"]
+
+
+def test_mixed_delta_explanation():
+    """혼조는 '두 신호가 서로 반대'라는 설명을 담아야 함"""
+    # 단기는 살짝 개선인데 전체 추세는 급격히 하락하는 형태
+    score = _score(
+        op_incomes=(100 * M, 160 * M, 200 * M, 220 * M, 250 * M),
+        margins=(50.0,) * 5,
+    )
+    data = explain.explain_delta(score)
+
+    if cfg.D_MIXED in data["title"]:
+        assert "서로 반대" in data["meaning"], data["meaning"]
+
+
 def test_all_explanations_survive_empty_data():
     """실적이 하나도 없는 종목에서도 모든 설명이 예외 없이 만들어져야 함"""
     price = {"state": cfg.S_UNKNOWN, "slope": "-", "disparity": None, "rs": None, "stage": 6}
@@ -242,6 +303,7 @@ def test_all_explanations_survive_empty_data():
         explain.explain_delta,
         explain.explain_verdict_full,
         explain.explain_technical,
+        explain.explain_confidence,
     ):
         data = fn(score)
         assert isinstance(data, dict) and data.get("title"), fn.__name__

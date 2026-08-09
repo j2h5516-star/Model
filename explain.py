@@ -35,6 +35,50 @@ def _pct(value: float | None, digits: int = 1) -> str:
 # ---------------------------------------------------------------------------
 # ① 데이터 출처 배지 (직접공시 / 역산 / 근사치)
 # ---------------------------------------------------------------------------
+def explain_confidence(score: dict) -> dict:
+    """이 종목의 데이터 신뢰도가 어떻게 나왔는지 설명합니다."""
+    conf = score.get("confidence_detail") or {}
+
+    counts = conf.get("counts", {})
+    count_text = " · ".join(f"{src} {n}개" for src, n in counts.items()) or "-"
+
+    return {
+        "title": f"데이터 신뢰도: {conf.get('total', 0):.0f}%",
+        "meaning": (
+            "이 종목의 숫자를 **얼마나 믿을 수 있는지**를 백분율로 나타낸 값입니다. "
+            "회사가 직접 발표한 수치일수록 높고, 계산으로 만든 근사치일수록 낮습니다. "
+            "**점수에는 반영하지 않고 참고용으로만 표시합니다.**"
+        ),
+        "formula": (
+            f"`실적 신뢰도 × {cfg.CONF_WEIGHT_ACTUAL} + 전망 신뢰도 × {cfg.CONF_WEIGHT_FORWARD}` · "
+            f"실적 신뢰도는 분기별 출처의 가중평균(최근 분기일수록 큰 가중치)"
+        ),
+        "calc_lines": [
+            f"- 실적 신뢰도: **{conf.get('actual', 0):.0f}%** (분기 {conf.get('quarter_count', 0)}개: {count_text})",
+            f"- 전망 신뢰도: **{conf.get('forward', 0):.0f}%** ({conf.get('forward_basis', '-')})",
+            f"- 종합: {conf.get('actual', 0):.0f} × {cfg.CONF_WEIGHT_ACTUAL} + "
+            f"{conf.get('forward', 0):.0f} × {cfg.CONF_WEIGHT_FORWARD} = "
+            f"**{conf.get('total', 0):.0f}%**",
+        ],
+        "history": conf.get("breakdown", []),
+        "source_text": "각 분기의 수집 방법(직접공시/역산/근사치)과 전망 근거(가이던스/추정)",
+    }
+
+
+def confidence_tier_table() -> list[dict]:
+    """신뢰도 등급표 전체를 표로 만듭니다 (화면의 '등급표' 섹션용)."""
+    return [
+        {
+            "순위": rank,
+            "종류": name,
+            "신뢰도": f"{pct}%",
+            "무엇인가": description,
+            "계산 방법": formula,
+        }
+        for rank, name, pct, description, formula in cfg.CONFIDENCE_TIERS
+    ]
+
+
 def explain_data_source(score: dict) -> dict:
     """실적 숫자를 어떤 방법으로 구했는지 설명합니다."""
     source = score.get("data_source")
@@ -199,17 +243,22 @@ def explain_delta(score: dict) -> dict:
     growths = trace.get("growths", [])
 
     meanings = {
-        "가속": (
+        cfg.D_ACCEL: (
             "이익이 늘어나는 **속도 자체가 빨라지는 중**입니다. "
             "단순히 '많이 벌었다'가 아니라 '점점 더 빠르게 벌고 있다'는 뜻으로, "
             "주가가 가장 잘 반응하는 구간으로 알려져 있습니다."
         ),
-        "유지": "이익 증가 속도가 비슷한 수준을 유지하고 있습니다. 나쁘지 않지만 탄력은 붙지 않은 상태입니다.",
-        "감속": (
+        cfg.D_STEADY: "이익 증가 속도가 비슷한 수준을 유지하고 있습니다. 나쁘지 않지만 탄력은 붙지 않은 상태입니다.",
+        cfg.D_DECEL: (
             "이익은 늘고 있을 수 있지만 **늘어나는 속도가 느려지는 중**입니다. "
             "성장 사이클의 후반부일 가능성을 살펴야 합니다."
         ),
-        "판단불가": "분기 데이터가 부족해 속도 변화를 계산할 수 없습니다.",
+        cfg.D_MIXED: (
+            "**두 신호가 서로 반대**입니다. 최근 한 분기는 좋아졌는데 여러 분기 추세는 "
+            "나빠지고 있거나, 그 반대입니다. 억지로 가속/감속 중 하나로 정하지 않고 "
+            "'판단이 갈린다'고 솔직히 표시합니다. 다음 실적발표를 보고 판단하는 게 좋습니다."
+        ),
+        cfg.D_UNKNOWN: "분기 데이터가 부족해 속도 변화를 계산할 수 없습니다.",
     }
 
     # 분기별 QoQ 증가율 이력 (증가율은 두 번째 분기부터 계산됨)
@@ -224,32 +273,19 @@ def explain_delta(score: dict) -> dict:
             }
         )
 
-    # --- 앞으로의 예측 ---
-    # 다음 분기 전망치로 QoQ 증가율을 미리 계산해, 가속이 이어질지 꺾일지 봅니다.
-    forward_trace = score["fundamental"]["forward"].get("trace", {})
-    forward_op = forward_trace.get("forward_op")
-    latest_op = forward_trace.get("latest_op")
-
+    # --- 앞으로의 예측 (scoring.predict_delta 결과를 그대로 풀어 씁니다) ---
+    forecast = score.get("forecast_detail") or {}
     forecast_lines = []
-    if forward_op is not None and latest_op and latest_op > 0:
-        next_growth = (forward_op / latest_op - 1.0) * 100.0
+    if forecast.get("next_qoq") is not None:
+        forecast_lines.append(f"- 예측: **{forecast.get('label')}**")
         forecast_lines.append(
-            f"- 다음 분기 예상 QoQ 증가율: **{next_growth:+.1f}%** "
-            f"({_m(latest_op)} → {_m(forward_op)})"
+            f"- 최근 실제 증가율 {forecast.get('last_qoq'):+.1f}% → "
+            f"다음 분기 예상 **{forecast.get('next_qoq'):+.1f}%** "
+            f"({forecast.get('change_pp'):+.1f}%p)"
         )
-        if growths:
-            change = next_growth - growths[-1]
-            if change > 3.0:
-                verdict = "**가속이 이어질 것으로 보입니다** ↗"
-            elif change < -3.0:
-                verdict = "**감속으로 돌아설 가능성이 있습니다** ↘"
-            else:
-                verdict = "**비슷한 속도를 유지할 것으로 보입니다** →"
-            forecast_lines.append(
-                f"- 최근 실제 증가율 {growths[-1]:+.1f}% 대비 {change:+.1f}%p → {verdict}"
-            )
         forecast_lines.append(
-            f"- ⚠️ 이 예측은 **{score.get('forward_basis') or '추정'}** 기반이며 실제 결과와 다를 수 있습니다"
+            f"- ⚠️ 이 예측은 **{forecast.get('basis') or '추정'}** 기반"
+            f"(신뢰도 {forecast.get('confidence', 0)}%)이며 실제 결과와 다를 수 있습니다"
         )
     else:
         forecast_lines.append("- 다음 분기 전망치가 없어 예측을 계산할 수 없습니다")
@@ -260,9 +296,16 @@ def explain_delta(score: dict) -> dict:
         calc_lines.append(f"- 직전 분기 증가율: {recent[-2]:+.1f}%")
         calc_lines.append(f"- 최근 분기 증가율: **{recent[-1]:+.1f}%**")
         calc_lines.append(
-            f"- 변화: **{trace.get('delta_pp', 0):+.1f}%p** "
-            f"(기준 ±{trace.get('threshold', 3.0):.0f}%p) → {delta.get('direction')}"
+            f"- **신호① 단기**: {trace.get('delta_pp', 0):+.1f}%p "
+            f"(기준 ±{trace.get('threshold', 3.0):.0f}%p)"
         )
+    if trace.get("slope") is not None:
+        window = trace.get("window", [])
+        calc_lines.append(
+            f"- **신호② 추세**: 최근 {len(window)}개 증가율의 기울기 "
+            f"{trace.get('slope'):+.1f} (기준 ±{trace.get('trend_threshold', 1.5):.1f})"
+        )
+        calc_lines.append(f"- 두 신호를 합친 결과 → **{delta.get('direction')}**")
     if trace.get("capped"):
         calc_lines.append(
             f"- ⚠️ 최근 분기 이익이 {_m(trace.get('latest_op'))}로 "
@@ -273,7 +316,12 @@ def explain_delta(score: dict) -> dict:
     return {
         "title": f"델타 방향: {delta.get('direction', '-')}",
         "meaning": meanings.get(delta.get("direction"), ""),
-        "formula": "`이번 분기 QoQ 증가율 − 직전 분기 QoQ 증가율` 이 +3%p 초과면 가속, −3%p 미만이면 감속",
+        "formula": (
+            "한 분기만 튀어도 판정이 뒤집히지 않도록 **두 신호를 함께** 봅니다.\n\n"
+            "① **단기** = 최근 QoQ 증가율 − 직전 QoQ 증가율 (민감함)\n\n"
+            f"② **추세** = 최근 {cfg.DELTA_TREND_WINDOW}개 증가율의 회귀 기울기 (안정적)\n\n"
+            "두 신호가 같은 방향이면 가속/감속, **서로 반대면 '혼조'** 로 표시합니다."
+        ),
         "calc_lines": calc_lines,
         "history": history,
         "forecast_lines": forecast_lines,
