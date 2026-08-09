@@ -480,6 +480,65 @@ def test_unpaired_press_recorded_in_report():
 
 
 # ---------------------------------------------------------------------------
+# 승격 규칙의 이중 계상 방지 (재검증에서 발견된 회귀 수정)
+# ---------------------------------------------------------------------------
+def test_late_annual_report_absorbed_not_duplicated():
+    """마지막 분기 발표가 110일 뒤에 나와도(늦은 연간 보고) 같은 분기가
+    두 행으로 이중 계상되면 안 됨 — 매출이 거의 같으면 흡수해야 함"""
+    xbrl = [_xbrl_row("2025-09-30", 90.0), _xbrl_row("2025-12-31", 100.0)]
+    press = [{
+        "ticker": "T", "filing_date": "2026-04-20", "period_label": "25 Q4",
+        "revenue": 505.0,   # XBRL 행 매출(100×5=500)과 1% 차이 = 같은 분기
+        "op_income": 111.0, "gross_margin_pct": 55.0,
+        "source": cfg.SRC_DIRECT, "gm_is_gaap": False, "filing_url": "u",
+        "derivation": "d", "guidance_text": "g",
+    }]
+
+    merged = sf.merge_quarters(xbrl, press)
+
+    assert len(merged) == 2, [r["filing_date"] for r in merged]   # 행이 늘면 안 됨
+    assert merged[-1]["source"] == cfg.SRC_DIRECT                  # 흡수됨
+    assert merged[-1]["op_income"] == 111.0
+
+
+def test_next_quarter_8k_still_promoted_when_revenue_differs():
+    """매출이 크게 다르면(다음 분기 발표) 흡수하지 않고 승격해야 함"""
+    xbrl = [_xbrl_row("2025-06-30", 120.0)]   # 매출 600
+    press = [{
+        "ticker": "T", "filing_date": "2025-10-25", "period_label": "25 Q3",
+        "revenue": 700.0,   # 600 대비 17% 차이 = 다른 분기
+        "op_income": 140.0, "gross_margin_pct": 55.0,
+        "source": cfg.SRC_DIRECT, "gm_is_gaap": False, "filing_url": "u",
+        "derivation": "d", "guidance_text": "g",
+    }]
+
+    merged = sf.merge_quarters(xbrl, press)
+
+    assert len(merged) == 2, merged            # 새 분기로 승격
+    assert merged[0]["source"] == cfg.SRC_APPROX   # 기존 행은 그대로
+    assert merged[-1]["op_income"] == 140.0
+
+
+def test_duplicate_8k_same_quarter_promoted_once():
+    """같은 새 분기에 8-K가 2건(원본+정정)이어도 승격은 1건만 되어야 함"""
+    xbrl = [_xbrl_row("2025-06-30", 120.0)]
+    original = {
+        "ticker": "T", "filing_date": "2025-10-25", "period_label": "25 Q3",
+        "revenue": 700.0, "op_income": 140.0, "gross_margin_pct": 55.0,
+        "source": cfg.SRC_DIRECT, "gm_is_gaap": False, "filing_url": "u",
+        "derivation": "d", "guidance_text": "g",
+    }
+    correction = dict(original, filing_date="2025-11-01", op_income=141.0)
+
+    report = sf.new_report("T")
+    merged = sf.merge_quarters(xbrl, [original, correction], report)
+
+    assert len(merged) == 2, [r["filing_date"] for r in merged]
+    assert merged[-1]["op_income"] == 140.0        # 최초 발표가 채택됨
+    assert report["unpaired_press"] == 1, report   # 정정본은 미사용으로 기록
+
+
+# ---------------------------------------------------------------------------
 # 리뷰에서 확정된 나머지 수정들
 # ---------------------------------------------------------------------------
 def test_nan_velocity_is_filtered():
