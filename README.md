@@ -345,6 +345,11 @@ python3 run_tests.py     # Mac
 **Q. "This repository does not exist" 라고 나와요.**
 → 저장소가 비공개입니다. GitHub Settings → Danger Zone → Change visibility → public 으로 변경하세요.
 
+**Q. 빨간 오류 화면이 뜨거나 "앱을 다시 시작해 주세요" 안내가 나와요.**
+→ 코드가 업데이트됐는데 서버가 옛 파일을 붙들고 있는 상태입니다. 화면 **오른쪽 아래 `Manage app`**
+→ 오른쪽 위 **⋮** → **`Reboot app`** 을 누르고 1~2분 기다리면 해결됩니다.
+(코드를 새로 올린 직후에 가끔 생깁니다)
+
 **Q. 첫 화면이 너무 오래 걸려요.**
 → 정상입니다. SEC에서 13개 종목의 공시를 모두 읽기 때문에 첫 실행은 1~3분 걸립니다.
 

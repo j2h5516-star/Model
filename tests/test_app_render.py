@@ -196,6 +196,54 @@ def test_pipeline_failure_is_handled():
     assert len(at.error) >= 1, "에러 안내가 없음"
 
 
+def test_stale_config_shows_reboot_guide():
+    """설정 파일이 옛 버전이면 빨간 오류 대신 재시작 안내를 보여줘야 함
+
+    실제로 겪었던 문제: 코드를 업데이트했는데 서버가 옛 config 모듈을
+    메모리에 붙들고 있어 AttributeError 로 앱이 죽었습니다.
+    """
+    import config as cfg
+
+    st.cache_data.clear()
+    at = AppTest.from_file(APP_PATH)
+    at.query_params["tickers"] = ",".join(FAKE_TICKERS)
+
+    original = cfg.CONFIG_VERSION
+    try:
+        cfg.CONFIG_VERSION = 0   # 옛 설정 파일이 붙들려 있는 상황을 흉내
+        with patch("pipeline.fetch_prices", side_effect=_fake_prices), \
+             patch("pipeline.collect_one_ticker", side_effect=_fake_bundle):
+            at.run(timeout=120)
+    finally:
+        cfg.CONFIG_VERSION = original
+
+    assert not at.exception, [e.value for e in at.exception]
+    assert len(at.error) >= 1, "재시작 안내가 없음"
+    message = " ".join(e.value for e in at.error)
+    assert "Reboot app" in message, message
+    assert "Manage app" in message, message
+
+
+def test_config_version_matches_app_requirement():
+    """config.py 의 판 번호가 app.py 가 요구하는 값 이상이어야 함
+
+    (config에 항목을 추가하고 판 번호 올리는 것을 잊으면 배포 후 앱이 멈춥니다)
+    """
+    import re
+
+    import config as cfg
+
+    source = open(APP_PATH, encoding="utf-8").read()
+    match = re.search(r"REQUIRED_CONFIG_VERSION\s*=\s*(\d+)", source)
+    assert match, "app.py 에서 REQUIRED_CONFIG_VERSION 을 찾지 못함"
+
+    required = int(match.group(1))
+    assert cfg.CONFIG_VERSION >= required, (
+        f"config.CONFIG_VERSION({cfg.CONFIG_VERSION}) 이 "
+        f"app.py 요구치({required})보다 낮습니다"
+    )
+
+
 def test_url_ticker_list_is_used():
     """주소에 적힌 종목 목록을 앱이 실제로 사용해야 함"""
     at = _run_app(True, tickers=["AAA"])
