@@ -371,14 +371,16 @@ def analyze_all(
             if prev_close > 0:
                 week_change = (result["close"] / prev_close - 1.0) * 100.0
 
+        # 컬럼 순서: 모바일 화면에서는 왼쪽 열부터 보이므로
+        # 가장 중요한 정보(종목, 추세 판정)를 앞쪽에 배치합니다
         rows.append(
             {
                 "종목": ticker,
+                "추세 판정": result["state"],
                 "현재가($)": result["close"],
                 "주간 등락(%)": week_change,
-                "추세 판정": result["state"],
-                "26주선 기울기": result["slope"],
                 "이격도(%)": result["disparity"],
+                "26주선 기울기": result["slope"],
                 "판정 근거": result["reason"],
             }
         )

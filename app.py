@@ -135,19 +135,32 @@ st.caption(f"데이터 기준일: **{data_date}** (마지막 거래일)")
 # ---------------------------------------------------------------------------
 st.subheader("종목별 추세 상태 요약")
 
-# 상태별 종목 수를 위쪽에 큼직하게 표시
+# 상태별 종목 수를 색상 칩(chip) 형태로 표시
+# (모바일 좁은 화면에서도 자동으로 줄바꿈되어 보기 좋습니다)
 state_counts = summary["추세 판정"].value_counts()
-cols = st.columns(6)
-metric_defs = [
-    ("🟢 완전 정배열", ta.S_FULL_UP),
-    ("🟩 준정배열", ta.S_SEMI_UP),
-    ("⬜ 중립", ta.S_NEUTRAL),
-    ("🟧 추세 훼손", ta.S_DAMAGED),
-    ("🟥 완전 역배열", ta.S_FULL_DOWN),
-    ("❔ 판정 불가", ta.S_UNKNOWN),
+chip_defs = [
+    (ta.S_FULL_UP, "#1a7f37", "white"),
+    (ta.S_SEMI_UP, "#a6e3a1", "#1a4a22"),
+    (ta.S_NEUTRAL, "#e5e7eb", "#374151"),
+    (ta.S_DAMAGED, "#ffb454", "#7c2d12"),
+    (ta.S_FULL_DOWN, "#d0342c", "white"),
+    (ta.S_UNKNOWN, "#f3f4f6", "#9ca3af"),
 ]
-for col, (label, state) in zip(cols, metric_defs):
-    col.metric(label, f"{int(state_counts.get(state, 0))}종목")
+chips = []
+for state, bg, fg in chip_defs:
+    n = int(state_counts.get(state, 0))
+    opacity = "1.0" if n > 0 else "0.35"  # 해당 없는 상태는 흐리게
+    chips.append(
+        f'<span style="background:{bg};color:{fg};padding:6px 12px;'
+        f'border-radius:16px;font-weight:600;font-size:0.9rem;opacity:{opacity};'
+        f'white-space:nowrap;">{state} {n}</span>'
+    )
+st.markdown(
+    '<div style="display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px 0;">'
+    + "".join(chips)
+    + "</div>",
+    unsafe_allow_html=True,
+)
 
 
 def style_state_cell(value):
@@ -183,6 +196,7 @@ st.dataframe(
     height=min(38 * (len(summary) + 1) + 12, 560),  # 종목 수에 맞춰 높이 조절
     hide_index=True,
 )
+st.caption("📱 모바일에서는 표를 좌우로 밀어서(스와이프) 나머지 열을 볼 수 있습니다.")
 
 # ---------------------------------------------------------------------------
 # 4) 종목별 상세 차트
