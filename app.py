@@ -19,6 +19,8 @@ app.py — 추세추종 대시보드 v2 (Streamlit)
 
 from __future__ import annotations
 
+import os
+
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
@@ -27,6 +29,37 @@ from plotly.subplots import make_subplots
 import config as cfg
 import explain
 import pipeline
+
+# ---------------------------------------------------------------------------
+# 설정 파일이 최신인지 먼저 확인합니다
+# ---------------------------------------------------------------------------
+# 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
+# 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
+# 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
+REQUIRED_CONFIG_VERSION = 3
+
+if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
+    st.error(
+        "### 🔄 앱을 다시 시작해 주세요\n\n"
+        "코드는 새 버전으로 올라갔는데, 서버가 **옛 설정 파일**을 아직 붙들고 있습니다.\n\n"
+        "**해결 방법 (30초)**\n\n"
+        "1. 화면 **오른쪽 아래 `Manage app`** 을 누릅니다\n"
+        "2. 오른쪽 위 **⋮ 메뉴** → **`Reboot app`** 을 누릅니다\n"
+        "3. 1~2분 기다렸다가 새로고침하면 정상 동작합니다\n\n"
+        "---\n"
+        f"*기술 정보: 설정 파일 판 번호 {getattr(cfg, 'CONFIG_VERSION', 0)} "
+        f"(필요: {REQUIRED_CONFIG_VERSION})*"
+    )
+    st.stop()
+
+# SEC에 보낼 요청자 신원을 Streamlit Secrets에서 읽어옵니다.
+# Secrets는 저장소에 올라가지 않아 개인 이메일을 비공개로 유지할 수 있습니다.
+# (설정하지 않아도 기본값으로 동작합니다)
+try:
+    if "SEC_IDENTITY" in st.secrets:
+        os.environ["SEC_IDENTITY"] = str(st.secrets["SEC_IDENTITY"])
+except Exception:
+    pass  # Secrets 파일이 없어도 앱은 정상 동작해야 합니다
 
 # ---------------------------------------------------------------------------
 # 페이지 기본 설정

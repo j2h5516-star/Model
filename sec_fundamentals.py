@@ -355,13 +355,17 @@ _identity_configured = False
 
 
 def _ensure_identity() -> None:
-    """SEC는 요청자 신원(이메일)을 요구합니다. 최초 1회만 설정합니다."""
+    """SEC는 요청자 신원을 요구합니다. 최초 1회만 설정합니다.
+
+    신원은 config.get_sec_identity()가 결정합니다
+    (환경변수 SEC_IDENTITY가 있으면 그것, 없으면 기본값).
+    """
     global _identity_configured
     if _identity_configured:
         return
     from edgar import set_identity
 
-    set_identity(cfg.SEC_IDENTITY)
+    set_identity(cfg.get_sec_identity())
     _identity_configured = True
 
 
