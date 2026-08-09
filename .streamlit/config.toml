@@ -1,0 +1,15 @@
+# Streamlit 화면 기본 설정 (다크 테마)
+# 이 파일은 앱을 실행하면 자동으로 적용됩니다.
+
+[theme]
+base = "dark"
+primaryColor = "#22c55e"            # 강조색 (초록)
+backgroundColor = "#0e1117"         # 배경
+secondaryBackgroundColor = "#1a1f2b"  # 카드·사이드바 배경
+textColor = "#e5e7eb"               # 글자색
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false
