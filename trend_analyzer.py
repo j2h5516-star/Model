@@ -186,17 +186,30 @@ def to_weekly(daily: pd.DataFrame) -> pd.DataFrame:
     return weekly
 
 
-def is_last_week_incomplete(daily: pd.DataFrame, weekly: pd.DataFrame) -> bool:
-    """마지막 주봉이 아직 '진행 중'(금요일 장 마감 전)인지 확인합니다.
+def is_last_week_incomplete(
+    weekly: pd.DataFrame,
+    now: pd.Timestamp | None = None,
+) -> bool:
+    """마지막 주봉이 아직 '진행 중'(그 주 금요일 장 마감 전)인지 확인합니다.
 
     주봉의 날짜 라벨은 그 주 금요일 날짜입니다.
-    실제 마지막 거래일이 그 금요일보다 앞서 있으면 아직 주가 끝나지 않은 것입니다.
+    미국 동부 시간 기준으로 그 금요일 오후 4시(정규장 마감)가 지나야
+    완성된 주로 봅니다.
+
+    이렇게 '지금 시각'과 비교하는 이유: 마지막 거래일과 비교하면
+    금요일이 휴장인 주(굿프라이데이 등)를 목요일에 이미 완결됐는데도
+    계속 '진행 중'으로 잘못 판단하기 때문입니다.
+
+    now: 테스트에서 기준 시각을 직접 지정할 때만 사용합니다. 평소엔 비워 둡니다.
     """
-    if weekly.empty or daily.empty:
+    if weekly.empty:
         return False
-    last_trading_day = daily.index[-1]
-    last_week_label = weekly.index[-1]
-    return last_trading_day < last_week_label
+    if now is None:
+        now = pd.Timestamp.now(tz="America/New_York")  # 미국 동부 현재 시각
+    last_week_friday = weekly.index[-1]
+    # 그 주 금요일 오후 4시(장 마감 시각)
+    friday_close = last_week_friday.tz_localize("America/New_York") + pd.Timedelta(hours=16)
+    return now < friday_close
 
 
 # ---------------------------------------------------------------------------
@@ -353,7 +366,7 @@ def analyze_all(
         weekly = to_weekly(daily)
 
         # 진행 중인 주 제외 옵션 처리
-        if not include_current_week and is_last_week_incomplete(daily, weekly):
+        if not include_current_week and is_last_week_incomplete(weekly):
             weekly = weekly.iloc[:-1]
 
         if weekly.empty:

@@ -181,16 +181,40 @@ def test_weekly_resample():
 
 
 def test_incomplete_week_detection():
-    """수요일까지만 데이터가 있으면 '진행 중인 주'로 인식해야 함"""
-    # 8일치 = 1주(월~금) + 둘째 주 월~수
+    """그 주 금요일 장 마감(미국 동부 16시) 전이면 '진행 중인 주'로 인식해야 함"""
+    # 8일치 = 1주(월~금) + 둘째 주 월~수 → 마지막 주봉 라벨은 2023-01-13(금)
     daily = make_daily([10, 11, 12, 13, 14, 20, 21, 22])
     weekly = ta.to_weekly(daily)
-    assert ta.is_last_week_incomplete(daily, weekly) is True
 
-    # 금요일까지 꽉 찬 2주면 진행 중 아님
-    daily_full = make_daily([10, 11, 12, 13, 14, 20, 21, 22, 23, 24])
-    weekly_full = ta.to_weekly(daily_full)
-    assert ta.is_last_week_incomplete(daily_full, weekly_full) is False
+    # 수요일 저녁 기준 → 아직 진행 중
+    wed_night = pd.Timestamp("2023-01-11 20:00", tz="America/New_York")
+    assert ta.is_last_week_incomplete(weekly, now=wed_night) is True
+
+    # 금요일 장중(정오) 기준 → 아직 진행 중
+    fri_noon = pd.Timestamp("2023-01-13 12:00", tz="America/New_York")
+    assert ta.is_last_week_incomplete(weekly, now=fri_noon) is True
+
+    # 금요일 장 마감 후 → 완성된 주
+    fri_after_close = pd.Timestamp("2023-01-13 16:30", tz="America/New_York")
+    assert ta.is_last_week_incomplete(weekly, now=fri_after_close) is False
+
+
+def test_friday_holiday_week_completes():
+    """금요일 휴장 주(굿프라이데이 등)도 주말부터는 '완성된 주'로 인식해야 함
+
+    (예전 방식은 마지막 거래일과 비교했기 때문에 목요일에 이미 끝난 주를
+     다음 주 월요일까지 계속 '진행 중'으로 잘못 판단하는 버그가 있었음)
+    """
+    # 2023-04-07(금)은 굿프라이데이 휴장.
+    # 3/27(월)~3/31(금) 5일 + 4/3(월)~4/6(목) 4일 = 9일치
+    daily = make_daily([10, 11, 12, 13, 14, 20, 21, 22, 23], start="2023-03-27")
+    weekly = ta.to_weekly(daily)
+    # 마지막 주봉 라벨은 2023-04-07(금)이지만 거래는 4/6(목)까지만 있음
+    assert str(weekly.index[-1].date()) == "2023-04-07"
+
+    # 토요일 아침 기준 → 이미 완성된 주로 인식해야 함 (버그 수정 검증)
+    sat = pd.Timestamp("2023-04-08 09:00", tz="America/New_York")
+    assert ta.is_last_week_incomplete(weekly, now=sat) is False
 
 
 # ---------------------------------------------------------------------------

@@ -76,8 +76,14 @@ cd 내려받은폴더경로
 
 ### 4단계. 필요한 프로그램 설치하기 (최초 1회만)
 
+**Windows:**
 ```bash
 pip install -r requirements.txt
+```
+
+**Mac:** (`pip` 대신 `pip3` 를 씁니다)
+```bash
+pip3 install -r requirements.txt
 ```
 
 설치에 1~2분 정도 걸립니다. 글자가 주르륵 올라가다가 멈추면 완료입니다.
@@ -87,6 +93,12 @@ pip install -r requirements.txt
 ```bash
 streamlit run app.py
 ```
+
+(`streamlit` 명령을 찾을 수 없다고 나오면 — Windows: `python -m streamlit run app.py`,
+Mac: `python3 -m streamlit run app.py`)
+
+> 💡 처음 실행하면 터미널에 `Email:` 이라고 물어볼 수 있습니다.
+> **아무것도 입력하지 말고 엔터만** 누르면 됩니다.
 
 잠시 후 웹 브라우저가 자동으로 열리면서 대시보드가 나타납니다.
 (자동으로 안 열리면 브라우저 주소창에 `http://localhost:8501` 을 입력하세요)
@@ -118,6 +130,8 @@ streamlit run app.py
 | 3 | ⬜ **중립** | 주가가 26주선 ±3% 이내 | 26주선 부근에서 방향 탐색 중 |
 | 4 | 🟧 **추세 훼손** | 주가 < 26주선 **또는** 13주선 < 26주선 | 상승 추세가 깨졌다는 경고 |
 | 5 | 🟩 **준정배열** | 주가 > 26주 > 52주 (단기 조정 중) | 큰 상승 구조는 유지 |
+| 6 | ⬜ **중립(기타)** | 위 어디에도 해당하지 않는 구간 | 추세 전환 초기 등 애매한 상황 |
+| - | ❔ **판정 불가** | 52주선을 계산할 데이터 부족 | 상장한 지 1년 미만인 종목 |
 
 **보조 신호**
 - **26주선 기울기**: 26주선이 4주 전보다 올라갔으면 상승↗, 내려갔으면 하락↘, 거의 그대로면 횡보→
@@ -135,8 +149,9 @@ streamlit run app.py
 ## ❓ 문제 해결 (FAQ)
 
 **Q. `pip` 또는 `streamlit` 명령어를 찾을 수 없다고 나와요.**
-→ 파이썬 설치 시 "Add Python to PATH"를 체크하지 않은 경우입니다. 파이썬을 다시 설치하면서 체크해 주세요.
+→ (Windows) 파이썬 설치 시 "Add Python to PATH"를 체크하지 않은 경우입니다. 파이썬을 다시 설치하면서 체크해 주세요.
 그래도 안 되면 `pip` 대신 `python -m pip`, `streamlit` 대신 `python -m streamlit` 으로 실행해 보세요.
+→ (Mac) `pip3`, `python3 -m pip`, `python3 -m streamlit` 처럼 뒤에 3을 붙여서 실행해 보세요.
 
 **Q. "주가 데이터를 받아오지 못했습니다" 라고 나와요.**
 → 인터넷 연결을 확인하고 왼쪽 사이드바의 **데이터 새로고침** 버튼을 눌러 주세요.

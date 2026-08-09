@@ -91,6 +91,9 @@ with st.sidebar:
 | ⬜ **중립** | 주가가 26주선 ±3% 이내에서 공방 |
 | 🟧 **추세 훼손** | 주가 < 26주선 또는 13주선이 26주선 하향돌파 |
 | 🟥 **완전 역배열** | 4주 < 13주 < 26주 < 52주 |
+| ❔ **판정 불가** | 상장 기간이 짧아 52주선 계산 불가 |
+
+위 어디에도 해당하지 않는 애매한 구간(추세 전환 초기 등)도 **중립**으로 표시됩니다.
 
 **보조 신호**
 - **26주선 기울기**: 4주 전과 비교해 상승/하락/횡보
@@ -118,17 +121,34 @@ if not daily_map:
     )
     st.stop()
 
-# 일부 종목만 실패한 경우: 어떤 종목이 빠졌는지 알려주기
+# 일부 종목만 실패한 경우: 어떤 종목이 빠졌는지 + 해결 방법 알려주기
 if failed:
-    st.warning(f"다음 종목은 데이터를 받지 못해 제외되었습니다: {', '.join(failed)}")
+    st.warning(
+        f"다음 종목은 데이터를 받지 못해 제외되었습니다: {', '.join(failed)} — "
+        "일시적인 문제일 수 있으니 왼쪽의 **🔄 데이터 새로고침** 버튼을 눌러 다시 시도해 보세요."
+    )
 
 # 2) 추세 분석 실행
 summary, chart_map = ta.analyze_all(daily_map, include_current_week=include_current)
 
-# 데이터 기준일 표시 (가장 최근 거래일)
-latest_dates = [df.index[-1] for df in daily_map.values()]
-data_date = max(latest_dates).strftime("%Y-%m-%d")
-st.caption(f"데이터 기준일: **{data_date}** (마지막 거래일)")
+# 분석 가능한 종목이 하나도 없는 경우 (예: '진행 중인 주 제외' 옵션과 데이터 상황이 겹칠 때)
+if summary.empty:
+    st.warning(
+        "판정할 수 있는 종목이 없습니다. 왼쪽 사이드바에서 **진행 중인 이번 주 포함**을 "
+        "체크하거나 **🔄 데이터 새로고침**을 눌러 주세요."
+    )
+    st.stop()
+
+# 데이터 기준일 표시 — 판정에 실제로 쓰인 시점을 정확히 알려줍니다
+last_trade = max(df.index[-1] for df in daily_map.values()).strftime("%Y-%m-%d")
+if include_current:
+    st.caption(f"데이터 기준일: **{last_trade}** (마지막 거래일)")
+else:
+    # '진행 중인 주 제외' 상태에서는 완성된 지난 주봉이 판정 기준입니다
+    basis_date = max(df.index[-1] for df in chart_map.values()).strftime("%Y-%m-%d")
+    st.caption(
+        f"판정 기준: **{basis_date}** 마감 주봉 (완성된 주) · 최신 거래일: {last_trade}"
+    )
 
 # ---------------------------------------------------------------------------
 # 3) 추세 상태 요약 테이블
@@ -222,6 +242,7 @@ if selected and selected in chart_map:
         "현재가",
         f"${info['현재가($)']:,.2f}",
         delta=None if pd.isna(week_chg) else f"{week_chg:+.1f}% (주간)",
+        delta_color="inverse",  # 한국식 표기: 상승=빨강 (요약 테이블·차트와 통일)
     )
     c2.metric("추세 판정", info["추세 판정"])
     slope_txt = info["26주선 기울기"]
