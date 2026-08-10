@@ -127,7 +127,23 @@ def check_quarter(quarter: dict) -> dict:
         return {"quality": Q_OK, "reasons": [], "revenue": revenue}
 
     # 여기부터는 "매출과 영업이익의 크기가 서로 맞지 않는" 상태입니다.
-    # 단위가 1,000배 또는 100만 배 어긋난 경우라면 확실하게 고칠 수 있습니다.
+    #
+    # ⚠️ XBRL(근사치)에서 온 값은 단위를 고치면 안 됩니다.
+    #    XBRL 숫자는 이미 절대 달러라 단위가 어긋날 수 없습니다. 크기가 안 맞는다면
+    #    그건 단위 문제가 아니라 **엉뚱한 항목을 매출로 잡아온 것**입니다.
+    #    여기서 1,000배를 곱해 "고쳤다"고 하면 틀린 값을 그럴듯하게 만들어
+    #    오히려 더 위험합니다 (실제로 비율 값 102를 $102M로 승격시킨 적이 있습니다).
+    if quarter.get("source") == cfg.SRC_APPROX:
+        return {
+            "quality": Q_PARTIAL,
+            "reasons": [
+                f"{label}: XBRL 매출 ${revenue:,.0f} 이 영업이익과 크기가 맞지 않습니다 "
+                "(다른 항목을 매출로 잘못 가져왔을 가능성) — 매출을 계산에서 뺐습니다"
+            ],
+            "revenue": None,
+        }
+
+    # 보도자료에서 온 값은 표 단위(천/백만) 표기를 놓쳤을 수 있어, 그 경우만 고칩니다.
     for scale, name in ((1_000.0, "천 단위"), (1_000_000.0, "백만 단위")):
         candidate = revenue * scale
         if safe_margin_pct(candidate, op_income) is not None:

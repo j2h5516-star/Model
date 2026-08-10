@@ -391,12 +391,15 @@ def quarters_to_frame(quarters: list[dict], start_date: str | None = None) -> pd
                         "op_income", "gross_margin_pct", "source") if c in df.columns]
     df = df[keep].copy()
 
-    # QoQ 증가율(%) — 이익이 얼마나 빠르게 늘고 있는지
+    # QoQ 증가율(%) — 이익이 얼마나 빠르게 늘고 있는지.
+    # 점수 계산과 **같은 안전 계산**을 씁니다. 예전에는 여기서만 그냥 나눠서,
+    # 점수 쪽에서 걸러낸 +461,711,116% 가 차트 오른쪽 축에는 그대로 그려졌습니다.
     if "op_income" in df.columns:
-        df["qoq_pct"] = df["op_income"].pct_change() * 100.0
-        # 직전 분기가 적자면 증가율이 의미 없으므로 비웁니다
-        prev = df["op_income"].shift(1)
-        df.loc[prev <= 0, "qoq_pct"] = None
+        values = df["op_income"].tolist()
+        growths = [None]
+        for prev, curr in zip(values, values[1:]):
+            growths.append(dq.safe_growth_pct(prev, curr))
+        df["qoq_pct"] = growths
 
     # 표시 기간으로 자르기 (증가율 계산 이후에 잘라야 첫 줄도 값이 남습니다)
     if start_date and "filing_date" in df.columns:

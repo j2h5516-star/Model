@@ -203,6 +203,190 @@ def test_normal_data_is_untouched():
         assert after["quality"] == dq.Q_OK
 
 
+
+# ---------------------------------------------------------------------------
+# XBRL 개념·단위 필터 — 배포 사고의 진짜 원인
+# ---------------------------------------------------------------------------
+class _FakeFacts:
+    """edgartools facts 객체 흉내 — to_dataframe() 만 있으면 됩니다."""
+
+    def __init__(self, rows):
+        self._rows = rows
+
+    def query(self):
+        return self
+
+    def by_concept(self, concept):
+        # 실제 edgartools 기본값과 같은 '부분일치 + 이름표 일치'를 흉내 냅니다
+        low = concept.lower()
+        self._filtered = [
+            r for r in self._rows
+            if low in r["concept"].lower() or low in str(r.get("label", "")).lower()
+        ]
+        return self
+
+    def by_period_length(self, months):
+        return self
+
+    def to_dataframe(self):
+        import pandas as pd
+        return pd.DataFrame(getattr(self, "_filtered", self._rows))
+
+
+def test_xbrl_rejects_other_concepts_and_units():
+    """매출을 찾을 때 매출원가·비율·주당금액이 딸려 들어오면 안 됨"""
+    import sec_fundamentals as sf
+
+    facts = _FakeFacts([
+        {"concept": "us-gaap:Revenues", "label": "Revenues",
+         "period_end": "2025-09-30", "numeric_value": 268_000_000.0, "unit": "USD"},
+        {"concept": "us-gaap:CostOfRevenue", "label": "Cost of revenues",
+         "period_end": "2025-09-30", "numeric_value": 96_000_000.0, "unit": "USD"},
+        {"concept": "us-gaap:ConcentrationRiskPercentageOfRevenues",
+         "label": "Concentration risk percentage of revenues",
+         "period_end": "2025-09-30", "numeric_value": 35.0, "unit": "pure"},
+    ])
+    report = {}
+    series = sf._period_series(facts, "Revenues", 3, report)
+
+    assert series == {"2025-09-30": 268_000_000.0}, series
+    assert report.get("xbrl_rejected", 0) >= 2
+
+
+def test_xbrl_rejects_per_share_unit():
+    """주당 금액(USD/shares)이 주식보상비 총액을 밀어내면 안 됨"""
+    import sec_fundamentals as sf
+
+    facts = _FakeFacts([
+        {"concept": "us-gaap:ShareBasedCompensation", "label": "Share-based compensation",
+         "period_end": "2025-09-30", "numeric_value": 12_000_000.0, "unit": "USD"},
+        {"concept": "us-gaap:ShareBasedCompensationArrangementWeightedAverageGrantDateFairValue",
+         "label": "Weighted average grant date fair value",
+         "period_end": "2025-09-30", "numeric_value": 18.42, "unit": "USD/shares"},
+    ])
+    series = sf._period_series(facts, "ShareBasedCompensation", 3, {})
+
+    assert series == {"2025-09-30": 12_000_000.0}, series
+
+
+def test_xbrl_ambiguous_values_are_not_guessed():
+    """같은 분기에 크게 다른 값이 둘이면 아무거나 쓰지 말고 제외해야 함"""
+    import sec_fundamentals as sf
+
+    facts = _FakeFacts([
+        {"concept": "us-gaap:Revenues", "label": "Revenues",
+         "period_end": "2025-09-30", "numeric_value": 268_000_000.0, "unit": "USD"},
+        {"concept": "us-gaap:Revenues", "label": "Revenues",
+         "period_end": "2025-09-30", "numeric_value": 12_000_000.0, "unit": "USD"},
+    ])
+    report = {}
+    series = sf._period_series(facts, "Revenues", 3, report)
+
+    assert series == {}, series
+    assert report.get("xbrl_ambiguous")
+
+
+# ---------------------------------------------------------------------------
+# 보도자료 퍼센트 함정
+# ---------------------------------------------------------------------------
+def test_percent_written_as_word_is_not_taken_as_amount():
+    """'82 percent' 를 금액으로 채택하면 마진이 1억%가 됩니다"""
+    import sec_fundamentals as sf
+
+    text = "Non-GAAP gross margin was 82 percent for the quarter."
+    value = sf.find_labeled_value(text, sf.LABELS_NONGAAP_GM_PCT, is_percent=True)
+    assert value == 82.0, value
+
+    # 금액을 찾을 때는 그 숫자를 쓰면 안 됩니다
+    amount = sf.find_labeled_value(text, [r"non[-\s]?GAAP\s+gross\s+margin"])
+    assert amount is None or amount != 82.0, amount
+
+
+def test_percent_on_next_line_does_not_hijack_amount():
+    """다음 줄이 '% of revenue' 로 시작해도 이번 줄 금액은 금액이어야 함"""
+    import sec_fundamentals as sf
+
+    text = "Non-GAAP operating income   45,123\n% of revenue   18.5"
+    value = sf.find_labeled_value(text, sf.LABELS_NONGAAP_OP_INCOME)
+    assert value == 45_123.0, value
+
+
+def test_press_rejects_revenue_smaller_than_op_income():
+    """매출이 영업이익보다 작게 잡히면 그 매출은 채택하지 않아야 함"""
+    import sec_fundamentals as sf
+
+    result = {"revenue": 102.0, "op_income": 84_500_000.0}
+    sf._sanity_check_press(result)
+    assert result["revenue"] is None
+    assert result["rejected_revenue"] == 102.0
+
+
+# ---------------------------------------------------------------------------
+# 전망 경로
+# ---------------------------------------------------------------------------
+def test_annual_guidance_is_not_used_as_quarterly():
+    """연간 전망을 분기 전망으로 쓰면 이익이 4배로 튑니다"""
+    annual = "Full-year 2026 outlook: we expect revenue of $1,900 million to $2,000 million."
+    quarterly = "Second quarter 2026 outlook: we expect revenue of $480 million to $500 million."
+
+    assert fe.looks_annual(annual) is True
+    assert fe.looks_annual(quarterly) is False
+
+
+def test_average_margin_excludes_outlier_quarter():
+    """한 분기만 크게 튀면 평균에서 빼야 함"""
+    quarters = [
+        {"revenue": 250 * M, "op_income": 45 * M},    # 18%
+        {"revenue": 260 * M, "op_income": 47 * M},    # 18.1%
+        {"revenue": 100 * M, "op_income": 94 * M},    # 94% ← 껍데기 잔차
+        {"revenue": 280 * M, "op_income": 51 * M},    # 18.2%
+    ]
+    margin = fe.average_operating_margin(quarters, n=4)
+
+    assert margin is not None and 15.0 < margin < 22.0, margin
+
+
+# ---------------------------------------------------------------------------
+# 점수 쪽 방어선
+# ---------------------------------------------------------------------------
+def test_forward_score_not_full_marks_on_absurd_growth():
+    """비현실적 증가율에 만점을 주면 안 됨"""
+    quarters = make_quarters([84.5 * M])
+    absurd = scoring.score_forward(
+        quarters, {"forward_op_income": 389_938_207.9 * M, "revision": 1}
+    )
+    normal = scoring.score_forward(
+        quarters, {"forward_op_income": 110 * M, "revision": 1}
+    )
+    assert absurd["score"] < normal["score"], (absurd, normal)
+    assert "비현실적" in absurd["detail"], absurd["detail"]
+
+
+def test_gm_driver_ignores_impossible_margin():
+    """82,804,463% 같은 GM%는 판단에서 빼야 함"""
+    quarters = [
+        {"gross_margin_pct": 50.0}, {"gross_margin_pct": 50.5},
+        {"gross_margin_pct": 82_804_463.3}, {"gross_margin_pct": 51.0},
+    ]
+    result = scoring.score_gm_driver(quarters)
+
+    assert result["delta_pp"] is None or abs(result["delta_pp"]) < 100.0, result
+
+
+def test_chart_qoq_uses_safe_growth():
+    """차트용 QoQ 도 점수와 같은 안전 계산을 써야 함"""
+    import pipeline
+
+    quarters = [
+        {"period_label": "A", "filing_date": "2025-01-01", "op_income": 100.0},
+        {"period_label": "B", "filing_date": "2025-04-01", "op_income": 84.5 * M},
+    ]
+    frame = pipeline.quarters_to_frame(quarters)
+
+    import pandas as pd
+    assert pd.isna(frame["qoq_pct"].iloc[1]), frame["qoq_pct"].tolist()
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

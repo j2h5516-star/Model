@@ -167,6 +167,33 @@ def _parse_pct(text: str) -> float | None:
     return None
 
 
+# 전망 문단이 "한 해 전체"를 말하고 있는지 알아보는 표현들.
+# 연간 매출 전망을 다음 '분기' 전망으로 쓰면 이익이 4배로 튀어
+# 증가율이 +300% 같은 가짜 값이 됩니다.
+_ANNUAL_HINTS = re.compile(
+    r"(full[-\s]?year|fiscal\s+year\s+20\d{2}|for\s+the\s+year|annual\s+(?:revenue|outlook|guidance))",
+    re.I,
+)
+
+
+def looks_annual(text: str) -> bool:
+    """전망 문단이 분기가 아니라 한 해 전체를 가리키는지 봅니다.
+
+    "Full-year 2026 outlook: we expect ..." 처럼 기간을 알려주는 말이
+    전망 문단 **앞쪽**에 있는 경우가 많아, 앞 200자도 함께 봅니다.
+    """
+    section = find_guidance_section(text)
+    if not section:
+        return False
+    start = text.find(section)
+    lead = text[max(0, start - 200) : start] if start >= 0 else ""
+    head = lead + section[:400]
+    # "분기"라는 말이 함께 있으면 분기 전망으로 봅니다 (연간·분기 둘 다 적는 회사가 많음)
+    if re.search(r"(first|second|third|fourth|next)\s+quarter", head, re.I):
+        return False
+    return bool(_ANNUAL_HINTS.search(head))
+
+
 def forward_from_guidance(guidance: dict) -> float | None:
     """가이던스 숫자로 다음 분기 논갭 영업이익을 계산합니다.
 
@@ -333,6 +360,14 @@ def average_operating_margin(quarters: list[dict], n: int = 4) -> float | None:
             margins.append(margin)
     if not margins:
         return None
+    if len(margins) >= 3:
+        # 한 분기만 크게 튀면(껍데기 잔차 등) 평균이 통째로 흔들립니다.
+        # 가운데 값에서 크게 벗어난 분기는 평균에서 뺍니다.
+        ordered = sorted(margins)
+        median = ordered[len(ordered) // 2]
+        kept = [m for m in margins if abs(m - median) <= max(15.0, abs(median) * 0.8)]
+        if len(kept) >= 2:
+            margins = kept
     return sum(margins) / len(margins)
 
 
@@ -416,7 +451,14 @@ def estimate_forward(ticker: str, quarters: list[dict]) -> dict:
     avg_margin = average_operating_margin(quarters, n=4)
 
     # --- 다음 분기: ① 가이던스 우선 ---
-    guidance = parse_guidance(find_latest_guidance_text(quarters))
+    guidance_text = find_latest_guidance_text(quarters)
+    if looks_annual(guidance_text):
+        # 연간 전망을 분기 전망으로 쓰면 이익이 4배로 튀어 가짜 급가속이 됩니다.
+        # 4로 나눠 분기화하는 것도 계절성 때문에 왜곡되므로, 그냥 쓰지 않고
+        # 월가 컨센서스 경로로 넘깁니다.
+        consensus["errors"].append("연간 가이던스로 판단되어 분기 전망에서 제외")
+        guidance_text = ""
+    guidance = parse_guidance(guidance_text)
     forward = forward_from_guidance(guidance)
     guidance_margin_pct = None   # 가이던스에 내재된 마진 (다다음 분기에도 같은 기준 적용)
     if forward is not None:

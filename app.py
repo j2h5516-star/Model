@@ -1092,17 +1092,20 @@ else:
     # 전망 막대가 실적 막대를 짓눌러 화면에서 지워버리지 않게 합니다.
     # (전망이 실적의 4억 배로 계산돼 y축이 늘어나는 바람에 실제 실적 막대가
     #  픽셀 0이 되어 "그래프가 통째로 없다"는 문제가 있었습니다)
-    actual_max = max((v for v in op_values if v is not None), default=None)
+    # 기준은 '가장 최근 분기 영업이익' — 전망 검사(check_forward)와 같은 기준선입니다.
+    latest_op = next((v for v in reversed(op_values) if v is not None and v > 0), None)
     dropped_future = 0
-    if actual_max and actual_max > 0 and future_labels:
-        keep_labels, keep_values = [], []
-        for label, value in zip(future_labels, future_values):
-            if value is not None and abs(value) > actual_max * cfg.CHART_FORWARD_MAX_RATIO:
-                dropped_future += 1
-                continue
-            keep_labels.append(label)
-            keep_values.append(value)
-        future_labels, future_values = keep_labels, keep_values
+    if latest_op and future_labels:
+        # ⚠️ 개별로 버리면 안 됩니다. 다음 분기를 버리고 다다음 분기만 남기면
+        #    같은 x칸에 다른 분기의 값이 그려져 점선과 막대가 어긋납니다.
+        #    다음 분기가 탈락하면 그것을 기준으로 만든 다다음 분기도 함께 버립니다.
+        cut = len(future_values)
+        for index, value in enumerate(future_values):
+            if value is not None and abs(value) > latest_op * cfg.CHART_FORWARD_MAX_RATIO:
+                cut = index
+                break
+        dropped_future = len(future_values) - cut
+        future_labels, future_values = future_labels[:cut], future_values[:cut]
 
     if future_labels:
         labels = labels + future_labels
@@ -1174,6 +1177,7 @@ else:
         )
         if next_qoq is not None and last_actual_qoq is not None and future_labels:
             last_actual_label = quarters_df["period_label"].tolist()[-1]
+            # 막대에서 살아남은 분기만큼만 점선을 그립니다 (막대와 칸이 어긋나지 않게)
             future_x = [last_actual_label, future_labels[0]]
             future_y = [last_actual_qoq, next_qoq]
             if next2_qoq is not None and len(future_labels) >= 2:
@@ -1217,7 +1221,7 @@ else:
 
     if dropped_future:
         st.caption(
-            f"⚠️ 전망 막대 {dropped_future}개는 실적보다 지나치게 커서 그리지 않았습니다 "
+            f"⚠️ 다음 분기부터 전망 {dropped_future}개는 실적보다 지나치게 커서 그리지 않았습니다 "
             "(계산이 깨진 값일 가능성이 큽니다 — 아래 진단을 확인해 주세요)"
         )
 

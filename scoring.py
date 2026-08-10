@@ -274,8 +274,14 @@ def score_gm_driver(quarters: list[dict]) -> dict:
       −1%p 초과 하락 → 마진 악화                                        8점
     """
     max_score = cfg.W_GM_DRIVER
+    # 매출총이익률은 정의상 100%를 넘을 수 없습니다.
+    # 범위를 벗어난 값(계산이 깨진 분기)은 판단에서 뺍니다 —
+    # 예전에는 82,804,463.3% 가 그대로 통과해 화면에 출력됐습니다.
     margins = [
-        q["gross_margin_pct"] for q in quarters if q.get("gross_margin_pct") is not None
+        q["gross_margin_pct"]
+        for q in quarters
+        if q.get("gross_margin_pct") is not None
+        and cfg.MARGIN_MIN_PCT <= q["gross_margin_pct"] <= cfg.MARGIN_MAX_PCT
     ]
 
     if len(margins) < 2:
@@ -412,11 +418,19 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
             forward_score = max_score * 0.67 * 0.1
             growth_text = "적자 확대 전망"
     else:
-        growth_pct = (forward_op / latest_op - 1.0) * 100.0
-        # −10% ~ +30% 구간을 0~10점으로 환산
-        ratio = _clamp((growth_pct + 10.0) / 40.0, 0.0, 1.0)
-        forward_score = ratio * (max_score * 0.67)
-        growth_text = f"다음 분기 영업이익 전망이 이번 분기 대비 {growth_pct:+.1f}%"
+        # 안전 계산: 비현실적인 증가율(단위가 깨진 경우)은 점수도 만점을 주면 안 됩니다.
+        # 예전에는 +461,711,116% 가 그대로 만점권 점수를 받았습니다.
+        growth_pct = dq.safe_growth_pct(latest_op, forward_op)
+        if growth_pct is None:
+            forward_score = max_score * 0.4
+            growth_text = (
+                "전망 증가율이 비현실적이어서(단위가 깨진 것으로 보임) 판단하지 않았습니다"
+            )
+        else:
+            # −10% ~ +30% 구간을 0~10점으로 환산
+            ratio = _clamp((growth_pct + 10.0) / 40.0, 0.0, 1.0)
+            forward_score = ratio * (max_score * 0.67)
+            growth_text = f"다음 분기 영업이익 전망이 이번 분기 대비 {growth_pct:+.1f}%"
 
     # 리비전 점수 (최대 5점)
     # 추정치가 30일간 몇 % 움직였는지(속도)가 있으면 그것으로 정밀하게,
