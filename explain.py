@@ -16,6 +16,7 @@ explain.py — "이 숫자가 어떻게 나왔는지" 설명문 만들기
 from __future__ import annotations
 
 import config as cfg
+import data_quality as dq
 
 
 def _m(value: float | None) -> str:
@@ -216,7 +217,13 @@ def explain_gm_driver(score: dict) -> dict:
     # 분기별 GM% 이력 표
     history = []
     margins = trace.get("margins", [])
-    labeled = [q for q in quarters if q.get("gross_margin_pct") is not None]
+    # scoring 과 **같은 필터**를 써야 목록 길이가 맞습니다.
+    # (예전에는 범위를 벗어난 GM%를 scoring 만 걸러내서 이력표가 한 칸씩 밀렸습니다)
+    labeled = [
+        q for q in quarters
+        if q.get("gross_margin_pct") is not None
+        and cfg.MARGIN_MIN_PCT <= q["gross_margin_pct"] <= cfg.MARGIN_MAX_PCT
+    ]
     for quarter, margin in zip(labeled, margins):
         history.append({"분기": quarter.get("period_label", "-"), "GM%": round(margin, 2)})
 
@@ -274,15 +281,24 @@ def explain_delta(score: dict) -> dict:
         cfg.D_UNKNOWN: "분기 데이터가 부족해 속도 변화를 계산할 수 없습니다.",
     }
 
-    # 분기별 QoQ 증가율 이력 (증가율은 두 번째 분기부터 계산됨)
+    # 분기별 증가율 이력.
+    # ⚠️ 압축된 growths 목록과 그냥 zip 하면 안 됩니다. 적자·단위오류로 건너뛴
+    #    분기가 있으면 증가율이 **한 칸씩 밀려 엉뚱한 분기에 붙고** 최근 분기가
+    #    통째로 빠집니다. 여기서 분기 쌍마다 다시 계산해 빈칸을 그대로 둡니다.
     history = []
     valid_quarters = [q for q in quarters if q.get("op_income") is not None]
-    for quarter, growth in zip(valid_quarters[1:], growths):
+    growth_label = "YoY 증가율(%)" if trace.get("seasonal") else "QoQ 증가율(%)"
+    step = 4 if trace.get("seasonal") else 1
+    for index in range(step, len(valid_quarters)):
+        quarter = valid_quarters[index]
+        growth = dq.safe_growth_pct(
+            valid_quarters[index - step].get("op_income"), quarter.get("op_income")
+        )
         history.append(
             {
                 "분기": quarter.get("period_label", "-"),
                 "영업이익($M)": round(quarter["op_income"] / 1e6, 1),
-                "QoQ 증가율(%)": round(growth, 1),
+                growth_label: None if growth is None else round(growth, 1),
             }
         )
 

@@ -34,14 +34,41 @@ def _qoq_growth_series(quarters: list[dict]) -> list[float]:
     예) 영업이익이 100 → 120 → 150 이면 [20.0, 25.0]
     직전 분기가 0 이하(적자)면 증가율을 계산할 수 없어 건너뜁니다.
     """
+    return _growth_segments(quarters)[-1] if _growth_segments(quarters) else []
+
+
+def _growth_segments(quarters: list[dict]) -> list[list[float]]:
+    """증가율을 **끊기지 않고 이어지는 구간별로** 나눠 돌려줍니다.
+
+    적자 분기나 단위가 깨진 분기를 만나면 거기서 구간을 끊습니다.
+    예전에는 끊긴 자리를 그냥 건너뛰고 이어붙여서, 서로 상관없는 시기의
+    증가율이 한 줄에 섞인 채 추세(회귀 기울기)를 계산했습니다.
+    """
     values = [q.get("op_income") for q in quarters if q.get("op_income") is not None]
-    growths: list[float] = []
+    segments: list[list[float]] = []
+    current: list[float] = []
     for prev, curr in zip(values, values[1:]):
-        # 기저가 0 이하이거나 결과가 비현실적이면(단위가 깨진 경우) 건너뜁니다
         growth = dq.safe_growth_pct(prev, curr)
+        if growth is None:
+            if current:
+                segments.append(current)
+                current = []
+            continue
+        current.append(growth)
+    if current:
+        segments.append(current)
+    return segments
+
+
+def _yoy_growth_series(quarters: list[dict]) -> list[float]:
+    """작년 같은 분기 대비 증가율(%) 목록. 계절 장사를 판정할 때 씁니다."""
+    values = [q.get("op_income") for q in quarters if q.get("op_income") is not None]
+    out: list[float] = []
+    for index in range(4, len(values)):
+        growth = dq.safe_growth_pct(values[index - 4], values[index])
         if growth is not None:
-            growths.append(growth)
-    return growths
+            out.append(growth)
+    return out
 
 
 def _clamp(value: float, low: float, high: float) -> float:
@@ -144,7 +171,21 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
       기저가 작으면 증가율이 쉽게 커 보여 착시가 생기기 때문입니다.
     """
     max_score = cfg.W_DELTA_ACCEL
-    growths = _qoq_growth_series(quarters)
+
+    # ★ 어떤 기준으로 볼지 **먼저 판단**합니다.
+    #   계절 장사(분기마다 오르내리는 사업)를 전분기 대비로 판정하면 구조적으로
+    #   틀립니다 — 백테스트에서 이런 종목의 적중률이 0%였습니다.
+    #   그런 종목은 작년 같은 분기와 비교(YoY)해 판정합니다.
+    season = quarters[0].get("seasonal") if quarters else None
+    if season is None:
+        season = dq.detect_seasonality(quarters)["seasonal"]
+
+    if season:
+        growths = _yoy_growth_series(quarters)
+        basis_text = "작년 같은 분기 대비(계절 장사로 판정)"
+    else:
+        growths = _qoq_growth_series(quarters)
+        basis_text = "전분기 대비"
 
     if len(growths) < 2:
         return {
@@ -155,7 +196,8 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
                 f"{len(growths)}개만 계산됐습니다. (분기 데이터 부족 또는 직전 분기 적자)"
             ),
             "capped": False,
-            "trace": {"growths": growths, "insufficient": True},
+            "trace": {"growths": growths, "insufficient": True,
+                      "basis": basis_text, "seasonal": bool(season)},
         }
 
     recent = growths[-3:]            # 최근 최대 3개 분기의 증가율
@@ -214,7 +256,9 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
 
     # 화면의 "계산 과정 보기"에 쓸 자료
     trace = {
-        "growths": growths,                 # 분기별 QoQ 증가율 전체 이력
+        "basis": basis_text,                # 무엇과 비교했나 (전분기 / 작년 같은 분기)
+        "seasonal": bool(season),
+        "growths": growths,                 # 분기별 증가율 전체 이력
         "recent": recent,                   # 판정에 실제로 쓴 최근 값들
         "delta_pp": delta,                  # 증가율의 변화(%p) — 단기 신호 근거
         "slope": slope,                     # 회귀 기울기 — 추세 신호 근거
@@ -364,12 +408,20 @@ def score_revenue_quality(quarters: list[dict]) -> dict:
         if prev > 0:
             qoq.append((curr / prev - 1.0) * 100.0)
     if len(qoq) >= 2:
-        if qoq[-1] > qoq[-2]:
+        # ⚠️ 매출이 줄고 있는데 "증가 속도가 빨라진다"고 쓰면 안 됩니다.
+        #    −20% → −5% 는 감소 폭이 줄어든 것이지 매출이 느는 게 아닙니다.
+        #    예전에는 이 경우에도 가점을 주고 "빨라지는 중"이라고 적었습니다.
+        if qoq[-1] > qoq[-2] and qoq[-1] > 0 and qoq[-2] > 0:
             accel_score = max_score * 0.3
             accel_text = " · 매출 증가 속도도 빨라지는 중입니다"
         elif qoq[-1] > 0:
             accel_score = max_score * 0.15
             accel_text = " · 매출은 계속 늘고 있습니다"
+        elif qoq[-1] > qoq[-2]:
+            accel_score = max_score * 0.05
+            accel_text = " · 매출은 줄고 있지만 감소 폭이 작아지는 중입니다"
+        else:
+            accel_text = " · 매출 감소 폭이 커지는 중입니다"
 
     yoy_text = f"{yoy:+.1f}%" if yoy is not None else "-"
     return {

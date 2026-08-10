@@ -170,6 +170,15 @@ def _parse_pct(text: str) -> float | None:
 # 전망 문단이 "한 해 전체"를 말하고 있는지 알아보는 표현들.
 # 연간 매출 전망을 다음 '분기' 전망으로 쓰면 이익이 4배로 튀어
 # 증가율이 +300% 같은 가짜 값이 됩니다.
+# "다음 분기 전망"을 가리키는 표현만 좁게 잡습니다 (제목의 "Fourth Quarter" 는 제외)
+_QUARTER_OUTLOOK_RE = re.compile(
+    r"(?:for|in)\s+the\s+(?:first|second|third|fourth|next|current)\s+quarter"
+    r"|(?:first|second|third|fourth|next)\s+quarter\s+(?:of\s+)?(?:fiscal\s+)?(?:20\d{2}\s+)?"
+    r"(?:outlook|guidance)"
+    r"|\bQ[1-4]\s*(?:FY)?\s*20\d{2}\s+(?:outlook|guidance)",
+    re.I,
+)
+
 _ANNUAL_HINTS = re.compile(
     r"(full[-\s]?year|fiscal\s+year\s+20\d{2}|for\s+the\s+year|annual\s+(?:revenue|outlook|guidance))",
     re.I,
@@ -188,8 +197,11 @@ def looks_annual(text: str) -> bool:
     start = text.find(section)
     lead = text[max(0, start - 200) : start] if start >= 0 else ""
     head = lead + section[:400]
-    # "분기"라는 말이 함께 있으면 분기 전망으로 봅니다 (연간·분기 둘 다 적는 회사가 많음)
-    if re.search(r"(first|second|third|fourth|next)\s+quarter", head, re.I):
+
+    # ⚠️ 분기 가드는 **전망 문단 안에서**, 그리고 '전망을 가리키는 분기 표현'만 봅니다.
+    #    보도자료 제목이 "Fourth Quarter and Full Year 2025 Results" 인 경우가 많아,
+    #    단순히 "quarter"라는 낱말만 찾으면 연간 가이던스가 분기 전망으로 통과합니다.
+    if _QUARTER_OUTLOOK_RE.search(section[:400]):
         return False
     return bool(_ANNUAL_HINTS.search(head))
 

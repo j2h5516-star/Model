@@ -39,7 +39,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 6
+REQUIRED_CONFIG_VERSION = 7
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -1428,6 +1428,44 @@ with st.expander("🎯 백테스트 — 이 판정이 과거에는 얼마나 맞
         "각 시점에서 **그때까지의 자료만** 가지고 판정을 내린 뒤, 실제 다음 분기와 맞춰 봅니다. "
         "미래를 미리 보지 않도록 코드로 막아 두었습니다."
     )
+    st.markdown(
+        "**두 가지 잣대로 잽니다.**\n\n"
+        f"- **엄격**: 모델이 스스로 정한 문턱({cfg.DELTA_THRESHOLD_PP:.0f}%p)만큼 실제로 움직였는가\n"
+        "- **방향**: 문턱까지는 아니어도 주장한 방향으로 움직였는가"
+    )
+
+    def _render_backtest(outcome: dict, caption: str) -> None:
+        total = outcome["전체"]
+        if not total["판정한 시점"]:
+            st.caption("되짚어 볼 자료가 부족합니다.")
+            return
+
+        low, high = total["적중률 95%구간"]
+        cols = st.columns(3)
+        cols[0].metric("엄격 적중", total["적중(원분수)"], f"95% {low:.0f}~{high:.0f}%",
+                       delta_color="off")
+        cols[1].metric("방향만 맞춤", f"{total['방향만 맞춘 비율(%)']:.0f}%",
+                       "문턱 미만 포함", delta_color="off")
+        cols[2].metric("판단 유보", f"{total['유보(혼조·판단불가)']}회",
+                       "혼조·판단불가", delta_color="off")
+
+        # 기준선 — 아무 계산도 안 하는 답안보다 나은지 보여줍니다
+        base_rows = [
+            {"답안": name, "적중률(%)": info["적중률(%)"]}
+            for name, info in total["기준선(무계산 답안)"].items()
+        ]
+        best_base = max((r["적중률(%)"] or 0) for r in base_rows)
+        model_rate = total["적중률(%)"] or 0
+        st.dataframe(pd.DataFrame(base_rows), hide_index=True, width="stretch")
+        if model_rate < best_base:
+            st.warning(
+                f"⚠️ 엄격 잣대에서는 모델({model_rate:.0f}%)이 "
+                f"아무 계산도 하지 않는 답안({best_base:.0f}%)보다 낮습니다. "
+                "이 모델은 방향을 **너무 자주 단정하는 경향**이 있다는 뜻입니다 — "
+                "실제로는 '유지'인 분기가 많습니다. 판정을 그대로 믿지 마시고, "
+                "위 '방향만 맞춤'과 함께 보세요."
+            )
+        st.caption(caption)
 
     # 지금 화면에 있는 종목들의 실제 이력으로 되짚어 봅니다
     real_history = {
@@ -1437,45 +1475,44 @@ with st.expander("🎯 백테스트 — 이 판정이 과거에는 얼마나 맞
     }
 
     if real_history:
+        st.markdown("#### 지금 이 종목들의 실제 이력")
         outcome = backtest.run(real_history)
-        total = outcome["전체"]
-        cols = st.columns(3)
-        cols[0].metric("적중률", "-" if total["적중률(%)"] is None else f"{total['적중률(%)']:.0f}%")
-        cols[1].metric("판정한 시점", f"{total['판정한 시점']}회")
-        cols[2].metric("판단 유보", f"{total['유보(혼조·판단불가)']}회")
-
-        rows = [
-            {"종목": ticker, "판정": s["판정한 시점"], "적중": s["적중"],
-             "적중률(%)": s["적중률(%)"], "유보": s["유보(혼조·판단불가)"]}
-            for ticker, s in outcome["종목별"].items()
-        ]
-        st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
-        st.caption(
-            f"⚠️ 표본이 {total['판정한 시점']}회뿐이라 이 숫자는 참고용입니다. "
-            "분기 6개 이상 모인 종목만 계산합니다."
+        _render_backtest(
+            outcome,
+            f"표본이 {outcome['전체']['판정한 시점']}회뿐이라 참고용입니다 "
+            f"(종목평균 {outcome['전체']['종목평균 적중률(%)']}% · "
+            f"독립 종목 {outcome['전체']['독립 종목 수']}개). 분기 6개 이상인 종목만 계산합니다.",
+        )
+        st.dataframe(
+            pd.DataFrame(
+                [
+                    {"종목": t, "적중": v["적중(원분수)"], "적중률(%)": v["적중률(%)"],
+                     "유보": v["유보(혼조·판단불가)"]}
+                    for t, v in outcome["종목별"].items()
+                ]
+            ),
+            hide_index=True,
+            width="stretch",
         )
     else:
-        st.caption(
-            "되짚어 볼 만큼 분기가 모인 종목이 아직 없습니다 (종목당 6분기 이상 필요)."
-        )
+        st.caption("되짚어 볼 만큼 분기가 모인 종목이 아직 없습니다 (종목당 6분기 이상 필요).")
 
-    st.markdown("**설계 점검용 가상 시나리오** — 모델이 설계대로 도는지 보는 표준 시험입니다.")
+    st.markdown("#### 설계 점검용 가상 시나리오")
     standard = backtest.run(backtest.standard_scenarios())
     st.dataframe(
         pd.DataFrame(
             [
-                {"시나리오": name, "판정": s["판정한 시점"], "적중": s["적중"],
-                 "적중률(%)": s["적중률(%)"], "유보": s["유보(혼조·판단불가)"]}
-                for name, s in standard["종목별"].items()
+                {"시나리오": name, "적중": v["적중(원분수)"], "적중률(%)": v["적중률(%)"],
+                 "유보": v["유보(혼조·판단불가)"]}
+                for name, v in standard["종목별"].items()
             ]
         ),
         hide_index=True,
         width="stretch",
     )
     st.caption(
-        "🚨 **계절성** 시나리오의 적중률이 낮은 것은 알려진 한계입니다. "
-        "분기마다 매출이 오르내리는 사업(계절 장사)은 전분기 대비(QoQ) 증가율로 "
-        "가속·감속을 판정하는 것 자체가 맞지 않습니다. 그런 종목은 판정을 그대로 믿지 마세요."
+        "가상 데이터로 재는 것은 '시장에서 얼마나 맞나'가 아니라 "
+        "**'설계한 대로 동작하나'** 입니다. 둘은 다릅니다."
     )
 
 

@@ -276,6 +276,7 @@ def parse_press_release(text: str) -> dict:
             "보도자료의 GAAP→non-GAAP 조정표에 적힌 "
             f"non-GAAP 영업이익 값을 그대로 사용했습니다 (${op/1e6:,.1f}M)."
         )
+        _sanity_check_press(result)   # ← 직접공시 경로에서도 반드시 검사
         return result
 
     # ③ 없으면 역산: 매출 × GM% − 논갭 영업비용
@@ -307,7 +308,11 @@ def _sanity_check_press(result: dict) -> None:
     revenue, op_income = result.get("revenue"), result.get("op_income")
     if revenue is None or op_income is None:
         return
-    if revenue <= 0 or abs(op_income) > revenue * 0.9:
+    # 흑자면 영업이익이 매출의 90%를 넘을 수 없습니다.
+    # 적자는 비용이 매출을 넘을 수 있으므로 마진 하한(-500%)으로만 봅니다.
+    too_big = op_income > 0 and op_income > revenue * 0.9
+    too_deep = op_income < 0 and op_income / revenue * 100.0 < cfg.MARGIN_MIN_PCT
+    if revenue <= 0 or too_big or too_deep:
         result["rejected_revenue"] = revenue
         result["revenue"] = None
 
@@ -738,7 +743,12 @@ def fetch_xbrl_approximation(
             bad_gross = (
                 gross_profit is not None and (gross_profit < 0 or gross_profit > revenue)
             )
-            if revenue <= 0 or abs(approx_op) > revenue or bad_gross:
+            # 적자 분기는 영업이익이 매출보다 클 수 있습니다(비용이 매출을 넘으므로).
+            # 흑자일 때만 "영업이익 ≤ 매출"을 강제하고, 적자는 마진 하한으로만 봅니다.
+            bad_op = approx_op > revenue or (
+                approx_op < 0 and approx_op / revenue * 100.0 < cfg.MARGIN_MIN_PCT
+            )
+            if revenue <= 0 or bad_op or bad_gross:
                 if report is not None:
                     report.setdefault("xbrl_ambiguous", []).append(
                         f"{period_end}: 매출 ${revenue:,.0f} 이 다른 항목과 앞뒤가 맞지 않아 제외"

@@ -32,6 +32,7 @@ data_quality.py — 숫자를 쓰기 전에 먼저 검사하는 단계
 from __future__ import annotations
 
 import math
+import statistics
 
 import config as cfg
 
@@ -203,12 +204,84 @@ def validate_quarters(quarters: list[dict], report: dict | None = None) -> list[
 
         kept.append(clean)
 
+    # 계절성도 '먼저 판단'해서 넘깁니다 (점수 계산이 어떤 기준으로 볼지 정하는 근거)
+    season = detect_seasonality(kept)
+    for quarter in kept:
+        quarter["seasonal"] = season["seasonal"]
+
     if report is not None:
         report["quality_notes"] = notes
         report["quality_fixed"] = fixed_count
         report["quality_dropped"] = dropped_count
+        report["seasonality"] = season
+        if season["seasonal"]:
+            notes.append(f"계절성: {season['reason']}")
 
     return kept
+
+
+# ---------------------------------------------------------------------------
+# 계절성 검사 — "이 종목은 전분기 대비로 판정해도 되는가"
+# ---------------------------------------------------------------------------
+def _swing(values: list[float]) -> float | None:
+    """값들이 가운데에서 얼마나 흔들리는지 (표준편차 대신 중앙값 절대편차).
+
+    한 분기만 튀어도 크게 흔들리는 표준편차와 달리, 잡음에 덜 흔들립니다.
+    """
+    if len(values) < 2:
+        return None
+    center = statistics.median(values)
+    return statistics.median([abs(v - center) for v in values])
+
+
+def detect_seasonality(quarters: list[dict]) -> dict:
+    """분기마다 오르내리는 '계절 장사'인지 판정합니다.
+
+    왜 필요한가:
+      아이스크림 가게의 이익은 여름에 오르고 겨울에 내립니다. 이런 회사를
+      **전분기 대비(QoQ)** 증가율로 보면 "가속 → 감속 → 가속"이 계속 반복되는데,
+      모델은 그때마다 방향을 단정합니다. 백테스트에서 이런 종목의 적중률이
+      **0%** 였습니다 — 틀리는 정도가 아니라 **거꾸로 맞히고 있었습니다.**
+
+    판정 방법:
+      같은 분기끼리 1년 간격으로 비교한 증가율(YoY)이, 전분기 대비 증가율(QoQ)보다
+      **훨씬 안정적**이면 계절성이 있다고 봅니다. (계절 장사는 작년 같은 분기와
+      비교해야 실체가 보입니다)
+
+    반환: {"seasonal": bool, "reason": str, "qoq_swing": float|None, "yoy_swing": float|None}
+    """
+    values = [q.get("op_income") for q in quarters if q.get("op_income") is not None]
+    if len(values) < cfg.SEASONALITY_MIN_QUARTERS:
+        return {"seasonal": False, "reason": "분기가 부족해 계절성을 판단하지 않았습니다",
+                "qoq_swing": None, "yoy_swing": None}
+
+    qoq = [g for g in (safe_growth_pct(a, b) for a, b in zip(values, values[1:]))
+           if g is not None]
+    yoy = [g for g in (safe_growth_pct(values[i - 4], values[i])
+                       for i in range(4, len(values))) if g is not None]
+
+    if len(qoq) < 3 or len(yoy) < 2:
+        return {"seasonal": False, "reason": "비교할 증가율이 부족합니다",
+                "qoq_swing": None, "yoy_swing": None}
+
+    qoq_swing, yoy_swing = _swing(qoq), _swing(yoy)
+    if qoq_swing is None or yoy_swing is None:
+        return {"seasonal": False, "reason": "흔들림을 계산할 수 없습니다",
+                "qoq_swing": qoq_swing, "yoy_swing": yoy_swing}
+
+    seasonal = qoq_swing > max(cfg.SEASONALITY_MIN_SWING_PP,
+                               yoy_swing * cfg.SEASONALITY_SWING_RATIO)
+    if seasonal:
+        reason = (
+            f"전분기 대비 증가율이 크게 출렁이는데(±{qoq_swing:.0f}%p) "
+            f"작년 같은 분기와 비교하면 안정적입니다(±{yoy_swing:.0f}%p). "
+            "계절 장사로 보여 전분기 대비 판정을 쓰지 않습니다."
+        )
+    else:
+        reason = "계절성이 뚜렷하지 않아 전분기 대비로 판정합니다"
+
+    return {"seasonal": seasonal, "reason": reason,
+            "qoq_swing": qoq_swing, "yoy_swing": yoy_swing}
 
 
 # ---------------------------------------------------------------------------
