@@ -358,6 +358,16 @@ def test_the_disproven_claim_is_gone_from_the_docs():
     assert "주가 정점" in readme, "채점 기준을 바로잡은 근거가 있어야 합니다"
 
 
+def test_eps_substitution_finding_is_recorded():
+    """조정 EPS 로 바꿔도 방향이 96% 일치한다는 측정 결과가 남아 있어야 함
+
+    같은 종목·같은 분기를 두 기준으로 판정해 비교한 결과입니다
+    (MU·NVDA·AMD·ENPH·ZIM 2020~2023, 50개 시점).
+    이 수치가 있어야 "EPS 로 전망을 만들어도 된다"는 판단에 근거가 생깁니다.
+    """
+    assert cfg.EPS_VS_OI_DIRECTION_MATCH >= 0.9, cfg.EPS_VS_OI_DIRECTION_MATCH
+
+
 # ---------------------------------------------------------------------------
 # ④ 이상 감지 — '크기'가 아니라 '증가 속도' 기준
 # ---------------------------------------------------------------------------

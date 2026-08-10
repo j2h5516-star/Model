@@ -39,7 +39,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 14
+REQUIRED_CONFIG_VERSION = 15
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
