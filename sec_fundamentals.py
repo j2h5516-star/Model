@@ -34,13 +34,28 @@ import config as cfg
 # ---------------------------------------------------------------------------
 
 # 보도자료 표에서 "(단위: 천 달러)" 같은 표기를 찾기 위한 패턴
+# 표 머리글의 단위 표기.
+#
+# ⚠️ 예전에는 "(in thousands" 처럼 **괄호 바로 뒤에 in 이 오는 형태**만 알아봤습니다.
+#    그래서 아래 표기들이 전부 "단위 없음(×1)"으로 처리돼 값이 1,000배 작게
+#    들어왔습니다 — 그런데 **매출과 영업이익이 같이 작아지므로 마진 비율이 보존되어
+#    어떤 정합성 검사에도 걸리지 않습니다.** 옆 분기와 섞이면 "영업이익 99.9% 붕괴"
+#    같은 가짜 델타가 생깁니다.
+#
+#      (Unaudited, in thousands)          (unaudited, in millions)
+#      (Dollars in thousands)             ($ in millions)
+#      (U.S. dollars in millions)         (dollars and shares in thousands, ...)
+#
+# 그래서 괄호 안 어디에 있든 "<무엇이> in thousands/millions/billions" 를 잡습니다.
+_SCALE_WORDS = r"(thousand|million|billion)s?"
 _UNIT_PATTERNS = [
-    (re.compile(r"\(\s*in\s+thousands", re.I), 1_000),
-    (re.compile(r"\(\s*in\s+millions", re.I), 1_000_000),
-    (re.compile(r"\(\s*in\s+billions", re.I), 1_000_000_000),
-    (re.compile(r"amounts?\s+in\s+thousands", re.I), 1_000),
-    (re.compile(r"amounts?\s+in\s+millions", re.I), 1_000_000),
+    (re.compile(rf"\([^)]{{0,40}}?\bin\s+{_SCALE_WORDS}\b", re.I), None),
+    (re.compile(rf"\(\s*\$\s*in\s+{_SCALE_WORDS}\b", re.I), None),
+    (re.compile(rf"\bamounts?\s+in\s+{_SCALE_WORDS}\b", re.I), None),
+    (re.compile(rf"\bdollars?\s+in\s+{_SCALE_WORDS}\b", re.I), None),
 ]
+# 잡아낸 낱말 → 배수
+_SCALE_MULTIPLIER = {"thousand": 1_000, "million": 1_000_000, "billion": 1_000_000_000}
 
 # 숫자 하나를 나타내는 패턴 — 예: $ 1,234.5  /  (1,234)  /  45.1
 _NUMBER_RE = re.compile(
@@ -83,10 +98,12 @@ def _detect_table_unit(text: str, position: int, window: int = 3000) -> int:
     start = max(0, position - window)
     context = text[start:position]
     best_scale, best_pos = 1, -1
-    for pattern, scale in _UNIT_PATTERNS:
+    for pattern, _ in _UNIT_PATTERNS:
         for match in pattern.finditer(context):
             if match.start() > best_pos:      # 가장 가까운(=뒤쪽) 표기를 채택
-                best_pos, best_scale = match.start(), scale
+                word = (match.group(1) or "").lower()
+                best_pos = match.start()
+                best_scale = _SCALE_MULTIPLIER.get(word, 1)
     return best_scale
 
 
