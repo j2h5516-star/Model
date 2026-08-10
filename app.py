@@ -303,10 +303,12 @@ def load_all(tickers: list[str], include_current_week: bool, use_cache: bool = T
 
     # 실적: 한 종목씩 차례로 받습니다.
     #
-    # ⚠️ 동시에 여러 종목을 받으면 안 됩니다.
-    #    SEC는 초당 요청 수를 제한하고 있어, 동시에 여러 종목을 받으면 요청이
-    #    거부되어 **모든 종목의 실적이 비는** 문제가 생깁니다.
-    #    (실제로 4개 동시 수집으로 바꾼 뒤 전 종목 실적 수집이 실패했습니다)
+    # ⚠️ 4개를 동시에 받도록 바꾼 직후 전 종목 실적 수집이 실패했습니다.
+    #    확인된 기전: SEC 신원을 설정하는 edgartools의 set_identity()가 여러 종목이
+    #    함께 쓰는 접속 창구를 닫고 새로 엽니다. 동시에 받는 도중 다른 종목이 이
+    #    함수를 또 부르면, 요청을 보내던 쪽의 창구가 닫혀 실패합니다.
+    #    → sec_fundamentals._ensure_identity 에 자물쇠를 넣어 막았지만,
+    #      실적 정확도가 속도보다 중요하므로 화면 수집은 순차로 둡니다.
     #    종목별로 하루치 캐시가 있어 처음 한 번만 느리고 이후는 즉시 표시됩니다.
     bundles: dict[str, dict] = {}
     todo = list(tickers)
@@ -591,7 +593,9 @@ if result["failed"]:
     )
 if result["no_fundamentals"]:
     missing = result["no_fundamentals"]
-    all_missing = len(missing) >= len(st.session_state.tickers)
+    # 주가를 못 받아 아예 분석에서 빠진 종목이 있을 수 있으므로,
+    # '전체'의 기준은 화면에 점수가 나온 종목(scores) 입니다.
+    all_missing = len(missing) >= len(scores)
 
     if all_missing:
         # 전 종목 실적이 비면 대시보드의 절반(펀더멘털)이 통째로 죽은 상태입니다.
@@ -1247,15 +1251,18 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
 
     # SEC는 요청자 신원에 이메일이 없으면 접속을 막습니다. 지금 무엇을 쓰고 있는지 표시합니다.
     _identity = cfg.get_sec_identity()
-    _has_mail = "@" in _identity
-    if _has_mail:
-        _local, _, _domain = _identity.rpartition("@")
-        _masked = f"{_local[:3]}***@{_domain}"
-        st.caption(f"SEC 요청자 신원: `{_masked}` — ✅ 이메일 포함 (정상)")
-    else:
-        st.caption(
-            f"SEC 요청자 신원: `{_identity}` — 🚨 **이메일이 없어 SEC가 차단합니다.** "
-            "Settings → Secrets 에 `SEC_IDENTITY = \"이름 이메일@주소\"` 를 넣어 주세요."
+    _typed = os.environ.get("SEC_IDENTITY", "").strip()   # Secrets에 직접 넣은 값
+    _local, _, _domain = _identity.rpartition("@")
+    _masked = f"{_local[:3]}***@{_domain}" if _domain else _identity
+    _source = "Secrets에 넣으신 값" if _typed and cfg._has_email(_typed) else "기본값"
+    st.caption(f"SEC 요청자 신원: `{_masked}` ({_source})")
+
+    if _typed and not cfg._has_email(_typed):
+        # 조용히 기본값으로 바꿔치기하면, 설정을 고쳤는데도 안 된다고 오해하게 됩니다
+        st.warning(
+            f"Secrets의 `SEC_IDENTITY` 값(`{_typed}`)에 **이메일 주소가 없어** 기본값으로 대신했습니다. "
+            "SEC는 이메일이 없는 요청을 차단하기 때문입니다. "
+            '`SEC_IDENTITY = "홍길동 mymail@example.com"` 처럼 실제 이메일을 함께 넣어 주세요.'
         )
 
     reports = result.get("reports") or []

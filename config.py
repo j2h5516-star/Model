@@ -89,6 +89,10 @@ MAX_TICKERS = 30
 #    앱 화면 오른쪽 아래 ⋮ → Settings → Secrets 에 아래 한 줄을 넣고 저장하면
 #    아래 기본값 대신 그 값이 쓰이며, Secrets는 저장소에 올라가지 않습니다.
 #        SEC_IDENTITY = "이름 본인이메일@example.com"
+#
+# 아래 기본값에 실제 이메일을 넣어 둔 것은 저장소 주인이 직접 선택한 것입니다.
+# (SEC 접속이 이메일 없이는 막히기 때문. 공개 저장소이므로 이 주소는 누구나 볼 수 있고,
+#  이 앱을 복제해 배포한 사람의 SEC 요청도 이 주소로 표시됩니다.)
 DEFAULT_SEC_IDENTITY = "Trend Dashboard j2h5516@gmail.com"
 
 
@@ -108,8 +112,15 @@ def get_sec_identity() -> str:
     return DEFAULT_SEC_IDENTITY
 
 
-# 예전 이름 호환용 (다른 파일에서 참조하던 코드가 깨지지 않도록)
-SEC_IDENTITY = get_sec_identity()
+def __getattr__(name: str):
+    """예전 이름 호환용 — `cfg.SEC_IDENTITY` 는 항상 '지금' 값을 돌려줍니다.
+
+    상수로 두면 파일을 읽어들이는 순간의 값이 굳어버려서,
+    나중에 Secrets에 넣은 신원이 반영되지 않습니다.
+    """
+    if name == "SEC_IDENTITY":
+        return get_sec_identity()
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 # 내려받은 SEC 파일을 저장해 둘 폴더 (재실행 시 다시 받지 않음)
 CACHE_DIR = "data"

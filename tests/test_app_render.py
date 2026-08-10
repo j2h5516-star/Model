@@ -214,6 +214,17 @@ def test_sec_identity_has_contact_email():
         assert cfg.get_sec_identity() == "홍길동 hong@example.com"
 
 
+def test_warns_when_secrets_identity_has_no_email():
+    """Secrets에 이메일 없는 신원을 넣으면 조용히 무시하지 말고 알려야 함"""
+    with patch.dict("os.environ", {"SEC_IDENTITY": "그냥 이름"}):
+        at = _run_app(True)
+
+    assert not at.exception, [e.value for e in at.exception]
+    assert any(
+        "이메일 주소가 없어" in w.value for w in at.warning
+    ), "신원이 조용히 기본값으로 바뀐 사실을 알리지 않음"
+
+
 def test_ticker_manager_is_on_main_screen():
     """종목 추가칸이 사이드바가 아니라 메인 화면(순위표 위)에 있어야 함"""
     at = _run_app(True)

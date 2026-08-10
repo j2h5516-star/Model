@@ -24,6 +24,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import threading
 from datetime import datetime, timedelta, timezone
 
 import config as cfg
@@ -351,22 +352,41 @@ def save_cache(ticker: str, quarters: list[dict]) -> None:
 # ---------------------------------------------------------------------------
 # SEC에서 실제로 받아오기
 # ---------------------------------------------------------------------------
-_identity_configured = False
+# 마지막으로 SEC에 알린 신원 (bool이 아니라 문자열로 둡니다 — 아래 설명 참고)
+_configured_identity: str | None = None
+
+# ⚠️ 이 자물쇠가 없으면 전 종목 실적이 통째로 비는 사고가 납니다.
+#    edgartools의 set_identity()는 신원만 바꾸는 게 아니라 **여러 종목이 함께 쓰는
+#    접속 창구(HTTP 클라이언트)를 닫고 새로 엽니다.** 여러 종목을 동시에 받는 도중
+#    다른 종목이 set_identity를 또 부르면, 이미 요청을 보내던 쪽의 창구가 닫혀
+#    "Cannot send a request, as the client has been closed" 오류로 실패합니다.
+_identity_lock = threading.Lock()
 
 
 def _ensure_identity() -> None:
-    """SEC는 요청자 신원을 요구합니다. 최초 1회만 설정합니다.
+    """SEC는 요청자 신원을 요구합니다. 신원이 바뀔 때만 다시 설정합니다.
 
     신원은 config.get_sec_identity()가 결정합니다
-    (환경변수 SEC_IDENTITY가 있으면 그것, 없으면 기본값).
-    """
-    global _identity_configured
-    if _identity_configured:
-        return
-    from edgar import set_identity
+    (환경변수 SEC_IDENTITY에 이메일이 있으면 그것, 없으면 기본값).
 
-    set_identity(cfg.get_sec_identity())
-    _identity_configured = True
+    '한 번만' 이 아니라 '바뀌면 다시' 인 이유:
+    Streamlit Secrets에서 신원을 고쳤을 때 앱을 껐다 켜지 않아도 반영되어야 합니다.
+    (예전에는 최초 1회만 설정해, 설정을 고쳐도 옛 신원으로 계속 요청했습니다)
+    """
+    global _configured_identity
+
+    wanted = cfg.get_sec_identity()
+    if _configured_identity == wanted:
+        return
+
+    with _identity_lock:
+        # 자물쇠를 얻는 사이 다른 쪽이 먼저 설정했을 수 있으니 한 번 더 확인합니다
+        if _configured_identity == wanted:
+            return
+        from edgar import set_identity
+
+        set_identity(wanted)
+        _configured_identity = wanted
 
 
 def new_report(ticker: str) -> dict:
