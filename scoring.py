@@ -904,6 +904,29 @@ def score_fundamental(quarters: list[dict], forward: dict) -> dict:
     revenue = score_revenue_quality(quarters)
     fwd = score_forward(quarters, forward)
 
+    # 다음 분기 전망이 가리키는 방향을 델타 점수에 반영합니다.
+    #
+    # ⚠️ **검증된 두 가지만** 반영합니다.
+    #   '가속 둔화 ↗↘' 는 오랫동안 "정점 근처 신호"라고 표시해 왔지만, 20종목
+    #   142개 시점으로 재 보니 정점 적중이 16.7% 로 기준선(21.1%)보다 오히려
+    #   낮았습니다. 문턱을 3~50%p 로 바꿔 가며 전부 시험해도 마찬가지였습니다.
+    #   근거가 없으므로 이 신호는 점수를 **건드리지 않습니다**(배수 1.0).
+    #   진짜였던 것은 '감속 지속 ↘↘'(정점 66.7%)과 '가속 지속 ↗↗'(정점 0%)입니다.
+    forecast = predict_delta(quarters, forward, delta)
+    multiplier = cfg.FORECAST_SCORE_MULT.get(forecast.get("label"), 1.0)
+    delta_score = min(delta["score"] * multiplier, float(cfg.W_DELTA_ACCEL))
+
+    if multiplier != 1.0:
+        delta = {
+            **delta,
+            "score": round(delta_score, 1),
+            "forecast_multiplier": multiplier,
+            "detail": (
+                f"{delta['detail']} · 다음 분기 전망이 '{forecast['label']}' 이라 "
+                f"이 항목을 {multiplier:.2f}배 했습니다"
+            ),
+        }
+
     total = (
         delta["score"] + phase["score"] + gm["score"]
         + revenue["score"] + fwd["score"]
@@ -915,6 +938,7 @@ def score_fundamental(quarters: list[dict], forward: dict) -> dict:
         "gm": gm,
         "revenue": revenue,
         "forward": fwd,
+        "forecast": forecast,
     }
 
 
@@ -1013,7 +1037,9 @@ def build_score(ticker: str, quarters: list[dict], forward: dict, price_info: di
     fundamental = score_fundamental(quarters, forward)
     technical = score_technical(price_info)
     confidence = compute_confidence(quarters, forward)
-    forecast = predict_delta(quarters, forward, fundamental["delta"])
+    # score_fundamental 이 이미 계산해 뒀습니다 (델타 점수에 반영하느라).
+    # 여기서 다시 부르면 배수가 곱해진 델타를 근거로 삼게 되어 값이 어긋납니다.
+    forecast = fundamental["forecast"]
 
     final = fundamental["total"] * cfg.WEIGHT_FUNDAMENTAL + technical["total"] * cfg.WEIGHT_TECHNICAL
     stage = price_info.get("stage", cfg.TREND_STAGE[cfg.S_UNKNOWN])

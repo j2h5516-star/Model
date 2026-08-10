@@ -408,6 +408,26 @@ def explain_delta(score: dict) -> dict:
     forecast_lines = []
     if forecast.get("next_qoq") is not None:
         forecast_lines.append(f"- 다음 분기 예측: **{forecast.get('label')}**")
+
+        # 이 예측이 과거에 실제로 얼마나 맞았는지 함께 보여 줍니다.
+        # 특히 '가속 둔화'는 오래 "정점 근처 신호"로 표시해 왔지만 검증에서
+        # 사실이 아니었습니다. 그 사실을 숨기지 않고 같은 자리에 적습니다.
+        measured = cfg.FORECAST_MEASURED_PEAK.get(forecast.get("label"))
+        if measured is not None:
+            base = cfg.FORECAST_PEAK_BASELINE
+            verdict = (
+                "정점을 알려주는 신호가 **아닙니다**" if measured <= base
+                else "정점 신호로 쓸 만합니다"
+            )
+            forecast_lines.append(
+                f"- 📏 이 예측이 뜬 뒤 실제로 정점이었던 비율 **{measured*100:.1f}%** "
+                f"(아무 때나 찍었을 때 {base*100:.1f}%) — {verdict}"
+            )
+        multiplier = cfg.FORECAST_SCORE_MULT.get(forecast.get("label"), 1.0)
+        if multiplier != 1.0:
+            forecast_lines.append(
+                f"- 이 예측 때문에 델타 점수를 **{multiplier:.2f}배** 했습니다"
+            )
         forecast_lines.append(
             f"- 최근 실제 증가율 {forecast.get('last_qoq'):+.1f}% → "
             f"다음 분기 예상 **{forecast.get('next_qoq'):+.1f}%** "

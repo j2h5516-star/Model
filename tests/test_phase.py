@@ -216,7 +216,102 @@ def test_phase_is_in_the_ranking_table_and_the_score():
 
 
 # ---------------------------------------------------------------------------
-# ③ 이상 감지 — '크기'가 아니라 '증가 속도' 기준
+# ③ 델타예측 — 검증된 것만 점수에 반영하는가
+# ---------------------------------------------------------------------------
+def _forward_case(values, forward_musd):
+    quarters = make(values)
+    forward = {"forward_op_income": forward_musd * M, "basis": cfg.SRC_GUIDANCE}
+    return quarters, forward
+
+
+def test_forecast_compares_like_with_like():
+    """전망도 실적과 **같은 잣대**로 재야 함 (1년치 vs 분기를 섞으면 안 됨)
+
+    델타를 1년치(TTM)로 판정해 놓고 전망만 분기 증가율로 재면, 꾸준히 크는
+    회사는 1년치 증가율이 분기 증가율보다 항상 커서 **거의 모두 '가속 둔화'**
+    로 찍힙니다. 실제로 전체 판정의 28%가 그렇게 나왔습니다.
+    """
+    quarters, forward = _forward_case([100, 110, 120, 130, 145, 165, 190], 215)
+    delta = scoring.score_delta_acceleration(quarters)
+    forecast = scoring.predict_delta(quarters, forward, delta)
+
+    assert delta["trace"]["use_ttm"] is True
+    assert forecast["growth_unit"] == "1년치", forecast
+
+    # 1년치끼리 비교했으므로 last 와 next 가 같은 크기 대역에 있어야 합니다
+    assert abs(forecast["next_qoq"] - forecast["last_qoq"]) < 30, forecast
+
+
+def test_slowdown_signal_does_not_change_the_score():
+    """'가속 둔화'는 검증에서 정점을 못 잡았으므로 점수를 건드리면 안 됨
+
+    20종목 142개 시점에서 이 신호가 뜬 24번 중 실제 정점은 16.7% 로,
+    아무 때나 찍었을 때(21.1%)보다 낮았습니다. 문턱을 3~50%p 로 바꿔도
+    마찬가지였습니다. 근거 없는 신호에 점수를 주지 않습니다.
+    """
+    assert cfg.FORECAST_SCORE_MULT[cfg.F_ACCEL_SLOW] == 1.0
+    assert cfg.FORECAST_MEASURED_PEAK[cfg.F_ACCEL_SLOW] < cfg.FORECAST_PEAK_BASELINE
+
+
+def test_validated_forecasts_do_change_the_score():
+    """검증된 두 신호는 점수에 반영돼야 함
+
+    감속 지속 ↘↘ : 정점 66.7% · 2분기 뒤 이익 감소 83.3%  → 깎음
+    가속 지속 ↗↗ : 정점  0.0%                              → 올림
+    """
+    assert cfg.FORECAST_SCORE_MULT[cfg.F_DECEL_KEEP] < 1.0
+    assert cfg.FORECAST_SCORE_MULT[cfg.F_ACCEL_KEEP] > 1.0
+
+    rising = [100, 110, 120, 130, 145, 165, 190]
+    quarters = make(rising)
+    plain = scoring.score_delta_acceleration(quarters)
+
+    # 전망이 좋을 때와 나쁠 때 델타 점수가 실제로 달라져야 합니다
+    good = scoring.score_fundamental(
+        quarters, {"forward_op_income": 260 * M, "basis": cfg.SRC_GUIDANCE})
+    bad = scoring.score_fundamental(
+        quarters, {"forward_op_income": 120 * M, "basis": cfg.SRC_GUIDANCE})
+
+    assert good["forecast"]["label"] != bad["forecast"]["label"], (
+        good["forecast"]["label"], bad["forecast"]["label"])
+    assert good["delta"]["score"] >= plain["score"] * 0.999
+    assert bad["delta"]["score"] <= good["delta"]["score"]
+
+
+def test_delta_score_never_exceeds_its_weight():
+    """배수를 곱해도 배점을 넘으면 안 됨 (합계 100점이 깨집니다)"""
+    quarters = make([100, 110, 125, 145, 170, 205, 250])
+    result = scoring.score_fundamental(
+        quarters, {"forward_op_income": 340 * M, "basis": cfg.SRC_GUIDANCE})
+
+    assert result["delta"]["score"] <= cfg.W_DELTA_ACCEL
+    assert result["total"] <= 100.0
+
+
+def test_build_score_reuses_one_forecast():
+    """예측을 두 번 계산하면 배수가 곱해진 델타를 근거로 삼아 값이 어긋남"""
+    quarters = make([100, 110, 120, 130, 145, 165, 190])
+    score = scoring.build_score(
+        "TEST", quarters,
+        {"forward_op_income": 120 * M, "basis": cfg.SRC_GUIDANCE},
+        {"stage": 1, "state": cfg.S_FULL_UP, "rs": 5.0, "close": 10.0},
+    )
+    assert score["delta_forecast"] == score["fundamental"]["forecast"]["label"]
+
+
+def test_the_disproven_claim_is_gone_from_the_docs():
+    """틀린 것으로 밝혀진 '정점 근처 신호' 표현이 문서에 남아 있으면 안 됨"""
+    import os
+    root = os.path.join(os.path.dirname(__file__), "..")
+    readme = open(os.path.join(root, "README.md"), encoding="utf-8").read()
+
+    # 표에 단정적으로 남아 있으면 안 됩니다 (정정 문단에서 인용하는 것은 허용)
+    assert "| `가속 둔화 ↗↘` | 정점 근처 가능성 |" not in readme
+    assert "정정합니다" in readme, "무엇이 틀렸는지 밝히는 문단이 있어야 합니다"
+
+
+# ---------------------------------------------------------------------------
+# ④ 이상 감지 — '크기'가 아니라 '증가 속도' 기준
 # ---------------------------------------------------------------------------
 def test_steady_hypergrowth_is_not_flagged_as_an_error():
     """매 분기 40%씩 크는 회사를 '데이터 오류'로 지우면 안 됨
