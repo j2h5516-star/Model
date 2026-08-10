@@ -336,9 +336,10 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
     }
     phase_mark = {
         cfg.PH_TURNAROUND: "턴어라운드 ⤴",
-        cfg.PH_NEW_HIGH: "신고점 돌파 ★",
+        cfg.PH_NEW_HIGH: "3년내 최고 ★",
         cfg.PH_ROLLOVER: "고점 이탈 ⤵",
         cfg.PH_NONE: "중간 자리 -",
+        cfg.PH_LOSS: "적자 지속 ✕",
         cfg.PH_UNKNOWN: "판단불가",
     }
 
@@ -349,13 +350,16 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
                 "종목": score["ticker"],
                 "주가($)": score.get("close"),
                 "최종점수": score["final_score"],
+                # 국면을 앞쪽에 둡니다. 검증에서 가장 크게 갈린 항목인데
+                # (신호 있음 95.5% vs 중간 자리 46.9%), 뒤쪽에 두면 폰 화면에서는
+                # 옆으로 밀어야만 보여서 사실상 없는 것과 같습니다.
+                "국면": phase_mark.get(score.get("phase"), score.get("phase", "-")),
+                "델타방향": arrow.get(score["delta_direction"], score["delta_direction"]),
                 "펀더": score["fund_score"],
                 "기술": score["tech_score"],
                 "신뢰도": score["confidence"],
                 "추세상태": score["trend_state"],
                 "GM%드라이버": score["gm_type"],
-                "델타방향": arrow.get(score["delta_direction"], score["delta_direction"]),
-                "국면": phase_mark.get(score.get("phase"), score.get("phase", "-")),
                 "델타예측(1분기후)": score["delta_forecast"],
                 "델타예측(2분기후)": score.get("accel_forecast", "-"),
                 "RS": score["rs"],

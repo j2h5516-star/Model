@@ -451,22 +451,33 @@ def score_phase(quarters: list[dict]) -> dict:
             f"1년치 이익이 적자(${previous/1e6:,.0f}M)에서 흑자(${now/1e6:,.0f}M)로 "
             "돌아섰습니다 — 사이클 바닥을 지난 자리입니다"
         )
+    elif now <= 0:
+        # 1년치가 아직 적자라면 사이클 위치를 논할 단계가 아닙니다.
+        # 이것을 '중간 자리'로 뭉뚱그리면, 계속 적자인 회사가 고점과 바닥 사이에
+        # 서 있는 멀쩡한 회사와 같은 표시를 받게 됩니다.
+        phase = cfg.PH_LOSS
+        detail = (
+            f"1년치 이익이 아직 적자입니다(${now/1e6:,.0f}M). "
+            "흑자로 돌아서기 전까지는 사이클 위치를 말할 수 없습니다"
+        )
     elif peak > 0 and now > peak:
         phase = cfg.PH_NEW_HIGH
         detail = (
-            f"1년치 이익 ${now/1e6:,.0f}M 이 과거 최고 ${peak/1e6:,.0f}M 을 "
-            "넘어섰습니다 — 사이클 상단을 새로 뚫는 자리입니다"
+            f"1년치 이익 ${now/1e6:,.0f}M 이 수집 기간(3년) 안의 최고 "
+            f"${peak/1e6:,.0f}M 을 넘어섰습니다. "
+            "⚠️ 3년치만 모으므로 '역대 최고'가 아니라 **3년 안에서의 최고**입니다 — "
+            "예전에 훨씬 잘 벌다 무너진 회사도 조금 회복하면 여기에 들어옵니다"
         )
     elif peak > 0 and now < peak * cfg.PHASE_ROLLOVER_RATIO:
         phase = cfg.PH_ROLLOVER
         detail = (
-            f"1년치 이익 ${now/1e6:,.0f}M 이 과거 최고 ${peak/1e6:,.0f}M 의 "
+            f"1년치 이익 ${now/1e6:,.0f}M 이 3년 내 최고 ${peak/1e6:,.0f}M 의 "
             f"{now/peak*100:.0f}% 까지 내려왔습니다 — 고점에서 이탈한 자리입니다"
         )
     else:
         phase = cfg.PH_NONE
         detail = (
-            f"1년치 이익 ${now/1e6:,.0f}M — 과거 최고(${peak/1e6:,.0f}M)를 넘지도, "
+            f"1년치 이익 ${now/1e6:,.0f}M — 3년 내 최고(${peak/1e6:,.0f}M)를 넘지도, "
             "크게 벗어나지도 않은 중간 자리입니다"
         )
 

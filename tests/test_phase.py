@@ -110,12 +110,12 @@ def test_turnaround_is_detected_when_ttm_crosses_into_profit():
     assert result["phase"] == cfg.PH_TURNAROUND, result
     assert result["score"] == cfg.W_PHASE * cfg.PHASE_RATIO[cfg.PH_TURNAROUND]
 
-    # 흑자가 이어져 최고 기록을 갈아치우면 그때는 '신고점 돌파'로 넘어갑니다
+    # 흑자가 이어져 최고 기록을 갈아치우면 그때는 '3년내 최고'로 넘어갑니다
     assert scoring.score_phase(quarters)["phase"] == cfg.PH_NEW_HIGH
 
 
 def test_new_high_is_detected():
-    """1년치 이익이 과거 최고를 넘으면 '신고점 돌파'"""
+    """1년치 이익이 수집 기간 안의 최고를 넘으면 '3년내 최고'"""
     result = scoring.score_phase(make([100, 110, 120, 130, 150, 170, 200]))
 
     assert result["phase"] == cfg.PH_NEW_HIGH, result
@@ -128,6 +128,30 @@ def test_rollover_is_detected():
 
     assert result["phase"] == cfg.PH_ROLLOVER, result
     assert result["score"] < cfg.W_PHASE * 0.3
+
+
+def test_persistent_losses_are_not_called_a_middle_position():
+    """계속 적자인 회사를 '중간 자리'라고 하면 안 됨
+
+    고점과 바닥 사이에 서 있는 멀쩡한 회사와 같은 표시를 받게 됩니다.
+    """
+    result = scoring.score_phase(make([-100, -110, -105, -120, -115, -108, -112]))
+
+    assert result["phase"] == cfg.PH_LOSS, result
+    assert result["score"] <= cfg.W_PHASE * 0.15, result
+
+
+def test_new_high_is_labelled_as_three_year_not_all_time():
+    """'역대 최고'가 아니라 '3년내 최고'라고 밝혀야 함
+
+    3년치만 모으므로, 예전에 훨씬 잘 벌다 무너진 회사가 조금 회복하면
+    여기에 들어옵니다(인텔). 이름과 설명에 그 한계를 박아 둡니다.
+    """
+    result = scoring.score_phase(make([100, 110, 120, 130, 150, 170, 200]))
+
+    assert "3년" in result["phase"], result["phase"]
+    assert "역대" not in result["phase"]
+    assert "3년" in result["detail"], result["detail"]
 
 
 def test_middle_ground_is_not_dressed_up():
@@ -188,7 +212,7 @@ def test_phase_is_in_the_ranking_table_and_the_score():
 
     table = pipeline.build_ranking_table({"TEST": score})
     assert "국면" in table.columns
-    assert "신고점" in table.iloc[0]["국면"]
+    assert "최고" in table.iloc[0]["국면"]
 
 
 # ---------------------------------------------------------------------------

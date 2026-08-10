@@ -830,9 +830,9 @@ def _style_delta(value):
 def _style_phase(value):
     """국면: 바닥 통과·신고점은 초록, 고점 이탈은 빨강, 중간 자리는 회색"""
     text = str(value)
-    if "턴어라운드" in text or "신고점" in text:
+    if "턴어라운드" in text or "최고" in text:
         return "color:#22c55e; font-weight:700"
-    if "고점 이탈" in text:
+    if "고점 이탈" in text or "적자 지속" in text:
         return "color:#ef4444"
     return "color:#9ca3af"
 
