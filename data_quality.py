@@ -312,9 +312,23 @@ def detect_seasonality(quarters: list[dict]) -> dict:
                 "groups": {},
                 "reason": "분기 종류가 부족해 계절성을 판단하지 않았습니다"}
 
-    means = [statistics.mean(values) for values in groups.values()]
+    # ⚠️ **두 번 이상 관찰된 분기만** 씁니다.
+    #    계절성은 "해마다 되풀이된다"는 뜻입니다. 한 번밖에 못 본 분기는
+    #    되풀이되는지 알 수가 없습니다.
+    #    이걸 빼먹었을 때 실제로 생긴 일: 인수합병으로 한 분기만 +117% 뛴 회사가
+    #    그 분기 하나 때문에 '계절 장사'로 찍혔습니다. 그 그룹은 표본이 1개라
+    #    분기 안 차이는 0인데 분기 사이 차이만 잔뜩 키웠기 때문입니다.
+    #    그러면 이상 감지가 "계절 흐름이겠지" 하며 인수합병을 그냥 지나칩니다.
+    repeated = {key: values for key, values in groups.items() if len(values) > 1}
+    if len(repeated) < 2:
+        return {"seasonal": False, "ratio": None, "between": None, "within": None,
+                "groups": groups,
+                "reason": ("같은 분기를 두 번 이상 관찰한 것이 부족해 "
+                           "계절성을 판단하지 않았습니다")}
+
+    means = [statistics.mean(values) for values in repeated.values()]
     between = statistics.pstdev(means) if len(means) > 1 else 0.0
-    inner = [statistics.pstdev(v) for v in groups.values() if len(v) > 1]
+    inner = [statistics.pstdev(v) for v in repeated.values()]
     within = statistics.mean(inner) if inner else 0.0
 
     # 분기 안의 차이가 0에 가까우면 나눗셈이 폭발하므로 바닥을 깔아 둡니다
@@ -359,6 +373,18 @@ def detect_anomalies(quarters: list[dict]) -> dict:
         사업 모멘텀은 아무것도 안 바뀌었는데도요.
         → 분기는 살리고 **그 한 번의 증가율만** 판정에서 뺍니다.
 
+    ⚠️ 무엇을 기준으로 "튀었다"고 할 것인가 — 여기서 한 번 크게 틀렸습니다.
+
+      처음에는 **이익의 크기**를 이웃 분기와 견줬습니다("직전 3분기 중앙값의 1.8배를
+      넘으면 튄 것"). 그런데 빠르게 크는 회사는 원래 매 분기 그만큼 커집니다.
+      분기마다 40%씩 늘면 3분기 전 대비 2배가 되므로, **정상적으로 잘 크는 회사의
+      모든 분기가 이상 분기로 찍힙니다.** 실제로 CRDO 는 6개 분기 연속으로
+      "데이터 오류"라고 표시됐습니다. 찾으려던 것과 정반대의 결과입니다.
+
+      그래서 기준을 **이익의 크기 → 증가 속도**로 바꿉니다.
+      "이 회사가 평소 크던 속도에 견줘 이번 분기만 유별났는가"를 봅니다.
+      평소 40%씩 크는 회사가 이번에도 40% 컸다면 아무 일도 없는 것입니다.
+
     반환: {"spikes": [분기번호...], "steps": [분기번호...], "reasons": [...]}
     """
     values = [q.get("op_income") for q in quarters]
@@ -367,53 +393,130 @@ def detect_anomalies(quarters: list[dict]) -> dict:
     pending: list[int] = []      # 아직 스파이크인지 계단인지 알 수 없는 최근 분기
     reasons: list[str] = []
 
+    # 분기별 '증가 배수' (1.4 = 40% 증가). 직전이 적자면 계산할 수 없어 비워 둡니다.
+    multiples: list[float | None] = [None] * len(values)
+    for i in range(1, len(values)):
+        previous, value = values[i - 1], values[i]
+        if _finite(previous) and _finite(value) and previous > 0 and value > 0:
+            multiples[i] = value / previous
+
+    known = [m for m in multiples if m is not None]
+    if len(known) < 3:
+        # 증가율을 3개도 못 내면 '평소 속도'라는 것이 없어 비교할 대상이 없습니다.
+        return {"spikes": [], "steps": [], "pending": [], "reasons": []}
+
+    # ⚠️ 계절 장사는 '평소 속도'가 분기마다 다릅니다.
+    #    ZETA 는 매년 1분기에 이익이 -40% 로 꺼졌다가 2분기에 복구됩니다.
+    #    전체 평균과 견주면 이 정상적인 계절 흐름이 매년 "데이터 오류"로 찍혀
+    #    1분기가 통째로 지워집니다. 그래서 계절 장사로 판정된 종목은
+    #    **작년·재작년의 같은 분기**와만 견줍니다.
+    seasonal = quarters[0].get("seasonal") if quarters else None
+    if seasonal is None:
+        seasonal = detect_seasonality(quarters)["seasonal"]
+
+    fq_of = [fiscal_quarter_of(q) for q in quarters]
+
     for i, value in enumerate(values):
-        if not _finite(value) or value <= 0:
-            continue
-        before = [v for v in values[max(0, i - 3):i] if _finite(v) and v > 0]
-        after = [v for v in values[i + 1:i + 4] if _finite(v) and v > 0]
-        if len(before) < 2:
+        multiple = multiples[i]
+        if multiple is None:
             continue
 
-        base = statistics.median(before)
-        if base <= 0:
+        # 이 회사가 '평소' 크던 속도 — 자기 자신은 빼고 중앙값을 냅니다.
+        # (자기를 포함하면 표본이 작을 때 자기가 중앙값이 되어 절대 안 걸립니다)
+        if seasonal and fq_of[i] is not None:
+            peers = [
+                m for j, m in enumerate(multiples)
+                if m is not None and j != i
+                and fq_of[j] is not None and fq_of[j][1] == fq_of[i][1]
+            ]
+            # 같은 분기 짝이 2개는 있어야 '이 분기의 평소'라고 말할 수 있습니다.
+            # 모자라면 판정하지 않습니다 — 계절 흐름을 오류로 지우는 것보다 낫습니다.
+            if len(peers) < 2:
+                continue
+            others = peers
+        else:
+            others = [m for j, m in enumerate(multiples) if m is not None and j != i]
+        if len(others) < 2:
+            continue
+        usual = statistics.median(others)
+        if usual <= 0:
             continue
 
-        jumped = value / base
-        if jumped <= cfg.ANOMALY_JUMP_RATIO and jumped >= 1.0 / cfg.ANOMALY_JUMP_RATIO:
-            continue    # 튀지 않았음
+        # 조건 ① 이 회사 평소 속도에 견줘 유별났는가
+        jumped = multiple / usual
+        if 1.0 / cfg.ANOMALY_JUMP_RATIO <= jumped <= cfg.ANOMALY_JUMP_RATIO:
+            continue    # 평소와 비슷하게 컸음 — 아무 일도 없음
+
+        # 조건 ② 그 자체로도 크게 움직였는가
+        # 이것이 없으면 폭증하는 회사의 정상 분기가 지워집니다 (config 설명 참고).
+        big_move = (
+            multiple >= cfg.ANOMALY_MIN_MOVE_RATIO
+            or multiple <= 1.0 / cfg.ANOMALY_MIN_MOVE_RATIO
+        )
+        if not big_move:
+            continue
 
         label = quarters[i].get("period_label", i)
+        grew_pct = (multiple - 1) * 100
+        usual_pct = (usual - 1) * 100
+        after = [v for v in values[i + 1:i + 4] if _finite(v) and v > 0]
+        previous_level = values[i - 1]
+        went_up = multiple > usual
 
-        # ⚠️ 가장 최근 분기는 **뒤가 없어서** 스파이크인지 계단인지 알 수 없습니다.
-        #    그런데 하필 우리가 가장 궁금한 분기입니다.
-        #    모르는 것을 아는 척하지 않고 '아직 알 수 없음'으로 두고 방향을 유보합니다.
-        if not after:
-            pending.append(i)
-            reasons.append(
-                f"{label}: 이익이 {jumped:.1f}배로 크게 뛰었는데, 다음 분기가 아직 없어 "
-                "일시적인 것인지 새 수준으로 올라선 것인지 알 수 없습니다. "
-                "다음 실적발표까지 방향 판정을 미룹니다."
-            )
+        # 뒤 분기들이 새 자리를 지키는가, 원래 자리로 되돌아오는가
+        later = statistics.median(after) if after else None
+        if later is None:
+            returned = None
+        elif went_up:
+            returned = later <= previous_level * 1.3        # 뛰기 전으로 복귀
+        else:
+            returned = later >= previous_level * 0.7        # 떨어지기 전으로 복귀
+
+        # ── 이익이 크게 늘어난 경우 ────────────────────────────────────────
+        if went_up:
+            # ⚠️ 가장 최근 분기는 **뒤가 없어서** 스파이크인지 계단인지 알 수 없습니다.
+            #    그런데 하필 우리가 가장 궁금한 분기입니다.
+            #    모르는 것을 아는 척하지 않고 '아직 알 수 없음'으로 두고 방향을 유보합니다.
+            if returned is None:
+                pending.append(i)
+                reasons.append(
+                    f"{label}: 이익이 {grew_pct:+.0f}% 로 유별나게 늘었습니다"
+                    f" (이 회사가 평소 크던 속도는 {usual_pct:+.0f}%). 다음 분기가 아직 없어 "
+                    "일시적인 것인지 새 수준으로 올라선 것인지 알 수 없습니다. "
+                    "다음 실적발표까지 방향 판정을 미룹니다."
+                )
+            elif returned:
+                spikes.append(i)
+                reasons.append(
+                    f"{label}: 이익이 {grew_pct:+.0f}% 로 튀었다가 곧바로 되돌아옵니다"
+                    f" (평소 속도 {usual_pct:+.0f}%). 논갭 영업이익은 일회성 항목이 이미 빠진 "
+                    "값이라 이런 모양이 나올 수 없으므로 **데이터 오류**로 보고 이 분기를 "
+                    "계산에서 뺍니다."
+                )
+            else:
+                steps.append(i)
+                reasons.append(
+                    f"{label}: 이익이 {grew_pct:+.0f}% 로 한 번 올라선 뒤 그 수준을 지킵니다"
+                    f" (평소 속도 {usual_pct:+.0f}%). 인수합병 같은 구조 변화로 사업 규모 "
+                    "자체가 커진 모양입니다. 커진 것은 진짜지만 '점점 빨라지는 중'은 아니므로 "
+                    "그 한 번의 증가율만 판정에서 뺍니다."
+                )
             continue
 
-        # 뒤 분기들이 새 수준을 유지하면 '계단', 원래대로 돌아오면 '스파이크'
-        later = statistics.median(after)
-        stayed = later / base
-        if abs(stayed - jumped) <= abs(jumped - 1.0) * 0.5:
-            steps.append(i)
-            reasons.append(
-                f"{label}: 이익이 {jumped:.1f}배로 올라 그 수준을 유지합니다 "
-                "(인수합병 등 구조 변화로 보입니다). 사업이 커진 것은 맞지만 "
-                "'가속'은 아니므로 그 한 번의 증가율만 판정에서 뺍니다."
-            )
-        else:
+        # ── 이익이 크게 줄어든 경우 ────────────────────────────────────────
+        # ⚠️ 여기서 한 번 더 조심해야 합니다.
+        #    이익이 무너져 그대로 눌러앉는 것은 **우리가 가장 알아야 할 신호**입니다.
+        #    이것까지 "구조 변화"라며 계산에서 빼면, 모델은 나빠지는 회사를 보고도
+        #    아무 말을 하지 않게 됩니다. 그래서 아래로 꺾인 분기는
+        #    **곧바로 원래대로 되돌아온 경우에만** 데이터 오류로 봅니다.
+        if returned:
             spikes.append(i)
             reasons.append(
-                f"{label}: 이익이 {jumped:.1f}배로 튀었다가 되돌아옵니다. "
-                "논갭 영업이익은 일회성 항목이 이미 빠진 값이라 이런 모양이 나올 수 "
-                "없으므로 **데이터 오류**로 보고 이 분기를 계산에서 뺍니다."
+                f"{label}: 이익이 {grew_pct:+.0f}% 로 급감했다가 곧바로 원래대로 "
+                f"돌아옵니다 (평소 속도 {usual_pct:+.0f}%). 한 분기만 푹 꺼졌다 복구되는 "
+                "모양은 데이터 오류일 가능성이 높아 이 분기를 계산에서 뺍니다."
             )
+        # 되돌아오지 않았거나(진짜 악화) 아직 알 수 없으면 **손대지 않습니다**.
 
     return {"spikes": spikes, "steps": steps, "pending": pending, "reasons": reasons}
 

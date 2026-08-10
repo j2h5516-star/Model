@@ -334,6 +334,13 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
         cfg.D_MIXED: "혼조 ↕",
         cfg.D_UNKNOWN: "판단불가",
     }
+    phase_mark = {
+        cfg.PH_TURNAROUND: "턴어라운드 ⤴",
+        cfg.PH_NEW_HIGH: "신고점 돌파 ★",
+        cfg.PH_ROLLOVER: "고점 이탈 ⤵",
+        cfg.PH_NONE: "중간 자리 -",
+        cfg.PH_UNKNOWN: "판단불가",
+    }
 
     rows = []
     for score in scores.values():
@@ -348,6 +355,7 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
                 "추세상태": score["trend_state"],
                 "GM%드라이버": score["gm_type"],
                 "델타방향": arrow.get(score["delta_direction"], score["delta_direction"]),
+                "국면": phase_mark.get(score.get("phase"), score.get("phase", "-")),
                 "델타예측(1분기후)": score["delta_forecast"],
                 "델타예측(2분기후)": score.get("accel_forecast", "-"),
                 "RS": score["rs"],

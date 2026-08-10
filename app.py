@@ -39,7 +39,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 10
+REQUIRED_CONFIG_VERSION = 11
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -425,6 +425,9 @@ def render_explain_buttons(detail: dict, key_prefix: str = "") -> None:
     with row3[0]:
         with st.popover(f"🎯 신뢰도: {detail['confidence']:.0f}%", width="stretch"):
             render_explanation(explain.explain_confidence(detail))
+    with row3[1]:
+        with st.popover(f"🔄 국면: {detail.get('phase', '-')}", width="stretch"):
+            render_explanation(explain.explain_phase(detail))
 
 
 # ---------------------------------------------------------------------------
@@ -824,10 +827,21 @@ def _style_delta(value):
     return "color:#9ca3af"
 
 
+def _style_phase(value):
+    """국면: 바닥 통과·신고점은 초록, 고점 이탈은 빨강, 중간 자리는 회색"""
+    text = str(value)
+    if "턴어라운드" in text or "신고점" in text:
+        return "color:#22c55e; font-weight:700"
+    if "고점 이탈" in text:
+        return "color:#ef4444"
+    return "color:#9ca3af"
+
+
 styled = (
     ranking.style.map(_style_verdict, subset=["판정"])
     .map(_style_score, subset=["최종점수", "펀더", "기술"])
     .map(_style_confidence, subset=["신뢰도"])
+    .map(_style_phase, subset=["국면"])
     .map(_style_delta, subset=["델타방향", "델타예측(1분기후)", "델타예측(2분기후)"])
     .map(_style_rs, subset=["RS"])
     .format(
@@ -1066,6 +1080,8 @@ with st.expander("🔍 점수 전체 구성 한눈에 보기"):
     st.markdown(
         f"- **델타 가속** {fundamental['delta']['score']:.0f}/{cfg.W_DELTA_ACCEL}점 — "
         f"{fundamental['delta']['detail']}\n"
+        f"- **국면** {fundamental['phase']['score']:.0f}/{cfg.W_PHASE}점 — "
+        f"{fundamental['phase']['phase']} · {fundamental['phase']['detail']}\n"
         f"- **GM% 드라이버** {fundamental['gm']['score']:.0f}/{cfg.W_GM_DRIVER}점 — "
         f"{fundamental['gm']['detail']}\n"
         f"- **매출 성장의 질** {fundamental['revenue']['score']:.0f}/{cfg.W_REVENUE_QUALITY}점 — "

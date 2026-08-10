@@ -98,6 +98,37 @@ def _yoy_growth_series(quarters: list[dict]) -> list[float]:
     return out
 
 
+def _ttm_series(quarters: list[dict]) -> list[float]:
+    """최근 4분기 이익을 더한 값(TTM)의 이력을 만듭니다.
+
+    4분기를 더하면 계절성이 저절로 상쇄됩니다 — 어느 시점에서 잘라도
+    1년치 장사가 통째로 들어가기 때문입니다. 그래서 계절 장사 종목이라고
+    따로 다른 잣대를 쓸 필요가 없습니다.
+
+    적자 분기가 섞여 있어도 합계는 계산됩니다. 이것이 중요한 이유:
+    분기 단위 증가율은 직전 분기가 적자면 아예 계산할 수 없어서,
+    바닥에서 돌아서는 국면이 통째로 보이지 않게 됩니다.
+    """
+    values = [
+        q["op_income"] for q in quarters
+        if q.get("op_income") is not None and q.get("anomaly") != "spike"
+    ]
+    if len(values) < 4:
+        return []
+    return [sum(values[i - 3 : i + 1]) for i in range(3, len(values))]
+
+
+def _ttm_growth_series(quarters: list[dict]) -> list[float]:
+    """TTM 이익의 분기별 증가율(%) 목록."""
+    ttm = _ttm_series(quarters)
+    return [
+        growth for growth in (
+            dq.safe_growth_pct(before, after) for before, after in zip(ttm, ttm[1:])
+        )
+        if growth is not None
+    ]
+
+
 def _clamp(value: float, low: float, high: float) -> float:
     """값을 low~high 범위 안으로 잘라 넣습니다."""
     return max(low, min(high, value))
@@ -200,27 +231,38 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
     max_score = cfg.W_DELTA_ACCEL
 
     # ★ 어떤 기준으로 볼지 **먼저 판단**합니다.
-    #   계절 장사(분기마다 오르내리는 사업)를 전분기 대비로 판정하면 구조적으로
-    #   틀립니다 — 백테스트에서 이런 종목의 적중률이 0%였습니다.
-    #   그런 종목은 작년 같은 분기와 비교(YoY)해 판정합니다.
+    #
+    #   1순위: TTM(최근 4분기 합) 증가율의 변화
+    #     20종목 132개 시점 백테스트에서 전분기 대비보다 확실히 나았습니다
+    #     (방향 적중 55.0% → 65.5%, "가속"의 정확도 81.6% → 92.9%).
+    #     4분기를 더하면 계절성이 저절로 상쇄되므로 계절 장사도 같은 잣대로 봅니다.
+    #
+    #   2순위(분기가 6개 미만일 때): 예전 방식 — 계절 장사면 작년 같은 분기 대비,
+    #     아니면 전분기 대비. 덜 믿을 만하다는 것을 화면에도 밝힙니다.
     season = quarters[0].get("seasonal") if quarters else None
     if season is None:
         season = dq.detect_seasonality(quarters)["seasonal"]
 
-    if season:
+    ttm_growths = _ttm_growth_series(quarters)
+    use_ttm = len(ttm_growths) >= 2
+
+    if use_ttm:
+        growths = ttm_growths
+        basis_text = "최근 4분기 합(TTM) 증가율의 변화"
+    elif season:
         growths = _yoy_growth_series(quarters)
-        basis_text = "작년 같은 분기 대비(계절 장사로 판정)"
+        basis_text = "작년 같은 분기 대비(분기가 모자라 TTM 대신)"
     else:
         growths = _qoq_growth_series(quarters)
-        basis_text = "전분기 대비"
+        basis_text = "전분기 대비(분기가 모자라 TTM 대신)"
 
     if len(growths) < 2:
         return {
             "score": max_score * 0.4,   # 판단할 데이터가 부족하면 중간보다 약간 아래
             "direction": cfg.D_UNKNOWN,
             "detail": (
-                "가속/감속을 판단하려면 QoQ 증가율이 최소 2개 필요한데 "
-                f"{len(growths)}개만 계산됐습니다. (분기 데이터 부족 또는 직전 분기 적자)"
+                "가속/감속을 판단하려면 증가율이 최소 2개 필요한데 "
+                f"{len(growths)}개만 계산됐습니다. (분기 데이터 부족 또는 직전 기간 적자)"
             ),
             "capped": False,
             "trace": {"growths": growths, "insufficient": True,
@@ -249,7 +291,7 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
     recent = growths[-3:]            # 최근 최대 3개 분기의 증가율
     delta = recent[-1] - recent[-2]  # 증가율이 얼마나 더 빨라졌는가(%p)
 
-    # --- 신호 ① 단기: 직전 분기와의 비교 (민감함) ---
+    # --- 신호 ① 단기: 직전 기간과의 비교 ---
     if delta > cfg.DELTA_THRESHOLD_PP:
         short_signal = 1
     elif delta < -cfg.DELTA_THRESHOLD_PP:
@@ -257,7 +299,7 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
     else:
         short_signal = 0
 
-    # --- 신호 ② 추세: 최근 여러 분기 증가율의 회귀 기울기 (안정적) ---
+    # --- 신호 ② 추세: 최근 여러 분기 증가율의 회귀 기울기 ---
     window = growths[-cfg.DELTA_TREND_WINDOW :]
     slope = _linear_slope(window)
     if slope is None:
@@ -280,8 +322,10 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
     elif short_signal == trend_signal:
         # 두 신호가 같은 방향 → 확신 있는 판정
         direction = {1: cfg.D_ACCEL, -1: cfg.D_DECEL, 0: cfg.D_STEADY}[short_signal]
+        what = "1년치 이익의 증가율" if use_ttm else "이익 증가율"
         detail = (
-            f"단기({delta:+.1f}%p)와 추세(기울기 {slope:+.1f})가 같은 방향을 가리킵니다"
+            f"{what}의 최근 변화({delta:+.1f}%p)와 추세(기울기 {slope:+.1f})가 "
+            "같은 방향을 가리킵니다"
         )
     elif short_signal == 0 or trend_signal == 0:
         # 한쪽만 방향이 있음 → **단정하지 않고** 약한 판정으로 내립니다.
@@ -304,11 +348,12 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
 
     # 화면의 "계산 과정 보기"에 쓸 자료
     trace = {
-        "basis": basis_text,                # 무엇과 비교했나 (전분기 / 작년 같은 분기)
+        "basis": basis_text,                # 무엇과 비교했나 (TTM / 전분기 / 작년 같은 분기)
+        "use_ttm": use_ttm,
         "seasonal": bool(season),
-        "growths": growths,                 # 분기별 증가율 전체 이력
+        "growths": growths,                 # 기간별 증가율 전체 이력
         "recent": recent,                   # 판정에 실제로 쓴 최근 값들
-        "delta_pp": delta,                  # 증가율의 변화(%p) — 단기 신호 근거
+        "delta_pp": delta,                  # 증가율의 변화(%p) — 판정의 직접 근거
         "slope": slope,                     # 회귀 기울기 — 추세 신호 근거
         "window": window,                   # 기울기 계산에 쓴 값들
         "short_signal": short_signal,
@@ -316,6 +361,8 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
         "ratio": ratio,
         "threshold": cfg.DELTA_THRESHOLD_PP,
         "trend_threshold": cfg.DELTA_TREND_THRESHOLD,
+        # 이 방향을 백테스트에서 실제로 얼마나 맞혔는지 (없으면 잰 적 없음)
+        "measured_hit": cfg.DELTA_MEASURED_HIT.get(direction),
     }
 
     # 최근 증가율 자체가 마이너스(이익 감소)면 추가 감점
@@ -323,7 +370,10 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
         ratio *= 0.5
         trace["ratio"] = ratio
         trace["shrink_penalty"] = True
-        detail += " · 다만 최근 분기 이익은 전분기보다 줄었습니다"
+        detail += (
+            " · 다만 1년치 이익 자체가 줄고 있습니다" if use_ttm
+            else " · 다만 최근 분기 이익은 전분기보다 줄었습니다"
+        )
 
     score = max_score * ratio
 
@@ -354,7 +404,91 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# 펀더멘털 ② GM% 드라이버 (25점)
+# 펀더멘털 ② 국면 — 이익 사이클에서 지금 어디에 서 있는가 (10점)
+# ---------------------------------------------------------------------------
+def score_phase(quarters: list[dict]) -> dict:
+    """1년치 이익(TTM)이 사이클의 어디쯤에 있는지 봅니다.
+
+    델타는 "얼마나 빨라지고 있나"를 봅니다. 그런데 델타만으로는
+    **바닥에서 돌아서는 순간**을 구조적으로 놓칩니다 — 직전 기간이 적자면
+    증가율 자체를 계산할 수 없기 때문입니다.
+
+    실제로 놓쳤습니다. 2025년 반도체 슈퍼사이클에서
+      · 마이크론: 이익이 폭증하기 시작한 것은 FY25 Q1 인데
+        델타가 처음 "가속"이라고 말한 것은 **4분기 뒤인 FY25 Q4** 였습니다.
+      · 크레도: 국면 신호는 FY24 Q4, 델타의 첫 가속은 FY25 Q2.
+    국면 신호는 두 경우 모두 폭증이 시작된 그 분기에 켜졌습니다.
+
+    ⚠️ 이 신호가 하는 일과 하지 못하는 일:
+      할 수 있음 — "지금 어느 종목이 좋은 자리에 있나" 줄 세우기.
+        백테스트에서 국면 신호가 있는 시점의 97%는 2분기 뒤 이익이 늘었고,
+        신호가 없는 시점에서 크게 오른 경우는 34번 중 0번이었습니다.
+      할 수 없음 — "한 종목 안에서 언제 사야 하나" 맞히기.
+        표본에서 성장 종목은 거의 항상 신호가 있었고 부진 종목은 거의 항상
+        없었기 때문에, 한 종목 안에서의 타이밍 효과는 재지 못했습니다.
+    """
+    max_score = cfg.W_PHASE
+    ttm = _ttm_series(quarters)
+
+    if len(ttm) < 2:
+        return {
+            "score": round(max_score * cfg.PHASE_RATIO[cfg.PH_UNKNOWN], 1),
+            "phase": cfg.PH_UNKNOWN,
+            "detail": (
+                f"1년치 이익을 두 번 이상 비교하려면 분기가 최소 "
+                f"{cfg.PHASE_MIN_QUARTERS}개 필요한데 모자랍니다."
+            ),
+            "trace": {"ttm": ttm, "insufficient": True},
+        }
+
+    now, previous = ttm[-1], ttm[-2]
+    history = ttm[:-1]
+    peak = max(history)
+
+    if previous <= 0 < now:
+        phase = cfg.PH_TURNAROUND
+        detail = (
+            f"1년치 이익이 적자(${previous/1e6:,.0f}M)에서 흑자(${now/1e6:,.0f}M)로 "
+            "돌아섰습니다 — 사이클 바닥을 지난 자리입니다"
+        )
+    elif peak > 0 and now > peak:
+        phase = cfg.PH_NEW_HIGH
+        detail = (
+            f"1년치 이익 ${now/1e6:,.0f}M 이 과거 최고 ${peak/1e6:,.0f}M 을 "
+            "넘어섰습니다 — 사이클 상단을 새로 뚫는 자리입니다"
+        )
+    elif peak > 0 and now < peak * cfg.PHASE_ROLLOVER_RATIO:
+        phase = cfg.PH_ROLLOVER
+        detail = (
+            f"1년치 이익 ${now/1e6:,.0f}M 이 과거 최고 ${peak/1e6:,.0f}M 의 "
+            f"{now/peak*100:.0f}% 까지 내려왔습니다 — 고점에서 이탈한 자리입니다"
+        )
+    else:
+        phase = cfg.PH_NONE
+        detail = (
+            f"1년치 이익 ${now/1e6:,.0f}M — 과거 최고(${peak/1e6:,.0f}M)를 넘지도, "
+            "크게 벗어나지도 않은 중간 자리입니다"
+        )
+
+    ratio = cfg.PHASE_RATIO[phase]
+    return {
+        "score": round(max_score * ratio, 1),
+        "phase": phase,
+        "detail": detail,
+        "trace": {
+            "ttm": ttm,
+            "now": now,
+            "previous": previous,
+            "peak": peak,
+            "vs_peak_pct": (now / peak * 100) if peak > 0 else None,
+            "rollover_ratio": cfg.PHASE_ROLLOVER_RATIO,
+            "ratio": ratio,
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
+# 펀더멘털 ③ GM% 드라이버 (25점)
 # ---------------------------------------------------------------------------
 def score_gm_driver(quarters: list[dict]) -> dict:
     """마진 개선이 "어떤 이유"로 생겼는지 성격을 구분합니다.
@@ -724,16 +858,21 @@ def score_technical(price_info: dict) -> dict:
 # 최종 종합
 # ---------------------------------------------------------------------------
 def score_fundamental(quarters: list[dict], forward: dict) -> dict:
-    """펀더멘털 4개 항목을 계산해 100점 만점으로 합칩니다."""
+    """펀더멘털 5개 항목을 계산해 100점 만점으로 합칩니다."""
     delta = score_delta_acceleration(quarters)
+    phase = score_phase(quarters)
     gm = score_gm_driver(quarters)
     revenue = score_revenue_quality(quarters)
     fwd = score_forward(quarters, forward)
 
-    total = delta["score"] + gm["score"] + revenue["score"] + fwd["score"]
+    total = (
+        delta["score"] + phase["score"] + gm["score"]
+        + revenue["score"] + fwd["score"]
+    )
     return {
         "total": round(total, 1),
         "delta": delta,
+        "phase": phase,
         "gm": gm,
         "revenue": revenue,
         "forward": fwd,
@@ -862,6 +1001,7 @@ def build_score(ticker: str, quarters: list[dict], forward: dict, price_info: di
         "gm_type": fundamental["gm"]["type"],
         "gm_delta_pp": fundamental["gm"]["delta_pp"],
         "delta_direction": fundamental["delta"]["direction"],
+        "phase": fundamental["phase"]["phase"],
         "revenue_yoy": fundamental["revenue"]["yoy"],
         "forward_basis": forward.get("basis"),
         "forward_op_income": forward.get("forward_op_income"),

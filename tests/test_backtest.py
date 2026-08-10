@@ -54,8 +54,19 @@ def test_accelerating_series_is_judged_accelerating():
 
     # 매 분기 +2%p대로 꾸준히 오르는 계열입니다. 한 분기 변화는 문턱(3%p)에 못 미치고
     # 추세 신호만 방향을 보이므로 '약한 가속'이 정직한 판정입니다.
-    assert all(r["direction"] == cfg.D_WEAK_ACCEL for r in records), records
-    assert all(r["direction_correct"] for r in records), records
+    #
+    # 다만 초반에는 1년치 합(TTM)을 두 개밖에 못 만들어 기울기를 낼 수 없습니다.
+    # 그때는 '유지'라고 말합니다 — 근거가 없는데 방향을 단정하는 것보다 낫습니다.
+    assert all(
+        r["direction"] in (cfg.D_WEAK_ACCEL, cfg.D_ACCEL, cfg.D_STEADY)
+        for r in records
+    ), records
+    assert not any(
+        r["direction"] in (cfg.D_DECEL, cfg.D_WEAK_DECEL) for r in records
+    ), records
+
+    # 자료가 쌓인 뒤(마지막 판정)에는 가속 쪽으로 말해야 합니다
+    assert records[-1]["direction"] in (cfg.D_WEAK_ACCEL, cfg.D_ACCEL), records[-1]
 
 
 def test_scoring_bands_do_not_overlap():
@@ -79,8 +90,13 @@ def test_summary_reports_baselines_and_interval():
     assert total["독립 종목 수"] >= 4
 
 
-def test_seasonal_series_uses_year_over_year():
-    """계절 장사는 전분기 대비가 아니라 작년 같은 분기와 비교해야 함"""
+def test_seasonal_series_is_not_judged_quarter_over_quarter():
+    """계절 장사를 전분기 대비로 판정하면 안 됨 — 1년치 합(TTM)으로 봐야 함
+
+    이 계열은 분기마다 100 → 130 → 90 → 160 처럼 오르내리지만
+    1년치로 보면 480 → 490 → 503 → 512 로 꾸준히 10%씩 크는 회사입니다.
+    전분기 대비로 보면 매년 '대폭 가속'과 '대폭 감속'을 번갈아 외치게 됩니다.
+    """
     import data_quality as dq
     import scoring
 
@@ -90,9 +106,14 @@ def test_seasonal_series_uses_year_over_year():
     checked = dq.validate_quarters([dict(q) for q in seasonal], {})
 
     assert dq.detect_seasonality(checked)["seasonal"] is True
-    trace = scoring.score_delta_acceleration(checked)["trace"]
-    assert trace["seasonal"] is True
-    assert "작년" in trace["basis"], trace["basis"]
+
+    result = scoring.score_delta_acceleration(checked)
+    trace = result["trace"]
+    assert trace["use_ttm"] is True, trace["basis"]
+    assert "TTM" in trace["basis"], trace["basis"]
+
+    # 1년치로는 꾸준히 크는 회사이므로 가속도 감속도 아닌 '유지'가 정직합니다
+    assert result["direction"] == cfg.D_STEADY, result
 
 
 def test_summary_counts_are_consistent():
