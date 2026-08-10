@@ -32,6 +32,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import config as cfg  # noqa: E402
+import pipeline  # noqa: E402
 import scoring  # noqa: E402
 import sec_fundamentals as sf  # noqa: E402
 
@@ -325,6 +326,199 @@ def test_eps_only_release_is_still_accepted():
     result = sf.parse_press_release(text)
     assert result["adj_eps"] == 1.00
     assert result["revenue"] is None and result["op_income"] is None
+
+
+# ---------------------------------------------------------------------------
+# ⑧ 기준자(어느 숫자로 재는가)에 따라 크기 검사가 달라져야 한다
+# ---------------------------------------------------------------------------
+def _basis_quarters(values, basis):
+    """같은 '성장 모양'을 서로 다른 단위로 만듭니다"""
+    return [
+        {
+            "period_label": f"Q{i + 1}",
+            "fiscal_quarter": i % 4 + 1,
+            "period_end": f"202{3 + i // 4}-{(i % 4) * 3 + 3:02d}-28",
+            "op_income": v,
+            "revenue": abs(v) * 5 + 1e8,
+            "source": cfg.SRC_DIRECT,
+            "basis": basis,
+        }
+        for i, v in enumerate(values)
+    ]
+
+
+def test_low_base_guard_uses_the_right_threshold_per_basis():
+    """같은 성장 모양이면 기준자가 달라도 델타 점수가 같아야 합니다.
+
+    '저기저 함정' 방지 장치는 "최근 이익이 $50M 미만이면 점수를 절반까지만"
+    이라는 규칙입니다. 조정 EPS 는 숫자가 $8.53 이라 이 문턱에 **무조건** 걸립니다.
+    실제로 확인했더니 같은 성장인데 점수가 18.0 → 15.0 으로 깎였고,
+    화면에는 "$0M" 이라고만 나와 원인을 알 수도 없었습니다.
+    """
+    shape = [1.00, 1.15, 1.32, 1.52, 1.75, 2.01, 2.31, 2.66]
+    money = _basis_quarters([g * 100 * M for g in shape], cfg.BASIS_OP_INCOME)
+    per_share = _basis_quarters(list(shape), cfg.BASIS_ADJ_EPS)
+
+    a = scoring.score_delta_acceleration(money)
+    b = scoring.score_delta_acceleration(per_share)
+
+    assert a["score"] == b["score"], f"기준자에 따라 점수가 달라짐: {a['score']} vs {b['score']}"
+    assert a["trace"]["capped"] is False and b["trace"]["capped"] is False
+    assert b["trace"]["metric_basis"] == cfg.BASIS_ADJ_EPS
+
+
+def test_low_base_guard_still_fires_on_a_genuinely_tiny_eps():
+    """진짜로 손익분기 근처인 EPS 는 여전히 제한해야 합니다 (장치를 끈 게 아님)"""
+    tiny = _basis_quarters([0.010, 0.012, 0.014, 0.017, 0.020, 0.024, 0.029, 0.035],
+                           cfg.BASIS_ADJ_EPS)
+    result = scoring.score_delta_acceleration(tiny)
+    assert result["trace"]["capped"] is True, "주당 1~3센트인데 제한이 걸리지 않았습니다"
+
+
+def test_amount_is_written_in_the_right_unit():
+    """조정 EPS 를 백만 단위로 나눠 '$0M' 으로 쓰면 안 됩니다"""
+    assert cfg.fmt_amount(1_352_000_000, cfg.BASIS_OP_INCOME) == "$1,352.0M"
+    assert cfg.fmt_amount(8.53, cfg.BASIS_ADJ_EPS) == "$8.53/주"
+    assert cfg.fmt_amount(None, cfg.BASIS_ADJ_EPS) == "-"
+
+
+def test_basis_defaults_to_operating_income():
+    """표시가 없는 옛 자료는 지금까지처럼 논갭 영업이익으로 봅니다"""
+    assert cfg.quarters_basis([]) == cfg.BASIS_OP_INCOME
+    assert cfg.quarters_basis([{"op_income": 1.0}]) == cfg.BASIS_OP_INCOME
+
+
+# ---------------------------------------------------------------------------
+# ⑨ 구조대 경로 — 논갭 영업이익이 모자랄 때만 조정 EPS 로 판정
+# ---------------------------------------------------------------------------
+def _mixed(op_values, eps_values):
+    """영업이익과 EPS 를 각각 원하는 만큼 채운 분기 목록"""
+    rows = []
+    for i in range(max(len(op_values), len(eps_values))):
+        rows.append({
+            "period_label": f"Q{i + 1}",
+            "fiscal_quarter": i % 4 + 1,
+            "period_end": f"202{3 + i // 4}-{(i % 4) * 3 + 3:02d}-28",
+            "op_income": op_values[i] if i < len(op_values) else None,
+            "adj_eps": eps_values[i] if i < len(eps_values) else None,
+            "revenue": 1e9,
+            "source": cfg.SRC_DIRECT,
+        })
+    return rows
+
+
+def test_operating_income_wins_when_it_is_available():
+    """논갭 영업이익이 충분하면 EPS 가 있어도 영업이익을 씁니다 — 1순위 유지"""
+    rows = _mixed([10 * M] * 8, [1.0] * 8)
+    out = pipeline.apply_metric_basis(rows, {})
+    assert cfg.quarters_basis(out) == cfg.BASIS_OP_INCOME
+    assert out[0]["op_income"] == 10 * M
+
+
+def test_eps_rescues_when_operating_income_is_missing():
+    """영업이익이 모자라면 조정 EPS 로 판정합니다 — 빈칸으로 두는 것보다 낫습니다"""
+    rows = _mixed([10 * M, 11 * M], [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7])
+    report = {}
+    out = pipeline.apply_metric_basis(rows, report)
+
+    assert cfg.quarters_basis(out) == cfg.BASIS_ADJ_EPS
+    assert len(out) == 8
+    assert out[-1]["op_income"] == 1.7            # EPS 값이 판정에 들어갑니다
+    assert out[-1]["source"] == cfg.SRC_ADJ_EPS
+    assert report["metric_basis"] == cfg.BASIS_ADJ_EPS
+
+
+def test_rescue_needs_enough_eps_quarters_too():
+    """EPS 도 모자라면 억지로 바꾸지 않습니다"""
+    rows = _mixed([10 * M, 11 * M], [1.0, 1.1])
+    out = pipeline.apply_metric_basis(rows, {})
+    assert cfg.quarters_basis(out) == cfg.BASIS_OP_INCOME
+
+
+def test_basis_is_never_mixed_within_one_ticker():
+    """한 종목 안에서 두 기준을 섞으면 안 됩니다.
+
+    레벨이 다른 숫자를 이어 붙이면 실제로는 아무 일도 없는데
+    거대한 가짜 증가율이 생깁니다.
+    """
+    rows = _mixed([10 * M, 11 * M, 12 * M], [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6])
+    out = pipeline.apply_metric_basis(rows, {})
+    assert len({q["basis"] for q in out}) == 1, "한 종목 안에 기준자가 섞였습니다"
+
+
+def test_original_operating_income_is_kept_for_comparison():
+    """바꿔치기해도 원래 영업이익은 화면 대조용으로 남겨 둡니다"""
+    rows = _mixed([10 * M], [1.0, 1.1, 1.2, 1.3, 1.4, 1.5])
+    out = pipeline.apply_metric_basis(rows, {})
+    assert out[0]["op_income_original"] == 10 * M
+
+
+# ---------------------------------------------------------------------------
+# ⑩ 자사주 방어장치 — 구조대 경로에서 '가속'이 자사주가 만든 것일 때
+# ---------------------------------------------------------------------------
+def _accelerating_eps_quarters():
+    """증가율이 빨라지는 EPS 시리즈 (가속 판정이 나오도록)"""
+    rows = _mixed([], [1.00, 1.10, 1.25, 1.45, 1.72, 2.10, 2.60, 3.30])
+    return pipeline.apply_metric_basis(rows, {})
+
+
+def test_heavy_buyback_caps_the_delta_score_on_eps_basis():
+    """조정 EPS 로 판정 중에 자사주가 크면 델타 점수를 제한합니다.
+
+    EBAY 2021-12-31(주식수 -11.7%)에서 논갭 영업이익은 '유지'인데 조정 EPS 는
+    '가속' 이라고 했고, 그 분기는 주가 정점 직후였습니다. 자사주가 만든 '가속'을
+    그대로 점수로 주면 꼭지에서 사라고 말하게 됩니다.
+    """
+    quarters = _accelerating_eps_quarters()
+    plain = scoring.score_fundamental(
+        quarters, {"forward_op_income": None, "basis": None, "consensus": {}})
+    buyback = scoring.score_fundamental(
+        quarters,
+        {"forward_op_income": None, "basis": None,
+         "consensus": {"shares_shrink_pct": -11.7}},
+    )
+    assert buyback["delta"]["score"] < plain["delta"]["score"], (
+        f"자사주가 큰데 점수가 그대로입니다: {buyback['delta']['score']}")
+    assert buyback["delta"].get("buyback_capped") is True
+    assert "자사주" in buyback["delta"]["detail"]
+
+
+def test_mild_buyback_does_not_cap():
+    """조금 줄어든 정도로는 제한하지 않습니다 (측정된 문턱 아래)"""
+    quarters = _accelerating_eps_quarters()
+    mild = scoring.score_fundamental(
+        quarters,
+        {"forward_op_income": None, "basis": None,
+         "consensus": {"shares_shrink_pct": -3.0}},
+    )
+    assert mild["delta"].get("buyback_capped") is not True
+
+
+def test_buyback_guard_does_not_touch_operating_income_basis():
+    """논갭 영업이익으로 판정 중이면 자사주와 무관합니다 — 건드리지 않습니다.
+
+    영업이익은 주식수로 나눈 값이 아니므로 자사주 매입의 영향을 받지 않습니다.
+    """
+    rows = _mixed([100 * M, 110 * M, 125 * M, 145 * M, 172 * M, 210 * M, 260 * M, 330 * M], [])
+    quarters = pipeline.apply_metric_basis(rows, {})
+    a = scoring.score_fundamental(
+        quarters, {"forward_op_income": None, "basis": None, "consensus": {}})
+    b = scoring.score_fundamental(
+        quarters,
+        {"forward_op_income": None, "basis": None,
+         "consensus": {"shares_shrink_pct": -20.0}},
+    )
+    assert a["delta"]["score"] == b["delta"]["score"]
+
+
+def test_measured_numbers_are_recorded_in_config():
+    """검증 결과를 코드에 남겨 둡니다 — 나중에 근거를 찾을 수 있도록"""
+    assert cfg.EPS_BASIS_DIRECTION_MATCH == 0.795     # 31/39 (자사주 종목)
+    assert cfg.EPS_BASIS_MATCH_NO_BUYBACK == 0.96     # 48/50 (자사주 없는 종목)
+    assert cfg.EPS_BASIS_BUYBACK_CORR < 0             # 주식수 감소 ↔ EPS 부풀림
+    # 조정 EPS 의 신뢰도는 직접공시(95%)보다 낮고 근사치(55%)보다 높아야 합니다
+    assert cfg.CONFIDENCE_PCT[cfg.SRC_APPROX] < cfg.CONFIDENCE_PCT[cfg.SRC_ADJ_EPS]
+    assert cfg.CONFIDENCE_PCT[cfg.SRC_ADJ_EPS] < cfg.CONFIDENCE_PCT[cfg.SRC_DIRECT]
 
 
 if __name__ == "__main__":

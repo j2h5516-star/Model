@@ -37,6 +37,70 @@ import sec_fundamentals as sf
 # ---------------------------------------------------------------------------
 # 1) 종목 하나의 실적 + 전망 (종목 단위 캐시의 기본 단위)
 # ---------------------------------------------------------------------------
+def apply_metric_basis(quarters: list[dict], report: dict | None = None) -> list[dict]:
+    """델타·국면을 **어느 숫자로 잴지** 정합니다.
+
+    1순위는 언제나 **논갭 영업이익**입니다. 그것이 모자랄 때만 조정 EPS 를
+    대신 씁니다 — 아무것도 없어 빈칸으로 두는 것보다 낫기 때문입니다.
+
+    ⚠️ 왜 조정 EPS 를 1순위로 올리지 않았는가 (백테스트가 막았습니다)
+        자사주를 크게 줄인 4종목 39개 시점에서 두 기준의 큰 방향 일치율은
+        **79.5%** [64.5~89.2] 였습니다. 자사주가 없는 표본에서는 96% 였으니,
+        **자사주가 있을 때만 갈립니다.**  EPS = 순이익 ÷ 주식수 이므로
+        영업이익이 제자리여도 분모가 줄면 EPS 는 오릅니다(상관계수 -0.703).
+
+        EBAY 2021-12-31(주식수 -11.7%)에서 논갭 영업이익은 '유지'였는데
+        조정 EPS 는 '가속' 이라고 했습니다. 그 분기는 **주가 정점 직후**입니다.
+        기준자를 EPS 로 바꿨다면 꼭지에서 "가속 중"이라고 말했을 것입니다.
+
+    ⚠️ 한 종목 안에서 기준을 **섞지 않습니다.** 레벨이 다른 두 숫자를 이어
+       붙이면 실제로는 아무 일도 없는데 거대한 가짜 증가율이 생깁니다.
+       그래서 전부 영업이익이거나, 전부 EPS 입니다.
+    """
+    if not quarters:
+        return quarters
+
+    have_op = sum(1 for q in quarters if q.get("op_income") is not None)
+    have_eps = sum(1 for q in quarters if q.get("adj_eps") is not None)
+
+    if report is not None:
+        report["basis_op_quarters"] = have_op
+        report["basis_eps_quarters"] = have_eps
+
+    # 논갭 영업이익이 충분하면 지금까지처럼 그대로 씁니다.
+    if have_op >= cfg.BASIS_MIN_QUARTERS or have_eps < cfg.BASIS_MIN_QUARTERS:
+        for quarter in quarters:
+            quarter["basis"] = cfg.BASIS_OP_INCOME
+        if report is not None:
+            report["metric_basis"] = cfg.BASIS_OP_INCOME
+        return quarters
+
+    # 구조대: 조정 EPS 가 있는 분기만 남겨 EPS 로 판정합니다.
+    swapped = []
+    for quarter in quarters:
+        if quarter.get("adj_eps") is None:
+            continue
+        row = dict(quarter)
+        row["op_income_original"] = quarter.get("op_income")   # 화면 대조용으로 남김
+        row["op_income"] = quarter["adj_eps"]
+        row["basis"] = cfg.BASIS_ADJ_EPS
+        row["source"] = cfg.SRC_ADJ_EPS
+        row["derivation"] = (
+            "논갭 영업이익을 구하지 못해 보도자료의 **조정 주당순이익**으로 "
+            f"판정했습니다 (${quarter['adj_eps']:,.2f}/주).\n\n"
+            "⚠️ 조정 EPS 에는 이자·세금·주식수가 섞여 있습니다. 자사주를 크게 "
+            "줄인 종목에서는 논갭 영업이익과 판정이 79.5%만 일치했습니다."
+        )
+        swapped.append(row)
+
+    if report is not None:
+        report["metric_basis"] = cfg.BASIS_ADJ_EPS
+        report["note"] = (
+            (report.get("note", "") + " · ") if report.get("note") else ""
+        ) + f"논갭 영업이익 {have_op}분기뿐이라 조정 EPS({len(swapped)}분기)로 판정"
+    return swapped
+
+
 def collect_one_ticker(ticker: str, use_cache: bool = True) -> dict:
     """한 종목의 실적과 전망을 모읍니다.
 
@@ -59,6 +123,13 @@ def collect_one_ticker(ticker: str, use_cache: bool = True) -> dict:
     except Exception as exc:
         if not report.get("first_error"):
             report["first_error"] = f"[검사] {type(exc).__name__}: {str(exc)[:180]}"
+
+    # 논갭 영업이익이 모자라면 조정 EPS 를 대신 씁니다 (구조대 경로).
+    try:
+        quarters = apply_metric_basis(quarters, report)
+    except Exception as exc:
+        if not report.get("first_error"):
+            report["first_error"] = f"[기준자] {type(exc).__name__}: {str(exc)[:180]}"
 
     try:
         forward = fe.estimate_forward(ticker, quarters)
