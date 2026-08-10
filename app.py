@@ -27,6 +27,7 @@ import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
 
+import backtest
 import config as cfg
 import explain
 import pipeline
@@ -38,7 +39,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 5
+REQUIRED_CONFIG_VERSION = 16
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -392,6 +393,43 @@ def ticker_exists(symbol: str) -> bool:
         return False
 
 
+def render_explain_buttons(detail: dict, key_prefix: str = "") -> None:
+    """그 종목의 계산 근거 버튼 묶음을 그립니다 (누르면 계산 과정이 펼쳐집니다).
+
+    순위 표 아래와 종목 상세, 두 곳에서 같은 버튼을 씁니다.
+    표에서 행을 눌렀을 때 한참 아래까지 내려가지 않아도 근거를 볼 수 있게 하기 위함입니다.
+    """
+    row1 = st.columns(3)
+    with row1[0]:
+        with st.popover(f"📄 출처: {detail['data_source'] or '없음'}", width="stretch"):
+            render_explanation(explain.explain_data_source(detail))
+    with row1[1]:
+        with st.popover(f"🔮 전망: {detail['forward_basis'] or '없음'}", width="stretch"):
+            render_explanation(explain.explain_forward(detail))
+    with row1[2]:
+        with st.popover(f"🏷️ 판정: {detail['verdict']}", width="stretch"):
+            render_explanation(explain.explain_verdict_full(detail))
+
+    row2 = st.columns(3)
+    with row2[0]:
+        with st.popover(f"📊 GM% 드라이버: {detail['gm_type']}", width="stretch"):
+            render_explanation(explain.explain_gm_driver(detail))
+    with row2[1]:
+        with st.popover("⚡ 델타 계산·예측 근거", width="stretch"):
+            render_explanation(explain.explain_delta(detail))
+    with row2[2]:
+        with st.popover(f"📈 기술 점수: {detail['tech_score']:.0f}점", width="stretch"):
+            render_explanation(explain.explain_technical(detail))
+
+    row3 = st.columns(3)
+    with row3[0]:
+        with st.popover(f"🎯 신뢰도: {detail['confidence']:.0f}%", width="stretch"):
+            render_explanation(explain.explain_confidence(detail))
+    with row3[1]:
+        with st.popover(f"🔄 국면: {detail.get('phase', '-')}", width="stretch"):
+            render_explanation(explain.explain_phase(detail))
+
+
 # ---------------------------------------------------------------------------
 # 종목 관리 (추가 · 삭제 · 저장)
 # ---------------------------------------------------------------------------
@@ -456,24 +494,27 @@ def render_ticker_manager() -> None:
     only_one = len(st.session_state.tickers) <= 1
     st.caption(
         f"현재 {len(st.session_state.tickers)}개 — "
-        + ("종목이 하나뿐이라 삭제할 수 없습니다" if only_one else "종목을 누르면 삭제됩니다")
+        + ("종목이 하나뿐이라 삭제할 수 없습니다" if only_one else "종목을 눌러 고른 뒤 삭제 버튼을 누르세요")
     )
-    remove_target = st.pills(
-        "삭제할 종목",
+    # 누르는 즉시 지워지면 실수로 종목을 잃습니다. 여기서는 '고르기'만 하고,
+    # 실제 삭제는 아래 삭제 버튼을 눌러야 일어납니다.
+    picked = st.pills(
+        "종목 고르기",
         options=list(st.session_state.tickers),
         selection_mode="single",
         default=None,
-        # 종목이 하나면 아예 못 누르게 합니다.
-        # 눌렀다가 거부되면 선택이 남아 "최소 한 종목" 경고가 영영 사라지지 않습니다
-        # (선택을 코드로 지우는 것은 Streamlit이 막습니다).
         disabled=only_one,
         # 목록이 바뀌면 키도 바뀌게 해서 지운 종목이 선택된 채로 남지 않게 합니다
         key="del_pills_" + "_".join(st.session_state.tickers),
         label_visibility="collapsed",
     )
 
-    if remove_target and not only_one:
-        st.session_state.tickers.remove(remove_target)
+    if st.button(
+        f"🗑️ {picked} 삭제" if picked else "🗑️ 선택 종목 삭제",
+        width="stretch",
+        disabled=only_one or not picked,
+    ):
+        st.session_state.tickers.remove(picked)
         write_tickers_to_url(st.session_state.tickers)
         st.rerun()
 
@@ -770,6 +811,11 @@ def _style_confidence(value):
 def _style_delta(value):
     """델타 방향·예측: 가속 계열 초록, 감속 계열 빨강, 혼조 노랑"""
     text = str(value)
+    # '약한' 판정은 흐리게 — 근거가 절반이면 화면에서도 절반으로 보여야 합니다
+    if text.startswith("약한 가속"):
+        return "color:#86efac"
+    if text.startswith("약한 감속"):
+        return "color:#fca5a5"
     if "가속" in text and "둔화" not in text:
         return "color:#22c55e; font-weight:700"
     if "반등" in text:
@@ -781,11 +827,22 @@ def _style_delta(value):
     return "color:#9ca3af"
 
 
+def _style_phase(value):
+    """국면: 바닥 통과·신고점은 초록, 고점 이탈은 빨강, 중간 자리는 회색"""
+    text = str(value)
+    if "턴어라운드" in text or "최고" in text:
+        return "color:#22c55e; font-weight:700"
+    if "고점 이탈" in text or "적자 지속" in text:
+        return "color:#ef4444"
+    return "color:#9ca3af"
+
+
 styled = (
     ranking.style.map(_style_verdict, subset=["판정"])
     .map(_style_score, subset=["최종점수", "펀더", "기술"])
     .map(_style_confidence, subset=["신뢰도"])
-    .map(_style_delta, subset=["델타방향", "델타예측", "델타가속예측"])
+    .map(_style_phase, subset=["국면"])
+    .map(_style_delta, subset=["델타방향", "델타예측(1분기후)", "델타예측(2분기후)"])
     .map(_style_rs, subset=["RS"])
     .format(
         {
@@ -816,8 +873,16 @@ try:
 except (AttributeError, IndexError, KeyError):
     picked_from_table = None
 
+if picked_from_table and picked_from_table in scores:
+    st.markdown(
+        f'<div class="section-note">👇 <b>{picked_from_table}</b> 의 계산 근거 — '
+        "아래 버튼을 누르면 그 항목을 어떻게 계산했는지 바로 볼 수 있습니다.</div>",
+        unsafe_allow_html=True,
+    )
+    render_explain_buttons(scores[picked_from_table], key_prefix="table")
+
 st.markdown(
-    '<div class="section-note">👆 <b>표의 행을 누르면</b> 아래 \'종목 상세\'가 그 종목으로 바뀝니다 · '
+    '<div class="section-note">👆 <b>표의 행을 누르면</b> 계산 근거 버튼이 바로 아래에 나오고, \'종목 상세\'도 그 종목으로 바뀝니다 · '
     "매수 후보는 상대강도(RS)가 높은 순으로 위에 표시됩니다<br>"
     "📱 모바일에서는 표를 좌우로 밀어서 나머지 열을 볼 수 있습니다.</div>",
     unsafe_allow_html=True,
@@ -954,13 +1019,13 @@ c4.metric(
 )
 
 # --- 델타(이익 증가 속도) 한 줄 요약: 현재 방향 · 다음 분기 · 2분기 경로 ---
-# 순위 표의 '델타방향 / 델타예측 / 델타가속예측' 세 열과 같은 값입니다.
+# 순위 표의 '델타방향 / 델타예측(1분기후) / 델타예측(2분기후)' 세 열과 같은 값입니다.
 forecast_detail = detail.get("forecast_detail") or {}
 next_qoq = forecast_detail.get("next_qoq")
 d1, d2, d3 = st.columns(3)
 d1.metric("델타 방향 (현재)", detail["delta_direction"], "실제 실적 기준", delta_color="off")
 d2.metric(
-    "델타예측 (다음 분기)",
+    "델타예측 (1분기 후)",
     detail.get("delta_forecast") or cfg.F_NONE,
     "예상 증가율 -" if next_qoq is None else f"예상 증가율 {next_qoq:+.1f}%",
     delta_color="off",
@@ -976,11 +1041,26 @@ else:
         f"{detail.get('forward_basis') or '-'} + {forecast_detail.get('basis_2') or '-'}"
     )
 d3.metric(
-    "델타가속예측 (2분기 경로)",
+    "델타예측 (2분기 후)",
     detail.get("accel_forecast") or cfg.F2_NONE,
     accel_note,
     delta_color="off",
 )
+
+# 판정 기준이 특별한 경우 그 사실을 먼저 알립니다
+_delta_trace = (detail["fundamental"]["delta"].get("trace") or {})
+if _delta_trace.get("seasonal"):
+    st.info(
+        "🗓️ 이 종목은 **분기마다 실적이 오르내리는 계절 사업**으로 판정됐습니다. "
+        "전분기와 비교하면 방향이 계속 뒤집히므로, **작년 같은 분기와 비교**해 판정했습니다.",
+        icon="🗓️",
+    )
+if _delta_trace.get("anomaly"):
+    st.warning(
+        "⚠️ 최근 분기 중 이웃 분기보다 유별나게 튄 곳이 있습니다 "
+        "(일회성 이익이나 인수합병일 수 있습니다). "
+        "그 숫자로 방향을 말하면 다음 분기에 뒤집히므로 **판정을 미뤘습니다.**"
+    )
 
 # --- 눌러서 보는 상세 설명 버튼들 ---
 st.markdown(
@@ -989,32 +1069,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-row1 = st.columns(3)
-with row1[0]:
-    with st.popover(f"📄 출처: {detail['data_source'] or '없음'}", width="stretch"):
-        render_explanation(explain.explain_data_source(detail))
-with row1[1]:
-    with st.popover(f"🔮 전망: {detail['forward_basis'] or '없음'}", width="stretch"):
-        render_explanation(explain.explain_forward(detail))
-with row1[2]:
-    with st.popover(f"🏷️ 판정: {detail['verdict']}", width="stretch"):
-        render_explanation(explain.explain_verdict_full(detail))
-
-row2 = st.columns(3)
-with row2[0]:
-    with st.popover(f"📊 GM% 드라이버: {detail['gm_type']}", width="stretch"):
-        render_explanation(explain.explain_gm_driver(detail))
-with row2[1]:
-    with st.popover("⚡ 델타 계산·예측 근거", width="stretch"):
-        render_explanation(explain.explain_delta(detail))
-with row2[2]:
-    with st.popover(f"📈 기술 점수: {detail['tech_score']:.0f}점", width="stretch"):
-        render_explanation(explain.explain_technical(detail))
-
-row3 = st.columns(3)
-with row3[0]:
-    with st.popover(f"🎯 신뢰도: {detail['confidence']:.0f}%", width="stretch"):
-        render_explanation(explain.explain_confidence(detail))
+render_explain_buttons(detail, key_prefix="detail")
 
 # --- 점수 구성 요약 ---
 fundamental = detail["fundamental"]
@@ -1025,6 +1080,8 @@ with st.expander("🔍 점수 전체 구성 한눈에 보기"):
     st.markdown(
         f"- **델타 가속** {fundamental['delta']['score']:.0f}/{cfg.W_DELTA_ACCEL}점 — "
         f"{fundamental['delta']['detail']}\n"
+        f"- **국면** {fundamental['phase']['score']:.0f}/{cfg.W_PHASE}점 — "
+        f"{fundamental['phase']['phase']} · {fundamental['phase']['detail']}\n"
         f"- **GM% 드라이버** {fundamental['gm']['score']:.0f}/{cfg.W_GM_DRIVER}점 — "
         f"{fundamental['gm']['detail']}\n"
         f"- **매출 성장의 질** {fundamental['revenue']['score']:.0f}/{cfg.W_REVENUE_QUALITY}점 — "
@@ -1068,6 +1125,24 @@ else:
         if forward_op_2 is not None:
             future_labels.append("다다음(전망)")
             future_values.append(forward_op_2)
+
+    # 전망 막대가 실적 막대를 짓눌러 화면에서 지워버리지 않게 합니다.
+    # (전망이 실적의 4억 배로 계산돼 y축이 늘어나는 바람에 실제 실적 막대가
+    #  픽셀 0이 되어 "그래프가 통째로 없다"는 문제가 있었습니다)
+    # 기준은 '가장 최근 분기 영업이익' — 전망 검사(check_forward)와 같은 기준선입니다.
+    latest_op = next((v for v in reversed(op_values) if v is not None and v > 0), None)
+    dropped_future = 0
+    if latest_op and future_labels:
+        # ⚠️ 개별로 버리면 안 됩니다. 다음 분기를 버리고 다다음 분기만 남기면
+        #    같은 x칸에 다른 분기의 값이 그려져 점선과 막대가 어긋납니다.
+        #    다음 분기가 탈락하면 그것을 기준으로 만든 다다음 분기도 함께 버립니다.
+        cut = len(future_values)
+        for index, value in enumerate(future_values):
+            if value is not None and abs(value) > latest_op * cfg.CHART_FORWARD_MAX_RATIO:
+                cut = index
+                break
+        dropped_future = len(future_values) - cut
+        future_labels, future_values = future_labels[:cut], future_values[:cut]
 
     if future_labels:
         labels = labels + future_labels
@@ -1139,6 +1214,7 @@ else:
         )
         if next_qoq is not None and last_actual_qoq is not None and future_labels:
             last_actual_label = quarters_df["period_label"].tolist()[-1]
+            # 막대에서 살아남은 분기만큼만 점선을 그립니다 (막대와 칸이 어긋나지 않게)
             future_x = [last_actual_label, future_labels[0]]
             future_y = [last_actual_qoq, next_qoq]
             if next2_qoq is not None and len(future_labels) >= 2:
@@ -1179,6 +1255,12 @@ else:
         secondary_y=True, showgrid=False, fixedrange=True,
     )
     st.plotly_chart(fig, width="stretch", config=PLOTLY_CONFIG)
+
+    if dropped_future:
+        st.caption(
+            f"⚠️ 다음 분기부터 전망 {dropped_future}개는 실적보다 지나치게 커서 그리지 않았습니다 "
+            "(계산이 깨진 값일 가능성이 큽니다 — 아래 진단을 확인해 주세요)"
+        )
 
     st.markdown(
         '<div class="chart-note">초록 막대가 이익 크기, 주황 실선이 "전분기 대비 얼마나 빨리 늘고 있는가"입니다. '
@@ -1310,6 +1392,9 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
     if not reports:
         st.caption("진단 기록이 없습니다.")
     else:
+        # 표에는 '숫자'만 둡니다.
+        # 긴 문장을 표 칸에 넣으면 모바일에서 양쪽이 잘려 읽을 수가 없습니다.
+        # 문장은 아래 종목별 '자세히'를 눌러 펼쳐 보게 합니다.
         diag = pd.DataFrame(
             [
                 {
@@ -1321,16 +1406,39 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
                     "숫자추출": r.get("parsed_ok", 0),
                     "공시반영": r.get("merged_direct", 0),
                     "짝못찾음": r.get("unpaired_press", 0),
-                    "텍스트출처": r.get("text_source", "") or "-",
-                    "전망수집": r.get("forward_note", "") or "정상",
                     "소요(초)": r.get("seconds", "-"),
-                    "첫 오류": r.get("first_error", "") or "-",
-                    "비고": (r.get("pair_note") or r.get("note") or "-"),
+                    "문제": "있음" if (r.get("first_error") or r.get("pair_note")) else "-",
                 }
                 for r in reports
             ]
         )
         st.dataframe(diag, hide_index=True, width="stretch")
+
+        st.caption("👇 문장으로 된 기록은 아래에서 종목을 눌러 펼쳐 보세요 (표에서는 글자가 잘립니다)")
+        for r in reports:
+            ticker = r.get("ticker", "-")
+            has_problem = bool(r.get("first_error") or r.get("pair_note"))
+            with st.expander(f"{'⚠️ ' if has_problem else ''}{ticker} 자세히"):
+                lines = [
+                    f"- **텍스트 출처**: {r.get('text_source') or '-'}",
+                    f"- **전망 수집**: {r.get('forward_note') or '정상'}",
+                    f"- **수집 소요**: {r.get('seconds', '-')}초",
+                ]
+                if r.get("first_error"):
+                    lines.append(f"- **첫 오류**: `{r['first_error']}`")
+                if r.get("pair_note"):
+                    lines.append(f"- **짝짓기 기록**: {r['pair_note']}")
+                if r.get("note"):
+                    lines.append(f"- **비고**: {r['note']}")
+                # 숫자 검사 단계에서 고치거나 뺀 내역
+                notes = r.get("quality_notes") or []
+                if notes:
+                    lines.append(
+                        f"- **숫자 검사**: 보정 {r.get('quality_fixed', 0)}건 · "
+                        f"제외 {r.get('quality_dropped', 0)}건"
+                    )
+                    lines.extend(f"    - {note}" for note in notes[:8])
+                st.markdown("\n".join(lines))
 
         st.markdown(
             """
@@ -1347,6 +1455,102 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
 `첫 오류` 열에 내용이 있으면 그 메시지를 알려주시면 정확히 조준해서 고칠 수 있습니다.
             """
         )
+
+# ---------------------------------------------------------------------------
+# ⑥-2 백테스트 — 이 판정이 과거에는 얼마나 맞았나
+# ---------------------------------------------------------------------------
+with st.expander("🎯 백테스트 — 이 판정이 과거에는 얼마나 맞았나"):
+    st.markdown(
+        "각 시점에서 **그때까지의 자료만** 가지고 판정을 내린 뒤, 실제 다음 분기와 맞춰 봅니다. "
+        "미래를 미리 보지 않도록 코드로 막아 두었습니다."
+    )
+    st.markdown(
+        "**두 가지 잣대로 잽니다.**\n\n"
+        f"- **엄격**: 모델이 스스로 정한 문턱({cfg.DELTA_THRESHOLD_PP:.0f}%p)만큼 실제로 움직였는가\n"
+        "- **방향**: 문턱까지는 아니어도 주장한 방향으로 움직였는가"
+    )
+
+    def _render_backtest(outcome: dict, caption: str) -> None:
+        total = outcome["전체"]
+        if not total["판정한 시점"]:
+            st.caption("되짚어 볼 자료가 부족합니다.")
+            return
+
+        low, high = total["적중률 95%구간"]
+        cols = st.columns(3)
+        cols[0].metric("엄격 적중", total["적중(원분수)"], f"95% {low:.0f}~{high:.0f}%",
+                       delta_color="off")
+        cols[1].metric("방향만 맞춤", f"{total['방향만 맞춘 비율(%)']:.0f}%",
+                       "문턱 미만 포함", delta_color="off")
+        cols[2].metric("판단 유보", f"{total['유보(혼조·판단불가)']}회",
+                       "혼조·판단불가", delta_color="off")
+
+        # 기준선 — 아무 계산도 안 하는 답안보다 나은지 보여줍니다
+        base_rows = [
+            {"답안": name, "적중률(%)": info["적중률(%)"]}
+            for name, info in total["기준선(무계산 답안)"].items()
+        ]
+        best_base = max((r["적중률(%)"] or 0) for r in base_rows)
+        model_rate = total["적중률(%)"] or 0
+        st.dataframe(pd.DataFrame(base_rows), hide_index=True, width="stretch")
+        if model_rate < best_base:
+            st.warning(
+                f"⚠️ 엄격 잣대에서는 모델({model_rate:.0f}%)이 "
+                f"아무 계산도 하지 않는 답안({best_base:.0f}%)보다 낮습니다. "
+                "이 모델은 방향을 **너무 자주 단정하는 경향**이 있다는 뜻입니다 — "
+                "실제로는 '유지'인 분기가 많습니다. 판정을 그대로 믿지 마시고, "
+                "위 '방향만 맞춤'과 함께 보세요."
+            )
+        st.caption(caption)
+
+    # 지금 화면에 있는 종목들의 실제 이력으로 되짚어 봅니다
+    real_history = {
+        ticker: score["quarters"]
+        for ticker, score in scores.items()
+        if len(score.get("quarters") or []) >= 6
+    }
+
+    if real_history:
+        st.markdown("#### 지금 이 종목들의 실제 이력")
+        outcome = backtest.run(real_history)
+        _render_backtest(
+            outcome,
+            f"표본이 {outcome['전체']['판정한 시점']}회뿐이라 참고용입니다 "
+            f"(종목평균 {outcome['전체']['종목평균 적중률(%)']}% · "
+            f"독립 종목 {outcome['전체']['독립 종목 수']}개). 분기 6개 이상인 종목만 계산합니다.",
+        )
+        st.dataframe(
+            pd.DataFrame(
+                [
+                    {"종목": t, "적중": v["적중(원분수)"], "적중률(%)": v["적중률(%)"],
+                     "유보": v["유보(혼조·판단불가)"]}
+                    for t, v in outcome["종목별"].items()
+                ]
+            ),
+            hide_index=True,
+            width="stretch",
+        )
+    else:
+        st.caption("되짚어 볼 만큼 분기가 모인 종목이 아직 없습니다 (종목당 6분기 이상 필요).")
+
+    st.markdown("#### 설계 점검용 가상 시나리오")
+    standard = backtest.run(backtest.standard_scenarios())
+    st.dataframe(
+        pd.DataFrame(
+            [
+                {"시나리오": name, "적중": v["적중(원분수)"], "적중률(%)": v["적중률(%)"],
+                 "유보": v["유보(혼조·판단불가)"]}
+                for name, v in standard["종목별"].items()
+            ]
+        ),
+        hide_index=True,
+        width="stretch",
+    )
+    st.caption(
+        "가상 데이터로 재는 것은 '시장에서 얼마나 맞나'가 아니라 "
+        "**'설계한 대로 동작하나'** 입니다. 둘은 다릅니다."
+    )
+
 
 # ---------------------------------------------------------------------------
 # ⑦ 지표 해석 가이드

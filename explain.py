@@ -16,6 +16,7 @@ explain.py — "이 숫자가 어떻게 나왔는지" 설명문 만들기
 from __future__ import annotations
 
 import config as cfg
+import data_quality as dq
 
 
 def _m(value: float | None) -> str:
@@ -185,7 +186,85 @@ def explain_forward(score: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# ③ GM% 드라이버 (물량형 / 믹스형 / 가격형 / 마진 악화)
+# ③ 국면 — 이익 사이클에서 지금 어디에 서 있는가
+# ---------------------------------------------------------------------------
+def explain_phase(score: dict) -> dict:
+    """왜 이 국면으로 판정됐는지, 그리고 이 신호를 어디까지 믿어야 하는지."""
+    phase_result = score.get("fundamental", {}).get("phase", {})
+    trace = phase_result.get("trace", {})
+    phase = phase_result.get("phase", "-")
+
+    meanings = {
+        cfg.PH_TURNAROUND: (
+            "1년치 이익이 **적자에서 흑자로 돌아섰습니다.** 사이클 바닥을 막 지난 자리입니다.\n\n"
+            "델타(증가 속도)만으로는 이 순간을 볼 수 없습니다. 직전이 적자면 "
+            "증가율을 계산할 자체가 안 되기 때문입니다. 2025년 반도체 슈퍼사이클에서 "
+            "마이크론의 이익 폭증이 시작된 분기를 델타는 **4분기 뒤에야** 알아챘고, "
+            "이 신호는 바로 그 분기에 켜졌습니다."
+        ),
+        cfg.PH_NEW_HIGH: (
+            "1년치 이익이 **수집 기간 안의 최고 기록을 넘어섰습니다.** "
+            "사이클 상단을 새로 뚫고 올라가는 자리입니다.\n\n"
+            "검증에서 이 신호가 켜진 67개 시점 중 95.5%는 2분기 뒤 이익이 더 늘었고, "
+            "크게 오른 구간(1년치 이익 +30% 이상)의 83%를 잡아냈습니다.\n\n"
+            "⚠️ **'역대 최고'가 아닙니다.** 이 대시보드는 3년치만 모으므로, "
+            "예전에 훨씬 잘 벌다가 무너진 회사가 조금 회복해도 여기에 들어옵니다 "
+            "(예: 인텔). 그래서 이름을 '신고점'이 아니라 **'3년내 최고'** 로 뒀습니다. "
+            "회사가 원래 어느 수준에서 벌던 곳인지는 따로 확인하셔야 합니다."
+        ),
+        cfg.PH_LOSS: (
+            "1년치 이익이 **아직 적자**입니다. 흑자로 돌아서기 전까지는 "
+            "사이클의 어디쯤인지 말할 수가 없습니다.\n\n"
+            "적자가 줄어드는 중일 수도 있지만, 그것과 '이익 사이클의 좋은 자리'는 "
+            "다릅니다. 좋아 보이게 포장하지 않고 그대로 표시합니다."
+        ),
+        cfg.PH_ROLLOVER: (
+            f"1년치 이익이 **과거 최고의 {cfg.PHASE_ROLLOVER_RATIO*100:.0f}% 아래로** "
+            "내려왔습니다. 고점에서 이탈한 자리입니다.\n\n"
+            "검증에서 이 상태의 29개 시점 중 2분기 뒤 이익이 늘어난 것은 45%뿐이었습니다 "
+            "(전체 평균 73%)."
+        ),
+        cfg.PH_NONE: (
+            "과거 최고를 넘지도, 크게 벗어나지도 않은 **중간 자리**입니다.\n\n"
+            "검증에서 이 상태의 34개 시점 중 1년치 이익이 30% 이상 오른 것은 "
+            "**한 번도 없었습니다.** 나쁜 자리는 아니지만 크게 오를 자리도 아닙니다."
+        ),
+        cfg.PH_UNKNOWN: "1년치 이익을 두 번 비교할 만큼 분기가 모이지 않았습니다.",
+    }
+
+    calc_lines = []
+    if trace.get("now") is not None:
+        calc_lines.append(f"- 지금 1년치 이익: **{_m(trace.get('now'))}**")
+        calc_lines.append(f"- 직전 1년치 이익: {_m(trace.get('previous'))}")
+        calc_lines.append(f"- 과거 최고 1년치 이익: {_m(trace.get('peak'))}")
+        if trace.get("vs_peak_pct") is not None:
+            calc_lines.append(f"- 최고 대비: **{trace['vs_peak_pct']:.0f}%**")
+        calc_lines.append(
+            f"- 배점 비율 {trace.get('ratio', 0):.2f} → "
+            f"점수 **{phase_result.get('score', 0):.0f} / {cfg.W_PHASE}점**"
+        )
+
+    return {
+        "title": f"국면: {phase}",
+        "meaning": meanings.get(phase, ""),
+        "formula": (
+            "**최근 4분기를 더한 1년치 이익**이 사이클의 어디에 있는지로 판정합니다.\n\n"
+            "· 직전 1년치가 적자였는데 지금 흑자 → **턴어라운드 진입**\n\n"
+            "· 지금이 과거 최고보다 높음 → **신고점 돌파**\n\n"
+            f"· 지금이 과거 최고의 {cfg.PHASE_ROLLOVER_RATIO*100:.0f}% 미만 → **고점 이탈**\n\n"
+            "· 그 사이 → **중간 자리**\n\n"
+            "⚠️ **이 신호가 하지 못하는 일**: 이것은 *종목끼리 줄 세우는* 신호이지 "
+            "*한 종목을 언제 사야 하는지* 알려주는 신호가 아닙니다. 검증에 쓴 표본에서 "
+            "잘 크는 종목은 거의 항상 신호가 있었고 부진한 종목은 거의 항상 없었기 때문에, "
+            "한 종목 안에서의 타이밍 효과는 재지 못했습니다. 그대로 밝혀 둡니다."
+        ),
+        "calc_lines": calc_lines,
+        "detail": phase_result.get("detail", ""),
+    }
+
+
+# ---------------------------------------------------------------------------
+# ④ GM% 드라이버 (물량형 / 믹스형 / 가격형 / 마진 악화)
 # ---------------------------------------------------------------------------
 def explain_gm_driver(score: dict) -> dict:
     """마진 변화의 성격이 왜 그렇게 판정됐는지 설명합니다."""
@@ -216,7 +295,13 @@ def explain_gm_driver(score: dict) -> dict:
     # 분기별 GM% 이력 표
     history = []
     margins = trace.get("margins", [])
-    labeled = [q for q in quarters if q.get("gross_margin_pct") is not None]
+    # scoring 과 **같은 필터**를 써야 목록 길이가 맞습니다.
+    # (예전에는 범위를 벗어난 GM%를 scoring 만 걸러내서 이력표가 한 칸씩 밀렸습니다)
+    labeled = [
+        q for q in quarters
+        if q.get("gross_margin_pct") is not None
+        and cfg.MARGIN_MIN_PCT <= q["gross_margin_pct"] <= cfg.MARGIN_MAX_PCT
+    ]
     for quarter, margin in zip(labeled, margins):
         history.append({"분기": quarter.get("period_label", "-"), "GM%": round(margin, 2)})
 
@@ -274,23 +359,89 @@ def explain_delta(score: dict) -> dict:
         cfg.D_UNKNOWN: "분기 데이터가 부족해 속도 변화를 계산할 수 없습니다.",
     }
 
-    # 분기별 QoQ 증가율 이력 (증가율은 두 번째 분기부터 계산됨)
+    # 분기별 증가율 이력.
+    # ⚠️ 압축된 growths 목록과 그냥 zip 하면 안 됩니다. 적자·단위오류로 건너뛴
+    #    분기가 있으면 증가율이 **한 칸씩 밀려 엉뚱한 분기에 붙고** 최근 분기가
+    #    통째로 빠집니다. 여기서 분기 쌍마다 다시 계산해 빈칸을 그대로 둡니다.
     history = []
     valid_quarters = [q for q in quarters if q.get("op_income") is not None]
-    for quarter, growth in zip(valid_quarters[1:], growths):
-        history.append(
-            {
-                "분기": quarter.get("period_label", "-"),
-                "영업이익($M)": round(quarter["op_income"] / 1e6, 1),
-                "QoQ 증가율(%)": round(growth, 1),
-            }
-        )
+
+    if trace.get("use_ttm"):
+        # 판정에 실제로 쓴 것은 '최근 4분기 합'이므로 그것을 그대로 보여 줍니다.
+        # 화면에 보이는 숫자와 모델이 본 숫자가 다르면 근거를 확인할 수가 없습니다.
+        for index in range(3, len(valid_quarters)):
+            quarter = valid_quarters[index]
+            window = [q["op_income"] for q in valid_quarters[index - 3 : index + 1]]
+            ttm_now = sum(window)
+            growth = None
+            if index >= 4:
+                previous = sum(
+                    q["op_income"] for q in valid_quarters[index - 4 : index]
+                )
+                growth = dq.safe_growth_pct(previous, ttm_now)
+            history.append(
+                {
+                    "분기": quarter.get("period_label", "-"),
+                    "영업이익($M)": round(quarter["op_income"] / 1e6, 1),
+                    "1년치 합($M)": round(ttm_now / 1e6, 1),
+                    "1년치 증가율(%)": None if growth is None else round(growth, 1),
+                }
+            )
+    else:
+        growth_label = "YoY 증가율(%)" if trace.get("seasonal") else "QoQ 증가율(%)"
+        step = 4 if trace.get("seasonal") else 1
+        for index in range(step, len(valid_quarters)):
+            quarter = valid_quarters[index]
+            growth = dq.safe_growth_pct(
+                valid_quarters[index - step].get("op_income"), quarter.get("op_income")
+            )
+            history.append(
+                {
+                    "분기": quarter.get("period_label", "-"),
+                    "영업이익($M)": round(quarter["op_income"] / 1e6, 1),
+                    growth_label: None if growth is None else round(growth, 1),
+                }
+            )
 
     # --- 앞으로의 예측 (scoring.predict_delta 결과를 그대로 풀어 씁니다) ---
     forecast = score.get("forecast_detail") or {}
     forecast_lines = []
     if forecast.get("next_qoq") is not None:
         forecast_lines.append(f"- 다음 분기 예측: **{forecast.get('label')}**")
+
+        # 이 예측이 과거에 실제로 얼마나 맞았는지 함께 보여 줍니다.
+        # 특히 '가속 둔화'는 오래 "정점 근처 신호"로 표시해 왔지만 검증에서
+        # 사실이 아니었습니다. 그 사실을 숨기지 않고 같은 자리에 적습니다.
+        # 이 예측이 과거에 실제로 얼마나 맞았는지 함께 보여 줍니다.
+        # ⚠️ 두 가지를 나눠서 봐야 합니다 — 여기서 한 번 크게 헷갈렸습니다.
+        #    '이익이 정점인가'와 '주가가 정점인가'는 전혀 다른 질문입니다.
+        #    이익 레벨은 사이클 후반까지 계속 신고점을 찍으므로, 이익 정점으로
+        #    재면 어떤 신호도 잘 맞지 않습니다. 주가는 그보다 먼저 꺾입니다.
+        label = forecast.get("label")
+        measured = cfg.FORECAST_MEASURED_PEAK.get(label)
+        if measured is not None:
+            base = cfg.FORECAST_PEAK_BASELINE
+            verdict = (
+                "**이익** 정점을 알려주는 신호는 아닙니다" if measured <= base
+                else "이익 정점 신호로 쓸 만합니다"
+            )
+            forecast_lines.append(
+                f"- 📏 이 예측 뒤 실제로 **이익**이 정점이었던 비율 "
+                f"**{measured*100:.1f}%** (아무 때나 {base*100:.1f}%) — {verdict}"
+            )
+        price = cfg.FORECAST_MEASURED_PRICE_PEAK.get(label)
+        if price is not None:
+            pbase = cfg.FORECAST_PRICE_PEAK_BASELINE
+            forecast_lines.append(
+                f"- 📉 그런데 **주가** 정점 부근(±1분기)이었던 비율은 "
+                f"**{price*100:.1f}%** (아무 때나 {pbase*100:.1f}%) — "
+                f"이익은 아직 최고여도 **주가는 이때 꺾이는 경우가 많았습니다**"
+            )
+        multiplier = cfg.FORECAST_SCORE_MULT.get(forecast.get("label"), 1.0)
+        if multiplier != 1.0:
+            forecast_lines.append(
+                f"- 이 예측 때문에 델타 점수를 **{multiplier:.2f}배** 했습니다"
+            )
         forecast_lines.append(
             f"- 최근 실제 증가율 {forecast.get('last_qoq'):+.1f}% → "
             f"다음 분기 예상 **{forecast.get('next_qoq'):+.1f}%** "
@@ -322,9 +473,11 @@ def explain_delta(score: dict) -> dict:
 
     calc_lines = []
     recent = trace.get("recent", [])
+    unit = "1년치 이익 증가율" if trace.get("use_ttm") else "분기 증가율"
     if len(recent) >= 2:
-        calc_lines.append(f"- 직전 분기 증가율: {recent[-2]:+.1f}%")
-        calc_lines.append(f"- 최근 분기 증가율: **{recent[-1]:+.1f}%**")
+        calc_lines.append(f"- 기준: **{trace.get('basis', '-')}**")
+        calc_lines.append(f"- 직전 {unit}: {recent[-2]:+.1f}%")
+        calc_lines.append(f"- 최근 {unit}: **{recent[-1]:+.1f}%**")
         calc_lines.append(
             f"- **신호① 단기**: {trace.get('delta_pp', 0):+.1f}%p "
             f"(기준 ±{trace.get('threshold', 3.0):.0f}%p)"
@@ -341,17 +494,39 @@ def explain_delta(score: dict) -> dict:
             f"- ⚠️ 최근 분기 이익이 {_m(trace.get('latest_op'))}로 "
             f"{_m(cfg.LOW_BASE_THRESHOLD_USD)} 미만이라 점수를 절반으로 제한했습니다 (저기저 함정 방지)"
         )
+    measured = trace.get("measured_hit")
+    if measured is not None:
+        calc_lines.append(
+            f"- 📏 이 방향('{delta.get('direction')}')을 과거 20종목 132개 시점에서 "
+            f"검증했을 때 실제로 맞은 비율은 **{measured*100:.0f}%** 였습니다"
+            + ("" if measured >= 0.6 else " — **믿을 것이 못 됩니다.** 참고만 하세요")
+        )
     calc_lines.append(f"- 점수: **{delta.get('score', 0):.0f} / {cfg.W_DELTA_ACCEL}점**")
+
+    if trace.get("use_ttm"):
+        formula = (
+            "**최근 4분기를 더한 1년치 이익**의 증가율이 어떻게 변하는지를 봅니다.\n\n"
+            "① **단기** = 최근 1년치 증가율 − 직전 1년치 증가율\n\n"
+            f"② **추세** = 최근 {cfg.DELTA_TREND_WINDOW}개 증가율의 회귀 기울기\n\n"
+            "두 신호가 같은 방향이면 가속/감속, **서로 반대면 '혼조'** 로 표시합니다.\n\n"
+            "왜 분기 단위가 아니라 1년치인가 — 20종목 132개 시점으로 두 방식을 "
+            "맞대결시킨 결과, 분기 단위는 방향을 55% 맞혔고 1년치는 66% 맞혔습니다. "
+            "특히 '가속'이라 말했을 때 실제로 맞은 비율이 82% → 91% 로 올랐습니다. "
+            "1년치는 계절 장사의 오르내림도 저절로 상쇄됩니다."
+        )
+    else:
+        formula = (
+            "분기가 6개가 안 돼 1년치(TTM)로 볼 수 없어, **분기 단위**로 봅니다.\n\n"
+            "① **단기** = 최근 증가율 − 직전 증가율 (민감함)\n\n"
+            f"② **추세** = 최근 {cfg.DELTA_TREND_WINDOW}개 증가율의 회귀 기울기 (안정적)\n\n"
+            "⚠️ 이 방식은 1년치로 보는 것보다 덜 정확합니다(검증 55% vs 66%). "
+            "분기가 더 쌓이면 자동으로 1년치 기준으로 바뀝니다."
+        )
 
     return {
         "title": f"델타 방향: {delta.get('direction', '-')}",
         "meaning": meanings.get(delta.get("direction"), ""),
-        "formula": (
-            "한 분기만 튀어도 판정이 뒤집히지 않도록 **두 신호를 함께** 봅니다.\n\n"
-            "① **단기** = 최근 QoQ 증가율 − 직전 QoQ 증가율 (민감함)\n\n"
-            f"② **추세** = 최근 {cfg.DELTA_TREND_WINDOW}개 증가율의 회귀 기울기 (안정적)\n\n"
-            "두 신호가 같은 방향이면 가속/감속, **서로 반대면 '혼조'** 로 표시합니다."
-        ),
+        "formula": formula,
         "calc_lines": calc_lines,
         "history": history,
         "forecast_lines": forecast_lines,

@@ -481,7 +481,11 @@ def test_delta_uses_regression_slope():
     trace = result["trace"]
     assert trace["slope"] is not None, trace
     assert trace["slope"] > 0, trace          # 증가율이 커지는 중이므로 양수
-    assert result["direction"] == cfg.D_ACCEL, result
+    # 추세 신호만 방향을 보이고 단기 신호는 문턱 미만이므로 '약한 가속'이 정직합니다.
+    # (예전에는 신호 하나만으로도 '가속'을 단정해, 실제로 방향이 있는 비율의
+    #  두 배 넘게 단정하다가 무계산 기준선보다 성적이 나빴습니다)
+    assert result["direction"] == cfg.D_WEAK_ACCEL, result
+    assert trace["short_signal"] == 0 and trace["trend_signal"] == 1, trace
 
 
 def test_linear_slope_math():
@@ -566,7 +570,7 @@ def test_ranking_table_has_confidence_and_forecast():
 
     table = pipeline.build_ranking_table(scores)
     assert "신뢰도" in table.columns, table.columns
-    assert "델타예측" in table.columns, table.columns
+    assert "델타예측(1분기후)" in table.columns, table.columns
     assert table.iloc[0]["신뢰도"] > 0
 
 

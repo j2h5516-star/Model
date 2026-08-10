@@ -262,8 +262,81 @@ def test_guidance_range_with_gm_and_opex():
     assert abs(guidance["opex"] - 47_000_000) < 1, guidance["opex"]
 
     # 포워드 = 160M × 65% − 47M = 104M − 47M = 57M
-    forward = fe.forward_from_guidance(guidance)
+    forward = fe.forward_from_guidance(guidance)[0]
     assert abs(forward - 57_000_000) < 1, forward
+
+
+# ---------------------------------------------------------------------------
+# 가이던스에서 GAAP 을 집어오지 않는가 (실제로 있었던 오류)
+# ---------------------------------------------------------------------------
+# 미국 회사들은 가이던스에 GAAP 과 논갭을 **둘 다** 적고, 관례적으로 GAAP 을
+# 먼저 씁니다. 그냥 첫 번째를 잡으면 GAAP 을 가져옵니다.
+# 이 모델은 과거 실적을 논갭으로 쌓아 두므로, 전망만 GAAP 이면 한 종목 안에서
+# 정의가 섞여 사업에 아무 변화가 없어도 증가율에 가짜 신호가 생깁니다.
+NVDA_STYLE = """Outlook for the third quarter of fiscal 2026 is as follows:
+Revenue is expected to be $54.0 billion, plus or minus 2%.
+GAAP and non-GAAP gross margins are expected to be 73.3% and 73.5%, respectively.
+GAAP and non-GAAP operating expenses are expected to be approximately $5.9 billion and $4.2 billion, respectively."""
+
+AMD_STYLE = """For the third quarter of 2026, AMD expects revenue to be approximately $8.7 billion.
+AMD expects GAAP gross margin to be approximately 50% and non-GAAP gross margin to be approximately 54%.
+GAAP operating expenses are expected to be approximately $2.9 billion; non-GAAP operating expenses approximately $2.3 billion."""
+
+MARGIN_STYLE = """Business Outlook: Revenue of $1.20 billion to $1.30 billion.
+GAAP operating margin of 12% to 14%. Non-GAAP operating margin of 20% to 22%."""
+
+
+def test_guidance_picks_nongaap_when_listed_side_by_side():
+    """'GAAP and non-GAAP ... A and B, respectively' 는 **뒤쪽** 값이 논갭"""
+    guidance = fe.parse_guidance(NVDA_STYLE)
+
+    assert abs(guidance["gross_margin_pct"] - 73.5) < 0.01, guidance["gross_margin_pct"]
+    assert abs(guidance["opex"] - 4_200_000_000) < 1, guidance["opex"]
+
+    # 매출 54.0B × 73.5% − 4.2B = 35.49B  (GAAP 으로 집었다면 33.68B 이 됩니다)
+    forward = fe.forward_from_guidance(guidance)[0]
+    assert abs(forward - 35_490_000_000) < 1_000_000, forward
+
+
+def test_guidance_picks_nongaap_when_stated_separately():
+    """'non-GAAP gross margin ... 54%' 처럼 따로 적어 준 경우도 논갭을 집어야 함"""
+    guidance = fe.parse_guidance(AMD_STYLE)
+
+    assert abs(guidance["gross_margin_pct"] - 54.0) < 0.01, guidance["gross_margin_pct"]
+    assert abs(guidance["opex"] - 2_300_000_000) < 1, guidance["opex"]
+
+
+def test_guidance_picks_nongaap_operating_margin():
+    """영업마진도 논갭을 집어야 함 (GAAP 12~14% 가 아니라 논갭 20~22%)"""
+    guidance = fe.parse_guidance(MARGIN_STYLE)
+
+    assert abs(guidance["operating_margin_pct"] - 21.0) < 0.01, guidance
+    forward = fe.forward_from_guidance(guidance)[0]
+    # 1.25B × 21% = 262.5M  (GAAP 13% 로 집었다면 162.5M — 38% 낮습니다)
+    assert abs(forward - 262_500_000) < 1_000_000, forward
+
+
+def test_guidance_flags_when_only_gaap_is_available():
+    """논갭이 아예 없으면 그 사실을 남겨야 함 (신뢰도를 낮출 근거)"""
+    gaap_only = """Business Outlook: Revenue of $1.00 billion.
+GAAP operating margin of 12%."""
+    guidance = fe.parse_guidance(gaap_only)
+
+    assert guidance["gaap_only"] is True, guidance
+    assert guidance["om_basis"] == "GAAP만", guidance
+
+
+def test_past_tense_quarter_phrase_is_not_treated_as_guidance():
+    """'for the third quarter of fiscal 2025 ended ...' 는 과거 서술 — 전망이 아님
+
+    이 문구를 전망 신호로 잡으면 손익계산서를 통째로 전망 문단으로 오인해,
+    매출을 못 찾고 엉뚱한 마진을 집어 옵니다. 실제로 그런 회귀가 났습니다.
+    """
+    guidance = fe.parse_guidance(PR_TABLE_THOUSANDS)
+
+    # 진짜 전망 문단을 찾아 매출을 제대로 집어야 합니다
+    assert guidance["revenue"] is not None, guidance
+    assert abs(guidance["revenue"] - 160_000_000) < 1, guidance["revenue"]
 
 
 def test_guidance_with_operating_margin():
@@ -275,14 +348,14 @@ def test_guidance_with_operating_margin():
     assert guidance["operating_margin_pct"] is not None
 
     # 포워드 = 2,675M × 7.2% ≈ 192.6M
-    forward = fe.forward_from_guidance(guidance)
+    forward = fe.forward_from_guidance(guidance)[0]
     assert 180_000_000 < forward < 205_000_000, forward
 
 
 def test_no_guidance_returns_none():
     """가이던스 문단이 없으면 None을 돌려줘야 함"""
     guidance = fe.parse_guidance(PR_NO_GUIDANCE)
-    assert fe.forward_from_guidance(guidance) is None
+    assert fe.forward_from_guidance(guidance)[0] is None
 
 
 def test_guidance_section_not_found():

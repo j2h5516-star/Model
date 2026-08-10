@@ -56,6 +56,12 @@ _NUMBER_RE = re.compile(
     re.I | re.X,
 )
 
+# 숫자 바로 뒤에 붙어 "이건 퍼센트다"를 뜻하는 표기들.
+# "%" 기호만 보면 "82 percent" 같은 낱말 표기를 금액으로 오인합니다.
+_PERCENT_AFTER_RE = re.compile(
+    r"\s*(%|％|percentage\b|percent\b|pct\b|basis\s+points\b|bps\b)", re.I
+)
+
 # 텍스트에 붙은 단위 단어 → 곱할 배수
 _WORD_SCALE = {
     "thousand": 1_000,
@@ -86,10 +92,10 @@ def _detect_table_unit(text: str, position: int, window: int = 3000) -> int:
 
 def _parse_number_at(
     text: str, search_from: int, search_len: int = 160
-) -> tuple[float, int, int, bool] | None:
+) -> tuple[float, int, int, bool, int] | None:
     """지정한 위치부터 오른쪽으로 훑으며 첫 번째 숫자를 찾아 값으로 바꿉니다.
 
-    반환값: (숫자값, 시작위치, 끝위치, 단위단어가붙었는지) — 못 찾으면 None
+    반환값: (숫자값, 시작위치, 끝위치, 단위단어가붙었는지, 숫자자체의끝) — 못 찾으면 None
     """
     segment = text[search_from : search_from + search_len]
     match = _NUMBER_RE.search(segment)
@@ -117,6 +123,10 @@ def _parse_number_at(
         search_from + match.start(),
         search_from + match.end(),
         had_word_scale,
+        # 숫자 자체가 끝난 위치. 퍼센트 판정은 반드시 이 위치에서 봐야 합니다.
+        # match.end()는 뒤따르는 공백·줄바꿈까지 삼켜서, 다음 줄의 "%"를
+        # 이 숫자에 붙은 것으로 오해하게 만듭니다.
+        search_from + match.end("num"),
     )
 
 
@@ -146,10 +156,18 @@ def find_labeled_value(
                 parsed = _parse_number_at(text, search_from)
                 if parsed is None:
                     break
-                value, number_start, number_end, had_word_scale = parsed
+                value, number_start, number_end, had_word_scale, num_end = parsed
 
-                # 숫자 바로 뒤가 % 인지 확인 (공백은 무시)
-                is_percent_value = text[number_end : number_end + 3].lstrip().startswith("%")
+                # 숫자 바로 뒤가 퍼센트 표기인지 확인.
+                # ⚠️ "%" 기호뿐 아니라 "percent" 같은 낱말도 봐야 합니다.
+                #    ("gross margin of 82 percent" 의 82를 금액으로 채택해
+                #     마진이 1억%가 되는 사고가 실제로 재현됐습니다)
+                # ⚠️ 줄이 바뀌면 그 뒤는 다른 항목이므로 퍼센트 판정을 멈춥니다.
+                #    (다음 줄이 "% of revenue" 로 시작하면 진짜 영업이익을
+                #     퍼센트로 오인해 버리는 문제가 있었습니다)
+                tail = text[num_end : num_end + 24]
+                tail_line = tail.split("\n", 1)[0]
+                is_percent_value = bool(_PERCENT_AFTER_RE.match(tail_line))
 
                 if is_percent:
                     # 퍼센트를 찾는 중: %가 붙어 있고 0~100 범위여야 채택
@@ -207,6 +225,13 @@ LABELS_REVENUE = [
     r"net\s+sales",
 ]
 
+# 조정 EBITDA — ZETA·TSLA·APP 처럼 논갭 영업이익을 발표하지 않는 회사가 많습니다.
+# 이 값에서 감가상각비를 빼면 논갭 영업이익을 역산할 수 있습니다.
+LABELS_ADJUSTED_EBITDA = [
+    r"adjusted\s+EBITDA",
+    r"non[-\s]?GAAP\s+EBITDA",
+]
+
 # 논갭 영업비용 (역산에 사용)
 LABELS_NONGAAP_OPEX = [
     r"non[-\s]?GAAP\s+(?:total\s+)?operating\s+expenses?",
@@ -232,6 +257,7 @@ def parse_press_release(text: str) -> dict:
         "revenue": None,
         "op_income": None,
         "gross_margin_pct": None,
+        "adjusted_ebitda": None,   # 논갭 영업이익이 없을 때 역산에 씁니다
         "source": None,
         "gm_is_gaap": False,
         "derivation": "",   # 어떻게 구한 값인지 사람이 읽을 수 있는 설명
@@ -240,6 +266,9 @@ def parse_press_release(text: str) -> dict:
         return result
 
     result["revenue"] = find_labeled_value(text, LABELS_REVENUE)
+    # ZETA·TSLA·APP 처럼 논갭 영업이익을 발표하지 않는 회사가 많습니다.
+    # 조정 EBITDA 를 챙겨 두었다가, 감가상각비를 빼서 논갭 영업이익을 역산합니다.
+    result["adjusted_ebitda"] = find_labeled_value(text, LABELS_ADJUSTED_EBITDA)
 
     # ① 논갭 GM% — 없으면 GAAP GM%로 대체
     gm = find_labeled_value(text, LABELS_NONGAAP_GM_PCT, is_percent=True)
@@ -258,6 +287,7 @@ def parse_press_release(text: str) -> dict:
             "보도자료의 GAAP→non-GAAP 조정표에 적힌 "
             f"non-GAAP 영업이익 값을 그대로 사용했습니다 (${op/1e6:,.1f}M)."
         )
+        _sanity_check_press(result)   # ← 직접공시 경로에서도 반드시 검사
         return result
 
     # ③ 없으면 역산: 매출 × GM% − 논갭 영업비용
@@ -274,7 +304,38 @@ def parse_press_release(text: str) -> dict:
             f"= **${result['op_income']/1e6:,.1f}M**"
         )
 
+    # ④ 그래도 없으면 조정 EBITDA 에서 감가상각비를 빼 역산합니다.
+    #    감가상각비는 XBRL 에서 오므로 여기서는 값만 챙겨 두고,
+    #    실제 계산은 merge_quarters 에서 XBRL 감가상각비와 만났을 때 합니다.
+    if result["op_income"] is None and result["adjusted_ebitda"] is not None:
+        result["source"] = None      # 아직 확정 아님 — merge 에서 정해집니다
+        result["derivation"] = (
+            "보도자료에 non-GAAP 영업이익이 없어 조정 EBITDA "
+            f"${result['adjusted_ebitda']/1e6:,.1f}M 에서 감가상각비를 빼 역산할 예정입니다."
+        )
+
+    _sanity_check_press(result)
     return result
+
+
+def _sanity_check_press(result: dict) -> None:
+    """뽑아낸 숫자끼리 앞뒤가 맞는지 마지막으로 확인합니다.
+
+    매출은 영업이익보다 커야 합니다(영업이익은 매출에서 비용을 뺀 값이므로).
+    이 관계가 깨졌다면 매출 자리에 엉뚱한 숫자(퍼센트·주당 금액 등)가
+    들어온 것이므로, 그 매출은 채택하지 않고 비워 둡니다.
+    비워 두면 XBRL에서 온 매출이 그대로 남아 계산이 이어집니다.
+    """
+    revenue, op_income = result.get("revenue"), result.get("op_income")
+    if revenue is None or op_income is None:
+        return
+    # 흑자면 영업이익이 매출의 90%를 넘을 수 없습니다.
+    # 적자는 비용이 매출을 넘을 수 있으므로 마진 하한(-500%)으로만 봅니다.
+    too_big = op_income > 0 and op_income > revenue * 0.9
+    too_deep = op_income < 0 and op_income / revenue * 100.0 < cfg.MARGIN_MIN_PCT
+    if revenue <= 0 or too_big or too_deep:
+        result["rejected_revenue"] = revenue
+        result["revenue"] = None
 
 
 # 회계 분기 이름 뽑기 — 예: "first quarter of fiscal 2025" → "FY2025 Q1"
@@ -625,6 +686,13 @@ _XBRL_CONCEPTS = {
         "ShareBasedCompensation",
         "AllocatedShareBasedCompensationExpense",
     ],
+    # 감가상각비 — 조정 EBITDA 로만 발표하는 회사의 논갭 영업이익을 역산할 때 씁니다.
+    #   논갭 영업이익 ≈ 조정 EBITDA − 감가상각비(D&A)
+    "depreciation_amortization": [
+        "DepreciationDepletionAndAmortization",
+        "DepreciationAmortizationAndAccretionNet",
+        "DepreciationAndAmortization",
+    ],
     "amortization": [
         "AmortizationOfIntangibleAssets",
         "AmortizationOfAcquiredIntangibleAssets",
@@ -670,12 +738,12 @@ def fetch_xbrl_approximation(
     for key, concept_names in _XBRL_CONCEPTS.items():
         merged: dict[str, float] = {}
         for concept in concept_names:
-            merged.update(_quarterly_series(facts, concept))
+            merged.update(_quarterly_series(facts, concept, report))
 
         # 연간(12개월) 값도 함께 가져와 빠진 4분기를 계산해 채웁니다
         annual: dict[str, float] = {}
         for concept in concept_names:
-            annual.update(_annual_series(facts, concept))
+            annual.update(_annual_series(facts, concept, report))
         merged = _fill_missing_q4(merged, annual)
 
         series[key] = merged
@@ -692,14 +760,34 @@ def fetch_xbrl_approximation(
 
         sbc = series["sbc"].get(period_end) or 0.0
         amort = series["amortization"].get(period_end) or 0.0
+        da = series.get("depreciation_amortization", {}).get(period_end)
         revenue = series["revenue"].get(period_end)
         gross_profit = series["gross_profit"].get(period_end)
+
+        # 교차검증: 매출 ≥ 매출총이익 ≥ 0 이어야 하고, 영업이익은 매출을 넘을 수 없습니다.
+        # 이 관계가 깨졌다면 매출 자리에 엉뚱한 항목이 들어온 것이므로 매출을 비웁니다.
+        # (비워 두면 뒤의 검사 단계가 "매출 없음"으로 처리해 영업이익만 씁니다)
+        approx_op = gaap_op + sbc + amort
+        if revenue is not None:
+            bad_gross = (
+                gross_profit is not None and (gross_profit < 0 or gross_profit > revenue)
+            )
+            # 적자 분기는 영업이익이 매출보다 클 수 있습니다(비용이 매출을 넘으므로).
+            # 흑자일 때만 "영업이익 ≤ 매출"을 강제하고, 적자는 마진 하한으로만 봅니다.
+            bad_op = approx_op > revenue or (
+                approx_op < 0 and approx_op / revenue * 100.0 < cfg.MARGIN_MIN_PCT
+            )
+            if revenue <= 0 or bad_op or bad_gross:
+                if report is not None:
+                    report.setdefault("xbrl_ambiguous", []).append(
+                        f"{period_end}: 매출 ${revenue:,.0f} 이 다른 항목과 앞뒤가 맞지 않아 제외"
+                    )
+                revenue = None
+                gross_profit = None
 
         gm_pct = None
         if revenue and gross_profit is not None and revenue > 0:
             gm_pct = gross_profit / revenue * 100.0
-
-        approx_op = gaap_op + sbc + amort
         quarters.append(
             {
                 "ticker": ticker,
@@ -707,6 +795,7 @@ def fetch_xbrl_approximation(
                 "period_label": period_end_label(period_end),
                 "revenue": revenue,
                 "op_income": approx_op,   # 논갭 근사
+                "da": da,                 # 감가상각비 — EBITDA 역산에 씁니다
                 "gross_margin_pct": gm_pct,
                 "source": cfg.SRC_APPROX,
                 "gm_is_gaap": True,
@@ -727,17 +816,17 @@ def fetch_xbrl_approximation(
     return quarters
 
 
-def _quarterly_series(facts, concept: str) -> dict[str, float]:
+def _quarterly_series(facts, concept: str, report: dict | None = None) -> dict[str, float]:
     """XBRL에서 특정 항목의 분기(3개월) 값들을 {기간종료일: 값}으로 뽑습니다."""
-    return _period_series(facts, concept, months=3)
+    return _period_series(facts, concept, months=3, report=report)
 
 
-def _annual_series(facts, concept: str) -> dict[str, float]:
+def _annual_series(facts, concept: str, report: dict | None = None) -> dict[str, float]:
     """XBRL에서 특정 항목의 연간(12개월) 값들을 {기간종료일: 값}으로 뽑습니다.
 
     4분기(Q4)는 10-K에 연간으로만 신고되는 경우가 많아, 이 값이 필요합니다.
     """
-    return _period_series(facts, concept, months=12)
+    return _period_series(facts, concept, months=12, report=report)
 
 
 def _fill_missing_q4(
@@ -809,8 +898,30 @@ def _find_prior_three_quarters(
     return [value for _, value in candidates[:3]]
 
 
-def _period_series(facts, concept: str, months: int) -> dict[str, float]:
-    """XBRL에서 특정 항목을 지정한 기간 길이로 뽑아 {기간종료일: 값}으로 만듭니다."""
+def _period_series(
+    facts, concept: str, months: int, report: dict | None = None
+) -> dict[str, float]:
+    """XBRL에서 특정 항목을 지정한 기간 길이로 뽑아 {기간종료일: 값}으로 만듭니다.
+
+    ⚠️ 여기가 배포 사고("평균 영업마진 82,804,463%")의 진짜 원인이었습니다.
+
+    edgartools의 `by_concept("Revenues")` 는 **부분일치**가 기본값이라, 개념 이름뿐
+    아니라 사람이 읽는 이름표(label)까지 훑습니다. 그래서 매출을 찾는 질의가
+      · "Cost of revenues"(매출원가)
+      · "Concentration risk percentage of revenues"(비율, 단위 pure)
+      · "...WeightedAverageGrantDateFairValue"(주당 금액, 단위 USD/shares)
+    같은 **전혀 다른 항목**을 함께 물어왔고, 같은 분기의 값을 나중 행이 덮어써서
+    매출 자리에 $102(비율 값)가 들어앉았습니다.
+
+    그래서 세 겹으로 막습니다.
+      ① 개념 이름 **완전일치**만 채택 (부분일치로 딸려온 남의 항목 제거)
+      ② 단위가 **달러(USD)** 인 값만 채택 (주당·주식수·비율은 이 계산에 쓸 일이 없음)
+      ③ 같은 분기에 값이 여러 개면 덮어쓰지 않고, 서로 2배 넘게 다르면
+         **아예 쓰지 않고** 진단에 남김 (덮어쓰면 SEC가 준 순서에 따라 결과가 달라짐)
+
+    (`exact=True` 로 조회하는 방법은 쓸 수 없습니다. edgartools의 색인 열쇠는
+     "us-gaap:Revenues" 처럼 앞머리가 붙어 있어, 앞머리 없는 이름으로는 전부 0건이 됩니다.)
+    """
     try:
         df = (
             facts.query()
@@ -830,13 +941,54 @@ def _period_series(facts, concept: str, months: int) -> dict[str, float]:
     if date_col is None or value_col is None:
         return {}
 
-    out: dict[str, float] = {}
+    concept_col = "concept" if "concept" in df.columns else None
+    unit_col = "unit" if "unit" in df.columns else None
+    wanted = concept.lower()
+
+    candidates: dict[str, list[float]] = {}
+    rejected = 0
+
     for _, row in df.iterrows():
+        # ① 개념 이름 완전일치 ("us-gaap:Revenues" → "Revenues")
+        if concept_col is not None:
+            name = str(row[concept_col]).split(":")[-1].strip().lower()
+            if name != wanted:
+                rejected += 1
+                continue
+
+        # ② 달러 단위만 (USD/shares, shares, pure 는 금액이 아닙니다)
+        if unit_col is not None:
+            unit = str(row[unit_col]).strip().upper()
+            if unit and unit != "USD":
+                rejected += 1
+                continue
+
         try:
             key = str(row[date_col])[:10]
-            out[key] = float(row[value_col])
+            candidates.setdefault(key, []).append(float(row[value_col]))
         except (TypeError, ValueError):
             continue
+
+    out: dict[str, float] = {}
+    ambiguous: list[str] = []
+    for key, values in candidates.items():
+        unique = sorted(set(values))
+        if len(unique) == 1:
+            out[key] = unique[0]
+            continue
+        # ③ 값이 서로 크게 다르면 어느 것이 맞는지 알 수 없으므로 쓰지 않습니다
+        low, high = unique[0], unique[-1]
+        if low > 0 and high / low <= 2.0:
+            out[key] = unique[len(unique) // 2]   # 비슷하면 가운데 값
+        else:
+            ambiguous.append(f"{concept} {key}: 후보 {len(unique)}개가 서로 달라 제외")
+
+    if report is not None:
+        if rejected:
+            report["xbrl_rejected"] = report.get("xbrl_rejected", 0) + rejected
+        if ambiguous:
+            report.setdefault("xbrl_ambiguous", []).extend(ambiguous)
+
     return out
 
 
@@ -850,6 +1002,23 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
         row["source"] = press.get("source") or cfg.SRC_DERIVED
         row["derivation"] = press.get("derivation", "")
         row["gm_is_gaap"] = press.get("gm_is_gaap", False)
+    elif press.get("adjusted_ebitda") is not None and row.get("da") is not None:
+        # 논갭 영업이익을 발표하지 않는 회사 (ZETA·TSLA·APP 등)
+        #   논갭 영업이익 ≈ 조정 EBITDA − 감가상각비(D&A)
+        # XBRL 근사치보다 회사 공식 숫자에 가까우므로 이쪽을 씁니다.
+        ebitda, da = press["adjusted_ebitda"], row["da"]
+        derived = ebitda - da
+        row["op_income"] = derived
+        row["source"] = cfg.SRC_DERIVED
+        row["derivation"] = (
+            "회사가 non-GAAP 영업이익을 발표하지 않아 조정 EBITDA에서 "
+            "감가상각비를 빼 역산했습니다.\n\n"
+            f"조정 EBITDA ${ebitda/1e6:,.1f}M\n\n"
+            f"− 감가상각비 ${da/1e6:,.1f}M (SEC XBRL)\n\n"
+            f"= **${derived/1e6:,.1f}M** (역산)"
+        )
+    if press.get("adjusted_ebitda") is not None:
+        row["adjusted_ebitda"] = press["adjusted_ebitda"]
     if press.get("revenue") is not None:
         row["revenue"] = press["revenue"]
     if press.get("gross_margin_pct") is not None:

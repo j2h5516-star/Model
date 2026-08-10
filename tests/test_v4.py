@@ -99,6 +99,100 @@ def test_consensus_two_quarters():
     assert out["errors"] == [], out
 
 
+def test_eps_growth_path_transplants_only_the_rate():
+    """EPS 경로는 **증가율만** 빌려 와야 함 (레벨을 옮기면 안 됨)
+
+    컨센서스 EPS 와 우리가 쌓은 논갭 영업이익은 레벨의 기준이 다릅니다.
+    레벨을 환산하려면 주식수·세율·이자를 다 알아야 하고 셋 다 잡음입니다.
+    증가율은 같은 출처 안에서 나누므로(IBES 실제 ÷ IBES 추정) 기준이 상쇄됩니다.
+    """
+    consensus = {"eps_0q": 1.32, "eps_actual_last": 1.20, "analysts_0q": 15}
+    latest_op = 500 * M
+
+    value, basis, note = fe.forward_from_eps_growth(consensus, latest_op)
+
+    # 1.32 / 1.20 = +10% → 500M × 1.10 = 550M
+    assert abs(value - 550 * M) < 1, value
+    assert basis == cfg.SRC_EPS_GROWTH
+    assert "증가율" in note
+
+
+def test_eps_growth_path_refuses_near_breakeven():
+    """손익분기 근처 EPS 는 계산하지 않아야 함
+
+    1~2센트 반올림이 +200% 를 만듭니다.
+    """
+    near_zero = {"eps_0q": 0.04, "eps_actual_last": 0.01, "analysts_0q": 15}
+    assert fe.forward_from_eps_growth(near_zero, 500 * M)[0] is None
+
+
+def test_eps_growth_path_refuses_sign_flip():
+    """적자 ↔ 흑자로 부호가 바뀌면 증가율에 뜻이 없습니다"""
+    flip = {"eps_0q": 0.50, "eps_actual_last": -0.30, "analysts_0q": 15}
+    assert fe.forward_from_eps_growth(flip, 500 * M)[0] is None
+
+
+def test_eps_growth_path_refuses_thin_coverage():
+    """애널리스트가 너무 적으면 '컨센서스'라 부를 수 없습니다"""
+    thin = {"eps_0q": 1.32, "eps_actual_last": 1.20, "analysts_0q": 1}
+    assert fe.forward_from_eps_growth(thin, 500 * M)[0] is None
+
+
+def test_eps_growth_path_warns_on_heavy_buyback():
+    """자사주 매입이 크면 EPS 증가율이 부풀려진다고 알려야 함"""
+    consensus = {
+        "eps_0q": 1.32, "eps_actual_last": 1.20, "analysts_0q": 15,
+        "shares_shrink_pct": -14.0,
+    }
+    note = fe.forward_from_eps_growth(consensus, 500 * M)[2]
+    assert "자사주" in note and "부풀려져" in note, note
+
+
+def test_nongaap_operating_income_always_wins():
+    """★ 우선순위 — 논갭 영업이익으로 만들 수 있으면 EPS 경로를 쓰지 않아야 함
+
+    EPS 경로는 어디까지나 **마지막 대안**입니다. 가이던스나 매출 컨센서스로
+    논갭 영업이익 전망을 만들 수 있는데도 EPS 로 가면, 신뢰도가 낮은 값이
+    높은 값을 밀어내게 됩니다.
+    """
+    from fixtures import make_quarters
+
+    quarters = make_quarters([100 * M, 110 * M, 120 * M, 130 * M])
+    consensus = {
+        "revenue_0q": 800 * M, "revenue_1q": None,
+        "eps_0q": 2.00, "eps_actual_last": 1.00,   # EPS 로 가면 +100% 라 눈에 띕니다
+        "analysts_0q": 15, "shares_shrink_pct": None,
+        "revision": 0, "revision_velocity_pct": None, "errors": [],
+    }
+
+    with patch.object(fe, "fetch_consensus", return_value=consensus):
+        out = fe.estimate_forward("TEST", quarters)
+
+    # 매출 컨센서스로 만들 수 있으므로 '추정'이어야 하고, EPS 경로면 안 됩니다
+    assert out["basis"] == cfg.SRC_ESTIMATE, out
+    assert out["basis"] != cfg.SRC_EPS_GROWTH
+
+
+def test_eps_path_fires_only_when_operating_income_path_fails():
+    """매출 컨센서스가 없을 때 비로소 EPS 경로가 동작해야 함"""
+    from fixtures import make_quarters
+
+    quarters = make_quarters([100 * M, 110 * M, 120 * M, 130 * M])
+    consensus = {
+        "revenue_0q": None, "revenue_1q": None,     # 매출 컨센서스 없음
+        "eps_0q": 1.32, "eps_actual_last": 1.20,
+        "analysts_0q": 15, "shares_shrink_pct": None,
+        "revision": 0, "revision_velocity_pct": None, "errors": [],
+    }
+
+    with patch.object(fe, "fetch_consensus", return_value=consensus):
+        out = fe.estimate_forward("TEST", quarters)
+
+    assert out["basis"] == cfg.SRC_EPS_GROWTH, out
+    # 130M × 1.10 = 143M
+    assert abs(out["forward_op_income"] - 143 * M) < 1e6, out["forward_op_income"]
+
+
 def test_consensus_empty_records_errors():
     """컨센서스가 없으면 실패 사유를 errors에 남겨야 함 (진단 패널용)"""
     with patch.dict(sys.modules, {"yfinance": _fake_yf(_EmptyTicker)}):

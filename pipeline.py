@@ -27,6 +27,7 @@ from datetime import datetime
 import pandas as pd
 
 import config as cfg
+import data_quality as dq
 import forward_estimates as fe
 import market_data as md
 import scoring
@@ -48,6 +49,16 @@ def collect_one_ticker(ticker: str, use_cache: bool = True) -> dict:
         quarters = []
         report = sf.new_report(ticker)
         report["first_error"] = f"[수집] {type(exc).__name__}: {str(exc)[:180]}"
+
+    # ★ 계산에 넣기 전에 먼저 숫자를 검사합니다 (모델링의 1단계).
+    #   단위가 어긋난 값을 고치고, 고칠 수 없는 값은 그 항목만 빼며,
+    #   무엇을 했는지 진단에 남깁니다. 이 단계가 없어서 매출이 100만 배 작게
+    #   들어온 분기 하나가 평균 마진 → 전망 → 증가율 → 차트까지 오염시켰습니다.
+    try:
+        quarters = dq.validate_quarters(quarters, report)
+    except Exception as exc:
+        if not report.get("first_error"):
+            report["first_error"] = f"[검사] {type(exc).__name__}: {str(exc)[:180]}"
 
     try:
         forward = fe.estimate_forward(ticker, quarters)
@@ -323,6 +334,14 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
         cfg.D_MIXED: "혼조 ↕",
         cfg.D_UNKNOWN: "판단불가",
     }
+    phase_mark = {
+        cfg.PH_TURNAROUND: "턴어라운드 ⤴",
+        cfg.PH_NEW_HIGH: "3년내 최고 ★",
+        cfg.PH_ROLLOVER: "고점 이탈 ⤵",
+        cfg.PH_NONE: "중간 자리 -",
+        cfg.PH_LOSS: "적자 지속 ✕",
+        cfg.PH_UNKNOWN: "판단불가",
+    }
 
     rows = []
     for score in scores.values():
@@ -331,14 +350,18 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
                 "종목": score["ticker"],
                 "주가($)": score.get("close"),
                 "최종점수": score["final_score"],
+                # 국면을 앞쪽에 둡니다. 검증에서 가장 크게 갈린 항목인데
+                # (신호 있음 95.5% vs 중간 자리 46.9%), 뒤쪽에 두면 폰 화면에서는
+                # 옆으로 밀어야만 보여서 사실상 없는 것과 같습니다.
+                "국면": phase_mark.get(score.get("phase"), score.get("phase", "-")),
+                "델타방향": arrow.get(score["delta_direction"], score["delta_direction"]),
                 "펀더": score["fund_score"],
                 "기술": score["tech_score"],
                 "신뢰도": score["confidence"],
                 "추세상태": score["trend_state"],
                 "GM%드라이버": score["gm_type"],
-                "델타방향": arrow.get(score["delta_direction"], score["delta_direction"]),
-                "델타예측": score["delta_forecast"],
-                "델타가속예측": score.get("accel_forecast", "-"),
+                "델타예측(1분기후)": score["delta_forecast"],
+                "델타예측(2분기후)": score.get("accel_forecast", "-"),
                 "RS": score["rs"],
                 "판정": score["verdict"],
             }
@@ -380,12 +403,15 @@ def quarters_to_frame(quarters: list[dict], start_date: str | None = None) -> pd
                         "op_income", "gross_margin_pct", "source") if c in df.columns]
     df = df[keep].copy()
 
-    # QoQ 증가율(%) — 이익이 얼마나 빠르게 늘고 있는지
+    # QoQ 증가율(%) — 이익이 얼마나 빠르게 늘고 있는지.
+    # 점수 계산과 **같은 안전 계산**을 씁니다. 예전에는 여기서만 그냥 나눠서,
+    # 점수 쪽에서 걸러낸 +461,711,116% 가 차트 오른쪽 축에는 그대로 그려졌습니다.
     if "op_income" in df.columns:
-        df["qoq_pct"] = df["op_income"].pct_change() * 100.0
-        # 직전 분기가 적자면 증가율이 의미 없으므로 비웁니다
-        prev = df["op_income"].shift(1)
-        df.loc[prev <= 0, "qoq_pct"] = None
+        values = df["op_income"].tolist()
+        growths = [None]
+        for prev, curr in zip(values, values[1:]):
+            growths.append(dq.safe_growth_pct(prev, curr))
+        df["qoq_pct"] = growths
 
     # 표시 기간으로 자르기 (증가율 계산 이후에 잘라야 첫 줄도 값이 남습니다)
     if start_date and "filing_date" in df.columns:

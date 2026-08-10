@@ -19,6 +19,9 @@ TEST_FILES = [
     "tests/test_market.py",      # 주가·추세·상대강도
     "tests/test_explain.py",     # "어떻게 계산됐는지" 설명 생성
     "tests/test_v4.py",          # 컨센서스·델타가속예측·증분캐시·저장
+    "tests/test_quality.py",     # 숫자 검사 단계 (단위·범위·전망 배수)
+    "tests/test_backtest.py",    # 워크포워드 백테스트 (미래 미리보기 금지 확인)
+    "tests/test_phase.py",       # 국면 신호 + 1년치(TTM) 델타 기준
     "tests/test_app_render.py",  # 화면이 실제로 그려지는지
 ]
 

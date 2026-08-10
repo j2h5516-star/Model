@@ -260,15 +260,21 @@ def test_confidence_explanation():
 
 
 def test_confidence_tier_table():
-    """등급표는 6단계 전부를 순위·신뢰도와 함께 담아야 함"""
+    """등급표는 모든 단계를 순위·신뢰도와 함께 담아야 함
+
+    EPS 증가율 이식 경로가 생기면서 6단계 → 7단계가 됐습니다.
+    """
     table = explain.confidence_tier_table()
 
-    assert len(table) == 6, table
+    assert len(table) == len(cfg.CONFIDENCE_TIERS), table
     assert table[0]["종류"] == cfg.SRC_DIRECT
     assert table[0]["신뢰도"] == "95%"
     assert table[-1]["종류"] == cfg.SRC_NONE
     # 순위가 1부터 차례대로인지
-    assert [row["순위"] for row in table] == [1, 2, 3, 4, 5, 6]
+    assert [row["순위"] for row in table] == list(range(1, len(table) + 1))
+    # 신뢰도가 순위를 따라 내려가는지 (뒤바뀌면 등급표의 뜻이 깨집니다)
+    percents = [int(row["신뢰도"].rstrip("%")) for row in table]
+    assert percents == sorted(percents, reverse=True), percents
 
 
 def test_confidence_low_when_approximate():
