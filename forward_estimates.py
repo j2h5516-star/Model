@@ -39,6 +39,15 @@ _GUIDANCE_TRIGGERS = [
     r"guidance\s+for\s+the\s+(?:first|second|third|fourth)\s+quarter",
     r"(?:we|the\s+company)\s+expects?",
     r"outlook\s+for\s+the\s+(?:next|first|second|third|fourth)",
+    # "For the third quarter of 2026, AMD expects revenue to be..." 형식.
+    # 회사 이름이 주어로 오면 위의 "we|the company expects" 에 안 걸립니다.
+    #
+    # ⚠️ "for the third quarter of fiscal 2025" 만으로 잡으면 안 됩니다.
+    #    보도자료 첫머리의 **과거 서술**("...for the third quarter of fiscal 2025
+    #    ended January 31, 2025")까지 걸려서, 전망 문단 대신 손익계산서를
+    #    잘라 오게 됩니다. 실제로 그렇게 회귀가 났습니다.
+    #    그래서 **앞을 보는 말이 실제로 붙어 있을 때만** 인정합니다.
+    r"expects?\s+(?:revenue|net\s+sales)\s+(?:to\s+be|of|in\s+the\s+range)",
 ]
 
 # 금액 범위 표현: "$180 million to $190 million" / "$180 - $190 million"
@@ -102,6 +111,8 @@ def parse_guidance(text: str) -> dict:
         "opex": None,
         "operating_margin_pct": None,
         "adjusted_ebitda": None,   # 논갭 영업이익을 안 밝히는 회사가 많습니다
+        # 각 항목을 GAAP 에서 집었는지 논갭에서 집었는지 (진단·신뢰도용)
+        "gm_basis": "", "opex_basis": "", "om_basis": "", "gaap_only": False,
     }
     if not section:
         return result
@@ -138,29 +149,44 @@ def parse_guidance(text: str) -> dict:
             if match:
                 result["revenue"] = _to_dollars(match.group(1), match.group(2), 1e6)
 
-    # --- 매출총이익률 전망 ---
-    gm_area = _slice_around(section, r"gross\s+margin")
+    # --- 매출총이익률 전망 (반드시 **논갭** 쪽을 집어야 합니다) ---
+    gm_area, gm_basis = _slice_nongaap(section, r"gross\s+margins?")
     if gm_area:
-        result["gross_margin_pct"] = _parse_pct(gm_area)
+        value = _second_number(gm_area, _parse_pct) if gm_basis == "나란히" else None
+        result["gross_margin_pct"] = value if value is not None else _parse_pct(gm_area)
+        result["gm_basis"] = gm_basis
 
     # --- 영업비용 전망 ---
-    opex_area = _slice_around(section, r"operating\s+expenses?")
-    if opex_area:
-        match = _RANGE_RE.search(opex_area)
+    def _dollars_from(area):
+        match = _RANGE_RE.search(area)
         if match:
             tail_scale = _SCALE.get((match.group(4) or "").lower(), 1e6)
             low = _to_dollars(match.group(1), match.group(2), tail_scale)
             high = _to_dollars(match.group(3), match.group(4), tail_scale)
-            result["opex"] = (low + high) / 2.0
-        else:
-            match = _SINGLE_RE.search(opex_area)
-            if match:
-                result["opex"] = _to_dollars(match.group(1), match.group(2), 1e6)
+            return (low + high) / 2.0
+        match = _SINGLE_RE.search(area)
+        if match:
+            return _to_dollars(match.group(1), match.group(2), 1e6)
+        return None
+
+    opex_area, opex_basis = _slice_nongaap(section, r"operating\s+expenses?")
+    if opex_area:
+        value = _second_number(opex_area, _dollars_from) if opex_basis == "나란히" else None
+        result["opex"] = value if value is not None else _dollars_from(opex_area)
+        result["opex_basis"] = opex_basis
 
     # --- 영업마진 전망 (영업비용 대신 마진을 제시하는 회사도 있음) ---
-    om_area = _slice_around(section, r"operating\s+margin")
+    om_area, om_basis = _slice_nongaap(section, r"operating\s+margins?")
     if om_area:
-        result["operating_margin_pct"] = _parse_pct(om_area)
+        value = _second_number(om_area, _parse_pct) if om_basis == "나란히" else None
+        result["operating_margin_pct"] = value if value is not None else _parse_pct(om_area)
+        result["om_basis"] = om_basis
+
+    # 어느 항목이든 GAAP 만 찾았다면 그 사실을 남깁니다.
+    # 과거 실적은 논갭인데 전망만 GAAP 이면 한 종목 안에서 정의가 섞입니다.
+    result["gaap_only"] = any(
+        result.get(key) == "GAAP만" for key in ("gm_basis", "opex_basis", "om_basis")
+    )
 
     return result
 
@@ -171,6 +197,83 @@ def _slice_around(text: str, keyword_pattern: str, width: int = 260) -> str:
     if not match:
         return ""
     return text[match.start() : match.start() + width]
+
+
+# "GAAP and non-GAAP gross margins are expected to be 73.3% and 73.5%, respectively"
+# 처럼 두 값을 나란히 주는 형식을 알아보기 위한 표식
+_RESPECTIVELY_RE = re.compile(r"\brespectively\b", re.I)
+_NON_GAAP_RE = re.compile(r"non[-\s]?GAAP", re.I)
+
+
+def _slice_nongaap(text: str, keyword_pattern: str, width: int = 260) -> tuple[str, str]:
+    """**논갭 수치가 있는 자리**를 잘라냅니다.
+
+    ⚠️ 이 함수가 없어서 큰 오류가 있었습니다.
+       미국 회사들은 가이던스에 GAAP 과 논갭을 **둘 다** 적고, 관례적으로
+       **GAAP 을 먼저** 씁니다. 그런데 그냥 첫 번째 것을 잡으면 GAAP 을 집어 옵니다.
+
+           "GAAP and non-GAAP gross margins are expected to be 73.3% and 73.5%"
+           "GAAP operating margin of 12% to 14%. Non-GAAP operating margin of 20% to 22%."
+
+       이 모델은 과거 실적을 **논갭 영업이익**으로 쌓아 놓고 있습니다. 여기에 GAAP
+       기준 전망을 붙이면 한 종목 안에서 정의가 섞여, 사업에 아무 변화가 없어도
+       증가율에 가짜 신호가 생깁니다. 실제로 위 두 예시에서 전망 영업이익이
+       각각 5%, 38% 낮게 나왔습니다. 그러면 '가속 둔화'가 가짜로 뜹니다.
+
+    반환: (잘라낸 문자열, 근거표시)
+      근거표시 = "논갭" / "나란히" / "GAAP만" / ""
+    """
+    match = re.search(keyword_pattern, text, re.I)
+    if not match:
+        return "", ""
+
+    # ① "GAAP and non-GAAP ... A and B, respectively" 형식인지 **먼저** 봅니다.
+    #    이 형식은 한 문장에 두 값이 나란히 있어서, 논갭 쪽을 직접 가리키는
+    #    표현이 있어도 값 자체는 뒤쪽 것을 골라야 합니다.
+    # ⚠️ 그냥 "." 으로 자르면 **소수점에서 잘립니다** ("73.3%" → "73").
+    #    그러면 뒤에 오는 respectively 를 못 보고 GAAP 값을 집어 옵니다.
+    #    마침표·세미콜론 **뒤에 공백이 오는 곳**에서만 문장을 끊습니다.
+    sentence = _first_sentence(text[match.start() : match.start() + width])
+    head = text[max(0, match.start() - 60) : match.start() + width]
+    if _NON_GAAP_RE.search(head) and _RESPECTIVELY_RE.search(sentence):
+        return text[match.start() : match.start() + width], "나란히"
+
+    # ② "non-GAAP <키워드>" 형태 — 논갭 값을 따로 적어 준 경우
+    direct = re.search(r"non[-\s]?GAAP[^.;]{0,40}?" + keyword_pattern, text, re.I)
+    if direct:
+        return text[direct.start() : direct.start() + width], "논갭"
+
+    # ③ 논갭이 어디에도 없음 — GAAP 만 있는 가이던스
+    return text[match.start() : match.start() + width], "GAAP만"
+
+
+def _first_sentence(text: str) -> str:
+    """마침표·세미콜론 **뒤에 공백이 오는 곳**에서만 끊습니다.
+
+    그냥 "." 으로 자르면 "73.3%" 의 소수점에서 잘립니다.
+    """
+    return re.split(r"(?<=[.;])\s+", text)[0]
+
+
+def _second_number(area: str, parser):
+    """'A and B, respectively' 형식에서 **뒤쪽(논갭)** 값을 고릅니다.
+
+    ⚠️ 반드시 **첫 문장까지만** 봐야 합니다. 잘라 온 구간에는 다음 줄
+       ("...operating expenses ... $5.9 billion and $4.2 billion, respectively")
+       이 함께 들어 있어서, 그대로 두면 매출총이익률을 찾다가 영업비용 금액을
+       집어 오고 결국 GAAP 값으로 되돌아갑니다.
+    """
+    area = _first_sentence(area)
+    if not _RESPECTIVELY_RE.search(area):
+        return None
+    cut = area.split(" and ")
+    if len(cut) < 2:
+        return None
+    # ⚠️ 'and' 뒤쪽 **전체**를 넘기면 앞의 GAAP 값이 다시 먼저 잡힙니다.
+    #    "GAAP and non-GAAP ... 73.3% and 73.5%, respectively" 에서
+    #    뒤쪽 전체는 "non-GAAP ... 73.3% and 73.5%..." 라 73.3 이 먼저입니다.
+    #    논갭 값은 **마지막 조각**에 있습니다.
+    return parser(cut[-1])
 
 
 def _parse_pct(text: str) -> float | None:
@@ -529,6 +632,15 @@ def estimate_forward(ticker: str, quarters: list[dict]) -> dict:
         if guidance.get("revenue"):
             guidance_margin_pct = forward / guidance["revenue"] * 100.0
         output["detail"] = forward_note
+        # 가이던스에서 논갭을 못 찾고 GAAP 만 집었다면 반드시 알려야 합니다.
+        # 과거 실적은 논갭인데 전망만 GAAP 이면 한 종목 안에서 정의가 섞여,
+        # 사업에 아무 변화가 없어도 증가율에 가짜 신호가 생깁니다.
+        if guidance.get("gaap_only"):
+            output["detail"] += (
+                " · ⚠️ 이 가이던스에서 논갭 수치를 찾지 못해 GAAP 기준으로 계산했습니다. "
+                "과거 실적(논갭)과 기준이 달라 증가율이 실제보다 낮게 나올 수 있습니다"
+            )
+            consensus["errors"].append("가이던스에 논갭이 없어 GAAP 으로 계산함")
     # --- 다음 분기: ② 컨센서스 매출 × 평균 마진 ---
     elif consensus["revenue_0q"] and avg_margin is not None:
         output["forward_op_income"] = consensus["revenue_0q"] * avg_margin / 100.0
