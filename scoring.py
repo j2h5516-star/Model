@@ -44,11 +44,21 @@ def _growth_segments(quarters: list[dict]) -> list[list[float]]:
     예전에는 끊긴 자리를 그냥 건너뛰고 이어붙여서, 서로 상관없는 시기의
     증가율이 한 줄에 섞인 채 추세(회귀 기울기)를 계산했습니다.
     """
-    values = [q.get("op_income") for q in quarters if q.get("op_income") is not None]
+    # 스파이크(데이터 오류로 보이는 분기)는 아예 빼고 계산합니다
+    usable = [
+        q for q in quarters
+        if q.get("op_income") is not None and q.get("anomaly") != "spike"
+    ]
     segments: list[list[float]] = []
     current: list[float] = []
-    for prev, curr in zip(values, values[1:]):
-        growth = dq.safe_growth_pct(prev, curr)
+    for previous, current_q in zip(usable, usable[1:]):
+        growth = dq.safe_growth_pct(previous.get("op_income"), current_q.get("op_income"))
+
+        # 계단(인수합병 등)이 생긴 그 한 번의 증가율만 뺍니다.
+        # 분기 자체는 살립니다 — 사업이 커진 것은 진짜이기 때문입니다.
+        if current_q.get("anomaly") == "step":
+            growth = None
+
         if growth is None:
             if current:
                 segments.append(current)
@@ -61,11 +71,28 @@ def _growth_segments(quarters: list[dict]) -> list[list[float]]:
 
 
 def _yoy_growth_series(quarters: list[dict]) -> list[float]:
-    """작년 같은 분기 대비 증가율(%) 목록. 계절 장사를 판정할 때 씁니다."""
-    values = [q.get("op_income") for q in quarters if q.get("op_income") is not None]
+    """작년 같은 분기 대비 증가율(%) 목록. 계절 장사를 판정할 때 씁니다.
+
+    ⚠️ 짝은 **회계분기 이름으로** 맞춥니다. "인덱스로 4칸 뒤"는 분기가 하나만
+       빠져도 완전히 어긋납니다. 실제 ZETA 예시로 확인한 결과:
+         올바른 짝  : +20.0%  +20.0%  +25.0%  +25.0%
+         인덱스 4칸 : +20.0%  +30.9%  +108.3%  -40.0%   ← 완전히 엉터리
+       Q4 역산 실패로 분기가 비는 일은 흔해서, 실전에서 거의 확실히 터집니다.
+    """
+    usable = [q for q in quarters if q.get("op_income") is not None]
+    by_quarter: dict[tuple[int, int], float] = {}
+    for quarter in usable:
+        key = dq.fiscal_quarter_of(quarter)
+        if key is not None:
+            by_quarter[key] = quarter["op_income"]
+
     out: list[float] = []
-    for index in range(4, len(values)):
-        growth = dq.safe_growth_pct(values[index - 4], values[index])
+    for quarter in usable:
+        key = dq.fiscal_quarter_of(quarter)
+        if key is None:
+            continue
+        last_year = by_quarter.get((key[0] - 1, key[1]))
+        growth = dq.safe_growth_pct(last_year, quarter["op_income"])
         if growth is not None:
             out.append(growth)
     return out
@@ -202,15 +229,17 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
 
     # 최근 구간에 '한 분기만 튄 곳'(일회성 이익·인수합병)이 있으면 방향을 말하지 않습니다.
     # 그런 분기를 그대로 두면 "가속!" 다음 분기에 "감속!"으로 뒤집힙니다.
-    recent_anomaly = any(q.get("anomaly") for q in quarters[-3:])
+    # '아직 스파이크인지 계단인지 알 수 없는' 최근 분기가 있으면 방향을 말하지 않습니다.
+    # (계단은 그 한 번의 증가율만 빼고 정상 판정합니다 — 판정을 통째로 미루는 것은 과잉입니다)
+    recent_anomaly = any(q.get("anomaly") == "pending" for q in quarters[-2:])
     if recent_anomaly:
         return {
             "score": max_score * 0.4,
             "direction": cfg.D_UNKNOWN,
             "detail": (
-                "최근 분기 중 이웃 분기보다 유별나게 튄 곳이 있습니다 "
-                "(일회성 이익이나 인수합병일 수 있습니다). "
-                "그 숫자로 방향을 말하면 다음 분기에 뒤집히므로 판정을 미룹니다."
+                "가장 최근 분기의 이익이 크게 뛰었는데, 다음 분기가 아직 없어 "
+                "일시적인 것인지 새 수준으로 올라선 것인지 알 수 없습니다. "
+                "지금 방향을 말하면 다음 실적발표에서 뒤집히므로 판정을 미룹니다."
             ),
             "capped": False,
             "trace": {"growths": growths, "anomaly": True,

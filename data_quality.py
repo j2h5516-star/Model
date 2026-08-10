@@ -32,6 +32,7 @@ data_quality.py — 숫자를 쓰기 전에 먼저 검사하는 단계
 from __future__ import annotations
 
 import math
+import re
 import statistics
 
 import config as cfg
@@ -209,18 +210,32 @@ def validate_quarters(quarters: list[dict], report: dict | None = None) -> list[
     for quarter in kept:
         quarter["seasonal"] = season["seasonal"]
 
-    # 한 분기만 유별나게 튄 곳(일회성·인수합병)도 표시해 둡니다
+    # 튄 분기를 찾아 스파이크(데이터 오류)와 계단(구조 변화)으로 나눠 표시합니다
     anomalies = detect_anomalies(kept)
-    for index in anomalies["indexes"]:
-        kept[index]["anomaly"] = True
+    for index in anomalies["spikes"]:
+        kept[index]["anomaly"] = "spike"     # 이 분기 자체를 판정에서 뺍니다
+    for index in anomalies["steps"]:
+        kept[index]["anomaly"] = "step"      # 그 한 번의 증가율만 뺍니다
+    for index in anomalies["pending"]:
+        kept[index]["anomaly"] = "pending"   # 판별 불가 — 방향 판정을 미룹니다
     notes.extend(anomalies["reasons"])
+
+    # 한 종목 안에서 '논갭 영업이익의 정의'가 섞였는지 확인합니다
+    consistency = check_source_consistency(kept)
+    if consistency["mixed"]:
+        notes.append(consistency["reason"])
 
     if report is not None:
         report["quality_notes"] = notes
         report["quality_fixed"] = fixed_count
         report["quality_dropped"] = dropped_count
         report["seasonality"] = season
-        report["anomalies"] = len(anomalies["indexes"])
+        report["anomalies"] = (
+            len(anomalies["spikes"]) + len(anomalies["steps"]) + len(anomalies["pending"])
+        )
+        report["spikes"] = len(anomalies["spikes"])
+        report["steps"] = len(anomalies["steps"])
+        report["source_consistency"] = consistency
         if season["seasonal"]:
             notes.append(f"계절성: {season['reason']}")
 
@@ -230,107 +245,212 @@ def validate_quarters(quarters: list[dict], report: dict | None = None) -> list[
 # ---------------------------------------------------------------------------
 # 계절성 검사 — "이 종목은 전분기 대비로 판정해도 되는가"
 # ---------------------------------------------------------------------------
-def _swing(values: list[float]) -> float | None:
-    """값들이 가운데에서 얼마나 흔들리는지 (표준편차 대신 중앙값 절대편차).
+def fiscal_quarter_of(quarter: dict) -> tuple[int, int] | None:
+    """이 분기가 '몇 년도 몇 번째 회계분기'인지 알아냅니다.
 
-    한 분기만 튀어도 크게 흔들리는 표준편차와 달리, 잡음에 덜 흔들립니다.
+    작년 같은 분기와 짝지으려면 **회계분기**를 알아야 합니다.
+    "인덱스로 4칸 뒤"는 분기가 하나만 빠져도 완전히 어긋납니다
+    (실제로 ZETA 예시에서 +20%/+25% 여야 할 값이 +108%/-40% 로 망가졌습니다).
+
+    분기 이름("25 Q3")이 있으면 그것을, 없으면 기간종료일의 월로 추정합니다.
     """
-    if len(values) < 2:
+    label = str(quarter.get("period_label") or "")
+
+    # "25 Q3" / "FY25 Q3" 형태
+    match = re.search(r"(\d{2,4})\s*Q([1-4])", label, re.I)
+    if match:
+        year = int(match.group(1))
+        return (year + 2000 if year < 100 else year, int(match.group(2)))
+
+    # "25/09" 형태이거나 이름이 없으면 기간종료일의 월로 회계분기를 추정합니다
+    date_text = str(quarter.get("period_end") or quarter.get("filing_date") or "")
+    match = re.search(r"(\d{4})-(\d{2})", date_text)
+    if not match:
+        match = re.search(r"^(\d{2})/(\d{2})", label)
+        if match:
+            return (2000 + int(match.group(1)), (int(match.group(2)) - 1) // 3 + 1)
         return None
-    center = statistics.median(values)
-    return statistics.median([abs(v - center) for v in values])
+    year, month = int(match.group(1)), int(match.group(2))
+    return (year, (month - 1) // 3 + 1)
 
 
 def detect_seasonality(quarters: list[dict]) -> dict:
-    """분기마다 오르내리는 '계절 장사'인지 판정합니다.
+    """분기마다 실적이 오르내리는 '계절 장사'인지 판정합니다.
 
     왜 필요한가:
       아이스크림 가게의 이익은 여름에 오르고 겨울에 내립니다. 이런 회사를
-      **전분기 대비(QoQ)** 증가율로 보면 "가속 → 감속 → 가속"이 계속 반복되는데,
-      모델은 그때마다 방향을 단정합니다. 백테스트에서 이런 종목의 적중률이
-      **0%** 였습니다 — 틀리는 정도가 아니라 **거꾸로 맞히고 있었습니다.**
+      **전분기 대비(QoQ)** 로 보면 "가속 → 감속 → 가속"이 끝없이 반복되는데,
+      모델은 그때마다 방향을 단정합니다.
+      ZETA 실데이터: 전분기 대비로 보면 매년 Q1 에 -71%p '대폭 감속',
+      Q2 에 +81%p '대폭 가속'. 사업은 아무것도 안 바뀌었는데도요.
 
-    판정 방법:
-      같은 분기끼리 1년 간격으로 비교한 증가율(YoY)이, 전분기 대비 증가율(QoQ)보다
-      **훨씬 안정적**이면 계절성이 있다고 봅니다. (계절 장사는 작년 같은 분기와
-      비교해야 실체가 보입니다)
+    판정 방법 — 계절성의 정의 그대로:
+      같은 회계분기끼리 묶어서, **분기 사이의 차이**가 **같은 분기 안의 차이**보다
+      훨씬 크면 계절성입니다.
+        ZETA: Q1 [-40.3, -38.8] · Q2 [+26.2, +40.5] · Q3 [+39.2, +31.4] · Q4 [+31.3, +29.7]
+              분기 사이 31.5 / 분기 안 3.2 = 10.0배 → 계절성
+        균등성장: 0.0배 → 계절성 아님
 
-    반환: {"seasonal": bool, "reason": str, "qoq_swing": float|None, "yoy_swing": float|None}
+    반환: {"seasonal", "reason", "ratio", "between", "within", "groups"}
     """
-    values = [q.get("op_income") for q in quarters if q.get("op_income") is not None]
-    if len(values) < cfg.SEASONALITY_MIN_QUARTERS:
-        return {"seasonal": False, "reason": "분기가 부족해 계절성을 판단하지 않았습니다",
-                "qoq_swing": None, "yoy_swing": None}
+    usable = [q for q in quarters if _finite(q.get("op_income"))]
+    if len(usable) < cfg.SEASONALITY_MIN_QUARTERS:
+        return {"seasonal": False, "ratio": None, "between": None, "within": None,
+                "groups": {},
+                "reason": "분기가 부족해 계절성을 판단하지 않았습니다"}
 
-    qoq = [g for g in (safe_growth_pct(a, b) for a, b in zip(values, values[1:]))
-           if g is not None]
-    yoy = [g for g in (safe_growth_pct(values[i - 4], values[i])
-                       for i in range(4, len(values))) if g is not None]
+    # 전분기 대비 증가율을 '그 분기가 몇 번째 회계분기인가'로 묶습니다
+    groups: dict[int, list[float]] = {}
+    for previous, current in zip(usable, usable[1:]):
+        growth = safe_growth_pct(previous.get("op_income"), current.get("op_income"))
+        key = fiscal_quarter_of(current)
+        if growth is not None and key is not None:
+            groups.setdefault(key[1], []).append(growth)
 
-    if len(qoq) < 3 or len(yoy) < 2:
-        return {"seasonal": False, "reason": "비교할 증가율이 부족합니다",
-                "qoq_swing": None, "yoy_swing": None}
+    if len(groups) < 3:
+        return {"seasonal": False, "ratio": None, "between": None, "within": None,
+                "groups": {},
+                "reason": "분기 종류가 부족해 계절성을 판단하지 않았습니다"}
 
-    qoq_swing, yoy_swing = _swing(qoq), _swing(yoy)
-    if qoq_swing is None or yoy_swing is None:
-        return {"seasonal": False, "reason": "흔들림을 계산할 수 없습니다",
-                "qoq_swing": qoq_swing, "yoy_swing": yoy_swing}
+    means = [statistics.mean(values) for values in groups.values()]
+    between = statistics.pstdev(means) if len(means) > 1 else 0.0
+    inner = [statistics.pstdev(v) for v in groups.values() if len(v) > 1]
+    within = statistics.mean(inner) if inner else 0.0
 
-    seasonal = qoq_swing > max(cfg.SEASONALITY_MIN_SWING_PP,
-                               yoy_swing * cfg.SEASONALITY_SWING_RATIO)
+    # 분기 안의 차이가 0에 가까우면 나눗셈이 폭발하므로 바닥을 깔아 둡니다
+    ratio = between / max(within, 0.5)
+    seasonal = between >= cfg.SEASONALITY_BETWEEN_MIN_PP and ratio >= cfg.SEASONALITY_RATIO
+
     if seasonal:
         reason = (
-            f"전분기 대비 증가율이 크게 출렁이는데(±{qoq_swing:.0f}%p) "
-            f"작년 같은 분기와 비교하면 안정적입니다(±{yoy_swing:.0f}%p). "
-            "계절 장사로 보여 전분기 대비 판정을 쓰지 않습니다."
+            f"같은 분기끼리는 비슷한데(±{within:.0f}%p) 분기별로는 크게 다릅니다"
+            f"(±{between:.0f}%p, {ratio:.1f}배). 계절 장사로 보여 "
+            "전분기 대신 **작년 같은 분기**와 비교해 판정합니다."
         )
     else:
         reason = "계절성이 뚜렷하지 않아 전분기 대비로 판정합니다"
 
-    return {"seasonal": seasonal, "reason": reason,
-            "qoq_swing": qoq_swing, "yoy_swing": yoy_swing}
+    return {
+        "seasonal": seasonal,
+        "reason": reason,
+        "ratio": round(ratio, 1),
+        "between": round(between, 1),
+        "within": round(within, 1),
+        "groups": {k: [round(x, 1) for x in v] for k, v in sorted(groups.items())},
+    }
 
 
 def detect_anomalies(quarters: list[dict]) -> dict:
-    """한 분기만 유별나게 튄 곳(일회성 이익·인수합병 점프)을 찾습니다.
+    """유별나게 튄 분기를 찾고, **스파이크와 계단을 구분**합니다.
 
-    왜 필요한가:
-      · 회사를 인수하면 이익이 한 분기 만에 2배가 됩니다. 유기적 성장이 아닙니다.
-      · 소송 합의금 같은 일회성 이익이 한 분기만 들어오기도 합니다.
-      이런 분기를 그대로 두면 "가속!"이라고 외친 다음 분기에 "감속!"으로 뒤집힙니다.
-      적대적 시나리오 검증에서 모델이 무계산 기준선보다 못했던 주된 이유입니다.
+    왜 구분해야 하는가 (논갭 영업이익의 정의부터 따져 보면):
 
-    판정 방법:
-      이웃 분기들의 가운데 값과 견주어 몇 배나 벗어났는지 봅니다.
-      (평균이 아니라 가운데 값을 쓰는 이유: 튄 값 자신이 평균을 끌어올리기 때문)
+      · **진짜 일회성 항목**(소송 합의금·구조조정비·자산손상·인수 관련 비용)은
+        논갭 영업이익에서 **정의상 이미 빠져 있습니다.** 그러니 논갭 영업이익이
+        한 분기만 튀었다가 되돌아오는 모양은 나올 수가 없습니다.
+        그런 모양이 보인다면 그건 사건이 아니라 **데이터 오류**입니다
+        (파싱 실수·분기 짝짓기 오류·단위 오류).
+        → 그 분기는 계산에서 뺍니다.
 
-    반환: {"indexes": [튄 분기 번호...], "reasons": [...]}
+      · **인수합병**은 다릅니다. 인수한 사업의 이익은 진짜이고 계속 이어집니다.
+        그래서 논갭 영업이익은 **계단처럼 한 번 올라가 그 수준을 유지**합니다.
+        문제는 계단이 생긴 그 한 분기의 증가율만 폭등하고 다음 분기엔 정상으로
+        돌아온다는 것입니다. 델타로 보면 "가속!" 다음 분기 "감속!"이 됩니다.
+        사업 모멘텀은 아무것도 안 바뀌었는데도요.
+        → 분기는 살리고 **그 한 번의 증가율만** 판정에서 뺍니다.
+
+    반환: {"spikes": [분기번호...], "steps": [분기번호...], "reasons": [...]}
     """
     values = [q.get("op_income") for q in quarters]
-    indexes: list[int] = []
+    spikes: list[int] = []
+    steps: list[int] = []
+    pending: list[int] = []      # 아직 스파이크인지 계단인지 알 수 없는 최근 분기
     reasons: list[str] = []
 
     for i, value in enumerate(values):
         if not _finite(value) or value <= 0:
             continue
-        neighbors = [
-            v for j, v in enumerate(values)
-            if j != i and _finite(v) and v > 0 and abs(j - i) <= 3
-        ]
-        if len(neighbors) < 3:
+        before = [v for v in values[max(0, i - 3):i] if _finite(v) and v > 0]
+        after = [v for v in values[i + 1:i + 4] if _finite(v) and v > 0]
+        if len(before) < 2:
             continue
-        center = statistics.median(neighbors)
-        if center <= 0:
+
+        base = statistics.median(before)
+        if base <= 0:
             continue
-        ratio = value / center
-        if ratio > cfg.ANOMALY_JUMP_RATIO or ratio < 1.0 / cfg.ANOMALY_JUMP_RATIO:
-            indexes.append(i)
+
+        jumped = value / base
+        if jumped <= cfg.ANOMALY_JUMP_RATIO and jumped >= 1.0 / cfg.ANOMALY_JUMP_RATIO:
+            continue    # 튀지 않았음
+
+        label = quarters[i].get("period_label", i)
+
+        # ⚠️ 가장 최근 분기는 **뒤가 없어서** 스파이크인지 계단인지 알 수 없습니다.
+        #    그런데 하필 우리가 가장 궁금한 분기입니다.
+        #    모르는 것을 아는 척하지 않고 '아직 알 수 없음'으로 두고 방향을 유보합니다.
+        if not after:
+            pending.append(i)
             reasons.append(
-                f"{quarters[i].get('period_label', i)}: 이웃 분기 중앙값의 "
-                f"{ratio:.1f}배 — 일회성이거나 인수합병일 수 있어 방향 판정에서 뺍니다"
+                f"{label}: 이익이 {jumped:.1f}배로 크게 뛰었는데, 다음 분기가 아직 없어 "
+                "일시적인 것인지 새 수준으로 올라선 것인지 알 수 없습니다. "
+                "다음 실적발표까지 방향 판정을 미룹니다."
+            )
+            continue
+
+        # 뒤 분기들이 새 수준을 유지하면 '계단', 원래대로 돌아오면 '스파이크'
+        later = statistics.median(after)
+        stayed = later / base
+        if abs(stayed - jumped) <= abs(jumped - 1.0) * 0.5:
+            steps.append(i)
+            reasons.append(
+                f"{label}: 이익이 {jumped:.1f}배로 올라 그 수준을 유지합니다 "
+                "(인수합병 등 구조 변화로 보입니다). 사업이 커진 것은 맞지만 "
+                "'가속'은 아니므로 그 한 번의 증가율만 판정에서 뺍니다."
+            )
+        else:
+            spikes.append(i)
+            reasons.append(
+                f"{label}: 이익이 {jumped:.1f}배로 튀었다가 되돌아옵니다. "
+                "논갭 영업이익은 일회성 항목이 이미 빠진 값이라 이런 모양이 나올 수 "
+                "없으므로 **데이터 오류**로 보고 이 분기를 계산에서 뺍니다."
             )
 
-    return {"indexes": indexes, "reasons": reasons}
+    return {"spikes": spikes, "steps": steps, "pending": pending, "reasons": reasons}
+
+
+def check_source_consistency(quarters: list[dict]) -> dict:
+    """한 종목 안에서 '논갭 영업이익의 정의'가 섞였는지 봅니다.
+
+    델타 모델은 값의 크기가 아니라 **값의 변화**를 봅니다. 그래서 절대 정확도보다
+    한 종목 안에서 정의가 일관된 것이 훨씬 중요합니다.
+
+    회사 공식 논갭 영업이익(직접공시)과 XBRL 근사치는 보통 5~20% 차이가 납니다.
+    분기마다 출처가 왔다 갔다 하면 **실제로는 아무 변화가 없어도 증가율에
+    ±20%p 짜리 가짜 신호**가 생깁니다. 델타 문턱이 3%p 인데 말입니다.
+
+    반환: {"mixed", "counts", "switches", "reason"}
+    """
+    sources = [q.get("source") for q in quarters if q.get("source")]
+    if len(sources) < 2:
+        return {"mixed": False, "counts": {}, "switches": 0, "reason": ""}
+
+    counts: dict[str, int] = {}
+    for source in sources:
+        counts[source] = counts.get(source, 0) + 1
+
+    switches = sum(1 for a, b in zip(sources, sources[1:]) if a != b)
+    mixed = len(counts) > 1
+
+    reason = ""
+    if mixed:
+        breakdown = " · ".join(f"{k} {v}개" for k, v in counts.items())
+        reason = (
+            f"이 종목의 분기들이 서로 다른 방법으로 만들어졌습니다 ({breakdown}, "
+            f"{switches}번 바뀜). 방법이 다르면 값의 기준이 달라져, 실제로는 변화가 "
+            "없어도 증가율에 가짜 신호가 생깁니다. 델타 판정을 그대로 믿지 마세요."
+        )
+
+    return {"mixed": mixed, "counts": counts, "switches": switches, "reason": reason}
 
 
 # ---------------------------------------------------------------------------

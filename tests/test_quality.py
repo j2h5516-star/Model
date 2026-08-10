@@ -393,15 +393,15 @@ def test_chart_qoq_uses_safe_growth():
 # ---------------------------------------------------------------------------
 def test_seasonal_business_is_detected():
     """분기마다 오르내리는 사업은 계절성으로 판정해야 함"""
+    labels = ["24 Q1", "24 Q2", "24 Q3", "24 Q4", "25 Q1", "25 Q2", "25 Q3", "25 Q4"]
     seasonal = [
-        {"period_label": f"Q{i}", "op_income": v, "revenue": v * 4}
-        for i, v in enumerate(
-            [100 * M, 130 * M, 90 * M, 160 * M, 110 * M, 143 * M, 99 * M, 176 * M], 1
-        )
+        {"period_label": lab, "op_income": v, "revenue": v * 4}
+        for lab, v in zip(labels, [100 * M, 130 * M, 90 * M, 160 * M,
+                                   110 * M, 143 * M, 99 * M, 176 * M])
     ]
     steady = [
-        {"period_label": f"Q{i}", "op_income": 100 * M * (1.1 ** i), "revenue": 400 * M}
-        for i in range(8)
+        {"period_label": lab, "op_income": 100 * M * (1.1 ** i), "revenue": 400 * M}
+        for i, lab in enumerate(labels)
     ]
 
     assert dq.detect_seasonality(seasonal)["seasonal"] is True
@@ -418,8 +418,34 @@ def test_one_off_spike_is_flagged():
     ]
     found = dq.detect_anomalies(quarters)
 
-    assert 3 in found["indexes"], found        # 260M 분기(0부터 세어 3번)
-    assert any("일회성" in r for r in found["reasons"])
+    # 260M 분기(0부터 세어 3번) — 튀었다 되돌아오므로 '스파이크'(데이터 오류)
+    assert 3 in found["spikes"], found
+    assert any("데이터 오류" in r for r in found["reasons"])
+
+
+def test_step_up_is_not_treated_as_error():
+    """인수합병처럼 올라가서 유지되면 '계단' — 분기를 버리지 않고 그 증가율만 뺌"""
+    quarters = [
+        {"period_label": f"2{4+i//4} Q{i%4+1}", "op_income": v * M}
+        for i, v in enumerate([50, 55, 60, 130, 140, 150, 160])
+    ]
+    found = dq.detect_anomalies(quarters)
+
+    assert 3 in found["steps"], found
+    assert 3 not in found["spikes"], found
+    assert any("구조 변화" in r for r in found["reasons"])
+
+
+def test_latest_quarter_jump_is_pending_not_guessed():
+    """가장 최근 분기가 튀면 뒤가 없어 판별 불가 — 아는 척하지 않고 유보"""
+    quarters = [
+        {"period_label": f"2{4+i//4} Q{i%4+1}", "op_income": v * M}
+        for i, v in enumerate([80, 85, 90, 95, 260])
+    ]
+    found = dq.detect_anomalies(quarters)
+
+    assert 4 in found["pending"], found
+    assert any("알 수 없습니다" in r for r in found["reasons"])
 
 
 def test_direction_is_withheld_after_spike():
