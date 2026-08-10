@@ -511,6 +511,32 @@ def test_buyback_guard_does_not_touch_operating_income_basis():
     assert a["delta"]["score"] == b["delta"]["score"]
 
 
+def test_phase_detail_uses_per_share_wording_on_eps_basis():
+    """구조대 경로에서 국면 설명이 '$0M' 으로 깨지면 안 됩니다"""
+    rows = _mixed([], [1.0, 1.1, 1.2, 1.3, 1.5, 1.8])
+    quarters = pipeline.apply_metric_basis(rows, {})
+    detail = scoring.score_phase(quarters)["detail"]
+    assert "/주" in detail, detail
+    assert "$0M" not in detail, detail
+
+
+def test_delta_history_table_uses_per_share_columns_on_eps_basis():
+    """근거 표가 전부 0.0 이 되면 숫자를 확인할 수가 없습니다"""
+    import explain
+
+    rows = _mixed([], [1.00, 1.10, 1.25, 1.45, 1.72, 2.10, 2.60, 3.30])
+    quarters = pipeline.apply_metric_basis(rows, {})
+    delta = scoring.score_delta_acceleration(quarters)
+    table = explain.explain_delta({
+        "fundamental": {"delta": delta}, "quarters": quarters,
+        "forecast_detail": {}, "delta_forecast": None,
+    })["history"]
+
+    assert table, "이력 표가 비었습니다"
+    assert "조정EPS($/주)" in table[0], list(table[0])
+    assert table[0]["조정EPS($/주)"] > 0, table[0]
+
+
 def test_measured_numbers_are_recorded_in_config():
     """검증 결과를 코드에 남겨 둡니다 — 나중에 근거를 찾을 수 있도록"""
     assert cfg.EPS_BASIS_DIRECTION_MATCH == 0.795     # 31/39 (자사주 종목)

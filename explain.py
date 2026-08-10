@@ -19,11 +19,13 @@ import config as cfg
 import data_quality as dq
 
 
-def _m(value: float | None) -> str:
-    """달러 금액을 "$123.4M" 형태로 짧게 바꿉니다."""
-    if value is None:
-        return "-"
-    return f"${value / 1e6:,.1f}M"
+def _m(value: float | None, basis: str = cfg.BASIS_OP_INCOME) -> str:
+    """금액을 짧게 바꿉니다 — 기준자에 따라 단위가 다릅니다.
+
+    논갭 영업이익은 "$123.4M", 조정 EPS 는 "$1.23/주" 입니다.
+    한 형식으로 통일해 버리면 조정 EPS 8.53 달러가 "$0.0M" 으로 나옵니다.
+    """
+    return cfg.fmt_amount(value, basis)
 
 
 def _pct(value: float | None, digits: int = 1) -> str:
@@ -366,6 +368,14 @@ def explain_delta(score: dict) -> dict:
     history = []
     valid_quarters = [q for q in quarters if q.get("op_income") is not None]
 
+    # 표의 열 이름과 나눗셈 배수는 **기준자에 따라 다릅니다.**
+    # 조정 EPS 를 백만으로 나누면 표가 전부 0.0 이 되어 근거를 볼 수 없습니다.
+    _metric_basis = cfg.quarters_basis(quarters)
+    if _metric_basis == cfg.BASIS_ADJ_EPS:
+        _amount_column, _ttm_column, _scale = "조정EPS($/주)", "1년치 합($/주)", 1.0
+    else:
+        _amount_column, _ttm_column, _scale = "영업이익($M)", "1년치 합($M)", 1e6
+
     if trace.get("use_ttm"):
         # 판정에 실제로 쓴 것은 '최근 4분기 합'이므로 그것을 그대로 보여 줍니다.
         # 화면에 보이는 숫자와 모델이 본 숫자가 다르면 근거를 확인할 수가 없습니다.
@@ -382,8 +392,8 @@ def explain_delta(score: dict) -> dict:
             history.append(
                 {
                     "분기": quarter.get("period_label", "-"),
-                    "영업이익($M)": round(quarter["op_income"] / 1e6, 1),
-                    "1년치 합($M)": round(ttm_now / 1e6, 1),
+                    _amount_column: round(quarter["op_income"] / _scale, 2),
+                    _ttm_column: round(ttm_now / _scale, 2),
                     "1년치 증가율(%)": None if growth is None else round(growth, 1),
                 }
             )
@@ -398,7 +408,7 @@ def explain_delta(score: dict) -> dict:
             history.append(
                 {
                     "분기": quarter.get("period_label", "-"),
-                    "영업이익($M)": round(quarter["op_income"] / 1e6, 1),
+                    _amount_column: round(quarter["op_income"] / _scale, 2),
                     growth_label: None if growth is None else round(growth, 1),
                 }
             )

@@ -113,13 +113,43 @@ def _no_sleep(_seconds):
     """재시도 대기를 건너뛰어 테스트를 빠르게 합니다."""
 
 
-def _run_app(with_fundamentals=True, tickers=None):
+def _eps_basis_bundle(ticker, use_cache=True):
+    """논갭 영업이익을 못 구해 **조정 EPS 로 판정**하는 종목 (구조대 경로)"""
+    import pipeline as pl
+    import sec_fundamentals as sf
+
+    report = sf.new_report(ticker)
+    quarters = make_quarters(
+        [100 * M, 115 * M, 140 * M, 175 * M, 210 * M, 260 * M],
+        margins=[50.0, 50.5, 51.0, 51.2, 51.4, 51.6],
+    )
+    # 영업이익은 최근 1개만 남기고 지웁니다 (6분기 문턱에 못 미치도록)
+    for quarter in quarters[:-1]:
+        quarter["op_income"] = None
+    for i, quarter in enumerate(quarters):
+        quarter["adj_eps"] = 1.00 + i * 0.25
+        quarter["gaap_eps"] = 0.90 + i * 0.20
+    report.update({"xbrl_quarters": 6, "filings_found": 6, "text_ok": 6,
+                   "gate_passed": 6, "parsed_ok": 6, "op_income_ok": 1,
+                   "adj_eps_ok": 6, "gaap_eps_ok": 6, "text_source": "보도자료"})
+    return {
+        "ticker": ticker,
+        "quarters": pl.apply_metric_basis(quarters, report),
+        "forward": {"forward_op_income": None, "basis": None, "revision": 0,
+                    "detail": "", "consensus": {"shares_shrink_pct": -11.7}},
+        "report": report,
+    }
+
+
+def _run_app(with_fundamentals=True, tickers=None, bundle_fn=None):
     """가상 데이터를 넣고 앱을 실행합니다."""
     _clear_streamlit_caches()
     at = AppTest.from_file(APP_PATH)
     at.query_params["tickers"] = ",".join(tickers or FAKE_TICKERS)
 
     def bundle(ticker, use_cache=True):
+        if bundle_fn is not None:
+            return bundle_fn(ticker, use_cache)
         return _fake_bundle(ticker, use_cache, with_fundamentals)
 
     with patch("market_data.fetch_daily_data", side_effect=_fake_daily), \
@@ -187,6 +217,31 @@ def test_dollar_signs_are_escaped_for_display():
     # 실제로 금액이 든 설명문이 화면에 있었는지도 확인합니다
     # (아무것도 안 그려졌는데 통과하는 것을 막기 위함)
     assert any("\\$" in m.value for m in at.markdown), "이스케이프된 금액 표시가 없음"
+
+
+def test_app_renders_on_the_eps_rescue_path():
+    """조정 EPS 로 판정하는 종목도 화면이 정상적으로 그려져야 합니다.
+
+    주당 금액을 백만으로 나누면 막대가 전부 0이 되고 설명문에는 '$0M' 만
+    남습니다. 그러면 근거를 확인할 방법이 없어집니다.
+    """
+    at = _run_app(True, tickers=["AAA"], bundle_fn=_eps_basis_bundle)
+
+    assert not at.exception, [e.value for e in at.exception]
+    all_text = " ".join(m.value for m in at.markdown)
+    all_text += " ".join(c.value for c in at.caption)
+
+    assert "조정 주당순이익" in all_text or "조정 EPS" in all_text, "구조대 경고가 없음"
+    assert "$0M" not in all_text.replace("\\$", "$"), "주당 금액이 $0M 으로 깨졌습니다"
+
+
+def test_eps_rescue_path_warns_about_buybacks():
+    """자사주가 크면 화면에 그렇다고 알려야 합니다 (점수도 제한됩니다)"""
+    at = _run_app(True, tickers=["AAA"], bundle_fn=_eps_basis_bundle)
+
+    assert not at.exception, [e.value for e in at.exception]
+    all_text = " ".join(m.value for m in at.markdown)
+    assert "자사주" in all_text, "자사주 경고가 화면에 없습니다"
 
 
 def test_eps_comparison_panel_renders():

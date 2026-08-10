@@ -453,6 +453,11 @@ def score_phase(quarters: list[dict]) -> dict:
     """
     max_score = cfg.W_PHASE
     ttm = _ttm_series(quarters)
+    # 금액 표기는 기준자에 따라 단위가 다릅니다 (달러 / 주당 달러).
+    # 한 함수로 통일하지 않으면 조정 EPS 8.53 달러가 화면에 "$0M" 으로 나옵니다.
+    _basis = cfg.quarters_basis(quarters)
+    _v = lambda x: cfg.fmt_amount(x, _basis, 0)   # noqa: E731
+
 
     if len(ttm) < 2:
         return {
@@ -472,7 +477,7 @@ def score_phase(quarters: list[dict]) -> dict:
     if previous <= 0 < now:
         phase = cfg.PH_TURNAROUND
         detail = (
-            f"1년치 이익이 적자(${previous/1e6:,.0f}M)에서 흑자(${now/1e6:,.0f}M)로 "
+            f"1년치 이익이 적자({_v(previous)})에서 흑자({_v(now)})로 "
             "돌아섰습니다 — 사이클 바닥을 지난 자리입니다"
         )
     elif now <= 0 and _all_approximated(quarters):
@@ -491,7 +496,7 @@ def score_phase(quarters: list[dict]) -> dict:
         # 틀린 확신보다 모른다고 말하는 편이 낫습니다.
         phase = cfg.PH_UNKNOWN
         detail = (
-            f"1년치 이익이 마이너스(${now/1e6:,.0f}M)로 나왔지만, 이 값은 회사 공식 "
+            f"1년치 이익이 마이너스({_v(now)})로 나왔지만, 이 값은 회사 공식 "
             "발표가 아니라 **XBRL 회계데이터로 만든 근사치**입니다. 무형자산상각을 "
             "되돌리지 못하면 GAAP 적자가 그대로 남기 때문에, 실제로 적자인지 "
             "판단할 수 없습니다"
@@ -502,27 +507,27 @@ def score_phase(quarters: list[dict]) -> dict:
         # 서 있는 멀쩡한 회사와 같은 표시를 받게 됩니다.
         phase = cfg.PH_LOSS
         detail = (
-            f"1년치 이익이 아직 적자입니다(${now/1e6:,.0f}M). "
+            f"1년치 이익이 아직 적자입니다({_v(now)}). "
             "흑자로 돌아서기 전까지는 사이클 위치를 말할 수 없습니다"
         )
     elif peak > 0 and now > peak:
         phase = cfg.PH_NEW_HIGH
         detail = (
-            f"1년치 이익 ${now/1e6:,.0f}M 이 수집 기간(3년) 안의 최고 "
-            f"${peak/1e6:,.0f}M 을 넘어섰습니다. "
+            f"1년치 이익 {_v(now)} 이 수집 기간(3년) 안의 최고 "
+            f"{_v(peak)} 을 넘어섰습니다. "
             "⚠️ 3년치만 모으므로 '역대 최고'가 아니라 **3년 안에서의 최고**입니다 — "
             "예전에 훨씬 잘 벌다 무너진 회사도 조금 회복하면 여기에 들어옵니다"
         )
     elif peak > 0 and now < peak * cfg.PHASE_ROLLOVER_RATIO:
         phase = cfg.PH_ROLLOVER
         detail = (
-            f"1년치 이익 ${now/1e6:,.0f}M 이 3년 내 최고 ${peak/1e6:,.0f}M 의 "
+            f"1년치 이익 {_v(now)} 이 3년 내 최고 {_v(peak)} 의 "
             f"{now/peak*100:.0f}% 까지 내려왔습니다 — 고점에서 이탈한 자리입니다"
         )
     else:
         phase = cfg.PH_NONE
         detail = (
-            f"1년치 이익 ${now/1e6:,.0f}M — 3년 내 최고(${peak/1e6:,.0f}M)를 넘지도, "
+            f"1년치 이익 {_v(now)} — 3년 내 최고({_v(peak)})를 넘지도, "
             "크게 벗어나지도 않은 중간 자리입니다"
         )
 
@@ -786,7 +791,10 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
         growth_pct = None
         if forward_op > 0:
             forward_score = max_score * 0.67 * 0.9
-            growth_text = f"적자에서 흑자 전환 전망({ '$%.0fM' % (forward_op/1e6) })"
+            growth_text = (
+            "적자에서 흑자 전환 전망("
+            + cfg.fmt_amount(forward_op, cfg.quarters_basis(quarters), 0) + ")"
+        )
         elif forward_op > latest_op:
             forward_score = max_score * 0.67 * 0.5
             growth_text = "적자 축소 전망 (기저가 적자라 증가율 대신 개선 여부로 평가)"
