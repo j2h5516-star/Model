@@ -106,9 +106,16 @@ def walk_forward(quarters: list[dict], min_history: int = 4) -> list[dict]:
         if realized is not None and last_qoq is not None:
             change = realized - last_qoq
             said = delta["direction"]
+            # 주장의 세기에 맞는 잣대로 채점합니다.
+            #  · 강한 판정(두 신호 일치)  → 문턱만큼 실제로 움직였는가 (엄격)
+            #  · 약한 판정(한 신호만)     → 주장한 방향으로 움직였는가 (방향)
             if said in (cfg.D_ACCEL, cfg.D_DECEL, cfg.D_STEADY):
                 strict_correct = said == _label(change, cfg.DELTA_THRESHOLD_PP)
                 direction_correct = said == _label(change, DIRECTION_EPS_PP)
+            elif said in (cfg.D_WEAK_ACCEL, cfg.D_WEAK_DECEL):
+                wanted = cfg.D_ACCEL if said == cfg.D_WEAK_ACCEL else cfg.D_DECEL
+                direction_correct = _label(change, DIRECTION_EPS_PP) == wanted
+                strict_correct = direction_correct   # 약한 판정은 방향 잣대로만 잽니다
             # 혼조·판단불가는 맞고 틀림을 따지지 않습니다 (판단을 유보한 것이므로)
 
         records.append(

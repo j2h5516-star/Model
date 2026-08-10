@@ -387,6 +387,66 @@ def test_chart_qoq_uses_safe_growth():
     assert pd.isna(frame["qoq_pct"].iloc[1]), frame["qoq_pct"].tolist()
 
 
+
+# ---------------------------------------------------------------------------
+# 계절성 · 튀는 분기 — "먼저 판단하고 적용" 원칙
+# ---------------------------------------------------------------------------
+def test_seasonal_business_is_detected():
+    """분기마다 오르내리는 사업은 계절성으로 판정해야 함"""
+    seasonal = [
+        {"period_label": f"Q{i}", "op_income": v, "revenue": v * 4}
+        for i, v in enumerate(
+            [100 * M, 130 * M, 90 * M, 160 * M, 110 * M, 143 * M, 99 * M, 176 * M], 1
+        )
+    ]
+    steady = [
+        {"period_label": f"Q{i}", "op_income": 100 * M * (1.1 ** i), "revenue": 400 * M}
+        for i in range(8)
+    ]
+
+    assert dq.detect_seasonality(seasonal)["seasonal"] is True
+    assert dq.detect_seasonality(steady)["seasonal"] is False
+
+
+def test_one_off_spike_is_flagged():
+    """한 분기만 유별나게 튄 곳(일회성 이익·인수합병)을 찾아야 함"""
+    quarters = [
+        {"period_label": f"Q{i}", "op_income": v}
+        for i, v in enumerate(
+            [80 * M, 85 * M, 90 * M, 260 * M, 95 * M, 100 * M, 105 * M], 1
+        )
+    ]
+    found = dq.detect_anomalies(quarters)
+
+    assert 3 in found["indexes"], found        # 260M 분기(0부터 세어 3번)
+    assert any("일회성" in r for r in found["reasons"])
+
+
+def test_direction_is_withheld_after_spike():
+    """튄 분기가 최근에 있으면 방향을 단정하지 말아야 함"""
+    quarters = [
+        {"period_label": f"Q{i}", "op_income": v, "revenue": v * 4}
+        for i, v in enumerate(
+            [80 * M, 85 * M, 90 * M, 95 * M, 100 * M, 260 * M], 1
+        )
+    ]
+    checked = dq.validate_quarters(quarters, {})
+    result = scoring.score_delta_acceleration(checked)
+
+    assert result["direction"] == cfg.D_UNKNOWN, result
+    assert "판정을 미룹니다" in result["detail"]
+
+
+def test_single_signal_is_not_a_firm_call():
+    """신호 하나만 방향을 보이면 단정하지 말고 '약한' 판정이어야 함"""
+    # 증가율이 매 분기 +2%p대로 오름 — 추세는 우상향이지만 단기 문턱(3%p)에는 못 미침
+    quarters = make_quarters([100 * M, 112 * M, 128 * M, 150 * M, 180 * M])
+    result = scoring.score_delta_acceleration(quarters)
+
+    assert result["direction"] == cfg.D_WEAK_ACCEL, result
+    assert cfg.DELTA_RATIO[cfg.D_WEAK_ACCEL] < cfg.DELTA_RATIO[cfg.D_ACCEL]
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

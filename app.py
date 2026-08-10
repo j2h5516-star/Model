@@ -39,7 +39,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 7
+REQUIRED_CONFIG_VERSION = 9
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -808,6 +808,11 @@ def _style_confidence(value):
 def _style_delta(value):
     """델타 방향·예측: 가속 계열 초록, 감속 계열 빨강, 혼조 노랑"""
     text = str(value)
+    # '약한' 판정은 흐리게 — 근거가 절반이면 화면에서도 절반으로 보여야 합니다
+    if text.startswith("약한 가속"):
+        return "color:#86efac"
+    if text.startswith("약한 감속"):
+        return "color:#fca5a5"
     if "가속" in text and "둔화" not in text:
         return "color:#22c55e; font-weight:700"
     if "반등" in text:
@@ -1027,6 +1032,21 @@ d3.metric(
     accel_note,
     delta_color="off",
 )
+
+# 판정 기준이 특별한 경우 그 사실을 먼저 알립니다
+_delta_trace = (detail["fundamental"]["delta"].get("trace") or {})
+if _delta_trace.get("seasonal"):
+    st.info(
+        "🗓️ 이 종목은 **분기마다 실적이 오르내리는 계절 사업**으로 판정됐습니다. "
+        "전분기와 비교하면 방향이 계속 뒤집히므로, **작년 같은 분기와 비교**해 판정했습니다.",
+        icon="🗓️",
+    )
+if _delta_trace.get("anomaly"):
+    st.warning(
+        "⚠️ 최근 분기 중 이웃 분기보다 유별나게 튄 곳이 있습니다 "
+        "(일회성 이익이나 인수합병일 수 있습니다). "
+        "그 숫자로 방향을 말하면 다음 분기에 뒤집히므로 **판정을 미뤘습니다.**"
+    )
 
 # --- 눌러서 보는 상세 설명 버튼들 ---
 st.markdown(

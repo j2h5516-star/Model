@@ -209,11 +209,18 @@ def validate_quarters(quarters: list[dict], report: dict | None = None) -> list[
     for quarter in kept:
         quarter["seasonal"] = season["seasonal"]
 
+    # 한 분기만 유별나게 튄 곳(일회성·인수합병)도 표시해 둡니다
+    anomalies = detect_anomalies(kept)
+    for index in anomalies["indexes"]:
+        kept[index]["anomaly"] = True
+    notes.extend(anomalies["reasons"])
+
     if report is not None:
         report["quality_notes"] = notes
         report["quality_fixed"] = fixed_count
         report["quality_dropped"] = dropped_count
         report["seasonality"] = season
+        report["anomalies"] = len(anomalies["indexes"])
         if season["seasonal"]:
             notes.append(f"계절성: {season['reason']}")
 
@@ -282,6 +289,48 @@ def detect_seasonality(quarters: list[dict]) -> dict:
 
     return {"seasonal": seasonal, "reason": reason,
             "qoq_swing": qoq_swing, "yoy_swing": yoy_swing}
+
+
+def detect_anomalies(quarters: list[dict]) -> dict:
+    """한 분기만 유별나게 튄 곳(일회성 이익·인수합병 점프)을 찾습니다.
+
+    왜 필요한가:
+      · 회사를 인수하면 이익이 한 분기 만에 2배가 됩니다. 유기적 성장이 아닙니다.
+      · 소송 합의금 같은 일회성 이익이 한 분기만 들어오기도 합니다.
+      이런 분기를 그대로 두면 "가속!"이라고 외친 다음 분기에 "감속!"으로 뒤집힙니다.
+      적대적 시나리오 검증에서 모델이 무계산 기준선보다 못했던 주된 이유입니다.
+
+    판정 방법:
+      이웃 분기들의 가운데 값과 견주어 몇 배나 벗어났는지 봅니다.
+      (평균이 아니라 가운데 값을 쓰는 이유: 튄 값 자신이 평균을 끌어올리기 때문)
+
+    반환: {"indexes": [튄 분기 번호...], "reasons": [...]}
+    """
+    values = [q.get("op_income") for q in quarters]
+    indexes: list[int] = []
+    reasons: list[str] = []
+
+    for i, value in enumerate(values):
+        if not _finite(value) or value <= 0:
+            continue
+        neighbors = [
+            v for j, v in enumerate(values)
+            if j != i and _finite(v) and v > 0 and abs(j - i) <= 3
+        ]
+        if len(neighbors) < 3:
+            continue
+        center = statistics.median(neighbors)
+        if center <= 0:
+            continue
+        ratio = value / center
+        if ratio > cfg.ANOMALY_JUMP_RATIO or ratio < 1.0 / cfg.ANOMALY_JUMP_RATIO:
+            indexes.append(i)
+            reasons.append(
+                f"{quarters[i].get('period_label', i)}: 이웃 분기 중앙값의 "
+                f"{ratio:.1f}배 — 일회성이거나 인수합병일 수 있어 방향 판정에서 뺍니다"
+            )
+
+    return {"indexes": indexes, "reasons": reasons}
 
 
 # ---------------------------------------------------------------------------

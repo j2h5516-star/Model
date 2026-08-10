@@ -200,6 +200,23 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
                       "basis": basis_text, "seasonal": bool(season)},
         }
 
+    # 최근 구간에 '한 분기만 튄 곳'(일회성 이익·인수합병)이 있으면 방향을 말하지 않습니다.
+    # 그런 분기를 그대로 두면 "가속!" 다음 분기에 "감속!"으로 뒤집힙니다.
+    recent_anomaly = any(q.get("anomaly") for q in quarters[-3:])
+    if recent_anomaly:
+        return {
+            "score": max_score * 0.4,
+            "direction": cfg.D_UNKNOWN,
+            "detail": (
+                "최근 분기 중 이웃 분기보다 유별나게 튄 곳이 있습니다 "
+                "(일회성 이익이나 인수합병일 수 있습니다). "
+                "그 숫자로 방향을 말하면 다음 분기에 뒤집히므로 판정을 미룹니다."
+            ),
+            "capped": False,
+            "trace": {"growths": growths, "anomaly": True,
+                      "basis": basis_text, "seasonal": bool(season)},
+        }
+
     recent = growths[-3:]            # 최근 최대 3개 분기의 증가율
     delta = recent[-1] - recent[-2]  # 증가율이 얼마나 더 빨라졌는가(%p)
 
@@ -238,11 +255,13 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
             f"단기({delta:+.1f}%p)와 추세(기울기 {slope:+.1f})가 같은 방향을 가리킵니다"
         )
     elif short_signal == 0 or trend_signal == 0:
-        # 한쪽만 방향이 있음 → 방향이 있는 쪽을 따르되 확신은 낮춤
+        # 한쪽만 방향이 있음 → **단정하지 않고** 약한 판정으로 내립니다.
+        # 근거가 절반이면 주장도 절반이어야 합니다.
         active = short_signal if short_signal != 0 else trend_signal
-        direction = {1: cfg.D_ACCEL, -1: cfg.D_DECEL}[active]
+        direction = {1: cfg.D_WEAK_ACCEL, -1: cfg.D_WEAK_DECEL}[active]
         detail = (
-            f"한 신호만 방향을 보입니다 (단기 {delta:+.1f}%p, 추세 기울기 {slope:+.1f})"
+            f"두 신호 중 하나만 방향을 보입니다 (단기 {delta:+.1f}%p, 추세 기울기 {slope:+.1f}) — "
+            "방향을 단정하지 않고 약한 신호로만 봅니다"
         )
     else:
         # 두 신호가 정반대 → 혼조 (억지로 한쪽으로 밀지 않습니다)
