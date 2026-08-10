@@ -75,9 +75,16 @@ def _fake_bundle(ticker, use_cache=True, with_fundamentals=True):
     quarters[-1]["derivation"] = "테스트 계산 설명"
     quarters[-1]["filing_url"] = "https://www.sec.gov/test"
 
+    # 보도자료에서 읽은 주당순이익 — 격차가 벌어지는 회사로 만듭니다
+    # (이익의 질 표시가 실제로 그려지는지 보기 위함)
+    for i, quarter in enumerate(quarters):
+        quarter["adj_eps"] = 1.00 + i * 0.30
+        quarter["gaap_eps"] = 0.90
+
     report.update(
         {"xbrl_quarters": 4, "filings_found": 6, "text_ok": 5,
          "gate_passed": 4, "parsed_ok": 4, "merged_direct": 4,
+         "op_income_ok": 2, "adj_eps_ok": 4, "gaap_eps_ok": 4,
          "text_source": "보도자료"}
     )
     return {
@@ -156,6 +163,74 @@ def test_confidence_and_diagnostics_sections():
         for df in at.dataframe
     )
     assert diag_found, "진단 표가 없음"
+
+
+def test_dollar_signs_are_escaped_for_display():
+    """달러 기호가 두 개인 문장이 수식으로 깨지지 않아야 합니다.
+
+    Streamlit 은 한 줄에 `$` 가 두 개면 그 사이를 수식(LaTeX)으로 해석합니다.
+    "적자($-30M)에서 흑자($12M)로 돌아섰습니다" 같은 국면 설명이 실제로
+    휴대폰 화면에서 회색 수식 상자로 깨져 읽을 수 없었습니다.
+    """
+    at = _run_app(True)
+    assert not at.exception, [e.value for e in at.exception]
+
+    # 위험한 것은 **한 줄에 이스케이프 안 된 달러가 두 개** 있는 경우입니다.
+    # 하나뿐이면 짝이 없어 수식으로 해석되지 않으므로 그대로 두어도 됩니다.
+    broken = []
+    for block in at.markdown:
+        for line in block.value.split("\n"):
+            if line.replace("\\$", "").count("$") >= 2:
+                broken.append(line.strip()[:90])
+    assert not broken, "한 줄에 달러가 두 개라 수식으로 깨집니다: " + " | ".join(broken[:3])
+
+    # 실제로 금액이 든 설명문이 화면에 있었는지도 확인합니다
+    # (아무것도 안 그려졌는데 통과하는 것을 막기 위함)
+    assert any("\\$" in m.value for m in at.markdown), "이스케이프된 금액 표시가 없음"
+
+
+def test_eps_comparison_panel_renders():
+    """1단계 관문 — '어느 숫자가 더 잘 읽히나' 비교 패널이 화면에 나와야 합니다.
+
+    이 패널의 숫자를 보고 모델의 기준자를 조정 EPS 로 바꿀지 결정합니다.
+    """
+    at = _run_app(True)
+
+    assert not at.exception, [e.value for e in at.exception]
+    all_text = " ".join(m.value for m in at.markdown)
+    assert "어느 숫자가 더 잘 읽히나" in all_text, "EPS 비교 패널이 없음"
+
+    # 종목별 비교 표에 세 열이 모두 있어야 합니다
+    found = any(
+        hasattr(df.value, "columns")
+        and {"영업이익", "조정EPS", "GAAP EPS"} <= set(df.value.columns)
+        for df in at.dataframe
+    )
+    assert found, "EPS 비교 표가 없음"
+
+
+def test_eps_panel_does_not_crash_on_old_reports():
+    """옛 진단 기록(EPS 항목이 없는)이 남아 있어도 화면이 죽지 않아야 합니다.
+
+    배포 직후에는 이전 버전이 저장해 둔 기록이 섞여 들어옵니다.
+    """
+    import sec_fundamentals as sf
+
+    report = sf.new_report("AAA")
+    for key in ("op_income_ok", "adj_eps_ok", "gaap_eps_ok"):
+        report.pop(key)
+    # .get(키, 0) 으로 읽으므로 항목이 없어도 0으로 처리돼야 합니다
+    assert report.get("adj_eps_ok", 0) == 0
+
+
+def test_earnings_quality_is_shown_but_marked_unscored():
+    """이익의 질은 화면에 보이되 '점수에 반영하지 않는다'고 밝혀야 합니다"""
+    at = _run_app(True)
+
+    assert not at.exception, [e.value for e in at.exception]
+    all_text = " ".join(m.value for m in at.markdown)
+    assert "이익의 질" in all_text, "이익의 질 표시가 없음"
+    assert "점수에 반영하지 않습니다" in all_text, "점수 미반영 표기가 없음"
 
 
 def test_ranking_table_has_new_columns():

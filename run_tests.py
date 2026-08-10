@@ -22,6 +22,7 @@ TEST_FILES = [
     "tests/test_quality.py",     # 숫자 검사 단계 (단위·범위·전망 배수)
     "tests/test_backtest.py",    # 워크포워드 백테스트 (미래 미리보기 금지 확인)
     "tests/test_phase.py",       # 국면 신호 + 1년치(TTM) 델타 기준
+    "tests/test_eps_parse.py",   # 보도자료 EPS 읽기 + 이익의 질
     "tests/test_app_render.py",  # 화면이 실제로 그려지는지
 ]
 
