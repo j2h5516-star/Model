@@ -262,7 +262,7 @@ def test_guidance_range_with_gm_and_opex():
     assert abs(guidance["opex"] - 47_000_000) < 1, guidance["opex"]
 
     # 포워드 = 160M × 65% − 47M = 104M − 47M = 57M
-    forward = fe.forward_from_guidance(guidance)
+    forward = fe.forward_from_guidance(guidance)[0]
     assert abs(forward - 57_000_000) < 1, forward
 
 
@@ -275,14 +275,14 @@ def test_guidance_with_operating_margin():
     assert guidance["operating_margin_pct"] is not None
 
     # 포워드 = 2,675M × 7.2% ≈ 192.6M
-    forward = fe.forward_from_guidance(guidance)
+    forward = fe.forward_from_guidance(guidance)[0]
     assert 180_000_000 < forward < 205_000_000, forward
 
 
 def test_no_guidance_returns_none():
     """가이던스 문단이 없으면 None을 돌려줘야 함"""
     guidance = fe.parse_guidance(PR_NO_GUIDANCE)
-    assert fe.forward_from_guidance(guidance) is None
+    assert fe.forward_from_guidance(guidance)[0] is None
 
 
 def test_guidance_section_not_found():

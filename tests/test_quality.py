@@ -473,6 +473,78 @@ def test_single_signal_is_not_a_firm_call():
     assert cfg.DELTA_RATIO[cfg.D_WEAK_ACCEL] < cfg.DELTA_RATIO[cfg.D_ACCEL]
 
 
+
+# ---------------------------------------------------------------------------
+# 조정 EBITDA 로만 발표하는 회사 (ZETA·TSLA·APP 형)
+# ---------------------------------------------------------------------------
+def test_adjusted_ebitda_is_parsed():
+    """논갭 영업이익이 없으면 조정 EBITDA 라도 챙겨 와야 함"""
+    import sec_fundamentals as sf
+
+    text = (
+        "Fourth Quarter 2025 Financial Results (in thousands)\n"
+        "Total revenue          395,000\n"
+        "Adjusted EBITDA        100,500\n"
+    )
+    parsed = sf.parse_press_release(text)
+
+    assert parsed["adjusted_ebitda"] == 100_500_000, parsed
+    assert parsed["op_income"] is None      # 아직 확정 아님 (감가상각비를 만나야 함)
+
+
+def test_ebitda_minus_da_becomes_operating_income():
+    """조정 EBITDA − 감가상각비 = 논갭 영업이익 (역산)"""
+    import sec_fundamentals as sf
+
+    row = {"period_label": "25 Q4", "op_income": 60 * M, "da": 14 * M,
+           "source": cfg.SRC_APPROX}
+    press = {"adjusted_ebitda": 100.5 * M, "revenue": 395 * M}
+    sf._apply_press_to_row(row, press)
+
+    assert abs(row["op_income"] - 86.5 * M) < 1, row
+    assert row["source"] == cfg.SRC_DERIVED
+    assert "조정 EBITDA" in row["derivation"]
+
+
+def test_ebitda_guidance_becomes_forward():
+    """회사가 조정 EBITDA 가이던스만 줘도 버리지 않고 전망을 만들어야 함"""
+    guidance = {"revenue": 370 * M, "adjusted_ebitda": 61.5 * M,
+                "gross_margin_pct": None, "opex": None, "operating_margin_pct": None}
+    quarters = [{"da": 13 * M}, {"da": 14 * M}, {"da": 15 * M}, {"da": 14 * M}]
+
+    value, basis, note = fe.forward_from_guidance(guidance, quarters)
+
+    assert abs(value - 47.5 * M) < 1, value        # 61.5 − 14(중앙값) = 47.5
+    assert basis == cfg.SRC_DERIVED                # 가이던스가 아니라 역산 (근사가 섞임)
+    assert "조정 EBITDA" in note
+
+
+def test_ebitda_guidance_without_depreciation_is_skipped():
+    """감가상각비를 모르면 억지로 만들지 말아야 함"""
+    guidance = {"revenue": 370 * M, "adjusted_ebitda": 61.5 * M,
+                "gross_margin_pct": None, "opex": None, "operating_margin_pct": None}
+
+    value, basis, _ = fe.forward_from_guidance(guidance, [{"da": None}])
+    assert value is None and basis is None
+
+
+def test_mixed_definition_is_detected():
+    """한 종목 안에서 논갭 영업이익의 정의가 섞이면 알려야 함"""
+    quarters = [
+        {"period_label": "25 Q1", "op_income": 50 * M, "source": cfg.SRC_DIRECT},
+        {"period_label": "25 Q2", "op_income": 55 * M, "source": cfg.SRC_APPROX},
+        {"period_label": "25 Q3", "op_income": 60 * M, "source": cfg.SRC_DIRECT},
+    ]
+    result = dq.check_source_consistency(quarters)
+
+    assert result["mixed"] is True
+    assert result["switches"] == 2
+    assert "가짜 신호" in result["reason"]
+
+    same = [{"op_income": 1, "source": cfg.SRC_DIRECT} for _ in range(3)]
+    assert dq.check_source_consistency(same)["mixed"] is False
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

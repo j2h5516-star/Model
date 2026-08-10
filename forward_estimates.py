@@ -101,9 +101,27 @@ def parse_guidance(text: str) -> dict:
         "gross_margin_pct": None,
         "opex": None,
         "operating_margin_pct": None,
+        "adjusted_ebitda": None,   # 논갭 영업이익을 안 밝히는 회사가 많습니다
     }
     if not section:
         return result
+
+    # --- 조정 EBITDA 전망 ---
+    # ZETA 처럼 "매출 $X~Y, 조정 EBITDA $A~B" 로만 가이던스를 주는 회사가 많습니다.
+    # 예전에는 이걸 통째로 버리고 야후 컨센서스 × 과거 평균 마진(추정 40%)으로
+    # 떨어뜨렸습니다. 회사가 직접 준 숫자를 버리는 것은 아깝습니다.
+    ebitda_area = _slice_around(section, r"adjusted\s+EBITDA")
+    if ebitda_area:
+        match = _RANGE_RE.search(ebitda_area)
+        if match:
+            tail_scale = _SCALE.get((match.group(4) or "").lower(), 1e6)
+            low = _to_dollars(match.group(1), match.group(2), tail_scale)
+            high = _to_dollars(match.group(3), match.group(4), tail_scale)
+            result["adjusted_ebitda"] = (low + high) / 2.0
+        else:
+            match = _SINGLE_RE.search(ebitda_area)
+            if match:
+                result["adjusted_ebitda"] = _to_dollars(match.group(1), match.group(2), 1e6)
 
     # --- 매출 전망 ---
     revenue_area = _slice_around(section, r"revenue|net\s+sales")
@@ -206,25 +224,57 @@ def looks_annual(text: str) -> bool:
     return bool(_ANNUAL_HINTS.search(head))
 
 
-def forward_from_guidance(guidance: dict) -> float | None:
+def recent_depreciation(quarters: list[dict]) -> float | None:
+    """최근 분기들의 감가상각비 중앙값. 조정 EBITDA 를 논갭 영업이익으로 바꿀 때 씁니다."""
+    import statistics
+
+    values = [
+        q["da"] for q in quarters[-cfg.EBITDA_DA_LOOKBACK:]
+        if q.get("da") is not None and q["da"] > 0
+    ]
+    return statistics.median(values) if values else None
+
+
+def forward_from_guidance(guidance: dict, quarters: list[dict] | None = None) -> tuple:
     """가이던스 숫자로 다음 분기 논갭 영업이익을 계산합니다.
 
-    방법 1: 매출 × 영업마진%
-    방법 2: 매출 × GM% − 영업비용
+    방법 1: 매출 × 영업마진%                → 가이던스 (85%)
+    방법 2: 매출 × GM% − 영업비용            → 가이던스 (85%)
+    방법 3: 조정 EBITDA − 최근 감가상각비    → 역산 (75%)
+            감가상각비는 사업이 커지면 같이 커지므로 최근값을 쓰는 것은 근사입니다.
+            그래서 '가이던스'가 아니라 '역산'으로 표시합니다.
+
+    반환: (전망 영업이익, 근거 배지, 설명) — 못 구하면 (None, None, "")
     """
     revenue = guidance.get("revenue")
-    if revenue is None:
-        return None
 
-    if guidance.get("operating_margin_pct") is not None:
-        return revenue * guidance["operating_margin_pct"] / 100.0
+    if revenue is not None and guidance.get("operating_margin_pct") is not None:
+        value = revenue * guidance["operating_margin_pct"] / 100.0
+        return value, cfg.SRC_GUIDANCE, (
+            f"회사 가이던스 매출 ${revenue/1e6:,.0f}M × "
+            f"영업마진 {guidance['operating_margin_pct']:.1f}%"
+        )
 
-    gm = guidance.get("gross_margin_pct")
-    opex = guidance.get("opex")
-    if gm is not None and opex is not None:
-        return revenue * gm / 100.0 - abs(opex)
+    gm, opex = guidance.get("gross_margin_pct"), guidance.get("opex")
+    if revenue is not None and gm is not None and opex is not None:
+        value = revenue * gm / 100.0 - abs(opex)
+        return value, cfg.SRC_GUIDANCE, (
+            f"회사 가이던스 매출 ${revenue/1e6:,.0f}M × GM {gm:.1f}% "
+            f"− 영업비용 ${abs(opex)/1e6:,.0f}M"
+        )
 
-    return None
+    # 조정 EBITDA 만 준 경우 (ZETA 형)
+    ebitda = guidance.get("adjusted_ebitda")
+    if ebitda is not None and quarters:
+        da = recent_depreciation(quarters)
+        if da is not None:
+            value = ebitda - da
+            return value, cfg.SRC_DERIVED, (
+                f"회사가 준 조정 EBITDA 가이던스 ${ebitda/1e6:,.0f}M 에서 "
+                f"최근 감가상각비 ${da/1e6:,.0f}M 을 빼 역산했습니다"
+            )
+
+    return None, None, ""
 
 
 # ---------------------------------------------------------------------------
@@ -471,15 +521,14 @@ def estimate_forward(ticker: str, quarters: list[dict]) -> dict:
         consensus["errors"].append("연간 가이던스로 판단되어 분기 전망에서 제외")
         guidance_text = ""
     guidance = parse_guidance(guidance_text)
-    forward = forward_from_guidance(guidance)
+    forward, forward_basis, forward_note = forward_from_guidance(guidance, quarters)
     guidance_margin_pct = None   # 가이던스에 내재된 마진 (다다음 분기에도 같은 기준 적용)
     if forward is not None:
         output["forward_op_income"] = forward
-        output["basis"] = cfg.SRC_GUIDANCE
+        output["basis"] = forward_basis
         if guidance.get("revenue"):
             guidance_margin_pct = forward / guidance["revenue"] * 100.0
-        revenue_text = f"${guidance['revenue']/1e6:,.0f}M" if guidance.get("revenue") else "-"
-        output["detail"] = f"회사가 제시한 다음 분기 전망(매출 {revenue_text} 기준)으로 계산했습니다"
+        output["detail"] = forward_note
     # --- 다음 분기: ② 컨센서스 매출 × 평균 마진 ---
     elif consensus["revenue_0q"] and avg_margin is not None:
         output["forward_op_income"] = consensus["revenue_0q"] * avg_margin / 100.0

@@ -225,6 +225,13 @@ LABELS_REVENUE = [
     r"net\s+sales",
 ]
 
+# 조정 EBITDA — ZETA·TSLA·APP 처럼 논갭 영업이익을 발표하지 않는 회사가 많습니다.
+# 이 값에서 감가상각비를 빼면 논갭 영업이익을 역산할 수 있습니다.
+LABELS_ADJUSTED_EBITDA = [
+    r"adjusted\s+EBITDA",
+    r"non[-\s]?GAAP\s+EBITDA",
+]
+
 # 논갭 영업비용 (역산에 사용)
 LABELS_NONGAAP_OPEX = [
     r"non[-\s]?GAAP\s+(?:total\s+)?operating\s+expenses?",
@@ -250,6 +257,7 @@ def parse_press_release(text: str) -> dict:
         "revenue": None,
         "op_income": None,
         "gross_margin_pct": None,
+        "adjusted_ebitda": None,   # 논갭 영업이익이 없을 때 역산에 씁니다
         "source": None,
         "gm_is_gaap": False,
         "derivation": "",   # 어떻게 구한 값인지 사람이 읽을 수 있는 설명
@@ -258,6 +266,9 @@ def parse_press_release(text: str) -> dict:
         return result
 
     result["revenue"] = find_labeled_value(text, LABELS_REVENUE)
+    # ZETA·TSLA·APP 처럼 논갭 영업이익을 발표하지 않는 회사가 많습니다.
+    # 조정 EBITDA 를 챙겨 두었다가, 감가상각비를 빼서 논갭 영업이익을 역산합니다.
+    result["adjusted_ebitda"] = find_labeled_value(text, LABELS_ADJUSTED_EBITDA)
 
     # ① 논갭 GM% — 없으면 GAAP GM%로 대체
     gm = find_labeled_value(text, LABELS_NONGAAP_GM_PCT, is_percent=True)
@@ -291,6 +302,16 @@ def parse_press_release(text: str) -> dict:
             f"= 매출총이익 ${gross_profit/1e6:,.1f}M\n\n"
             f"매출총이익 ${gross_profit/1e6:,.1f}M − 영업비용 ${abs(opex)/1e6:,.1f}M "
             f"= **${result['op_income']/1e6:,.1f}M**"
+        )
+
+    # ④ 그래도 없으면 조정 EBITDA 에서 감가상각비를 빼 역산합니다.
+    #    감가상각비는 XBRL 에서 오므로 여기서는 값만 챙겨 두고,
+    #    실제 계산은 merge_quarters 에서 XBRL 감가상각비와 만났을 때 합니다.
+    if result["op_income"] is None and result["adjusted_ebitda"] is not None:
+        result["source"] = None      # 아직 확정 아님 — merge 에서 정해집니다
+        result["derivation"] = (
+            "보도자료에 non-GAAP 영업이익이 없어 조정 EBITDA "
+            f"${result['adjusted_ebitda']/1e6:,.1f}M 에서 감가상각비를 빼 역산할 예정입니다."
         )
 
     _sanity_check_press(result)
@@ -665,6 +686,13 @@ _XBRL_CONCEPTS = {
         "ShareBasedCompensation",
         "AllocatedShareBasedCompensationExpense",
     ],
+    # 감가상각비 — 조정 EBITDA 로만 발표하는 회사의 논갭 영업이익을 역산할 때 씁니다.
+    #   논갭 영업이익 ≈ 조정 EBITDA − 감가상각비(D&A)
+    "depreciation_amortization": [
+        "DepreciationDepletionAndAmortization",
+        "DepreciationAmortizationAndAccretionNet",
+        "DepreciationAndAmortization",
+    ],
     "amortization": [
         "AmortizationOfIntangibleAssets",
         "AmortizationOfAcquiredIntangibleAssets",
@@ -732,6 +760,7 @@ def fetch_xbrl_approximation(
 
         sbc = series["sbc"].get(period_end) or 0.0
         amort = series["amortization"].get(period_end) or 0.0
+        da = series.get("depreciation_amortization", {}).get(period_end)
         revenue = series["revenue"].get(period_end)
         gross_profit = series["gross_profit"].get(period_end)
 
@@ -766,6 +795,7 @@ def fetch_xbrl_approximation(
                 "period_label": period_end_label(period_end),
                 "revenue": revenue,
                 "op_income": approx_op,   # 논갭 근사
+                "da": da,                 # 감가상각비 — EBITDA 역산에 씁니다
                 "gross_margin_pct": gm_pct,
                 "source": cfg.SRC_APPROX,
                 "gm_is_gaap": True,
@@ -972,6 +1002,23 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
         row["source"] = press.get("source") or cfg.SRC_DERIVED
         row["derivation"] = press.get("derivation", "")
         row["gm_is_gaap"] = press.get("gm_is_gaap", False)
+    elif press.get("adjusted_ebitda") is not None and row.get("da") is not None:
+        # 논갭 영업이익을 발표하지 않는 회사 (ZETA·TSLA·APP 등)
+        #   논갭 영업이익 ≈ 조정 EBITDA − 감가상각비(D&A)
+        # XBRL 근사치보다 회사 공식 숫자에 가까우므로 이쪽을 씁니다.
+        ebitda, da = press["adjusted_ebitda"], row["da"]
+        derived = ebitda - da
+        row["op_income"] = derived
+        row["source"] = cfg.SRC_DERIVED
+        row["derivation"] = (
+            "회사가 non-GAAP 영업이익을 발표하지 않아 조정 EBITDA에서 "
+            "감가상각비를 빼 역산했습니다.\n\n"
+            f"조정 EBITDA ${ebitda/1e6:,.1f}M\n\n"
+            f"− 감가상각비 ${da/1e6:,.1f}M (SEC XBRL)\n\n"
+            f"= **${derived/1e6:,.1f}M** (역산)"
+        )
+    if press.get("adjusted_ebitda") is not None:
+        row["adjusted_ebitda"] = press["adjusted_ebitda"]
     if press.get("revenue") is not None:
         row["revenue"] = press["revenue"]
     if press.get("gross_margin_pct") is not None:
