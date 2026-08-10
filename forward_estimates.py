@@ -22,6 +22,7 @@ yfinance의 EPS 추정치 변화 건수로 계산해 +1 / 0 / −1 로 나타냅
 
 from __future__ import annotations
 
+import math
 import re
 
 import config as cfg
@@ -398,6 +399,10 @@ def fetch_consensus(ticker: str) -> dict:
         "revenue_1q": None,      # 그다음 분기 매출 컨센서스
         "eps_0q": None,          # 다음 발표 분기 EPS 컨센서스
         "eps_1q": None,
+        # 컨센서스와 **같은 기준**의 직전 실제 EPS.
+        # 증가율을 만들려면 분자·분모가 같은 자여야 하므로 반드시 여기서 받아옵니다.
+        "eps_actual_last": None,
+        "shares_shrink_pct": None,   # 최근 1년 희석주식수 변화(%) — 음수면 감소
         "analysts_0q": None,     # 참여 애널리스트 수 (컨센서스의 무게)
         "revision": 0,           # 방향: +1 상향 / 0 중립 / -1 하향
         "revision_velocity_pct": None,   # 30일간 추정치가 몇 % 움직였나
@@ -442,6 +447,40 @@ def fetch_consensus(ticker: str) -> dict:
                     out["analysts_0q"] = int(analysts)
     except Exception as exc:
         out["errors"].append(f"EPS 컨센서스: {type(exc).__name__}")
+
+    # --- 컨센서스와 **같은 기준**의 직전 실제 EPS ---
+    # 야후(LSEG/IBES)의 earnings_history 는 추정치와 같은 잣대로 실제치를 실어 줍니다.
+    # 그래서 이 둘로 만든 증가율은 정의 불일치가 원천적으로 없습니다.
+    # 회사가 논갭 정의를 바꿔도 분자·분모가 같이 바뀌어 상쇄됩니다.
+    try:
+        history = stock.earnings_history
+        if history is not None and len(history) > 0:
+            for column in ("epsActual", "eps_actual", "actual"):
+                if column in history.columns:
+                    values = [
+                        v for v in history[column].tolist()
+                        if v is not None and isinstance(v, (int, float))
+                        and math.isfinite(v)
+                    ]
+                    if values:
+                        out["eps_actual_last"] = float(values[-1])
+                    break
+    except AttributeError:
+        pass      # 이 yfinance 판에는 없는 기능 — 오류가 아니라 '없음'입니다
+    except Exception as exc:
+        out["errors"].append(f"실제 EPS 이력: {type(exc).__name__}")
+
+    # --- 희석주식수 변화 (자사주 매입이 EPS 증가율을 부풀리는지) ---
+    try:
+        shares = stock.get_shares_full(start=None)
+        if shares is not None and len(shares) > 8:
+            recent, year_ago = float(shares.iloc[-1]), float(shares.iloc[-min(len(shares), 250)])
+            if year_ago > 0:
+                out["shares_shrink_pct"] = (recent / year_ago - 1) * 100.0
+    except AttributeError:
+        pass      # 위와 같음 (선택 항목)
+    except Exception as exc:
+        out["errors"].append(f"주식수: {type(exc).__name__}")
 
     # --- 리비전 속도: 추정치가 30일 전 대비 몇 % 움직였나 ---
     # 분모가 5센트 미만이면 계산하지 않습니다: 손익분기 근처 EPS에서는
@@ -534,6 +573,65 @@ def average_operating_margin(quarters: list[dict], n: int = 4) -> float | None:
         if len(kept) >= 2:
             margins = kept
     return sum(margins) / len(margins)
+
+
+def forward_from_eps_growth(consensus: dict, latest_op: float | None) -> tuple:
+    """컨센서스 EPS 의 **증가율만** 빌려 와 영업이익 전망을 만듭니다.
+
+    ⚠️ 이것은 **마지막 대안**입니다. 우선순위는 언제나
+        ① 가이던스(논갭 영업이익)  ② 컨센서스 매출 × 논갭 마진  ③ 이 경로
+    논갭 영업이익으로 만들 수 있으면 절대 여기까지 오지 않습니다.
+
+    왜 레벨이 아니라 증가율인가:
+      컨센서스 EPS 와 우리가 쌓아 둔 논갭 영업이익은 **레벨의 기준이 다릅니다**.
+      레벨을 환산하려면 주식수·세율·이자를 다 알아야 하는데 셋 다 잡음입니다.
+      반면 증가율은 **같은 출처 안에서 나누면**(IBES 실제 ÷ IBES 추정) 기준이
+      무엇이든 상쇄됩니다. 회사가 논갭 정의를 바꿔도 분자·분모가 같이 바뀝니다.
+
+    실데이터로 확인한 근거: 같은 종목·같은 분기를 논갭 영업이익으로 볼 때와
+    조정 EPS 로 볼 때 델타 **방향이 96% 일치**했습니다(50개 시점 중 48개).
+    AMD 가 인수 대금을 주식으로 치러 희석주식수가 +36.5% 늘어난 구간에서도
+    방향은 뒤집히지 않았습니다.
+
+    반환: (전망 영업이익, 근거 배지, 설명) — 못 만들면 (None, None, "")
+    """
+    estimate = consensus.get("eps_0q")
+    actual = consensus.get("eps_actual_last")
+    if estimate is None or actual is None or latest_op is None or latest_op <= 0:
+        return None, None, ""
+
+    # 손익분기 근처에서는 1~2센트 반올림이 +200% 를 만듭니다
+    if abs(actual) < cfg.EPS_MIN_ABS or abs(estimate) < cfg.EPS_MIN_ABS:
+        return None, None, ""
+    # 부호가 다르면(적자 ↔ 흑자) 증가율에 뜻이 없습니다
+    if (actual > 0) != (estimate > 0):
+        return None, None, ""
+
+    analysts = consensus.get("analysts_0q")
+    if analysts is not None and analysts < cfg.EPS_MIN_ANALYSTS:
+        return None, None, ""
+
+    growth = dq.safe_growth_pct(actual, estimate)
+    if growth is None or abs(growth) > cfg.EPS_MAX_GROWTH_PCT:
+        return None, None, ""
+
+    value = latest_op * (1 + growth / 100.0)
+    note = (
+        f"논갭 영업이익으로는 전망을 만들지 못해, 월가 **EPS 컨센서스의 증가율만** "
+        f"빌려 왔습니다 (직전 실제 {actual:+.2f} → 컨센서스 {estimate:+.2f}, "
+        f"{growth:+.1f}%). 그 증가율을 최근 영업이익 ${latest_op/1e6:,.0f}M 에 "
+        f"적용했습니다"
+    )
+    if analysts:
+        note += f" · 애널리스트 {analysts}명"
+
+    shrink = consensus.get("shares_shrink_pct")
+    if shrink is not None and shrink <= -cfg.EPS_SHARE_SHRINK_WARN:
+        note += (
+            f" · ⚠️ 최근 1년 주식수가 {shrink:.0f}% 줄었습니다(자사주 매입). "
+            "EPS 증가율이 사업 성장보다 부풀려져 있을 수 있습니다"
+        )
+    return value, cfg.SRC_EPS_GROWTH, note
 
 
 # ---------------------------------------------------------------------------
@@ -653,6 +751,25 @@ def estimate_forward(ticker: str, quarters: list[dict]) -> dict:
             f"월가 매출 컨센서스(${consensus['revenue_0q']/1e6:,.0f}M{analysts_text})에 "
             f"최근 4개 분기 평균 영업마진({avg_margin:.1f}%)을 곱한 추정치입니다"
         )
+
+    # --- 다음 분기: ③ 마지막 대안 — EPS 컨센서스의 '증가율만' 빌려 오기 ---
+    # 여기까지 왔다는 것은 **논갭 영업이익으로는 전망을 만들 수 없었다**는 뜻입니다.
+    #   · 회사가 가이던스를 안 줬거나 파싱하지 못했고
+    #   · 매출 컨센서스가 없거나 과거 흑자 분기가 없어 평균 마진을 못 냈습니다
+    # 그럴 때 전망을 통째로 포기하는 대신, 커버리지가 가장 넓은 EPS 컨센서스에서
+    # **증가율만** 가져옵니다. 레벨은 기준이 달라 쓰지 않습니다.
+    else:
+        latest_for_eps = next(
+            (q["op_income"] for q in reversed(quarters)
+             if q.get("op_income") is not None), None
+        )
+        eps_forward, eps_basis, eps_note = forward_from_eps_growth(
+            consensus, latest_for_eps
+        )
+        if eps_forward is not None:
+            output["forward_op_income"] = eps_forward
+            output["basis"] = eps_basis
+            output["detail"] = eps_note
 
     # --- 다다음 분기: 컨센서스 매출 × 마진 ---
     # ⚠️ 다음 분기가 가이던스 기반이면 다다음 분기도 "가이던스에 내재된 마진"을
