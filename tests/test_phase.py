@@ -250,10 +250,12 @@ def test_slowdown_signal_is_measured_against_the_right_thing():
     사이클 후반까지 계속 신고점을 찍으므로 그 잣대 자체가 틀린 것이었습니다.
     주가는 그보다 먼저 꺾입니다.
 
-    주가 정점으로 다시 재니 54.5% [34.7~73.1] vs 기준선 31.8% 로 유의했습니다.
+    주가 정점으로 다시 재니 51.4% [35.9~66.6] vs 기준선 31.1% 로 유의했습니다.
+    (표본 7개 → 11개로 늘려도 유지)
     2021~2022 사이클 실제 사례 — 주가가 꺾인 그 분기의 판정:
         마이크론 2022-01 · 엔비디아 2021-11 · ZIM 2022-03 · 엔페이즈 2022-12
-        네 종목 모두 '가속 둔화' + '3년내 최고' 였습니다.
+        솔라엣지 2021-11 · 줌 2020-10 · 엣시 2021-11
+        일곱 종목 모두 '가속 둔화' + '3년내 최고' 였습니다.
     """
     # 이익 정점으로는 기준선을 못 넘습니다 — 그 사실을 그대로 남겨 둡니다
     assert cfg.FORECAST_MEASURED_PEAK[cfg.F_ACCEL_SLOW] < cfg.FORECAST_PEAK_BASELINE
@@ -292,7 +294,7 @@ def test_both_peak_measurements_are_shown_to_the_user():
     text = " ".join(lines)
 
     assert "이익" in text and "주가" in text, lines
-    assert "54.5%" in text or "54." in text, lines
+    assert "51.4%" in text or "51." in text, lines
 
 
 def test_validated_forecasts_do_change_the_score():
