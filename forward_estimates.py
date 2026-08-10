@@ -655,6 +655,60 @@ def find_latest_guidance_text(quarters: list[dict]) -> str:
     return (quarters[-1].get("guidance_text") or "").strip()
 
 
+def _forward_on_eps_basis(output: dict, consensus: dict, quarters: list[dict]) -> dict:
+    """조정 EPS 로 판정 중인 종목의 전망 — **같은 단위(주당 달러)** 로 만듭니다.
+
+    과거도 주당 달러, 전망도 주당 달러이므로 환산이 필요 없습니다.
+    이것이 EPS 기준의 유일한 장점입니다: 월가 컨센서스가 바로 이 단위로 나옵니다.
+
+    가이던스와 '매출 × 마진' 경로는 **쓰지 않습니다.** 둘 다 달러라서,
+    주당 달러로 쌓은 과거와 맞대면 자가 어긋납니다.
+    """
+    eps_next = consensus.get("eps_0q")
+    eps_after = consensus.get("eps_1q")
+    analysts = consensus.get("analysts_0q")
+
+    latest = next(
+        (q["op_income"] for q in reversed(quarters)
+         if q.get("op_income") is not None), None
+    )
+
+    if eps_next is not None:
+        output["forward_op_income"] = eps_next
+        output["basis"] = cfg.SRC_ESTIMATE
+        analysts_text = f", 애널리스트 {analysts}명" if analysts else ""
+        output["detail"] = (
+            f"이 종목은 논갭 영업이익을 구하지 못해 **조정 EPS**로 판정하고 있어서, "
+            f"전망도 같은 단위인 월가 EPS 컨센서스(${eps_next:,.2f}/주{analysts_text})를 "
+            "그대로 씁니다. 과거와 전망의 자가 같아 환산 오차가 없습니다"
+        )
+    else:
+        consensus.setdefault("errors", []).append(
+            "조정 EPS 기준인데 EPS 컨센서스를 구하지 못해 전망 없음"
+        )
+
+    if eps_after is not None:
+        output["forward_op_income_2"] = eps_after
+        output["basis_2"] = cfg.SRC_ESTIMATE
+        output["detail_2"] = (
+            f"다다음 분기도 EPS 컨센서스(${eps_after:,.2f}/주)를 그대로 썼습니다"
+        )
+
+    # 크기 검사 — 두 분기 모두 봅니다.
+    # (예전에는 다음 분기만 검사해서, 다다음 분기의 깨진 값이 그대로 차트에 그려졌습니다)
+    positive_latest = next(
+        (q["op_income"] for q in reversed(quarters)
+         if q.get("op_income") is not None and q["op_income"] > 0), None
+    )
+    for key, label in (("forward_op_income", "다음 분기"),
+                       ("forward_op_income_2", "다다음 분기")):
+        ok, reason = dq.check_forward(output[key], positive_latest or latest)
+        if not ok:
+            consensus.setdefault("errors", []).append(f"{label} 전망 제외: {reason}")
+            output[key] = None
+    return output
+
+
 def estimate_forward(ticker: str, quarters: list[dict]) -> dict:
     """다음 분기(그리고 가능하면 다다음 분기까지) 논갭 영업이익 전망을 만듭니다.
 
@@ -710,6 +764,19 @@ def estimate_forward(ticker: str, quarters: list[dict]) -> dict:
         consensus["revenue_1q"] = None
         consensus["eps_0q"] = consensus["eps_1q"]
         consensus["eps_1q"] = None
+
+    # --- 구조대 경로: 과거를 조정 EPS 로 판정 중이면 전망도 EPS 여야 합니다 ---
+    #
+    # ⚠️ 이것을 빼먹으면 자가 어긋납니다. 과거는 주당 달러($0.87)인데 전망은
+    #    달러($60,000,000)로 나와, 증가율이 수십억 %가 되거나(그래서 통째로
+    #    버려지거나) 평균 마진이 0.0000002% 로 계산돼 전망이 0 이 됩니다.
+    #    실제로 LITE(루멘텀)에서 그렇게 나왔습니다 — 논갭 영업이익을 한 건도
+    #    못 읽어 EPS 로 판정하는데 전망만 달러였습니다.
+    #
+    # 다행히 EPS 는 월가 컨센서스를 **같은 단위(주당 달러)로** 바로 구할 수
+    # 있습니다. 그래서 이 경로에서는 증가율을 이식할 필요 없이 레벨을 그대로 씁니다.
+    if cfg.quarters_basis(quarters) == cfg.BASIS_ADJ_EPS:
+        return _forward_on_eps_basis(output, consensus, quarters)
 
     avg_margin = average_operating_margin(quarters, n=4)
 
