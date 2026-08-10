@@ -219,11 +219,17 @@ def test_accel_path_decel_keep():
     assert result["accel_label"] == cfg.F2_DECEL_KEEP, result
 
 
-def test_accel_falls_back_without_q2():
-    """다다음 분기 자료가 없으면 다음 분기 예측을 그대로 써야 함"""
+def test_accel_is_not_judged_without_q2():
+    """다다음 분기 자료가 없으면 '2분기 경로'를 판정하면 안 됨.
+
+    예전에는 다음 분기 예측을 그대로 복사했는데, F_*와 F2_* 문자열이 같아
+    화면에서 2분기까지 계산한 것처럼 보였습니다 (없는 근거를 있는 것처럼 표시).
+    """
     result = _accel((100 * M, 115 * M, 140 * M), 180 * M, None)
     assert result["next2_qoq"] is None
-    assert result["accel_label"] == result["label"], result
+    assert result["accel_label"] == cfg.F2_NONE, result
+    assert result["label"] != cfg.F_NONE, result   # 다음 분기 예측은 그대로 살아 있어야 함
+    assert "판정하지 않았습니다" in result["accel_detail"], result
 
 
 # ---------------------------------------------------------------------------
@@ -717,8 +723,13 @@ def test_identity_is_set_only_once_under_threads():
     assert len(calls) == 1, f"set_identity가 {len(calls)}번 호출됨 (1번이어야 함)"
 
 
-def test_identity_is_reapplied_when_it_changes():
-    """Secrets에서 신원을 고치면 앱을 껐다 켜지 않아도 반영돼야 함"""
+def test_identity_change_does_not_close_open_connections():
+    """신원을 고치면 반영은 되되, 이미 열린 접속 창구를 닫으면 안 됨.
+
+    set_identity()를 다시 부르면 여러 종목이 함께 쓰는 접속 창구가 닫혀
+    수집 중이던 요청이 끊깁니다. 두 번째부터는 환경변수만 바꿉니다
+    (edgartools는 요청할 때마다 EDGAR_IDENTITY를 읽습니다).
+    """
     calls = []
     fake_module = types.SimpleNamespace(set_identity=lambda v: calls.append(v))
 
@@ -726,11 +737,13 @@ def test_identity_is_reapplied_when_it_changes():
     with patch.dict(sys.modules, {"edgar": fake_module}):
         with patch.dict(os.environ, {"SEC_IDENTITY": "첫번째 a@example.com"}):
             sf._ensure_identity()
-            sf._ensure_identity()          # 같은 값 → 다시 부르지 않음
+            sf._ensure_identity()          # 같은 값 → 아무것도 하지 않음
+            assert calls == ["첫번째 a@example.com"], calls
         with patch.dict(os.environ, {"SEC_IDENTITY": "두번째 b@example.com"}):
-            sf._ensure_identity()          # 값이 바뀜 → 다시 부름
+            sf._ensure_identity()          # 값이 바뀜 → 창구는 그대로, 환경변수만 갱신
+            assert calls == ["첫번째 a@example.com"], f"창구를 닫는 호출이 또 일어남: {calls}"
+            assert os.environ["EDGAR_IDENTITY"] == "두번째 b@example.com"
 
-    assert calls == ["첫번째 a@example.com", "두번째 b@example.com"], calls
     sf._configured_identity = None
 
 

@@ -383,9 +383,19 @@ def _ensure_identity() -> None:
         # 자물쇠를 얻는 사이 다른 쪽이 먼저 설정했을 수 있으니 한 번 더 확인합니다
         if _configured_identity == wanted:
             return
-        from edgar import set_identity
 
-        set_identity(wanted)
+        if _configured_identity is None:
+            # 최초 1회 — 아직 접속 창구가 없으므로 정식 함수를 써도 안전합니다
+            from edgar import set_identity
+
+            set_identity(wanted)
+        else:
+            # 신원이 바뀐 경우: set_identity()를 다시 부르면 이미 열려 있는 접속 창구를
+            # 닫아버려, 다른 종목이 요청 중이면 그 요청이 끊깁니다.
+            # edgartools는 요청할 때마다 이 환경변수를 읽으므로, 값만 바꿔 두면
+            # 다음에 새로 열리는 접속부터 새 신원이 적용됩니다.
+            os.environ["EDGAR_IDENTITY"] = wanted
+
         _configured_identity = wanted
 
 

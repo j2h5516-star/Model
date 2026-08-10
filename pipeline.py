@@ -356,11 +356,13 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
     buy = df[df["판정"] == cfg.V_BUY].sort_values(
         by=["_rs", "최종점수"], ascending=[False, False]
     )
-    others = df[df["판정"] != cfg.V_BUY].sort_values(
+    # 실적을 못 구한 종목은 점수를 같은 기준으로 비교할 수 없어 맨 뒤로 보냅니다
+    no_data = df[df["판정"] == cfg.V_NO_DATA].sort_values(by=["최종점수"], ascending=False)
+    others = df[~df["판정"].isin([cfg.V_BUY, cfg.V_NO_DATA])].sort_values(
         by=["최종점수", "_rs"], ascending=[False, False]
     )
 
-    ordered = pd.concat([buy, others]).drop(columns=["_rs"])
+    ordered = pd.concat([buy, others, no_data]).drop(columns=["_rs"])
     return ordered.reset_index(drop=True)
 
 

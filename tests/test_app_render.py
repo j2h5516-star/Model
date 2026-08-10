@@ -225,6 +225,36 @@ def test_warns_when_secrets_identity_has_no_email():
     ), "신원이 조용히 기본값으로 바뀐 사실을 알리지 않음"
 
 
+def test_delete_pills_disabled_when_only_one_ticker():
+    """종목이 하나면 삭제 알약을 아예 못 누르게 해야 함.
+
+    눌렀다가 거부되면 선택이 남아 '최소 한 종목' 경고가 영영 사라지지 않습니다
+    (선택을 코드로 지우는 것은 Streamlit이 막습니다).
+    """
+    at = _run_app(True, tickers=["AAA"])
+
+    assert not at.exception, [e.value for e in at.exception]
+    assert at.main.pills[0].disabled is True, "종목이 하나인데 삭제 알약이 활성 상태"
+    assert not any("최소 한 종목" in w.value for w in at.warning)
+
+
+def test_no_fundamentals_shows_no_data_verdict():
+    """실적을 못 구한 종목은 '매수 후보'가 아니라 '실적 없음'으로 표시돼야 함"""
+    at = _run_app(False)
+
+    assert not at.exception, [e.value for e in at.exception]
+    verdicts = []
+    for df in at.dataframe:
+        columns = list(getattr(df.value, "columns", []))
+        if "최종점수" in columns and "판정" in columns:
+            verdicts = list(df.value["판정"])
+            break
+
+    assert verdicts, "순위 표를 찾지 못함"
+    assert set(verdicts) == {cfg.V_NO_DATA}, verdicts
+    assert cfg.V_BUY not in verdicts, "실적이 없는데 매수 후보 판정이 나옴"
+
+
 def test_ticker_manager_is_on_main_screen():
     """종목 추가칸이 사이드바가 아니라 메인 화면(순위표 위)에 있어야 함"""
     at = _run_app(True)

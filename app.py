@@ -406,9 +406,34 @@ def render_ticker_manager() -> None:
     사이드바(서브 메뉴) 안에 있으면 모바일에서 한 번 더 들어가야 해서,
     순위 표 바로 위 메인 화면에 그대로 펼쳐 둡니다.
     """
-    st.markdown("#### 📌 종목 관리")
+    st.markdown("##### 📌 종목 관리")
 
-    # --- 종목 추가 (입력칸 + 버튼을 한 줄에) ---
+    # 추가 처리는 반드시 '콜백'에서 해야 합니다.
+    # 본문에서 입력칸을 비우면 Streamlit이 "위젯을 만든 뒤에는 못 바꾼다"며 앱을 죽입니다.
+    # 콜백은 위젯을 그리기 전에 실행되므로 여기서만 입력칸을 비울 수 있습니다.
+    def _do_add() -> None:
+        symbol = str(st.session_state.get("new_ticker_input", "")).strip().upper()
+        st.session_state.new_ticker_input = ""     # 추가하면 입력칸을 비웁니다
+        if not symbol:
+            return
+        if symbol in st.session_state.tickers:
+            st.session_state.add_message = ("warning", f"{symbol}은(는) 이미 목록에 있습니다")
+        elif len(st.session_state.tickers) >= cfg.MAX_TICKERS:
+            st.session_state.add_message = (
+                "error",
+                f"종목은 최대 {cfg.MAX_TICKERS}개까지입니다. "
+                "수집 시간이 길어지고 야후가 요청을 거부할 수 있어 제한을 둡니다.",
+            )
+        elif not ticker_exists(symbol):
+            st.session_state.add_message = (
+                "error", f"{symbol}을(를) 찾을 수 없습니다. 티커를 다시 확인해 주세요"
+            )
+        else:
+            st.session_state.tickers.append(symbol)
+            st.session_state.last_added = symbol   # 추가 직후 수집 결과를 보여주기 위해
+            write_tickers_to_url(st.session_state.tickers)
+
+    # --- 종목 추가 ---
     add_cols = st.columns([3, 1])
     with add_cols[0]:
         new_symbol = st.text_input(
@@ -416,47 +441,41 @@ def render_ticker_manager() -> None:
             placeholder="예: NVDA",
             key="new_ticker_input",
             label_visibility="collapsed",
+            help="미국 주식 티커를 넣으면 기존 종목과 완전히 같은 기준으로 비교됩니다.",
         ).strip().upper()
     with add_cols[1]:
-        add_clicked = st.button("➕ 추가", width="stretch", disabled=not new_symbol)
+        st.button("➕ 추가", width="stretch", disabled=not new_symbol, on_click=_do_add)
 
-    if add_clicked:
-        if new_symbol in st.session_state.tickers:
-            st.warning(f"{new_symbol}은(는) 이미 목록에 있습니다")
-        elif len(st.session_state.tickers) >= cfg.MAX_TICKERS:
-            st.error(
-                f"종목은 최대 {cfg.MAX_TICKERS}개까지입니다. "
-                "수집 시간이 길어지고 야후가 요청을 거부할 수 있어 제한을 둡니다."
-            )
-        elif not ticker_exists(new_symbol):
-            st.error(f"{new_symbol}을(를) 찾을 수 없습니다. 티커를 다시 확인해 주세요")
-        else:
-            st.session_state.tickers.append(new_symbol)
-            st.session_state.last_added = new_symbol   # 추가 직후 수집 결과를 보여주기 위해
-            write_tickers_to_url(st.session_state.tickers)
-            st.rerun()
+    message = st.session_state.pop("add_message", None)
+    if message:
+        {"warning": st.warning, "error": st.error}.get(message[0], st.info)(message[1])
 
     # --- 현재 목록 + 삭제 ---
     # 모바일에서 세로로 길게 늘어지지 않도록 가로로 감기는 알약(pills) 모양으로 그립니다.
     # (버튼 13개를 세로로 쌓으면 순위 표까지 한참 내려야 합니다)
-    st.caption(f"현재 {len(st.session_state.tickers)}개 — 종목을 누르면 삭제됩니다")
+    only_one = len(st.session_state.tickers) <= 1
+    st.caption(
+        f"현재 {len(st.session_state.tickers)}개 — "
+        + ("종목이 하나뿐이라 삭제할 수 없습니다" if only_one else "종목을 누르면 삭제됩니다")
+    )
     remove_target = st.pills(
         "삭제할 종목",
         options=list(st.session_state.tickers),
         selection_mode="single",
         default=None,
+        # 종목이 하나면 아예 못 누르게 합니다.
+        # 눌렀다가 거부되면 선택이 남아 "최소 한 종목" 경고가 영영 사라지지 않습니다
+        # (선택을 코드로 지우는 것은 Streamlit이 막습니다).
+        disabled=only_one,
         # 목록이 바뀌면 키도 바뀌게 해서 지운 종목이 선택된 채로 남지 않게 합니다
         key="del_pills_" + "_".join(st.session_state.tickers),
         label_visibility="collapsed",
     )
 
-    if remove_target:
-        if len(st.session_state.tickers) <= 1:
-            st.warning("최소 한 종목은 남아 있어야 합니다")
-        else:
-            st.session_state.tickers.remove(remove_target)
-            write_tickers_to_url(st.session_state.tickers)
-            st.rerun()
+    if remove_target and not only_one:
+        st.session_state.tickers.remove(remove_target)
+        write_tickers_to_url(st.session_state.tickers)
+        st.rerun()
 
     # --- 저장 / 되돌리기 ---
     is_custom = st.session_state.tickers != list(cfg.TICKERS)
@@ -506,10 +525,8 @@ def render_ticker_manager() -> None:
                 "Settings → Secrets 에 `GITHUB_TOKEN` 을 넣어 주세요 (README 참고)."
             )
 
-    st.caption(
-        "💡 지금 주소를 홈 화면에 추가해두면 이 목록이 그대로 유지됩니다. "
-        "추가한 종목도 기존 종목과 **완전히 같은 기준**으로 비교됩니다."
-    )
+    # 안내 문구는 짧게. 모바일에서 이 칸이 길어지면 순위·점수가 첫 화면에서 밀려납니다.
+    st.caption("💡 주소를 홈 화면에 추가해두면 이 목록이 유지됩니다.")
     st.divider()
 
 
@@ -551,11 +568,13 @@ with st.sidebar:
 # ---------------------------------------------------------------------------
 # 헤더 + 데이터 로드
 # ---------------------------------------------------------------------------
-st.title("📊 추세추종 대시보드 v2")
+# 제목과 설명은 짧게 둡니다.
+# 모바일(폭 412px)에서 제목이 두 줄로 넘어가고 설명이 세 줄이면,
+# 그 아래 종목 관리 칸까지 더해져 점수·순위가 첫 화면에서 통째로 밀려납니다.
+st.markdown("### 📊 추세추종 대시보드")
 st.markdown(
-    '<div class="section-note">실적(SEC 8-K 논갭 영업이익) + 주가 추세를 합쳐 종목별 종합 점수를 매깁니다. '
-    "모든 데이터는 무료 공개 자료에서 자동 수집됩니다. "
-    "<b>화면의 배지나 항목을 누르면 어떻게 계산했는지 볼 수 있습니다.</b></div>",
+    '<div class="section-note">실적(논갭 영업이익) + 주가 추세를 합쳐 종합 점수를 냅니다. '
+    "<b>항목을 누르면 계산 과정을 볼 수 있습니다.</b></div>",
     unsafe_allow_html=True,
 )
 
@@ -595,9 +614,12 @@ if result["no_fundamentals"]:
     missing = result["no_fundamentals"]
     # 주가를 못 받아 아예 분석에서 빠진 종목이 있을 수 있으므로,
     # '전체'의 기준은 화면에 점수가 나온 종목(scores) 입니다.
-    all_missing = len(missing) >= len(scores)
+    #
+    # 13종목 중 12종목이 비어도 파란 안내만 뜨면 사고를 놓칩니다.
+    # 대부분(70% 이상, 최소 2종목)이 비면 SEC 수집이 망가진 것으로 보고 크게 알립니다.
+    mostly_missing = len(missing) >= max(2, len(scores) * 0.7)
 
-    if all_missing:
+    if mostly_missing:
         # 전 종목 실적이 비면 대시보드의 절반(펀더멘털)이 통째로 죽은 상태입니다.
         # 접힌 진단 패널에 묻히지 않도록 맨 위에 크게 알리고 원인을 바로 보여줍니다.
         first_errors = [
@@ -605,9 +627,15 @@ if result["no_fundamentals"]:
             for r in (result.get("reports") or [])
             if r.get("first_error")
         ]
+        scope = (
+            "모든 종목의"
+            if len(missing) >= len(scores)
+            else f"대부분의 종목({len(missing)}/{len(scores)})에서"
+        )
         st.error(
-            "🚨 **모든 종목의 실적 자료를 가져오지 못했습니다.**\n\n"
-            "지금 화면의 점수는 **주가 추세만 반영된 값**이라 원래 모델과 다릅니다.\n\n"
+            f"🚨 **{scope} 실적 자료를 가져오지 못했습니다.**\n\n"
+            "이 종목들의 점수는 **주가 추세만 반영된 값**이라 원래 모델과 다르며, "
+            f"판정은 `{cfg.V_NO_DATA}`으로 표시되고 순위표 맨 뒤로 밀려 있습니다.\n\n"
             "가장 흔한 원인은 SEC가 요청을 거부한 경우입니다. "
             "아래 **🔧 데이터 수집 진단**을 펼쳐 `첫 오류` 열을 확인해 주세요."
             + ("\n\n첫 오류:\n\n- " + "\n- ".join(first_errors[:3]) if first_errors else "")
@@ -937,10 +965,20 @@ d2.metric(
     "예상 증가율 -" if next_qoq is None else f"예상 증가율 {next_qoq:+.1f}%",
     delta_color="off",
 )
+next2_qoq = forecast_detail.get("next2_qoq")
+if next2_qoq is None:
+    # 다다음 분기 자료가 없으면 2분기 경로를 판정하지 않습니다 (없는 근거를 있는 척하지 않기)
+    accel_note = "다다음 분기 자료 없음"
+else:
+    # 근거는 '다음 분기 근거 + 다다음 분기 근거'입니다.
+    # (예전에는 다음 분기 근거만 적어 신뢰도를 실제보다 높게 보이게 했습니다)
+    accel_note = (
+        f"{detail.get('forward_basis') or '-'} + {forecast_detail.get('basis_2') or '-'}"
+    )
 d3.metric(
     "델타가속예측 (2분기 경로)",
     detail.get("accel_forecast") or cfg.F2_NONE,
-    detail.get("forward_basis") or "근거 없음",
+    accel_note,
     delta_color="off",
 )
 
@@ -1255,7 +1293,10 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
     _local, _, _domain = _identity.rpartition("@")
     _masked = f"{_local[:3]}***@{_domain}" if _domain else _identity
     _source = "Secrets에 넣으신 값" if _typed and cfg._has_email(_typed) else "기본값"
-    st.caption(f"SEC 요청자 신원: `{_masked}` ({_source})")
+    st.caption(
+        f"SEC 요청자 신원: `{_masked}` ({_source}) — "
+        "신원을 바꾸면 이미 열려 있는 접속에는 앱이 다시 시작된 뒤부터 적용됩니다."
+    )
 
     if _typed and not cfg._has_email(_typed):
         # 조용히 기본값으로 바꿔치기하면, 설정을 고쳤는데도 안 된다고 오해하게 됩니다
