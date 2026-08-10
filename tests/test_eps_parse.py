@@ -537,6 +537,67 @@ def test_delta_history_table_uses_per_share_columns_on_eps_basis():
     assert table[0]["조정EPS($/주)"] > 0, table[0]
 
 
+def test_forecast_uses_the_same_ruler_as_the_history():
+    """구조대 경로에서 전망도 **주당 달러**여야 합니다 (LITE 루멘텀 사고).
+
+    과거는 주당 $0.87 인데 전망만 달러($60,000,000)로 만들면
+    증가율이 수십억 %가 되어 통째로 버려지거나, 평균 마진이 0.0000002% 로
+    계산돼 전망이 0 이 됩니다. 실제 화면에서 그렇게 나왔습니다.
+    """
+    import forward_estimates as fe
+
+    rows = _mixed([], [0.60, 0.65, 0.72, 0.80, 0.84, 0.87])
+    quarters = pipeline.apply_metric_basis(rows, {})
+    output = {
+        "forward_op_income": None, "basis": None,
+        "forward_op_income_2": None, "basis_2": None,
+        "detail": "", "detail_2": "",
+    }
+    consensus = {"eps_0q": 0.95, "eps_1q": 1.02, "analysts_0q": 12, "errors": []}
+    result = fe._forward_on_eps_basis(output, consensus, quarters)
+
+    assert result["forward_op_income"] == 0.95, result["forward_op_income"]
+    assert result["forward_op_income_2"] == 1.02
+    assert "/주" in result["detail"], result["detail"]
+
+
+def test_dollar_forecast_is_rejected_on_eps_basis():
+    """달러 전망이 섞여 들어오면 크기 검사가 걸러 내야 합니다"""
+    import forward_estimates as fe
+
+    rows = _mixed([], [0.60, 0.65, 0.72, 0.80, 0.84, 0.87])
+    quarters = pipeline.apply_metric_basis(rows, {})
+    output = {
+        "forward_op_income": None, "basis": None,
+        "forward_op_income_2": None, "basis_2": None,
+        "detail": "", "detail_2": "",
+    }
+    # 달러 값이 EPS 자리에 들어온 상황 (자가 어긋난 경우)
+    consensus = {"eps_0q": 60_000_000.0, "eps_1q": None, "errors": []}
+    result = fe._forward_on_eps_basis(output, consensus, quarters)
+
+    assert result["forward_op_income"] is None, "자가 어긋난 전망이 통과했습니다"
+    assert any("제외" in e for e in consensus["errors"]), consensus["errors"]
+
+
+def test_no_eps_consensus_leaves_forecast_empty():
+    """EPS 컨센서스가 없으면 억지로 만들지 않고 비워 둡니다"""
+    import forward_estimates as fe
+
+    rows = _mixed([], [0.60, 0.65, 0.72, 0.80, 0.84, 0.87])
+    quarters = pipeline.apply_metric_basis(rows, {})
+    output = {
+        "forward_op_income": None, "basis": None,
+        "forward_op_income_2": None, "basis_2": None,
+        "detail": "", "detail_2": "",
+    }
+    consensus = {"eps_0q": None, "eps_1q": None, "errors": []}
+    result = fe._forward_on_eps_basis(output, consensus, quarters)
+
+    assert result["forward_op_income"] is None
+    assert any("EPS 컨센서스" in e for e in consensus["errors"]), consensus["errors"]
+
+
 def test_measured_numbers_are_recorded_in_config():
     """검증 결과를 코드에 남겨 둡니다 — 나중에 근거를 찾을 수 있도록"""
     assert cfg.EPS_BASIS_DIRECTION_MATCH == 0.795     # 31/39 (자사주 종목)
