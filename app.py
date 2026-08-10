@@ -39,7 +39,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 17
+REQUIRED_CONFIG_VERSION = 18
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -1183,21 +1183,39 @@ else:
         forward_bar = None
         op_bar = op_values
 
+    # 이 종목을 어느 숫자로 재고 있는지 — 차트의 단위가 여기에 달려 있습니다.
+    # 구조대 경로(조정 EPS)에서는 주당 달러라, 백만으로 나누면 막대가 전부 0이 됩니다.
+    _basis = cfg.quarters_basis(detail.get("quarters") or [])
+    _is_eps = _basis == cfg.BASIS_ADJ_EPS
+    _unit_scale = 1.0 if _is_eps else 1e6
+    _metric_name = "조정 EPS" if _is_eps else "논갭 영업이익"
+    _axis_title = "조정EPS($/주)" if _is_eps else "영업이익($M)"
+    _hover_fmt = (
+        "%{x}<br>조정 EPS $%{y:,.2f}/주<extra></extra>" if _is_eps
+        else "%{x}<br>영업이익 $%{y:,.0f}M<extra></extra>"
+    )
+
     # 제목을 plotly 밖에 두어 툴바·범례와 겹치지 않게 합니다
     st.markdown(
-        f'<div class="chart-title">{selected} — 분기별 논갭 영업이익과 증가 속도</div>',
+        f'<div class="chart-title">{selected} — 분기별 {_metric_name}과 증가 속도</div>',
         unsafe_allow_html=True,
     )
+    if _is_eps:
+        st.caption(
+            "⚠️ 이 종목은 논갭 영업이익을 구하지 못해 **조정 주당순이익**으로 "
+            "판정했습니다. 조정 EPS에는 이자·세금·자사주가 섞여 있어, 자사주를 크게 "
+            "줄인 종목에서는 논갭 영업이익과 판정이 79.5%만 일치했습니다."
+        )
 
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     fig.add_trace(
         go.Bar(
             x=labels,
-            y=[v / 1e6 if v is not None else None for v in op_bar],
-            name="논갭 영업이익",
+            y=[v / _unit_scale if v is not None else None for v in op_bar],
+            name=_metric_name,
             marker_color="#22c55e",
             opacity=0.9,
-            hovertemplate="%{x}<br>영업이익 $%{y:,.0f}M<extra></extra>",
+            hovertemplate=_hover_fmt,
         ),
         secondary_y=False,
     )
@@ -1278,7 +1296,7 @@ else:
     # 가로축 라벨을 눕히지 않고 짧게 유지해 글자 겹침을 막습니다
     fig.update_xaxes(tickangle=0, tickfont=dict(size=11), fixedrange=True)
     fig.update_yaxes(
-        title_text="영업이익($M)", title_font=dict(size=11),
+        title_text=_axis_title, title_font=dict(size=11),
         secondary_y=False, gridcolor="#2b3241", fixedrange=True,
     )
     fig.update_yaxes(
@@ -1341,8 +1359,10 @@ else:
         display["매출($M)"] = display["revenue"].apply(
             lambda v: f"{v/1e6:,.0f}" if pd.notna(v) else "-"
         )
-        display["논갭 영업이익($M)"] = display["op_income"].apply(
-            lambda v: f"{v/1e6:,.0f}" if pd.notna(v) else "-"
+        _amount_col = "조정EPS($/주)" if _is_eps else "논갭 영업이익($M)"
+        display[_amount_col] = display["op_income"].apply(
+            lambda v: (f"{v:,.2f}" if _is_eps else f"{v/1e6:,.0f}")
+            if pd.notna(v) else "-"
         )
         display["GM(%)"] = display["gross_margin_pct"].apply(
             lambda v: f"{v:.1f}" if pd.notna(v) else "-"
@@ -1354,7 +1374,7 @@ else:
             columns={"period_label": "분기", "filing_date": "발표일(8-K)", "source": "출처"}
         )
         st.dataframe(
-            display[["분기", "발표일(8-K)", "매출($M)", "논갭 영업이익($M)", "GM(%)", "QoQ(%)", "출처"]],
+            display[["분기", "발표일(8-K)", "매출($M)", _amount_col, "GM(%)", "QoQ(%)", "출처"]],
             width="stretch",
             hide_index=True,
         )

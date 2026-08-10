@@ -391,21 +391,32 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
     score = max_score * ratio
 
     # 저기저 함정 방지 상한
+    #
+    # ⚠️ 문턱은 **기준자마다 다릅니다.** 논갭 영업이익은 달러($50M), 조정 EPS 는
+    #    주당 달러($0.05)입니다. 하나의 문턱을 그대로 쓰면 EPS 8.53 달러가
+    #    "$50M 미만"으로 판정되어 모든 종목의 델타 점수가 조용히 깎입니다.
+    #    실제로 그렇게 깎이는 것을 확인하고 기준자별로 나눴습니다.
     capped = False
+    basis = cfg.quarters_basis(quarters)
+    threshold = cfg.LOW_BASE_THRESHOLD.get(basis, cfg.LOW_BASE_THRESHOLD_USD)
     latest_op = next(
         (q["op_income"] for q in reversed(quarters) if q.get("op_income") is not None), None
     )
-    if latest_op is not None and latest_op < cfg.LOW_BASE_THRESHOLD_USD:
+    if latest_op is not None and latest_op < threshold:
         limit = max_score * cfg.LOW_BASE_CAP_RATIO
         if score > limit:
             score = limit
             capped = True
             detail += (
-                f" · 이익 규모가 작아(${latest_op/1e6:,.0f}M) 이 항목 점수를 "
+                f" · 이익 규모가 작아({cfg.fmt_amount(latest_op, basis, 0)}) 이 항목 점수를 "
                 f"{int(cfg.LOW_BASE_CAP_RATIO*100)}%로 제한했습니다"
             )
     trace["latest_op"] = latest_op
     trace["capped"] = capped
+    # ⚠️ 이름 주의: trace["basis"] 는 이미 "TTM 이냐 분기 단위냐"를 뜻합니다.
+    #    여기서 말하는 기준자(어느 숫자로 재는가)는 다른 개념이라 이름을 나눕니다.
+    trace["metric_basis"] = basis
+    trace["low_base_threshold"] = threshold
 
     return {
         "score": round(score, 1),
@@ -442,6 +453,11 @@ def score_phase(quarters: list[dict]) -> dict:
     """
     max_score = cfg.W_PHASE
     ttm = _ttm_series(quarters)
+    # 금액 표기는 기준자에 따라 단위가 다릅니다 (달러 / 주당 달러).
+    # 한 함수로 통일하지 않으면 조정 EPS 8.53 달러가 화면에 "$0M" 으로 나옵니다.
+    _basis = cfg.quarters_basis(quarters)
+    _v = lambda x: cfg.fmt_amount(x, _basis, 0)   # noqa: E731
+
 
     if len(ttm) < 2:
         return {
@@ -461,7 +477,7 @@ def score_phase(quarters: list[dict]) -> dict:
     if previous <= 0 < now:
         phase = cfg.PH_TURNAROUND
         detail = (
-            f"1년치 이익이 적자(${previous/1e6:,.0f}M)에서 흑자(${now/1e6:,.0f}M)로 "
+            f"1년치 이익이 적자({_v(previous)})에서 흑자({_v(now)})로 "
             "돌아섰습니다 — 사이클 바닥을 지난 자리입니다"
         )
     elif now <= 0 and _all_approximated(quarters):
@@ -480,7 +496,7 @@ def score_phase(quarters: list[dict]) -> dict:
         # 틀린 확신보다 모른다고 말하는 편이 낫습니다.
         phase = cfg.PH_UNKNOWN
         detail = (
-            f"1년치 이익이 마이너스(${now/1e6:,.0f}M)로 나왔지만, 이 값은 회사 공식 "
+            f"1년치 이익이 마이너스({_v(now)})로 나왔지만, 이 값은 회사 공식 "
             "발표가 아니라 **XBRL 회계데이터로 만든 근사치**입니다. 무형자산상각을 "
             "되돌리지 못하면 GAAP 적자가 그대로 남기 때문에, 실제로 적자인지 "
             "판단할 수 없습니다"
@@ -491,27 +507,27 @@ def score_phase(quarters: list[dict]) -> dict:
         # 서 있는 멀쩡한 회사와 같은 표시를 받게 됩니다.
         phase = cfg.PH_LOSS
         detail = (
-            f"1년치 이익이 아직 적자입니다(${now/1e6:,.0f}M). "
+            f"1년치 이익이 아직 적자입니다({_v(now)}). "
             "흑자로 돌아서기 전까지는 사이클 위치를 말할 수 없습니다"
         )
     elif peak > 0 and now > peak:
         phase = cfg.PH_NEW_HIGH
         detail = (
-            f"1년치 이익 ${now/1e6:,.0f}M 이 수집 기간(3년) 안의 최고 "
-            f"${peak/1e6:,.0f}M 을 넘어섰습니다. "
+            f"1년치 이익 {_v(now)} 이 수집 기간(3년) 안의 최고 "
+            f"{_v(peak)} 을 넘어섰습니다. "
             "⚠️ 3년치만 모으므로 '역대 최고'가 아니라 **3년 안에서의 최고**입니다 — "
             "예전에 훨씬 잘 벌다 무너진 회사도 조금 회복하면 여기에 들어옵니다"
         )
     elif peak > 0 and now < peak * cfg.PHASE_ROLLOVER_RATIO:
         phase = cfg.PH_ROLLOVER
         detail = (
-            f"1년치 이익 ${now/1e6:,.0f}M 이 3년 내 최고 ${peak/1e6:,.0f}M 의 "
+            f"1년치 이익 {_v(now)} 이 3년 내 최고 {_v(peak)} 의 "
             f"{now/peak*100:.0f}% 까지 내려왔습니다 — 고점에서 이탈한 자리입니다"
         )
     else:
         phase = cfg.PH_NONE
         detail = (
-            f"1년치 이익 ${now/1e6:,.0f}M — 3년 내 최고(${peak/1e6:,.0f}M)를 넘지도, "
+            f"1년치 이익 {_v(now)} — 3년 내 최고({_v(peak)})를 넘지도, "
             "크게 벗어나지도 않은 중간 자리입니다"
         )
 
@@ -775,7 +791,10 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
         growth_pct = None
         if forward_op > 0:
             forward_score = max_score * 0.67 * 0.9
-            growth_text = f"적자에서 흑자 전환 전망({ '$%.0fM' % (forward_op/1e6) })"
+            growth_text = (
+            "적자에서 흑자 전환 전망("
+            + cfg.fmt_amount(forward_op, cfg.quarters_basis(quarters), 0) + ")"
+        )
         elif forward_op > latest_op:
             forward_score = max_score * 0.67 * 0.5
             growth_text = "적자 축소 전망 (기저가 적자라 증가율 대신 개선 여부로 평가)"
@@ -1046,6 +1065,40 @@ def score_fundamental(quarters: list[dict], forward: dict) -> dict:
                 f"이 항목을 {multiplier:.2f}배 했습니다"
             ),
         }
+
+    # --- 자사주 방어장치 (구조대 경로에서만) ---
+    #
+    # 논갭 영업이익을 못 구해 조정 EPS 로 판정하는 중이라면, 자사주 매입이
+    # '가속'을 만들어 낼 수 있습니다.  EPS = 순이익 ÷ 주식수  이므로
+    # 영업이익이 제자리여도 분모가 줄면 EPS 는 오릅니다.
+    #
+    # 자사주가 큰 4종목 39개 시점으로 재 본 결과:
+    #   · 주식수 감소와 EPS 부풀림의 상관계수 -0.703
+    #   · 주식수가 1년에 -12% 줄어든 구간에서 편향이 +1.5 ~ +3.8%p
+    #     → 판정 문턱(3.0%p)과 겹칩니다
+    #   · EBAY 2021-12-31(주식수 -11.7%)에서 논갭 영업이익은 '유지'인데
+    #     조정 EPS 는 '가속' 이라고 했습니다. 그 분기는 **주가 정점 직후**였습니다.
+    #
+    # 그래서 이 구간에서는 델타 점수를 절반까지만 인정합니다.
+    shrink = (forward.get("consensus") or {}).get("shares_shrink_pct")
+    if (
+        cfg.quarters_basis(quarters) == cfg.BASIS_ADJ_EPS
+        and shrink is not None
+        and shrink <= cfg.EPS_BASIS_BUYBACK_LIMIT_PCT
+    ):
+        capped_to = min(delta["score"], cfg.W_DELTA_ACCEL * cfg.EPS_BASIS_BUYBACK_CAP_RATIO)
+        if capped_to < delta["score"]:
+            delta = {
+                **delta,
+                "score": round(capped_to, 1),
+                "buyback_capped": True,
+                "detail": (
+                    f"{delta['detail']} · ⚠️ 조정 EPS 로 판정 중인데 주식수가 1년에 "
+                    f"{shrink:.1f}% 줄었습니다. 자사주 매입이 '가속'을 만들었을 수 "
+                    f"있어 이 항목을 {int(cfg.EPS_BASIS_BUYBACK_CAP_RATIO*100)}%로 "
+                    "제한했습니다"
+                ),
+            }
 
     total = (
         delta["score"] + phase["score"] + gm["score"]
