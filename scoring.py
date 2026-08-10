@@ -129,6 +129,19 @@ def _ttm_growth_series(quarters: list[dict]) -> list[float]:
     ]
 
 
+def _all_approximated(quarters: list[dict], window: int = 4) -> bool:
+    """최근 1년치를 이루는 분기가 전부 '근사치'인지 봅니다.
+
+    근사치는 회사 공식 발표가 아니라 XBRL 회계데이터로 만든 값이라,
+    이것만으로 "적자다" 같은 단정을 하면 안 됩니다. 한 분기라도 회사가
+    직접 밝힌 값(직접공시·역산)이 섞여 있으면 근거가 있다고 봅니다.
+    """
+    usable = [q for q in quarters if q.get("op_income") is not None]
+    if not usable:
+        return False
+    return all(q.get("source") == cfg.SRC_APPROX for q in usable[-window:])
+
+
 def _clamp(value: float, low: float, high: float) -> float:
     """값을 low~high 범위 안으로 잘라 넣습니다."""
     return max(low, min(high, value))
@@ -451,6 +464,27 @@ def score_phase(quarters: list[dict]) -> dict:
             f"1년치 이익이 적자(${previous/1e6:,.0f}M)에서 흑자(${now/1e6:,.0f}M)로 "
             "돌아섰습니다 — 사이클 바닥을 지난 자리입니다"
         )
+    elif now <= 0 and _all_approximated(quarters):
+        # ⚠️ 근사치만으로는 적자를 선언하지 않습니다.
+        #
+        # 근사치는 'XBRL 의 GAAP 영업이익 + 주식보상비 + 무형자산상각' 입니다.
+        # 그런데 회사가 무형자산상각을 따로 신고하지 않으면 그 되돌리기가 0이 되어,
+        # GAAP 적자가 그대로 논갭 적자로 남습니다.
+        #
+        # 실제 사례 — 코히런트(COHR) FY2025:
+        #   GAAP 주당순이익 −$0.52 (적자)  /  조정 주당순이익 +$3.53 (흑자)
+        # 인수로 생긴 상각비가 원인이라 GAAP 만 적자입니다. 그런데 근사치가
+        # 이것을 '적자 지속'(국면 최하 등급)으로 만들어 순위 바닥으로 밀었습니다.
+        #
+        # 그래서 근사치만 있는 종목의 마이너스는 '판단불가'로 표시합니다.
+        # 틀린 확신보다 모른다고 말하는 편이 낫습니다.
+        phase = cfg.PH_UNKNOWN
+        detail = (
+            f"1년치 이익이 마이너스(${now/1e6:,.0f}M)로 나왔지만, 이 값은 회사 공식 "
+            "발표가 아니라 **XBRL 회계데이터로 만든 근사치**입니다. 무형자산상각을 "
+            "되돌리지 못하면 GAAP 적자가 그대로 남기 때문에, 실제로 적자인지 "
+            "판단할 수 없습니다"
+        )
     elif now <= 0:
         # 1년치가 아직 적자라면 사이클 위치를 논할 단계가 아닙니다.
         # 이것을 '중간 자리'로 뭉뚱그리면, 계속 적자인 회사가 고점과 바닥 사이에
@@ -564,6 +598,92 @@ def score_gm_driver(quarters: list[dict]) -> dict:
             "baseline": baseline,                # 직전 4개 분기 평균
             "baseline_values": baseline_values,  # 평균 계산에 쓴 값들
             "delta_pp": delta,
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
+# 이익의 질 — GAAP EPS 와 조정 EPS 의 격차가 벌어지는가 (점수 없음 · 표시 전용)
+# ---------------------------------------------------------------------------
+def check_earnings_quality(quarters: list[dict]) -> dict:
+    """'조정' 주당순이익이 무엇을 얼마나 가리고 있는지 추세를 봅니다.
+
+    조정 EPS 는 감독기관이 아니라 **회사가 스스로 정의**합니다. 그래서 숫자
+    자체보다 "GAAP 과 얼마나 벌어져 있고, 그 격차가 커지는가"가 중요합니다.
+
+        격차 = 조정 EPS − GAAP EPS
+
+    · 격차가 좁아지는 중  → 구조조정·상각 같은 일회성이 실제로 끝나가는 중 (건강)
+    · 격차가 그대로       → 인수 상각처럼 예정된 항목 (정상)
+    · 격차가 벌어지는 중  → ⚠️ '조정'이 점점 더 많은 것을 가리는 중
+
+    ⚠️ 이 검사는 **점수에 반영하지 않습니다.** 아직 과거 데이터로 검증한 적이
+       없기 때문입니다. 화면에 보여 주기만 합니다. 검증 없이 점수를 주지
+       않는다는 이 저장소의 원칙을 따릅니다.
+    """
+    pairs = [
+        (q["adj_eps"], q["gaap_eps"])
+        for q in quarters
+        if q.get("adj_eps") is not None and q.get("gaap_eps") is not None
+    ]
+    if len(pairs) < cfg.EPS_GAP_MIN_QUARTERS:
+        return {
+            "verdict": cfg.QUALITY_GAP_UNKNOWN,
+            "detail": (
+                f"GAAP·조정 주당순이익이 함께 잡힌 분기가 {len(pairs)}개뿐입니다 "
+                f"(최소 {cfg.EPS_GAP_MIN_QUARTERS}개 필요). 격차 추세를 말할 수 없습니다."
+            ),
+            "trace": {"pairs": pairs},
+        }
+
+    gaps = [adj - gaap for adj, gaap in pairs]
+    half = len(gaps) // 2
+    older, recent = gaps[:half], gaps[half:]
+    older_avg = sum(older) / len(older)
+    recent_avg = sum(recent) / len(recent)
+
+    # 앞 절반의 평균 격차가 0 근처면 배수를 낼 수 없습니다(0으로 나누기).
+    # 그럴 때는 '조정할 것이 거의 없던 회사'이므로 격차가 생긴 것 자체를 봅니다.
+    if abs(older_avg) < 0.01:
+        verdict = (
+            cfg.QUALITY_GAP_WIDENING if abs(recent_avg) >= 0.10
+            else cfg.QUALITY_GAP_STABLE
+        )
+        ratio = None
+    else:
+        ratio = recent_avg / older_avg
+        if ratio >= cfg.EPS_GAP_WIDEN_RATIO:
+            verdict = cfg.QUALITY_GAP_WIDENING
+        elif ratio <= cfg.EPS_GAP_NARROW_RATIO:
+            verdict = cfg.QUALITY_GAP_NARROWING
+        else:
+            verdict = cfg.QUALITY_GAP_STABLE
+
+    notes = {
+        cfg.QUALITY_GAP_WIDENING: (
+            "⚠️ 조정 주당순이익이 GAAP 과 점점 더 벌어지고 있습니다. "
+            "'조정'으로 빼는 몫이 커지는 중이라, 조정 EPS 의 증가율을 그대로 "
+            "믿으면 안 됩니다"
+        ),
+        cfg.QUALITY_GAP_STABLE: (
+            "GAAP 과의 격차가 일정합니다. 인수 상각처럼 예정된 항목일 가능성이 큽니다"
+        ),
+        cfg.QUALITY_GAP_NARROWING: (
+            "GAAP 과의 격차가 줄고 있습니다. 일회성 비용이 실제로 끝나가는 중입니다"
+        ),
+    }
+    return {
+        "verdict": verdict,
+        "detail": (
+            f"주당 격차(조정−GAAP) 평균이 ${older_avg:.2f} → ${recent_avg:.2f} 로 "
+            f"움직였습니다. {notes[verdict]}"
+        ),
+        "trace": {
+            "pairs": pairs,
+            "gaps": [round(g, 4) for g in gaps],
+            "older_avg": round(older_avg, 4),
+            "recent_avg": round(recent_avg, 4),
+            "ratio": round(ratio, 3) if ratio is not None else None,
         },
     }
 
@@ -1040,6 +1160,8 @@ def build_score(ticker: str, quarters: list[dict], forward: dict, price_info: di
     # score_fundamental 이 이미 계산해 뒀습니다 (델타 점수에 반영하느라).
     # 여기서 다시 부르면 배수가 곱해진 델타를 근거로 삼게 되어 값이 어긋납니다.
     forecast = fundamental["forecast"]
+    # 이익의 질 — 점수에는 넣지 않고 화면에만 띄웁니다(아직 검증 전).
+    quality = check_earnings_quality(quarters)
 
     final = fundamental["total"] * cfg.WEIGHT_FUNDAMENTAL + technical["total"] * cfg.WEIGHT_TECHNICAL
     stage = price_info.get("stage", cfg.TREND_STAGE[cfg.S_UNKNOWN])
@@ -1074,6 +1196,11 @@ def build_score(ticker: str, quarters: list[dict], forward: dict, price_info: di
         "data_source": data_source,
         "confidence": confidence["total"],
         "confidence_detail": confidence,
+        "earnings_quality": quality["verdict"],
+        "earnings_quality_detail": quality,
+        # 최근 분기의 주당순이익 — 점수에는 쓰지 않고 화면 확인용입니다(1단계).
+        "adj_eps": (latest_quarter or {}).get("adj_eps"),
+        "gaap_eps": (latest_quarter or {}).get("gaap_eps"),
         "delta_forecast": forecast["label"],
         "accel_forecast": forecast["accel_label"],
         "forward_op_income_2": forward.get("forward_op_income_2"),

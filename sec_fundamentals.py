@@ -239,6 +239,112 @@ LABELS_NONGAAP_OPEX = [
     r"total\s+operating\s+expenses?\s*\(non[-\s]?GAAP\)",
 ]
 
+# 손익 항목 이름의 공통 부분.
+# 표에서는 "net income (loss) per diluted share" 처럼 괄호로 흑자·적자를 함께
+# 표기하는 것이 표준입니다. 그 괄호를 허용해야 표 형식 보도자료를 읽을 수 있습니다.
+_PROFIT_WORD = r"(?:income|earnings|loss)(?:\s*\((?:loss|income)\))?"
+
+# 조정(논갭) 주당순이익 — 앞에 있는 것부터 우선 시도합니다.
+LABELS_ADJUSTED_EPS = [
+    rf"non[-\s]?GAAP\s+(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
+    rf"adjusted\s+(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
+    rf"non[-\s]?GAAP\s+diluted\s+{_PROFIT_WORD}\s+per\s+share",
+    rf"adjusted\s+diluted\s+{_PROFIT_WORD}\s+per\s+share",
+    r"non[-\s]?GAAP\s+(?:diluted\s+)?EPS",
+    r"adjusted\s+(?:diluted\s+)?EPS",
+    r"(?:earnings|income)\s+per\s+(?:diluted\s+)?share\s*\(non[-\s]?GAAP\)",
+]
+
+# GAAP 주당순이익 — 조정 EPS 와 짝지어 '이익의 질'을 보는 데 씁니다.
+# ⚠️ "non-GAAP" 안에도 "GAAP" 글자가 들어 있습니다. 뒤쪽 패턴들은 아무 수식어 없이
+#    매칭되므로, 실제 채택할 때 앞을 되돌아보며 논갭 표기를 걸러 냅니다
+#    (find_eps_value 의 exclude_nongaap).
+LABELS_GAAP_EPS = [
+    rf"(?<!non-)(?<!non )GAAP\s+(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
+    r"(?<!non-)(?<!non )GAAP\s+(?:diluted\s+)?EPS",
+    rf"net\s+{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
+    rf"diluted\s+{_PROFIT_WORD}\s+per\s+share",
+    rf"{_PROFIT_WORD}\s+per\s+diluted\s+share",
+]
+
+# 매칭된 이름 앞쪽에 이 말이 있으면 GAAP 이 아니라 논갭 수치입니다.
+# ⚠️ 바로 앞 한 낱말만 봐서는 안 됩니다. "Non-GAAP net income per diluted share" 에서
+#    'income per diluted share' 부분만 매칭되면 그 앞은 "Non-GAAP net " 이라
+#    'non-GAAP' 이 낱말 하나 건너에 있습니다. 그래서 범위를 두고 훑습니다.
+_NONGAAP_NEAR_RE = re.compile(r"non[-\s]?GAAP|adjusted", re.I)
+_NONGAAP_LOOKBACK = 40   # 이름 앞 몇 글자까지 되돌아볼 것인가
+
+
+def find_eps_value(
+    text: str, label_patterns: list[str], *, exclude_nongaap: bool = False
+) -> float | None:
+    """보도자료에서 **주당** 금액(EPS)을 찾습니다.
+
+    금액을 찾는 find_labeled_value 와 따로 두는 이유가 세 가지 있습니다.
+
+    ① **단위 배수를 절대 적용하면 안 됩니다.**
+       표 제목에 "(in thousands)" 가 있어도 주당 금액에는 곱하지 않습니다.
+       곱해 버리면 $1.00 이 $1,000 이 됩니다.
+    ② **적자는 이름에 적혀 있습니다.**
+       "net loss per diluted share of $0.83" 은 숫자가 양수 0.83 이지만
+       실제로는 −0.83 입니다. 이름에 loss 가 있으면 부호를 뒤집습니다.
+       (표 형식의 "$(0.83)" 은 괄호 규칙으로 이미 음수가 됩니다)
+    ③ **크기 검사가 필요합니다.**
+       주당 금액이 수백 달러를 넘는 일은 거의 없습니다. 그보다 크면 표의
+       다른 숫자(매출 등)를 잘못 집은 것이므로 버립니다.
+
+    exclude_nongaap: True 면 이름 바로 앞에 "non-GAAP"·"adjusted" 가 붙은
+                     경우를 건너뜁니다 (GAAP 값을 찾을 때 사용).
+    """
+    if not text:
+        return None
+
+    for pattern_str in label_patterns:
+        pattern = re.compile(pattern_str, re.I)
+        for label_match in pattern.finditer(text):
+            if exclude_nongaap:
+                # 이름 앞쪽을 되돌아보되 **줄을 넘어가지는 않습니다.**
+                # 표에서는 한 줄이 한 항목이므로, 윗줄의 'Non-GAAP' 때문에
+                # 아랫줄의 진짜 GAAP 값까지 버리는 일을 막아야 합니다.
+                start = label_match.start()
+                line_start = text.rfind("\n", 0, start) + 1
+                window_start = max(line_start, start - _NONGAAP_LOOKBACK)
+                if _NONGAAP_NEAR_RE.search(text[window_start:start]):
+                    continue
+
+            search_from = label_match.end()
+            for _ in range(4):    # 같은 문장 안에서 최대 4번까지 다시 시도
+                parsed = _parse_number_at(text, search_from)
+                if parsed is None:
+                    break
+                value, _start, number_end, _had_scale, num_end = parsed
+
+                # 퍼센트 숫자는 EPS 가 아닙니다 (예: "grew 20% to $1.00")
+                tail_line = text[num_end : num_end + 24].split("\n", 1)[0]
+                if _PERCENT_AFTER_RE.match(tail_line):
+                    search_from = number_end
+                    continue
+
+                if abs(value) > cfg.EPS_MAX_ABS:
+                    search_from = number_end
+                    continue
+
+                # 이름이 "적자"라고 말하고 있는데 숫자가 양수면 부호를 뒤집습니다.
+                #   "net loss per diluted share of $0.83"  →  −0.83
+                #
+                # ⚠️ 단, "net income (loss) per share" 처럼 흑자·적자를 함께 적은
+                #    표 제목은 적자 선언이 아니라 그냥 항목 이름입니다. 이런 표에서는
+                #    금액 자체가 "(0.83)" 형태로 적혀 이미 음수가 되어 있으므로
+                #    여기서 또 뒤집으면 안 됩니다.
+                label_text = label_match.group(0)
+                says_loss = re.search(r"\bloss\b", label_text, re.I) and not re.search(
+                    r"\b(?:income|earnings)\b", label_text, re.I
+                )
+                if value > 0 and says_loss:
+                    value = -value
+                return value
+    return None
+
 
 # ---------------------------------------------------------------------------
 # 보도자료 텍스트 → 실적 숫자
@@ -252,18 +358,30 @@ def parse_press_release(text: str) -> dict:
       gross_margin_pct  논갭 매출총이익률 (%)
       source            "직접공시" / "역산" / None (못 찾음)
       gm_is_gaap        GM%가 GAAP 값이면 True
+      adj_eps           조정(논갭) 주당순이익 — 규정상 존재가 보장된 값
+      gaap_eps          GAAP 주당순이익 — 조정 EPS 와 짝지어 '이익의 질'을 봅니다
     """
     result: dict = {
         "revenue": None,
         "op_income": None,
         "gross_margin_pct": None,
         "adjusted_ebitda": None,   # 논갭 영업이익이 없을 때 역산에 씁니다
+        "adj_eps": None,
+        "gaap_eps": None,
         "source": None,
         "gm_is_gaap": False,
         "derivation": "",   # 어떻게 구한 값인지 사람이 읽을 수 있는 설명
     }
     if not text:
         return result
+
+    # 주당순이익은 다른 항목의 성공 여부와 무관하게 항상 읽어 둡니다.
+    # 미국 증권규정이 조정 EPS 옆에 GAAP EPS 를 나란히 싣도록 요구하기 때문에,
+    # 논갭 영업이익을 못 찾은 보도자료에서도 이 둘은 잡히는 경우가 많습니다.
+    result["adj_eps"] = find_eps_value(text, LABELS_ADJUSTED_EPS)
+    result["gaap_eps"] = find_eps_value(
+        text, LABELS_GAAP_EPS, exclude_nongaap=True
+    )
 
     result["revenue"] = find_labeled_value(text, LABELS_REVENUE)
     # ZETA·TSLA·APP 처럼 논갭 영업이익을 발표하지 않는 회사가 많습니다.
@@ -472,6 +590,11 @@ def new_report(ticker: str) -> dict:
         "text_ok": 0,              # 보도자료 텍스트를 확보한 건수
         "gate_passed": 0,          # 실적발표로 판별된 건수
         "parsed_ok": 0,            # 숫자 추출에 성공한 건수
+        # ↓ 1단계에서 새로 재는 것 — "조정 EPS 를 논갭 영업이익보다 잘 읽어 오는가"
+        #   이 두 숫자를 배포 환경에서 비교해 보고 모델의 기준자를 바꿀지 결정합니다.
+        "op_income_ok": 0,         # 논갭 영업이익을 뽑아낸 건수
+        "adj_eps_ok": 0,           # 조정 EPS 를 뽑아낸 건수
+        "gaap_eps_ok": 0,          # GAAP EPS 를 뽑아낸 건수 (이익의 질 검사용)
         "xbrl_quarters": 0,        # XBRL로 만든 분기 수
         "merged_direct": 0,        # 8-K 값으로 덮어쓴 분기 수
         "text_source": "",         # 텍스트를 어디서 얻었나 (보도자료/첨부/본문)
@@ -532,15 +655,29 @@ def fetch_earnings_8k(
         report["gate_passed"] += 1
 
         parsed = parse_press_release(text)
-        if parsed["revenue"] is None and parsed["op_income"] is None:
-            continue  # 실적 숫자가 전혀 없으면 실적발표가 아닐 가능성
+        # 실적 숫자가 하나도 없으면 실적발표가 아닐 가능성이 큽니다.
+        # 조정 EPS 도 실적 숫자로 인정합니다 — 규정상 존재가 보장된 값이라
+        # 매출·영업이익을 못 읽은 보도자료에서도 이것만 잡히는 경우가 있습니다.
+        if (
+            parsed["revenue"] is None
+            and parsed["op_income"] is None
+            and parsed["adj_eps"] is None
+        ):
+            continue
 
         # 보도자료 첨부가 아니라 공시 본문에서 읽은 경우에는 기준을 높입니다.
         # (실적과 무관한 8-K 본문에서 엉뚱한 금액을 주워 담아
         #  분기 짝짓기를 오염시키는 것을 실전에서 확인했습니다)
-        if not had_exhibit and parsed["op_income"] is None:
+        if not had_exhibit and parsed["op_income"] is None and parsed["adj_eps"] is None:
             continue
         report["parsed_ok"] += 1
+        # 어느 항목이 얼마나 잡히는지 따로 셉니다 — 기준자 교체 판단의 근거가 됩니다.
+        if parsed["op_income"] is not None:
+            report["op_income_ok"] += 1
+        if parsed["adj_eps"] is not None:
+            report["adj_eps_ok"] += 1
+        if parsed["gaap_eps"] is not None:
+            report["gaap_eps_ok"] += 1
 
         filing_date = str(filing.filing_date)
         quarters.append(
@@ -551,6 +688,8 @@ def fetch_earnings_8k(
                 "revenue": parsed["revenue"],
                 "op_income": parsed["op_income"],
                 "gross_margin_pct": parsed["gross_margin_pct"],
+                "adj_eps": parsed["adj_eps"],
+                "gaap_eps": parsed["gaap_eps"],
                 "source": parsed["source"] or cfg.SRC_DERIVED,
                 "gm_is_gaap": parsed["gm_is_gaap"],
                 # 화면의 "원문 보기" 링크에 사용 (사용자가 직접 공시를 확인할 수 있도록)
@@ -1019,6 +1158,13 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
         )
     if press.get("adjusted_ebitda") is not None:
         row["adjusted_ebitda"] = press["adjusted_ebitda"]
+    # 주당순이익은 점수에 쓰지 않고 '이익의 질' 검사에만 씁니다(1단계).
+    # 논갭 영업이익을 못 찾은 분기에서도 이 둘은 잡히는 경우가 많으므로
+    # op_income 성공 여부와 무관하게 따로 옮겨 둡니다.
+    if press.get("adj_eps") is not None:
+        row["adj_eps"] = press["adj_eps"]
+    if press.get("gaap_eps") is not None:
+        row["gaap_eps"] = press["gaap_eps"]
     if press.get("revenue") is not None:
         row["revenue"] = press["revenue"]
     if press.get("gross_margin_pct") is not None:

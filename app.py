@@ -39,7 +39,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 16
+REQUIRED_CONFIG_VERSION = 17
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -196,20 +196,31 @@ def tip(label: str, key: str | None = None) -> str:
 # ---------------------------------------------------------------------------
 # 상세 설명 그리기 도우미 — 눌렀을 때 나오는 내용 공통 서식
 # ---------------------------------------------------------------------------
+def md_money(text: str) -> str:
+    """달러 기호가 그대로 보이게 만듭니다.
+
+    Streamlit 은 한 줄에 `$` 가 두 개 있으면 **그 사이를 수식으로 해석**합니다.
+    그래서 "적자($-30M)에서 흑자($12M)로 돌아섰습니다" 같은 문장이 화면에서
+    회색 수식 상자로 깨져 읽을 수 없게 됩니다(휴대폰에서 실제로 확인했습니다).
+    앞에 백슬래시를 붙여 "이건 수식이 아니라 그냥 달러 기호"라고 알려 줍니다.
+    """
+    return text.replace("$", "\\$") if text else text
+
+
 def render_explanation(data: dict) -> None:
     """설명 딕셔너리를 화면에 보기 좋게 그립니다."""
     if data.get("meaning"):
-        st.markdown(f"**이게 무슨 뜻인가요?**\n\n{data['meaning']}")
+        st.markdown(f"**이게 무슨 뜻인가요?**\n\n{md_money(data['meaning'])}")
 
     if data.get("formula"):
-        st.markdown(f"**계산 방법**\n\n{data['formula']}")
+        st.markdown(f"**계산 방법**\n\n{md_money(data['formula'])}")
 
     lines = [line for line in data.get("calc_lines", []) if line]
     if lines:
-        st.markdown("**이 종목의 실제 숫자**\n\n" + "\n".join(lines))
+        st.markdown("**이 종목의 실제 숫자**\n\n" + md_money("\n".join(lines)))
 
     if data.get("detail"):
-        st.info(data["detail"])
+        st.info(md_money(data["detail"]))
 
     if data.get("bands"):
         st.markdown("**구간별 점수표**")
@@ -1078,17 +1089,37 @@ technical = detail["technical"]
 with st.expander("🔍 점수 전체 구성 한눈에 보기"):
     st.markdown(f"**펀더멘털 {detail['fund_score']:.0f}점**")
     st.markdown(
-        f"- **델타 가속** {fundamental['delta']['score']:.0f}/{cfg.W_DELTA_ACCEL}점 — "
-        f"{fundamental['delta']['detail']}\n"
-        f"- **국면** {fundamental['phase']['score']:.0f}/{cfg.W_PHASE}점 — "
-        f"{fundamental['phase']['phase']} · {fundamental['phase']['detail']}\n"
-        f"- **GM% 드라이버** {fundamental['gm']['score']:.0f}/{cfg.W_GM_DRIVER}점 — "
-        f"{fundamental['gm']['detail']}\n"
-        f"- **매출 성장의 질** {fundamental['revenue']['score']:.0f}/{cfg.W_REVENUE_QUALITY}점 — "
-        f"{fundamental['revenue']['detail']}\n"
-        f"- **포워드 신호** {fundamental['forward']['score']:.0f}/{cfg.W_FORWARD}점 — "
-        f"{fundamental['forward']['detail']}"
+        md_money(
+            f"- **델타 가속** {fundamental['delta']['score']:.0f}/{cfg.W_DELTA_ACCEL}점 — "
+            f"{fundamental['delta']['detail']}\n"
+            f"- **국면** {fundamental['phase']['score']:.0f}/{cfg.W_PHASE}점 — "
+            f"{fundamental['phase']['phase']} · {fundamental['phase']['detail']}\n"
+            f"- **GM% 드라이버** {fundamental['gm']['score']:.0f}/{cfg.W_GM_DRIVER}점 — "
+            f"{fundamental['gm']['detail']}\n"
+            f"- **매출 성장의 질** {fundamental['revenue']['score']:.0f}/{cfg.W_REVENUE_QUALITY}점 — "
+            f"{fundamental['revenue']['detail']}\n"
+            f"- **포워드 신호** {fundamental['forward']['score']:.0f}/{cfg.W_FORWARD}점 — "
+            f"{fundamental['forward']['detail']}"
+        )
     )
+    # --- 이익의 질 (점수 없음 · 표시 전용) ---
+    # 조정 EPS 는 회사가 스스로 정의합니다. 그래서 숫자 자체보다
+    # "GAAP 과 얼마나 벌어져 있고 그 격차가 커지는가"를 함께 봐야 합니다.
+    _quality = detail.get("earnings_quality_detail") or {}
+    if _quality.get("verdict") and _quality["verdict"] != cfg.QUALITY_GAP_UNKNOWN:
+        _adj, _gaap = detail.get("adj_eps"), detail.get("gaap_eps")
+        _eps_line = ""
+        if _adj is not None and _gaap is not None:
+            _eps_line = (
+                f" (최근 분기 조정 ${_adj:,.2f} · GAAP ${_gaap:,.2f})"
+            )
+        st.markdown(
+            md_money(
+                f"**이익의 질 — {_quality['verdict']}** "
+                f"*(점수에 반영하지 않습니다)*{_eps_line}\n\n{_quality['detail']}"
+            )
+        )
+
     st.markdown(f"**기술 {detail['tech_score']:.0f}점**")
     st.markdown(
         f"- **추세** {technical['trend_score']:.0f}/{cfg.W_TREND}점 — {detail['trend_state']}\n"
@@ -1413,6 +1444,64 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
             ]
         )
         st.dataframe(diag, hide_index=True, width="stretch")
+
+        # --- 1단계 관문: 조정 EPS 를 논갭 영업이익보다 잘 읽어 오는가 ---
+        # 이 두 숫자를 보고 모델의 기준자를 조정 EPS 로 바꿀지 결정합니다.
+        # 표를 따로 두는 이유: 위 표에 열을 더 붙이면 휴대폰에서 잘립니다.
+        st.markdown("---")
+        st.markdown("#### 📏 어느 숫자가 더 잘 읽히나 — 기준자 교체 판단용")
+        st.caption(
+            "미국 증권규정은 회사가 **조정 EPS**를 발표하면 GAAP EPS와 나란히 "
+            "대조표를 싣도록 요구합니다. 그래서 조정 EPS는 보도자료에서 "
+            "**존재가 규정으로 보장된 유일한 논갭 숫자**입니다. "
+            "반면 논갭 영업이익은 그런 의무가 없어 아예 안 싣는 회사가 많습니다."
+        )
+
+        _op_total = sum(r.get("op_income_ok", 0) for r in reports)
+        _eps_total = sum(r.get("adj_eps_ok", 0) for r in reports)
+        _gaap_total = sum(r.get("gaap_eps_ok", 0) for r in reports)
+
+        _c1, _c2, _c3 = st.columns(3)
+        _c1.metric("논갭 영업이익", f"{_op_total}건")
+        _c2.metric("조정 EPS", f"{_eps_total}건")
+        _c3.metric("GAAP EPS", f"{_gaap_total}건")
+
+        st.dataframe(
+            pd.DataFrame(
+                [
+                    {
+                        "종목": r.get("ticker", "-"),
+                        "영업이익": r.get("op_income_ok", 0),
+                        "조정EPS": r.get("adj_eps_ok", 0),
+                        "GAAP EPS": r.get("gaap_eps_ok", 0),
+                    }
+                    for r in reports
+                ]
+            ),
+            hide_index=True,
+            width="stretch",
+        )
+
+        if _eps_total > _op_total:
+            st.success(
+                f"조정 EPS가 논갭 영업이익보다 **{_eps_total - _op_total}건 더** 읽혔습니다. "
+                "기준자를 조정 EPS로 바꾸는 쪽이 유리하다는 신호입니다."
+            )
+        elif _eps_total or _op_total:
+            st.info(
+                "아직 조정 EPS가 논갭 영업이익보다 더 잘 읽히지는 않습니다. "
+                "기준자 교체를 서두를 근거가 없습니다."
+            )
+        else:
+            st.warning(
+                "두 숫자 모두 한 건도 읽지 못했습니다. 보도자료 본문 확보 단계"
+                "(`본문확보` 열)부터 막혀 있을 가능성이 큽니다."
+            )
+        st.caption(
+            "⚠️ 지금 단계에서 EPS는 **점수에 쓰지 않습니다.** 얼마나 잘 읽히는지 "
+            "재기만 합니다. 기준자를 바꾸는 것은 이 숫자를 확인한 뒤에 결정합니다."
+        )
+        st.markdown("---")
 
         st.caption("👇 문장으로 된 기록은 아래에서 종목을 눌러 펼쳐 보세요 (표에서는 글자가 잘립니다)")
         for r in reports:
