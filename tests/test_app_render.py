@@ -159,7 +159,7 @@ def test_confidence_and_diagnostics_sections():
 
 
 def test_ranking_table_has_new_columns():
-    """순위 표에 주가($)·신뢰도·델타예측·델타가속예측 열이 있어야 함"""
+    """순위 표에 주가($)·신뢰도·델타예측(1분기후)·델타예측(2분기후) 열이 있어야 함"""
     at = _run_app(True)
 
     assert not at.exception, [e.value for e in at.exception]
@@ -169,8 +169,8 @@ def test_ranking_table_has_new_columns():
         if "최종점수" in columns:
             assert "주가($)" in columns, columns
             assert "신뢰도" in columns, columns
-            assert "델타예측" in columns, columns
-            assert "델타가속예측" in columns, columns
+            assert "델타예측(1분기후)" in columns, columns
+            assert "델타예측(2분기후)" in columns, columns
             ranking_found = True
             break
     assert ranking_found, "순위 표를 찾지 못함"
@@ -273,13 +273,13 @@ def test_ticker_manager_is_on_main_screen():
 
 
 def test_detail_shows_both_delta_forecasts():
-    """종목 상세에 델타예측(다음 분기)과 델타가속예측(2분기)이 모두 보여야 함"""
+    """종목 상세에 1분기 후·2분기 후 델타예측이 모두 보여야 함"""
     at = _run_app(True)
 
     assert not at.exception, [e.value for e in at.exception]
     labels = [m.label for m in at.metric]
-    assert any("델타예측" in label for label in labels), "델타예측 표시가 없음"
-    assert any("델타가속예측" in label for label in labels), "델타가속예측 표시가 없음"
+    assert any("1분기 후" in label for label in labels), "1분기 후 델타예측 표시가 없음"
+    assert any("2분기 후" in label for label in labels), "2분기 후 델타예측 표시가 없음"
 
 
 def test_empty_scores_shows_message():

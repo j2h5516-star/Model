@@ -566,7 +566,7 @@ def test_ranking_table_has_confidence_and_forecast():
 
     table = pipeline.build_ranking_table(scores)
     assert "신뢰도" in table.columns, table.columns
-    assert "델타예측" in table.columns, table.columns
+    assert "델타예측(1분기후)" in table.columns, table.columns
     assert table.iloc[0]["신뢰도"] > 0
 
 

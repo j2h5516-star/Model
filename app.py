@@ -38,7 +38,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 5
+REQUIRED_CONFIG_VERSION = 6
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -392,6 +392,40 @@ def ticker_exists(symbol: str) -> bool:
         return False
 
 
+def render_explain_buttons(detail: dict, key_prefix: str = "") -> None:
+    """그 종목의 계산 근거 버튼 묶음을 그립니다 (누르면 계산 과정이 펼쳐집니다).
+
+    순위 표 아래와 종목 상세, 두 곳에서 같은 버튼을 씁니다.
+    표에서 행을 눌렀을 때 한참 아래까지 내려가지 않아도 근거를 볼 수 있게 하기 위함입니다.
+    """
+    row1 = st.columns(3)
+    with row1[0]:
+        with st.popover(f"📄 출처: {detail['data_source'] or '없음'}", width="stretch"):
+            render_explanation(explain.explain_data_source(detail))
+    with row1[1]:
+        with st.popover(f"🔮 전망: {detail['forward_basis'] or '없음'}", width="stretch"):
+            render_explanation(explain.explain_forward(detail))
+    with row1[2]:
+        with st.popover(f"🏷️ 판정: {detail['verdict']}", width="stretch"):
+            render_explanation(explain.explain_verdict_full(detail))
+
+    row2 = st.columns(3)
+    with row2[0]:
+        with st.popover(f"📊 GM% 드라이버: {detail['gm_type']}", width="stretch"):
+            render_explanation(explain.explain_gm_driver(detail))
+    with row2[1]:
+        with st.popover("⚡ 델타 계산·예측 근거", width="stretch"):
+            render_explanation(explain.explain_delta(detail))
+    with row2[2]:
+        with st.popover(f"📈 기술 점수: {detail['tech_score']:.0f}점", width="stretch"):
+            render_explanation(explain.explain_technical(detail))
+
+    row3 = st.columns(3)
+    with row3[0]:
+        with st.popover(f"🎯 신뢰도: {detail['confidence']:.0f}%", width="stretch"):
+            render_explanation(explain.explain_confidence(detail))
+
+
 # ---------------------------------------------------------------------------
 # 종목 관리 (추가 · 삭제 · 저장)
 # ---------------------------------------------------------------------------
@@ -456,24 +490,27 @@ def render_ticker_manager() -> None:
     only_one = len(st.session_state.tickers) <= 1
     st.caption(
         f"현재 {len(st.session_state.tickers)}개 — "
-        + ("종목이 하나뿐이라 삭제할 수 없습니다" if only_one else "종목을 누르면 삭제됩니다")
+        + ("종목이 하나뿐이라 삭제할 수 없습니다" if only_one else "종목을 눌러 고른 뒤 삭제 버튼을 누르세요")
     )
-    remove_target = st.pills(
-        "삭제할 종목",
+    # 누르는 즉시 지워지면 실수로 종목을 잃습니다. 여기서는 '고르기'만 하고,
+    # 실제 삭제는 아래 삭제 버튼을 눌러야 일어납니다.
+    picked = st.pills(
+        "종목 고르기",
         options=list(st.session_state.tickers),
         selection_mode="single",
         default=None,
-        # 종목이 하나면 아예 못 누르게 합니다.
-        # 눌렀다가 거부되면 선택이 남아 "최소 한 종목" 경고가 영영 사라지지 않습니다
-        # (선택을 코드로 지우는 것은 Streamlit이 막습니다).
         disabled=only_one,
         # 목록이 바뀌면 키도 바뀌게 해서 지운 종목이 선택된 채로 남지 않게 합니다
         key="del_pills_" + "_".join(st.session_state.tickers),
         label_visibility="collapsed",
     )
 
-    if remove_target and not only_one:
-        st.session_state.tickers.remove(remove_target)
+    if st.button(
+        f"🗑️ {picked} 삭제" if picked else "🗑️ 선택 종목 삭제",
+        width="stretch",
+        disabled=only_one or not picked,
+    ):
+        st.session_state.tickers.remove(picked)
         write_tickers_to_url(st.session_state.tickers)
         st.rerun()
 
@@ -785,7 +822,7 @@ styled = (
     ranking.style.map(_style_verdict, subset=["판정"])
     .map(_style_score, subset=["최종점수", "펀더", "기술"])
     .map(_style_confidence, subset=["신뢰도"])
-    .map(_style_delta, subset=["델타방향", "델타예측", "델타가속예측"])
+    .map(_style_delta, subset=["델타방향", "델타예측(1분기후)", "델타예측(2분기후)"])
     .map(_style_rs, subset=["RS"])
     .format(
         {
@@ -816,8 +853,16 @@ try:
 except (AttributeError, IndexError, KeyError):
     picked_from_table = None
 
+if picked_from_table and picked_from_table in scores:
+    st.markdown(
+        f'<div class="section-note">👇 <b>{picked_from_table}</b> 의 계산 근거 — '
+        "아래 버튼을 누르면 그 항목을 어떻게 계산했는지 바로 볼 수 있습니다.</div>",
+        unsafe_allow_html=True,
+    )
+    render_explain_buttons(scores[picked_from_table], key_prefix="table")
+
 st.markdown(
-    '<div class="section-note">👆 <b>표의 행을 누르면</b> 아래 \'종목 상세\'가 그 종목으로 바뀝니다 · '
+    '<div class="section-note">👆 <b>표의 행을 누르면</b> 계산 근거 버튼이 바로 아래에 나오고, \'종목 상세\'도 그 종목으로 바뀝니다 · '
     "매수 후보는 상대강도(RS)가 높은 순으로 위에 표시됩니다<br>"
     "📱 모바일에서는 표를 좌우로 밀어서 나머지 열을 볼 수 있습니다.</div>",
     unsafe_allow_html=True,
@@ -954,13 +999,13 @@ c4.metric(
 )
 
 # --- 델타(이익 증가 속도) 한 줄 요약: 현재 방향 · 다음 분기 · 2분기 경로 ---
-# 순위 표의 '델타방향 / 델타예측 / 델타가속예측' 세 열과 같은 값입니다.
+# 순위 표의 '델타방향 / 델타예측(1분기후) / 델타예측(2분기후)' 세 열과 같은 값입니다.
 forecast_detail = detail.get("forecast_detail") or {}
 next_qoq = forecast_detail.get("next_qoq")
 d1, d2, d3 = st.columns(3)
 d1.metric("델타 방향 (현재)", detail["delta_direction"], "실제 실적 기준", delta_color="off")
 d2.metric(
-    "델타예측 (다음 분기)",
+    "델타예측 (1분기 후)",
     detail.get("delta_forecast") or cfg.F_NONE,
     "예상 증가율 -" if next_qoq is None else f"예상 증가율 {next_qoq:+.1f}%",
     delta_color="off",
@@ -976,7 +1021,7 @@ else:
         f"{detail.get('forward_basis') or '-'} + {forecast_detail.get('basis_2') or '-'}"
     )
 d3.metric(
-    "델타가속예측 (2분기 경로)",
+    "델타예측 (2분기 후)",
     detail.get("accel_forecast") or cfg.F2_NONE,
     accel_note,
     delta_color="off",
@@ -989,32 +1034,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-row1 = st.columns(3)
-with row1[0]:
-    with st.popover(f"📄 출처: {detail['data_source'] or '없음'}", width="stretch"):
-        render_explanation(explain.explain_data_source(detail))
-with row1[1]:
-    with st.popover(f"🔮 전망: {detail['forward_basis'] or '없음'}", width="stretch"):
-        render_explanation(explain.explain_forward(detail))
-with row1[2]:
-    with st.popover(f"🏷️ 판정: {detail['verdict']}", width="stretch"):
-        render_explanation(explain.explain_verdict_full(detail))
-
-row2 = st.columns(3)
-with row2[0]:
-    with st.popover(f"📊 GM% 드라이버: {detail['gm_type']}", width="stretch"):
-        render_explanation(explain.explain_gm_driver(detail))
-with row2[1]:
-    with st.popover("⚡ 델타 계산·예측 근거", width="stretch"):
-        render_explanation(explain.explain_delta(detail))
-with row2[2]:
-    with st.popover(f"📈 기술 점수: {detail['tech_score']:.0f}점", width="stretch"):
-        render_explanation(explain.explain_technical(detail))
-
-row3 = st.columns(3)
-with row3[0]:
-    with st.popover(f"🎯 신뢰도: {detail['confidence']:.0f}%", width="stretch"):
-        render_explanation(explain.explain_confidence(detail))
+render_explain_buttons(detail, key_prefix="detail")
 
 # --- 점수 구성 요약 ---
 fundamental = detail["fundamental"]
@@ -1068,6 +1088,21 @@ else:
         if forward_op_2 is not None:
             future_labels.append("다다음(전망)")
             future_values.append(forward_op_2)
+
+    # 전망 막대가 실적 막대를 짓눌러 화면에서 지워버리지 않게 합니다.
+    # (전망이 실적의 4억 배로 계산돼 y축이 늘어나는 바람에 실제 실적 막대가
+    #  픽셀 0이 되어 "그래프가 통째로 없다"는 문제가 있었습니다)
+    actual_max = max((v for v in op_values if v is not None), default=None)
+    dropped_future = 0
+    if actual_max and actual_max > 0 and future_labels:
+        keep_labels, keep_values = [], []
+        for label, value in zip(future_labels, future_values):
+            if value is not None and abs(value) > actual_max * cfg.CHART_FORWARD_MAX_RATIO:
+                dropped_future += 1
+                continue
+            keep_labels.append(label)
+            keep_values.append(value)
+        future_labels, future_values = keep_labels, keep_values
 
     if future_labels:
         labels = labels + future_labels
@@ -1179,6 +1214,12 @@ else:
         secondary_y=True, showgrid=False, fixedrange=True,
     )
     st.plotly_chart(fig, width="stretch", config=PLOTLY_CONFIG)
+
+    if dropped_future:
+        st.caption(
+            f"⚠️ 전망 막대 {dropped_future}개는 실적보다 지나치게 커서 그리지 않았습니다 "
+            "(계산이 깨진 값일 가능성이 큽니다 — 아래 진단을 확인해 주세요)"
+        )
 
     st.markdown(
         '<div class="chart-note">초록 막대가 이익 크기, 주황 실선이 "전분기 대비 얼마나 빨리 늘고 있는가"입니다. '
@@ -1310,6 +1351,9 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
     if not reports:
         st.caption("진단 기록이 없습니다.")
     else:
+        # 표에는 '숫자'만 둡니다.
+        # 긴 문장을 표 칸에 넣으면 모바일에서 양쪽이 잘려 읽을 수가 없습니다.
+        # 문장은 아래 종목별 '자세히'를 눌러 펼쳐 보게 합니다.
         diag = pd.DataFrame(
             [
                 {
@@ -1321,16 +1365,39 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
                     "숫자추출": r.get("parsed_ok", 0),
                     "공시반영": r.get("merged_direct", 0),
                     "짝못찾음": r.get("unpaired_press", 0),
-                    "텍스트출처": r.get("text_source", "") or "-",
-                    "전망수집": r.get("forward_note", "") or "정상",
                     "소요(초)": r.get("seconds", "-"),
-                    "첫 오류": r.get("first_error", "") or "-",
-                    "비고": (r.get("pair_note") or r.get("note") or "-"),
+                    "문제": "있음" if (r.get("first_error") or r.get("pair_note")) else "-",
                 }
                 for r in reports
             ]
         )
         st.dataframe(diag, hide_index=True, width="stretch")
+
+        st.caption("👇 문장으로 된 기록은 아래에서 종목을 눌러 펼쳐 보세요 (표에서는 글자가 잘립니다)")
+        for r in reports:
+            ticker = r.get("ticker", "-")
+            has_problem = bool(r.get("first_error") or r.get("pair_note"))
+            with st.expander(f"{'⚠️ ' if has_problem else ''}{ticker} 자세히"):
+                lines = [
+                    f"- **텍스트 출처**: {r.get('text_source') or '-'}",
+                    f"- **전망 수집**: {r.get('forward_note') or '정상'}",
+                    f"- **수집 소요**: {r.get('seconds', '-')}초",
+                ]
+                if r.get("first_error"):
+                    lines.append(f"- **첫 오류**: `{r['first_error']}`")
+                if r.get("pair_note"):
+                    lines.append(f"- **짝짓기 기록**: {r['pair_note']}")
+                if r.get("note"):
+                    lines.append(f"- **비고**: {r['note']}")
+                # 숫자 검사 단계에서 고치거나 뺀 내역
+                notes = r.get("quality_notes") or []
+                if notes:
+                    lines.append(
+                        f"- **숫자 검사**: 보정 {r.get('quality_fixed', 0)}건 · "
+                        f"제외 {r.get('quality_dropped', 0)}건"
+                    )
+                    lines.extend(f"    - {note}" for note in notes[:8])
+                st.markdown("\n".join(lines))
 
         st.markdown(
             """

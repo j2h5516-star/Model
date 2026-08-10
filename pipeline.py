@@ -27,6 +27,7 @@ from datetime import datetime
 import pandas as pd
 
 import config as cfg
+import data_quality as dq
 import forward_estimates as fe
 import market_data as md
 import scoring
@@ -48,6 +49,16 @@ def collect_one_ticker(ticker: str, use_cache: bool = True) -> dict:
         quarters = []
         report = sf.new_report(ticker)
         report["first_error"] = f"[수집] {type(exc).__name__}: {str(exc)[:180]}"
+
+    # ★ 계산에 넣기 전에 먼저 숫자를 검사합니다 (모델링의 1단계).
+    #   단위가 어긋난 값을 고치고, 고칠 수 없는 값은 그 항목만 빼며,
+    #   무엇을 했는지 진단에 남깁니다. 이 단계가 없어서 매출이 100만 배 작게
+    #   들어온 분기 하나가 평균 마진 → 전망 → 증가율 → 차트까지 오염시켰습니다.
+    try:
+        quarters = dq.validate_quarters(quarters, report)
+    except Exception as exc:
+        if not report.get("first_error"):
+            report["first_error"] = f"[검사] {type(exc).__name__}: {str(exc)[:180]}"
 
     try:
         forward = fe.estimate_forward(ticker, quarters)
@@ -337,8 +348,8 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
                 "추세상태": score["trend_state"],
                 "GM%드라이버": score["gm_type"],
                 "델타방향": arrow.get(score["delta_direction"], score["delta_direction"]),
-                "델타예측": score["delta_forecast"],
-                "델타가속예측": score.get("accel_forecast", "-"),
+                "델타예측(1분기후)": score["delta_forecast"],
+                "델타예측(2분기후)": score.get("accel_forecast", "-"),
                 "RS": score["rs"],
                 "판정": score["verdict"],
             }

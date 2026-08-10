@@ -22,6 +22,7 @@ scoring.py — 펀더멘털 점수 + 기술 점수 + 최종 판정
 from __future__ import annotations
 
 import config as cfg
+import data_quality as dq
 
 
 # ---------------------------------------------------------------------------
@@ -36,9 +37,10 @@ def _qoq_growth_series(quarters: list[dict]) -> list[float]:
     values = [q.get("op_income") for q in quarters if q.get("op_income") is not None]
     growths: list[float] = []
     for prev, curr in zip(values, values[1:]):
-        if prev is None or curr is None or prev <= 0:
-            continue
-        growths.append((curr / prev - 1.0) * 100.0)
+        # 기저가 0 이하이거나 결과가 비현실적이면(단위가 깨진 경우) 건너뜁니다
+        growth = dq.safe_growth_pct(prev, curr)
+        if growth is not None:
+            growths.append(growth)
     return growths
 
 
@@ -486,7 +488,10 @@ def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> di
     last_qoq = growths[-1]
 
     # --- 델타예측 (다음 분기 하나) ---
-    next_qoq = (forward_op / latest_op - 1.0) * 100.0
+    # 전망 증가율도 안전 계산을 씁니다 (단위가 깨지면 +461,711,116% 같은 값이 나옵니다)
+    next_qoq = dq.safe_growth_pct(latest_op, forward_op)
+    if next_qoq is None:
+        return {**empty, "accel_detail": "전망 증가율이 비현실적이어서 예측을 만들지 않았습니다"}
     change = next_qoq - last_qoq
     was_rising = last_qoq >= 0
 
@@ -500,7 +505,7 @@ def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> di
     # --- 델타가속예측 (2분기 경로) ---
     next2_qoq = None
     if forward_op_2 is not None and forward_op > 0:
-        next2_qoq = (forward_op_2 / forward_op - 1.0) * 100.0
+        next2_qoq = dq.safe_growth_pct(forward_op, forward_op_2)
 
     if next2_qoq is None:
         # 다다음 분기 자료가 없으면 '2분기 경로'를 판정하지 않습니다.

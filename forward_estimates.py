@@ -25,6 +25,7 @@ from __future__ import annotations
 import re
 
 import config as cfg
+import data_quality as dq
 
 # ---------------------------------------------------------------------------
 # ① 보도자료에서 다음 분기 가이던스 찾기
@@ -323,8 +324,13 @@ def average_operating_margin(quarters: list[dict], n: int = 4) -> float | None:
     margins = []
     for q in quarters[-n:]:
         revenue, op_income = q.get("revenue"), q.get("op_income")
-        if revenue and op_income is not None and revenue > 0 and op_income > 0:
-            margins.append(op_income / revenue * 100.0)
+        if op_income is None or op_income <= 0:
+            continue
+        # 말이 되는 마진일 때만 씁니다 (영업이익이 매출보다 클 수는 없습니다).
+        # 예전에는 검사 없이 나눠서 82,804,463% 같은 값이 그대로 흘러갔습니다.
+        margin = dq.safe_margin_pct(revenue, op_income)
+        if margin is not None:
+            margins.append(margin)
     if not margins:
         return None
     return sum(margins) / len(margins)
@@ -446,5 +452,32 @@ def estimate_forward(ticker: str, quarters: list[dict]) -> dict:
             f"다다음 분기는 월가 매출 컨센서스(${consensus['revenue_1q']/1e6:,.0f}M) × "
             f"{margin_label}({margin_for_q2:.1f}%)으로 추정했습니다"
         )
+
+    # --- 마지막 관문: 전망이 말이 되는 크기인지 확인 ---
+    # 여기까지 오는 동안 어딘가에서 단위가 어긋났다면, 한 분기 만에 이익이
+    # 수백만 배가 되는 값이 나옵니다. 그런 값은 화면에 내보내지 않고
+    # "전망 없음"으로 두는 편이 정직합니다.
+    latest_op = next(
+        (q["op_income"] for q in reversed(quarters)
+         if q.get("op_income") is not None and q["op_income"] > 0),
+        None,
+    )
+    ok, reason = dq.check_forward(output["forward_op_income"], latest_op)
+    if not ok:
+        consensus["errors"].append(f"다음 분기 전망 제외: {reason}")
+        output["forward_op_income"] = None
+        output["basis"] = None
+        output["detail"] = f"계산된 전망이 이상해서 쓰지 않았습니다 ({reason})"
+        # 다음 분기가 무너지면 그것을 기준으로 만든 다다음 분기도 믿을 수 없습니다
+        output["forward_op_income_2"] = None
+        output["basis_2"] = None
+        output["detail_2"] = ""
+    else:
+        ok2, reason2 = dq.check_forward(output["forward_op_income_2"], latest_op)
+        if not ok2:
+            consensus["errors"].append(f"다다음 분기 전망 제외: {reason2}")
+            output["forward_op_income_2"] = None
+            output["basis_2"] = None
+            output["detail_2"] = f"계산된 전망이 이상해서 쓰지 않았습니다 ({reason2})"
 
     return output
