@@ -125,6 +125,31 @@ def check_quarter(quarter: dict) -> dict:
             "revenue": None,
         }
 
+    # ⚠️ 조정 EPS 기준에서는 마진 검사를 쓸 수 없습니다.
+    #
+    #   이 검사는 "영업이익 ÷ 매출이 −500%~100% 안에 드는가" 입니다. 그런데
+    #   영업이익 자리에 **주당 달러**(0.87)가 들어오면 어떤 매출을 넣어도
+    #   비율이 0% 근처가 되어 **무조건 통과**합니다. 매출이 100만 배 작게
+    #   들어와도 잡지 못합니다 — 이 모듈이 존재하는 이유 자체가 무력화됩니다.
+    #
+    #   그래서 EPS 기준에서는 매출을 **이웃 분기와 견주어** 검사합니다.
+    #   매출은 어느 기준에서든 언제나 달러이므로 이 방법은 항상 유효합니다.
+    if quarter.get("basis") == cfg.BASIS_ADJ_EPS:
+        neighbor = quarter.get("_neighbor_revenue")
+        if neighbor and neighbor > 0:
+            ratio = revenue / neighbor
+            if not (1.0 / cfg.EPS_BASIS_REVENUE_RATIO <= ratio <= cfg.EPS_BASIS_REVENUE_RATIO):
+                return {
+                    "quality": Q_PARTIAL,
+                    "reasons": [
+                        f"{label}: 매출 ${revenue:,.0f} 이 이웃 분기"
+                        f"(${neighbor:,.0f})의 {ratio:.4g}배라 단위가 어긋난 것으로 "
+                        "보고 매출을 계산에서 뺐습니다"
+                    ],
+                    "revenue": None,
+                }
+        return {"quality": Q_OK, "reasons": [], "revenue": revenue}
+
     if safe_margin_pct(revenue, op_income) is not None:
         return {"quality": Q_OK, "reasons": [], "revenue": revenue}
 
@@ -185,7 +210,18 @@ def validate_quarters(quarters: list[dict], report: dict | None = None) -> list[
     fixed_count = 0
     dropped_count = 0
 
+    # 조정 EPS 기준에서는 매출을 이웃 분기와 견주어 검사합니다(마진 검사가 통하지 않음).
+    # 이웃의 기준값으로는 **중앙값**을 씁니다 — 바로 옆 분기가 하필 깨진 값이면
+    # 둘이 함께 통과해 버리기 때문입니다.
+    revenues = sorted(
+        q["revenue"] for q in quarters
+        if _finite(q.get("revenue")) and q.get("revenue", 0) > 0
+    )
+    median_revenue = revenues[len(revenues) // 2] if revenues else None
+
     for quarter in quarters:
+        if quarter.get("basis") == cfg.BASIS_ADJ_EPS and median_revenue:
+            quarter["_neighbor_revenue"] = median_revenue
         verdict = check_quarter(quarter)
         notes.extend(verdict["reasons"])
 

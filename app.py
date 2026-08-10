@@ -39,7 +39,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 18
+REQUIRED_CONFIG_VERSION = 19
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -1194,6 +1194,12 @@ else:
         "%{x}<br>조정 EPS $%{y:,.2f}/주<extra></extra>" if _is_eps
         else "%{x}<br>영업이익 $%{y:,.0f}M<extra></extra>"
     )
+    # ⚠️ 전망 막대도 **같은 단위**로 그려야 합니다. 실적 막대만 고치고 전망 막대를
+    #    빠뜨리면, 전망이 실적의 100만분의 1 높이가 되어 화면에서 사라집니다.
+    _forward_hover = (
+        "%{x}<br>전망 $%{y:,.2f}/주 (추정치)<extra></extra>" if _is_eps
+        else "%{x}<br>전망 $%{y:,.0f}M (추정치)<extra></extra>"
+    )
 
     # 제목을 plotly 밖에 두어 툴바·범례와 겹치지 않게 합니다
     st.markdown(
@@ -1223,14 +1229,14 @@ else:
         fig.add_trace(
             go.Bar(
                 x=labels,
-                y=[v / 1e6 if v is not None else None for v in forward_bar],
+                y=[v / _unit_scale if v is not None else None for v in forward_bar],
                 name=f"다음 분기 전망({detail['forward_basis'] or '추정'})",
                 marker=dict(
                     color="rgba(34,197,94,0.25)",
                     line=dict(color="#22c55e", width=2),
                     pattern=dict(shape="/", fgcolor="#22c55e", size=6, solidity=0.25),
                 ),
-                hovertemplate="%{x}<br>전망 $%{y:,.0f}M (추정치)<extra></extra>",
+                hovertemplate=_forward_hover,
             ),
             secondary_y=False,
         )
