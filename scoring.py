@@ -746,9 +746,30 @@ def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> di
     threshold = cfg.DELTA_THRESHOLD_PP
     last_qoq = growths[-1]
 
-    # --- 델타예측 (다음 분기 하나) ---
-    # 전망 증가율도 안전 계산을 씁니다 (단위가 깨지면 +461,711,116% 같은 값이 나옵니다)
-    next_qoq = dq.safe_growth_pct(latest_op, forward_op)
+    # ⚠️ 앞과 뒤를 **같은 잣대로** 재야 합니다.
+    #   델타 판정 기준을 1년치(TTM)로 바꾸면서, 여기만 그대로 두는 바람에
+    #   '최근 실제'는 1년치 증가율(예: +23%)인데 '다음 전망'은 분기 증가율
+    #   (예: +17%)이 되어 서로 다른 자를 맞대고 있었습니다.
+    #   꾸준히 크는 회사는 1년치 증가율이 분기 증가율보다 항상 크므로,
+    #   이 상태로는 **거의 모든 성장 종목이 '가속 둔화'로 찍힙니다.**
+    #   실제로 전체 판정의 28%가 그렇게 나왔습니다 (NVDA 는 세 분기 연속).
+    #   그래서 1년치로 판정했으면 전망도 1년치로 환산해 견줍니다.
+    use_ttm = delta_result.get("trace", {}).get("use_ttm", False)
+    values = [
+        q["op_income"] for q in quarters
+        if q.get("op_income") is not None and q.get("anomaly") != "spike"
+    ]
+
+    if use_ttm and len(values) >= 4:
+        ttm_now = sum(values[-4:])
+        ttm_next = sum(values[-3:]) + forward_op
+        next_qoq = dq.safe_growth_pct(ttm_now, ttm_next)
+        growth_unit = "1년치"
+    else:
+        # 전망 증가율도 안전 계산을 씁니다 (단위가 깨지면 +461,711,116% 같은 값이 나옵니다)
+        next_qoq = dq.safe_growth_pct(latest_op, forward_op)
+        growth_unit = "분기"
+
     if next_qoq is None:
         return {**empty, "accel_detail": "전망 증가율이 비현실적이어서 예측을 만들지 않았습니다"}
     change = next_qoq - last_qoq
@@ -762,9 +783,15 @@ def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> di
         label = cfg.F_FLAT
 
     # --- 델타가속예측 (2분기 경로) ---
+    # 여기도 같은 잣대를 씁니다 — 1년치로 봤으면 다다음 분기도 1년치로.
     next2_qoq = None
-    if forward_op_2 is not None and forward_op > 0:
-        next2_qoq = dq.safe_growth_pct(forward_op, forward_op_2)
+    if forward_op_2 is not None:
+        if use_ttm and len(values) >= 4:
+            ttm_next = sum(values[-3:]) + forward_op
+            ttm_next2 = sum(values[-2:]) + forward_op + forward_op_2
+            next2_qoq = dq.safe_growth_pct(ttm_next, ttm_next2)
+        elif forward_op > 0:
+            next2_qoq = dq.safe_growth_pct(forward_op, forward_op_2)
 
     if next2_qoq is None:
         # 다다음 분기 자료가 없으면 '2분기 경로'를 판정하지 않습니다.
@@ -798,7 +825,7 @@ def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> di
         else:
             accel_label = cfg.F2_FLAT
         accel_detail = (
-            f"증가율 경로: 실제 {last_qoq:+.1f}% → 다음 {next_qoq:+.1f}% → "
+            f"{growth_unit} 증가율 경로: 실제 {last_qoq:+.1f}% → 다음 {next_qoq:+.1f}% → "
             f"다다음 {next2_qoq:+.1f}%"
         )
 
@@ -812,9 +839,10 @@ def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> di
         "basis": forward.get("basis"),
         "basis_2": forward.get("basis_2"),
         "confidence": cfg.CONFIDENCE_PCT.get(forward.get("basis"), 0),
+        "growth_unit": growth_unit,
         "detail": (
-            f"최근 실제 증가율 {last_qoq:+.1f}% → 다음 분기 예상 {next_qoq:+.1f}% "
-            f"({change:+.1f}%p)"
+            f"최근 실제 {growth_unit} 증가율 {last_qoq:+.1f}% → 다음 예상 "
+            f"{next_qoq:+.1f}% ({change:+.1f}%p)"
         ),
         "accel_detail": accel_detail,
     }
