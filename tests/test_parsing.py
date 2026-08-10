@@ -397,3 +397,62 @@ if __name__ == "__main__":
             failed += 1
     print(f"\n파싱 테스트: {passed}개 통과, {failed}개 실패")
     sys.exit(1 if failed else 0)
+
+
+def test_reconciliation_title_is_not_read_as_the_value():
+    """조정표 **제목**에 걸려 바로 아래 GAAP 값을 논갭으로 읽으면 안 됩니다.
+
+    제목이 라벨과 같은 문구라서, 숫자 탐색 창(160자)이 줄을 넘어가 그 아래
+    첫 숫자를 채택했습니다. 44% 과소인데 화면에는 "조정표에 적힌 논갭 값을
+    그대로 사용"이라는 거짓 근거가 붙었습니다.
+    """
+    text = (
+        "RECONCILIATION OF GAAP TO NON-GAAP OPERATING INCOME\n"
+        "(in thousands)\n"
+        "GAAP operating income                        140,000\n"
+        "Stock-based compensation                      95,000\n"
+        "Non-GAAP operating income                    250,000"
+    )
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_OP_INCOME) == 250_000_000
+
+
+def test_label_used_as_prose_does_not_steal_the_value():
+    """설명 문구로 쓰인 라벨이 뒤에 나오는 GAAP 숫자를 집으면 안 됩니다.
+
+    값은 언제나 자기 라벨 바로 뒤에 옵니다. 설명 문구는 숫자가 한참 뒤에
+    있으므로 '가장 가까운 라벨'을 고르면 걸러집니다.
+    """
+    text = (
+        "Management uses non-GAAP operating income to evaluate performance. "
+        "GAAP operating income was $140.0 million, and "
+        "non-GAAP operating income was $250.0 million."
+    )
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_OP_INCOME) == 250_000_000
+
+
+def test_value_on_the_next_line_is_still_found():
+    """줄이 바뀐 서술형도 놓치지 않아야 합니다 (같은 줄 우선이 과하면 안 됨)"""
+    text = "Non-GAAP operating income\n   was $250.0 million for the quarter."
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_OP_INCOME) == 250_000_000
+
+
+def test_table_unit_headers_are_all_recognised():
+    """보도자료에서 흔한 단위 표기를 전부 알아봐야 합니다.
+
+    못 알아보면 값이 1,000배 작아지는데, 매출과 영업이익이 같이 작아져
+    마진 비율이 보존되므로 **어떤 정합성 검사에도 걸리지 않습니다.**
+    """
+    cases = {
+        "(in thousands, except per share data)": 1_000,
+        "(Unaudited, in thousands)": 1_000,
+        "(unaudited, in millions)": 1_000_000,
+        "(Dollars in thousands)": 1_000,
+        "($ in millions)": 1_000_000,
+        "(U.S. dollars in millions)": 1_000_000,
+        "(dollars and shares in thousands, except per share data)": 1_000,
+        "(in billions)": 1_000_000_000,
+        "단위 표기 없음": 1,
+    }
+    for header, expected in cases.items():
+        text = header + "\nNon-GAAP operating income   250,000\n"
+        assert sf._detect_table_unit(text, len(text)) == expected, header
