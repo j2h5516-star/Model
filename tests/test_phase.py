@@ -242,15 +242,57 @@ def test_forecast_compares_like_with_like():
     assert abs(forecast["next_qoq"] - forecast["last_qoq"]) < 30, forecast
 
 
-def test_slowdown_signal_does_not_change_the_score():
-    """'가속 둔화'는 검증에서 정점을 못 잡았으므로 점수를 건드리면 안 됨
+def test_slowdown_signal_is_measured_against_the_right_thing():
+    """'가속 둔화'는 **이익** 정점이 아니라 **주가** 정점을 짚는 신호
 
-    20종목 142개 시점에서 이 신호가 뜬 24번 중 실제 정점은 16.7% 로,
-    아무 때나 찍었을 때(21.1%)보다 낮았습니다. 문턱을 3~50%p 로 바꿔도
-    마찬가지였습니다. 근거 없는 신호에 점수를 주지 않습니다.
+    여기서 채점 기준을 한 번 크게 틀렸습니다. 처음에는 '이익이 정점인가'로
+    쟀고 결과는 실패였습니다(16.7% vs 기준선 21.1%). 그런데 이익 레벨은
+    사이클 후반까지 계속 신고점을 찍으므로 그 잣대 자체가 틀린 것이었습니다.
+    주가는 그보다 먼저 꺾입니다.
+
+    주가 정점으로 다시 재니 54.5% [34.7~73.1] vs 기준선 31.8% 로 유의했습니다.
+    2021~2022 사이클 실제 사례 — 주가가 꺾인 그 분기의 판정:
+        마이크론 2022-01 · 엔비디아 2021-11 · ZIM 2022-03 · 엔페이즈 2022-12
+        네 종목 모두 '가속 둔화' + '3년내 최고' 였습니다.
     """
-    assert cfg.FORECAST_SCORE_MULT[cfg.F_ACCEL_SLOW] == 1.0
+    # 이익 정점으로는 기준선을 못 넘습니다 — 그 사실을 그대로 남겨 둡니다
     assert cfg.FORECAST_MEASURED_PEAK[cfg.F_ACCEL_SLOW] < cfg.FORECAST_PEAK_BASELINE
+
+    # 주가 정점으로는 기준선을 넘습니다
+    assert (cfg.FORECAST_MEASURED_PRICE_PEAK[cfg.F_ACCEL_SLOW]
+            > cfg.FORECAST_PRICE_PEAK_BASELINE)
+
+    # 그래서 점수를 깎습니다 (근거가 생겼으므로)
+    assert cfg.FORECAST_SCORE_MULT[cfg.F_ACCEL_SLOW] < 1.0
+
+    # 다만 '감속 지속'보다는 약하게 — 표본이 작기 때문입니다
+    assert (cfg.FORECAST_SCORE_MULT[cfg.F_ACCEL_SLOW]
+            > cfg.FORECAST_SCORE_MULT[cfg.F_DECEL_KEEP])
+
+
+def test_both_peak_measurements_are_shown_to_the_user():
+    """화면에 **이익 정점**과 **주가 정점** 두 수치를 모두 보여줘야 함
+
+    하나만 보여주면 오해합니다. "이익 정점은 못 잡지만 주가 정점은 잡는다"가
+    이 신호의 정확한 성격입니다.
+    """
+    import explain
+
+    quarters = make([100, 110, 120, 130, 145, 165, 190])
+    delta = scoring.score_delta_acceleration(quarters)
+    forecast = scoring.predict_delta(
+        quarters, {"forward_op_income": 185 * M, "basis": cfg.SRC_GUIDANCE}, delta)
+    assert forecast["label"] == cfg.F_ACCEL_SLOW, forecast["label"]
+
+    lines = explain.explain_delta({
+        "fundamental": {"delta": delta},
+        "quarters": quarters,
+        "forecast_detail": forecast,
+    })["forecast_lines"]
+    text = " ".join(lines)
+
+    assert "이익" in text and "주가" in text, lines
+    assert "54.5%" in text or "54." in text, lines
 
 
 def test_validated_forecasts_do_change_the_score():
@@ -307,7 +349,11 @@ def test_the_disproven_claim_is_gone_from_the_docs():
 
     # 표에 단정적으로 남아 있으면 안 됩니다 (정정 문단에서 인용하는 것은 허용)
     assert "| `가속 둔화 ↗↘` | 정점 근처 가능성 |" not in readme
-    assert "정정합니다" in readme, "무엇이 틀렸는지 밝히는 문단이 있어야 합니다"
+    assert "정정했습니다" in readme or "정정합니다" in readme, (
+        "무엇이 틀렸는지 밝히는 문단이 있어야 합니다")
+
+    # 2차 정정: 이익 정점이 아니라 주가 정점으로 재야 한다는 사실이 적혀야 합니다
+    assert "주가 정점" in readme, "채점 기준을 바로잡은 근거가 있어야 합니다"
 
 
 # ---------------------------------------------------------------------------

@@ -412,16 +412,30 @@ def explain_delta(score: dict) -> dict:
         # 이 예측이 과거에 실제로 얼마나 맞았는지 함께 보여 줍니다.
         # 특히 '가속 둔화'는 오래 "정점 근처 신호"로 표시해 왔지만 검증에서
         # 사실이 아니었습니다. 그 사실을 숨기지 않고 같은 자리에 적습니다.
-        measured = cfg.FORECAST_MEASURED_PEAK.get(forecast.get("label"))
+        # 이 예측이 과거에 실제로 얼마나 맞았는지 함께 보여 줍니다.
+        # ⚠️ 두 가지를 나눠서 봐야 합니다 — 여기서 한 번 크게 헷갈렸습니다.
+        #    '이익이 정점인가'와 '주가가 정점인가'는 전혀 다른 질문입니다.
+        #    이익 레벨은 사이클 후반까지 계속 신고점을 찍으므로, 이익 정점으로
+        #    재면 어떤 신호도 잘 맞지 않습니다. 주가는 그보다 먼저 꺾입니다.
+        label = forecast.get("label")
+        measured = cfg.FORECAST_MEASURED_PEAK.get(label)
         if measured is not None:
             base = cfg.FORECAST_PEAK_BASELINE
             verdict = (
-                "정점을 알려주는 신호가 **아닙니다**" if measured <= base
-                else "정점 신호로 쓸 만합니다"
+                "**이익** 정점을 알려주는 신호는 아닙니다" if measured <= base
+                else "이익 정점 신호로 쓸 만합니다"
             )
             forecast_lines.append(
-                f"- 📏 이 예측이 뜬 뒤 실제로 정점이었던 비율 **{measured*100:.1f}%** "
-                f"(아무 때나 찍었을 때 {base*100:.1f}%) — {verdict}"
+                f"- 📏 이 예측 뒤 실제로 **이익**이 정점이었던 비율 "
+                f"**{measured*100:.1f}%** (아무 때나 {base*100:.1f}%) — {verdict}"
+            )
+        price = cfg.FORECAST_MEASURED_PRICE_PEAK.get(label)
+        if price is not None:
+            pbase = cfg.FORECAST_PRICE_PEAK_BASELINE
+            forecast_lines.append(
+                f"- 📉 그런데 **주가** 정점 부근(±1분기)이었던 비율은 "
+                f"**{price*100:.1f}%** (아무 때나 {pbase*100:.1f}%) — "
+                f"이익은 아직 최고여도 **주가는 이때 꺾이는 경우가 많았습니다**"
             )
         multiplier = cfg.FORECAST_SCORE_MULT.get(forecast.get("label"), 1.0)
         if multiplier != 1.0:
