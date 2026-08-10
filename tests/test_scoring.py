@@ -306,7 +306,11 @@ def test_ranking_sorts_buy_candidates_by_rs():
 
 
 def test_build_score_with_no_fundamentals():
-    """실적 데이터가 하나도 없어도 예외 없이 점수를 내야 함"""
+    """실적이 하나도 없으면 예외 없이 점수를 내되, 판정은 '실적 없음'이어야 함.
+
+    이때의 펀더멘털 점수는 '판단 불가' 항목들의 기본 배점이 더해진 값이라,
+    실적이 있는 종목과 같은 기준으로 비교하면 안 됩니다.
+    """
     price = {
         "state": cfg.S_NEUTRAL, "slope": "횡보", "disparity": 1.0, "rs": 0.0,
         "stage": 3, "close": 20.0, "week_change": 0.0,
@@ -315,9 +319,40 @@ def test_build_score_with_no_fundamentals():
 
     assert result["final_score"] >= 0
     assert result["data_source"] is None
-    assert result["verdict"] in (
-        cfg.V_BUY, cfg.V_WARN, cfg.V_WATCH, cfg.V_MOMENTUM, cfg.V_EXCLUDE
-    )
+    assert result["verdict"] == cfg.V_NO_DATA, result["verdict"]
+
+
+def test_no_fundamentals_never_becomes_buy_candidate():
+    """실적이 없는데 추세만 좋다고 '매수 후보'가 되면 안 됨"""
+    strong_price = {
+        "state": cfg.S_FULL_UP, "slope": "상승", "disparity": 10.0, "rs": 30.0,
+        "stage": 1, "close": 50.0, "week_change": 1.0,
+    }
+    result = scoring.build_score("EMPTY", [], {}, strong_price)
+
+    assert result["verdict"] == cfg.V_NO_DATA, result["verdict"]
+    assert "비교할 수 없습니다" in result["verdict_info"]["meaning"]
+
+
+def test_no_fundamentals_ranked_last():
+    """실적 없는 종목은 최종점수가 높아도 순위표 맨 뒤로 가야 함"""
+    strong_price = {
+        "state": cfg.S_FULL_UP, "slope": "상승", "disparity": 10.0, "rs": 30.0,
+        "stage": 1, "close": 50.0, "week_change": 1.0,
+    }
+    weak_price = {
+        "state": cfg.S_NEUTRAL, "slope": "횡보", "disparity": 1.0, "rs": 0.0,
+        "stage": 3, "close": 20.0, "week_change": 0.0,
+    }
+    quarters = make_quarters([10 * M, 12 * M, 15 * M], margins=[50.0, 50.0, 50.0])
+
+    scores = {
+        "NODATA": scoring.build_score("NODATA", [], {}, strong_price),
+        "REAL": scoring.build_score("REAL", quarters, {}, weak_price),
+    }
+    table = pipeline.build_ranking_table(scores)
+
+    assert list(table["종목"])[-1] == "NODATA", table[["종목", "최종점수", "판정"]]
 
 
 def test_ranking_non_buy_sorted_by_final_score():

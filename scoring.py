@@ -503,9 +503,11 @@ def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> di
         next2_qoq = (forward_op_2 / forward_op - 1.0) * 100.0
 
     if next2_qoq is None:
-        # 다다음 분기 자료가 없으면 다음 분기 예측을 그대로 씁니다
-        accel_label = label if label != cfg.F_NONE else cfg.F2_NONE
-        accel_detail = "다다음 분기 컨센서스가 없어 다음 분기까지만 예측했습니다"
+        # 다다음 분기 자료가 없으면 '2분기 경로'를 판정하지 않습니다.
+        # 예전에는 다음 분기 예측을 그대로 복사했는데, F_*와 F2_* 문자열이 같아
+        # 화면에서 2분기까지 계산한 것처럼 보였습니다 (없는 근거를 있는 것처럼 표시).
+        accel_label = cfg.F2_NONE
+        accel_detail = "다다음 분기 컨센서스가 없어 2분기 경로는 판정하지 않았습니다"
     else:
         # 1단계 변화(실제→다음)와 2단계 변화(다음→다다음)의 방향을 조합합니다.
         # 단분기 판정과 마찬가지로 "지금 증가 중인가(was_rising)"를 함께 봅니다:
@@ -619,18 +621,23 @@ def score_fundamental(quarters: list[dict], forward: dict) -> dict:
     }
 
 
-def decide_verdict(fund_total: float, trend_stage: int) -> str:
+def decide_verdict(fund_total: float, trend_stage: int, has_fundamentals: bool = True) -> str:
     """펀더멘털 점수와 추세 단계를 조합해 최종 판정을 내립니다.
 
     추세 단계: 1=완전 정배열, 2=준정배열, 3=중립, 4=추세 훼손, 5=완전 역배열
     """
-    return explain_verdict(fund_total, trend_stage)["verdict"]
+    return explain_verdict(fund_total, trend_stage, has_fundamentals)["verdict"]
 
 
-def explain_verdict(fund_total: float, trend_stage: int) -> dict:
+def explain_verdict(fund_total: float, trend_stage: int, has_fundamentals: bool = True) -> dict:
     """판정 결과와 함께 "왜 그 판정이 나왔는지"를 돌려줍니다.
 
     화면에서 판정을 눌렀을 때 보여줄 근거로 사용합니다.
+
+    has_fundamentals=False (실적을 한 분기도 못 구한 종목)이면 판정을 매기지 않습니다.
+    이때의 펀더멘털 점수는 "자료가 없어 판단 불가"인 항목들의 기본 배점이 더해진 값이라
+    실적이 좋아서 받은 점수가 아닙니다. 그대로 두면 실적이 있는 종목보다 위에 랭크되어
+    "실적이 좋은 종목"으로 오해하게 됩니다.
     """
     strong_trend = trend_stage in (1, 2)
     weak_trend = trend_stage in (4, 5)
@@ -649,6 +656,22 @@ def explain_verdict(fund_total: float, trend_stage: int) -> dict:
         f"추세 {trend_stage}단계"
         + (" (1~2단계 → 양호)" if strong_trend else " (4~5단계 → 꺾임)" if weak_trend else " (3단계 → 중립)")
     )
+
+    if not has_fundamentals:
+        return {
+            "verdict": cfg.V_NO_DATA,
+            "rule": "실적 자료를 한 분기도 구하지 못함",
+            "meaning": (
+                "SEC에서 이 종목의 실적을 찾지 못했습니다. 화면의 펀더멘털 점수는 "
+                "실적이 좋아서 받은 점수가 아니라 **'판단 불가' 항목들의 기본 배점**이므로, "
+                "다른 종목과 같은 기준으로 비교할 수 없습니다. "
+                "아래 🔧 데이터 수집 진단에서 어느 단계에서 막혔는지 확인해 주세요."
+            ),
+            "fund_text": f"펀더멘털 {fund_total:.0f}점 (실적 자료 없음 — 비교 불가)",
+            "stage_text": stage_text,
+            "fund_total": fund_total,
+            "trend_stage": trend_stage,
+        }
 
     if fund_total >= cfg.FUND_STRONG and strong_trend:
         verdict = cfg.V_BUY
@@ -697,7 +720,7 @@ def build_score(ticker: str, quarters: list[dict], forward: dict, price_info: di
 
     final = fundamental["total"] * cfg.WEIGHT_FUNDAMENTAL + technical["total"] * cfg.WEIGHT_TECHNICAL
     stage = price_info.get("stage", cfg.TREND_STAGE[cfg.S_UNKNOWN])
-    verdict_info = explain_verdict(fundamental["total"], stage)
+    verdict_info = explain_verdict(fundamental["total"], stage, has_fundamentals=bool(quarters))
     verdict = verdict_info["verdict"]
 
     # 데이터 출처 배지 (가장 최근 분기 기준)

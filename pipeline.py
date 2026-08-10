@@ -262,17 +262,29 @@ def run_pipeline(
     tickers: list[str] | None = None,
     include_current_week: bool = True,
     use_cache: bool = True,
-    max_workers: int = 4,
+    max_workers: int = 1,
     fundamentals_timeout_sec: float = 300.0,
 ) -> dict:
     """전체 파이프라인을 한 번에 실행합니다 (테스트·단독 실행용).
 
     대시보드는 종목 단위 캐시를 쓰기 위해 위 함수들을 따로 호출합니다.
+
+    max_workers 기본값이 1인 이유: 여러 종목을 동시에 받으면 SEC 신원 설정이
+    공용 접속 창구를 닫아 수집이 통째로 실패한 적이 있습니다
+    (sec_fundamentals._ensure_identity 주석 참고). 지금은 자물쇠로 막았지만,
+    앱 화면과 같은 순차 방식을 기본으로 두어 동작을 일치시킵니다.
     """
     if tickers is None:
         tickers = cfg.TICKERS
 
     price_map, weekly_map, failed = fetch_prices(tickers, include_current_week)
+
+    # 동시에 받기 전에 SEC 신원을 미리 한 번 설정해 둡니다
+    # (수집 도중에 설정이 일어나면 다른 종목의 접속이 끊깁니다)
+    try:
+        sf._ensure_identity()
+    except Exception:
+        pass  # 신원 설정 실패는 각 종목 수집에서 진단으로 기록됩니다
 
     # SEC 서버가 느리거나 막혀 있어도 앱이 무한정 멈추지 않도록 전체 시간 제한을 둡니다.
     bundles: dict[str, dict] = {}
@@ -344,11 +356,13 @@ def build_ranking_table(scores: dict[str, dict]) -> pd.DataFrame:
     buy = df[df["판정"] == cfg.V_BUY].sort_values(
         by=["_rs", "최종점수"], ascending=[False, False]
     )
-    others = df[df["판정"] != cfg.V_BUY].sort_values(
+    # 실적을 못 구한 종목은 점수를 같은 기준으로 비교할 수 없어 맨 뒤로 보냅니다
+    no_data = df[df["판정"] == cfg.V_NO_DATA].sort_values(by=["최종점수"], ascending=False)
+    others = df[~df["판정"].isin([cfg.V_BUY, cfg.V_NO_DATA])].sort_values(
         by=["최종점수", "_rs"], ascending=[False, False]
     )
 
-    ordered = pd.concat([buy, others]).drop(columns=["_rs"])
+    ordered = pd.concat([buy, others, no_data]).drop(columns=["_rs"])
     return ordered.reset_index(drop=True)
 
 

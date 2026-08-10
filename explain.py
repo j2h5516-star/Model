@@ -303,13 +303,19 @@ def explain_delta(score: dict) -> dict:
                 f"{forecast.get('accel_detail', '')}"
             )
             forecast_lines.append(
-                "- 다다음 분기는 월가 컨센서스 매출 × 평균 마진으로 계산한 값입니다"
+                f"- 다다음 분기는 월가 컨센서스 매출 × 평균 마진으로 계산한 값입니다 "
+                f"(근거 **{forecast.get('basis_2') or '추정'}**)"
             )
         elif forecast.get("accel_detail"):
             forecast_lines.append(f"- {forecast.get('accel_detail')}")
+        # 근거는 분기마다 다릅니다 (다음 분기=가이던스, 다다음 분기=컨센서스 추정).
+        # 하나로 뭉뚱그리면 2분기 예측의 신뢰도를 실제보다 높게 보이게 합니다.
+        basis_text = f"다음 분기 **{forecast.get('basis') or '추정'}**"
+        if forecast.get("next2_qoq") is not None:
+            basis_text += f" + 다다음 분기 **{forecast.get('basis_2') or '추정'}**"
         forecast_lines.append(
-            f"- ⚠️ 이 예측은 **{forecast.get('basis') or '추정'}** 기반"
-            f"(신뢰도 {forecast.get('confidence', 0)}%)이며 실제 결과와 다를 수 있습니다"
+            f"- ⚠️ 이 예측은 {basis_text} 기반"
+            f"(다음 분기 신뢰도 {forecast.get('confidence', 0)}%)이며 실제 결과와 다를 수 있습니다"
         )
     else:
         forecast_lines.append("- 다음 분기 전망치가 없어 예측을 계산할 수 없습니다")
