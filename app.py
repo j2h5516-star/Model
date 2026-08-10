@@ -27,6 +27,7 @@ import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
 
+import backtest
 import config as cfg
 import explain
 import pipeline
@@ -1418,6 +1419,65 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
 `첫 오류` 열에 내용이 있으면 그 메시지를 알려주시면 정확히 조준해서 고칠 수 있습니다.
             """
         )
+
+# ---------------------------------------------------------------------------
+# ⑥-2 백테스트 — 이 판정이 과거에는 얼마나 맞았나
+# ---------------------------------------------------------------------------
+with st.expander("🎯 백테스트 — 이 판정이 과거에는 얼마나 맞았나"):
+    st.markdown(
+        "각 시점에서 **그때까지의 자료만** 가지고 판정을 내린 뒤, 실제 다음 분기와 맞춰 봅니다. "
+        "미래를 미리 보지 않도록 코드로 막아 두었습니다."
+    )
+
+    # 지금 화면에 있는 종목들의 실제 이력으로 되짚어 봅니다
+    real_history = {
+        ticker: score["quarters"]
+        for ticker, score in scores.items()
+        if len(score.get("quarters") or []) >= 6
+    }
+
+    if real_history:
+        outcome = backtest.run(real_history)
+        total = outcome["전체"]
+        cols = st.columns(3)
+        cols[0].metric("적중률", "-" if total["적중률(%)"] is None else f"{total['적중률(%)']:.0f}%")
+        cols[1].metric("판정한 시점", f"{total['판정한 시점']}회")
+        cols[2].metric("판단 유보", f"{total['유보(혼조·판단불가)']}회")
+
+        rows = [
+            {"종목": ticker, "판정": s["판정한 시점"], "적중": s["적중"],
+             "적중률(%)": s["적중률(%)"], "유보": s["유보(혼조·판단불가)"]}
+            for ticker, s in outcome["종목별"].items()
+        ]
+        st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
+        st.caption(
+            f"⚠️ 표본이 {total['판정한 시점']}회뿐이라 이 숫자는 참고용입니다. "
+            "분기 6개 이상 모인 종목만 계산합니다."
+        )
+    else:
+        st.caption(
+            "되짚어 볼 만큼 분기가 모인 종목이 아직 없습니다 (종목당 6분기 이상 필요)."
+        )
+
+    st.markdown("**설계 점검용 가상 시나리오** — 모델이 설계대로 도는지 보는 표준 시험입니다.")
+    standard = backtest.run(backtest.standard_scenarios())
+    st.dataframe(
+        pd.DataFrame(
+            [
+                {"시나리오": name, "판정": s["판정한 시점"], "적중": s["적중"],
+                 "적중률(%)": s["적중률(%)"], "유보": s["유보(혼조·판단불가)"]}
+                for name, s in standard["종목별"].items()
+            ]
+        ),
+        hide_index=True,
+        width="stretch",
+    )
+    st.caption(
+        "🚨 **계절성** 시나리오의 적중률이 낮은 것은 알려진 한계입니다. "
+        "분기마다 매출이 오르내리는 사업(계절 장사)은 전분기 대비(QoQ) 증가율로 "
+        "가속·감속을 판정하는 것 자체가 맞지 않습니다. 그런 종목은 판정을 그대로 믿지 마세요."
+    )
+
 
 # ---------------------------------------------------------------------------
 # ⑦ 지표 해석 가이드
