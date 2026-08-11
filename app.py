@@ -28,6 +28,7 @@ import streamlit as st
 from plotly.subplots import make_subplots
 
 import backtest
+import breadth
 import config as cfg
 import explain
 import measure_store
@@ -40,7 +41,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 24
+REQUIRED_CONFIG_VERSION = 25
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -626,8 +627,8 @@ with st.sidebar:
 # 그 아래 종목 관리 칸까지 더해져 점수·순위가 첫 화면에서 통째로 밀려납니다.
 st.markdown("### 📊 추세추종 대시보드")
 st.markdown(
-    '<div class="section-note">실적(논갭 영업이익) + 주가 추세를 합쳐 종합 점수를 냅니다. '
-    "<b>항목을 누르면 계산 과정을 볼 수 있습니다.</b></div>",
+    '<div class="section-note">실적(논갭 이익)과 주가 추세를 모아 <b>상태를 보여주는</b> 참고 도구입니다. '
+    "점수는 매수 신호가 아닙니다 — <b>항목을 누르면 계산 과정과 실제 측정 성적을 볼 수 있습니다.</b></div>",
     unsafe_allow_html=True,
 )
 
@@ -657,6 +658,37 @@ if not scores:
     st.stop()
 
 st.caption(f"🕐 마지막 업데이트: **{result['updated_at'].strftime('%Y-%m-%d %H:%M')}**")
+
+# ---------------------------------------------------------------------------
+# 장세 폭 게이지 — 측정에서 유일하게 깨끗이 갈린 지표 (측정결과.md 5차 · H5)
+# ---------------------------------------------------------------------------
+# 개별 종목 신호는 4차 측정까지 전부 기준선을 못 넘었지만,
+# "실적 신기록을 새로 쓴 종목의 **비율**"은 발표 후 성적을 갈랐습니다.
+# 단, 탐색치라서 확정 검증 전임을 화면에 그대로 밝힙니다.
+try:
+    _gauge = breadth.current_gauge(list(st.session_state.tickers))
+except Exception:
+    _gauge = {"pct": None, "on": False, "tickers": 0}
+
+if _gauge["tickers"] >= 10:
+    _g_label = "🟢 사이클 ON" if _gauge["on"] else "⚪ 사이클 OFF"
+    st.info(
+        f"**장세 게이지 — 실적 폭 {_gauge['pct']:.0f}%** ({_g_label}) · "
+        f"1년치 이익 신기록을 새로 쓴 종목이 {_gauge['tickers']}개 중 "
+        f"{_gauge['pct']:.0f}%입니다."
+    )
+    st.caption(
+        f"과거 이 상태에서 실적 발표 뒤 60거래일 동안 시장 대비 +20%p 이상 "
+        f"오른 비율(탐색치): 사이클 ON {cfg.MEASURED_BREADTH_ON_SURGE_PCT}% / "
+        f"OFF {cfg.MEASURED_BREADTH_OFF_SURGE_PCT}% "
+        f"(아무 발표나 사면 {cfg.MEASURED_BASELINE_SURGE_PCT}%). "
+        "⚠️ 아직 확정 검증 전인 참고 지표입니다 — 근거는 저장소의 측정결과.md"
+    )
+else:
+    st.caption(
+        "장세 게이지: 판단할 수 있는 종목이 10개 미만이라 표시하지 않습니다 "
+        "(새로고침으로 실적을 수집하면 나타납니다)."
+    )
 
 if result["failed"]:
     st.warning(
@@ -1057,6 +1089,13 @@ d3.metric(
     detail.get("accel_forecast") or cfg.F2_NONE,
     accel_note,
     delta_color="off",
+)
+
+# 정직 표시 — 델타는 상태 설명이지 매수 신호가 아닙니다 (측정결과.md 4차).
+st.caption(
+    f"⚠️ 주가 측정 결과: '가속' 확인 후 매수는 세 번의 측정 모두 기준선 이하였습니다 "
+    f"(폭등률 {cfg.MEASURED_ACCEL_SURGE_PCT}% vs 아무 발표나 "
+    f"{cfg.MEASURED_BASELINE_SURGE_PCT}%). 델타는 **상태 설명**으로만 읽어 주세요."
 )
 
 # 판정 기준이 특별한 경우 그 사실을 먼저 알립니다
