@@ -39,7 +39,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 20
+REQUIRED_CONFIG_VERSION = 21
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -1210,7 +1210,7 @@ else:
         st.caption(
             "⚠️ 이 종목은 논갭 영업이익을 구하지 못해 **조정 주당순이익**으로 "
             "판정했습니다. 조정 EPS에는 이자·세금·자사주가 섞여 있어, 자사주를 크게 "
-            "줄인 종목에서는 논갭 영업이익과 판정이 79.5%만 일치했습니다."
+            "줄인 종목에서는 논갭 영업이익과 판정이 85.7%만 일치했습니다."
         )
 
     fig = make_subplots(specs=[[{"secondary_y": True}]])

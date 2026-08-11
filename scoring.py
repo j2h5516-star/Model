@@ -749,19 +749,38 @@ def check_earnings_quality(quarters: list[dict]) -> dict:
 def score_revenue_quality(quarters: list[dict]) -> dict:
     """매출이 얼마나 크게 늘었는지(YoY) + 그 속도가 빨라지는지 봅니다."""
     max_score = cfg.W_REVENUE_QUALITY
-    revenues = [q["revenue"] for q in quarters if q.get("revenue") is not None]
+    usable = [q for q in quarters if q.get("revenue") is not None]
+    revenues = [q["revenue"] for q in usable]
 
     if len(revenues) < 2:
         return {
             "score": max_score * cfg.UNKNOWN_RATIO,
             "yoy": None,
             "detail": "매출 데이터가 부족합니다",
+            "trace": {"revenues": revenues, "insufficient": True},
         }
 
-    # YoY(1년 전 같은 분기 대비). 4개 분기 전 데이터가 없으면 가장 오래된 값과 비교
-    base_index = -5 if len(revenues) >= 5 else 0
-    base = revenues[base_index]
-    yoy = (revenues[-1] / base - 1.0) * 100.0 if base > 0 else None
+    # 1년 전 같은 분기를 **회계분기 이름으로** 찾습니다.
+    #
+    # ⚠️ 예전에는 `revenues[-5]` 처럼 자리 번호로 셌습니다. 그런데 revenues 는
+    #    '매출이 있는 분기만' 모은 목록이라, 한 분기라도 비면 짝이 밀립니다.
+    #    실제로 확인한 오차는 +6.6%p 였습니다(정답 21.6% → 28.2%).
+    #    같은 이유로 _yoy_growth_series 는 이미 이름 기준으로 고쳐 놨는데
+    #    매출 쪽만 그대로였습니다.
+    #
+    # ⚠️ 분기가 5개 미만이면 예전에는 **바로 전 분기**와 비교하면서 화면에는
+    #    "1년 전 대비"라고 썼습니다. 이제는 짝을 못 찾으면 솔직히 말합니다.
+    latest = usable[-1]
+    target = dq.fiscal_quarter_of(latest)
+    base = None
+    if target is not None:
+        want = (target[0] - 1, target[1])
+        base = next(
+            (q["revenue"] for q in reversed(usable[:-1])
+             if dq.fiscal_quarter_of(q) == want),
+            None,
+        )
+    yoy = (revenues[-1] / base - 1.0) * 100.0 if base and base > 0 else None
 
     # 성장률 크기 점수 (0~70% 구간을 0~14점으로 환산, 최대 14점)
     growth_score = 0.0
@@ -791,11 +810,21 @@ def score_revenue_quality(quarters: list[dict]) -> dict:
         else:
             accel_text = " · 매출 감소 폭이 커지는 중입니다"
 
-    yoy_text = f"{yoy:+.1f}%" if yoy is not None else "-"
+    # 짝을 못 찾았으면 "-" 로 얼버무리지 않고 이유를 밝힙니다.
+    # (예전에는 분기가 모자라면 바로 전 분기와 비교해 놓고 화면에는
+    #  "1년 전 대비"라고 썼습니다 — 전분기 +70%가 연간 성장으로 표시됐습니다)
+    if yoy is None:
+        detail = (
+            "1년 전 같은 분기를 찾지 못해 매출 성장률을 내지 못했습니다"
+            f"{accel_text}"
+        )
+    else:
+        detail = f"1년 전 대비 매출 {yoy:+.1f}%{accel_text}"
+
     return {
         "score": round(growth_score + accel_score, 1),
         "yoy": round(yoy, 1) if yoy is not None else None,
-        "detail": f"1년 전 대비 매출 {yoy_text}{accel_text}",
+        "detail": detail,
         "trace": {
             "revenues": revenues,
             "base": base,
@@ -1126,39 +1155,38 @@ def score_fundamental(quarters: list[dict], forward: dict) -> dict:
             ),
         }
 
-    # --- 자사주 방어장치 (구조대 경로에서만) ---
+    # --- 자사주 경고 (점수에는 반영하지 않습니다) ---
     #
-    # 논갭 영업이익을 못 구해 조정 EPS 로 판정하는 중이라면, 자사주 매입이
-    # '가속'을 만들어 낼 수 있습니다.  EPS = 순이익 ÷ 주식수  이므로
-    # 영업이익이 제자리여도 분모가 줄면 EPS 는 오릅니다.
+    # ⚠️ 처음에는 여기서 델타 점수를 절반으로 깎았습니다. 그런데 **재검증에서
+    #    그 근거가 무너졌습니다.**
     #
-    # 자사주가 큰 4종목 39개 시점으로 재 본 결과:
-    #   · 주식수 감소와 EPS 부풀림의 상관계수 -0.703
-    #   · 주식수가 1년에 -12% 줄어든 구간에서 편향이 +1.5 ~ +3.8%p
-    #     → 판정 문턱(3.0%p)과 겹칩니다
-    #   · EBAY 2021-12-31(주식수 -11.7%)에서 논갭 영업이익은 '유지'인데
-    #     조정 EPS 는 '가속' 이라고 했습니다. 그 분기는 **주가 정점 직후**였습니다.
+    #      · 자사주 종목 표본(23개)  상관계수 -0.590
+    #      · 다른 표본(49개)         상관계수 +0.022   ← 관계가 사라집니다
+    #      · AMD 는 주식수가 +33.8% 늘었는데도 판정이 일치했습니다
+    #      · 문턱으로 잡았던 -8% 는 회귀선상 근거가 -13.7% 였습니다
+    #        (-8% 부근 4개 값은 +0.9 / +2.2 / +1.5 / -0.7 %p 로 판정 문턱 3.0%p 에
+    #         닿는 것이 하나도 없고 하나는 음수였습니다)
+    #      · '결정적 사례'로 인용했던 EBAY 2021-12-31 은 두 기준의 전망 라벨이
+    #        **똑같이 '가속 둔화'** 였습니다 — 제가 말한 출력은 모델이 낼 수 없는 것이었습니다
     #
-    # 그래서 이 구간에서는 델타 점수를 절반까지만 인정합니다.
+    #    검증되지 않은 신호에 점수를 주지 않는다는 원칙에 따라 **점수 반영을
+    #    철회하고 경고만 남깁니다.** 편향 자체는 실재하므로(측정 +0.59%p 평균)
+    #    화면에는 알립니다.
     shrink = (forward.get("consensus") or {}).get("shares_shrink_pct")
     if (
         cfg.quarters_basis(quarters) == cfg.BASIS_ADJ_EPS
         and shrink is not None
-        and shrink <= cfg.EPS_BASIS_BUYBACK_LIMIT_PCT
+        and shrink <= cfg.EPS_BASIS_BUYBACK_WARN_PCT
     ):
-        capped_to = min(delta["score"], cfg.W_DELTA_ACCEL * cfg.EPS_BASIS_BUYBACK_CAP_RATIO)
-        if capped_to < delta["score"]:
-            delta = {
-                **delta,
-                "score": round(capped_to, 1),
-                "buyback_capped": True,
-                "detail": (
-                    f"{delta['detail']} · ⚠️ 조정 EPS 로 판정 중인데 주식수가 1년에 "
-                    f"{shrink:.1f}% 줄었습니다. 자사주 매입이 '가속'을 만들었을 수 "
-                    f"있어 이 항목을 {int(cfg.EPS_BASIS_BUYBACK_CAP_RATIO*100)}%로 "
-                    "제한했습니다"
-                ),
-            }
+        delta = {
+            **delta,
+            "buyback_warned": True,
+            "detail": (
+                f"{delta['detail']} · ⚠️ 조정 EPS 로 판정 중인데 주식수가 1년에 "
+                f"{shrink:.1f}% 줄었습니다. 자사주 매입이 증가율을 부풀렸을 수 "
+                "있습니다(점수에는 반영하지 않았습니다 — 검증되지 않은 신호이므로)"
+            ),
+        }
 
     total = (
         delta["score"] + phase["score"] + gm["score"]
