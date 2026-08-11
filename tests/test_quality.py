@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import config as cfg  # noqa: E402
 import data_quality as dq  # noqa: E402
 import forward_estimates as fe  # noqa: E402
-import scoring  # noqa: E402
+import status  # noqa: E402
 from fixtures import make_quarters  # noqa: E402
 
 M = 1_000_000
@@ -142,55 +142,6 @@ def test_average_margin_ignores_broken_quarter():
 # ---------------------------------------------------------------------------
 # 사고 전체 재현 (수집 → 검사 → 전망 → 예측)
 # ---------------------------------------------------------------------------
-def test_zeta_incident_end_to_end():
-    """실제 사고 데이터를 넣어도 화면용 숫자가 정상 범위여야 함"""
-    import pipeline
-
-    broken = [
-        {"period_label": "25 Q3", "revenue": 240 * M, "op_income": 65.3 * M,
-         "source": cfg.SRC_APPROX},
-        {"period_label": "26 Q1", "revenue": 102.0, "op_income": 50.5 * M,
-         "source": cfg.SRC_APPROX},          # ← 매출이 100만분의 1
-        {"period_label": "26 Q2", "revenue": 290 * M, "op_income": 84.5 * M,
-         "source": cfg.SRC_APPROX},
-    ]
-
-    def fake_fundamentals(ticker, use_cache=True):
-        import sec_fundamentals as sf
-        return list(broken), sf.new_report(ticker)
-
-    def fake_consensus(ticker):
-        return {"revenue_0q": 471 * M, "revenue_1q": 500 * M, "eps_0q": None,
-                "eps_1q": None, "analysts_0q": 13, "revision": 1,
-                "revision_velocity_pct": 4.5, "errors": []}
-
-    with patch("sec_fundamentals.get_fundamentals", side_effect=fake_fundamentals), \
-         patch("forward_estimates.fetch_consensus", side_effect=fake_consensus):
-        bundle = pipeline.collect_one_ticker("ZETA", use_cache=False)
-
-    quarters, forward = bundle["quarters"], bundle["forward"]
-
-    # ① 망가진 매출은 고쳐졌거나 제외됐어야 함
-    for q in quarters:
-        margin = dq.safe_margin_pct(q.get("revenue"), q.get("op_income"))
-        assert margin is None or -500 <= margin <= 100, q
-
-    # ② 전망이 최근 실적의 10배를 넘지 않아야 함
-    if forward.get("forward_op_income") is not None:
-        assert forward["forward_op_income"] < 84.5 * M * cfg.FORWARD_MAX_MULTIPLE, forward
-
-    # ③ 화면에 나갈 증가율이 정상 범위여야 함
-    score = scoring.build_score(
-        "ZETA", quarters, forward,
-        {"state": cfg.S_FULL_UP, "slope": "상승", "disparity": 10.0, "rs": 20.0,
-         "stage": 1, "close": 30.0, "week_change": 0.0},
-    )
-    detail = score["forecast_detail"]
-    for key in ("next_qoq", "next2_qoq", "last_qoq"):
-        value = detail.get(key)
-        assert value is None or abs(value) <= cfg.GROWTH_ABS_MAX_PCT, (key, value)
-
-
 def test_normal_data_is_untouched():
     """정상 데이터는 검사를 통과하며 값이 바뀌면 안 됨"""
     quarters = make_quarters([100 * M, 115 * M, 140 * M], margins=[50.0, 50.5, 51.0])
@@ -349,48 +300,6 @@ def test_average_margin_excludes_outlier_quarter():
 # ---------------------------------------------------------------------------
 # 점수 쪽 방어선
 # ---------------------------------------------------------------------------
-def test_forward_score_not_full_marks_on_absurd_growth():
-    """비현실적 증가율에 만점을 주면 안 됨"""
-    quarters = make_quarters([84.5 * M])
-    absurd = scoring.score_forward(
-        quarters, {"forward_op_income": 389_938_207.9 * M, "revision": 1}
-    )
-    normal = scoring.score_forward(
-        quarters, {"forward_op_income": 110 * M, "revision": 1}
-    )
-    assert absurd["score"] < normal["score"], (absurd, normal)
-    assert "비현실적" in absurd["detail"], absurd["detail"]
-
-
-def test_gm_driver_ignores_impossible_margin():
-    """82,804,463% 같은 GM%는 판단에서 빼야 함"""
-    quarters = [
-        {"gross_margin_pct": 50.0}, {"gross_margin_pct": 50.5},
-        {"gross_margin_pct": 82_804_463.3}, {"gross_margin_pct": 51.0},
-    ]
-    result = scoring.score_gm_driver(quarters)
-
-    assert result["delta_pp"] is None or abs(result["delta_pp"]) < 100.0, result
-
-
-def test_chart_qoq_uses_safe_growth():
-    """차트용 QoQ 도 점수와 같은 안전 계산을 써야 함"""
-    import pipeline
-
-    quarters = [
-        {"period_label": "A", "filing_date": "2025-01-01", "op_income": 100.0},
-        {"period_label": "B", "filing_date": "2025-04-01", "op_income": 84.5 * M},
-    ]
-    frame = pipeline.quarters_to_frame(quarters)
-
-    import pandas as pd
-    assert pd.isna(frame["qoq_pct"].iloc[1]), frame["qoq_pct"].tolist()
-
-
-
-# ---------------------------------------------------------------------------
-# 계절성 · 튀는 분기 — "먼저 판단하고 적용" 원칙
-# ---------------------------------------------------------------------------
 def test_seasonal_business_is_detected():
     """분기마다 오르내리는 사업은 계절성으로 판정해야 함"""
     labels = ["24 Q1", "24 Q2", "24 Q3", "24 Q4", "25 Q1", "25 Q2", "25 Q3", "25 Q4"]
@@ -457,7 +366,7 @@ def test_direction_is_withheld_after_spike():
         )
     ]
     checked = dq.validate_quarters(quarters, {})
-    result = scoring.score_delta_acceleration(checked)
+    result = status.judge_delta(checked)
 
     assert result["direction"] == cfg.D_UNKNOWN, result
     assert "판정을 미룹니다" in result["detail"]
@@ -467,10 +376,9 @@ def test_single_signal_is_not_a_firm_call():
     """신호 하나만 방향을 보이면 단정하지 말고 '약한' 판정이어야 함"""
     # 증가율이 매 분기 +2%p대로 오름 — 추세는 우상향이지만 단기 문턱(3%p)에는 못 미침
     quarters = make_quarters([100 * M, 112 * M, 128 * M, 150 * M, 180 * M])
-    result = scoring.score_delta_acceleration(quarters)
+    result = status.judge_delta(quarters)
 
     assert result["direction"] == cfg.D_WEAK_ACCEL, result
-    assert cfg.DELTA_RATIO[cfg.D_WEAK_ACCEL] < cfg.DELTA_RATIO[cfg.D_ACCEL]
 
 
 

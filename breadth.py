@@ -27,7 +27,7 @@ from datetime import date
 import config as cfg
 import data_quality as dq
 import measurement as mm
-import scoring
+import status
 
 # 발표가 이 일수보다 오래됐으면 그 종목의 실적 상태는 "김빠진 것"으로 보고
 # 분모에서 뺍니다 (한 분기 91일 + 발표 지연 여유). 값은 config 에서 관리.
@@ -62,7 +62,7 @@ def earnings_states(rows: list[dict]) -> list[tuple[str, bool, bool | None]]:
             if not announce:
                 continue
             known = mm.to_scoring_rows(run[: idx + 1])
-            ttm = scoring._ttm_series(known)
+            ttm = status.ttm_series(known)
             if len(ttm) < 2:
                 continue
             new_high = ttm[-1] > max(ttm[:-1])
@@ -162,6 +162,36 @@ def current_gauge(tickers: list[str], load_quarters=None, today: str | None = No
         "pct": pct,
         "on": pct is not None and pct >= cfg.BREADTH_ON_PCT,
         "tickers": total,
+    }
+
+
+
+def gauge_from_snapshot(snapshot: dict, today: str | None = None) -> dict:
+    """스냅샷만으로 계산한 실적 폭 게이지 — 뷰어 앱용 (네트워크·캐시 불필요).
+
+    '오늘'은 스냅샷의 마지막 거래일입니다 — 데이터의 나이를 그대로 반영해
+    로봇이 멈추면 게이지도 낡았다는 사실이 드러납니다.
+    """
+    spy = snapshot.get("prices", {}).get(snapshot.get("benchmark", "SPY")) or {}
+    if today is None:
+        dates = spy.get("dates") or []
+        today = dates[-1] if dates else date.today().isoformat()
+
+    new_high_count = total = 0
+    for ticker in snapshot.get("tickers", []):
+        rows = snapshot.get("eps", {}).get(ticker) or []
+        state = latest_state(earnings_states(rows), today)
+        if state is None:
+            continue
+        total += 1
+        new_high_count += bool(state[0])
+
+    pct = round(new_high_count / total * 100.0, 1) if total else None
+    return {
+        "pct": pct,
+        "on": pct is not None and pct >= cfg.BREADTH_ON_PCT,
+        "tickers": total,
+        "as_of": today,
     }
 
 

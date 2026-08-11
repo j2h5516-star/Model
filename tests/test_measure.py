@@ -12,7 +12,6 @@ import io
 import json
 import os
 import sys
-import urllib.error
 
 import pandas as pd
 
@@ -22,7 +21,6 @@ import config as cfg  # noqa: E402
 import forward_estimates as fe  # noqa: E402
 import measure_store  # noqa: E402
 import sec_fundamentals as sf  # noqa: E402
-import storage  # noqa: E402
 
 M = 1_000_000
 
@@ -232,89 +230,6 @@ def test_snapshot_rows_carry_guidance_fields():
     assert rows[1]["guid_eps_mid"] is None      # 가이던스 없으면 없음
 
 
-# ---------------------------------------------------------------------------
-# GitHub 커밋 (가짜 네트워크로 성공·실패 경로 확인)
-# ---------------------------------------------------------------------------
-class _FakeResponse(io.BytesIO):
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        return False
-
-
-def _http_error(code: int):
-    return urllib.error.HTTPError("url", code, "msg", None, io.BytesIO(b"{}"))
-
-
-def test_commit_file_new_file_ok():
-    """파일이 아직 없으면(404) 새로 만들며 성공해야 함."""
-    calls = []
-
-    def opener(request, timeout=0):
-        calls.append(request)
-        if request.get_method() == "GET":
-            raise _http_error(404)
-        return _FakeResponse(b"{}")
-
-    ok, msg = storage.commit_file_github(
-        "data/measure/snapshot.json", "{}", "토큰", "user/repo", "메시지", opener=opener
-    )
-    assert ok, msg
-    assert calls[-1].get_method() == "PUT"
-    payload = json.loads(calls[-1].data.decode())
-    assert payload["message"] == "메시지"
-    assert "sha" not in payload               # 새 파일에는 sha 가 없어야 함
-
-
-def test_commit_file_updates_existing_with_sha():
-    """이미 있는 파일은 버전 번호(sha)를 붙여 덮어써야 함."""
-    calls = []
-
-    def opener(request, timeout=0):
-        calls.append(request)
-        if request.get_method() == "GET":
-            return _FakeResponse(json.dumps({"sha": "abc123"}).encode())
-        return _FakeResponse(b"{}")
-
-    ok, _ = storage.commit_file_github(
-        "user_tickers.json", "{}", "토큰", "user/repo", "메시지", opener=opener
-    )
-    assert ok
-    payload = json.loads(calls[-1].data.decode())
-    assert payload["sha"] == "abc123"
-
-
-def test_commit_file_permission_error_reported():
-    """토큰 권한 문제(403)는 실패로 알리고, 이유를 사용자 말로 전달."""
-    def opener(request, timeout=0):
-        raise _http_error(403)
-
-    ok, msg = storage.commit_file_github(
-        "x.json", "{}", "토큰", "user/repo", "메시지", opener=opener
-    )
-    assert not ok
-    assert "403" in msg
-
-
-def test_commit_tickers_still_works_via_generic():
-    """기존 종목 목록 저장이 범용 함수 위에서 그대로 동작해야 함."""
-    calls = []
-
-    def opener(request, timeout=0):
-        calls.append(request)
-        if request.get_method() == "GET":
-            raise _http_error(404)
-        return _FakeResponse(b"{}")
-
-    ok, _ = storage.commit_tickers_github(["nvda", "NVDA", "amd"], "토큰", "user/repo",
-                                          opener=opener)
-    assert ok
-    payload = json.loads(calls[-1].data.decode())
-    import base64
-    saved = json.loads(base64.b64decode(payload["content"]).decode())
-    assert saved["tickers"] == ["NVDA", "AMD"]     # 대문자 통일 + 중복 제거
-
 
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
@@ -332,3 +247,4 @@ if __name__ == "__main__":
             failed += 1
     print(f"\n측정 저장 검증: {passed}개 통과, {failed}개 실패")
     sys.exit(1 if failed else 0)
+

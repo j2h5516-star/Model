@@ -12,10 +12,10 @@ measurement.py — 2단계 측정: 조정 EPS 델타 ↔ 주가 (전략.md 7장�
   · 폭등   = 초과수익 +20%p 이상 (보조 정의 +30%p)
   · 기준선 = ① 같은 종목 무조건 60거래일 보유  ② 아무 발표나 사기
   · 통계   = 윌슨 신뢰구간 + 종목별 쪼개기
-  · 판정   = 모델과 같은 코드(scoring.score_delta_acceleration)를 걸어가며 사용
+  · 판정   = 모델과 같은 코드(status.judge_delta)를 걸어가며 사용
              — 각 발표 시점에서 그때까지의 분기만 봅니다
 
-입력: 배포된 앱이 저장소로 커밋한 실데이터 (data/measure/snapshot.json).
+입력: 수집 로봇이 저장소로 커밋한 실데이터 (data/measure/snapshot.json).
 이 파일은 어떤 값도 만들어 내지 않습니다 — 있는 숫자끼리의 산수만 합니다.
 """
 
@@ -26,10 +26,9 @@ import json
 from datetime import date
 from statistics import median
 
-import backtest
 import config as cfg
-import data_quality as dq  # noqa: F401  (판정 코드가 내부에서 사용)
-import scoring
+import data_quality as dq
+import status
 
 # --- 사전 등록 상수 (전략.md 7장) ---
 WINDOW_TRADING_DAYS = 60      # 주 창
@@ -50,6 +49,18 @@ SPACING_MAX_DAYS = 150
 TREND_MA_SHORT = 13
 TREND_MA_LONG = 26
 TREND_SUSTAIN_WEEKS = 13
+
+
+
+def wilson_interval(hits: int, total: int, z: float = 1.96) -> tuple[float, float]:
+    """윌슨 신뢰구간(%) — 표본이 작을 때도 과신하지 않는 적중률 구간 (v1 이식)."""
+    if total == 0:
+        return (0.0, 0.0)
+    p = hits / total
+    denominator = 1 + z * z / total
+    centre = (p + z * z / (2 * total)) / denominator
+    margin = (z / denominator) * ((p * (1 - p) / total + z * z / (4 * total ** 2)) ** 0.5)
+    return (max(0.0, centre - margin) * 100.0, min(1.0, centre + margin) * 100.0)
 
 
 def _to_date(text: str) -> date:
@@ -210,7 +221,7 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
 
                 # ★ 그 시점까지의 분기만 보고 판정 (발표된 분기 포함, 미래 제외)
                 known = to_scoring_rows(run[: idx + 1])
-                judgment = scoring.score_delta_acceleration(known)
+                judgment = status.judge_delta(known)
                 growths = judgment.get("trace", {}).get("growths", [])
                 accel_size = (
                     growths[-1] - growths[-2] if len(growths) >= 2 else None
@@ -219,7 +230,7 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
                 # H2 — 이번 발표로 TTM(4분기 합)이 그동안의 최고를 넘었는가.
                 # 이익 쪽에서는 이미 97.0% 로 측정된 신호 (config.py 국면 참조).
                 # 주가 쪽에서 통하는지는 이번이 첫 측정입니다.
-                ttm = scoring._ttm_series(known)
+                ttm = status.ttm_series(known)
                 new_high = bool(ttm) and len(ttm) >= 2 and ttm[-1] > max(ttm[:-1])
 
                 # --- 탐색용 요인 (exploration.py 가 묶어서 봅니다) ---
@@ -308,7 +319,7 @@ def baseline_hold(snapshot: dict) -> dict:
             hits20 += excess >= SURGE_PP
             hits30 += excess >= SURGE_AUX_PP
     return {"n": total, "rate20": _rate(hits20, total), "rate30": _rate(hits30, total),
-            "wilson20": backtest.wilson_interval(hits20, total)}
+            "wilson20": wilson_interval(hits20, total)}
 
 
 def _rate(hits: int, total: int) -> float | None:
@@ -322,7 +333,7 @@ def _group_stats(group: list[dict]) -> dict:
     return {
         "n": n,
         "rate20": _rate(hits20, n),
-        "wilson20": backtest.wilson_interval(hits20, n) if n else (0.0, 0.0),
+        "wilson20": wilson_interval(hits20, n) if n else (0.0, 0.0),
         "rate30": _rate(hits30, n),
         "median_excess": round(median(e["excess"] for e in group), 1) if n else None,
     }
