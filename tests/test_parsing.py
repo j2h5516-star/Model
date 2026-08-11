@@ -540,3 +540,49 @@ if __name__ == "__main__":
             failed += 1
     print(f"\n파싱 테스트: {passed}개 통과, {failed}개 실패")
     sys.exit(1 if failed else 0)
+
+
+def test_xbrl_addbacks_are_used_only_when_every_quarter_has_them():
+    """되돌릴 항목이 일부 분기에만 있으면 아예 쓰지 않아야 합니다.
+
+    주식보상비는 10-Q 현금흐름표에 **누적기간(3·6·9개월)** 으로 신고돼 3개월
+    값이 Q1 에만 있는 경우가 흔합니다. 없으면 0 으로 처리하면 한 열 안에
+    "GAAP+주식보상비" 와 "GAAP" 이 섞여 분기마다 정의가 달라집니다.
+
+        Q1  GAAP 100 + 주식보상비 40 = 140
+        Q2  GAAP 110              = 110   ← 주식보상비 없음
+        → 델타 -21% (실제로는 +10%)
+
+    델타 모델은 값의 크기가 아니라 값의 변화를 봅니다. 절대 정확도보다
+    **한 종목 안에서 정의가 일관된 것**이 훨씬 중요합니다.
+    """
+    ends = ["2024-03-31", "2024-06-30", "2024-09-30"]
+    op = {"2024-03-31": 100e6, "2024-06-30": 110e6, "2024-09-30": 120e6}
+    partial_sbc = {"2024-03-31": 40e6}          # Q1 에만 있음
+
+    usable = [e for e in ends if op.get(e) is not None]
+    have = sum(1 for e in usable if partial_sbc.get(e) is not None)
+    assert 0 < have < len(usable), "이 픽스처는 '일부 분기에만 있는' 상황이어야 합니다"
+
+    # 일관성 규칙: 전 분기에 있어야만 되돌립니다
+    consistent = have == len(usable)
+    values = [op[e] + ((partial_sbc.get(e) or 0.0) if consistent else 0.0) for e in ends]
+    assert values == [100e6, 110e6, 120e6], values
+
+    growth = (values[1] / values[0] - 1) * 100
+    assert abs(growth - 10.0) < 0.01, f"델타가 {growth:.1f}% — 정의 혼재가 남아 있습니다"
+
+
+def test_all_exceptions_are_recorded_not_just_the_first():
+    """첫 예외만 남기면 뒤의 진짜 실패가 보이지 않습니다.
+
+    8-K 60건을 훑는 동안 앞쪽에서 사소한 예외 하나가 나면, 그 뒤의 진짜
+    원인은 화면에 한 줄도 나타나지 않았습니다.
+    """
+    report = sf.new_report("TEST")
+    for i in range(3):
+        sf._record_error(report, f"단계{i}", ValueError(f"오류{i}"))
+
+    assert "단계0" in report["first_error"]          # 화면 요약용 첫 오류는 그대로
+    assert len(report["all_errors"]) == 3            # 나머지도 남습니다
+    assert any("단계2" in e for e in report["all_errors"])
