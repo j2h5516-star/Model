@@ -227,6 +227,41 @@ def test_surge_threshold_is_20pp_excess():
     assert stats["rate30"] == round(1 / 3 * 100, 1)
 
 
+def test_breadth_crossings_boundary():
+    """게이지 '켜짐'은 아래→위 통과 순간만 잡아야 함 (경계 포함)."""
+    import breadth
+    weeks = ["w1", "w2", "w3", "w4", "w5"]
+    values = [10.0, 25.0, 15.0, 20.0, 30.0]
+    assert breadth.crossings(weeks, values, 20.0) == ["w2", "w4"]
+
+
+def test_breadth_latest_state_goes_stale():
+    """발표가 140일 넘게 오래되면 그 종목 상태는 세지 않아야 함."""
+    import breadth
+    states = [("2025-01-02", True, True)]
+    assert breadth.latest_state(states, "2025-03-01") is not None
+    assert breadth.latest_state(states, "2025-06-30") is None    # 179일 경과
+    assert breadth.latest_state(states, "2024-12-30") is None    # 발표 전
+
+
+def test_breadth_earnings_state_is_walk_forward():
+    """뒤 분기를 바꿔도 앞 발표 시점의 신고점 판정은 그대로여야 함."""
+    import breadth
+    rows = [
+        {"adj_eps": v, "filing_date": d, "announced_date": d}
+        for v, d in zip(
+            [1.0, 1.1, 1.2, 1.3, 1.4, 1.5],
+            ["2024-01-31", "2024-04-30", "2024-07-31",
+             "2024-10-31", "2025-01-31", "2025-04-30"],
+        )
+    ]
+    tampered = [dict(r) for r in rows]
+    tampered[-1]["adj_eps"] = 0.01
+    a = breadth.earnings_states(rows)
+    b = breadth.earnings_states(tampered)
+    assert a[:-1] == b[:-1], (a, b)
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
