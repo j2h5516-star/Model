@@ -1,0 +1,210 @@
+{
+ "ran_at": "2026-08-11T09:04:28.190875+00:00",
+ "tickers": 29,
+ "summary": "조정 EPS 시계열 29종목 · 일봉 30종목(기준지수 포함) · 파싱 실패 원문 41건",
+ "per_ticker": [
+  {
+   "ticker": "CRDO",
+   "adj_eps_ok": 18,
+   "merged_direct": 14,
+   "seconds": 9.0,
+   "first_error": ""
+  },
+  {
+   "ticker": "CLS",
+   "adj_eps_ok": 9,
+   "merged_direct": 0,
+   "seconds": 17.3,
+   "first_error": ""
+  },
+  {
+   "ticker": "MU",
+   "adj_eps_ok": 21,
+   "merged_direct": 19,
+   "seconds": 15.2,
+   "first_error": ""
+  },
+  {
+   "ticker": "SNDK",
+   "adj_eps_ok": 7,
+   "merged_direct": 6,
+   "seconds": 7.3,
+   "first_error": ""
+  },
+  {
+   "ticker": "LITE",
+   "adj_eps_ok": 21,
+   "merged_direct": 1,
+   "seconds": 13.3,
+   "first_error": ""
+  },
+  {
+   "ticker": "STRL",
+   "adj_eps_ok": 13,
+   "merged_direct": 6,
+   "seconds": 28.8,
+   "first_error": ""
+  },
+  {
+   "ticker": "MXL",
+   "adj_eps_ok": 20,
+   "merged_direct": 19,
+   "seconds": 13.3,
+   "first_error": ""
+  },
+  {
+   "ticker": "COHR",
+   "adj_eps_ok": 15,
+   "merged_direct": 8,
+   "seconds": 43.0,
+   "first_error": ""
+  },
+  {
+   "ticker": "TTMI",
+   "adj_eps_ok": 21,
+   "merged_direct": 15,
+   "seconds": 10.2,
+   "first_error": ""
+  },
+  {
+   "ticker": "ICHR",
+   "adj_eps_ok": 19,
+   "merged_direct": 15,
+   "seconds": 13.4,
+   "first_error": ""
+  },
+  {
+   "ticker": "AMD",
+   "adj_eps_ok": 20,
+   "merged_direct": 13,
+   "seconds": 13.6,
+   "first_error": ""
+  },
+  {
+   "ticker": "PLTR",
+   "adj_eps_ok": 20,
+   "merged_direct": 20,
+   "seconds": 10.7,
+   "first_error": ""
+  },
+  {
+   "ticker": "ZETA",
+   "adj_eps_ok": 0,
+   "merged_direct": 0,
+   "seconds": 8.1,
+   "first_error": ""
+  },
+  {
+   "ticker": "INTC",
+   "adj_eps_ok": 18,
+   "merged_direct": 14,
+   "seconds": 19.7,
+   "first_error": ""
+  },
+  {
+   "ticker": "ENPH",
+   "adj_eps_ok": 20,
+   "merged_direct": 19,
+   "seconds": 9.7,
+   "first_error": ""
+  },
+  {
+   "ticker": "SWKS",
+   "adj_eps_ok": 20,
+   "merged_direct": 17,
+   "seconds": 18.6,
+   "first_error": ""
+  },
+  {
+   "ticker": "PYPL",
+   "adj_eps_ok": 22,
+   "merged_direct": 18,
+   "seconds": 20.1,
+   "first_error": ""
+  },
+  {
+   "ticker": "QRVO",
+   "adj_eps_ok": 19,
+   "merged_direct": 13,
+   "seconds": 13.0,
+   "first_error": ""
+  },
+  {
+   "ticker": "APP",
+   "adj_eps_ok": 0,
+   "merged_direct": 0,
+   "seconds": 33.3,
+   "first_error": ""
+  },
+  {
+   "ticker": "NVDA",
+   "adj_eps_ok": 19,
+   "merged_direct": 17,
+   "seconds": 14.4,
+   "first_error": ""
+  },
+  {
+   "ticker": "ANET",
+   "adj_eps_ok": 20,
+   "merged_direct": 20,
+   "seconds": 11.4,
+   "first_error": ""
+  },
+  {
+   "ticker": "FN",
+   "adj_eps_ok": 20,
+   "merged_direct": 0,
+   "seconds": 13.2,
+   "first_error": ""
+  },
+  {
+   "ticker": "SMCI",
+   "adj_eps_ok": 14,
+   "merged_direct": 6,
+   "seconds": 32.9,
+   "first_error": ""
+  },
+  {
+   "ticker": "LSCC",
+   "adj_eps_ok": 21,
+   "merged_direct": 19,
+   "seconds": 19.7,
+   "first_error": ""
+  },
+  {
+   "ticker": "SYNA",
+   "adj_eps_ok": 22,
+   "merged_direct": 19,
+   "seconds": 23.1,
+   "first_error": ""
+  },
+  {
+   "ticker": "UCTT",
+   "adj_eps_ok": 21,
+   "merged_direct": 17,
+   "seconds": 49.4,
+   "first_error": ""
+  },
+  {
+   "ticker": "ONTO",
+   "adj_eps_ok": 20,
+   "merged_direct": 15,
+   "seconds": 13.6,
+   "first_error": ""
+  },
+  {
+   "ticker": "IPGP",
+   "adj_eps_ok": 11,
+   "merged_direct": 6,
+   "seconds": 18.2,
+   "first_error": ""
+  },
+  {
+   "ticker": "CGNX",
+   "adj_eps_ok": 17,
+   "merged_direct": 17,
+   "seconds": 12.1,
+   "first_error": ""
+  }
+ ]
+}
