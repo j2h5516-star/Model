@@ -1,0 +1,185 @@
+"""
+test_measurement.py — 2단계 측정 장치 검증
+==========================================
+
+측정 코드가 사전 등록 규칙(전략.md 7장)을 그대로 지키는지,
+가짜 데이터로 인터넷 없이 확인합니다.
+
+실행: python3 tests/test_measurement.py
+"""
+
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+import config as cfg  # noqa: E402
+import measurement as mm  # noqa: E402
+
+
+# ---------------------------------------------------------------------------
+# 가짜 데이터
+# ---------------------------------------------------------------------------
+def _trading_days(n: int, start_year: int = 2024) -> list[str]:
+    """주말 없는 가짜 거래일 목록 (평일만, 충분히 단순하게)."""
+    from datetime import date, timedelta
+
+    days = []
+    day = date(start_year, 1, 2)
+    while len(days) < n:
+        if day.weekday() < 5:
+            days.append(day.isoformat())
+        day += timedelta(days=1)
+    return days
+
+
+def _flat_prices(n: int, price: float = 100.0) -> dict:
+    return {"dates": _trading_days(n), "close": [price] * n}
+
+
+def _rising_prices(n: int, start: float = 100.0, step: float = 1.0) -> dict:
+    return {"dates": _trading_days(n), "close": [start + i * step for i in range(n)]}
+
+
+# ---------------------------------------------------------------------------
+# 주가 창 규칙
+# ---------------------------------------------------------------------------
+def test_entry_is_strictly_after_announce():
+    """발표일이 거래일이어도 진입은 그 **다음** 거래일이어야 함 (미래 보기 차단)."""
+    prices = _rising_prices(80)
+    announce = prices["dates"][5]
+    pct, entry_date, _exit = mm.window_return(prices["dates"], prices["close"], announce)
+    assert entry_date == prices["dates"][6], (announce, entry_date)
+    assert pct is not None
+
+
+def test_window_is_exactly_60_trading_days():
+    prices = _rising_prices(80)
+    announce = prices["dates"][5]
+    _pct, entry_date, exit_date = mm.window_return(prices["dates"], prices["close"], announce)
+    entry_index = prices["dates"].index(entry_date)
+    exit_index = prices["dates"].index(exit_date)
+    assert exit_index - entry_index == mm.WINDOW_TRADING_DAYS
+
+
+def test_right_censored_window_is_skipped():
+    """창이 아직 안 끝난 최근 발표는 '우측검열'로 세지 않고 건너뜀."""
+    prices = _rising_prices(30)                  # 60거래일 창을 채울 수 없음
+    announce = prices["dates"][5]
+    pct, reason, _ = mm.window_return(prices["dates"], prices["close"], announce)
+    assert pct is None
+    assert reason == "우측검열"
+
+
+def test_excess_subtracts_spy():
+    """종목 +측정치 − SPY 측정치 = 초과수익 (%p)."""
+    stock = {"dates": _trading_days(80), "close": [100 + i for i in range(80)]}
+    spy = {"dates": _trading_days(80), "close": [100.0] * 80}   # SPY 는 제자리
+    announce = stock["dates"][0]
+    excess, _detail = mm.excess_return(stock, spy, announce)
+    # 진입 1번째 종가 101, 청산 61번째 종가 161 → +59.4% − 0% ≈ +59.4%p
+    assert excess is not None and abs(excess - (161 / 101 - 1) * 100) < 0.01
+
+
+# ---------------------------------------------------------------------------
+# 분기 연속 구간
+# ---------------------------------------------------------------------------
+def test_gap_splits_runs():
+    """분기 사이가 크게 비면 TTM 오염을 막기 위해 구간을 끊어야 함."""
+    rows = [
+        {"adj_eps": 1.0, "filing_date": "2024-01-31"},
+        {"adj_eps": 1.1, "filing_date": "2024-04-30"},
+        # ← 2024-07 분기가 빠짐 (간격 184일)
+        {"adj_eps": 1.3, "filing_date": "2024-10-31"},
+        {"adj_eps": 1.4, "filing_date": "2025-01-31"},
+    ]
+    runs, breaks = mm.eps_runs(rows)
+    assert len(runs) == 2 and breaks == 1
+    assert [len(r) for r in runs] == [2, 2]
+
+
+def test_missing_eps_rows_are_not_fabricated():
+    """조정 EPS 없는 분기는 구간에 들어가지 않아야 함 (창작 금지)."""
+    rows = [
+        {"adj_eps": 1.0, "filing_date": "2024-01-31"},
+        {"adj_eps": None, "filing_date": "2024-04-30"},
+        {"adj_eps": 1.2, "filing_date": "2024-07-31"},
+    ]
+    runs, _ = mm.eps_runs(rows)
+    total_rows = sum(len(r) for r in runs)
+    assert total_rows == 2
+
+
+# ---------------------------------------------------------------------------
+# 사건 수집 — 미래를 보지 않는지
+# ---------------------------------------------------------------------------
+def _fake_snapshot(eps_values, price_days=400):
+    """8분기 성장 시계열 + 상승 주가로 만든 최소 스냅샷."""
+    rows = []
+    quarter_dates = ["2024-01-31", "2024-04-30", "2024-07-31", "2024-10-31",
+                     "2025-01-31", "2025-04-30", "2025-07-31", "2025-10-31"]
+    days = _trading_days(price_days)
+    for i, (value, qd) in enumerate(zip(eps_values, quarter_dates)):
+        announce = qd[:8] + "28" if qd[5:7] != "01" else qd[:5] + "03-05"
+        rows.append({"adj_eps": value, "filing_date": qd,
+                     "announced_date": announce, "period_label": f"Q{i+1}"})
+    return {
+        "tickers": ["TT"],
+        "benchmark": "SPY",
+        "eps": {"TT": rows},
+        "prices": {
+            "TT": {"dates": days, "close": [100 + 0.5 * i for i in range(price_days)]},
+            "SPY": {"dates": days, "close": [100.0] * price_days},
+        },
+    }
+
+
+def test_no_look_ahead_in_judgment():
+    """뒤 분기를 아무리 바꿔도 앞 사건의 판정은 그대로여야 함."""
+    values = [1.0, 1.1, 1.25, 1.45, 1.7, 2.0, 2.4, 2.9]
+    base = _fake_snapshot(values)
+    tampered = _fake_snapshot(values[:-1] + [0.1])     # 마지막 분기를 폭락으로
+
+    events_a, _ = mm.collect_events(base)
+    events_b, _ = mm.collect_events(tampered)
+    # 마지막 사건을 뺀 나머지 판정은 완전히 같아야 함
+    for a, b in zip(events_a[:-1], events_b[:-1]):
+        assert a["direction"] == b["direction"], (a, b)
+        assert a["announced"] == b["announced"]
+
+
+def test_duplicate_announcements_counted_once():
+    """원본 + 정정 발표(같은 발표일)는 한 번만 사건이 되어야 함."""
+    snap = _fake_snapshot([1.0, 1.1, 1.25, 1.45, 1.7, 2.0, 2.4, 2.9])
+    snap["eps"]["TT"].append(dict(snap["eps"]["TT"][-1]))   # 같은 발표일 중복 행
+    events, skipped = mm.collect_events(snap)
+    dates = [e["announced"] for e in events]
+    assert len(dates) == len(set(dates))
+
+
+def test_surge_threshold_is_20pp_excess():
+    """폭등 판정은 시장 대비 +20%p 경계에서 갈려야 함."""
+    stats = mm._group_stats([
+        {"excess": 19.9}, {"excess": 20.0}, {"excess": 35.0},
+    ])
+    assert stats["n"] == 3
+    assert stats["rate20"] == round(2 / 3 * 100, 1)
+    assert stats["rate30"] == round(1 / 3 * 100, 1)
+
+
+if __name__ == "__main__":
+    tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
+    passed = failed = 0
+    for name, fn in tests:
+        try:
+            fn()
+            print(f"  ✅ {name}")
+            passed += 1
+        except AssertionError as e:
+            print(f"  ❌ {name} — {e}")
+            failed += 1
+        except Exception as e:
+            print(f"  💥 {name} — {type(e).__name__}: {e}")
+            failed += 1
+    print(f"\n측정 장치 검증: {passed}개 통과, {failed}개 실패")
+    sys.exit(1 if failed else 0)
