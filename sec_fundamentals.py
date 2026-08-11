@@ -348,12 +348,19 @@ LABELS_NONGAAP_OPEX = [
 # 손익 항목 이름의 공통 부분.
 # 표에서는 "net income (loss) per diluted share" 처럼 괄호로 흑자·적자를 함께
 # 표기하는 것이 표준입니다. 그 괄호를 허용해야 표 형식 보도자료를 읽을 수 있습니다.
-_PROFIT_WORD = r"(?:income|earnings|loss)(?:\s*\((?:loss|income)\))?"
+# "net income / earnings per share" 처럼 순이익과 EPS 를 한 항목으로 묶은
+# 대조표 제목(실물: AMD)도 잡도록 빗금 꼬리를 허용합니다.
+_PROFIT_WORD = (
+    r"(?:income|earnings|loss)(?:\s*\((?:loss|income)\))?"
+    r"(?:\s*/\s*(?:income|earnings|loss))?"
+)
 
 # 조정(논갭) 주당순이익 — 앞에 있는 것부터 우선 시도합니다.
+# ⚠️ "non-GAAP **diluted** net income per share" 처럼 diluted 가 앞에 오는
+#    어순(실물: CRDO·샌디스크)이 있어 (?:diluted\s+)? 를 앞자리에도 둡니다.
 LABELS_ADJUSTED_EPS = [
-    rf"non[-\s]?GAAP\s+(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
-    rf"adjusted\s+(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
+    rf"non[-\s]?GAAP\s+(?:diluted\s+)?(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
+    rf"adjusted\s+(?:diluted\s+)?(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
     rf"non[-\s]?GAAP\s+diluted\s+{_PROFIT_WORD}\s+per\s+share",
     rf"adjusted\s+diluted\s+{_PROFIT_WORD}\s+per\s+share",
     r"non[-\s]?GAAP\s+(?:diluted\s+)?EPS",
@@ -366,7 +373,7 @@ LABELS_ADJUSTED_EPS = [
 #    매칭되므로, 실제 채택할 때 앞을 되돌아보며 논갭 표기를 걸러 냅니다
 #    (find_eps_value 의 exclude_nongaap).
 LABELS_GAAP_EPS = [
-    rf"(?<!non-)(?<!non )GAAP\s+(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
+    rf"(?<!non-)(?<!non )GAAP\s+(?:diluted\s+)?(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
     r"(?<!non-)(?<!non )GAAP\s+(?:diluted\s+)?EPS",
     rf"net\s+{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
     rf"diluted\s+{_PROFIT_WORD}\s+per\s+share",
@@ -418,12 +425,46 @@ def find_eps_value(
                 if _NONGAAP_NEAR_RE.search(text[window_start:start]):
                     continue
 
+            # "net income / earnings per share" 묶음 제목(실물: AMD)은 한 줄에
+            # [순이익 $2,760] [EPS $1.66] 이 짝으로 반복됩니다. 순이익 칸은
+            # 쉼표 있는 정수, EPS 칸은 소수점 표기이므로 — 묶음 제목일 때는
+            # **소수점이 있는 숫자만** EPS 로 인정합니다. (순이익이 $781M 처럼
+            # 크기 상한 아래인 분기에 순이익을 EPS 로 집는 사고 방지)
+            label_text = label_match.group(0)
+            combo_label = "/" in label_text
+
+            # 이름이 "적자"라고 말하면 양수를 음수로 뒤집습니다 (아래 두 곳 공용).
+            # "net income (loss) per share" 같은 겸용 표기는 선언이 아니므로 제외.
+            says_loss = re.search(r"\bloss\b", label_text, re.I) and not re.search(
+                r"\b(?:income|earnings)\b", label_text, re.I
+            )
+
+            # "($43.97 diluted net income per share)" 처럼 **숫자가 이름 앞 괄호
+            # 안에** 있는 형식(실물: 샌디스크). 이름 바로 뒤가 닫는 괄호라면 값은
+            # 괄호 안쪽에 있으므로, 뒤쪽을 훑으면 엉뚱한 숫자를 뭅니다
+            # (실제로 뒤 문장의 연도 표기를 물어 GAAP EPS 가 202.0 이 됐습니다).
+            if text[label_match.end() : label_match.end() + 2].lstrip().startswith(")"):
+                line_start = text.rfind("\n", 0, label_match.start()) + 1
+                open_paren = text.rfind("(", line_start, label_match.start())
+                if open_paren >= 0:
+                    parsed = _parse_number_at(text, open_paren + 1)
+                    if (
+                        parsed is not None
+                        and parsed[1] < label_match.start()      # 숫자가 괄호 안에 있음
+                        and abs(parsed[0]) <= cfg.EPS_MAX_ABS
+                    ):
+                        value = parsed[0]
+                        if value > 0 and says_loss:
+                            value = -value
+                        return value
+                continue   # 괄호형인데 값을 못 읽으면 이 자리는 건너뜁니다
+
             search_from = label_match.end()
             for _ in range(4):    # 같은 문장 안에서 최대 4번까지 다시 시도
                 parsed = _parse_number_at(text, search_from)
                 if parsed is None:
                     break
-                value, _start, number_end, _had_scale, num_end = parsed
+                value, num_start, number_end, _had_scale, num_end = parsed
 
                 # 퍼센트 숫자는 EPS 가 아닙니다 (예: "grew 20% to $1.00")
                 tail_line = text[num_end : num_end + 24].split("\n", 1)[0]
@@ -435,17 +476,14 @@ def find_eps_value(
                     search_from = number_end
                     continue
 
+                if combo_label and "." not in text[num_start:num_end]:
+                    search_from = number_end
+                    continue
+
                 # 이름이 "적자"라고 말하고 있는데 숫자가 양수면 부호를 뒤집습니다.
                 #   "net loss per diluted share of $0.83"  →  −0.83
-                #
-                # ⚠️ 단, "net income (loss) per share" 처럼 흑자·적자를 함께 적은
-                #    표 제목은 적자 선언이 아니라 그냥 항목 이름입니다. 이런 표에서는
-                #    금액 자체가 "(0.83)" 형태로 적혀 이미 음수가 되어 있으므로
-                #    여기서 또 뒤집으면 안 됩니다.
-                label_text = label_match.group(0)
-                says_loss = re.search(r"\bloss\b", label_text, re.I) and not re.search(
-                    r"\b(?:income|earnings)\b", label_text, re.I
-                )
+                # ("net income (loss) per share" 겸용 표기는 위 says_loss 에서
+                #  이미 제외했습니다 — 금액이 "(0.83)" 형태로 이미 음수입니다)
                 if value > 0 and says_loss:
                     value = -value
                 return value
@@ -789,7 +827,10 @@ def fetch_earnings_8k(
         # 보도자료 첨부(EX-99)인데 조정 EPS 를 못 읽었다면 — 파서가 진 것입니다.
         # 그 원문을 진단에 남겨, 배포된 앱의 '측정용 실데이터 저장' 버튼이
         # 저장소로 커밋할 수 있게 합니다. (전략.md 8장 1단계 연료 파이프라인)
-        if had_exhibit and parsed["adj_eps"] is None:
+        # ⚠️ 실적발표로 보이는 것만 남깁니다. 실제 저장해 보니 파트너십 발표 같은
+        #    비실적 8-K(EPS 가 원래 없는 문서)가 보관 상한(종목당 2건)을 차지해
+        #    정작 파서가 진 실적 원문이 못 담겼습니다 (실물: LITE·COHR 2026-03-02).
+        if had_exhibit and parsed["adj_eps"] is None and _looks_like_earnings(text):
             _keep_raw_text(
                 report, str(filing.filing_date), _safe_filing_url(filing), text
             )

@@ -609,6 +609,95 @@ def test_measured_numbers_are_recorded_in_config():
     assert cfg.CONFIDENCE_PCT[cfg.SRC_ADJ_EPS] < cfg.CONFIDENCE_PCT[cfg.SRC_DIRECT]
 
 
+# ---------------------------------------------------------------------------
+# 실물 보도자료 검증 — 연료 파이프라인(data/measure/raw/)이 가져온 진짜 문장
+# ---------------------------------------------------------------------------
+# 지금까지 파서가 계속 어긋난 이유는 "지어낸 예제로만 테스트해서"였습니다.
+# 아래 문장들은 배포된 앱이 저장소로 커밋해 준 **실제 보도자료**에서 그대로
+# 따온 것이고, 기대값은 그 문서에 인쇄된 실제 숫자입니다.
+def test_real_crdo_diluted_before_net():
+    """실물 CRDO 2026-06-01 — 'non-GAAP **diluted** net income per share' 어순"""
+    text = (
+        "GAAP diluted net income per share of $0.88 and "
+        "non-GAAP diluted net income per share of $1.16"
+    )
+    result = sf.parse_press_release(text)
+    assert result["adj_eps"] == 1.16, result["adj_eps"]
+    assert result["gaap_eps"] == 0.88, result["gaap_eps"]
+
+
+def test_real_sndk_paren_value_before_label():
+    """실물 샌디스크 2026-08-05 — 값이 이름 **앞 괄호 안**에 있는 형식.
+
+    고치기 전에는 이름 뒤쪽을 훑다가 뒤 문장의 숫자를 물어
+    GAAP EPS 가 202.0 으로 나왔습니다.
+    """
+    text = (
+        "Fiscal fourth quarter revenue was $8.97 billion, up 51% sequentially, "
+        "with GAAP net income reported at $6.90 billion ($43.97 diluted net income "
+        "per share). Sequential revenue growth came approximately one-third from "
+        "higher volumes and two-thirds from higher pricing. Fourth quarter "
+        "Non-GAAP diluted net income per share was $39.25."
+    )
+    result = sf.parse_press_release(text)
+    assert result["adj_eps"] == 39.25, result["adj_eps"]      # EPS 상한(1000) 안의 큰 EPS
+    assert result["gaap_eps"] == 43.97, result["gaap_eps"]
+
+
+def test_real_amd_combo_reconciliation_row():
+    """실물 AMD 2026-08-04 — '순이익 / EPS' 묶음 대조표.
+
+    한 줄에 [순이익 $2,760] [EPS $1.66] 이 짝으로 반복되므로,
+    소수점 없는 순이익 칸을 건너뛰고 EPS 칸을 집어야 합니다.
+    """
+    text = (
+        "GAAP net income / earnings per share $2,297 $1.38 $1,383 $0.84 $872 $0.54\n"
+        "Non-GAAP net income / earnings per share $2,760 $1.66 $2,265 $1.37 $781 $0.48"
+    )
+    result = sf.parse_press_release(text)
+    assert result["adj_eps"] == 1.66, result["adj_eps"]
+    assert result["gaap_eps"] == 1.38, result["gaap_eps"]
+
+
+def test_amd_combo_small_net_income_is_not_eaten():
+    """순이익이 크기 상한(1000) **아래**인 분기 — 소수점 규칙이 지켜 줍니다.
+
+    $781 은 상한 아래라 크기 검사로는 못 거르지만, 소수점이 없어 EPS 칸이
+    아닙니다. 이 규칙이 없으면 EPS 가 781.0 이 됩니다.
+    """
+    text = "Non-GAAP net income / earnings per share $781 $0.48"
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.48
+
+
+def test_real_zeta_has_no_adjusted_eps():
+    """실물 ZETA 2026-08-04 — 조정 EPS 를 발표하지 않는 회사.
+
+    조정 EBITDA 만 발표하므로 adj_eps 는 '없음'이 정답입니다.
+    없는 숫자를 만들어 내면 안 됩니다 (창작 금지).
+    """
+    text = (
+        "Achieved positive GAAP net income of $8 million, and GAAP earnings per "
+        "share of $0.03. Generated $92 million of adjusted EBITDA and expanded "
+        "adjusted EBITDA margin by 170 bps Y/Y to 20.7%."
+    )
+    result = sf.parse_press_release(text)
+    assert result["adj_eps"] is None, result["adj_eps"]
+    assert result["gaap_eps"] == 0.03, result["gaap_eps"]
+
+
+def test_partnership_8k_is_not_kept_as_raw():
+    """실물 LITE·COHR 2026-03-02 — 파트너십 발표는 실적이 아닙니다.
+
+    실적으로 판별되지 않아야 원문 보관 상한(종목당 2건)을 차지하지 않습니다.
+    """
+    text = (
+        "NVIDIA Announces Strategic Partnership with Lumentum to Develop "
+        "State-of-the-Art Optics Technology. NVIDIA to invest $2B in Lumentum "
+        "to grow capacity and deepen R&D collaboration in data center optics."
+    )
+    assert not sf._looks_like_earnings(text)
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
