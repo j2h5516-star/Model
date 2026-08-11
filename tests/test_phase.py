@@ -438,6 +438,105 @@ def test_a_single_step_does_not_masquerade_as_seasonality():
     assert dq.detect_seasonality(stepped)["seasonal"] is False
     assert 3 in dq.detect_anomalies(stepped)["steps"]
 
+# ---------------------------------------------------------------------------
+# 재검증에서 나온 '치명' 4건 — 점수가 실제로 틀리게 나오던 것들
+# ---------------------------------------------------------------------------
+def _series(values, basis=None):
+    """백만 달러 단위 분기 목록"""
+    return [
+        {"period_label": f"FY{2023 + i // 4} Q{(i % 4) + 1}",
+         "fiscal_quarter": (i % 4) + 1,
+         "period_end": f"20{23 + i // 4}-{(i % 4) * 3 + 3:02d}-28",
+         "op_income": v * M, "revenue": abs(v) * M * 5 + 1e8,
+         "source": cfg.SRC_DIRECT, "basis": basis or cfg.BASIS_OP_INCOME}
+        for i, v in enumerate(values)
+    ]
+
+
+def test_low_base_cap_is_not_undone_by_the_forecast_multiplier():
+    """상한을 걸어 놓고 배수로 되돌리면 안 됩니다.
+
+    상한은 score_delta_acceleration 안에서, 배수는 그 바깥에서 나중에 곱해집니다.
+    곱한 뒤의 min() 이 만점(30)만 막아서, 상한 15.0 에 배수 1.10 을 곱해 16.5 가
+    되면서 화면에는 그대로 "50%로 제한했습니다" 라고 떴습니다. 실제로는 55% 입니다.
+    """
+    quarters = dq.validate_quarters(_series([10, 13, 16, 19, 23, 28]), {})
+    result = scoring.score_fundamental(
+        quarters,
+        {"forward_op_income": 40 * M, "forward_op_income_2": 60 * M,
+         "basis": cfg.SRC_GUIDANCE, "consensus": {}},
+    )
+    delta = result["delta"]
+    assert delta["trace"]["capped"] is True, "저기저 상한이 걸리지 않았습니다"
+    limit = cfg.W_DELTA_ACCEL * cfg.LOW_BASE_CAP_RATIO
+    assert delta["score"] <= limit, f"상한 {limit} 을 넘었습니다: {delta['score']}"
+
+
+def test_ttm_growth_does_not_bridge_a_gap():
+    """계산할 수 없는 자리를 건너뛰고 이어붙이면 없는 가속이 생깁니다.
+
+    10분기 동안 1년치 이익이 400 → 400 으로 한 푼도 안 늘어난 회사가
+    '가속' 판정을 받았습니다(2년 떨어진 두 증가율이 이웃이 되어서).
+    """
+    quarters = _series([100, 100, 100, 100, -1000, 100, 100, 100, 100, 100])
+    result = scoring.score_delta_acceleration(quarters)
+    assert "가속" not in result["direction"], (
+        f"제자리 걸음인데 {result['direction']} 로 판정했습니다")
+
+
+def test_ttm_growth_last_value_is_actually_the_latest():
+    """구멍이 뒤쪽에 있으면 두 분기 전 증가율이 '최근'으로 쓰이면 안 됩니다"""
+    quarters = _series([100, 100, 100, 100, 110, 120, -600, 200, 300])
+    result = scoring.score_delta_acceleration(quarters)
+    # 최근 1년치가 -170 → +20 으로 회복 중인데 '감속'이라 하면 안 됩니다
+    assert "감속" not in result["direction"], result["direction"]
+
+
+def test_forecast_is_converted_with_the_same_ruler():
+    """전망 증가율을 과거와 **같은 자**로 환산해야 합니다.
+
+    예전에는 use_ttm(참/거짓)만 넘겨서, TTM 이 아니면 무조건 '전분기 대비'로
+    환산했습니다. 그런데 계절 종목은 '작년 같은 분기 대비'라 자가 어긋났습니다.
+    """
+    quarters = _series([100, 50, 60, 200, 120])
+    forward = {"forward_op_income": 70 * M, "basis": cfg.SRC_GUIDANCE}
+
+    expected = {"QoQ": "분기", "YoY": "작년 같은 분기", "TTM": "1년치"}
+    for mode, unit in expected.items():
+        fake = {"trace": {"use_ttm": mode == "TTM", "growth_mode": mode,
+                          "growths": [10.0, 20.0]}, "direction": cfg.D_ACCEL}
+        got = scoring.predict_delta(quarters, forward, fake)
+        assert got["growth_unit"] == unit, (mode, got["growth_unit"])
+
+    # 계절 경로는 작년 같은 분기(50)와 견줘야 합니다 — 전분기(120)가 아니라
+    fake_yoy = {"trace": {"use_ttm": False, "growth_mode": "YoY",
+                          "growths": [10.0, 20.0]}, "direction": cfg.D_ACCEL}
+    assert abs(scoring.predict_delta(quarters, forward, fake_yoy)["next_qoq"] - 40.0) < 0.1
+
+
+def test_pending_quarter_keeps_the_ruler():
+    """판정을 미룬 경로에서도 어느 자로 쟀는지 남겨야 합니다"""
+    quarters = _series([100, 110, 125, 140, 160, 180, 400])
+    quarters[-1]["anomaly"] = "pending"
+    trace = scoring.score_delta_acceleration(quarters)["trace"]
+    assert "growth_mode" in trace, "보류 경로에 자 표시가 없습니다"
+    assert "use_ttm" in trace
+
+
+def test_unknown_never_scores_higher_than_bad():
+    """'모르는 것'이 '나쁜 것'보다 유리하면 안 됩니다.
+
+    자료가 하나도 없는 종목이 42.6점을 받아 FUND_WEAK(40.0)를 넘고 자동으로
+    '관심' 판정에 들어갔습니다. 고점이탈 + 감속 + 마진악화인 진짜 종목
+    (약 28.6점)보다 14점 높았습니다.
+    """
+    nothing = scoring.score_fundamental(
+        [], {"forward_op_income": None, "basis": None, "consensus": {}})
+    assert nothing["total"] < cfg.FUND_WEAK, (
+        f"자료 없는 종목이 {nothing['total']:.1f}점으로 보통 기준선을 넘습니다")
+    assert nothing["total"] < 28.0, (
+        f"자료 없는 종목({nothing['total']:.1f})이 진짜 나쁜 종목(약 28.6)보다 높습니다")
+
 
 if __name__ == "__main__":
     tests = [

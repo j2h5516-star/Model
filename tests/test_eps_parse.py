@@ -462,12 +462,16 @@ def _accelerating_eps_quarters():
     return pipeline.apply_metric_basis(rows, {})
 
 
-def test_heavy_buyback_caps_the_delta_score_on_eps_basis():
-    """조정 EPS 로 판정 중에 자사주가 크면 델타 점수를 제한합니다.
+def test_heavy_buyback_warns_but_does_not_change_the_score():
+    """자사주가 크면 **경고만** 하고 점수는 건드리지 않습니다.
 
-    EBAY 2021-12-31(주식수 -11.7%)에서 논갭 영업이익은 '유지'인데 조정 EPS 는
-    '가속' 이라고 했고, 그 분기는 주가 정점 직후였습니다. 자사주가 만든 '가속'을
-    그대로 점수로 주면 꼭지에서 사라고 말하게 됩니다.
+    처음에는 델타 점수를 절반으로 깎았습니다. 그런데 재검증에서 근거가
+    무너졌습니다 — 자사주 종목 표본에서는 상관 -0.590 인데 다른 표본에서는
+    +0.022 로 관계가 사라졌고, 문턱으로 잡았던 -8% 는 회귀선상 근거가
+    -13.7% 였습니다. '결정적 사례'로 인용했던 EBAY 2021-12-31 은 두 기준의
+    전망 라벨이 똑같이 '가속 둔화' 였습니다.
+
+    검증되지 않은 신호에 점수를 주지 않는다는 원칙에 따라 철회했습니다.
     """
     quarters = _accelerating_eps_quarters()
     plain = scoring.score_fundamental(
@@ -477,38 +481,33 @@ def test_heavy_buyback_caps_the_delta_score_on_eps_basis():
         {"forward_op_income": None, "basis": None,
          "consensus": {"shares_shrink_pct": -11.7}},
     )
-    assert buyback["delta"]["score"] < plain["delta"]["score"], (
-        f"자사주가 큰데 점수가 그대로입니다: {buyback['delta']['score']}")
-    assert buyback["delta"].get("buyback_capped") is True
+    assert buyback["delta"]["score"] == plain["delta"]["score"], "점수를 건드렸습니다"
+    assert buyback["delta"].get("buyback_warned") is True
     assert "자사주" in buyback["delta"]["detail"]
+    assert "점수에는 반영하지 않았습니다" in buyback["delta"]["detail"]
 
 
-def test_mild_buyback_does_not_cap():
-    """조금 줄어든 정도로는 제한하지 않습니다 (측정된 문턱 아래)"""
+def test_mild_buyback_is_not_even_warned():
+    """조금 줄어든 정도로는 경고도 하지 않습니다"""
     quarters = _accelerating_eps_quarters()
     mild = scoring.score_fundamental(
         quarters,
         {"forward_op_income": None, "basis": None,
          "consensus": {"shares_shrink_pct": -3.0}},
     )
-    assert mild["delta"].get("buyback_capped") is not True
+    assert mild["delta"].get("buyback_warned") is not True
 
 
-def test_buyback_guard_does_not_touch_operating_income_basis():
-    """논갭 영업이익으로 판정 중이면 자사주와 무관합니다 — 건드리지 않습니다.
-
-    영업이익은 주식수로 나눈 값이 아니므로 자사주 매입의 영향을 받지 않습니다.
-    """
+def test_buyback_warning_does_not_apply_to_operating_income_basis():
+    """논갭 영업이익은 주식수로 나눈 값이 아니므로 자사주와 무관합니다"""
     rows = _mixed([100 * M, 110 * M, 125 * M, 145 * M, 172 * M, 210 * M, 260 * M, 330 * M], [])
     quarters = pipeline.apply_metric_basis(rows, {})
-    a = scoring.score_fundamental(
-        quarters, {"forward_op_income": None, "basis": None, "consensus": {}})
     b = scoring.score_fundamental(
         quarters,
         {"forward_op_income": None, "basis": None,
          "consensus": {"shares_shrink_pct": -20.0}},
     )
-    assert a["delta"]["score"] == b["delta"]["score"]
+    assert b["delta"].get("buyback_warned") is not True
 
 
 def test_phase_detail_uses_per_share_wording_on_eps_basis():
@@ -600,9 +599,11 @@ def test_no_eps_consensus_leaves_forecast_empty():
 
 def test_measured_numbers_are_recorded_in_config():
     """검증 결과를 코드에 남겨 둡니다 — 나중에 근거를 찾을 수 있도록"""
-    assert cfg.EPS_BASIS_DIRECTION_MATCH == 0.795     # 31/39 (자사주 종목)
+    assert cfg.EPS_BASIS_DIRECTION_MATCH == 0.857     # 30/35 (오염 분기 제외 후)
     assert cfg.EPS_BASIS_MATCH_NO_BUYBACK == 0.96     # 48/50 (자사주 없는 종목)
-    assert cfg.EPS_BASIS_BUYBACK_CORR < 0             # 주식수 감소 ↔ EPS 부풀림
+    assert cfg.EPS_BASIS_BUYBACK_CORR < 0             # 자사주 종목 표본에서는 음의 상관
+    # ⚠️ 그런데 다른 표본에서는 관계가 사라집니다 — 그래서 점수에 반영하지 않습니다
+    assert abs(cfg.EPS_BASIS_BUYBACK_CORR_OTHER) < 0.1
     # 조정 EPS 의 신뢰도는 직접공시(95%)보다 낮고 근사치(55%)보다 높아야 합니다
     assert cfg.CONFIDENCE_PCT[cfg.SRC_APPROX] < cfg.CONFIDENCE_PCT[cfg.SRC_ADJ_EPS]
     assert cfg.CONFIDENCE_PCT[cfg.SRC_ADJ_EPS] < cfg.CONFIDENCE_PCT[cfg.SRC_DIRECT]

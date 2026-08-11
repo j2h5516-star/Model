@@ -100,12 +100,19 @@ def explain_data_source(score: dict) -> dict:
             "보도자료를 읽지 못해 SEC의 회계데이터(XBRL)로 **근사치를 만든 값**입니다. "
             "회사가 발표하는 공식 non-GAAP 수치와 차이가 날 수 있으니 참고용으로만 보세요."
         ),
+        cfg.SRC_ADJ_EPS: (
+            "논갭 영업이익을 구하지 못해, 보도자료의 **조정 주당순이익(EPS)**으로 "
+            "판정했습니다. 회사가 직접 발표한 숫자라 근사치보다는 낫지만, "
+            "이자·세금·자사주가 섞여 있습니다. 자사주를 크게 줄인 종목에서는 "
+            "논갭 영업이익과 판정이 **85.7%만 일치**했습니다."
+        ),
     }
 
     formula = {
         cfg.SRC_DIRECT: "보도자료의 `Non-GAAP operating income` 항목을 그대로 사용",
         cfg.SRC_DERIVED: "`매출 × non-GAAP 매출총이익률 − non-GAAP 영업비용`",
         cfg.SRC_APPROX: "`GAAP 영업이익 + 주식보상비 + 무형자산상각`",
+        cfg.SRC_ADJ_EPS: "보도자료의 `Non-GAAP EPS` 를 그대로 사용",
     }
 
     return {
@@ -115,7 +122,7 @@ def explain_data_source(score: dict) -> dict:
         "detail": score.get("source_derivation", ""),
         "source_text": (
             "미국 증권거래위원회(SEC) 전자공시 EDGAR의 8-K(Item 2.02 실적발표) 공시"
-            if source in (cfg.SRC_DIRECT, cfg.SRC_DERIVED)
+            if source in (cfg.SRC_DIRECT, cfg.SRC_DERIVED, cfg.SRC_ADJ_EPS)
             else "SEC EDGAR의 XBRL 회계데이터(Company Facts)"
         ),
         "url": score.get("filing_url", ""),
@@ -155,18 +162,24 @@ def explain_forward(score: dict) -> dict:
     forward_op = trace.get("forward_op")
     growth = trace.get("growth_pct")
 
+    # ⚠️ 기준자를 넘기지 않으면 조정 EPS 8.53 달러가 "$0.0M" 으로 나옵니다.
+    #    같은 화면 다른 칸에는 "$8.53/주" 가 찍혀 있어 서로 충돌합니다.
+    metric_basis = cfg.quarters_basis(score.get("quarters") or [])
+    is_eps = metric_basis == cfg.BASIS_ADJ_EPS
+    metric_name = "조정 EPS" if is_eps else "영업이익"
+
     calc_lines = []
     if forward_op is not None:
-        calc_lines.append(f"- 다음 분기 예상 영업이익: **{_m(forward_op)}**")
+        calc_lines.append(f"- 다음 분기 예상 {metric_name}: **{_m(forward_op, metric_basis)}**")
     if latest_op is not None:
-        calc_lines.append(f"- 가장 최근 분기 실제 영업이익: {_m(latest_op)}")
+        calc_lines.append(f"- 가장 최근 분기 실제 {metric_name}: {_m(latest_op, metric_basis)}")
     if growth is not None:
         calc_lines.append(f"- 변화율: {_pct(growth)} ({'증가' if growth > 0 else '감소'} 전망)")
 
     # 다다음 분기(월가 컨센서스)와 컨센서스의 무게(애널리스트 수)도 보여줍니다
     forward_op_2 = score.get("forward_op_income_2")
     if forward_op_2 is not None:
-        calc_lines.append(f"- 다다음 분기 예상(컨센서스): {_m(forward_op_2)}")
+        calc_lines.append(f"- 다다음 분기 예상(컨센서스): {_m(forward_op_2, metric_basis)}")
     forecast = score.get("forecast_detail") or {}
     consensus = (score.get("forward_consensus") or {})
     analysts = consensus.get("analysts_0q")
@@ -175,6 +188,17 @@ def explain_forward(score: dict) -> dict:
     velocity = consensus.get("revision_velocity_pct")
     if velocity is not None:
         calc_lines.append(f"- 추정치 30일 변화(리비전 속도): **{velocity:+.1f}%**")
+
+    # ⚠️ 조정 EPS 기준에서는 '매출 × 마진'을 쓰지 않습니다. EPS 컨센서스를
+    #    그대로 씁니다. 하지 않은 계산을 했다고 설명하면 안 됩니다.
+    if is_eps and basis == cfg.SRC_ESTIMATE:
+        meaning = (
+            "이 종목은 논갭 영업이익을 구하지 못해 **조정 EPS**로 판정하고 있어서, "
+            "전망도 같은 단위인 월가 EPS 컨센서스를 그대로 씁니다. "
+            "과거와 전망의 자가 같아 환산 오차가 없습니다."
+        )
+        formula = "`월가 다음 분기 EPS 컨센서스` (환산 없이 그대로)"
+        source_text = "Yahoo Finance 애널리스트 EPS 컨센서스 (LSEG 집계)"
 
     return {
         "title": f"다음 분기 전망 근거: {basis or '없음'}",
@@ -234,11 +258,13 @@ def explain_phase(score: dict) -> dict:
         cfg.PH_UNKNOWN: "1년치 이익을 두 번 비교할 만큼 분기가 모이지 않았습니다.",
     }
 
+    basis = cfg.quarters_basis(score.get("quarters") or [])
+
     calc_lines = []
     if trace.get("now") is not None:
-        calc_lines.append(f"- 지금 1년치 이익: **{_m(trace.get('now'))}**")
-        calc_lines.append(f"- 직전 1년치 이익: {_m(trace.get('previous'))}")
-        calc_lines.append(f"- 과거 최고 1년치 이익: {_m(trace.get('peak'))}")
+        calc_lines.append(f"- 지금 1년치 이익: **{_m(trace.get('now'), basis)}**")
+        calc_lines.append(f"- 직전 1년치 이익: {_m(trace.get('previous'), basis)}")
+        calc_lines.append(f"- 과거 최고 1년치 이익: {_m(trace.get('peak'), basis)}")
         if trace.get("vs_peak_pct") is not None:
             calc_lines.append(f"- 최고 대비: **{trace['vs_peak_pct']:.0f}%**")
         calc_lines.append(
@@ -501,8 +527,15 @@ def explain_delta(score: dict) -> dict:
         calc_lines.append(f"- 두 신호를 합친 결과 → **{delta.get('direction')}**")
     if trace.get("capped"):
         calc_lines.append(
-            f"- ⚠️ 최근 분기 이익이 {_m(trace.get('latest_op'))}로 "
-            f"{_m(cfg.LOW_BASE_THRESHOLD_USD)} 미만이라 점수를 절반으로 제한했습니다 (저기저 함정 방지)"
+            # 문턱은 scoring 이 trace 에 담아 둔 값을 씁니다 (기준자마다 다릅니다)
+            f"- ⚠️ 최근 분기 이익이 {_m(trace.get('latest_op'), _metric_basis)}로 "
+            f"{_m(trace.get('low_base_threshold', cfg.LOW_BASE_THRESHOLD_USD), _metric_basis)} "
+            "미만이라 점수를 절반으로 제한했습니다 (저기저 함정 방지)"
+        )
+    if delta.get("buyback_capped"):
+        calc_lines.append(
+            "- ⚠️ 조정 EPS 로 판정하는 중에 자사주 매입으로 주식수가 크게 줄어, "
+            "'가속'이 자사주가 만든 것일 수 있어 점수를 절반으로 제한했습니다"
         )
     measured = trace.get("measured_hit")
     if measured is not None:

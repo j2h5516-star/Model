@@ -119,14 +119,37 @@ def _ttm_series(quarters: list[dict]) -> list[float]:
 
 
 def _ttm_growth_series(quarters: list[dict]) -> list[float]:
-    """TTM 이익의 분기별 증가율(%) 목록."""
+    """TTM 이익의 분기별 증가율(%) 목록 — **끊긴 뒤 구간만** 돌려줍니다.
+
+    ⚠️ 예전에는 계산할 수 없는 자리(직전 1년치가 적자라 증가율이 무의미한 곳)를
+       그냥 **버리고 남은 것을 한 줄로 이어붙였습니다.** 그러면 서로 몇 년
+       떨어진 증가율이 이웃이 되어 없는 가속이 생깁니다.
+
+       분기 이익 [100,100,100,100,-1000,100,100,100,100,100] (10분기 동안 제자리)
+         1년치 이력      [400, -700, -700, -700, -700, 400, 400]
+         구멍 포함 증가율 [-275.0, None, None, None, None, 0.0]
+         이어붙인 결과    [-275.0, 0.0]      ← 2년 떨어진 둘이 이웃이 됨
+         판정            **가속** (+275%p)   ← 한 푼도 안 늘었는데
+
+       더 나쁜 경우는 `[-1]` 이 최신이 아니게 되는 것입니다. 마지막 두 자리가
+       구멍이면 두 분기 전 증가율이 "가장 최근"으로 쓰이고, 그 값이 그대로
+       전망 비교(predict_delta)로도 넘어갑니다.
+
+       QoQ 쪽은 `_growth_segments` 로 이미 고쳤는데, **지금 1순위 기준자인
+       TTM 쪽은 고치지 않은 채로 남아 있었습니다.**
+
+    그래서 구멍을 만나면 앞부분을 버리고 **마지막 연속 구간만** 씁니다.
+    최근을 보는 모델이므로 최신 쪽이 이어져 있는 것이 중요합니다.
+    """
     ttm = _ttm_series(quarters)
-    return [
-        growth for growth in (
-            dq.safe_growth_pct(before, after) for before, after in zip(ttm, ttm[1:])
-        )
-        if growth is not None
-    ]
+    segment: list[float] = []
+    for before, after in zip(ttm, ttm[1:]):
+        growth = dq.safe_growth_pct(before, after)
+        if growth is None:
+            segment = []          # 끊겼습니다 — 여기까지는 버립니다
+        else:
+            segment.append(growth)
+    return segment
 
 
 def _all_approximated(quarters: list[dict], window: int = 4) -> bool:
@@ -259,19 +282,28 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
     ttm_growths = _ttm_growth_series(quarters)
     use_ttm = len(ttm_growths) >= 2
 
+    # ⚠️ **어느 자로 쟀는지를 반드시 함께 넘깁니다.**
+    #    전망 증가율(predict_delta)을 같은 자로 환산해야 하기 때문입니다.
+    #    예전에는 use_ttm(참/거짓)만 넘겨서, TTM 이 아니면 무조건 '전분기 대비'로
+    #    환산했습니다. 그런데 TTM 이 아닌 경우는 두 가지고, 그중 계절 종목은
+    #    작년 같은 분기 대비(YoY)입니다. 그래서 계절 종목에서 자가 어긋나
+    #    '가속 지속'이 '가속 둔화'로 뒤집혔습니다.
     if use_ttm:
         growths = ttm_growths
+        growth_mode = "TTM"
         basis_text = "최근 4분기 합(TTM) 증가율의 변화"
     elif season:
         growths = _yoy_growth_series(quarters)
+        growth_mode = "YoY"
         basis_text = "작년 같은 분기 대비(분기가 모자라 TTM 대신)"
     else:
         growths = _qoq_growth_series(quarters)
+        growth_mode = "QoQ"
         basis_text = "전분기 대비(분기가 모자라 TTM 대신)"
 
     if len(growths) < 2:
         return {
-            "score": max_score * 0.4,   # 판단할 데이터가 부족하면 중간보다 약간 아래
+            "score": max_score * cfg.UNKNOWN_RATIO,   # 모르는 것이 나쁜 것보다 유리하면 안 됩니다
             "direction": cfg.D_UNKNOWN,
             "detail": (
                 "가속/감속을 판단하려면 증가율이 최소 2개 필요한데 "
@@ -279,6 +311,8 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
             ),
             "capped": False,
             "trace": {"growths": growths, "insufficient": True,
+                      "use_ttm": use_ttm,
+        "growth_mode": growth_mode, "growth_mode": growth_mode,
                       "basis": basis_text, "seasonal": bool(season)},
         }
 
@@ -289,7 +323,7 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
     recent_anomaly = any(q.get("anomaly") == "pending" for q in quarters[-2:])
     if recent_anomaly:
         return {
-            "score": max_score * 0.4,
+            "score": max_score * cfg.UNKNOWN_RATIO,
             "direction": cfg.D_UNKNOWN,
             "detail": (
                 "가장 최근 분기의 이익이 크게 뛰었는데, 다음 분기가 아직 없어 "
@@ -297,7 +331,11 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
                 "지금 방향을 말하면 다음 실적발표에서 뒤집히므로 판정을 미룹니다."
             ),
             "capped": False,
+            # ⚠️ use_ttm·growth_mode 가 빠져 있어서, 판정을 미룬 이 경로에서만
+            #    전망 환산이 '분기 대비'로 되돌아가 자가 어긋났습니다.
             "trace": {"growths": growths, "anomaly": True,
+                      "use_ttm": use_ttm,
+        "growth_mode": growth_mode, "growth_mode": growth_mode,
                       "basis": basis_text, "seasonal": bool(season)},
         }
 
@@ -363,6 +401,7 @@ def score_delta_acceleration(quarters: list[dict]) -> dict:
     trace = {
         "basis": basis_text,                # 무엇과 비교했나 (TTM / 전분기 / 작년 같은 분기)
         "use_ttm": use_ttm,
+        "growth_mode": growth_mode,
         "seasonal": bool(season),
         "growths": growths,                 # 기간별 증가율 전체 이력
         "recent": recent,                   # 판정에 실제로 쓴 최근 값들
@@ -573,7 +612,7 @@ def score_gm_driver(quarters: list[dict]) -> dict:
 
     if len(margins) < 2:
         return {
-            "score": max_score * 0.4,
+            "score": max_score * cfg.UNKNOWN_RATIO,
             "type": "판단불가",
             "delta_pp": None,
             "latest_gm": margins[-1] if margins else None,
@@ -710,19 +749,38 @@ def check_earnings_quality(quarters: list[dict]) -> dict:
 def score_revenue_quality(quarters: list[dict]) -> dict:
     """매출이 얼마나 크게 늘었는지(YoY) + 그 속도가 빨라지는지 봅니다."""
     max_score = cfg.W_REVENUE_QUALITY
-    revenues = [q["revenue"] for q in quarters if q.get("revenue") is not None]
+    usable = [q for q in quarters if q.get("revenue") is not None]
+    revenues = [q["revenue"] for q in usable]
 
     if len(revenues) < 2:
         return {
-            "score": max_score * 0.4,
+            "score": max_score * cfg.UNKNOWN_RATIO,
             "yoy": None,
             "detail": "매출 데이터가 부족합니다",
+            "trace": {"revenues": revenues, "insufficient": True},
         }
 
-    # YoY(1년 전 같은 분기 대비). 4개 분기 전 데이터가 없으면 가장 오래된 값과 비교
-    base_index = -5 if len(revenues) >= 5 else 0
-    base = revenues[base_index]
-    yoy = (revenues[-1] / base - 1.0) * 100.0 if base > 0 else None
+    # 1년 전 같은 분기를 **회계분기 이름으로** 찾습니다.
+    #
+    # ⚠️ 예전에는 `revenues[-5]` 처럼 자리 번호로 셌습니다. 그런데 revenues 는
+    #    '매출이 있는 분기만' 모은 목록이라, 한 분기라도 비면 짝이 밀립니다.
+    #    실제로 확인한 오차는 +6.6%p 였습니다(정답 21.6% → 28.2%).
+    #    같은 이유로 _yoy_growth_series 는 이미 이름 기준으로 고쳐 놨는데
+    #    매출 쪽만 그대로였습니다.
+    #
+    # ⚠️ 분기가 5개 미만이면 예전에는 **바로 전 분기**와 비교하면서 화면에는
+    #    "1년 전 대비"라고 썼습니다. 이제는 짝을 못 찾으면 솔직히 말합니다.
+    latest = usable[-1]
+    target = dq.fiscal_quarter_of(latest)
+    base = None
+    if target is not None:
+        want = (target[0] - 1, target[1])
+        base = next(
+            (q["revenue"] for q in reversed(usable[:-1])
+             if dq.fiscal_quarter_of(q) == want),
+            None,
+        )
+    yoy = (revenues[-1] / base - 1.0) * 100.0 if base and base > 0 else None
 
     # 성장률 크기 점수 (0~70% 구간을 0~14점으로 환산, 최대 14점)
     growth_score = 0.0
@@ -752,11 +810,21 @@ def score_revenue_quality(quarters: list[dict]) -> dict:
         else:
             accel_text = " · 매출 감소 폭이 커지는 중입니다"
 
-    yoy_text = f"{yoy:+.1f}%" if yoy is not None else "-"
+    # 짝을 못 찾았으면 "-" 로 얼버무리지 않고 이유를 밝힙니다.
+    # (예전에는 분기가 모자라면 바로 전 분기와 비교해 놓고 화면에는
+    #  "1년 전 대비"라고 썼습니다 — 전분기 +70%가 연간 성장으로 표시됐습니다)
+    if yoy is None:
+        detail = (
+            "1년 전 같은 분기를 찾지 못해 매출 성장률을 내지 못했습니다"
+            f"{accel_text}"
+        )
+    else:
+        detail = f"1년 전 대비 매출 {yoy:+.1f}%{accel_text}"
+
     return {
         "score": round(growth_score + accel_score, 1),
         "yoy": round(yoy, 1) if yoy is not None else None,
-        "detail": f"1년 전 대비 매출 {yoy_text}{accel_text}",
+        "detail": detail,
         "trace": {
             "revenues": revenues,
             "base": base,
@@ -783,7 +851,7 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
 
     # 전망 자체 점수 (최대 10점)
     if forward_op is None or latest_op is None:
-        forward_score = max_score * 0.4
+        forward_score = max_score * cfg.UNKNOWN_RATIO
         growth_text = "다음 분기 전망치를 구하지 못했습니다"
         growth_pct = None
     elif latest_op <= 0:
@@ -806,7 +874,7 @@ def score_forward(quarters: list[dict], forward: dict) -> dict:
         # 예전에는 +461,711,116% 가 그대로 만점권 점수를 받았습니다.
         growth_pct = dq.safe_growth_pct(latest_op, forward_op)
         if growth_pct is None:
-            forward_score = max_score * 0.4
+            forward_score = max_score * cfg.UNKNOWN_RATIO
             growth_text = (
                 "전망 증가율이 비현실적이어서(단위가 깨진 것으로 보임) 판단하지 않았습니다"
             )
@@ -893,19 +961,27 @@ def predict_delta(quarters: list[dict], forward: dict, delta_result: dict) -> di
     #   이 상태로는 **거의 모든 성장 종목이 '가속 둔화'로 찍힙니다.**
     #   실제로 전체 판정의 28%가 그렇게 나왔습니다 (NVDA 는 세 분기 연속).
     #   그래서 1년치로 판정했으면 전망도 1년치로 환산해 견줍니다.
-    use_ttm = delta_result.get("trace", {}).get("use_ttm", False)
+    trace = delta_result.get("trace", {})
+    use_ttm = trace.get("use_ttm", False)
+    growth_mode = trace.get("growth_mode", "TTM" if use_ttm else "QoQ")
     values = [
         q["op_income"] for q in quarters
         if q.get("op_income") is not None and q.get("anomaly") != "spike"
     ]
 
-    if use_ttm and len(values) >= 4:
+    # 과거 증가율과 **같은 자**로 전망 증가율을 냅니다.
+    # (안전 계산을 쓰는 이유: 단위가 깨지면 +461,711,116% 같은 값이 나옵니다)
+    if growth_mode == "TTM" and len(values) >= 4:
         ttm_now = sum(values[-4:])
         ttm_next = sum(values[-3:]) + forward_op
         next_qoq = dq.safe_growth_pct(ttm_now, ttm_next)
         growth_unit = "1년치"
+    elif growth_mode == "YoY" and len(values) >= 4:
+        # 계절 종목: 과거가 '작년 같은 분기 대비'이므로 전망도 그렇게 재야 합니다.
+        # 다음 분기의 작년 같은 분기는 values[-4] 입니다.
+        next_qoq = dq.safe_growth_pct(values[-4], forward_op)
+        growth_unit = "작년 같은 분기"
     else:
-        # 전망 증가율도 안전 계산을 씁니다 (단위가 깨지면 +461,711,116% 같은 값이 나옵니다)
         next_qoq = dq.safe_growth_pct(latest_op, forward_op)
         growth_unit = "분기"
 
@@ -1053,7 +1129,20 @@ def score_fundamental(quarters: list[dict], forward: dict) -> dict:
     #   진짜였던 것은 '감속 지속 ↘↘'(정점 66.7%)과 '가속 지속 ↗↗'(정점 0%)입니다.
     forecast = predict_delta(quarters, forward, delta)
     multiplier = cfg.FORECAST_SCORE_MULT.get(forecast.get("label"), 1.0)
-    delta_score = min(delta["score"] * multiplier, float(cfg.W_DELTA_ACCEL))
+
+    # ⚠️ **상한을 배수로 되돌리면 안 됩니다.**
+    #
+    #   '저기저 함정' 상한은 score_delta_acceleration 안에서 걸리고, 전망 배수는
+    #   여기 바깥에서 나중에 곱해집니다. 그런데 곱한 뒤의 min() 은 만점(30)만
+    #   막았습니다. 그래서 상한 15.0 을 걸어 놓고 배수 1.10 을 곱해 16.5 가
+    #   되면서, 화면에는 그대로 "이 항목 점수를 50%로 제한했습니다" 라고 떴습니다.
+    #   실제로는 55% 입니다 — 사용자에게 거짓을 말하는 상태였습니다.
+    #
+    #   그래서 배수를 곱한 뒤에도 **이미 걸린 상한을 다시 적용**합니다.
+    ceiling = float(cfg.W_DELTA_ACCEL)
+    if delta.get("trace", {}).get("capped"):
+        ceiling = min(ceiling, cfg.W_DELTA_ACCEL * cfg.LOW_BASE_CAP_RATIO)
+    delta_score = min(delta["score"] * multiplier, ceiling)
 
     if multiplier != 1.0:
         delta = {
@@ -1066,39 +1155,38 @@ def score_fundamental(quarters: list[dict], forward: dict) -> dict:
             ),
         }
 
-    # --- 자사주 방어장치 (구조대 경로에서만) ---
+    # --- 자사주 경고 (점수에는 반영하지 않습니다) ---
     #
-    # 논갭 영업이익을 못 구해 조정 EPS 로 판정하는 중이라면, 자사주 매입이
-    # '가속'을 만들어 낼 수 있습니다.  EPS = 순이익 ÷ 주식수  이므로
-    # 영업이익이 제자리여도 분모가 줄면 EPS 는 오릅니다.
+    # ⚠️ 처음에는 여기서 델타 점수를 절반으로 깎았습니다. 그런데 **재검증에서
+    #    그 근거가 무너졌습니다.**
     #
-    # 자사주가 큰 4종목 39개 시점으로 재 본 결과:
-    #   · 주식수 감소와 EPS 부풀림의 상관계수 -0.703
-    #   · 주식수가 1년에 -12% 줄어든 구간에서 편향이 +1.5 ~ +3.8%p
-    #     → 판정 문턱(3.0%p)과 겹칩니다
-    #   · EBAY 2021-12-31(주식수 -11.7%)에서 논갭 영업이익은 '유지'인데
-    #     조정 EPS 는 '가속' 이라고 했습니다. 그 분기는 **주가 정점 직후**였습니다.
+    #      · 자사주 종목 표본(23개)  상관계수 -0.590
+    #      · 다른 표본(49개)         상관계수 +0.022   ← 관계가 사라집니다
+    #      · AMD 는 주식수가 +33.8% 늘었는데도 판정이 일치했습니다
+    #      · 문턱으로 잡았던 -8% 는 회귀선상 근거가 -13.7% 였습니다
+    #        (-8% 부근 4개 값은 +0.9 / +2.2 / +1.5 / -0.7 %p 로 판정 문턱 3.0%p 에
+    #         닿는 것이 하나도 없고 하나는 음수였습니다)
+    #      · '결정적 사례'로 인용했던 EBAY 2021-12-31 은 두 기준의 전망 라벨이
+    #        **똑같이 '가속 둔화'** 였습니다 — 제가 말한 출력은 모델이 낼 수 없는 것이었습니다
     #
-    # 그래서 이 구간에서는 델타 점수를 절반까지만 인정합니다.
+    #    검증되지 않은 신호에 점수를 주지 않는다는 원칙에 따라 **점수 반영을
+    #    철회하고 경고만 남깁니다.** 편향 자체는 실재하므로(측정 +0.59%p 평균)
+    #    화면에는 알립니다.
     shrink = (forward.get("consensus") or {}).get("shares_shrink_pct")
     if (
         cfg.quarters_basis(quarters) == cfg.BASIS_ADJ_EPS
         and shrink is not None
-        and shrink <= cfg.EPS_BASIS_BUYBACK_LIMIT_PCT
+        and shrink <= cfg.EPS_BASIS_BUYBACK_WARN_PCT
     ):
-        capped_to = min(delta["score"], cfg.W_DELTA_ACCEL * cfg.EPS_BASIS_BUYBACK_CAP_RATIO)
-        if capped_to < delta["score"]:
-            delta = {
-                **delta,
-                "score": round(capped_to, 1),
-                "buyback_capped": True,
-                "detail": (
-                    f"{delta['detail']} · ⚠️ 조정 EPS 로 판정 중인데 주식수가 1년에 "
-                    f"{shrink:.1f}% 줄었습니다. 자사주 매입이 '가속'을 만들었을 수 "
-                    f"있어 이 항목을 {int(cfg.EPS_BASIS_BUYBACK_CAP_RATIO*100)}%로 "
-                    "제한했습니다"
-                ),
-            }
+        delta = {
+            **delta,
+            "buyback_warned": True,
+            "detail": (
+                f"{delta['detail']} · ⚠️ 조정 EPS 로 판정 중인데 주식수가 1년에 "
+                f"{shrink:.1f}% 줄었습니다. 자사주 매입이 증가율을 부풀렸을 수 "
+                "있습니다(점수에는 반영하지 않았습니다 — 검증되지 않은 신호이므로)"
+            ),
+        }
 
     total = (
         delta["score"] + phase["score"] + gm["score"]

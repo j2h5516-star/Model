@@ -660,8 +660,30 @@ def check_forward(forward_op, latest_op) -> tuple[bool, str]:
         return False, f"전망 ${forward_op:,.0f} 은(는) 현실적인 범위를 벗어납니다"
     if not _finite(latest_op) or latest_op <= 0:
         return True, ""          # 비교 기준이 없으면 배수 검사는 건너뜁니다
+    # ⚠️ **적자 전환 전망은 버리면 안 됩니다.**
+    #
+    #   전망이 음수면 배수가 음수가 되어 하한(1/10)에 걸렸습니다. 그래서
+    #   "다음 분기 적자 전환" 가이던스가 통째로 버려지고 '전망 없음'이 됐는데,
+    #   '전망 없음'에는 중간 점수가 붙습니다. 결과가 이렇게 뒤집혔습니다.
+    #
+    #       -9% 소폭 감소 전망 → 2.8점
+    #       적자 전환 전망     → 8.6점   ← 더 나쁜데 3배 높음
+    #
+    #   대시보드가 잡으려는 바로 그 신호(급격한 감속·적자 전환)가
+    #   "자료 없음"으로 세탁되어 중간 점수를 받고 있었습니다.
+    #
+    #   적자 전환은 **계산이 깨진 것이 아니라 진짜 나쁜 소식**입니다.
+    #   크기만 현실적이면 그대로 씁니다 (위의 절대 크기 검사는 이미 지났습니다).
+    if forward_op <= 0:
+        if abs(forward_op) > latest_op * cfg.FORWARD_MAX_MULTIPLE:
+            return False, (
+                f"적자 전망 ${forward_op:,.0f} 이 최근 실적의 "
+                f"{cfg.FORWARD_MAX_MULTIPLE:.0f}배를 넘습니다"
+            )
+        return True, ""
+
     ratio = forward_op / latest_op
-    if ratio > cfg.FORWARD_MAX_MULTIPLE or ratio < 1.0 / cfg.FORWARD_MAX_MULTIPLE:
+    if ratio > cfg.FORWARD_MAX_MULTIPLE or ratio < cfg.FORWARD_MIN_RATIO:
         return False, (
             f"전망이 최근 실적의 {ratio:,.1f}배로 "
             f"{cfg.FORWARD_MAX_MULTIPLE:.0f}배 한도를 벗어납니다"
