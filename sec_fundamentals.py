@@ -34,13 +34,28 @@ import config as cfg
 # ---------------------------------------------------------------------------
 
 # 보도자료 표에서 "(단위: 천 달러)" 같은 표기를 찾기 위한 패턴
+# 표 머리글의 단위 표기.
+#
+# ⚠️ 예전에는 "(in thousands" 처럼 **괄호 바로 뒤에 in 이 오는 형태**만 알아봤습니다.
+#    그래서 아래 표기들이 전부 "단위 없음(×1)"으로 처리돼 값이 1,000배 작게
+#    들어왔습니다 — 그런데 **매출과 영업이익이 같이 작아지므로 마진 비율이 보존되어
+#    어떤 정합성 검사에도 걸리지 않습니다.** 옆 분기와 섞이면 "영업이익 99.9% 붕괴"
+#    같은 가짜 델타가 생깁니다.
+#
+#      (Unaudited, in thousands)          (unaudited, in millions)
+#      (Dollars in thousands)             ($ in millions)
+#      (U.S. dollars in millions)         (dollars and shares in thousands, ...)
+#
+# 그래서 괄호 안 어디에 있든 "<무엇이> in thousands/millions/billions" 를 잡습니다.
+_SCALE_WORDS = r"(thousand|million|billion)s?"
 _UNIT_PATTERNS = [
-    (re.compile(r"\(\s*in\s+thousands", re.I), 1_000),
-    (re.compile(r"\(\s*in\s+millions", re.I), 1_000_000),
-    (re.compile(r"\(\s*in\s+billions", re.I), 1_000_000_000),
-    (re.compile(r"amounts?\s+in\s+thousands", re.I), 1_000),
-    (re.compile(r"amounts?\s+in\s+millions", re.I), 1_000_000),
+    (re.compile(rf"\([^)]{{0,40}}?\bin\s+{_SCALE_WORDS}\b", re.I), None),
+    (re.compile(rf"\(\s*\$\s*in\s+{_SCALE_WORDS}\b", re.I), None),
+    (re.compile(rf"\bamounts?\s+in\s+{_SCALE_WORDS}\b", re.I), None),
+    (re.compile(rf"\bdollars?\s+in\s+{_SCALE_WORDS}\b", re.I), None),
 ]
+# 잡아낸 낱말 → 배수
+_SCALE_MULTIPLIER = {"thousand": 1_000, "million": 1_000_000, "billion": 1_000_000_000}
 
 # 숫자 하나를 나타내는 패턴 — 예: $ 1,234.5  /  (1,234)  /  45.1
 _NUMBER_RE = re.compile(
@@ -83,10 +98,12 @@ def _detect_table_unit(text: str, position: int, window: int = 3000) -> int:
     start = max(0, position - window)
     context = text[start:position]
     best_scale, best_pos = 1, -1
-    for pattern, scale in _UNIT_PATTERNS:
+    for pattern, _ in _UNIT_PATTERNS:
         for match in pattern.finditer(context):
             if match.start() > best_pos:      # 가장 가까운(=뒤쪽) 표기를 채택
-                best_pos, best_scale = match.start(), scale
+                word = (match.group(1) or "").lower()
+                best_pos = match.start()
+                best_scale = _SCALE_MULTIPLIER.get(word, 1)
     return best_scale
 
 
@@ -144,16 +161,99 @@ def find_labeled_value(
     label_patterns: 찾을 항목 이름들(정규식). 앞에 있는 것부터 우선 시도합니다.
     is_percent    : 퍼센트 값이면 True (단위 배수를 적용하지 않음)
     """
+    # ⚠️ **같은 줄에 있는 숫자를 먼저 찾습니다.**
+    #
+    #   숫자 탐색 창(160자)이 줄을 넘어가기 때문에, 라벨과 같은 문구가 들어간
+    #   **표 제목**에 먼저 걸리면 그 아래 첫 숫자를 값으로 채택했습니다.
+    #
+    #       RECONCILIATION OF GAAP TO NON-GAAP OPERATING INCOME   ← 여기 걸림
+    #       GAAP operating income                     140,000     ← 이 값을 채택
+    #       Non-GAAP operating income                 250,000     ← 진짜 값
+    #
+    #   44% 과소인데 화면에는 "조정표에 적힌 논갭 값을 그대로 사용"이라는
+    #   **거짓 근거**가 붙었습니다. 이미 잡은 '가이던스에서 GAAP 을 먼저 집는
+    #   버그'와 같은 부류가 본 지표에 그대로 남아 있었습니다.
+    #
+    #   표든 서술형이든 **진짜 값은 라벨과 같은 줄**에 있습니다. 제목 줄만
+    #   숫자가 다음 줄에 있습니다. 그래서 같은 줄을 먼저 훑고, 거기서 아무것도
+    #   못 찾았을 때만 예전처럼 줄을 넘어가 찾습니다.
+    # 그리고 **분기 숫자를 연간 숫자보다 먼저** 찾습니다.
+    #
+    #   "4분기 및 연간 실적" 보도자료에는 두 숫자가 함께 들어 있는데, 예전에는
+    #   구분하는 장치가 전혀 없어 연간 숫자를 분기 자리에 넣었습니다.
+    #   매년 4분기마다 +228% 짜리 가짜 급등이 생겼습니다.
+    for avoid_annual in (True, False):
+        for same_line_only in (True, False):
+            found = _scan_labeled_value(
+                text, label_patterns, is_percent, apply_table_unit,
+                same_line_only, avoid_annual,
+            )
+            if found is not None:
+                return found
+    return None
+
+
+# 이 말이 라벨 앞에 있으면 그 숫자는 **연간** 수치입니다.
+# ("fourth quarter and full year" 보도자료에서 분기 숫자와 연간 숫자를 가릅니다)
+_ANNUAL_CONTEXT_RE = re.compile(
+    r"(full[-\s]year|fiscal[-\s]year|twelve\s+months|year\s+ended|"
+    r"annual\s+(?:revenue|results?)|for\s+the\s+year)",
+    re.I,
+)
+_ANNUAL_LOOKBACK = 90   # 라벨 앞 몇 글자까지 되돌아볼 것인가
+
+
+def _scan_labeled_value(
+    text: str,
+    label_patterns: list[str],
+    is_percent: bool,
+    apply_table_unit: bool,
+    same_line_only: bool,
+    avoid_annual: bool = False,
+) -> float | None:
+    """find_labeled_value 의 한 번 훑기 (같은 줄만 볼지 여부를 받습니다).
+
+    ⚠️ **숫자가 가장 가까이 붙은 라벨**을 고릅니다.
+
+    한 문장 안에 같은 라벨이 두 번 나오면 예전에는 앞의 것을 잡았습니다.
+
+        "Management uses non-GAAP operating income to evaluate performance.
+         GAAP operating income was $140.0 million, and
+         non-GAAP operating income was $250.0 million."
+                ↑ 앞의 라벨(설명 문구)이 걸려 뒤의 $140.0 을 채택
+
+    값은 언제나 자기 라벨 바로 뒤에 옵니다. 설명 문구로 쓰인 라벨은 숫자가
+    한참 뒤에 있으므로, 거리로 가리면 정확히 걸러집니다.
+    """
+    best_value, best_gap = None, None
     for pattern_str in label_patterns:
         pattern = re.compile(pattern_str, re.I)
         for label_match in pattern.finditer(text):
+            if avoid_annual:
+                # 라벨 앞쪽(줄을 넘지 않고)에 '연간'을 뜻하는 말이 있으면 건너뜁니다.
+                start = label_match.start()
+                line_start = text.rfind("\n", 0, start) + 1
+                window_start = max(line_start, start - _ANNUAL_LOOKBACK)
+                if _ANNUAL_CONTEXT_RE.search(text[window_start:start]):
+                    continue
+
             search_from = label_match.end()
+            if same_line_only:
+                line_end = text.find("\n", search_from)
+                limit = (line_end if line_end != -1 else len(text)) - search_from
+                if limit <= 0:
+                    continue
+            else:
+                limit = 160
 
             # 금액을 찾는 중이라면 퍼센트 숫자는 건너뛰고 계속 오른쪽을 봅니다.
             # 예) "Revenue grew 20% year-over-year to $135.0 million"
             #      → 20을 매출로 오인하지 않고 135.0 million을 찾아냅니다.
             for _ in range(4):   # 같은 문장 안에서 최대 4번까지 다시 시도
-                parsed = _parse_number_at(text, search_from)
+                remaining = limit - (search_from - label_match.end())
+                if remaining <= 0:
+                    break
+                parsed = _parse_number_at(text, search_from, remaining)
                 if parsed is None:
                     break
                 value, number_start, number_end, had_word_scale, num_end = parsed
@@ -172,7 +272,10 @@ def find_labeled_value(
                 if is_percent:
                     # 퍼센트를 찾는 중: %가 붙어 있고 0~100 범위여야 채택
                     if is_percent_value and 0 < value <= 100:
-                        return value
+                        gap = number_start - label_match.end()
+                        if best_gap is None or gap < best_gap:
+                            best_value, best_gap = value, gap
+                        break
                     search_from = number_end
                     continue
 
@@ -184,8 +287,11 @@ def find_labeled_value(
                 # 숫자 뒤에 단위 단어가 없었다면 표 제목의 단위를 적용
                 if apply_table_unit and not had_word_scale:
                     value *= _detect_table_unit(text, number_start)
-                return value
-    return None
+                gap = number_start - label_match.end()
+                if best_gap is None or gap < best_gap:
+                    best_value, best_gap = value, gap
+                break
+    return best_value
 
 
 # ---------------------------------------------------------------------------
@@ -1241,7 +1347,37 @@ def merge_quarters(
             if press_date is None:
                 continue
             gap = (press_date - period_date).days
-            if 0 <= gap <= cfg.PAIRING_WINDOW_DAYS and (best_gap is None or gap < best_gap):
+            if not (0 <= gap <= cfg.PAIRING_WINDOW_DAYS):
+                continue
+
+            # ⚠️ **이 8-K 를 더 가깝게 받을 분기가 따로 있으면 가져가지 않습니다.**
+            #
+            #   짝짓기 창(120일)이 분기 간격(약 91일)보다 넓습니다. 그래서 예전에는
+            #   앞 분기의 8-K 가 파싱에 실패하면 **앞 분기가 뒷 분기의 8-K 를
+            #   가로챘습니다.** 12월 결산 회사의 2분기 발표(7/25)는 1분기 종료일
+            #   (3/31)에서 116일이라 창 안에 들어옵니다.
+            #
+            #   그 결과 실제 100→130(+30%)이 모델에는 155→130(-16%)으로 보였고,
+            #   분기 이름표까지 "24 Q2"로 덮여 3월 분기 자리에 표시됐습니다.
+            #   진단에는 실패 기록이 한 줄도 남지 않았습니다.
+            #
+            #   창을 좁히면 10-K 와 함께 늦게 나오는 연말 발표를 놓치므로,
+            #   창은 그대로 두고 **가장 가까운 분기가 임자**라는 규칙을 넣습니다.
+            stolen = False
+            for other in merged:
+                if other is row:
+                    continue
+                other_date = _to_date(other.get("filing_date", ""))
+                if other_date is None:
+                    continue
+                other_gap = (press_date - other_date).days
+                if 0 <= other_gap < gap:
+                    stolen = True
+                    break
+            if stolen:
+                continue
+
+            if best_gap is None or gap < best_gap:
                 best_index, best_gap = index, gap
 
         if best_index is None:

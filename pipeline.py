@@ -118,18 +118,23 @@ def collect_one_ticker(ticker: str, use_cache: bool = True) -> dict:
     #   단위가 어긋난 값을 고치고, 고칠 수 없는 값은 그 항목만 빼며,
     #   무엇을 했는지 진단에 남깁니다. 이 단계가 없어서 매출이 100만 배 작게
     #   들어온 분기 하나가 평균 마진 → 전망 → 증가율 → 차트까지 오염시켰습니다.
-    try:
-        quarters = dq.validate_quarters(quarters, report)
-    except Exception as exc:
-        if not report.get("first_error"):
-            report["first_error"] = f"[검사] {type(exc).__name__}: {str(exc)[:180]}"
-
-    # 논갭 영업이익이 모자라면 조정 EPS 를 대신 씁니다 (구조대 경로).
+    # ⚠️ 순서가 중요합니다. 기준자를 **먼저** 정해야 합니다.
+    #    검사(validate_quarters)는 영업이익이 없는 분기를 버립니다. 그래서 검사를
+    #    먼저 돌리면, 조정 EPS 로 갈아탈 분기가 기준자 단계에 도착하기 전에 이미
+    #    사라집니다. 실제로 그 순서였고, 그 결과 **구조대 경로가 한 번도 켜지지
+    #    않았습니다** — 논갭을 못 읽은 종목(LITE)은 EPS 로 판정되는 대신
+    #    분기가 0개가 되어 실적이 통째로 비었습니다.
     try:
         quarters = apply_metric_basis(quarters, report)
     except Exception as exc:
         if not report.get("first_error"):
             report["first_error"] = f"[기준자] {type(exc).__name__}: {str(exc)[:180]}"
+
+    try:
+        quarters = dq.validate_quarters(quarters, report)
+    except Exception as exc:
+        if not report.get("first_error"):
+            report["first_error"] = f"[검사] {type(exc).__name__}: {str(exc)[:180]}"
 
     try:
         forward = fe.estimate_forward(ticker, quarters)

@@ -125,6 +125,31 @@ def check_quarter(quarter: dict) -> dict:
             "revenue": None,
         }
 
+    # ⚠️ 조정 EPS 기준에서는 마진 검사를 쓸 수 없습니다.
+    #
+    #   이 검사는 "영업이익 ÷ 매출이 −500%~100% 안에 드는가" 입니다. 그런데
+    #   영업이익 자리에 **주당 달러**(0.87)가 들어오면 어떤 매출을 넣어도
+    #   비율이 0% 근처가 되어 **무조건 통과**합니다. 매출이 100만 배 작게
+    #   들어와도 잡지 못합니다 — 이 모듈이 존재하는 이유 자체가 무력화됩니다.
+    #
+    #   그래서 EPS 기준에서는 매출을 **이웃 분기와 견주어** 검사합니다.
+    #   매출은 어느 기준에서든 언제나 달러이므로 이 방법은 항상 유효합니다.
+    if quarter.get("basis") == cfg.BASIS_ADJ_EPS:
+        neighbor = quarter.get("_neighbor_revenue")
+        if neighbor and neighbor > 0:
+            ratio = revenue / neighbor
+            if not (1.0 / cfg.EPS_BASIS_REVENUE_RATIO <= ratio <= cfg.EPS_BASIS_REVENUE_RATIO):
+                return {
+                    "quality": Q_PARTIAL,
+                    "reasons": [
+                        f"{label}: 매출 ${revenue:,.0f} 이 이웃 분기"
+                        f"(${neighbor:,.0f})의 {ratio:.4g}배라 단위가 어긋난 것으로 "
+                        "보고 매출을 계산에서 뺐습니다"
+                    ],
+                    "revenue": None,
+                }
+        return {"quality": Q_OK, "reasons": [], "revenue": revenue}
+
     if safe_margin_pct(revenue, op_income) is not None:
         return {"quality": Q_OK, "reasons": [], "revenue": revenue}
 
@@ -146,16 +171,55 @@ def check_quarter(quarter: dict) -> dict:
         }
 
     # 보도자료에서 온 값은 표 단위(천/백만) 표기를 놓쳤을 수 있어, 그 경우만 고칩니다.
+    #
+    # ⚠️ 마진만 보고 고치면 **정상 회사를 망칩니다.**
+    #    매출을 키우면 마진은 언제나 0 쪽으로 움직이므로, "마진이 너무 음수다"는
+    #    상태는 **항상** 보정에 성공합니다. 그래서 이 코드는 "매출이 천 단위로
+    #    들어왔다"와 "이 회사가 매출보다 손실이 크다"를 구분하지 못하고,
+    #    후자를 언제나 전자로 판정했습니다.
+    #
+    #    실제 피해: 매출 $20M · 논갭 영업손실 −$150M 인 바이오텍(정상적인 모습)의
+    #    매출이 $20,000M 로 부풀려지고 "보정됨" 배지까지 달렸습니다. 일부 분기만
+    #    보정되면 화면에 "매출 −99.8%"라는 가짜 붕괴가 뜹니다.
+    #
+    # 그래서 **이웃 분기와 견주어** 진짜 단위 오류일 때만 고칩니다.
+    # 단위 오류는 한 분기만 정확히 1,000배(또는 100만 배) 어긋납니다.
+    # 손실이 큰 회사는 매출이 이웃 분기와 비슷합니다 — 그것이 구분점입니다.
+    neighbor = quarter.get("_neighbor_revenue")
     for scale, name in ((1_000.0, "천 단위"), (1_000_000.0, "백만 단위")):
         candidate = revenue * scale
-        if safe_margin_pct(candidate, op_income) is not None:
+        if safe_margin_pct(candidate, op_income) is None:
+            continue
+        if neighbor and neighbor > 0:
+            # 고친 값이 이웃과 같은 자릿수여야 진짜 단위 오류입니다.
+            if not (1.0 / cfg.REVENUE_NEIGHBOR_RATIO
+                    <= candidate / neighbor
+                    <= cfg.REVENUE_NEIGHBOR_RATIO):
+                continue
+        elif neighbor is not None:
+            continue      # 이웃을 알 수 없으면 함부로 고치지 않습니다
+        return {
+            "quality": Q_FIXED,
+            "reasons": [
+                f"{label}: 매출이 {name}로 들어와 있어 ${revenue:,.0f} → "
+                f"${candidate:,.0f} 로 고쳤습니다"
+            ],
+            "revenue": candidate,
+        }
+
+    # 이웃과 크기가 맞으면 매출 자체는 멀쩡합니다 — 손실이 큰 회사일 뿐입니다.
+    # 이런 분기의 매출을 버리면 매출 성장 지표가 통째로 무너집니다.
+    if neighbor and neighbor > 0:
+        ratio = revenue / neighbor
+        if 1.0 / cfg.REVENUE_NEIGHBOR_RATIO <= ratio <= cfg.REVENUE_NEIGHBOR_RATIO:
             return {
-                "quality": Q_FIXED,
+                "quality": Q_OK,
                 "reasons": [
-                    f"{label}: 매출이 {name}로 들어와 있어 ${revenue:,.0f} → "
-                    f"${candidate:,.0f} 로 고쳤습니다"
+                    f"{label}: 영업손실이 매출보다 크지만(마진 "
+                    f"{op_income / revenue * 100.0:,.0f}%), 매출이 이웃 분기"
+                    f"(${neighbor:,.0f})와 크기가 맞아 그대로 씁니다"
                 ],
-                "revenue": candidate,
+                "revenue": revenue,
             }
 
     # 고칠 수 없으면 매출만 빼고 영업이익은 그대로 씁니다 (분기를 통째로 버리지 않음)
@@ -185,7 +249,28 @@ def validate_quarters(quarters: list[dict], report: dict | None = None) -> list[
     fixed_count = 0
     dropped_count = 0
 
+    # 매출을 이웃 분기와 견주기 위한 기준값을 분기마다 만듭니다.
+    #
+    # 두 가지에 씁니다.
+    #   ① 조정 EPS 기준: 마진 검사를 쓸 수 없으므로 이것으로 대신합니다
+    #   ② 논갭 영업이익 기준: "진짜 단위 오류"와 "손실이 큰 정상 회사"를 가릅니다
+    #
+    # ⚠️ 기준값은 **자기 자신을 뺀** 나머지의 중앙값입니다.
+    #    자기를 넣으면 분기가 하나뿐일 때 깨진 값이 스스로를 "이웃과 같다"고
+    #    보증해 검사가 무력화됩니다(실제로 테스트가 이것을 잡았습니다).
+    #    중앙값을 쓰는 이유는 바로 옆 분기가 하필 깨진 값이어도 흔들리지 않기 위함입니다.
+    #    이웃이 하나도 없으면(분기 1개) 기준값 없이 예전 방식으로 판단합니다.
+    all_revenues = [
+        q.get("revenue") for q in quarters
+        if _finite(q.get("revenue")) and q.get("revenue", 0) > 0
+    ]
+
     for quarter in quarters:
+        others = [r for r in all_revenues if r is not quarter.get("revenue")]
+        if others:
+            quarter["_neighbor_revenue"] = statistics.median(others)
+        else:
+            quarter.pop("_neighbor_revenue", None)
         verdict = check_quarter(quarter)
         notes.extend(verdict["reasons"])
 

@@ -13,6 +13,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
+import config as cfg  # noqa: E402
 import forward_estimates as fe  # noqa: E402
 import sec_fundamentals as sf  # noqa: E402
 from fixtures import (  # noqa: E402
@@ -379,6 +380,148 @@ def test_average_operating_margin():
 def test_average_margin_empty():
     """데이터가 없으면 None을 돌려줘야 함"""
     assert fe.average_operating_margin([]) is None
+
+
+
+
+def test_reconciliation_title_is_not_read_as_the_value():
+    """조정표 **제목**에 걸려 바로 아래 GAAP 값을 논갭으로 읽으면 안 됩니다.
+
+    제목이 라벨과 같은 문구라서, 숫자 탐색 창(160자)이 줄을 넘어가 그 아래
+    첫 숫자를 채택했습니다. 44% 과소인데 화면에는 "조정표에 적힌 논갭 값을
+    그대로 사용"이라는 거짓 근거가 붙었습니다.
+    """
+    text = (
+        "RECONCILIATION OF GAAP TO NON-GAAP OPERATING INCOME\n"
+        "(in thousands)\n"
+        "GAAP operating income                        140,000\n"
+        "Stock-based compensation                      95,000\n"
+        "Non-GAAP operating income                    250,000"
+    )
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_OP_INCOME) == 250_000_000
+
+
+def test_label_used_as_prose_does_not_steal_the_value():
+    """설명 문구로 쓰인 라벨이 뒤에 나오는 GAAP 숫자를 집으면 안 됩니다.
+
+    값은 언제나 자기 라벨 바로 뒤에 옵니다. 설명 문구는 숫자가 한참 뒤에
+    있으므로 '가장 가까운 라벨'을 고르면 걸러집니다.
+    """
+    text = (
+        "Management uses non-GAAP operating income to evaluate performance. "
+        "GAAP operating income was $140.0 million, and "
+        "non-GAAP operating income was $250.0 million."
+    )
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_OP_INCOME) == 250_000_000
+
+
+def test_value_on_the_next_line_is_still_found():
+    """줄이 바뀐 서술형도 놓치지 않아야 합니다 (같은 줄 우선이 과하면 안 됨)"""
+    text = "Non-GAAP operating income\n   was $250.0 million for the quarter."
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_OP_INCOME) == 250_000_000
+
+
+def test_table_unit_headers_are_all_recognised():
+    """보도자료에서 흔한 단위 표기를 전부 알아봐야 합니다.
+
+    못 알아보면 값이 1,000배 작아지는데, 매출과 영업이익이 같이 작아져
+    마진 비율이 보존되므로 **어떤 정합성 검사에도 걸리지 않습니다.**
+    """
+    cases = {
+        "(in thousands, except per share data)": 1_000,
+        "(Unaudited, in thousands)": 1_000,
+        "(unaudited, in millions)": 1_000_000,
+        "(Dollars in thousands)": 1_000,
+        "($ in millions)": 1_000_000,
+        "(U.S. dollars in millions)": 1_000_000,
+        "(dollars and shares in thousands, except per share data)": 1_000,
+        "(in billions)": 1_000_000_000,
+        "단위 표기 없음": 1,
+    }
+    for header, expected in cases.items():
+        text = header + "\nNon-GAAP operating income   250,000\n"
+        assert sf._detect_table_unit(text, len(text)) == expected, header
+
+
+def test_annual_figures_are_not_read_as_quarterly():
+    """'4분기 및 연간' 보도자료에서 연간 숫자를 분기 자리에 넣으면 안 됩니다.
+
+    구분하는 장치가 전혀 없어 매년 4분기마다 +228% 짜리 가짜 급등이 생겼습니다.
+    """
+    text = (
+        "ACME Corp. Reports Fourth Quarter and Full Year 2024 Results\n"
+        "Fourth quarter revenue was $1.0 billion, up 18%.\n"
+        "Full year revenue was $3.6 billion.\n"
+        "Fourth quarter non-GAAP operating income was $250.0 million.\n"
+        "For the year, non-GAAP operating income was $820.0 million."
+    )
+    result = sf.parse_press_release(text)
+    assert result["revenue"] == 1_000_000_000, result["revenue"]
+    assert result["op_income"] == 250_000_000, result["op_income"]
+
+
+def test_quarter_column_wins_in_a_two_column_table():
+    """'3개월 / 12개월' 두 열이 있는 표에서는 분기 열을 써야 합니다"""
+    text = (
+        "(in thousands)                    Three Months Ended   Twelve Months Ended\n"
+        "Total revenue                          1,000,000            3,600,000\n"
+        "Non-GAAP operating income                250,000              820,000"
+    )
+    result = sf.parse_press_release(text)
+    assert result["revenue"] == 1_000_000_000
+    assert result["op_income"] == 250_000_000
+
+
+def test_annual_only_document_still_yields_numbers():
+    """연간 숫자밖에 없는 문서에서는 그것이라도 써야 합니다 (자료를 잃지 않음)"""
+    text = (
+        "Full year revenue was $3.6 billion and "
+        "non-GAAP operating income was $820.0 million."
+    )
+    result = sf.parse_press_release(text)
+    assert result["revenue"] == 3_600_000_000
+    assert result["op_income"] == 820_000_000
+
+
+def test_earlier_quarter_does_not_steal_the_next_quarters_8k():
+    """앞 분기가 뒷 분기의 8-K 를 가로채면 안 됩니다.
+
+    짝짓기 창(120일)이 분기 간격(약 91일)보다 넓어서, 앞 분기의 8-K 가 파싱에
+    실패하면 앞 분기가 뒷 분기 것을 가져갔습니다. 12월 결산 회사의 2분기
+    발표(7/25)는 1분기 종료일(3/31)에서 116일이라 창 안에 들어옵니다.
+    """
+    M = 1_000_000
+    xbrl = [
+        {"filing_date": "2024-03-31", "period_label": "24/03",
+         "revenue": 600 * M, "op_income": 100 * M, "source": cfg.SRC_APPROX},
+        {"filing_date": "2024-06-30", "period_label": "24/06",
+         "revenue": 560 * M, "op_income": 130 * M, "source": cfg.SRC_APPROX},
+    ]
+    press = [{"filing_date": "2024-07-25", "period_label": "24 Q2",
+              "revenue": 600 * M, "op_income": 155 * M, "source": cfg.SRC_DIRECT,
+              "gm_is_gaap": False, "derivation": "", "filing_url": ""}]
+
+    merged = sf.merge_quarters(xbrl, press, {})
+
+    first, second = merged[0], merged[1]
+    assert first["op_income"] == 100 * M, "3월 분기가 7월 발표를 가로챘습니다"
+    assert first["period_label"] == "24/03", "3월 분기 이름표가 덮였습니다"
+    assert second["op_income"] == 155 * M, "6월 분기가 자기 발표를 못 받았습니다"
+    assert second["source"] == cfg.SRC_DIRECT
+
+
+def test_8k_still_pairs_when_it_is_the_only_candidate_quarter():
+    """가로채기 방지가 과해서 정상 짝짓기까지 막으면 안 됩니다"""
+    M = 1_000_000
+    xbrl = [{"filing_date": "2024-06-30", "period_label": "24/06",
+             "revenue": 560 * M, "op_income": 130 * M, "source": cfg.SRC_APPROX}]
+    press = [{"filing_date": "2024-07-25", "period_label": "24 Q2",
+              "revenue": 600 * M, "op_income": 155 * M, "source": cfg.SRC_DIRECT,
+              "gm_is_gaap": False, "derivation": "", "filing_url": ""}]
+
+    merged = sf.merge_quarters(xbrl, press, {})
+    assert merged[0]["op_income"] == 155 * M
+    assert merged[0]["source"] == cfg.SRC_DIRECT
 
 
 if __name__ == "__main__":

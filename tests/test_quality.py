@@ -545,6 +545,61 @@ def test_mixed_definition_is_detected():
     assert dq.check_source_consistency(same)["mixed"] is False
 
 
+
+
+# ---------------------------------------------------------------------------
+# 매출 보정 — "진짜 단위 오류"와 "손실이 큰 정상 회사"를 가려야 합니다
+# ---------------------------------------------------------------------------
+def _rev_quarter(label, revenue_m, op_m):
+    return {
+        "period_label": label, "fiscal_quarter": 1,
+        "revenue": revenue_m * M, "op_income": op_m * M,
+        "source": cfg.SRC_DIRECT,
+    }
+
+
+def test_loss_making_company_revenue_is_not_inflated():
+    """정상 적자기업의 매출을 1,000배로 부풀리면 안 됩니다.
+
+    예전에는 '고친 뒤 마진이 범위에 들어오는가'만 봤습니다. 그런데 매출을 키우면
+    마진은 언제나 0 쪽으로 움직이므로 **어떤 값이든 보정에 성공**합니다.
+    그래서 매출 $20M · 영업손실 −$150M 인 바이오텍(정상적인 모습)의 매출이
+    $20,000M 로 부풀려지고 "보정됨" 배지까지 달렸습니다.
+    """
+    quarters = [
+        _rev_quarter(f"Q{i + 1}", revenue, -150)
+        for i, revenue in enumerate([6, 7, 8, 9, 11, 13])
+    ]
+    report = {}
+    kept = dq.validate_quarters(quarters, report)
+
+    assert [q["revenue"] for q in kept] == [6 * M, 7 * M, 8 * M, 9 * M, 11 * M, 13 * M]
+    assert not [n for n in report.get("quality_notes", []) if "고쳤습니다" in n]
+
+
+def test_real_unit_error_is_still_repaired():
+    """한 분기만 이웃과 1,000배 어긋나면 그건 진짜 단위 오류입니다"""
+    quarters = [
+        _rev_quarter(f"Q{i + 1}", revenue, 100)
+        for i, revenue in enumerate([500, 520, 540, 560, 580])
+    ]
+    quarters[2]["revenue"] = 540_000.0        # 천 단위로 들어온 분기
+    report = {}
+    kept = dq.validate_quarters(quarters, report)
+
+    assert kept[2]["revenue"] == 540_000_000.0
+    assert [n for n in report.get("quality_notes", []) if "고쳤습니다" in n]
+
+
+def test_single_quarter_cannot_vouch_for_itself():
+    """분기가 하나뿐이면 자기 자신을 이웃으로 삼아 검증을 통과하면 안 됩니다"""
+    kept = dq.validate_quarters(
+        [{"period_label": "X", "revenue": 3.0, "op_income": 50 * M,
+          "gross_margin_pct": 65.0}], {}
+    )
+    assert kept[0]["revenue"] is None
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
