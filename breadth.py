@@ -56,16 +56,19 @@ def earnings_states(rows: list[dict]) -> list[tuple[str, bool, bool | None]]:
     """
     runs, _ = mm.eps_runs(rows)
     out: list[tuple[str, bool, bool | None]] = []
+    past_peak: float | None = None   # 구간이 끊겨도 TTM 정점은 잊지 않는다 (8차 감사)
     for run in runs:
         for idx, row in enumerate(run):
             announce = row.get("announced_date")
-            if not announce:
-                continue
             known = mm.to_scoring_rows(run[: idx + 1])
             ttm = status.ttm_series(known)
-            if len(ttm) < 2:
-                continue
-            new_high = ttm[-1] > max(ttm[:-1])
+            current = ttm[-1] if ttm else None
+            had_prior = past_peak is not None      # 비교할 과거 TTM 이 있는가
+            new_high = current is not None and had_prior and current > past_peak
+            if current is not None and (past_peak is None or current > past_peak):
+                past_peak = current
+            if not announce or current is None or not had_prior:
+                continue                            # 판단 불능 발표는 분모에서 제외
             eps = [q["op_income"] for q in known]
             yoy = dq.safe_growth_pct(eps[-5], eps[-1]) if len(eps) >= 5 else None
             out.append((str(announce)[:10], new_high, None if yoy is None else yoy > 0))

@@ -49,6 +49,22 @@ def test_new_high_detection():
     assert status.is_ttm_new_high(make([10, 10, 10])) is None     # 판단 불능은 None
 
 
+def test_new_high_not_stitched_across_hole():
+    """결측 분기를 건너뛰어 이어붙인 가짜 TTM 으로 신고점을 내면 안 됨 (8차 감사).
+
+    [1,1,1,1, 결측, 10] — 구멍 뒤는 아직 진짜 4분기 합이 없으므로 판단
+    불능이어야 함. 이어붙이면 1+1+1+10=13 이라는 가짜 TTM 이 '돌파'가 된다.
+    """
+    rows = make([1, 1, 1, 1, 99, 10])
+    rows[4]["op_income"] = None                     # 가운데 분기 결측
+    assert status.is_ttm_new_high(rows) is None
+    # 구멍 양쪽의 진짜 TTM 만 비교해야 함: 20 vs 8 → 신고점 아님
+    rows2 = make([5, 5, 5, 5, 99, 2, 2, 2, 2])
+    rows2[4]["op_income"] = None
+    assert status.segment_ttms(rows2) == [20 * M, 8 * M]
+    assert status.is_ttm_new_high(rows2) is False
+
+
 # ---------------------------------------------------------------------------
 # 델타 방향 판정
 # ---------------------------------------------------------------------------

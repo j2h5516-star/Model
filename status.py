@@ -117,13 +117,31 @@ def ttm_growth_series(quarters: list[dict]) -> list[float]:
     return segment
 
 
+def segment_ttms(quarters: list[dict]) -> list[float]:
+    """구멍(결측·튐 분기)을 만나면 합산을 새로 시작해, 몇 년 떨어진 분기를
+    이어붙인 가짜 4분기 합 없이 **진짜 TTM 만** 시간순으로 돌려줍니다."""
+    out: list[float] = []
+    segment: list[float] = []
+    for q in quarters:
+        value = q.get("op_income")
+        if value is None or q.get("anomaly") == "spike":
+            segment = []
+            continue
+        segment.append(value)
+        if len(segment) >= 4:
+            out.append(sum(segment[-4:]))
+    return out
+
+
 def is_ttm_new_high(quarters: list[dict]) -> bool | None:
     """이번 TTM 이 수집 기간 안의 최고를 넘었는가. 판단 불능이면 None.
 
     '역대 최고'가 아니라 **수집 기간(약 5년) 안의 최고**입니다 —
     옛날에 더 잘 벌던 회사(인텔)도 여기 들어올 수 있습니다.
+    결측 분기를 건너뛰어 이어붙인 가짜 TTM 은 비교에 쓰지 않습니다
+    (8차 감사에서 고침).
     """
-    ttm = ttm_series(quarters)
+    ttm = segment_ttms(quarters)
     if len(ttm) < 2:
         return None
     return ttm[-1] > max(ttm[:-1])

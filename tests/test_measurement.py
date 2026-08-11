@@ -170,6 +170,40 @@ def test_duplicate_announcements_counted_once():
     assert len(dates) == len(set(dates))
 
 
+def test_newhigh_remembers_peak_before_gap():
+    """이력이 끊겨도 옛 TTM 정점을 기억해야 함 (8차 감사에서 발견된 결함).
+
+    정점(TTM 20) → 결측으로 구간 끊김 → 회복(TTM 9)은 옛 정점보다 낮으므로
+    신고점이 아니어야 하고, 옛 정점을 실제로 넘는 순간(TTM 23)만 첫돌파여야 함.
+    """
+    quarters = [
+        ("2022-01-31", 5), ("2022-04-29", 5), ("2022-07-29", 5),
+        ("2022-10-31", 5), ("2023-01-31", 5),
+        # ← 2023-04 분기 결측 (간격 181일 → 구간 끊김)
+        ("2023-07-31", 2), ("2023-10-31", 2), ("2024-01-31", 2),
+        ("2024-04-30", 2), ("2024-07-31", 3), ("2024-10-31", 16),
+    ]
+    days = _trading_days(900, start_year=2022)
+    snap = {
+        "tickers": ["TT"], "benchmark": "SPY",
+        "eps": {"TT": [
+            {"adj_eps": v, "filing_date": d, "announced_date": d,
+             "period_label": d[:7]} for d, v in quarters
+        ]},
+        "prices": {
+            "TT": {"dates": days, "close": [100.0] * 900},
+            "SPY": {"dates": days, "close": [100.0] * 900},
+        },
+    }
+    events, _ = mm.collect_events(snap)
+    by_date = {e["announced"]: e for e in events}
+    # 회복 구간의 상승(TTM 8→9)은 옛 정점 20 아래 — 신고점이 아니어야 함
+    assert by_date["2024-07-31"]["new_high"] is False, by_date["2024-07-31"]
+    # 옛 정점을 실제로 넘는 TTM 23 — 신고점이며 '첫' 돌파여야 함
+    assert by_date["2024-10-31"]["new_high"] is True, by_date["2024-10-31"]
+    assert by_date["2024-10-31"]["newhigh_streak"] == 1
+
+
 def test_trend_state_rising_series_is_uptrend():
     """꾸준히 오르는 주가는 '지속상승'으로 판정되어야 함."""
     prices = _rising_prices(400, start=100.0, step=0.5)

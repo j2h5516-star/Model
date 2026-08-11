@@ -206,10 +206,31 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
         runs, breaks = eps_runs(rows)
         skipped["구간끊김"] += breaks
         seen_dates: set[str] = set()
+        past_peak: float | None = None   # 구간이 끊겨도 TTM 정점은 잊지 않는다
 
         for run in runs:
-            newhigh_streak = 0        # 이 구간 안에서 신고점이 몇 번 연속인가
+            newhigh_streak = 0        # 첫돌파 셈 — 구간이 새로 시작하면 연속도 새로
             for idx, row in enumerate(run):
+                # ★ 그 시점까지의 분기만 보고 판정 (발표된 분기 포함, 미래 제외).
+                #   발표일 없는 분기도 TTM 정점 기억에는 참여해야 하므로
+                #   발표일 검사보다 먼저 계산합니다.
+                known = to_scoring_rows(run[: idx + 1])
+
+                # H2 — 이번 발표로 TTM(4분기 합)이 **수집 기간 안의** 최고를
+                # 넘었는가. 구간이 끊겨도 이전 정점과 비교한다 — 구간 안에서만
+                # 비교하면 옛 정점보다 낮은 값이 '신고점'이 된다
+                # (8차 감사에서 실제 27건 발견되어 고침).
+                ttm = status.ttm_series(known)
+                current_ttm = ttm[-1] if ttm else None
+                new_high = (
+                    current_ttm is not None
+                    and past_peak is not None
+                    and current_ttm > past_peak
+                )
+                if current_ttm is not None and (past_peak is None or current_ttm > past_peak):
+                    past_peak = current_ttm
+                newhigh_streak = newhigh_streak + 1 if new_high else 0
+
                 announce = row.get("announced_date")
                 if not announce:
                     skipped["발표일없음"] += 1
@@ -220,20 +241,11 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
                     continue
                 seen_dates.add(announce)
 
-                # ★ 그 시점까지의 분기만 보고 판정 (발표된 분기 포함, 미래 제외)
-                known = to_scoring_rows(run[: idx + 1])
                 judgment = status.judge_delta(known)
                 growths = judgment.get("trace", {}).get("growths", [])
                 accel_size = (
                     growths[-1] - growths[-2] if len(growths) >= 2 else None
                 )
-
-                # H2 — 이번 발표로 TTM(4분기 합)이 그동안의 최고를 넘었는가.
-                # 이익 쪽에서는 이미 97.0% 로 측정된 신호 (config.py 국면 참조).
-                # 주가 쪽에서 통하는지는 이번이 첫 측정입니다.
-                ttm = status.ttm_series(known)
-                new_high = bool(ttm) and len(ttm) >= 2 and ttm[-1] > max(ttm[:-1])
-                newhigh_streak = newhigh_streak + 1 if new_high else 0
 
                 # --- 탐색 배터리 요인 (전략.md v2 5장 — 문턱은 exploration 쪽에 고정) ---
                 # 델타 변동성: 성장의 꾸준함. 최근 4개 증가율의 표준편차.
