@@ -704,7 +704,8 @@ def new_report(ticker: str) -> dict:
         "xbrl_quarters": 0,        # XBRL로 만든 분기 수
         "merged_direct": 0,        # 8-K 값으로 덮어쓴 분기 수
         "text_source": "",         # 텍스트를 어디서 얻었나 (보도자료/첨부/본문)
-        "first_error": "",         # 첫 예외 (원인 파악의 핵심)
+        "first_error": "",         # 첫 예외 (화면 요약용)
+        "all_errors": [],          # 그 뒤의 예외들 — 첫 것만 보면 진짜 실패를 놓칩니다
         "unpaired_press": 0,       # 분기와 짝을 못 찾은 8-K 건수
         "pair_note": "",           # 짝짓기 실패 설명
         "forward_note": "",        # 전망(컨센서스) 수집 실패 사유
@@ -846,9 +847,20 @@ def _looks_like_earnings(text: str) -> bool:
 
 
 def _record_error(report: dict | None, where: str, exc: Exception) -> None:
-    """첫 번째 예외만 진단 리포트에 남깁니다 (원인 파악용)."""
-    if report is not None and not report.get("first_error"):
-        report["first_error"] = f"[{where}] {type(exc).__name__}: {str(exc)[:180]}"
+    """예외를 진단 리포트에 남깁니다 (원인 파악용).
+
+    ⚠️ 예전에는 **첫 예외만** 남겼습니다. 그런데 8-K 60건을 훑는 동안 앞쪽에서
+       사소한 예외 하나가 나면 뒤의 **진짜 실패는 전부 보이지 않았습니다.**
+       그래서 첫 예외는 그대로 두되(화면 요약용), 나머지도 목록에 모읍니다.
+    """
+    if report is None:
+        return
+    message = f"[{where}] {type(exc).__name__}: {str(exc)[:180]}"
+    if not report.get("first_error"):
+        report["first_error"] = message
+    errors = report.setdefault("all_errors", [])
+    if message not in errors and len(errors) < 20:
+        errors.append(message)
 
 
 def _earnings_text(filing, report: dict | None = None) -> tuple[str, str, bool]:
@@ -997,14 +1009,46 @@ def fetch_xbrl_approximation(
         d for d in series.get("op_income", {}) if d >= start_date
     )
 
+    # ⚠️ **되돌릴 항목은 모든 분기에 있을 때만 씁니다.**
+    #
+    #   예전에는 `sbc = ... or 0.0` 처럼 없으면 그냥 0 으로 처리했습니다.
+    #   그런데 주식보상비는 10-Q 현금흐름표에 **누적기간(3·6·9개월)** 으로
+    #   신고돼 3개월 값이 Q1 에만 있는 경우가 흔합니다. 그러면 한 열 안에
+    #   "GAAP+주식보상비" 와 "GAAP" 이 섞여 **분기마다 정의가 달라집니다.**
+    #
+    #     Q1  GAAP 100 + 주식보상비 40 = 140
+    #     Q2  GAAP 110              = 110   ← 주식보상비 없음
+    #     → 델타 -21% (실제로는 +10%)
+    #
+    #   그리고 진단에는 한 줄도 남지 않았습니다.
+    #
+    #   델타 모델은 값의 크기가 아니라 **값의 변화**를 봅니다. 그래서 절대
+    #   정확도보다 **한 종목 안에서 정의가 일관된 것**이 훨씬 중요합니다.
+    #   그래서 모든 분기에 다 있는 항목만 되돌리고, 빠진 항목은 **아예 쓰지
+    #   않으며**, 무엇을 뺐는지 진단에 남깁니다.
+    usable_ends = [e for e in period_ends if series["op_income"].get(e) is not None]
+    consistent = {}
+    for key in ("sbc", "amortization"):
+        have = sum(1 for e in usable_ends if series[key].get(e) is not None)
+        consistent[key] = bool(usable_ends) and have == len(usable_ends)
+        if usable_ends and 0 < have < len(usable_ends) and report is not None:
+            name = "주식보상비" if key == "sbc" else "무형자산상각"
+            report.setdefault("xbrl_ambiguous", []).append(
+                f"{name}가 {have}/{len(usable_ends)} 분기에만 있어 "
+                "되돌리지 않았습니다 (분기마다 정의가 달라지는 것을 막기 위함)"
+            )
+
     quarters: list[dict] = []
     for period_end in period_ends:
         gaap_op = series["op_income"].get(period_end)
         if gaap_op is None:
             continue
 
-        sbc = series["sbc"].get(period_end) or 0.0
-        amort = series["amortization"].get(period_end) or 0.0
+        sbc = (series["sbc"].get(period_end) or 0.0) if consistent["sbc"] else 0.0
+        amort = (
+            (series["amortization"].get(period_end) or 0.0)
+            if consistent["amortization"] else 0.0
+        )
         da = series.get("depreciation_amortization", {}).get(period_end)
         revenue = series["revenue"].get(period_end)
         gross_profit = series["gross_profit"].get(period_end)
@@ -1167,6 +1211,9 @@ def _period_series(
     (`exact=True` 로 조회하는 방법은 쓸 수 없습니다. edgartools의 색인 열쇠는
      "us-gaap:Revenues" 처럼 앞머리가 붙어 있어, 앞머리 없는 이름으로는 전부 0건이 됩니다.)
     """
+    # ⚠️ 예전에는 여기서 예외를 통째로 삼키고 빈 결과만 돌려줬습니다(진단 기록 없음).
+    #    edgartools API 가 깨져도, 열 이름이 바뀌어도 화면에는 "데이터 없음"만
+    #    뜨고 **원인을 알 방법이 전혀 없었습니다.**
     try:
         df = (
             facts.query()
@@ -1174,7 +1221,8 @@ def _period_series(
             .by_period_length(months)
             .to_dataframe()
         )
-    except Exception:
+    except Exception as exc:
+        _record_error(report, f"XBRL 조회({concept}, {months}개월)", exc)
         return {}
 
     if df is None or len(df) == 0:

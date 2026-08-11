@@ -39,7 +39,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 21
+REQUIRED_CONFIG_VERSION = 22
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -1541,6 +1541,13 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
                 ]
                 if r.get("first_error"):
                     lines.append(f"- **첫 오류**: `{r['first_error']}`")
+                # ⚠️ 첫 오류만 보면 진짜 실패를 놓칩니다. 8-K 60건을 훑는 동안
+                #    앞쪽의 사소한 예외 하나가 뒤의 진짜 원인을 가렸습니다.
+                others = [e for e in (r.get("all_errors") or [])
+                          if e != r.get("first_error")]
+                if others:
+                    lines.append(f"- **그 밖의 오류 {len(others)}건**:")
+                    lines.extend(f"    - `{e}`" for e in others[:6])
                 if r.get("pair_note"):
                     lines.append(f"- **짝짓기 기록**: {r['pair_note']}")
                 if r.get("note"):
