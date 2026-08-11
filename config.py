@@ -16,7 +16,7 @@ import re
 # "그런 항목이 없다(AttributeError)"며 앱이 죽습니다.
 # app.py가 이 번호를 확인해, 그런 경우 빨간 오류 대신 재시작 안내를 보여줍니다.
 # ⚠️ config에 새 항목을 추가하고 app.py가 그것을 쓰기 시작하면 이 번호를 1 올리세요.
-CONFIG_VERSION = 26
+CONFIG_VERSION = 27
 
 # ---------------------------------------------------------------------------
 # 분석 대상
@@ -55,7 +55,29 @@ TICKERS: list[str] = [
     "ONTO",  # Onto Innovation — 계측 장비 (중간)
     "IPGP",  # IPG Photonics — 부진 레이저
     "CGNX",  # Cognex — 횡보 머신비전
+    # --- 5단계 확장 (+51, 2026-08-11 교차 검증용 — 측정결과.md 7차 사전 등록) ---
+    # 반도체·장비 (성장과 부진 혼합)
+    "AVGO", "QCOM", "TXN", "ADI", "MCHP", "NXPI", "MRVL", "KLAC", "LRCX",
+    "AMAT", "TER", "ENTG", "MKSI", "FORM", "ACLS", "AMBA", "POWI", "DIOD",
+    "SLAB", "MPWR",
+    # 하드웨어·네트워크·광학
+    "CIEN", "COMM", "EXTR", "NTAP", "PSTG", "WDC", "STX", "DELL", "VIAV", "AAOI",
+    # 소프트웨어 (급등주와 급락주 혼합)
+    "TWLO", "DDOG", "NET", "MDB", "SNOW", "OKTA", "ZS", "CRWD", "S", "HUBS",
+    "BILL", "U", "ROKU", "SNAP", "ZM", "DOCU",
+    # 기타 성장·산업
+    "TSLA", "TTD", "FSLR", "SEDG", "GNRC",
 ]
+
+# 신호 발견에 쓰인 원래 29종목 — 교차 검증 판정에서는 **제외**합니다.
+# (H2·H2b·H5 가 이 종목들에서 발견됐으므로, 판정은 이 목록에 없는
+#  종목의 사건으로만 합니다 — 측정결과.md 7차 사전 등록)
+MEASURE_DISCOVERY_TICKERS: frozenset = frozenset([
+    "CRDO", "CLS", "MU", "SNDK", "LITE", "STRL", "MXL", "COHR", "TTMI",
+    "ICHR", "AMD", "PLTR", "ZETA", "INTC", "ENPH", "SWKS", "PYPL", "QRVO",
+    "APP", "NVDA", "ANET", "FN", "SMCI", "LSCC", "SYNA", "UCTT", "ONTO",
+    "IPGP", "CGNX",
+])
 
 # 상대강도(RS) 비교 기준이 되는 지수 ETF
 BENCHMARK = "SPY"  # S&P 500 지수를 따라가는 ETF
@@ -90,7 +112,7 @@ PAIRING_WINDOW_DAYS = 120
 
 # 대시보드에 담을 수 있는 최대 종목 수.
 # 너무 많으면 수집 시간이 길어지고 야후가 요청을 거부할 수 있습니다.
-MAX_TICKERS = 30
+MAX_TICKERS = 100
 
 # SEC 전자공시(EDGAR)는 요청자 신원을 헤더에 담아 보내도록 요구합니다.
 #

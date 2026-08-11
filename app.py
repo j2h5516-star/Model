@@ -30,7 +30,7 @@ import config as cfg
 import measurement as mm
 import status
 
-REQUIRED_CONFIG_VERSION = 26
+REQUIRED_CONFIG_VERSION = 27
 
 st.set_page_config(page_title="실적 계기판", page_icon="📟", layout="centered")
 
@@ -225,6 +225,50 @@ with st.expander("📊 측정 성적표 — 무엇이 기각됐고 무엇이 남
 전체 기록과 방법은 저장소의 **측정결과.md** · 원칙은 **전략.md** 에 있습니다.
         """
     )
+
+
+# ---------------------------------------------------------------------------
+# ④-b 자동 판정 — 로봇이 매일 가설을 재판정한 결과 (사람 개입 없음)
+# ---------------------------------------------------------------------------
+@st.cache_data(ttl=300, show_spinner=False)
+def load_verdict():
+    path = os.path.join(cfg.MEASURE_DIR, "verdict.json")
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+with st.expander("⚖️ 자동 판정 — 후보 신호들이 검증을 통과했나 (매일 갱신)"):
+    st.caption(
+        "판정 표본은 신호 발견에 쓰이지 않은 **신규 종목의 발표 사건**입니다 "
+        "(측정결과.md 7차 사전 등록). 채택 = 신호 신뢰구간 하한이 기준선 상한을 "
+        "넘을 때만. 같은 장세를 공유하는 한계가 있어 시간 방향 검증도 계속 쌓입니다."
+    )
+    verdict_data = load_verdict()
+    if verdict_data is None:
+        st.caption("아직 판정 기록이 없습니다 — 로봇의 다음 실행에서 생성됩니다.")
+    elif verdict_data.get("error"):
+        st.warning(f"최근 판정 실행이 실패했습니다: {verdict_data['error']}")
+    else:
+        rows = []
+        for name, entry in verdict_data.get("가설", {}).items():
+            judged = entry.get("신규(판정)") or {}
+            signal = judged.get("신호") or {}
+            base = judged.get("기준선") or {}
+            rows.append({
+                "가설": name.replace("_", " "),
+                "판정": "✅ 채택" if entry.get("판정") == "채택" else "⏳ 미채택",
+                "신호(%)": signal.get("rate"),
+                "구간": str(signal.get("ci")),
+                "기준선(%)": base.get("rate"),
+                "n": signal.get("n"),
+            })
+        st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
+        st.caption(
+            f"판정 시각: {str(verdict_data.get('computed_at', ''))[:16].replace('T', ' ')} UTC · "
+            f"표본 {verdict_data.get('표본', {})}"
+        )
 
 
 # ---------------------------------------------------------------------------
