@@ -172,6 +172,32 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
                 ttm = scoring._ttm_series(known)
                 new_high = bool(ttm) and len(ttm) >= 2 and ttm[-1] > max(ttm[:-1])
 
+                # --- 탐색용 요인 (exploration.py 가 묶어서 봅니다) ---
+                # 전부 "그 시점까지 아는 숫자끼리의 산수"입니다. 없으면 None.
+                eps_list = [q["op_income"] for q in known]
+                q_qoq = dq.safe_growth_pct(eps_list[-2], eps_list[-1]) if len(eps_list) >= 2 else None
+                q_yoy = dq.safe_growth_pct(eps_list[-5], eps_list[-1]) if len(eps_list) >= 5 else None
+                ttm_yoy = (
+                    dq.safe_growth_pct(sum(eps_list[-8:-4]), sum(eps_list[-4:]))
+                    if len(eps_list) >= 8 else None
+                )
+                # TTM 흑자전환: 직전 TTM ≤ 0 인데 이번 TTM > 0
+                turnaround = (
+                    len(ttm) >= 2 and ttm[-2] <= 0 < ttm[-1]
+                ) if ttm else False
+                # 매출 요인 — 최근 8분기 매출이 전부 있을 때만 (창작 금지: 빈칸 추정 안 함)
+                revs = [r.get("revenue") for r in run[: idx + 1]]
+                rev_ttm_yoy = rev_new_high = None
+                if len(revs) >= 8 and all(v is not None for v in revs[-8:]):
+                    rev_ttm_yoy = dq.safe_growth_pct(sum(revs[-8:-4]), sum(revs[-4:]))
+                    rev_ttms = [
+                        sum(revs[i - 3 : i + 1])
+                        for i in range(3, len(revs))
+                        if all(v is not None for v in revs[i - 3 : i + 1])
+                    ]
+                    if len(rev_ttms) >= 2:
+                        rev_new_high = rev_ttms[-1] > max(rev_ttms[:-1])
+
                 excess, detail = excess_return(prices, spy, announce)
                 if excess is None:
                     if detail == "우측검열":
@@ -185,6 +211,12 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
                         "direction": judgment["direction"],
                         "accel_size": accel_size,
                         "new_high": new_high,
+                        "q_qoq": q_qoq,
+                        "q_yoy": q_yoy,
+                        "ttm_yoy": ttm_yoy,
+                        "turnaround": turnaround,
+                        "rev_ttm_yoy": rev_ttm_yoy,
+                        "rev_new_high": rev_new_high,
                         "excess": excess,
                         "window": detail,
                     }
