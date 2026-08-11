@@ -84,6 +84,50 @@ def explore(snapshot: dict) -> dict:
     return out
 
 
+def cross_trend(snapshot: dict) -> dict:
+    """추세 → EPS 역방향 관찰 + 합동 신호(H4) 검사.
+
+    "지속 상승추세일 때 조정 EPS 는 어떤 상태였나"를 **비상승 구간과
+    나란히** 봅니다 — 오른 구간만 보면 뭐든 좋아 보이기 때문입니다.
+    이어서 앞방향으로도 잽니다: 발표 시점에 [추세 × EPS 상태] 조합별로
+    이후 60거래일 초과수익이 어땠는가.
+    """
+    events, _ = mm.collect_events(snapshot)
+    up = [e for e in events if e["uptrend"] == "지속상승"]
+    down = [e for e in events if e["uptrend"] == "아님"]
+
+    def describe(group: list[dict]) -> dict:
+        n = len(group)
+        if not n:
+            return {"n": 0}
+        accel = sum(1 for e in group if e["direction"] in ("가속", "약한 가속"))
+        yoy_known = [e["q_yoy"] for e in group if e["q_yoy"] is not None]
+        return {
+            "n": n,
+            "신고점_비율%": round(sum(1 for e in group if e["new_high"]) / n * 100, 1),
+            "가속판정_비율%": round(accel / n * 100, 1),
+            "QoQ상승_비율%": round(
+                sum(1 for e in group if (e["q_qoq"] or 0) > 0) / n * 100, 1),
+            "분기YoY_중앙값%": round(sorted(yoy_known)[len(yoy_known) // 2], 1)
+            if yoy_known else None,
+        }
+
+    joint = {
+        "상승추세+신고점": mm._group_stats([e for e in up if e["new_high"]]),
+        "상승추세+신고점아님": mm._group_stats([e for e in up if not e["new_high"]]),
+        "비추세+신고점": mm._group_stats([e for e in down if e["new_high"]]),
+        "비추세+신고점아님": mm._group_stats([e for e in down if not e["new_high"]]),
+        "상승추세_전체": mm._group_stats(up),
+        "비추세_전체": mm._group_stats(down),
+        "기준선_모든발표": mm._group_stats(events),
+    }
+    return {
+        "역방향_관찰": {"지속상승 구간": describe(up), "비상승 구간": describe(down)},
+        "합동_앞방향": joint,
+        "추세판단불가": sum(1 for e in events if e["uptrend"] is None),
+    }
+
+
 def print_report(result: dict) -> None:
     base = result["기준선_모든발표"]
     print(f"사건 {result['사건수']}건 · 기준선(모든 발표) 폭등률 {base['rate20']}% "
@@ -105,3 +149,19 @@ if __name__ == "__main__":
     with open("data/measure/snapshot.json", encoding="utf-8") as f:
         snap = json.load(f)
     print_report(explore(snap))
+
+    print("\n" + "=" * 60)
+    print("역방향 관찰 — 지속 상승추세일 때 조정 EPS 는 어떤 상태였나")
+    print("=" * 60)
+    cross = cross_trend(snap)
+    for name, desc in cross["역방향_관찰"].items():
+        print(f"  {name}: {desc}")
+    print(f"  (추세 판단불가 사건 {cross['추세판단불가']}건)")
+    print("\n합동 신호 (앞방향 — 발표 시점 조합별 이후 60거래일):")
+    for name, s in cross["합동_앞방향"].items():
+        if not s["n"]:
+            print(f"  {name:14s} 표본 0")
+            continue
+        lo, hi = s["wilson20"]
+        print(f"  {name:14s} n={s['n']:3d}  폭등 {s['rate20']:5.1f}% "
+              f"[{lo:4.1f}~{hi:5.1f}]  중앙 {s['median_excess']:+6.1f}%p")

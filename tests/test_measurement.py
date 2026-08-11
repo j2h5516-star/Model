@@ -157,6 +157,53 @@ def test_duplicate_announcements_counted_once():
     assert len(dates) == len(set(dates))
 
 
+def test_trend_state_rising_series_is_uptrend():
+    """꾸준히 오르는 주가는 '지속상승'으로 판정되어야 함."""
+    prices = _rising_prices(400, start=100.0, step=0.5)
+    state = mm.trend_state(prices["dates"], prices["close"], prices["dates"][-1])
+    assert state == "지속상승", state
+
+
+def test_trend_state_falling_series_is_not_uptrend():
+    """꾸준히 내리는 주가는 '아님'이어야 함."""
+    n = 400
+    prices = {"dates": _trading_days(n), "close": [400.0 - 0.5 * i for i in range(n)]}
+    state = mm.trend_state(prices["dates"], prices["close"], prices["dates"][-1])
+    assert state == "아님", state
+
+
+def test_trend_state_short_history_is_none():
+    """역사가 모자라면 판정하지 않아야 함 (없으면 없음 — 창작 금지)."""
+    prices = _rising_prices(60)      # 39주(26+13)를 채울 수 없는 길이
+    state = mm.trend_state(prices["dates"], prices["close"], prices["dates"][-1])
+    assert state is None, state
+
+
+def test_trend_state_needs_close_above_long_ma():
+    """오래 오르다 최근 26주선 아래로 무너지면 '지속상승'이 아니어야 함.
+
+    일부러 깨뜨리기에서 발견한 빈틈: 13주선>26주선 조건만으로는 이
+    경우를 '지속상승'으로 잘못 판정합니다. 종가>26주선 조건을 뭅니다.
+    """
+    n = 360
+    closes = [100.0 + 0.5 * i for i in range(n - 10)] + [230.0] * 10
+    days = _trading_days(n)
+    state = mm.trend_state(days, closes, days[-1])
+    assert state == "아님", state
+
+
+def test_trend_state_ignores_future_prices():
+    """발표일 이후의 주가는 추세 판정에 들어가면 안 됨 (미래 보기 차단)."""
+    n = 400
+    up = [100.0 + 0.5 * i for i in range(n)]
+    crashed = up[: n - 50] + [1.0] * 50          # 발표 '이후' 폭락
+    days = _trading_days(n)
+    announce = days[n - 51]
+    a = mm.trend_state(days, up, announce)
+    b = mm.trend_state(days, crashed, announce)
+    assert a == b == "지속상승", (a, b)
+
+
 def test_surge_threshold_is_20pp_excess():
     """폭등 판정은 시장 대비 +20%p 경계에서 갈려야 함."""
     stats = mm._group_stats([
