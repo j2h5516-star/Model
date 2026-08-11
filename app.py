@@ -129,7 +129,14 @@ def build_status_rows(snap: dict) -> list[dict]:
 
         scoring_rows = mm.to_scoring_rows(last_run)
         judgment = status.judge_delta(scoring_rows)
-        new_high = status.is_ttm_new_high(scoring_rows)
+        # 신고점은 끊긴 구간 이전의 정점까지 포함해 비교합니다 — 마지막 구간
+        # 안에서만 보면 옛 정점보다 낮은데 '돌파'로 보입니다 (8차 감사).
+        all_ttms = [t for r in runs for t in status.ttm_series(mm.to_scoring_rows(r))]
+        last_ttms = status.ttm_series(scoring_rows)
+        new_high = (
+            all_ttms[-1] > max(all_ttms[:-1])
+            if last_ttms and len(all_ttms) >= 2 else None
+        )
         eps_values = [r["adj_eps"] for r in last_run]
         yoy = (
             round((eps_values[-1] - eps_values[-5]) / abs(eps_values[-5]) * 100.0, 1)
