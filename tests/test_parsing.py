@@ -456,3 +456,84 @@ def test_table_unit_headers_are_all_recognised():
     for header, expected in cases.items():
         text = header + "\nNon-GAAP operating income   250,000\n"
         assert sf._detect_table_unit(text, len(text)) == expected, header
+
+
+def test_annual_figures_are_not_read_as_quarterly():
+    """'4분기 및 연간' 보도자료에서 연간 숫자를 분기 자리에 넣으면 안 됩니다.
+
+    구분하는 장치가 전혀 없어 매년 4분기마다 +228% 짜리 가짜 급등이 생겼습니다.
+    """
+    text = (
+        "ACME Corp. Reports Fourth Quarter and Full Year 2024 Results\n"
+        "Fourth quarter revenue was $1.0 billion, up 18%.\n"
+        "Full year revenue was $3.6 billion.\n"
+        "Fourth quarter non-GAAP operating income was $250.0 million.\n"
+        "For the year, non-GAAP operating income was $820.0 million."
+    )
+    result = sf.parse_press_release(text)
+    assert result["revenue"] == 1_000_000_000, result["revenue"]
+    assert result["op_income"] == 250_000_000, result["op_income"]
+
+
+def test_quarter_column_wins_in_a_two_column_table():
+    """'3개월 / 12개월' 두 열이 있는 표에서는 분기 열을 써야 합니다"""
+    text = (
+        "(in thousands)                    Three Months Ended   Twelve Months Ended\n"
+        "Total revenue                          1,000,000            3,600,000\n"
+        "Non-GAAP operating income                250,000              820,000"
+    )
+    result = sf.parse_press_release(text)
+    assert result["revenue"] == 1_000_000_000
+    assert result["op_income"] == 250_000_000
+
+
+def test_annual_only_document_still_yields_numbers():
+    """연간 숫자밖에 없는 문서에서는 그것이라도 써야 합니다 (자료를 잃지 않음)"""
+    text = (
+        "Full year revenue was $3.6 billion and "
+        "non-GAAP operating income was $820.0 million."
+    )
+    result = sf.parse_press_release(text)
+    assert result["revenue"] == 3_600_000_000
+    assert result["op_income"] == 820_000_000
+
+
+def test_earlier_quarter_does_not_steal_the_next_quarters_8k():
+    """앞 분기가 뒷 분기의 8-K 를 가로채면 안 됩니다.
+
+    짝짓기 창(120일)이 분기 간격(약 91일)보다 넓어서, 앞 분기의 8-K 가 파싱에
+    실패하면 앞 분기가 뒷 분기 것을 가져갔습니다. 12월 결산 회사의 2분기
+    발표(7/25)는 1분기 종료일(3/31)에서 116일이라 창 안에 들어옵니다.
+    """
+    M = 1_000_000
+    xbrl = [
+        {"filing_date": "2024-03-31", "period_label": "24/03",
+         "revenue": 600 * M, "op_income": 100 * M, "source": cfg.SRC_APPROX},
+        {"filing_date": "2024-06-30", "period_label": "24/06",
+         "revenue": 560 * M, "op_income": 130 * M, "source": cfg.SRC_APPROX},
+    ]
+    press = [{"filing_date": "2024-07-25", "period_label": "24 Q2",
+              "revenue": 600 * M, "op_income": 155 * M, "source": cfg.SRC_DIRECT,
+              "gm_is_gaap": False, "derivation": "", "filing_url": ""}]
+
+    merged = sf.merge_quarters(xbrl, press, {})
+
+    first, second = merged[0], merged[1]
+    assert first["op_income"] == 100 * M, "3월 분기가 7월 발표를 가로챘습니다"
+    assert first["period_label"] == "24/03", "3월 분기 이름표가 덮였습니다"
+    assert second["op_income"] == 155 * M, "6월 분기가 자기 발표를 못 받았습니다"
+    assert second["source"] == cfg.SRC_DIRECT
+
+
+def test_8k_still_pairs_when_it_is_the_only_candidate_quarter():
+    """가로채기 방지가 과해서 정상 짝짓기까지 막으면 안 됩니다"""
+    M = 1_000_000
+    xbrl = [{"filing_date": "2024-06-30", "period_label": "24/06",
+             "revenue": 560 * M, "op_income": 130 * M, "source": cfg.SRC_APPROX}]
+    press = [{"filing_date": "2024-07-25", "period_label": "24 Q2",
+              "revenue": 600 * M, "op_income": 155 * M, "source": cfg.SRC_DIRECT,
+              "gm_is_gaap": False, "derivation": "", "filing_url": ""}]
+
+    merged = sf.merge_quarters(xbrl, press, {})
+    assert merged[0]["op_income"] == 155 * M
+    assert merged[0]["source"] == cfg.SRC_DIRECT

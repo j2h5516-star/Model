@@ -177,13 +177,30 @@ def find_labeled_value(
     #   표든 서술형이든 **진짜 값은 라벨과 같은 줄**에 있습니다. 제목 줄만
     #   숫자가 다음 줄에 있습니다. 그래서 같은 줄을 먼저 훑고, 거기서 아무것도
     #   못 찾았을 때만 예전처럼 줄을 넘어가 찾습니다.
-    for same_line_only in (True, False):
-        found = _scan_labeled_value(
-            text, label_patterns, is_percent, apply_table_unit, same_line_only
-        )
-        if found is not None:
-            return found
+    # 그리고 **분기 숫자를 연간 숫자보다 먼저** 찾습니다.
+    #
+    #   "4분기 및 연간 실적" 보도자료에는 두 숫자가 함께 들어 있는데, 예전에는
+    #   구분하는 장치가 전혀 없어 연간 숫자를 분기 자리에 넣었습니다.
+    #   매년 4분기마다 +228% 짜리 가짜 급등이 생겼습니다.
+    for avoid_annual in (True, False):
+        for same_line_only in (True, False):
+            found = _scan_labeled_value(
+                text, label_patterns, is_percent, apply_table_unit,
+                same_line_only, avoid_annual,
+            )
+            if found is not None:
+                return found
     return None
+
+
+# 이 말이 라벨 앞에 있으면 그 숫자는 **연간** 수치입니다.
+# ("fourth quarter and full year" 보도자료에서 분기 숫자와 연간 숫자를 가릅니다)
+_ANNUAL_CONTEXT_RE = re.compile(
+    r"(full[-\s]year|fiscal[-\s]year|twelve\s+months|year\s+ended|"
+    r"annual\s+(?:revenue|results?)|for\s+the\s+year)",
+    re.I,
+)
+_ANNUAL_LOOKBACK = 90   # 라벨 앞 몇 글자까지 되돌아볼 것인가
 
 
 def _scan_labeled_value(
@@ -192,6 +209,7 @@ def _scan_labeled_value(
     is_percent: bool,
     apply_table_unit: bool,
     same_line_only: bool,
+    avoid_annual: bool = False,
 ) -> float | None:
     """find_labeled_value 의 한 번 훑기 (같은 줄만 볼지 여부를 받습니다).
 
@@ -211,6 +229,14 @@ def _scan_labeled_value(
     for pattern_str in label_patterns:
         pattern = re.compile(pattern_str, re.I)
         for label_match in pattern.finditer(text):
+            if avoid_annual:
+                # 라벨 앞쪽(줄을 넘지 않고)에 '연간'을 뜻하는 말이 있으면 건너뜁니다.
+                start = label_match.start()
+                line_start = text.rfind("\n", 0, start) + 1
+                window_start = max(line_start, start - _ANNUAL_LOOKBACK)
+                if _ANNUAL_CONTEXT_RE.search(text[window_start:start]):
+                    continue
+
             search_from = label_match.end()
             if same_line_only:
                 line_end = text.find("\n", search_from)
@@ -1321,7 +1347,37 @@ def merge_quarters(
             if press_date is None:
                 continue
             gap = (press_date - period_date).days
-            if 0 <= gap <= cfg.PAIRING_WINDOW_DAYS and (best_gap is None or gap < best_gap):
+            if not (0 <= gap <= cfg.PAIRING_WINDOW_DAYS):
+                continue
+
+            # ⚠️ **이 8-K 를 더 가깝게 받을 분기가 따로 있으면 가져가지 않습니다.**
+            #
+            #   짝짓기 창(120일)이 분기 간격(약 91일)보다 넓습니다. 그래서 예전에는
+            #   앞 분기의 8-K 가 파싱에 실패하면 **앞 분기가 뒷 분기의 8-K 를
+            #   가로챘습니다.** 12월 결산 회사의 2분기 발표(7/25)는 1분기 종료일
+            #   (3/31)에서 116일이라 창 안에 들어옵니다.
+            #
+            #   그 결과 실제 100→130(+30%)이 모델에는 155→130(-16%)으로 보였고,
+            #   분기 이름표까지 "24 Q2"로 덮여 3월 분기 자리에 표시됐습니다.
+            #   진단에는 실패 기록이 한 줄도 남지 않았습니다.
+            #
+            #   창을 좁히면 10-K 와 함께 늦게 나오는 연말 발표를 놓치므로,
+            #   창은 그대로 두고 **가장 가까운 분기가 임자**라는 규칙을 넣습니다.
+            stolen = False
+            for other in merged:
+                if other is row:
+                    continue
+                other_date = _to_date(other.get("filing_date", ""))
+                if other_date is None:
+                    continue
+                other_gap = (press_date - other_date).days
+                if 0 <= other_gap < gap:
+                    stolen = True
+                    break
+            if stolen:
+                continue
+
+            if best_gap is None or gap < best_gap:
                 best_index, best_gap = index, gap
 
         if best_index is None:
