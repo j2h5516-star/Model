@@ -111,6 +111,11 @@ def window_return(
     entry = bisect.bisect_right(dates, str(announce)[:10])   # 발표일 **다음** 거래일
     if entry >= len(dates):
         return None, "진입일 없음", None
+    # 주가 이력이 발표보다 늦게 시작하면(5년 rolling 창 밖의 옛 발표),
+    # "다음 거래일"이 실제로는 몇 달 뒤가 됩니다 — 그런 사건은 재지 않습니다.
+    gap_days = (_to_date(dates[entry]) - _to_date(announce)).days
+    if gap_days > 10:
+        return None, "주가시작전", None
     exit_ = entry + window
     if exit_ >= len(dates):
         return None, "우측검열", None    # 창이 아직 안 끝남 — 세지 않고 개수만 기록
@@ -177,7 +182,8 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
     """모든 발표 사건에 (판정, 가속폭, 이후 초과수익) 을 붙입니다."""
     spy = snapshot["prices"].get(snapshot.get("benchmark", "SPY"))
     events: list[dict] = []
-    skipped = {"우측검열": 0, "발표일없음": 0, "주가없음": 0, "구간끊김": 0, "중복발표": 0}
+    skipped = {"우측검열": 0, "발표일없음": 0, "주가없음": 0, "구간끊김": 0,
+               "중복발표": 0, "주가시작전": 0}
 
     for ticker in snapshot["tickers"]:
         prices = snapshot["prices"].get(ticker)
@@ -244,9 +250,17 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
 
                 excess, detail = excess_return(prices, spy, announce)
                 if excess is None:
-                    if detail == "우측검열":
-                        skipped["우측검열"] += 1
+                    if detail in ("우측검열", "주가시작전"):
+                        skipped[detail] += 1
                     continue
+
+                # H3 — 회사가 이번 발표에서 준 다음 분기 가이던스 EPS 대비
+                # 이번 실제 EPS 의 증감 (스냅샷에 가이던스가 없으면 없음)
+                guid_mid = row.get("guid_eps_mid")
+                guid_growth = (
+                    dq.safe_growth_pct(eps_list[-1], guid_mid)
+                    if guid_mid is not None else None
+                )
 
                 events.append(
                     {
@@ -256,6 +270,7 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
                         "accel_size": accel_size,
                         "new_high": new_high,
                         "uptrend": trend_state(prices["dates"], prices["close"], announce),
+                        "guid_growth": guid_growth,
                         "q_qoq": q_qoq,
                         "q_yoy": q_yoy,
                         "ttm_yoy": ttm_yoy,

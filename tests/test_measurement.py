@@ -71,6 +71,19 @@ def test_right_censored_window_is_skipped():
     assert reason == "우측검열"
 
 
+def test_announce_before_price_history_is_skipped():
+    """주가 이력이 시작되기 전의 발표는 재지 않아야 함.
+
+    5년 rolling 주가 창 밖의 옛 발표에 '다음 거래일'을 적용하면 몇 달
+    뒤 가격으로 진입하는 셈이 됩니다 — 그런 사건은 '주가시작전'으로 제외.
+    """
+    prices = {"dates": _trading_days(80, start_year=2024),
+              "close": [100.0 + i for i in range(80)]}
+    pct, reason, _ = mm.window_return(prices["dates"], prices["close"], "2023-01-15")
+    assert pct is None
+    assert reason == "주가시작전", reason
+
+
 def test_excess_subtracts_spy():
     """종목 +측정치 − SPY 측정치 = 초과수익 (%p)."""
     stock = {"dates": _trading_days(80), "close": [100 + i for i in range(80)]}

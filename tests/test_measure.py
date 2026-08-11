@@ -19,6 +19,7 @@ import pandas as pd
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import config as cfg  # noqa: E402
+import forward_estimates as fe  # noqa: E402
 import measure_store  # noqa: E402
 import sec_fundamentals as sf  # noqa: E402
 import storage  # noqa: E402
@@ -153,6 +154,82 @@ def test_keep_raw_text_respects_caps():
     assert len(report["raw_texts"]) == cfg.MEASURE_RAW_MAX
     for kept in report["raw_texts"]:
         assert len(kept["text"]) == cfg.MEASURE_RAW_TEXT_CAP
+
+
+# ---------------------------------------------------------------------------
+# 가이던스 EPS 읽기 (H3 측정용 — 실물 문장으로 검증)
+# ---------------------------------------------------------------------------
+def test_guidance_eps_real_sndk_range():
+    """실물 샌디스크 2026-08-05 — 분기 가이던스 EPS 범위를 그대로 읽어야 함."""
+    text = (
+        "Expect first quarter 2027 revenue to be in the range of $10.30 billion "
+        "to $10.80 billion, with expected Non-GAAP diluted net income per share "
+        "to be in the range of $44.00 to $46.00."
+    )
+    guid = fe.parse_guidance_eps(text)
+    assert guid["low"] == 44.0 and guid["high"] == 46.0, guid
+    assert guid["mid"] == 45.0
+
+
+def test_guidance_eps_annual_sentence_is_skipped():
+    """연간(full year) 가이던스를 분기 것으로 착각하면 안 됨."""
+    text = (
+        "For the full year 2026, the company expects non-GAAP earnings per "
+        "share in the range of $70.00 to $72.00 for the fourth quarter update."
+    )
+    guid = fe.parse_guidance_eps(text)
+    assert guid["mid"] is None, guid
+
+
+def test_guidance_eps_absent_when_company_gives_none():
+    """실물 CRDO — 매출·GM 가이던스만 주는 회사는 없음(None)이 정답 (창작 금지)."""
+    text = (
+        "First Quarter of Fiscal Year 2027 Financial Outlook. "
+        "Revenue is expected to be between $465.0 million and $475.0 million. "
+        "Non-GAAP gross margin is expected to be between 67.0% and 69.0%."
+    )
+    guid = fe.parse_guidance_eps(text)
+    assert guid["mid"] is None, guid
+
+
+def test_guidance_eps_gaap_only_is_not_taken():
+    """GAAP EPS 가이던스만 있으면 조정 EPS 가이던스가 아님 → 없음."""
+    text = (
+        "For the second quarter, GAAP diluted earnings per share is expected "
+        "to be in the range of $0.09 to $0.11."
+    )
+    guid = fe.parse_guidance_eps(text)
+    assert guid["mid"] is None, guid
+
+
+def test_guidance_eps_loss_range_in_parens():
+    """괄호 표기 적자 가이던스는 음수로 읽어야 함."""
+    text = (
+        "For the third quarter, non-GAAP net loss per share is expected to be "
+        "in the range of ($0.10) to ($0.05)."
+    )
+    guid = fe.parse_guidance_eps(text)
+    assert guid["low"] == -0.10 and guid["high"] == -0.05, guid
+
+
+def test_snapshot_rows_carry_guidance_fields():
+    """스냅샷 분기 행에 가이던스 EPS 가 원문에서 읽혀 담겨야 함."""
+    quarters = [
+        {
+            "filing_date": "2026-06-30",
+            "announced_date": "2026-08-05",
+            "adj_eps": 39.25,
+            "source": cfg.SRC_DIRECT,
+            "guidance_text": (
+                "Expect first quarter 2028 non-GAAP diluted net income per "
+                "share to be in the range of $44.00 to $46.00."
+            ),
+        },
+        {"filing_date": "2026-03-31", "adj_eps": 30.0, "source": cfg.SRC_DIRECT},
+    ]
+    rows = measure_store.eps_rows(quarters)
+    assert rows[0]["guid_eps_mid"] == 45.0, rows[0]
+    assert rows[1]["guid_eps_mid"] is None      # 가이던스 없으면 없음
 
 
 # ---------------------------------------------------------------------------

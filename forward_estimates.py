@@ -328,6 +328,58 @@ def looks_annual(text: str) -> bool:
     return bool(_ANNUAL_HINTS.search(head))
 
 
+# --- 다음 분기 가이던스의 조정 EPS (H3 측정용 — 측정결과.md 결정 기록) ---
+# 실물 근거: 샌디스크 보도자료의
+#   "Expect first quarter 2027 revenue ..., with expected Non-GAAP diluted
+#    net income per share to be in the range of $44.00 to $46.00."
+# CRDO 처럼 매출·GM 가이던스만 주고 EPS 가이던스는 없는 회사도 있습니다 —
+# 그때는 없음(None)으로 둡니다 (창작 금지).
+_GUID_EPS_QUARTER_RE = re.compile(
+    r"(?:first|second|third|fourth)\s+quarter|next\s+quarter|\bQ[1-4]\b", re.I
+)
+# "non-GAAP … per share/EPS … $A to $B" — 괄호는 회계 표기의 음수입니다
+_GUID_EPS_RANGE_RE = re.compile(
+    r"non[-\s]?GAAP[^.]{0,120}?(?:per\s+share|EPS)[^.$\d]{0,60}?"
+    r"(\()?\$\s*(\d+\.\d{1,2})\)?\s*(?:to|[-–~])\s*(\()?\$\s*(\d+\.\d{1,2})\)?",
+    re.I,
+)
+_GUID_EPS_SINGLE_RE = re.compile(
+    r"non[-\s]?GAAP[^.]{0,120}?(?:per\s+share|EPS)[^.$\d]{0,60}?(\()?\$\s*(\d+\.\d{1,2})\)?",
+    re.I,
+)
+
+
+def parse_guidance_eps(text: str) -> dict:
+    """다음 분기 가이던스에서 조정 EPS 를 원문 그대로 읽습니다.
+
+    반환: {"low", "high", "mid"} — 못 찾으면 전부 None.
+    연간(full year) 전망 문장은 건너뜁니다. 분기를 가리키는 문장에서만 읽습니다.
+    """
+    result = {"low": None, "high": None, "mid": None}
+    if not text:
+        return result
+    # 가이던스는 보도자료 뒷부분에 있습니다 (quarters 행의 guidance_text 가 그 조각)
+    for sentence in re.split(r"(?<=[.!?])\s+", text[-8000:]):
+        if not _GUID_EPS_QUARTER_RE.search(sentence):
+            continue
+        if _ANNUAL_HINTS.search(sentence):
+            continue
+        match = _GUID_EPS_RANGE_RE.search(sentence)
+        if match:
+            low = float(match.group(2)) * (-1 if match.group(1) else 1)
+            high = float(match.group(4)) * (-1 if match.group(3) else 1)
+            if low > high:
+                low, high = high, low
+            result.update(low=low, high=high, mid=round((low + high) / 2, 4))
+            return result
+        match = _GUID_EPS_SINGLE_RE.search(sentence)
+        if match:
+            value = float(match.group(2)) * (-1 if match.group(1) else 1)
+            result.update(low=value, high=value, mid=value)
+            return result
+    return result
+
+
 def recent_depreciation(quarters: list[dict]) -> float | None:
     """최근 분기들의 감가상각비 중앙값. 조정 EBITDA 를 논갭 영업이익으로 바꿀 때 씁니다."""
     import statistics
