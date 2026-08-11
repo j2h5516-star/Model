@@ -66,6 +66,20 @@ def test_no_score_no_save_button():
     assert not any("저장" in label for label in button_labels), button_labels
 
 
+def test_verdict_panel_renders():
+    """자동 판정 패널 — 기록이 없으면 안내가, 있으면 판정 결과가 보여야 함."""
+    at = _run_app()
+    text = _all_text(at)
+    assert "판정 표본" in text, "자동 판정 패널이 그려지지 않음"
+    verdict_path = os.path.join(cfg.MEASURE_DIR, "verdict.json")
+    if not os.path.exists(verdict_path):
+        assert "아직 판정 기록이 없습니다" in text, "기록 없음 안내가 없음"
+    else:
+        warnings = " ".join(w.value for w in at.warning)
+        assert ("판정 시각" in text) or ("판정 실행이 실패" in warnings), \
+            "판정 결과도 실패 경고도 없음"
+
+
 def test_missing_snapshot_shows_robot_guide():
     """스냅샷이 없으면 (로봇 첫 실행 전) 안내가 나와야 함."""
     with patch.object(cfg, "MEASURE_DIR", "/tmp/claude-0/없는폴더"):

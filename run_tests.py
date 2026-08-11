@@ -22,6 +22,7 @@ TEST_FILES = [
     "tests/test_measure.py",     # 측정용 실데이터 저장 (연료 파이프라인)
     "tests/test_measurement.py", # 2단계 측정 장치 (창·검열·미래 보기 차단)
     "tests/test_collect_job.py", # 수집 로봇 (반쯤 깨진 날 방어·파일 기록)
+    "tests/test_verdict.py",     # 자동 판정 (채택 규칙·표본 분리)
     "tests/test_app_render.py",  # 화면이 실제로 그려지는지
 ]
 
