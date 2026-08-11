@@ -1,0 +1,123 @@
+"""
+collect_job.py — 수집 로봇의 몸통 (깃허브 액션에서 매일 실행)
+=============================================================
+
+v2 구조(전략.md 4장)의 첫 몸입니다. 사람 조작 없이:
+
+  ① SEC 8-K에서 조정 EPS 원문을 수집하고 (sec_fundamentals — v1 이식)
+  ② 야후에서 일봉 주가를 받고 (market_data — v1 이식)
+  ③ 검사·꾸리기를 거쳐 (measure_store — v1 이식)
+  ④ data/measure/ 아래에 **파일로 쓴다** (커밋은 워크플로가 한다)
+
+로봇의 실행 기록은 깃허브 액션 로그와 data/measure/robot_log.json 에
+남습니다 — "새 코드 경로는 실행 흔적으로 증명한다" 규칙의 이행입니다.
+
+절반 이상의 종목에서 실적 수집이 실패하면 종료코드 1 로 끝나
+그날 커밋을 막고 실패를 드러냅니다 (반쯤 깨진 데이터로 덮어쓰지 않기).
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import sys
+import time
+from datetime import datetime, timezone
+
+import config as cfg
+import market_data as md
+import measure_store
+import sec_fundamentals as sf
+
+
+def collect_fundamentals(tickers: list[str], progress=print) -> list[dict]:
+    """종목별 실적을 순차 수집합니다 (SEC 신원 창구 문제로 병렬 금지 — v1 교훈)."""
+    reports: list[dict] = []
+    for index, ticker in enumerate(tickers, start=1):
+        started = time.monotonic()
+        try:
+            _quarters, report = sf.get_fundamentals(ticker, use_cache=False)
+        except Exception as exc:
+            report = sf.new_report(ticker)
+            report["first_error"] = f"{type(exc).__name__}: {str(exc)[:160]}"
+        report["seconds"] = round(time.monotonic() - started, 1)
+        reports.append(report)
+        progress(
+            f"[{index}/{len(tickers)}] {ticker}: "
+            f"직접공시 {report.get('merged_direct', 0)}건 · "
+            f"조정EPS {report.get('adj_eps_ok', 0)}건 · "
+            f"{report['seconds']}초"
+            + (f" · ⚠️ {report['first_error']}" if report.get("first_error") else "")
+        )
+    return reports
+
+
+def collect_prices(tickers: list[str], progress=print) -> dict:
+    """일봉을 일괄 수집합니다. 야후가 일부를 거부하면 한 번 더 시도합니다."""
+    wanted = list(dict.fromkeys(list(tickers) + [cfg.BENCHMARK]))
+    daily_map, _failed = md.fetch_daily_data(wanted)
+    missing = [t for t in wanted if t not in daily_map]
+    if missing:
+        progress(f"주가 재시도: {missing}")
+        time.sleep(3.0)
+        retry_map, _ = md.fetch_daily_data(missing)
+        daily_map.update(retry_map)
+    progress(f"주가 확보: {len(daily_map)}/{len(wanted)}종목")
+    return daily_map
+
+
+def success_enough(reports: list[dict], daily_map: dict, tickers: list[str]) -> bool:
+    """커밋해도 될 만큼 수집됐는가 — 반쯤 깨진 날은 덮어쓰지 않습니다."""
+    fund_ok = sum(1 for r in reports if r.get("adj_eps_ok", 0) > 0 or r.get("xbrl_quarters", 0) > 0)
+    price_ok = sum(1 for t in tickers if t in daily_map)
+    half = len(tickers) / 2.0
+    return fund_ok >= half and price_ok >= half and cfg.BENCHMARK in daily_map
+
+
+def write_files(files: dict[str, str], progress=print) -> None:
+    for path, content in files.items():
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(content)
+        progress(f"기록: {path} ({len(content):,}자)")
+
+
+def run(tickers: list[str] | None = None, progress=print) -> int:
+    if tickers is None:
+        tickers = list(cfg.TICKERS)
+    progress(f"수집 로봇 시작 — {len(tickers)}종목 · {datetime.now(timezone.utc).isoformat()}")
+
+    reports = collect_fundamentals(tickers, progress)
+    daily_map = collect_prices(tickers, progress)
+
+    if not success_enough(reports, daily_map, tickers):
+        progress("⛔ 절반 이상 실패 — 오늘 데이터로 덮어쓰지 않습니다 (종료코드 1)")
+        return 1
+
+    files, summary = measure_store.build_files(tickers, daily_map, reports)
+
+    # 로봇 실행 기록 — 앱 진단과 다음 세션이 읽습니다
+    log = {
+        "ran_at": datetime.now(timezone.utc).isoformat(),
+        "tickers": len(tickers),
+        "summary": summary,
+        "per_ticker": [
+            {
+                "ticker": r.get("ticker"),
+                "adj_eps_ok": r.get("adj_eps_ok", 0),
+                "merged_direct": r.get("merged_direct", 0),
+                "seconds": r.get("seconds"),
+                "first_error": r.get("first_error", ""),
+            }
+            for r in reports
+        ],
+    }
+    files[f"{cfg.MEASURE_DIR}/robot_log.json"] = json.dumps(log, ensure_ascii=False, indent=1)
+
+    write_files(files, progress)
+    progress(f"✅ 완료 — {summary}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(run())
