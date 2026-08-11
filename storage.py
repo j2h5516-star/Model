@@ -79,14 +79,17 @@ def save_tickers_local(tickers: list[str]) -> bool:
         return False
 
 
-def commit_tickers_github(
-    tickers: list[str],
+def commit_file_github(
+    path: str,
+    content: str,
     token: str,
     repo: str,
+    message: str,
     opener=None,
 ) -> tuple[bool, str]:
-    """GitHub 저장소에 user_tickers.json 을 커밋합니다 (완전 영구 저장).
+    """GitHub 저장소의 아무 파일이나 커밋합니다 (있으면 덮어쓰고 없으면 만듦).
 
+    종목 목록 저장과 측정용 실데이터 저장(measure_store.py)이 함께 씁니다.
     반환: (성공 여부, 사용자에게 보여줄 메시지)
     opener 는 테스트에서 가짜 네트워크로 갈아끼우기 위한 것입니다.
     """
@@ -96,7 +99,7 @@ def commit_tickers_github(
     if opener is None:
         opener = urllib.request.urlopen
 
-    url = f"https://api.github.com/repos/{repo}/contents/{REPO_FILE}"
+    url = f"https://api.github.com/repos/{repo}/contents/{path}"
     headers = {
         "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json",
@@ -115,9 +118,8 @@ def commit_tickers_github(
     except Exception as exc:
         return False, f"GitHub 연결 실패: {type(exc).__name__}"
 
-    content = json.dumps({"tickers": _clean(tickers)}, ensure_ascii=False, indent=1)
     payload: dict = {
-        "message": "종목 목록 저장 (대시보드에서 저장 버튼)",
+        "message": message,
         "content": base64.b64encode(content.encode()).decode(),
     }
     if sha:
@@ -137,3 +139,21 @@ def commit_tickers_github(
         return False, f"GitHub 저장 실패 (HTTP {exc.code}) — 토큰에 쓰기 권한이 있는지 확인해 주세요"
     except Exception as exc:
         return False, f"GitHub 저장 실패: {type(exc).__name__}"
+
+
+def commit_tickers_github(
+    tickers: list[str],
+    token: str,
+    repo: str,
+    opener=None,
+) -> tuple[bool, str]:
+    """GitHub 저장소에 user_tickers.json 을 커밋합니다 (완전 영구 저장)."""
+    content = json.dumps({"tickers": _clean(tickers)}, ensure_ascii=False, indent=1)
+    return commit_file_github(
+        REPO_FILE,
+        content,
+        token,
+        repo,
+        message="종목 목록 저장 (대시보드에서 저장 버튼)",
+        opener=opener,
+    )

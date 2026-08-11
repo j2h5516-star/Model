@@ -30,6 +30,7 @@ from plotly.subplots import make_subplots
 import backtest
 import config as cfg
 import explain
+import measure_store
 import pipeline
 import storage
 
@@ -39,7 +40,7 @@ import storage
 # 코드를 새로 올렸는데 서버가 옛 설정 파일을 메모리에 붙들고 있으면,
 # 새 app.py가 찾는 항목이 없어서 빨간 오류 화면(AttributeError)이 뜹니다.
 # 그런 경우 사용자가 무엇을 해야 하는지 알 수 있도록 안내로 바꿔 줍니다.
-REQUIRED_CONFIG_VERSION = 22
+REQUIRED_CONFIG_VERSION = 23
 
 if getattr(cfg, "CONFIG_VERSION", 0) < REQUIRED_CONFIG_VERSION:
     st.error(
@@ -1577,6 +1578,66 @@ with st.expander("🔧 데이터 수집 진단 — 실적 자료를 어디까지
 `첫 오류` 열에 내용이 있으면 그 메시지를 알려주시면 정확히 조준해서 고칠 수 있습니다.
             """
         )
+
+# ---------------------------------------------------------------------------
+# ⑥-b 측정용 실데이터 저장 — 개발 환경으로 보내는 연료 (전략.md 8장 1단계)
+# ---------------------------------------------------------------------------
+with st.expander("📦 측정용 실데이터 저장 — 개발 환경으로 보내는 연료"):
+    st.markdown(
+        "코드를 고치는 개발 환경은 SEC·주가 접속이 차단되어 **실물 데이터를 볼 수 "
+        "없습니다.** 이 버튼은 방금 이 앱이 수집한 실데이터 — 조정 EPS 시계열(발표일 "
+        "포함), 일봉 주가, 조정 EPS 를 못 읽은 보도자료 원문 — 를 저장소 "
+        f"`{cfg.MEASURE_DIR}/` 에 커밋합니다. 다음 개발 세션이 이 실물로 "
+        "델타↔주가 상관관계 측정(전략.md 7장)과 파서 수정을 합니다."
+    )
+    st.caption(
+        "⚠️ 파싱 실패 원문은 **새로 수집한 직후에만** 담깁니다. 결과에 원문이 0건인데 "
+        "위 진단에 파싱 실패가 보인다면, 위의 **🔄 데이터 새로고침**을 누른 뒤 "
+        "다시 저장해 주세요. 저장소에 커밋되면 앱이 1~2분 자동 재시작될 수 있습니다."
+    )
+
+    try:
+        _m_token = str(st.secrets.get("GITHUB_TOKEN", "")).strip()
+        _m_repo = str(st.secrets.get("GITHUB_REPO", "j2h5516-star/Model")).strip()
+    except Exception:
+        _m_token, _m_repo = "", ""
+
+    if not _m_token:
+        st.warning(
+            "Settings → Secrets 에 `GITHUB_TOKEN` 이 없어 저장할 수 없습니다. "
+            "종목 목록 영구 저장에 쓰는 것과 같은 토큰입니다 (README 참고)."
+        )
+    elif st.button("📦 지금 데이터를 저장소로 저장", key="measure_save_btn"):
+        _m_store = _price_store()
+        _m_files, _m_summary = measure_store.build_files(
+            list(st.session_state.tickers),
+            _m_store.get("data", {}),
+            result.get("reports") or [],
+        )
+        _m_progress = st.progress(0.0, text="저장 준비 중...")
+        _m_rows = []
+        for _m_index, (_m_path, _m_content) in enumerate(_m_files.items(), start=1):
+            _m_ok, _m_msg = storage.commit_file_github(
+                _m_path,
+                _m_content,
+                _m_token,
+                _m_repo,
+                message=f"측정용 실데이터 저장 — {_m_path}",
+            )
+            _m_rows.append(
+                {"파일": _m_path, "결과": "✅ 저장됨" if _m_ok else f"❌ {_m_msg}"}
+            )
+            _m_progress.progress(
+                _m_index / max(len(_m_files), 1),
+                text=f"저장 중... ({_m_index}/{len(_m_files)})",
+            )
+        _m_progress.empty()
+        st.dataframe(pd.DataFrame(_m_rows), hide_index=True, width="stretch")
+        _m_failed = sum(1 for row in _m_rows if row["결과"].startswith("❌"))
+        if _m_failed:
+            st.warning(f"{_m_failed}개 파일 저장에 실패했습니다. 위 표의 메시지를 알려 주세요.")
+        else:
+            st.success(f"저장 완료 — {_m_summary}")
 
 # ---------------------------------------------------------------------------
 # ⑥-2 백테스트 — 이 판정이 과거에는 얼마나 맞았나

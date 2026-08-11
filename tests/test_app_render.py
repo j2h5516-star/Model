@@ -195,6 +195,24 @@ def test_confidence_and_diagnostics_sections():
     assert diag_found, "진단 표가 없음"
 
 
+def test_measure_save_panel_renders():
+    """측정용 실데이터 저장 패널이 실제로 그려져야 함 (전략.md 8장 1단계).
+
+    '있는 줄 알았는데 실행되지 않는 코드' 사고의 재발을 막기 위해,
+    새 화면 조각은 렌더링 증거를 테스트로 남깁니다. 테스트 환경에는
+    GITHUB_TOKEN 이 없으므로 안내 경고까지 나와야 정상입니다.
+    """
+    at = _run_app(True)
+
+    assert not at.exception, [e.value for e in at.exception]
+    # 접이식 패널의 제목은 markdown 에 잡히지 않으므로 본문 문구로 확인합니다
+    all_text = " ".join(m.value for m in at.markdown)
+    assert "델타↔주가 상관관계 측정" in all_text, "저장 패널 본문이 없음"
+    assert cfg.MEASURE_DIR in all_text, "저장 위치 안내가 없음"
+    # 토큰이 없을 때는 저장 버튼 대신 설정 안내가 나와야 함
+    assert any("GITHUB_TOKEN" in w.value for w in at.warning), "토큰 안내 경고가 없음"
+
+
 def test_dollar_signs_are_escaped_for_display():
     """달러 기호가 두 개인 문장이 수식으로 깨지지 않아야 합니다.
 
