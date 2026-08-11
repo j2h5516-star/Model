@@ -710,7 +710,30 @@ def new_report(ticker: str) -> dict:
         "pair_note": "",           # 짝짓기 실패 설명
         "forward_note": "",        # 전망(컨센서스) 수집 실패 사유
         "note": "",
+        # 조정 EPS 를 읽지 못한 보도자료 원문 (측정용 저장 대상 — 전략.md 8장 1단계)
+        # 개발 환경은 SEC 가 차단되어 실물을 볼 수 없으므로, 실패한 원문을
+        # 배포된 앱이 저장소로 커밋해 주면 다음 세션이 그 실물로 파서를 고칩니다.
+        "raw_texts": [],
     }
+
+
+def _keep_raw_text(report: dict, filing_date: str, url: str, text: str) -> None:
+    """조정 EPS 를 읽지 못한 보도자료 원문을 진단 리포트에 남깁니다.
+
+    파싱 실패 사례가 가장 값진 디버깅 자료입니다 — 지금까지 파서가 계속
+    어긋난 이유가 "가짜(지어낸) 예제로만 테스트해서"였기 때문입니다.
+    저장소가 무한히 커지지 않게 종목당 건수와 글자 수에 상한을 둡니다.
+    """
+    kept = report.setdefault("raw_texts", [])
+    if len(kept) >= cfg.MEASURE_RAW_MAX:
+        return
+    kept.append(
+        {
+            "filing_date": filing_date,
+            "url": url,
+            "text": text[: cfg.MEASURE_RAW_TEXT_CAP],
+        }
+    )
 
 
 def fetch_earnings_8k(
@@ -762,6 +785,15 @@ def fetch_earnings_8k(
         report["gate_passed"] += 1
 
         parsed = parse_press_release(text)
+
+        # 보도자료 첨부(EX-99)인데 조정 EPS 를 못 읽었다면 — 파서가 진 것입니다.
+        # 그 원문을 진단에 남겨, 배포된 앱의 '측정용 실데이터 저장' 버튼이
+        # 저장소로 커밋할 수 있게 합니다. (전략.md 8장 1단계 연료 파이프라인)
+        if had_exhibit and parsed["adj_eps"] is None:
+            _keep_raw_text(
+                report, str(filing.filing_date), _safe_filing_url(filing), text
+            )
+
         # 실적 숫자가 하나도 없으면 실적발표가 아닐 가능성이 큽니다.
         # 조정 EPS 도 실적 숫자로 인정합니다 — 규정상 존재가 보장된 값이라
         # 매출·영업이익을 못 읽은 보도자료에서도 이것만 잡히는 경우가 있습니다.
