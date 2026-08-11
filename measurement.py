@@ -44,6 +44,13 @@ BASELINE_STEP = 5             # 기준선① 표본 간격 (5거래일마다 시
 SPACING_MIN_DAYS = 55
 SPACING_MAX_DAYS = 150
 
+# 지속 상승추세의 정의 — 데이터를 보기 전에 고정 (대시보드의 정배열 근사)
+#   주봉 종가 > 26주 이동평균  그리고  13주선 > 26주선  이
+#   TREND_SUSTAIN_WEEKS 주 연속이면 "지속상승". 역사가 모자라면 판단하지 않음.
+TREND_MA_SHORT = 13
+TREND_MA_LONG = 26
+TREND_SUSTAIN_WEEKS = 13
+
 
 def _to_date(text: str) -> date:
     return date.fromisoformat(str(text)[:10])
@@ -109,6 +116,43 @@ def window_return(
         return None, "우측검열", None    # 창이 아직 안 끝남 — 세지 않고 개수만 기록
     pct = (closes[exit_] / closes[entry] - 1.0) * 100.0
     return pct, dates[entry], dates[exit_]
+
+
+def weekly_closes(dates: list[str], closes: list[float], upto: str) -> list[float]:
+    """발표일까지의 일봉을 주봉 종가로 바꿉니다 (한 주의 마지막 종가)."""
+    weeks: list[float] = []
+    current_week = None
+    for day, close in zip(dates, closes):
+        if day > upto:
+            break
+        iso = date.fromisoformat(day).isocalendar()
+        key = (iso[0], iso[1])
+        if key != current_week:
+            weeks.append(close)
+            current_week = key
+        else:
+            weeks[-1] = close
+    return weeks
+
+
+def trend_state(dates: list[str], closes: list[float], announce: str) -> str | None:
+    """발표 시점의 주봉 추세: '지속상승' / '아님' / None(역사 부족).
+
+    미래를 보지 않습니다 — 발표일까지의 주봉만 사용합니다.
+    """
+    weeks = weekly_closes(dates, closes, str(announce)[:10])
+    need = TREND_MA_LONG + TREND_SUSTAIN_WEEKS
+    if len(weeks) < need:
+        return None
+    for back in range(TREND_SUSTAIN_WEEKS):
+        end = len(weeks) - back
+        window_long = weeks[end - TREND_MA_LONG : end]
+        window_short = weeks[end - TREND_MA_SHORT : end]
+        ma_long = sum(window_long) / TREND_MA_LONG
+        ma_short = sum(window_short) / TREND_MA_SHORT
+        if not (weeks[end - 1] > ma_long and ma_short > ma_long):
+            return "아님"
+    return "지속상승"
 
 
 def excess_return(prices: dict, spy: dict, announce: str):
@@ -211,6 +255,7 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
                         "direction": judgment["direction"],
                         "accel_size": accel_size,
                         "new_high": new_high,
+                        "uptrend": trend_state(prices["dates"], prices["close"], announce),
                         "q_qoq": q_qoq,
                         "q_yoy": q_yoy,
                         "ttm_yoy": ttm_yoy,
