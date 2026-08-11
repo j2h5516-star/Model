@@ -208,6 +208,7 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
         seen_dates: set[str] = set()
 
         for run in runs:
+            newhigh_streak = 0        # 이 구간 안에서 신고점이 몇 번 연속인가
             for idx, row in enumerate(run):
                 announce = row.get("announced_date")
                 if not announce:
@@ -232,6 +233,22 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
                 # 주가 쪽에서 통하는지는 이번이 첫 측정입니다.
                 ttm = status.ttm_series(known)
                 new_high = bool(ttm) and len(ttm) >= 2 and ttm[-1] > max(ttm[:-1])
+                newhigh_streak = newhigh_streak + 1 if new_high else 0
+
+                # --- 탐색 배터리 요인 (전략.md v2 5장 — 문턱은 exploration 쪽에 고정) ---
+                # 델타 변동성: 성장의 꾸준함. 최근 4개 증가율의 표준편차.
+                growth_vol = None
+                if len(growths) >= 4:
+                    window4 = growths[-4:]
+                    mean4 = sum(window4) / 4.0
+                    growth_vol = (sum((g - mean4) ** 2 for g in window4) / 4.0) ** 0.5
+                # 연속 가속: 증가율이 몇 분기 연속으로 커졌는가 (뒤에서부터 셈)
+                accel_streak = 0
+                for i in range(len(growths) - 1, 0, -1):
+                    if growths[i] > growths[i - 1]:
+                        accel_streak += 1
+                    else:
+                        break
 
                 # --- 탐색용 요인 (exploration.py 가 묶어서 봅니다) ---
                 # 전부 "그 시점까지 아는 숫자끼리의 산수"입니다. 없으면 None.
@@ -280,6 +297,9 @@ def collect_events(snapshot: dict) -> tuple[list[dict], dict]:
                         "direction": judgment["direction"],
                         "accel_size": accel_size,
                         "new_high": new_high,
+                        "newhigh_streak": newhigh_streak,
+                        "growth_vol": growth_vol,
+                        "accel_streak": accel_streak,
                         "uptrend": trend_state(prices["dates"], prices["close"], announce),
                         "guid_growth": guid_growth,
                         "q_qoq": q_qoq,

@@ -28,6 +28,10 @@ TTM_YOY_LO = 10.0     # 10% 미만 = 저성장
 QOQ_HI = 10.0
 QOQ_LO = -10.0
 
+# 배터리 1차 경계 (전략.md v2 5장 — 2026-08-11 실행 전 고정)
+VOL_STEADY = 10.0     # 증가율 표준편차 < 10 = 꾸준한 성장 (델타 변동성 가설)
+VOL_CHOPPY = 30.0     # ≥ 30 = 들쭉날쭉
+
 
 def _bucket_growth(value, hi, lo) -> str:
     if value is None:
@@ -49,6 +53,21 @@ FACTORS = {
     "TTM 흑자전환": lambda e: "전환" if e["turnaround"] else "아님",
     # H3 (사전 등록: 측정결과.md) — 가이던스 EPS 중간값 vs 이번 실제 EPS, ±10%
     "가이던스 델타": lambda e: _bucket_growth(e.get("guid_growth"), 10.0, -10.0),
+    # --- 배터리 1차 (사용자 가설: 성장의 꾸준함이 신호인가) ---
+    "델타 변동성": lambda e: (
+        "없음" if e.get("growth_vol") is None
+        else "꾸준" if e["growth_vol"] < VOL_STEADY
+        else "들쭉" if e["growth_vol"] >= VOL_CHOPPY
+        else "중간"
+    ),
+    "연속 가속 횟수": lambda e: (
+        "0" if not e.get("accel_streak") else
+        "1" if e["accel_streak"] == 1 else "2+"
+    ),
+    "신고점 연속": lambda e: (
+        "아님" if not e.get("newhigh_streak") else
+        "첫돌파" if e["newhigh_streak"] == 1 else "연속2+"
+    ),
     "매출 TTM YoY": lambda e: _bucket_growth(e["rev_ttm_yoy"], TTM_YOY_HI, TTM_YOY_LO),
     "매출 TTM 신고점": lambda e: (
         "없음" if e["rev_new_high"] is None else ("돌파" if e["rev_new_high"] else "아님")
