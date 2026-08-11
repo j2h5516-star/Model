@@ -217,6 +217,24 @@ def test_trend_state_ignores_future_prices():
     assert a == b == "지속상승", (a, b)
 
 
+def test_battery_fields_streaks_and_volatility():
+    """배터리 요인이 걸어가며 옳게 계산되는지 — 가속 연속·신고점 연속·변동성."""
+    values = [1.0, 1.05, 1.12, 1.22, 1.37, 1.60, 1.95, 2.50]   # 가속이 이어지는 성장
+    snap = _fake_snapshot(values, price_days=560)              # 뒤 사건이 검열로 안 잘리게
+    events, _ = mm.collect_events(snap)
+    assert events, "사건이 없음"
+    last = events[-1]
+    assert last["accel_streak"] >= 2, last                    # 증가율이 계속 커짐
+    assert last["newhigh_streak"] >= 2, last                  # 신고점이 연속으로 갱신
+    assert last["growth_vol"] is not None and last["growth_vol"] >= 0.0
+
+    flat = _fake_snapshot([1.0] * 8, price_days=560)          # 완전 제자리 장사
+    flat_events, _ = mm.collect_events(flat)
+    assert flat_events[-1]["accel_streak"] == 0
+    assert flat_events[-1]["newhigh_streak"] == 0
+    assert flat_events[-1]["growth_vol"] == 0.0               # 흔들림 없음
+
+
 def test_surge_threshold_is_20pp_excess():
     """폭등 판정은 시장 대비 +20%p 경계에서 갈려야 함."""
     stats = mm._group_stats([
