@@ -13,6 +13,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
+import config as cfg  # noqa: E402
 import forward_estimates as fe  # noqa: E402
 import sec_fundamentals as sf  # noqa: E402
 from fixtures import (  # noqa: E402
@@ -381,22 +382,6 @@ def test_average_margin_empty():
     assert fe.average_operating_margin([]) is None
 
 
-if __name__ == "__main__":
-    tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
-    passed = failed = 0
-    for name, fn in tests:
-        try:
-            fn()
-            print(f"  ✅ {name}")
-            passed += 1
-        except AssertionError as e:
-            print(f"  ❌ {name} — {e}")
-            failed += 1
-        except Exception as e:
-            print(f"  💥 {name} — {type(e).__name__}: {e}")
-            failed += 1
-    print(f"\n파싱 테스트: {passed}개 통과, {failed}개 실패")
-    sys.exit(1 if failed else 0)
 
 
 def test_reconciliation_title_is_not_read_as_the_value():
@@ -537,3 +522,21 @@ def test_8k_still_pairs_when_it_is_the_only_candidate_quarter():
     merged = sf.merge_quarters(xbrl, press, {})
     assert merged[0]["op_income"] == 155 * M
     assert merged[0]["source"] == cfg.SRC_DIRECT
+
+
+if __name__ == "__main__":
+    tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
+    passed = failed = 0
+    for name, fn in tests:
+        try:
+            fn()
+            print(f"  ✅ {name}")
+            passed += 1
+        except AssertionError as e:
+            print(f"  ❌ {name} — {e}")
+            failed += 1
+        except Exception as e:
+            print(f"  💥 {name} — {type(e).__name__}: {e}")
+            failed += 1
+    print(f"\n파싱 테스트: {passed}개 통과, {failed}개 실패")
+    sys.exit(1 if failed else 0)

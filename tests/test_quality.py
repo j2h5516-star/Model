@@ -545,22 +545,6 @@ def test_mixed_definition_is_detected():
     assert dq.check_source_consistency(same)["mixed"] is False
 
 
-if __name__ == "__main__":
-    tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
-    passed = failed = 0
-    for name, fn in tests:
-        try:
-            fn()
-            print(f"  ✅ {name}")
-            passed += 1
-        except AssertionError as e:
-            print(f"  ❌ {name} — {e}")
-            failed += 1
-        except Exception as e:
-            print(f"  💥 {name} — {type(e).__name__}: {e}")
-            failed += 1
-    print(f"\n숫자 검사 테스트: {passed}개 통과, {failed}개 실패")
-    sys.exit(1 if failed else 0)
 
 
 # ---------------------------------------------------------------------------
@@ -614,3 +598,21 @@ def test_single_quarter_cannot_vouch_for_itself():
           "gross_margin_pct": 65.0}], {}
     )
     assert kept[0]["revenue"] is None
+
+
+if __name__ == "__main__":
+    tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
+    passed = failed = 0
+    for name, fn in tests:
+        try:
+            fn()
+            print(f"  ✅ {name}")
+            passed += 1
+        except AssertionError as e:
+            print(f"  ❌ {name} — {e}")
+            failed += 1
+        except Exception as e:
+            print(f"  💥 {name} — {type(e).__name__}: {e}")
+            failed += 1
+    print(f"\n숫자 검사 테스트: {passed}개 통과, {failed}개 실패")
+    sys.exit(1 if failed else 0)
