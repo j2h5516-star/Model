@@ -30,8 +30,8 @@ import measurement as mm
 import scoring
 
 # 발표가 이 일수보다 오래됐으면 그 종목의 실적 상태는 "김빠진 것"으로 보고
-# 분모에서 뺍니다 (한 분기 91일 + 발표 지연 여유).
-EARNINGS_FRESH_DAYS = 140
+# 분모에서 뺍니다 (한 분기 91일 + 발표 지연 여유). 값은 config 에서 관리.
+EARNINGS_FRESH_DAYS = cfg.BREADTH_FRESH_DAYS
 
 
 def weekly_grid(daily_dates: list[str]) -> list[str]:
@@ -131,6 +131,38 @@ def build_series(snapshot: dict) -> dict:
         )
         series["spy"].append(spy_map.get(week))
     return series
+
+
+def current_gauge(tickers: list[str], load_quarters=None, today: str | None = None) -> dict:
+    """지금 시점의 실적 폭 게이지 — 앱 상단 배너용.
+
+    반환: {"pct": 신고점 종목 비율(%), "on": 사이클 ON 여부, "tickers": 분모}
+    분기 데이터는 SEC 디스크 캐시(수집 원본)에서 읽습니다.
+    """
+    if load_quarters is None:
+        import sec_fundamentals as sf
+        load_quarters = sf.load_cache
+    if today is None:
+        today = date.today().isoformat()
+
+    new_high_count = total = 0
+    for ticker in tickers:
+        try:
+            rows = load_quarters(ticker)
+        except Exception:
+            rows = None
+        state = latest_state(earnings_states(rows or []), today)
+        if state is None:
+            continue
+        total += 1
+        new_high_count += bool(state[0])
+
+    pct = round(new_high_count / total * 100.0, 1) if total else None
+    return {
+        "pct": pct,
+        "on": pct is not None and pct >= cfg.BREADTH_ON_PCT,
+        "tickers": total,
+    }
 
 
 def _pearson(xs: list[float], ys: list[float]) -> float | None:

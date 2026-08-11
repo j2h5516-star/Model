@@ -195,6 +195,22 @@ def test_confidence_and_diagnostics_sections():
     assert diag_found, "진단 표가 없음"
 
 
+def test_breadth_gauge_and_delta_honesty_render():
+    """장세 게이지와 델타 정직 표시가 실제로 그려져야 함 (측정결과.md 반영).
+
+    테스트 환경에는 SEC 디스크 캐시가 없으므로 게이지는 '10개 미만' 안내
+    경로가 나와야 정상입니다. 델타 요약에는 '매수 신호가 아니다'라는
+    측정 결과 문구가 있어야 합니다.
+    """
+    at = _run_app(True)
+
+    assert not at.exception, [e.value for e in at.exception]
+    all_text = " ".join(c.value for c in at.caption) + " ".join(m.value for m in at.markdown)
+    assert "장세 게이지" in all_text, "장세 게이지 문구가 없음"
+    assert "상태 설명" in all_text, "델타 정직 표시(매수 신호 아님)가 없음"
+    assert str(cfg.MEASURED_ACCEL_SURGE_PCT) in all_text, "측정된 가속 폭등률이 없음"
+
+
 def test_measure_save_panel_renders():
     """측정용 실데이터 저장 패널이 실제로 그려져야 함 (전략.md 8장 1단계).
 
