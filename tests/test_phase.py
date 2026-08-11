@@ -141,17 +141,19 @@ def test_persistent_losses_are_not_called_a_middle_position():
     assert result["score"] <= cfg.W_PHASE * 0.15, result
 
 
-def test_new_high_is_labelled_as_three_year_not_all_time():
-    """'역대 최고'가 아니라 '3년내 최고'라고 밝혀야 함
+def test_new_high_is_labelled_with_period_not_all_time():
+    """'역대 최고'가 아니라 수집 기간('5년내 최고')을 밝혀야 함
 
-    3년치만 모으므로, 예전에 훨씬 잘 벌다 무너진 회사가 조금 회복하면
-    여기에 들어옵니다(인텔). 이름과 설명에 그 한계를 박아 둡니다.
+    수집 기간(약 5년)만 모으므로, 예전에 훨씬 잘 벌다 무너진 회사가 조금
+    회복하면 여기에 들어옵니다(인텔). 이름과 설명에 그 한계를 박아 둡니다.
+    (2026-08 수집 기간 3년 → 5년 확장에 맞춰 라벨도 함께 갱신)
     """
     result = scoring.score_phase(make([100, 110, 120, 130, 150, 170, 200]))
 
-    assert "3년" in result["phase"], result["phase"]
+    assert result["phase"] == cfg.PH_NEW_HIGH, result["phase"]
+    assert "년내" in result["phase"], result["phase"]     # 기간이 이름에 박혀 있어야 함
     assert "역대" not in result["phase"]
-    assert "3년" in result["detail"], result["detail"]
+    assert "5년" in result["detail"], result["detail"]
 
 
 def test_middle_ground_is_not_dressed_up():

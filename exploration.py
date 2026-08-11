@@ -47,6 +47,8 @@ FACTORS = {
     "분기 YoY": lambda e: _bucket_growth(e["q_yoy"], TTM_YOY_HI, TTM_YOY_LO),
     "분기 QoQ": lambda e: _bucket_growth(e["q_qoq"], QOQ_HI, QOQ_LO),
     "TTM 흑자전환": lambda e: "전환" if e["turnaround"] else "아님",
+    # H3 (사전 등록: 측정결과.md) — 가이던스 EPS 중간값 vs 이번 실제 EPS, ±10%
+    "가이던스 델타": lambda e: _bucket_growth(e.get("guid_growth"), 10.0, -10.0),
     "매출 TTM YoY": lambda e: _bucket_growth(e["rev_ttm_yoy"], TTM_YOY_HI, TTM_YOY_LO),
     "매출 TTM 신고점": lambda e: (
         "없음" if e["rev_new_high"] is None else ("돌파" if e["rev_new_high"] else "아님")

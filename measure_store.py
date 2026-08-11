@@ -23,6 +23,7 @@ import json
 from datetime import datetime, timezone
 
 import config as cfg
+import forward_estimates as fe
 import sec_fundamentals as sf
 
 # 분기에서 스냅샷으로 옮겨 적는 항목 (큰 설명 텍스트는 제외 — 파일 크기)
@@ -43,10 +44,22 @@ EPS_FIELDS = (
 
 
 def eps_rows(quarters: list[dict] | None) -> list[dict]:
-    """분기 목록에서 측정에 필요한 항목만 그대로 옮겨 적습니다."""
+    """분기 목록에서 측정에 필요한 항목만 그대로 옮겨 적습니다.
+
+    가이던스 EPS(H3 측정용)는 각 분기의 보도자료 뒷부분(guidance_text)에서
+    원문 그대로 읽어 함께 담습니다 — 회사가 안 줬으면 없음(None)입니다.
+    """
     if not quarters:
         return []
-    return [{key: quarter.get(key) for key in EPS_FIELDS} for quarter in quarters]
+    rows = []
+    for quarter in quarters:
+        row = {key: quarter.get(key) for key in EPS_FIELDS}
+        guid = fe.parse_guidance_eps(quarter.get("guidance_text") or "")
+        row["guid_eps_low"] = guid["low"]
+        row["guid_eps_high"] = guid["high"]
+        row["guid_eps_mid"] = guid["mid"]
+        rows.append(row)
+    return rows
 
 
 def price_rows(daily_df) -> dict:
