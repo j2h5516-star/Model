@@ -70,14 +70,18 @@ def _to_date(text: str) -> date:
 # ---------------------------------------------------------------------------
 # 분기 준비 — 조정 EPS 가 있는 행만, 연속 구간으로
 # ---------------------------------------------------------------------------
-def eps_runs(rows: list[dict]) -> tuple[list[list[dict]], int]:
-    """조정 EPS 가 있는 분기를 날짜순으로 정렬해 **연속 구간**으로 쪼갭니다.
+def eps_runs(rows: list[dict], field: str = "adj_eps") -> tuple[list[list[dict]], int]:
+    """잣대(field)가 있는 분기를 날짜순으로 정렬해 **연속 구간**으로 쪼갭니다.
+
+    기본 잣대는 조정 EPS. 조정 EPS 를 발표하지 않는 회사(ZETA·APP 등)는
+    계기판에서만 field="adjusted_ebitda"(회사 발표 원문)로 대신 봅니다 —
+    측정·판정(H2 등)은 등록된 대로 조정 EPS 만 씁니다.
 
     반환: (구간 목록, 간격 문제로 끊어진 횟수)
     """
     usable = [
         r for r in rows
-        if r.get("adj_eps") is not None and r.get("filing_date")
+        if r.get(field) is not None and r.get("filing_date")
     ]
     usable.sort(key=lambda r: str(r["filing_date"]))
 
@@ -97,14 +101,15 @@ def eps_runs(rows: list[dict]) -> tuple[list[list[dict]], int]:
     return runs, breaks
 
 
-def to_scoring_rows(run: list[dict]) -> list[dict]:
-    """스냅샷 행을 판정 코드가 읽는 형태로 바꿉니다 (조정 EPS 를 잣대로)."""
+def to_scoring_rows(run: list[dict], field: str = "adj_eps") -> list[dict]:
+    """스냅샷 행을 판정 코드가 읽는 형태로 바꿉니다 (기본 잣대: 조정 EPS)."""
     return [
         {
             "period_label": r.get("period_label") or "",
             "filing_date": str(r["filing_date"]),
-            "op_income": r["adj_eps"],          # 잣대 교체 — 값은 원문 그대로
-            "basis": cfg.BASIS_ADJ_EPS,         # 저기저 문턱이 $0.05/주 로 잡히게
+            "op_income": r[field],              # 잣대 교체 — 값은 원문 그대로
+            # 저기저 문턱: 조정 EPS 는 $0.05/주, EBITDA 등 금액 잣대는 기본값
+            "basis": cfg.BASIS_ADJ_EPS if field == "adj_eps" else cfg.BASIS_OP_INCOME,
             "source": cfg.SRC_DIRECT,
         }
         for r in run

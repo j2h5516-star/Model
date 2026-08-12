@@ -336,6 +336,88 @@ def test_real_zeta_has_no_adjusted_eps():
     assert result["gaap_eps"] == 0.03, result["gaap_eps"]
 
 
+def test_real_zeta_ebitda_is_extracted():
+    """실물 ZETA 2026-08-04 — 조정 EPS 미발표 회사의 대체 잣대(조정 EBITDA).
+
+    이 값이 스냅샷까지 흘러가야 계기판이 ZETA 의 이익 방향을 볼 수 있습니다
+    (9차 감사: 값은 뽑히는데 분기 행으로 복사되지 않아 버려지고 있었음).
+    """
+    text = (
+        "(In thousands, except percentages)\n"
+        "Three months ended June 30,\n"
+        "Net income / (loss)                           $8,173\n"
+        "Add back:\n"
+        "Depreciation and amortization                 22,658\n"
+        "Stock-based compensation                      52,115\n"
+        "Adjusted EBITDA                              $91,697\n"
+        "Adjusted EBITDA margin                          20.7      %\n"
+    )
+    result = sf.parse_press_release(text)
+    assert result["adjusted_ebitda"] == 91_697_000.0, result["adjusted_ebitda"]
+
+
+def test_real_crdo_q3_fy26_eps():
+    """실물 CRDO 2026-03-02 — 짝짓기 사고로 통째로 버려졌던 발표의 원문.
+
+    'non-GAAP diluted net income per share of $1.07' 어순이 계속 읽히는지
+    고정합니다 (원문 보관 파일은 순환 삭제되므로 여기 박제).
+    """
+    text = (
+        "Credo Technology Group Holding Ltd Reports Third Quarter of Fiscal "
+        "Year 2026 Financial Results. Revenue of $407.0 million, grew by 51.9% "
+        "quarter over quarter and 201.5% year over year. GAAP net income of "
+        "$157.1 million and non-GAAP net income of $208.8 million. GAAP diluted "
+        "net income per share of $0.82 and non-GAAP diluted net income per "
+        "share of $1.07"
+    )
+    result = sf.parse_press_release(text)
+    assert result["adj_eps"] == 1.07, result["adj_eps"]
+    assert result["gaap_eps"] == 0.82, result["gaap_eps"]
+    assert result["revenue"] == 407_000_000.0, result["revenue"]
+
+
+def test_real_sedg_loss_word_order():
+    """실물 SEDG 2023-11-01 — 'net diluted loss' 어순의 적자는 음수여야 함."""
+    text = "Non-GAAP net diluted loss per share* of $0.55"
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == -0.55
+
+
+def test_real_stx_paren_loss():
+    """실물 STX 2023-10-26 — '(loss)' 괄호 표기 + 괄호 음수. 이중 반전 금지."""
+    text = "GAAP (loss) per share of $(0.88); non-GAAP (loss) per share of $(0.22)"
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == -0.22
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True) == -0.88
+
+
+def test_real_amba_ordinary_share_current_quarter():
+    """실물 AMBA 2026-02-26 — 이번 분기(0.13)를 집어야지 1년 전(0.11)이면 안 됨.
+
+    문장 중간에 여백 패딩(공백 68자+줄바꿈)이 끼는 실물 구조 그대로.
+    """
+    text = (
+        "Non-GAAP net profit for the fourth quarter of fiscal 2026 was"
+        + " " * 68 + "\n"
+        + "    $5.5 million, or earnings per diluted ordinary share of $0.13. "
+        "This compares with non-GAAP net profit of $4.8 million, or earnings "
+        "per diluted ordinary share of $0.11, for the same period in fiscal 2025."
+    )
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.13
+
+
+def test_real_mpwr_table_picks_diluted_row():
+    """실물 MPWR 2026-07-30 — 표제목 아래 Basic/Diluted 줄에서 Diluted 를 집기.
+
+    실물과 같은 기하(222자 줄, 값은 78열)로 재현 — 제목과 값 사이가 멀어
+    일반 패턴은 못 읽고, Diluted 로 건너뛰는 표 패턴이 6.50 을 집어야 함.
+    """
+    text = (
+        "Non-GAAP net income per share:".ljust(222) + "\n"
+        + ("Basic".ljust(78) + "$6.51").ljust(222) + "\n"
+        + ("Diluted".ljust(78) + "$6.50").ljust(222) + "\n"
+    )
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 6.50
+
+
 def test_partnership_8k_is_not_kept_as_raw():
     """실물 LITE·COHR 2026-03-02 — 파트너십 발표는 실적이 아닙니다.
 

@@ -61,7 +61,10 @@ TICKERS: list[str] = [
     "AMAT", "TER", "ENTG", "MKSI", "FORM", "ACLS", "AMBA", "POWI", "DIOD",
     "SLAB", "MPWR",
     # 하드웨어·네트워크·광학
-    "CIEN", "COMM", "EXTR", "NTAP", "PSTG", "WDC", "STX", "DELL", "VIAV", "AAOI",
+    # COMM(CommScope)은 2026-01 사업 매각·사명 변경(VISN)으로 제외 — 회사
+    # 실체가 바뀌어 과거 이력의 연속성이 없습니다. PSTG(Pure Storage)는
+    # 2026년 Everpure 로 사명 변경, 티커가 P 로 바뀜 (같은 회사·같은 사업).
+    "CIEN", "EXTR", "NTAP", "P", "WDC", "STX", "DELL", "VIAV", "AAOI",
     # 소프트웨어 (급등주와 급락주 혼합)
     "TWLO", "DDOG", "NET", "MDB", "SNOW", "OKTA", "ZS", "CRWD", "S", "HUBS",
     "BILL", "U", "ROKU", "SNAP", "ZM", "DOCU",
@@ -104,6 +107,13 @@ MAX_8K_SCAN = 100
 
 # 실적 숫자를 이만큼 확보하면 더 스캔하지 않고 멈춥니다 (5년 × 4분기 + 여유 4)
 EARLY_STOP_PARSED = 24
+
+# 보도자료 숫자 추출을 건너뛰는 종목 — "틀림"은 "없음"보다 위험합니다.
+# TSLA: 실적 자료가 슬라이드 표 형식인데 열이 과거→현재 순서라, 라벨 뒤
+#       첫 숫자를 집는 파서가 **1년 전 분기 값**을 최신으로 가져옵니다
+#       (실물 확인: 조정 EBITDA 3,401(작년)을 집음, 최신은 3,273 — 9차 감사).
+#       열 방향까지 읽는 파서가 생기기 전에는 XBRL 근사 표시만 유지합니다.
+PRESS_PARSE_SKIP = frozenset({"TSLA"})
 
 # 분기 종료일과 8-K 제출일이 이 일수 안이면 같은 분기의 발표로 짝짓습니다.
 # 실적발표는 보통 분기 종료 후 2~8주이지만, 회계연도 마지막 분기는
