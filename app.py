@@ -117,27 +117,36 @@ def build_status_rows(snap: dict) -> list[dict]:
             if prices.get("dates") and today else None
         )
 
+        # 잣대: 기본은 조정 EPS. 조정 EPS 를 발표하지 않는 회사(ZETA·APP 등)는
+        # 회사가 발표한 조정 EBITDA(원문)로 대신 봅니다 — XBRL 근사치는 안 씀.
+        metric_field, metric_label = "adj_eps", "조정EPS"
         runs, _breaks = mm.eps_runs(eps_rows)
+        if not runs:
+            runs, _breaks = mm.eps_runs(eps_rows, field="adjusted_ebitda")
+            metric_field, metric_label = "adjusted_ebitda", "조정EBITDA"
         last_run = runs[-1] if runs else []
         if not last_run:
             rows_out.append({
-                "종목": ticker, "델타 방향": "조정EPS 미발표", "신고점": "-",
-                "주가 추세": trend or "-", "발표 후": "-", "최근 EPS": None, "YoY%": None,
+                "종목": ticker, "델타 방향": "조정EPS·EBITDA 미발표", "신고점": "-",
+                "주가 추세": trend or "-", "발표 후": "-", "최근 EPS": "-", "YoY%": "-",
                 "_sort": 9_999,
             })
             continue
 
-        scoring_rows = mm.to_scoring_rows(last_run)
+        scoring_rows = mm.to_scoring_rows(last_run, field=metric_field)
         judgment = status.judge_delta(scoring_rows)
         # 신고점은 끊긴 구간 이전의 정점까지 포함해 비교합니다 — 마지막 구간
         # 안에서만 보면 옛 정점보다 낮은데 '돌파'로 보입니다 (8차 감사).
-        all_ttms = [t for r in runs for t in status.ttm_series(mm.to_scoring_rows(r))]
+        all_ttms = [
+            t for r in runs
+            for t in status.ttm_series(mm.to_scoring_rows(r, field=metric_field))
+        ]
         last_ttms = status.ttm_series(scoring_rows)
         new_high = (
             all_ttms[-1] > max(all_ttms[:-1])
             if last_ttms and len(all_ttms) >= 2 else None
         )
-        eps_values = [r["adj_eps"] for r in last_run]
+        eps_values = [r[metric_field] for r in last_run]
         yoy = (
             round((eps_values[-1] - eps_values[-5]) / abs(eps_values[-5]) * 100.0, 1)
             if len(eps_values) >= 5 and eps_values[-5] else None
@@ -156,8 +165,13 @@ def build_status_rows(snap: dict) -> list[dict]:
             "신고점": "🏔️ 돌파" if new_high else ("-" if new_high is None else "아님"),
             "주가 추세": trend or "-",
             "발표 후": f"{weeks_ago}주" if weeks_ago is not None else "-",
-            "최근 EPS": eps_values[-1],
-            "YoY%": yoy,
+            # EBITDA 잣대 종목은 금액이 커서 백만 단위로 표시하고 잣대를 밝힙니다
+            "최근 EPS": (
+                "-" if eps_values[-1] is None
+                else f"{eps_values[-1]/1e6:,.0f}M(EBITDA)" if metric_field == "adjusted_ebitda"
+                else eps_values[-1]
+            ),
+            "YoY%": yoy if yoy is not None else "-",
             "_sort": weeks_ago if weeks_ago is not None else 9_998,
         })
     rows_out.sort(key=lambda r: (r["_sort"], r["종목"]))
@@ -182,22 +196,77 @@ st.dataframe(pd.DataFrame(status_rows), hide_index=True, width="stretch")
 st.markdown("#### 종목 상세")
 picked = st.selectbox("종목을 고르세요", snapshot["tickers"])
 
-picked_rows = snapshot["eps"].get(picked) or []
+picked_rows = sorted(
+    (r for r in (snapshot["eps"].get(picked) or []) if r.get("filing_date")),
+    key=lambda r: str(r["filing_date"]),
+)
+# 잣대: 조정 EPS → 없으면 회사 발표 조정 EBITDA (근사치는 안 씀 — 창작 금지)
+metric_field, metric_title, metric_unit = "adj_eps", "분기 조정 EPS ($/주)", 1.0
 runs, _ = mm.eps_runs(picked_rows)
+if not runs:
+    runs, _ = mm.eps_runs(picked_rows, field="adjusted_ebitda")
+    metric_field, metric_title, metric_unit = (
+        "adjusted_ebitda", "분기 조정 EBITDA ($M)", 1e6,
+    )
 if runs:
-    run = runs[-1]
-    labels = [r.get("period_label") or str(r["filing_date"])[:7] for r in run]
-    values = [r["adj_eps"] for r in run]
-    figure = go.Figure(go.Bar(x=labels, y=values, marker_color="#2e86ab"))
+    # 전체 이력을 그립니다 — 마지막 연속 구간만 그리면 중간 분기 추출이
+    # 실패한 종목(감사에서 23/80개)이 분기 1~2개짜리 차트가 됩니다.
+    # 추출 실패 분기는 값 없이 비워 두어 구멍이 보이게 합니다 (창작 금지).
+    labels = [r.get("period_label") or str(r["filing_date"])[:7] for r in picked_rows]
+    values = [
+        (r.get(metric_field) / metric_unit) if r.get(metric_field) is not None else None
+        for r in picked_rows
+    ]
+    figure = go.Figure(go.Bar(x=labels, y=values, marker_color="#2e86ab", name="발표치"))
+
+    # 회사가 준 다음 분기 가이던스(중간값) — 최신 발표분에 있을 때만 (EPS 잣대 전용)
+    last_guided = None
+    if metric_field == "adj_eps":
+        last_guided = next(
+            (r for r in reversed(picked_rows) if r.get("guid_eps_mid") is not None), None
+        )
+        if last_guided is not None and last_guided is not picked_rows[-1]:
+            last_guided = None          # 오래된 가이던스는 그리지 않음
+    if last_guided is not None:
+        figure.add_bar(
+            x=["다음분기 전망"], y=[last_guided["guid_eps_mid"]],
+            marker_color="#f4a261", name="회사 가이던스",
+        )
     figure.update_layout(
         height=260, margin=dict(l=10, r=10, t=30, b=10),
-        title=f"{picked} — 분기 조정 EPS ($/주)", yaxis_title=None, xaxis_title=None,
+        title=f"{picked} — {metric_title}", yaxis_title=None, xaxis_title=None,
+        showlegend=last_guided is not None,
+        legend=dict(orientation="h", yanchor="bottom", y=1.0, x=0),
     )
     st.plotly_chart(figure, width="stretch", config={"displayModeBar": False})
-    judgment = status.judge_delta(mm.to_scoring_rows(run))
+
+    if metric_field == "adjusted_ebitda":
+        st.caption(
+            "이 회사는 조정 EPS 를 발표하지 않아 **회사가 발표한 조정 EBITDA** "
+            "로 이익의 방향을 봅니다 (근사치·추정 아님)."
+        )
+    missing = sum(1 for v in values if v is None)
+    if missing:
+        st.caption(
+            f"빈 자리 {missing}개 = 원문에서 숫자 추출 실패 또는 미발표 분기 — "
+            "지어내지 않고 비워 둡니다."
+        )
+
+    # 델타 판정은 등록된 규칙 그대로 '마지막 연속 구간'만 씁니다 (이어붙임 금지)
+    last_run = runs[-1]
+    judgment = status.judge_delta(mm.to_scoring_rows(last_run, field=metric_field))
     st.caption(f"델타 판정: **{judgment['direction']}** — {judgment['detail']}")
+    if len(last_run) < 4 and sum(len(r) for r in runs) >= 4:
+        st.caption(
+            f"⚠️ 판정은 끊기지 않은 최근 {len(last_run)}개 분기만 씁니다 — 중간 분기 "
+            "추출 실패로 구간이 끊겨 판정이 이릅니다. 이어붙이면 가짜 가속이 "
+            "생기므로 붙이지 않습니다."
+        )
 else:
-    st.caption(f"{picked}: 조정 EPS 발표가 없는 회사입니다 (없음은 없음으로 둡니다 — 창작 금지).")
+    st.caption(
+        f"{picked}: 조정 EPS 도 조정 EBITDA 도 발표가 없는 회사입니다 "
+        "(없음은 없음으로 둡니다 — 창작 금지)."
+    )
 
 picked_prices = snapshot["prices"].get(picked)
 if picked_prices and picked_prices.get("dates"):

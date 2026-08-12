@@ -240,6 +240,41 @@ def test_merge_without_press_keeps_xbrl():
     assert len(merged) == 1 and merged[0]["source"] == "근사치"
 
 
+def test_merge_prefers_press_with_numbers_over_closer_preliminary():
+    """예비 공지(이익 숫자 없음)가 가깝다고 진짜 실적 발표를 밀어내면 안 됨.
+
+    실물 사고 (9차 감사): CRDO 26Q3 — 예비 매출 공지(분기 종료 9일 뒤)가
+    분기를 차지해, 실적 발표(30일 뒤)의 조정 EPS $1.07 이 통째로 버려졌음.
+    """
+    xbrl = [_xbrl_row("2026-01-31", 100.0)]
+    preliminary = _press_row("2026-02-09", 111.0)
+    preliminary.update(op_income=None, gross_margin_pct=None, revenue=404_000_000.0)
+    real = _press_row("2026-03-02", 222_000_000.0)
+    real["adj_eps"] = 1.07
+
+    merged = sf.merge_quarters(xbrl, [preliminary, real])
+    assert merged[0]["announced_date"] == "2026-03-02", merged[0]
+    assert merged[0]["adj_eps"] == 1.07
+    assert merged[0]["source"] == "직접공시"
+
+
+def test_sanity_ebitda_rules():
+    """조정 EBITDA 검사 — ① $10만 미만은 오파싱 ② EBITDA > 매출이면 매출을 버림.
+
+    두 규칙 모두 실물 오류에서 나옴: FSLR 에서 1.0 이 EBITDA 로 잡혔고,
+    ZETA 에서 가이던스 상향 폭 $33M 이 매출로 잡혀 EBITDA(91.7M)보다 작아짐.
+    """
+    fslr_like = {"revenue": 1_179_374.0, "op_income": None, "adjusted_ebitda": 1.0}
+    sf._sanity_check_press(fslr_like)
+    assert fslr_like["adjusted_ebitda"] is None
+
+    zeta_like = {"revenue": 33_859_000.0, "op_income": None,
+                 "adjusted_ebitda": 91_697_000.0}
+    sf._sanity_check_press(zeta_like)
+    assert zeta_like["revenue"] is None                       # 매출 쪽을 버림
+    assert zeta_like["adjusted_ebitda"] == 91_697_000.0       # EBITDA 는 지킴
+
+
 def test_diagnostic_report_shape():
     """진단 리포트에 단계별 항목이 모두 있어야 함"""
     report = sf.new_report("TEST")

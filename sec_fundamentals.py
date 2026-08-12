@@ -359,10 +359,25 @@ _PROFIT_WORD = (
 # ⚠️ "non-GAAP **diluted** net income per share" 처럼 diluted 가 앞에 오는
 #    어순(실물: CRDO·샌디스크)이 있어 (?:diluted\s+)? 를 앞자리에도 둡니다.
 LABELS_ADJUSTED_EPS = [
-    rf"non[-\s]?GAAP\s+(?:diluted\s+)?(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
-    rf"adjusted\s+(?:diluted\s+)?(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
-    rf"non[-\s]?GAAP\s+diluted\s+{_PROFIT_WORD}\s+per\s+share",
-    rf"adjusted\s+diluted\s+{_PROFIT_WORD}\s+per\s+share",
+    # 수식어(net·diluted)는 회사마다 순서가 다릅니다 — "diluted net income"
+    # (CRDO·샌디스크), "net diluted loss"(SEDG). 순서 무관 최대 2개 허용.
+    # 적자를 "(loss)" 로 묶는 표기(실물: STX)와 케이맨 법인의 "ordinary share"
+    # (실물: AMBA)도 허용합니다. (9차 감사에서 실물 4형식 보강)
+    rf"non[-\s]?GAAP\s+(?:(?:net|diluted)\s+){{0,2}}\(?{_PROFIT_WORD}\)?"
+    r"\s+per\s+(?:diluted\s+)?(?:ordinary\s+)?share",
+    rf"adjusted\s+(?:(?:net|diluted)\s+){{0,2}}\(?{_PROFIT_WORD}\)?"
+    r"\s+per\s+(?:diluted\s+)?(?:ordinary\s+)?share",
+    # MPWR 형 대조표: "Non-GAAP net income per share:" 제목 아래 Basic/Diluted
+    # 줄이 따로 옵니다. Diluted 바로 뒤의 값을 집습니다.
+    # (표 여백이 넓어 창을 600자로 둡니다 — Basic 줄 하나를 건너뛰는 거리)
+    r"non[-\s]?GAAP\s+net\s+income\s+per\s+share:[\s\S]{0,600}?\bDiluted\b",
+    # AMBA 형 문장: "non-GAAP net profit of $5.5 million, or earnings per
+    # diluted ordinary share of $0.13" — 논갭 문맥이 같은 문장 앞쪽에 있음.
+    # 금액($5.5)의 소수점과 줄바꿈이 사이에 끼므로 문장 종료(.)로 끊지 않고
+    # 거리로만 제한합니다.
+    # 여백 패딩(공백 60~70자 + 줄바꿈)이 문장 중간에 끼는 실물이 있어 220자.
+    r"non[-\s]?GAAP\s+net\s+profit[\s\S]{0,220}?\bor\s+earnings\s+per\s+diluted"
+    r"\s+(?:ordinary\s+)?share",
     r"non[-\s]?GAAP\s+(?:diluted\s+)?EPS",
     r"adjusted\s+(?:diluted\s+)?EPS",
     r"(?:earnings|income)\s+per\s+(?:diluted\s+)?share\s*\(non[-\s]?GAAP\)",
@@ -373,7 +388,8 @@ LABELS_ADJUSTED_EPS = [
 #    매칭되므로, 실제 채택할 때 앞을 되돌아보며 논갭 표기를 걸러 냅니다
 #    (find_eps_value 의 exclude_nongaap).
 LABELS_GAAP_EPS = [
-    rf"(?<!non-)(?<!non )GAAP\s+(?:diluted\s+)?(?:net\s+)?{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
+    rf"(?<!non-)(?<!non )GAAP\s+(?:(?:net|diluted)\s+){{0,2}}\(?{_PROFIT_WORD}\)?"
+    r"\s+per\s+(?:diluted\s+)?(?:ordinary\s+)?share",
     r"(?<!non-)(?<!non )GAAP\s+(?:diluted\s+)?EPS",
     rf"net\s+{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
     rf"diluted\s+{_PROFIT_WORD}\s+per\s+share",
@@ -589,6 +605,21 @@ def _sanity_check_press(result: dict) -> None:
     비워 두면 XBRL에서 온 매출이 그대로 남아 계산이 이어집니다.
     """
     revenue, op_income = result.get("revenue"), result.get("op_income")
+    ebitda = result.get("adjusted_ebitda")
+
+    # 조정 EBITDA 검사 (8차 감사 후속 — 실물 오류 2건에서 규칙을 만듦):
+    # ① $10만 미만은 주당 금액·퍼센트가 잘못 잡힌 것 (실물: FSLR 에서 1.0)
+    if ebitda is not None and abs(ebitda) < 100_000:
+        result["rejected_ebitda"] = ebitda
+        result["adjusted_ebitda"] = ebitda = None
+    # ② EBITDA 가 매출보다 크면 산수 모순 — **매출 쪽을** 버립니다.
+    #    (실물: ZETA 에서 가이던스 상향 폭 $33M 이 매출로 잘못 잡힘. 매출은
+    #    버려도 XBRL 원문이 대신 남지만 EBITDA 는 대체재가 없고, EBITDA 는
+    #    라벨에 붙어 뽑혀 오답 확률이 낮습니다)
+    if ebitda is not None and revenue is not None and ebitda > revenue:
+        result["rejected_revenue"] = revenue
+        result["revenue"] = revenue = None
+
     if revenue is None or op_income is None:
         return
     # 흑자면 영업이익이 매출의 90%를 넘을 수 없습니다.
@@ -789,6 +820,12 @@ def fetch_earnings_8k(
     if report is None:
         report = new_report(ticker)
 
+    # 파서가 틀린 값을 가져오는 형식의 회사는 건너뜁니다 (config 에 사유 기록).
+    # "없음"은 안전하고 "틀림"은 위험합니다.
+    if ticker in cfg.PRESS_PARSE_SKIP:
+        report["note"] = "보도자료 형식 미지원(config.PRESS_PARSE_SKIP) — XBRL 근사만 사용"
+        return []
+
     _ensure_identity()
     from edgar import Company
 
@@ -842,6 +879,7 @@ def fetch_earnings_8k(
             parsed["revenue"] is None
             and parsed["op_income"] is None
             and parsed["adj_eps"] is None
+            and parsed["adjusted_ebitda"] is None
         ):
             continue
 
@@ -869,6 +907,10 @@ def fetch_earnings_8k(
                 "op_income": parsed["op_income"],
                 "gross_margin_pct": parsed["gross_margin_pct"],
                 "adj_eps": parsed["adj_eps"],
+                # 조정 EPS 미발표 회사(ZETA·APP 등)의 대체 잣대. 예전에는 이 복사가
+                # 빠져 있어서 _apply_press_to_row 의 EBITDA 역산이 실행 불가능한
+                # 위치에 있었습니다 (루멘텀 사건과 같은 유형 — 9차 감사에서 발견).
+                "adjusted_ebitda": parsed["adjusted_ebitda"],
                 "gaap_eps": parsed["gaap_eps"],
                 "source": parsed["source"] or cfg.SRC_DERIVED,
                 "gm_is_gaap": parsed["gm_is_gaap"],
@@ -1458,9 +1500,15 @@ def merge_quarters(
         if period_date is None:
             continue
 
-        # 이 분기 종료 후 일정 기간 안에 나온 8-K 중 가장 가까운 것을 짝짓습니다
-        # (연말 분기는 10-K와 함께 늦게 발표하는 회사가 있어 창을 넉넉히 둡니다)
-        best_index, best_gap = None, None
+        # 이 분기 종료 후 일정 기간 안에 나온 8-K 중에서 고릅니다
+        # (연말 분기는 10-K와 함께 늦게 발표하는 회사가 있어 창을 넉넉히 둡니다).
+        #
+        # ⚠️ 거리보다 **알맹이 우선**: 예비 매출 공지(EPS·이익 없음)가 분기
+        #    종료일에 더 가깝다는 이유로 진짜 실적 발표를 밀어내고 분기를
+        #    차지하는 사고가 있었습니다 (실물: CRDO 26Q3 — 02-09 예비 공지가
+        #    이기고 03-02 실적 발표의 EPS $1.07 이 통째로 버려짐, 9차 감사).
+        #    이익 숫자(조정EPS·영업이익·조정EBITDA)를 실은 발표가 항상 이깁니다.
+        best_index, best_gap, best_rank = None, None, None
         for index, press in enumerate(press_quarters):
             if index in used_press or index in promote_only:
                 continue
@@ -1470,6 +1518,11 @@ def merge_quarters(
             gap = (press_date - period_date).days
             if not (0 <= gap <= cfg.PAIRING_WINDOW_DAYS):
                 continue
+            rank = 0 if (
+                press.get("adj_eps") is not None
+                or press.get("op_income") is not None
+                or press.get("adjusted_ebitda") is not None
+            ) else 1
 
             # ⚠️ **이 8-K 를 더 가깝게 받을 분기가 따로 있으면 가져가지 않습니다.**
             #
@@ -1498,8 +1551,8 @@ def merge_quarters(
             if stolen:
                 continue
 
-            if best_gap is None or gap < best_gap:
-                best_index, best_gap = index, gap
+            if best_rank is None or (rank, gap) < (best_rank, best_gap):
+                best_index, best_gap, best_rank = index, gap, rank
 
         if best_index is None:
             continue

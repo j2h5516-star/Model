@@ -38,6 +38,7 @@ EPS_FIELDS = (
     "revenue",
     "op_income",
     "adj_eps",
+    "adjusted_ebitda",   # 조정 EPS 미발표 회사(ZETA·APP 등)의 대체 잣대 — 회사 발표 원문
     "gaap_eps",
     "source",
 )
