@@ -1,560 +1,560 @@
 {
- "ran_at": "2026-08-13T10:02:44.072126+00:00",
+ "ran_at": "2026-08-13T10:22:52.994997+00:00",
  "tickers": 79,
- "summary": "조정 EPS 시계열 79종목 · 일봉 80종목(기준지수 포함) · 파싱 실패 원문 113건",
- "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 채택 · H6_결합_H5bxH2b: 미채택",
+ "summary": "조정 EPS 시계열 79종목 · 일봉 80종목(기준지수 포함) · 파싱 실패 원문 115건",
+ "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 채택 · H6_결합_H5bxH2b: 판정 불가 · H7_EBITDA_첫돌파: 판정 불가 · H8_GAAPEPS_첫돌파: 판정 불가",
  "per_ticker": [
   {
    "ticker": "CRDO",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 9.9,
+   "seconds": 6.2,
    "first_error": ""
   },
   {
    "ticker": "CLS",
    "adj_eps_ok": 9,
    "merged_direct": 1,
-   "seconds": 17.7,
+   "seconds": 11.2,
    "first_error": ""
   },
   {
    "ticker": "MU",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 14.9,
+   "seconds": 9.4,
    "first_error": ""
   },
   {
    "ticker": "SNDK",
    "adj_eps_ok": 7,
    "merged_direct": 6,
-   "seconds": 7.1,
+   "seconds": 4.6,
    "first_error": ""
   },
   {
    "ticker": "LITE",
    "adj_eps_ok": 19,
    "merged_direct": 0,
-   "seconds": 12.4,
+   "seconds": 8.4,
    "first_error": ""
   },
   {
    "ticker": "STRL",
    "adj_eps_ok": 13,
    "merged_direct": 8,
-   "seconds": 27.7,
+   "seconds": 15.9,
    "first_error": ""
   },
   {
    "ticker": "MXL",
    "adj_eps_ok": 20,
    "merged_direct": 19,
-   "seconds": 14.6,
+   "seconds": 7.1,
    "first_error": ""
   },
   {
    "ticker": "COHR",
    "adj_eps_ok": 14,
    "merged_direct": 9,
-   "seconds": 44.7,
+   "seconds": 26.4,
    "first_error": ""
   },
   {
    "ticker": "TTMI",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 11.6,
+   "seconds": 6.5,
    "first_error": ""
   },
   {
    "ticker": "ICHR",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 14.5,
+   "seconds": 8.1,
    "first_error": ""
   },
   {
    "ticker": "AMD",
    "adj_eps_ok": 19,
    "merged_direct": 20,
-   "seconds": 19.4,
+   "seconds": 11.6,
    "first_error": ""
   },
   {
    "ticker": "PLTR",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 11.4,
+   "seconds": 6.8,
    "first_error": ""
   },
   {
    "ticker": "ZETA",
    "adj_eps_ok": 0,
    "merged_direct": 7,
-   "seconds": 8.1,
+   "seconds": 4.7,
    "first_error": ""
   },
   {
    "ticker": "INTC",
    "adj_eps_ok": 18,
    "merged_direct": 16,
-   "seconds": 20.5,
+   "seconds": 12.6,
    "first_error": ""
   },
   {
    "ticker": "ENPH",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 9.6,
+   "seconds": 5.8,
    "first_error": ""
   },
   {
    "ticker": "SWKS",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 17.3,
+   "seconds": 11.3,
    "first_error": ""
   },
   {
    "ticker": "PYPL",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 20.7,
+   "seconds": 12.8,
    "first_error": ""
   },
   {
    "ticker": "QRVO",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 12.5,
+   "seconds": 8.5,
    "first_error": ""
   },
   {
    "ticker": "APP",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 28.4,
+   "seconds": 18.4,
    "first_error": ""
   },
   {
    "ticker": "NVDA",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 12.2,
+   "seconds": 7.3,
    "first_error": ""
   },
   {
    "ticker": "ANET",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 9.1,
+   "seconds": 5.9,
    "first_error": ""
   },
   {
    "ticker": "FN",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 11.2,
+   "seconds": 5.9,
    "first_error": ""
   },
   {
    "ticker": "SMCI",
    "adj_eps_ok": 15,
    "merged_direct": 13,
-   "seconds": 30.2,
+   "seconds": 18.4,
    "first_error": ""
   },
   {
    "ticker": "LSCC",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 15.8,
+   "seconds": 9.7,
    "first_error": ""
   },
   {
    "ticker": "SYNA",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 18.2,
+   "seconds": 10.7,
    "first_error": ""
   },
   {
    "ticker": "UCTT",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 44.4,
+   "seconds": 25.6,
    "first_error": ""
   },
   {
    "ticker": "ONTO",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 11.1,
+   "seconds": 7.0,
    "first_error": ""
   },
   {
    "ticker": "IPGP",
    "adj_eps_ok": 10,
    "merged_direct": 6,
-   "seconds": 14.6,
+   "seconds": 9.1,
    "first_error": ""
   },
   {
    "ticker": "CGNX",
    "adj_eps_ok": 16,
    "merged_direct": 17,
-   "seconds": 8.9,
+   "seconds": 4.8,
    "first_error": ""
   },
   {
    "ticker": "AVGO",
    "adj_eps_ok": 19,
    "merged_direct": 1,
-   "seconds": 27.3,
+   "seconds": 15.2,
    "first_error": ""
   },
   {
    "ticker": "QCOM",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 16.7,
+   "seconds": 9.2,
    "first_error": ""
   },
   {
    "ticker": "TXN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 12.4,
+   "seconds": 7.4,
    "first_error": ""
   },
   {
    "ticker": "ADI",
    "adj_eps_ok": 15,
    "merged_direct": 13,
-   "seconds": 16.7,
+   "seconds": 11.3,
    "first_error": ""
   },
   {
    "ticker": "MCHP",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 16.9,
+   "seconds": 10.7,
    "first_error": ""
   },
   {
    "ticker": "NXPI",
    "adj_eps_ok": 11,
    "merged_direct": 11,
-   "seconds": 13.3,
+   "seconds": 7.6,
    "first_error": ""
   },
   {
    "ticker": "MRVL",
    "adj_eps_ok": 18,
    "merged_direct": 16,
-   "seconds": 14.1,
+   "seconds": 10.6,
    "first_error": ""
   },
   {
    "ticker": "KLAC",
    "adj_eps_ok": 22,
    "merged_direct": 22,
-   "seconds": 12.7,
+   "seconds": 9.0,
    "first_error": ""
   },
   {
    "ticker": "LRCX",
    "adj_eps_ok": 17,
    "merged_direct": 17,
-   "seconds": 11.2,
+   "seconds": 8.3,
    "first_error": ""
   },
   {
    "ticker": "AMAT",
    "adj_eps_ok": 20,
    "merged_direct": 17,
-   "seconds": 17.2,
+   "seconds": 10.6,
    "first_error": ""
   },
   {
    "ticker": "TER",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 20.1,
+   "seconds": 11.1,
    "first_error": ""
   },
   {
    "ticker": "ENTG",
    "adj_eps_ok": 20,
    "merged_direct": 19,
-   "seconds": 30.6,
+   "seconds": 18.5,
    "first_error": ""
   },
   {
    "ticker": "MKSI",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 20.3,
+   "seconds": 11.1,
    "first_error": ""
   },
   {
    "ticker": "FORM",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 9.8,
+   "seconds": 5.4,
    "first_error": ""
   },
   {
    "ticker": "ACLS",
    "adj_eps_ok": 7,
    "merged_direct": 6,
-   "seconds": 10.8,
+   "seconds": 5.6,
    "first_error": ""
   },
   {
    "ticker": "AMBA",
    "adj_eps_ok": 6,
    "merged_direct": 7,
-   "seconds": 8.6,
+   "seconds": 5.4,
    "first_error": ""
   },
   {
    "ticker": "POWI",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 13.0,
+   "seconds": 6.8,
    "first_error": ""
   },
   {
    "ticker": "DIOD",
    "adj_eps_ok": 19,
    "merged_direct": 10,
-   "seconds": 11.1,
+   "seconds": 7.7,
    "first_error": ""
   },
   {
    "ticker": "SLAB",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 10.4,
+   "seconds": 7.3,
    "first_error": ""
   },
   {
    "ticker": "MPWR",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 10.1,
+   "seconds": 6.4,
    "first_error": ""
   },
   {
    "ticker": "CIEN",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 32.2,
+   "seconds": 20.5,
    "first_error": ""
   },
   {
    "ticker": "EXTR",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 18.7,
+   "seconds": 10.9,
    "first_error": ""
   },
   {
    "ticker": "NTAP",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 113.1,
+   "seconds": 57.8,
    "first_error": ""
   },
   {
    "ticker": "P",
    "adj_eps_ok": 0,
    "merged_direct": 19,
-   "seconds": 10.0,
+   "seconds": 6.3,
    "first_error": ""
   },
   {
    "ticker": "WDC",
    "adj_eps_ok": 21,
    "merged_direct": 14,
-   "seconds": 32.7,
+   "seconds": 20.2,
    "first_error": ""
   },
   {
    "ticker": "STX",
    "adj_eps_ok": 22,
    "merged_direct": 19,
-   "seconds": 23.8,
+   "seconds": 15.2,
    "first_error": ""
   },
   {
    "ticker": "DELL",
    "adj_eps_ok": 20,
    "merged_direct": 17,
-   "seconds": 40.2,
+   "seconds": 21.0,
    "first_error": ""
   },
   {
    "ticker": "VIAV",
    "adj_eps_ok": 18,
    "merged_direct": 7,
-   "seconds": 16.1,
+   "seconds": 9.1,
    "first_error": ""
   },
   {
    "ticker": "AAOI",
    "adj_eps_ok": 19,
    "merged_direct": 2,
-   "seconds": 35.2,
+   "seconds": 20.3,
    "first_error": ""
   },
   {
    "ticker": "TWLO",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 12.1,
+   "seconds": 7.1,
    "first_error": ""
   },
   {
    "ticker": "DDOG",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 7.4,
+   "seconds": 4.6,
    "first_error": ""
   },
   {
    "ticker": "NET",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 12.9,
+   "seconds": 7.2,
    "first_error": ""
   },
   {
    "ticker": "MDB",
    "adj_eps_ok": 20,
    "merged_direct": 17,
-   "seconds": 10.4,
+   "seconds": 5.7,
    "first_error": ""
   },
   {
    "ticker": "SNOW",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 414.4,
+   "seconds": 216.1,
    "first_error": ""
   },
   {
    "ticker": "OKTA",
    "adj_eps_ok": 19,
    "merged_direct": 14,
-   "seconds": 8.1,
+   "seconds": 5.7,
    "first_error": ""
   },
   {
    "ticker": "ZS",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 7.7,
+   "seconds": 4.6,
    "first_error": ""
   },
   {
    "ticker": "CRWD",
    "adj_eps_ok": 19,
    "merged_direct": 15,
-   "seconds": 12.3,
+   "seconds": 6.8,
    "first_error": ""
   },
   {
    "ticker": "S",
    "adj_eps_ok": 19,
    "merged_direct": 5,
-   "seconds": 10.2,
+   "seconds": 6.7,
    "first_error": ""
   },
   {
    "ticker": "HUBS",
    "adj_eps_ok": 21,
    "merged_direct": 15,
-   "seconds": 26.2,
+   "seconds": 14.1,
    "first_error": ""
   },
   {
    "ticker": "BILL",
    "adj_eps_ok": 19,
    "merged_direct": 16,
-   "seconds": 15.2,
+   "seconds": 9.4,
    "first_error": ""
   },
   {
    "ticker": "U",
    "adj_eps_ok": 11,
    "merged_direct": 2,
-   "seconds": 20.7,
+   "seconds": 12.7,
    "first_error": ""
   },
   {
    "ticker": "ROKU",
    "adj_eps_ok": 0,
    "merged_direct": 13,
-   "seconds": 15.9,
+   "seconds": 7.8,
    "first_error": ""
   },
   {
    "ticker": "SNAP",
    "adj_eps_ok": 12,
    "merged_direct": 9,
-   "seconds": 34.2,
+   "seconds": 13.7,
    "first_error": ""
   },
   {
    "ticker": "ZM",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 7.1,
+   "seconds": 5.3,
    "first_error": ""
   },
   {
    "ticker": "DOCU",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 14.1,
+   "seconds": 7.6,
    "first_error": ""
   },
   {
    "ticker": "TSLA",
-   "adj_eps_ok": 0,
+   "adj_eps_ok": 13,
    "merged_direct": 0,
-   "seconds": 0.5,
+   "seconds": 7.8,
    "first_error": ""
   },
   {
    "ticker": "TTD",
    "adj_eps_ok": 20,
    "merged_direct": 5,
-   "seconds": 18.0,
+   "seconds": 6.7,
    "first_error": ""
   },
   {
    "ticker": "FSLR",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 15.3,
+   "seconds": 9.8,
    "first_error": ""
   },
   {
    "ticker": "SEDG",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 20.0,
+   "seconds": 11.4,
    "first_error": ""
   },
   {
    "ticker": "GNRC",
    "adj_eps_ok": 5,
    "merged_direct": 18,
-   "seconds": 15.8,
+   "seconds": 9.4,
    "first_error": ""
   }
  ]
