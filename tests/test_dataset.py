@@ -74,6 +74,18 @@ def test_absurd_per_share_value_becomes_none():
     assert any("202.0" in n for n in result["notes"]), result["notes"]
 
 
+def test_tiny_revenue_is_dropped():
+    """자릿수가 무너진 매출(실물: APP 21Q4 rev=3.55달러)은 없음 처리.
+
+    주당 금액·백만 단위 착오가 매출 칸에 들어온 실측 3건 —
+    이 유니버스에 분기 매출 1만 달러 미만 회사는 없습니다.
+    """
+    snap = make_snapshot(eps={"AAA": [quarter_row(revenue=3.55)]})
+    result = dataset.build(snap)
+    assert result["quarters"]["AAA"][0]["revenue"] is None
+    assert any("3.55" in n for n in result["notes"])
+
+
 def test_normal_large_eps_passes():
     """검증된 정상 최대값(SNDK 39.25)은 상한 안이므로 통과해야 합니다."""
     snap = make_snapshot(eps={"AAA": [quarter_row(adj_eps=39.25)]})

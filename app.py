@@ -261,6 +261,31 @@ def main():
     st.caption("· 시장 게이지(H5b) — " + hypothesis_note(verdict if is_v3 else None,
                                                         "H5b_실적폭_중앙값"))
 
+    # --- 사이클 테마별 폭 (관찰) — 2026 AI 사이클 기준 (저장소 주인 정의) ---
+    st.subheader("사이클 테마별 실적 폭 (관찰 · 2026 AI 사이클)")
+    st.caption(
+        "업종이 아니라 현재 사이클(AI)의 역할로 묶은 관찰값입니다. "
+        "분류는 사람의 판단이며, 사전 등록된 신호가 아니므로 판정·추천에 "
+        "쓰지 않습니다. 사이클이 바뀌면 분류를 새로 정의합니다."
+    )
+    by_theme: dict = {}
+    for ticker in ds["tickers"]:
+        by_theme.setdefault(cfg.theme_of(ticker), []).append(ticker)
+    theme_rows = []
+    today = ds["prices"][ds["benchmark"]]["dates"][-1]
+    for theme, members in by_theme.items():
+        series = me.gauge_series(ds, tickers=members)
+        value = me.gauge_at(series, today)
+        above = me.gauge_h5b_on(series, today)
+        theme_rows.append((theme, len(members), value,
+                           {True: "평소보다 높음", False: "평소 이하",
+                            None: "판단 불가"}[above]))
+    theme_rows.sort(key=lambda r: (r[2] is not None, r[2] or 0), reverse=True)
+    for theme, n, value, above in theme_rows:
+        vt = f"{value}%" if value is not None else "값 없음"
+        st.markdown(f"**{theme}** ({n}종목) — {vt}"
+                    + (f" · {above}" if value is not None else ""))
+
     # --- 섹터별 폭 (관찰) — 어느 무리에서 신기록이 나오고 있나 ---
     st.subheader("섹터별 실적 폭 (관찰)")
     st.caption(

@@ -21,7 +21,9 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    # 3차 확장(160종목, 종목당 ~25초)으로 수집이 ~70분까지 늘어
+    # 한도를 늘립니다 (2026-08-13)
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
 
