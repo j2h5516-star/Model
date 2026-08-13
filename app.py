@@ -145,6 +145,37 @@ def gauge_now(ds: dict) -> dict:
     return {"value": value, "h5b": h5b, "asof": today}
 
 
+def sector_gauge_rows(ds: dict) -> list[dict]:
+    """섹터별 실적 폭 (관찰용 — 사전 등록된 가설이 아님, 판정에 안 씀).
+
+    각 섹터에 대해 시장 게이지와 같은 계산을 그 섹터 종목만으로 하고,
+    "평소(자기 이력 중앙값) 대비"도 같은 방법으로 봅니다.
+    게이지가 높은 섹터부터 정렬합니다 — 신기록이 무리 지어 나오는
+    무리(주도 후보)가 위로 옵니다.
+    """
+    today = ds["prices"][ds["benchmark"]]["dates"][-1]
+    by_sector: dict[str, list[str]] = {}
+    for ticker in ds["tickers"]:
+        by_sector.setdefault(cfg.SECTORS.get(ticker, "미분류"), []).append(ticker)
+
+    rows = []
+    for sector, members in by_sector.items():
+        series = me.gauge_series(ds, tickers=members)
+        value = me.gauge_at(series, today)
+        above = me.gauge_h5b_on(series, today)
+        rows.append(
+            {
+                "섹터": sector,
+                "종목수": len(members),
+                "게이지": value,
+                "평소대비": {True: "평소보다 높음", False: "평소 이하",
+                             None: "판단 불가"}[above],
+            }
+        )
+    rows.sort(key=lambda r: (r["게이지"] is not None, r["게이지"] or 0), reverse=True)
+    return rows
+
+
 def hypothesis_note(verdict: dict | None, name: str) -> str:
     """정직화 문구: 그 상태의 과거 실측 + 판정 상태 (verdict 에서 복사)."""
     if not verdict or name not in (verdict.get("가설") or {}):
@@ -222,6 +253,20 @@ def main():
         st.write(f"상태: **{h5b_text}** ({gauge['asof']} 기준)")
     st.caption("· 시장 게이지(H5b) — " + hypothesis_note(verdict if is_v3 else None,
                                                         "H5b_실적폭_중앙값"))
+
+    # --- 섹터별 폭 (관찰) — 어느 무리에서 신기록이 나오고 있나 ---
+    st.subheader("섹터별 실적 폭 (관찰)")
+    st.caption(
+        "시장 게이지를 섹터 무리별로 쪼갠 관찰값입니다. 사전 등록된 신호가 "
+        "아니므로 판정·추천에 쓰지 않습니다. 종목 수가 적은 섹터일수록 "
+        "값이 계단처럼 크게 튑니다 — 참고로만 보세요."
+    )
+    for row in sector_gauge_rows(ds):
+        value_text = f"{row['게이지']}%" if row["게이지"] is not None else "값 없음"
+        st.markdown(
+            f"**{row['섹터']}** ({row['종목수']}종목) — {value_text}"
+            + (f" · {row['평소대비']}" if row["게이지"] is not None else "")
+        )
 
     st.subheader(f"종목 — 최근 {RECENT_DAYS}일 발표")
     recent = recent_ticker_rows(ds)
