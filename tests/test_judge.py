@@ -124,6 +124,23 @@ def test_ladder_groups_have_separate_baselines():
     assert h2b["기준선"]["n"] == 30, h2b        # 조정 EPS 그룹만
 
 
+def test_h9_undervalued_first_breakout():
+    """H9 (21차 등록): 첫 신기록 ∧ 52주선 아래. 표본은 판단 가능 사건만."""
+    sig = [event(streak=1, excess=50.0) for _ in range(12)]
+    for e in sig: e["below52"] = True
+    above = [event(streak=1, excess=0.0) for _ in range(10)]
+    for e in above: e["below52"] = False
+    unknown = [event(excess=0.0) for _ in range(20)]
+    for e in unknown: e["below52"] = None
+    rest = [event(excess=0.0) for _ in range(30)]
+    for e in rest: e["below52"] = False
+    result = judge.run(sig + above + unknown + rest)
+    h9 = result["가설"]["H9_저평가_첫신기록"]["신규(판정)"]
+    assert h9["기준선"]["n"] == 52, h9        # 판단 불가 20건 제외
+    assert h9["신호"]["n"] == 12, h9
+    assert result["가설"]["H9_저평가_첫신기록"]["판정"] in ("채택", "미채택")
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
