@@ -25,7 +25,10 @@ import time
 from datetime import datetime, timezone
 
 import config as cfg
+import dataset
+import judge
 import market_data as md
+import measure_engine
 import measure_store
 import sec_fundamentals as sf
 
@@ -96,14 +99,29 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
 
     files, summary = measure_store.build_files(tickers, daily_map, reports)
 
-    # v3 재건축 0단계: 자동 판정(verdict.py)은 v2 측정 계층과 함께 철거했습니다.
-    # 로봇은 지금 **수집만** 합니다 — 판정 장치는 v3 5단계에서 새로 만듭니다.
+    # v3 5단계 — 수집 성공 시 등록된 판정(11차)을 자동 계산합니다 (사람 개입 없음).
+    # 방금 만든 snapshot 내용으로 데이터 계층 → 측정 장치 → 자동 판정 순서.
+    # ⚠️ 판정이 실패해도 그날의 **데이터 커밋은 막지 않습니다** — 데이터가 더
+    #    귀합니다. 대신 실패를 로봇 기록에 남겨 조용히 넘어가지 않게 합니다.
+    try:
+        snap = json.loads(files[f"{cfg.MEASURE_DIR}/snapshot.json"])
+        events, _skipped = measure_engine.collect_events(dataset.build(snap))
+        verdict = judge.run(events)
+        files[f"{cfg.MEASURE_DIR}/verdict.json"] = judge.to_json(verdict)
+        verdict_note = " · ".join(
+            f"{name}: {entry['판정']}" for name, entry in verdict["가설"].items()
+        )
+        progress(f"자동 판정 — {verdict_note}")
+    except Exception as exc:
+        verdict_note = f"판정 실패: {type(exc).__name__}: {str(exc)[:160]}"
+        progress(f"⚠️ {verdict_note}")
 
     # 로봇 실행 기록 — 다음 세션이 읽습니다
     log = {
         "ran_at": datetime.now(timezone.utc).isoformat(),
         "tickers": len(tickers),
         "summary": summary,
+        "verdict": verdict_note,
         "per_ticker": [
             {
                 "ticker": r.get("ticker"),
