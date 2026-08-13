@@ -559,6 +559,83 @@ def test_8k_still_pairs_when_it_is_the_only_candidate_quarter():
     assert merged[0]["source"] == cfg.SRC_DIRECT
 
 
+# ---------------------------------------------------------------------------
+# XBRL GAAP EPS — 구조화 데이터에서 주당순이익 뽑기 (조정 EPS 미발표 회사 커버)
+# ---------------------------------------------------------------------------
+class _FakeFacts:
+    """edgartools facts 흉내 — query().by_concept().by_period_length().to_dataframe()"""
+
+    def __init__(self, rows):
+        self._rows = rows      # [{concept, unit, period_end, numeric_value, months}]
+
+    def query(self):
+        return self
+
+    def by_concept(self, concept):
+        self._concept = concept.lower()
+        return self
+
+    def by_period_length(self, months):
+        self._months = months
+        return self
+
+    def to_dataframe(self):
+        import pandas as pd
+        picked = [
+            {k: r[k] for k in ("concept", "unit", "period_end", "numeric_value")}
+            for r in self._rows
+            # 실제 edgartools 처럼 부분일치로 딸려 오는 상황을 흉내냅니다
+            if self._concept in r["concept"].lower() and r["months"] == self._months
+        ]
+        return pd.DataFrame(picked)
+
+
+def _eps_fact(period_end, value, months=3, concept="us-gaap:EarningsPerShareDiluted"):
+    return {"concept": concept, "unit": "USD/shares",
+            "period_end": period_end, "numeric_value": value, "months": months}
+
+
+def test_xbrl_concepts_include_gaap_eps():
+    """XBRL 개념 목록에 주당순이익이 등록되어 있어야 합니다."""
+    assert "gaap_eps" in sf._XBRL_CONCEPTS
+    assert "EarningsPerShareDiluted" in sf._XBRL_CONCEPTS["gaap_eps"]
+
+
+def test_period_series_unit_filter_by_kind():
+    """달러 시계열은 주당 금액을 거부하고, 주당 시계열은 받아야 합니다."""
+    facts = _FakeFacts([_eps_fact("2025-03-31", 1.26)])
+    # 기본(달러) 조회 — 주당 금액은 단위가 달라 거부
+    assert sf._period_series(facts, "EarningsPerShareDiluted", months=3) == {}
+    # 주당 단위로 조회하면 받아들임
+    got = sf._period_series(
+        facts, "EarningsPerShareDiluted", months=3, unit="USD/SHARES"
+    )
+    assert got == {"2025-03-31": 1.26}, got
+
+
+def test_xbrl_eps_is_not_q4_filled():
+    """EPS 는 비율이라 `연간 − 3분기합`이 4분기 값이 아닙니다 — 채우면 창작.
+
+    영업이익(달러)은 같은 상황에서 4분기가 채워져야 하고,
+    주당순이익은 채워지지 않아야 합니다.
+    """
+    quarter_ends = ("2024-03-31", "2024-06-30", "2024-09-30")
+    rows = (
+        [_eps_fact(d, 1.0) for d in quarter_ends]
+        + [_eps_fact("2024-12-31", 5.0, months=12)]      # 연간 EPS 만 있음
+        + [{"concept": "us-gaap:OperatingIncomeLoss", "unit": "USD",
+            "period_end": d, "numeric_value": 100.0, "months": 3}
+           for d in quarter_ends]
+        + [{"concept": "us-gaap:OperatingIncomeLoss", "unit": "USD",
+            "period_end": "2024-12-31", "numeric_value": 500.0, "months": 12}]
+    )
+    facts = _FakeFacts(rows)
+    eps = sf._series_for_key("gaap_eps", facts, None)
+    op = sf._series_for_key("op_income", facts, None)
+    assert "2024-12-31" not in eps, eps          # EPS Q4 는 없음으로 남아야 함
+    assert op.get("2024-12-31") == 200.0, op     # 500 − (100×3) = 200 채움
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

@@ -1214,7 +1214,13 @@ _XBRL_CONCEPTS = {
         "RevenueFromContractWithCustomerIncludingAssessedTax",
     ],
     "gross_profit": ["GrossProfit"],
+    # GAAP 희석 주당순이익 — 조정 EPS 를 발표하지 않는 회사(TXN·TSLA·FSLR)의
+    # 사다리 잣대 재료 (10차 후속 대책 4). 구조화 데이터라 파싱 위험이 없습니다.
+    "gaap_eps": ["EarningsPerShareDiluted"],
 }
+
+# 항목별 단위 — 적지 않으면 달러(USD). 주당 금액은 단위가 다릅니다.
+_XBRL_UNITS = {"gaap_eps": "USD/SHARES"}
 
 
 def fetch_xbrl_approximation(
@@ -1245,18 +1251,8 @@ def fetch_xbrl_approximation(
 
     # 개념별로 "분기(3개월)" 데이터를 뽑고, 빠진 4분기를 채워 넣습니다
     series: dict[str, dict[str, float]] = {}
-    for key, concept_names in _XBRL_CONCEPTS.items():
-        merged: dict[str, float] = {}
-        for concept in concept_names:
-            merged.update(_quarterly_series(facts, concept, report))
-
-        # 연간(12개월) 값도 함께 가져와 빠진 4분기를 계산해 채웁니다
-        annual: dict[str, float] = {}
-        for concept in concept_names:
-            annual.update(_annual_series(facts, concept, report))
-        merged = _fill_missing_q4(merged, annual)
-
-        series[key] = merged
+    for key in _XBRL_CONCEPTS:
+        series[key] = _series_for_key(key, facts, report)
 
     period_ends = sorted(
         d for d in series.get("op_income", {}) if d >= start_date
@@ -1296,6 +1292,11 @@ def fetch_xbrl_approximation(
         gaap_op = series["op_income"].get(period_end)
         if gaap_op is None:
             continue
+
+        # GAAP 희석 EPS — 구조화 값 그대로. 비상식 크기만 없음 처리 (2차 방어)
+        gaap_eps = series.get("gaap_eps", {}).get(period_end)
+        if gaap_eps is not None and abs(gaap_eps) > cfg.EPS_MAX_ABS:
+            gaap_eps = None
 
         sbc = (series["sbc"].get(period_end) or 0.0) if consistent["sbc"] else 0.0
         amort = (
@@ -1337,6 +1338,7 @@ def fetch_xbrl_approximation(
                 "period_label": period_end_label(period_end),
                 "revenue": revenue,
                 "op_income": approx_op,   # 논갭 근사
+                "gaap_eps": gaap_eps,     # GAAP 희석 EPS (XBRL 구조화 — 근사 아님)
                 "da": da,                 # 감가상각비 — EBITDA 역산에 씁니다
                 "gross_margin_pct": gm_pct,
                 "source": cfg.SRC_APPROX,
@@ -1358,12 +1360,34 @@ def fetch_xbrl_approximation(
     return quarters
 
 
-def _quarterly_series(facts, concept: str, report: dict | None = None) -> dict[str, float]:
+def _series_for_key(key: str, facts, report: dict | None = None) -> dict[str, float]:
+    """개념 묶음(key) 하나의 분기 시계열을 만듭니다.
+
+    달러 항목은 빠진 4분기를 `연간 − (1+2+3분기)` 로 채우지만,
+    ⚠️ **gaap_eps 는 채우지 않습니다.** EPS 는 비율(주당 금액)이라
+    연간 EPS 에서 분기 EPS 합을 빼도 4분기 EPS 가 아닙니다
+    (주식 수가 분기마다 다릅니다). 없으면 없는 채로 둡니다 — 창작 금지.
+    """
+    unit = _XBRL_UNITS.get(key, "USD")
+    merged: dict[str, float] = {}
+    for concept in _XBRL_CONCEPTS[key]:
+        merged.update(_quarterly_series(facts, concept, report, unit=unit))
+    if key == "gaap_eps":
+        return merged
+    annual: dict[str, float] = {}
+    for concept in _XBRL_CONCEPTS[key]:
+        annual.update(_annual_series(facts, concept, report, unit=unit))
+    return _fill_missing_q4(merged, annual)
+
+
+def _quarterly_series(
+    facts, concept: str, report: dict | None = None, unit: str = "USD"
+) -> dict[str, float]:
     """XBRL에서 특정 항목의 분기(3개월) 값들을 {기간종료일: 값}으로 뽑습니다."""
-    return _period_series(facts, concept, months=3, report=report)
+    return _period_series(facts, concept, months=3, report=report, unit=unit)
 
 
-def _annual_series(facts, concept: str, report: dict | None = None) -> dict[str, float]:
+def _annual_series(facts, concept: str, report: dict | None = None, unit: str = "USD") -> dict[str, float]:
     """XBRL에서 특정 항목의 연간(12개월) 값들을 {기간종료일: 값}으로 뽑습니다.
 
     4분기(Q4)는 10-K에 연간으로만 신고되는 경우가 많아, 이 값이 필요합니다.
@@ -1441,7 +1465,8 @@ def _find_prior_three_quarters(
 
 
 def _period_series(
-    facts, concept: str, months: int, report: dict | None = None
+    facts, concept: str, months: int, report: dict | None = None,
+    unit: str = "USD",
 ) -> dict[str, float]:
     """XBRL에서 특정 항목을 지정한 기간 길이로 뽑아 {기간종료일: 값}으로 만듭니다.
 
@@ -1502,10 +1527,11 @@ def _period_series(
                 rejected += 1
                 continue
 
-        # ② 달러 단위만 (USD/shares, shares, pure 는 금액이 아닙니다)
+        # ② 항목에 맞는 단위만 — 달러 항목은 USD, 주당 항목은 USD/shares.
+        #    (다른 단위의 값이 섞이면 자릿수가 무너집니다 — 배포 사고의 원인)
         if unit_col is not None:
-            unit = str(row[unit_col]).strip().upper()
-            if unit and unit != "USD":
+            row_unit = str(row[unit_col]).strip().upper()
+            if row_unit and row_unit != unit.upper():
                 rejected += 1
                 continue
 
