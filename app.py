@@ -37,12 +37,13 @@ V3_HYPOTHESES = (
     "H2_신고점", "H2b_신고점_첫돌파", "H5_실적폭_고정20",
     "H5b_실적폭_중앙값", "H6_결합_H5bxH2b",
 )
+# 화면 이름은 쉬운 한국어로, 괄호 안 H번호는 등록 문서와 잇는 꼬리표입니다.
 HYPOTHESIS_LABELS = {
-    "H2_신고점": "H2 · TTM 신고점",
-    "H2b_신고점_첫돌파": "H2b · 신고점 첫 돌파",
-    "H5_실적폭_고정20": "H5 · 실적 폭 ≥20% (고정)",
-    "H5b_실적폭_중앙값": "H5b · 실적 폭 > 자기 이력 중앙값",
-    "H6_결합_H5bxH2b": "H6 · 결합 (H5b ON × 첫 돌파)",
+    "H2_신고점": "이익 신기록 돌파 (H2)",
+    "H2b_신고점_첫돌파": "이익 첫 신기록 돌파 (H2b)",
+    "H5_실적폭_고정20": "시장 게이지 20% 고정 문턱 (H5)",
+    "H5b_실적폭_중앙값": "시장 게이지 — 평소보다 높음 (H5b)",
+    "H6_결합_H5bxH2b": "시장 좋음 × 첫 신기록 (H6)",
 }
 
 
@@ -123,6 +124,7 @@ def recent_ticker_rows(ds: dict, today: str | None = None) -> list[dict]:
         rows.append(
             {
                 "종목": ticker,
+                "섹터": cfg.SECTORS.get(ticker, "미분류"),
                 "발표일": last["announced"],
                 "TTM 조정EPS": (
                     round(last["ttm"], 2) if last["ttm"] is not None else None
@@ -206,20 +208,22 @@ def main():
         st.error(f"데이터를 읽지 못했습니다: {exc}")
         return
 
-    st.subheader("위층 — 장세 (실적 폭 게이지)")
+    st.subheader("시장 — 지금이 폭등 잘 나오는 장세인가")
     gauge = gauge_now(ds)
     if gauge["value"] is None:
         st.write("게이지 값 없음 (신선한 발표 부족)")
     else:
-        h5b_text = {True: "자기 이력 중앙값 위", False: "자기 이력 중앙값 아래",
+        h5b_text = {True: "평소(자기 과거 중앙값)보다 높음",
+                    False: "평소(자기 과거 중앙값) 이하",
                     None: "판단 불가 (이력 부족)"}[gauge["h5b"]]
-        st.metric("신고점 종목 비율", f"{gauge['value']}%", help="최근 140일 내 "
-                  "발표가 신선한 종목 중 TTM 조정 EPS 신고점 상태인 종목의 비율")
+        st.metric("이익 신기록 종목 비율", f"{gauge['value']}%",
+                  help="최근 140일 안에 실적을 발표한 종목 중, 그 발표가 "
+                  "이익(TTM 조정 EPS) 신기록이었던 종목의 비율")
         st.write(f"상태: **{h5b_text}** ({gauge['asof']} 기준)")
-    st.caption("· H5b — " + hypothesis_note(verdict if is_v3 else None,
-                                            "H5b_실적폭_중앙값"))
+    st.caption("· 시장 게이지(H5b) — " + hypothesis_note(verdict if is_v3 else None,
+                                                        "H5b_실적폭_중앙값"))
 
-    st.subheader(f"아래층 — 최근 {RECENT_DAYS}일 발표 종목")
+    st.subheader(f"종목 — 최근 {RECENT_DAYS}일 발표")
     recent = recent_ticker_rows(ds)
     if not recent:
         st.write("최근 발표 없음")
@@ -227,12 +231,31 @@ def main():
         for row in recent:
             ttm = row["TTM 조정EPS"]
             st.markdown(
-                f"**{row['종목']}** · {row['발표일']}  \n"
+                f"**{row['종목']}** ({row['섹터']}) · {row['발표일']}  \n"
                 f"{row['상태']}"
-                + (f" · TTM ${ttm}" if ttm is not None else "")
+                + (f" · 최근 4분기 이익 ${ttm}/주" if ttm is not None else "")
             )
-    st.caption("· 첫 돌파(H2b) — " + hypothesis_note(verdict if is_v3 else None,
-                                                     "H2b_신고점_첫돌파"))
+    st.caption("· 첫 신기록(H2b) — " + hypothesis_note(verdict if is_v3 else None,
+                                                       "H2b_신고점_첫돌파"))
+
+    # --- 용어 풀이 (알파벳·통계 용어를 쉬운 말로) ---
+    with st.expander("용어 풀이"):
+        st.markdown(
+            "- **TTM 조정 EPS** — 최근 4개 분기의 조정 주당순이익 합. "
+            "회사가 보도자료에 직접 발표한 숫자만 씁니다\n"
+            "- **신기록(신고점)** — 그 회사의 수집 이력 안에서 TTM 이익이 "
+            "과거 최고를 넘은 것. **첫 신기록**은 그 첫 번째 돌파\n"
+            "- **시장 게이지** — 최근에 발표한 종목 중 이익 신기록 비율. "
+            "높으면 신기록이 무리 지어 나오는 장세\n"
+            "- **SPY** — 미국 S&P500 지수를 따라가는 ETF. '시장 평균'의 "
+            "기준으로, 폭등 = 60거래일 수익이 SPY보다 +20%p 이상\n"
+            "- **n** — 표본 수 (그 상태였던 발표 사건의 개수)\n"
+            "- **윌슨 구간** — 적중률의 신뢰 범위. 표본이 적을수록 넓어져 "
+            "과신을 막습니다\n"
+            "- **H2·H2b·H5·H5b·H6** — 사전 등록된 가설의 일련번호 "
+            "(측정결과.md 의 등록 문서와 잇는 꼬리표)\n"
+            "- **UTC** — 국제 표준시. 한국 시각보다 9시간 늦습니다"
+        )
 
     # --- 한계 명시 (감추지 않는다) ---
     st.subheader("한계")
