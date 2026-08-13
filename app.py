@@ -275,21 +275,11 @@ def main():
             + (f" · {row['평소대비']}" if row["게이지"] is not None else "")
         )
 
-    st.subheader(f"종목 — 최근 {RECENT_DAYS}일 발표")
-    recent = recent_ticker_rows(ds)
-    if not recent:
-        st.write("최근 발표 없음")
-    else:
-        for row in recent:
-            ttm = row["TTM 조정EPS"]
-            yard = "" if row["잣대"] == "조정 EPS" else f" · 잣대: {row['잣대']}"
-            st.markdown(
-                f"**{row['종목']}** ({row['섹터']}) · {row['발표일']}{yard}  \n"
-                f"{row['상태']}"
-                + (f" · 최근 4분기 ${ttm:,}" if ttm is not None else "")
-            )
-    st.caption("· 첫 신기록(H2b) — " + hypothesis_note(verdict if is_v3 else None,
-                                                       "H2b_신고점_첫돌파"))
+    # 종목별 발표 목록은 별도 "원자료" 페이지로 옮겼습니다 (2026-08-13 요청).
+    # 메인 화면은 판정·시장·섹터 요약만 남깁니다.
+    st.subheader("종목")
+    st.page_link("pages/1_원자료.py",
+                 label="원자료 보기 — 종목별 최근 발표·전 종목 상태 →")
 
     # --- 용어 풀이 (알파벳·통계 용어를 쉬운 말로) ---
     with st.expander("용어 풀이"):
