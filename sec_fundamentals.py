@@ -512,6 +512,130 @@ def find_eps_value(
 
 
 # ---------------------------------------------------------------------------
+# 열 방향 표 파서 — 열 제목이 여러 줄에 쌓인 위치 정렬 표 (실물: CGNX)
+# ---------------------------------------------------------------------------
+# 문장형 파서(find_eps_value)는 글을 왼쪽→오른쪽으로 읽으므로,
+#   [Revenue] [Net Income] [Net Income per Diluted Share] [Non-GAAP ... Share*]
+# 처럼 열 제목이 3~4줄에 걸쳐 세로로 쌓이고 값이 "Current quarter" 행의
+# 몇 번째 칸에 있는 표를 읽지 못합니다 (10차 감사 B유형 — CGNX·MU 등 15건).
+# 이 파서는 그런 표에서 **확신이 설 때만** 값을 읽고, 조금이라도 구조가
+# 어긋나면 "없음"을 돌려줍니다 — 틀림이 없음보다 위험하기 때문입니다.
+
+_SEP_LINE_RE = re.compile(r"^\s*-{20,}\s*$")        # 표의 구분선
+_COL_SEG_RE = re.compile(r"\S(?:\S| (?=\S))*")       # 2칸 이상 공백으로 칸 나누기
+_ADJ_COL_RE = re.compile(r"non[-\s]?gaap|adjusted", re.I)
+_PER_SHARE_COL_RE = re.compile(r"per\s+(?:diluted\s+)?share|per\s+diluted|\bEPS\b", re.I)
+_CURRENT_ROW_RE = re.compile(r"current\s+quarter|three\s+months\s+ended", re.I)
+
+
+def _line_segments(line: str) -> list[tuple[int, int, str]]:
+    return [(m.start(), m.end(), m.group()) for m in _COL_SEG_RE.finditer(line)]
+
+
+def _cell_per_share(cell: str) -> float | None:
+    """표 칸 하나를 주당 금액으로 읽습니다.
+
+    소수점 표기($0.27)만 인정합니다 — 사고 15(소수점 없는 정수를 뭄)와
+    같은 규칙입니다. 퍼센트·대시(—)·정수는 없음.
+    """
+    cell = cell.strip()
+    if "%" in cell:
+        return None
+    negative = cell.startswith("(") and cell.rstrip().endswith(")")
+    cleaned = cell.strip("() ").replace("$", "").replace(",", "").strip()
+    if not re.fullmatch(r"\d+\.\d+", cleaned):
+        return None
+    value = float(cleaned)
+    if value > cfg.EPS_MAX_ABS:
+        return None
+    return -value if negative else value
+
+
+def find_eps_in_column_table(text: str) -> dict:
+    """위치 정렬 표에서 (조정 EPS, GAAP EPS)를 읽습니다. 못 읽으면 없음.
+
+    확신 조건 — 전부 만족해야만 값을 돌려줍니다:
+      ① 구분선(-----) 위에 열 제목 줄들이 있고
+      ② 제목을 세로로 쌓아 보면 "Non-GAAP/Adjusted ... per share" 열이 있고
+      ③ 구분선 아래에 "Current quarter"/"three months ended" 행이 있고
+      ④ 그 행의 값 칸 수가 열 수와 정확히 일치한다 (순서로 짝지음)
+    """
+    result = {"adj_eps": None, "gaap_eps": None}
+    if not text:
+        return result
+    lines = text.split("\n")
+    for sep_idx, line in enumerate(lines):
+        if not _SEP_LINE_RE.match(line):
+            continue
+
+        # ① 구분선 위 최대 5줄을 열 제목 후보로 모읍니다 (빈 줄은 건너뜀)
+        header_rows: list[list[tuple[int, int, str]]] = []
+        for j in range(sep_idx - 1, max(sep_idx - 6, -1), -1):
+            segments = _line_segments(lines[j])
+            if not segments:
+                if header_rows:
+                    break
+                continue
+            if len(segments) == 1 and len(segments[0][2]) > 60:
+                break                     # 산문 줄 — 제목이 아닙니다
+            header_rows.append(segments)
+        if not header_rows:
+            continue
+        header_rows.reverse()             # 위→아래 순서로
+
+        # ② 가로 위치가 겹치는 조각끼리 한 열로 묶어 제목을 완성합니다
+        columns: list[list] = []          # [시작x, 끝x, [단어들]]
+        for segments in header_rows:
+            for start, end, word in segments:
+                for col in columns:
+                    if start <= col[1] + 2 and end >= col[0] - 2:
+                        col[0] = min(col[0], start)
+                        col[1] = max(col[1], end)
+                        col[2].append(word)
+                        break
+                else:
+                    columns.append([start, end, [word]])
+        columns.sort(key=lambda c: c[0])
+        titles = [" ".join(c[2]) for c in columns]
+
+        adj_idx = gaap_idx = None
+        for i, title in enumerate(titles):
+            if not _PER_SHARE_COL_RE.search(title):
+                continue
+            if _ADJ_COL_RE.search(title):
+                adj_idx = i if adj_idx is None else adj_idx
+            elif gaap_idx is None:
+                gaap_idx = i
+        if adj_idx is None:
+            continue                      # 논갭 열이 없는 표 — 지어내지 않음
+
+        # ③ 구분선 아래에서 "이번 분기" 행을 찾습니다 (각주 * 에서 중단)
+        blanks = 0
+        for k in range(sep_idx + 1, min(sep_idx + 30, len(lines))):
+            row = lines[k]
+            if not row.strip():
+                blanks += 1
+                if blanks >= 2:
+                    break
+                continue
+            blanks = 0
+            if row.lstrip().startswith("*"):
+                break
+            if not _CURRENT_ROW_RE.search(row):
+                continue
+
+            # ④ 첫 칸(행 이름)을 뺀 값 칸 수가 열 수와 같을 때만 짝지음
+            cells = _line_segments(row)[1:]
+            if len(cells) != len(columns):
+                break                     # 구조가 어긋남 — 없음이 안전
+            result["adj_eps"] = _cell_per_share(cells[adj_idx][2])
+            if gaap_idx is not None:
+                result["gaap_eps"] = _cell_per_share(cells[gaap_idx][2])
+            return result
+    return result
+
+
+# ---------------------------------------------------------------------------
 # 보도자료 텍스트 → 실적 숫자
 # ---------------------------------------------------------------------------
 def parse_press_release(text: str) -> dict:
@@ -547,6 +671,15 @@ def parse_press_release(text: str) -> dict:
     result["gaap_eps"] = find_eps_value(
         text, LABELS_GAAP_EPS, exclude_nongaap=True
     )
+
+    # 문장형으로 못 찾았을 때만 열 방향 표를 시도합니다 (실물: CGNX —
+    # 열 제목이 여러 줄에 쌓인 표. 확신이 안 서면 그대로 없음).
+    if result["adj_eps"] is None:
+        table = find_eps_in_column_table(text)
+        if table["adj_eps"] is not None:
+            result["adj_eps"] = table["adj_eps"]
+            if result["gaap_eps"] is None:
+                result["gaap_eps"] = table["gaap_eps"]
 
     result["revenue"] = find_labeled_value(text, LABELS_REVENUE)
     # ZETA·TSLA·APP 처럼 논갭 영업이익을 발표하지 않는 회사가 많습니다.

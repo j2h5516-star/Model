@@ -453,6 +453,29 @@ def test_partnership_8k_is_not_kept_as_raw():
     assert not sf._looks_like_earnings(text)
 
 
+def test_real_cgnx_column_table():
+    """실물 CGNX 2023-02-16 — 열 제목이 여러 줄에 걸친 위치 정렬 표.
+
+    "Non-GAAP Net Income per Diluted Share" 열 제목이 4줄에 쌓여 있고
+    값은 "Current quarter: Q4-22" 행의 네 번째 칸($0.27)에 있습니다.
+    문장형 파서는 각주(*Non-GAAP ...)만 물고 값을 못 뽑던 실물입니다.
+    """
+    text = '  Table 1  (Dollars in thousands, except per share amounts) \n \n                                                       Revenue                                Net Income                              Net Income                               Non-GAAP              \n                                                                                                                                     per Diluted                              Net Income             \n                                                                                                                                        Share                                per Diluted             \n                                                                                                                                                                                Share*               \n-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\nQuarterly Comparisons                                                                                                                                                                                \nCurrent quarter: Q4-22                                               $239,433                                 $55,311                                   $0.32                                   $0.27\nPrior year’s quarter: Q4-21                                          $244,065                                 $53,535                                   $0.30                                   $0.30\nChange: Q4-21 to Q4-22                                                   (2)%                                      3%                                      7%                                   (10)%\nPrior quarter: Q3-22                                                 $209,622                                 $33,980                                   $0.19                                   $0.21\nChange: Q3-22 to Q4-22                                                    14%                                     63%                                     68%                                     29%\nYearly Comparisons                                                                                                                                                                                   \nYear ended December 31, 2022                                       $1,006,090                                $215,525                                   $1.23                                   $1.31\nYear ended December 31, 2021                                       $1,037,098                                $279,881                                   $1.56                                   $1.49\nChange from 2021 to 2022                                                 (3)%                                   (23)%                                   (21)%                                   (12)%\n*Non-GAAP net income per diluted share excludes a loss from fire and restructuring charges, both net of tax benefit, and discrete tax adjustments. A reconciliation from GAAP to Non-GAAP is         \nshown in Exhibit 2 of this news release.                                                                                                                                                             '
+    result = sf.parse_press_release(text)
+    assert result["adj_eps"] == 0.27, result["adj_eps"]
+    assert result["gaap_eps"] == 0.32, result["gaap_eps"]
+
+
+def test_column_table_without_nongaap_column_returns_none():
+    """논갭 열이 없는 표에서는 값을 지어내면 안 됩니다 — 없음이 정답."""
+    text = (
+        "                Revenue        Net Income\n"
+        "--------------------------------------------------\n"
+        "Current quarter: Q4-22      $1,000      $100\n"
+    )
+    assert sf.find_eps_in_column_table(text)["adj_eps"] is None
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
