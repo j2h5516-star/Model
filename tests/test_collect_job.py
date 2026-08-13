@@ -96,6 +96,13 @@ def test_run_writes_snapshot_and_log(tmp_dir="/tmp/claude-0/robot_test"):
             log = json.load(f)
         assert log["tickers"] == 2
         assert log["per_ticker"][0]["adj_eps_ok"] == 1
+        # v3 5단계 — 수집 성공 시 자동 판정도 기록되어야 합니다.
+        # (가짜 데이터는 분기 1개뿐이라 사건 0건 → 전 가설 '판정 불가'가 정답)
+        assert "verdict" in log, log.keys()
+        with open(f"{cfg.MEASURE_DIR}/verdict.json", encoding="utf-8") as f:
+            verdict = json.load(f)
+        assert "H2b_신고점_첫돌파" in verdict["가설"]
+        assert verdict["가설"]["H2b_신고점_첫돌파"]["판정"] == "판정 불가"
     finally:
         os.chdir(cwd)
         shutil.rmtree(tmp_dir, ignore_errors=True)
