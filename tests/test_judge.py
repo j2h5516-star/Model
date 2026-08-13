@@ -124,6 +124,30 @@ def test_ladder_groups_have_separate_baselines():
     assert h2b["기준선"]["n"] == 30, h2b        # 조정 EPS 그룹만
 
 
+def test_h10_op_income_pool_is_separate():
+    """H10 (23차 등록): 논갭 영업이익 사건은 별도 목록 — H2~H9 오염 금지."""
+    ladder = [event(excess=0.0) for _ in range(30)]
+    for e in ladder: e["below52"] = False
+    op_sig = [event(streak=1, excess=50.0, yardstick="op_income")
+              for _ in range(12)]
+    for e in op_sig: e["below52"] = True
+    op_rest = [event(excess=0.0, yardstick="op_income") for _ in range(30)]
+    for e in op_rest: e["below52"] = False
+    op_unknown = [event(excess=50.0, streak=1, yardstick="op_income")
+                  for _ in range(5)]
+    for e in op_unknown: e["below52"] = None
+    result = judge.run(ladder, op_events=op_sig + op_rest + op_unknown)
+    h10 = result["가설"][judge.H10_NAME]["신규(판정)"]
+    assert h10["기준선"]["n"] == 42, h10          # 판단 불가 5건 제외, 사다리 30건 불포함
+    assert h10["신호"]["n"] == 12, h10
+    assert result["가설"][judge.H10_NAME]["판정"] == "채택"
+    # 반대 방향 오염도 금지: H9 표본에 op_income 사건이 섞이면 안 된다
+    h9 = result["가설"]["H9_저평가_첫신기록"]["신규(판정)"]
+    assert h9["기준선"]["n"] == 30, h9
+    # op_events 를 안 주면 H10 은 아예 안 나온다
+    assert judge.H10_NAME not in judge.run(ladder)["가설"]
+
+
 def test_h9_undervalued_first_breakout():
     """H9 (21차 등록): 첫 신기록 ∧ 52주선 아래. 표본은 판단 가능 사건만."""
     sig = [event(streak=1, excess=50.0) for _ in range(12)]

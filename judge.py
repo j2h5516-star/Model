@@ -112,8 +112,21 @@ def _halves(events: list[dict]) -> tuple[list[dict], list[dict]]:
     return ordered[:half], ordered[half:]
 
 
-def run(events: list[dict]) -> dict:
-    """사건 목록 전체에 등록된 가설을 판정합니다."""
+# H10 (23차 등록): 논갭 영업이익 TTM 첫 신고점 ∧ 주봉 종가 < 52주 이동평균.
+# 사건 목록이 H2~H9(잣대 사다리)와 **별도**라서 run 의 두 번째 인자로 받습니다.
+H10_NAME = "H10_논갭영업이익_저평가_첫신기록"
+_H10_ELIGIBLE = lambda e: e.get("below52") is not None    # noqa: E731
+_H10_CONDITION = (                                        # noqa: E731
+    lambda e: e["newhigh_streak"] == 1 and e["below52"] is True
+)
+
+
+def run(events: list[dict], op_events: list[dict] | None = None) -> dict:
+    """사건 목록 전체에 등록된 가설을 판정합니다.
+
+    op_events: 논갭 영업이익 단독 사건 목록 (collect_metric_events).
+    주면 H10 도 판정합니다 — 기준선은 그 목록(같은 잣대 그룹)만 씁니다.
+    """
     new_events = [
         e for e in events if e["ticker"] not in cfg.MEASURE_DISCOVERY_TICKERS
     ]
@@ -139,6 +152,24 @@ def run(events: list[dict]) -> dict:
         entry["신규_뒤시기"] = _stats([e for e in back if condition(e)])
         entry["판정"] = entry["신규(판정)"]["판정"]
         out["가설"][h_name] = entry
+
+    if op_events is not None:
+        new_op = [
+            e for e in op_events
+            if e["ticker"] not in cfg.MEASURE_DISCOVERY_TICKERS
+        ]
+        entry = {}
+        for s_name, group in {"신규(판정)": new_op, "전체(참고)": op_events}.items():
+            pool = [e for e in group if _H10_ELIGIBLE(e)]
+            entry[s_name] = _judge(
+                [e for e in pool if _H10_CONDITION(e)], pool
+            )
+        judged_pool = [e for e in new_op if _H10_ELIGIBLE(e)]
+        front, back = _halves(judged_pool)
+        entry["신규_앞시기"] = _stats([e for e in front if _H10_CONDITION(e)])
+        entry["신규_뒤시기"] = _stats([e for e in back if _H10_CONDITION(e)])
+        entry["판정"] = entry["신규(판정)"]["판정"]
+        out["가설"][H10_NAME] = entry
     return out
 
 

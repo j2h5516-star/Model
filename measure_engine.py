@@ -331,3 +331,39 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
             )
     events.sort(key=lambda e: e["announced"])
     return events, skipped
+
+
+def collect_metric_events(ds: dict, field: str,
+                          min_quarters: int = LADDER_MIN_QUARTERS) -> list[dict]:
+    """한 지표(field)만으로 발표 사건을 수집합니다 — H10(23차 등록)용.
+
+    잣대 사다리와 별도의 사건 목록입니다. collect_events 가 만드는 목록에
+    섞이지 않으므로 H2~H9 의 표본을 오염시키지 않습니다. 사건 모양은
+    collect_events 와 같되 잣대 칸에 field 이름이 들어갑니다.
+    """
+    spy = ds["prices"].get(ds["benchmark"])
+    events: list[dict] = []
+    for ticker in ds["tickers"]:
+        rows = ds["quarters"].get(ticker) or []
+        if sum(1 for r in rows if r.get(field) is not None) < min_quarters:
+            continue                     # 등록 조건: 값이 8분기 이상인 종목만
+        prices = ds["prices"].get(ticker)
+        if not prices or not prices.get("dates"):
+            continue
+        for state in earnings_states(rows, field=field):
+            excess, _detail = excess_return(prices, spy, state["announced"])
+            if excess is None:
+                continue
+            events.append(
+                {
+                    "ticker": ticker,
+                    "잣대": field,
+                    "announced": state["announced"],
+                    "new_high": state["new_high"],
+                    "newhigh_streak": state["newhigh_streak"],
+                    "below52": below_52wk_ma(prices, state["announced"]),
+                    "excess": excess,
+                }
+            )
+    events.sort(key=lambda e: e["announced"])
+    return events

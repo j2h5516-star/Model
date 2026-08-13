@@ -105,8 +105,11 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
     #    귀합니다. 대신 실패를 로봇 기록에 남겨 조용히 넘어가지 않게 합니다.
     try:
         snap = json.loads(files[f"{cfg.MEASURE_DIR}/snapshot.json"])
-        events, _skipped = measure_engine.collect_events(dataset.build(snap))
-        verdict = judge.run(events)
+        ds = dataset.build(snap)
+        events, _skipped = measure_engine.collect_events(ds)
+        # H10 (23차 등록) — 논갭 영업이익 단독 사건은 별도 목록으로
+        op_events = measure_engine.collect_metric_events(ds, "op_income")
+        verdict = judge.run(events, op_events=op_events)
         files[f"{cfg.MEASURE_DIR}/verdict.json"] = judge.to_json(verdict)
         verdict_note = " · ".join(
             f"{name}: {entry['판정']}" for name, entry in verdict["가설"].items()
