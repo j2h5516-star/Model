@@ -476,6 +476,26 @@ def test_column_table_without_nongaap_column_returns_none():
     assert sf.find_eps_in_column_table(text)["adj_eps"] is None
 
 
+def test_real_tsla_date_column_row():
+    """실물 TSLA 2026-07-22 — 열 제목이 날짜(Q2-2025 … Q2-2026)인 한 줄 표.
+
+    열 순서가 과거→현재라 "첫 숫자" 규칙은 1년 전 값(0.40)을 뭅니다.
+    날짜를 읽어 **가장 최신 분기 열**(Q2-2026 = 0.33)을 골라야 합니다.
+    이 형식 때문에 TSLA 자동 추출이 차단되어 있었습니다 (사고 백서 9번).
+    """
+    text = '($ in millions, except percentages and per share data) Q2-2025 Q3-2025 Q4-2025 Q1-2026 Q2-2026 YoY Total automotive revenues 16,661 21,205 17,693 16,234 20,516 23% Energy generation and storage revenue 2,789 3,415 3,837 2,408 3,139 13% Services and other revenue 3,046 3,475 3,371 3,745 4,581 50% Total revenues 22,496 28,095 24,901 22,387 28,236 26% Total gross profit 3,878 5,054 5,009 4,720 4,751 23% Total GAAP gross margin 17.2% 18.0% 20.1% 21.1% 16.8% -41 bp Operating expenses 2,955 3,430 3,600 3,779 4,353 47% Income from operations 923 1,624 1,409 941 398 -57% Operating margin 4.1% 5.8% 5.7% 4.2% 1.4% -269 bp Adjusted EBITDA 3,401 4,227 4,154 3,668 3,273 -4% Adjusted EBITDA margin 15.1% 15.0% 16.7% 16.4% 11.6% -353 bp Net income attributable to common stockholders (GAAP) 1,172 1,373 840 477 1,114 -5% Net income attributable to common stockholders (non-GAAP) 1,393 1,770 1,761 1,453 1,153 -17% EPS attributable to common stockholders, diluted (GAAP) 0.33 0.39 0.24 0.13 0.32 -3% EPS attributable to common stockholders, diluted (non-GAAP) 0.40 0.50 0.50 0.41 0.33 -18% '
+    result = sf.find_eps_in_date_column_table(text)
+    assert result["adj_eps"] == 0.33, result
+    assert result["gaap_eps"] == 0.32, result
+
+
+def test_date_column_needs_enough_period_headers():
+    """날짜 열이 3개 미만이면 확신이 없으므로 없음이 정답입니다."""
+    text = ("Q2-2026 EPS attributable to common stockholders, diluted "
+            "(non-GAAP) 0.40 0.50")
+    assert sf.find_eps_in_date_column_table(text)["adj_eps"] is None
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

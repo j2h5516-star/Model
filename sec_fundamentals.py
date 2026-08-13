@@ -636,6 +636,81 @@ def find_eps_in_column_table(text: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# 날짜 열 표 파서 — 열 제목이 분기(Q2-2025 …)인 한 줄 표 (실물: TSLA)
+# ---------------------------------------------------------------------------
+# TSLA 슬라이드 표는 텍스트로 눌리면 한 줄이 됩니다:
+#   "... Q2-2025 Q3-2025 Q4-2025 Q1-2026 Q2-2026 YoY
+#    EPS ... diluted (non-GAAP) 0.40 0.50 0.50 0.41 0.33 -18% ..."
+# 열 순서가 과거→현재라 "첫 숫자" 규칙은 1년 전 값을 뭅니다 (사고 9 —
+# 이 때문에 TSLA 자동 추출을 차단했었습니다). 여기서는 날짜를 읽어
+# **가장 최신 분기 열**을 고릅니다. 열 순서가 반대여도 동작합니다.
+
+_PERIOD_TOKEN_RE = re.compile(r"\b(?:Q([1-4])[- ]20(\d{2})|([1-4])Q[- ]20(\d{2}))\b")
+_DATE_HEADER_RE = re.compile(
+    r"(?:(?:Q[1-4][- ]20\d{2}|[1-4]Q[- ]20\d{2})\s+){2,}"
+    r"(?:Q[1-4][- ]20\d{2}|[1-4]Q[- ]20\d{2})"
+)
+# 표 칸 하나: (1,092) / 0.33 / 17.2% / — / $3,401
+_DATE_CELL_RE = re.compile(r"\(?\$?-?[\d,]+(?:\.\d+)?\)?%?|—")
+_DATE_EPS_LABELS = {
+    # 값이 이름 **뒤 괄호**에 (non-GAAP)/(GAAP) 로 붙는 형식 (실물: TSLA)
+    "adj_eps": re.compile(r"EPS[^()\n]{0,80}\(non[-\s]?GAAP\)", re.I),
+    "gaap_eps": re.compile(r"EPS[^()\n]{0,80}\((?<!non-)(?<!non )GAAP\)", re.I),
+}
+
+
+def _period_key(match: re.Match) -> tuple[int, int]:
+    quarter = int(match.group(1) or match.group(3))
+    year = 2000 + int(match.group(2) or match.group(4))
+    return (year, quarter)
+
+
+def find_eps_in_date_column_table(text: str) -> dict:
+    """날짜 열 표에서 (조정 EPS, GAAP EPS)를 읽습니다. 확신이 없으면 없음.
+
+    확신 조건: ① 분기 표기 3개 이상이 연달아 나오는 열 제목이 있고
+    ② 그 뒤의 EPS 행에서 열 수만큼의 칸을 정확히 읽을 수 있어야 하며
+    ③ 고른 칸(최신 분기 열)이 소수점 표기여야 한다 (사고 15 규칙).
+    """
+    result = {"adj_eps": None, "gaap_eps": None}
+    if not text:
+        return result
+    for line in text.split("\n"):
+        header = _DATE_HEADER_RE.search(line)
+        if not header:
+            continue
+        periods = list(_PERIOD_TOKEN_RE.finditer(header.group(0)))
+        if len(periods) < 3:
+            continue
+        # 열 순서와 무관하게 "가장 최신 분기"의 열 번호를 고릅니다
+        latest_idx = max(range(len(periods)), key=lambda i: _period_key(periods[i]))
+        body = line[header.end():]
+
+        for field, label_re in _DATE_EPS_LABELS.items():
+            if result[field] is not None:
+                continue
+            label = label_re.search(body)
+            if not label:
+                continue
+            # 이름 바로 뒤에서 열 수만큼의 칸을 연달아 읽습니다.
+            # 칸 사이에 글자가 끼면(=다음 행 이름) 구조가 어긋난 것 — 없음.
+            cells = []
+            pos = label.end()
+            for _ in range(len(periods)):
+                while pos < len(body) and body[pos] == " ":
+                    pos += 1
+                cell = _DATE_CELL_RE.match(body, pos)
+                if cell is None:
+                    break
+                cells.append(cell.group(0))
+                pos = cell.end()
+            if len(cells) != len(periods):
+                continue
+            result[field] = _cell_per_share(cells[latest_idx])
+    return result
+
+
+# ---------------------------------------------------------------------------
 # 보도자료 텍스트 → 실적 숫자
 # ---------------------------------------------------------------------------
 def parse_press_release(text: str) -> dict:
@@ -958,11 +1033,16 @@ def fetch_earnings_8k(
     if report is None:
         report = new_report(ticker)
 
-    # 파서가 틀린 값을 가져오는 형식의 회사는 건너뜁니다 (config 에 사유 기록).
-    # "없음"은 안전하고 "틀림"은 위험합니다.
-    if ticker in cfg.PRESS_PARSE_SKIP:
-        report["note"] = "보도자료 형식 미지원(config.PRESS_PARSE_SKIP) — XBRL 근사만 사용"
-        return []
+    # 표가 과거→현재 열 순서인 회사(TSLA)는 일반 파서가 첫 열(1년 전 값)을
+    # 뭅니다 (사고 9). 그래서 이런 회사는 **날짜 열 EPS 전용 부분 파싱**만
+    # 합니다 — 날짜 열 파서는 최신 분기 열을 고르므로 안전하고,
+    # 매출 등 다른 항목은 계속 차단합니다 ("없음"이 "틀림"보다 안전).
+    eps_only = ticker in cfg.PRESS_PARSE_SKIP
+    if eps_only:
+        report["note"] = (
+            "보도자료 형식 특수(config.PRESS_PARSE_SKIP) — "
+            "날짜 열 EPS 만 부분 파싱, 나머지는 XBRL 근사"
+        )
 
     _ensure_identity()
     from edgar import Company
@@ -997,7 +1077,19 @@ def fetch_earnings_8k(
             continue
         report["gate_passed"] += 1
 
-        parsed = parse_press_release(text)
+        if eps_only:
+            table = find_eps_in_date_column_table(text)
+            parsed = {
+                "revenue": None, "op_income": None, "gross_margin_pct": None,
+                "adjusted_ebitda": None, "adj_eps": table["adj_eps"],
+                "gaap_eps": table["gaap_eps"], "source": None,
+                "gm_is_gaap": False, "derivation": (
+                    "날짜 열 표에서 최신 분기 열의 EPS 만 부분 파싱했습니다 "
+                    "(다른 항목은 열 순서 문제로 차단 — 사고 9)."
+                ),
+            }
+        else:
+            parsed = parse_press_release(text)
 
         # 보도자료 첨부(EX-99)인데 조정 EPS 를 못 읽었다면 — 파서가 진 것입니다.
         # 그 원문을 진단에 남겨, 배포된 앱의 '측정용 실데이터 저장' 버튼이
