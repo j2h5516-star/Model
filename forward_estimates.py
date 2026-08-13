@@ -380,6 +380,70 @@ def parse_guidance_eps(text: str) -> dict:
     return result
 
 
+# --- 다음 분기 가이던스의 매출·조정 EBITDA (대책 2 — 2026-08-13) ---
+# EPS 가이던스를 주는 회사는 79개 중 7개뿐이지만, 매출 전망은 거의 모든
+# 회사가 줍니다 (실패 원문 137건에서 매출 후보 23건·EBITDA 후보 8건 실측).
+# 실물 근거: AMBA 2024-08-27 "guidance for the third quarter of fiscal year
+# 2025 ... Revenue is expected to be between $77.0 million and $81.0 million."
+#
+# 규칙은 EPS 가이던스와 같습니다: 분기를 가리키는 문장에서만 읽고,
+# 못 찾으면 없음(None). 회사가 준 숫자끼리의 산수(범위 중간값)만 합니다.
+#
+# ⚠️ "between $A and $B" 형식은 기존 _RANGE_RE 가 못 읽습니다 (구분자에
+#    and 가 없음). and 는 "between" 뒤에서만 범위 구분자로 인정합니다 —
+#    "revenue of $256.5 million and EPS of $1.04" 처럼 서로 다른 항목을
+#    잇는 and 를 범위로 착각하면 중간값이 엉망이 되기 때문입니다.
+_GUID_BETWEEN_RE = re.compile(
+    r"between\s+\$\s*(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\s*(million|billion|bn|mm)?"
+    r"\s+and\s+\$?\s*(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\s*(million|billion|bn|mm)?",
+    re.I,
+)
+_GUID_REV_KEY_RE = re.compile(r"revenue|net\s+sales", re.I)
+_GUID_EBITDA_KEY_RE = re.compile(r"adjusted\s+EBITDA", re.I)
+
+
+def _parse_guidance_dollar(text: str, keyword_re: re.Pattern) -> dict:
+    """분기 전망 문장에서 keyword 뒤의 달러 범위(또는 단일값)를 읽습니다."""
+    result = {"low": None, "high": None, "mid": None}
+    if not text:
+        return result
+    for sentence in re.split(r"(?<=[.!?])\s+", text[-8000:]):
+        if not _GUID_EPS_QUARTER_RE.search(sentence):
+            continue                      # 분기를 가리키는 문장만
+        keyword = keyword_re.search(sentence)
+        if not keyword:
+            continue
+        area = sentence[keyword.start():]
+        match = _GUID_BETWEEN_RE.search(area) or _RANGE_RE.search(area)
+        if match:
+            tail_scale = _SCALE.get((match.group(4) or "").lower(), 1e6)
+            low = _to_dollars(match.group(1), match.group(2), tail_scale)
+            high = _to_dollars(match.group(3), match.group(4), tail_scale)
+            if low > high:
+                low, high = high, low
+            # 두 값의 자릿수가 크게 다르면 서로 다른 항목을 짝지은 것 — 없음
+            if low <= 0 or high / low > 5.0:
+                continue
+            result.update(low=low, high=high, mid=round((low + high) / 2, 2))
+            return result
+        match = _SINGLE_RE.search(area)
+        if match:
+            value = _to_dollars(match.group(1), match.group(2), 1e6)
+            result.update(low=value, high=value, mid=value)
+            return result
+    return result
+
+
+def parse_guidance_revenue(text: str) -> dict:
+    """다음 분기 매출 가이던스: {"low","high","mid"} (달러). 없으면 None."""
+    return _parse_guidance_dollar(text, _GUID_REV_KEY_RE)
+
+
+def parse_guidance_ebitda(text: str) -> dict:
+    """다음 분기 조정 EBITDA 가이던스: {"low","high","mid"} (달러). 없으면 None."""
+    return _parse_guidance_dollar(text, _GUID_EBITDA_KEY_RE)
+
+
 def recent_depreciation(quarters: list[dict]) -> float | None:
     """최근 분기들의 감가상각비 중앙값. 조정 EBITDA 를 논갭 영업이익으로 바꿀 때 씁니다."""
     import statistics
