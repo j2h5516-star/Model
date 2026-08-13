@@ -403,6 +403,20 @@ LABELS_GAAP_EPS = [
 _NONGAAP_NEAR_RE = re.compile(r"non[-\s]?GAAP|adjusted", re.I)
 _NONGAAP_LOOKBACK = 40   # 이름 앞 몇 글자까지 되돌아볼 것인가
 
+# 전망·목표 문맥 — 이 낱말들이 EPS 이름 주변에 있으면 그 자리는
+# 분기 **실적**이 아니라 전망·연간 목표입니다 (사고 16 — 실물:
+# QRVO "expect … approaching $7.00" · TER "2024 earnings model to …
+# $8.00" · TTMI "to approach $5.00"). 그 이름 자리는 건너뛰고 다음
+# 자리(대개 표의 진짜 분기 값)를 계속 찾습니다.
+_FORECAST_NEAR_RE = re.compile(
+    r"\b(?:expects?|expecting|anticipates?|approach(?:es|ing)?"
+    r"|targets?|targeting|forecasts?|estimates?|guidance|outlook"
+    r"|earnings\s+model)\b",
+    re.I,
+)
+_FORECAST_BACK = 80      # 이름 앞
+_FORECAST_AHEAD = 80     # 이름 뒤 (값과 이름 사이의 to approach 류)
+
 
 def find_eps_value(
     text: str, label_patterns: list[str], *, exclude_nongaap: bool = False
@@ -431,6 +445,29 @@ def find_eps_value(
     for pattern_str in label_patterns:
         pattern = re.compile(pattern_str, re.I)
         for label_match in pattern.finditer(text):
+            # 이미지 슬라이드가 눌린 줄은 문장이 아니라 차트 숫자 나열입니다
+            # (실물: MKSI 8.00 — 연간 차트 값). 슬라이드는 날짜 열 파서만 다룹니다.
+            line_start = text.rfind("\n", 0, label_match.start()) + 1
+            line_end_pos = text.find("\n", label_match.end())
+            if "<img" in text[line_start : line_end_pos if line_end_pos > 0 else len(text)]:
+                continue
+
+            # 전망·연간 목표 문맥이면 이 자리는 분기 실적이 아닙니다 (사고 16).
+            # ⚠️ 창은 같은 문장·같은 줄 안으로 제한합니다 — 표의 진짜 값 행이
+            #    바로 앞 문장의 outlook 같은 낱말 때문에 버려지면 안 됩니다.
+            back = max(
+                label_match.start() - _FORECAST_BACK,
+                text.rfind("\n", 0, label_match.start()) + 1,
+                text.rfind(". ", 0, label_match.start()) + 2,
+            )
+            ahead_limit = label_match.end() + _FORECAST_AHEAD
+            for stop in ("\n", ". "):
+                cut = text.find(stop, label_match.end(), ahead_limit)
+                if cut != -1:
+                    ahead_limit = cut
+            if _FORECAST_NEAR_RE.search(text[back:ahead_limit]):
+                continue
+
             if exclude_nongaap:
                 # 이름 앞쪽을 되돌아보되 **줄을 넘어가지는 않습니다.**
                 # 표에서는 한 줄이 한 항목이므로, 윗줄의 'Non-GAAP' 때문에
