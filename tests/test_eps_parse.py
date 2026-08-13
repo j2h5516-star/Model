@@ -320,6 +320,28 @@ def test_amd_combo_small_net_income_is_not_eaten():
     assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.48
 
 
+def test_date_number_after_label_is_skipped():
+    """이름 뒤에 날짜·연도 같은 정수가 먼저 오면 건너뛰고 진짜 값을 집는다.
+
+    실제 사고 (2026-08-12 snapshot 실측): 분기 종료일 "March 31" 의 31을
+    EPS 로 물어 MCHP 조정 EPS 가 세 해 연속 31.0, 그 밖에 정수를 문
+    202.0 이 30건 (FN 15개 분기 전부 · TER · CLS · FORM 등).
+    실제 EPS 는 보도자료에서 항상 소수점 표기($1.66, $39.25)이므로,
+    소수점 없는 숫자는 EPS 후보가 아닙니다.
+    """
+    text = (
+        "Non-GAAP diluted earnings per share for the three months ended "
+        "March 31, 2025 was $1.60."
+    )
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.60
+
+
+def test_integer_only_sentence_returns_none():
+    """소수점 있는 값이 끝내 없으면 "없음"이 답입니다 — 없음이 틀림보다 안전."""
+    text = "Adjusted EPS discussion in Item 202 of the annual report"
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
 def test_real_zeta_has_no_adjusted_eps():
     """실물 ZETA 2026-08-04 — 조정 EPS 를 발표하지 않는 회사.
 

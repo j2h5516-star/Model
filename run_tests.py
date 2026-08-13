@@ -23,6 +23,7 @@ TEST_FILES = [
     "tests/test_eps_parse.py",   # 보도자료 EPS 읽기 + 이익의 질
     "tests/test_measure.py",     # 수집 결과 꾸리기 (snapshot.json 만들기)
     "tests/test_collect_job.py", # 수집 로봇 (반쯤 깨진 날 방어·파일 기록)
+    "tests/test_dataset.py",     # 데이터 계층 (v3 4단계 — 재료 손질)
 ]
 
 if __name__ == "__main__":
