@@ -441,13 +441,7 @@ def find_eps_value(
                 if _NONGAAP_NEAR_RE.search(text[window_start:start]):
                     continue
 
-            # "net income / earnings per share" 묶음 제목(실물: AMD)은 한 줄에
-            # [순이익 $2,760] [EPS $1.66] 이 짝으로 반복됩니다. 순이익 칸은
-            # 쉼표 있는 정수, EPS 칸은 소수점 표기이므로 — 묶음 제목일 때는
-            # **소수점이 있는 숫자만** EPS 로 인정합니다. (순이익이 $781M 처럼
-            # 크기 상한 아래인 분기에 순이익을 EPS 로 집는 사고 방지)
             label_text = label_match.group(0)
-            combo_label = "/" in label_text
 
             # 이름이 "적자"라고 말하면 양수를 음수로 뒤집습니다 (아래 두 곳 공용).
             # "net income (loss) per share" 같은 겸용 표기는 선언이 아니므로 제외.
@@ -468,6 +462,8 @@ def find_eps_value(
                         parsed is not None
                         and parsed[1] < label_match.start()      # 숫자가 괄호 안에 있음
                         and abs(parsed[0]) <= cfg.EPS_MAX_ABS
+                        # 소수점 없는 숫자는 EPS 가 아닙니다 (아래 본검사와 동일 규칙)
+                        and "." in text[parsed[1]:parsed[4]]
                     ):
                         value = parsed[0]
                         if value > 0 and says_loss:
@@ -492,7 +488,16 @@ def find_eps_value(
                     search_from = number_end
                     continue
 
-                if combo_label and "." not in text[num_start:num_end]:
+                # 소수점 없는 숫자는 EPS 가 아닙니다. 실제 EPS 는 보도자료에서
+                # 항상 소수점 표기($1.66, $39.25)로 나오기 때문입니다.
+                # 처음엔 묶음 제목(실물: AMD — [순이익 $2,760][EPS $1.66] 짝)
+                # 에만 적용했지만, 이름 뒤의 날짜·연도류 정수를 무는 사고가
+                # 실제로 났습니다: 분기 종료일 "March 31" 의 31을 물어 MCHP
+                # 조정 EPS 가 세 해 연속 31.0, 정수 202 를 물어 202.0 이 30건
+                # (2026-08-12 snapshot 실측 — FN 15개 분기 전부·TER·CLS·FORM 등).
+                # 그래서 모든 EPS 후보에 적용합니다. 소수점 값을 끝내 못 찾으면
+                # 답은 "없음"입니다 — 없음이 틀림보다 안전합니다.
+                if "." not in text[num_start:num_end]:
                     search_from = number_end
                     continue
 
