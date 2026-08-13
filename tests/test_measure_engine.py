@@ -288,6 +288,24 @@ def test_collect_events_carry_below52():
     assert all("below52" in e for e in events)
 
 
+def test_collect_metric_events_op_income_only():
+    """H10 (23차 등록): 논갭 영업이익 단독 사건 — 8분기 미달 종목 제외."""
+    ds = _mini_ds({
+        "OP": _rows_with("op_income", 9, start="2024-01-31"),
+        "SHORT": _rows_with("op_income", 5, start="2024-01-31"),
+        "EPSONLY": _rows_with("adj_eps", 9, start="2024-01-31"),
+    }, price_days=800)
+    events = me.collect_metric_events(ds, "op_income")
+    assert events, "사건이 없습니다"
+    assert all(e["ticker"] == "OP" for e in events), events[:2]
+    assert all(e["잣대"] == "op_income" for e in events)
+    for key in ("announced", "newhigh_streak", "below52", "excess"):
+        assert key in events[0], key
+    # 사다리 사건 목록과 섞이지 않는다 — collect_events 는 op_income 을 모른다
+    ladder_events, _ = me.collect_events(ds)
+    assert all(e["잣대"] != "op_income" for e in ladder_events)
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
