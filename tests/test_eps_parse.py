@@ -496,6 +496,32 @@ def test_date_column_needs_enough_period_headers():
     assert sf.find_eps_in_date_column_table(text)["adj_eps"] is None
 
 
+def test_money_amount_is_not_eps():
+    """주당 금액에는 million 같은 단위 낱말이 붙지 않습니다.
+
+    실제 사고 (2026-08-13 잔여 5건): 인수·공지 문서의 "accretive to
+    non-GAAP EPS ... $5.0 million" 류에서 금액을 EPS 로 물어
+    TTMI 5.0 · QRVO 7.0 · TER 8.0 · MKSI 8.0 이 만들어졌고,
+    TTMI 는 이 가짜 행이 이력의 연속성까지 끊었습니다.
+    """
+    text = ("The $5.0 million transaction is expected to be immediately "
+            "accretive to non-GAAP EPS, with revenue of $8.0 million.")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+    # 단위 낱말이 없는 진짜 EPS 는 그대로 읽혀야 합니다
+    assert sf.find_eps_value("Non-GAAP EPS of $5.05 for the quarter.",
+                             sf.LABELS_ADJUSTED_EPS) == 5.05
+
+
+def test_real_merger_announcement_is_not_earnings():
+    """실물 SWKS·QRVO 2025-10-28 합병 발표 — 실적발표로 오인하면 안 됩니다.
+
+    오인하면 ① 원문 보관함(종목당 2건)을 합병 문서가 차지해 진짜 실패
+    원문이 못 담기고 ② "accretive to EPS" 문구가 가짜 행을 만듭니다.
+    """
+    text = 'Skyworks and Qorvo to Combine to Create $22 Billion U.S.-Based Leader in High-Performance RF, Analog and Mixed-Signal Solutions ·   Immediately and meaningfully accretive to non-GAAP EPS post-close, with $500 million or more of annual cost synergies within 24-36 ·   Phil Brace will serve as chief executive officer of the combined company; Bob Bruggeworth will join the Board of Directors of the combined company IRVINE, CA and GREENSBORO, NC – Oct. 28, 2025 – Skyworks (Nasdaq: SWKS), a global leader in high-performance analog and mixed-signal semiconductors, and Qorvo (Nasdaq: QRVO), a leading global provider of connectivity and “This combination marks an important milestone for our industry and for Skyworks,” said Phil Brace, chief executive officer and president of Skyworks. “Combining Skyworks’ and Qorvo’s complementary portfolios and world-c'
+    assert not sf._looks_like_earnings(text)
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

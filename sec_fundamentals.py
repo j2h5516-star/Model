@@ -1102,6 +1102,18 @@ def fetch_earnings_8k(
                 report, str(filing.filing_date), _safe_filing_url(filing), text
             )
 
+        # 진단 장치 (2026-08-13, 13차 의심 목록): 소수점 규칙을 통과한
+        # 정수 EPS(5.0·7.0·8.0 류)가 남아 있는데 출처 원문이 없어 감사가
+        # 막혔습니다. 그런 값이 또 나오면 **값은 그대로 두되 원문을 보관**해
+        # 다음 세션이 실물로 감사할 수 있게 합니다.
+        suspect = parsed["adj_eps"]
+        if (suspect is not None and suspect == int(suspect) and abs(suspect) >= 5
+                and had_exhibit):
+            _keep_raw_text(
+                report, f"의심정수_{filing.filing_date}",
+                _safe_filing_url(filing), text,
+            )
+
         # 실적 숫자가 하나도 없으면 실적발표가 아닐 가능성이 큽니다.
         # 조정 EPS 도 실적 숫자로 인정합니다 — 규정상 존재가 보장된 값이라
         # 매출·영업이익을 못 읽은 보도자료에서도 이것만 잡히는 경우가 있습니다.
@@ -1185,10 +1197,32 @@ _EARNINGS_HINTS = [
 ]
 
 
+# 합병·인수 발표의 신호 — 실적 신호 없이 이것만 있으면 실적발표가 아닙니다.
+# 실물: SWKS·QRVO 2025-10-28 합병 발표가 실적으로 오인되어 ① 원문 보관함
+# (종목당 2건)을 차지하고 ② "accretive to EPS" 문구 근처의 금액이 가짜 행을
+# 만들 뻔했습니다 (ACLS 2025-10-01 인수 발표의 EBITDA $387M 도 같은 부류).
+_MERGER_HINTS_RE = re.compile(
+    r"definitive\s+(?:merger\s+)?agreement|to\s+combine|combined\s+company"
+    r"|to\s+acquire|agreement\s+to\s+be\s+acquired|all[-\s]cash\s+transaction",
+    re.I,
+)
+_RESULTS_HINTS_RE = re.compile(
+    r"reports?\s+(?:first|second|third|fourth)\s+quarter"
+    r"|financial\s+results\s+for|quarterly\s+(?:results|revenue)"
+    r"|results\s+of\s+operations|item\s+2\.02",
+    re.I,
+)
+
+
 def _looks_like_earnings(text: str) -> bool:
     """이 공시가 실적발표인지 대략 판별합니다."""
     lowered = text[:20000].lower()
-    return any(hint in lowered for hint in _EARNINGS_HINTS)
+    if not any(hint in lowered for hint in _EARNINGS_HINTS):
+        return False
+    # 합병·인수 발표인데 실적 신호가 없으면 실적발표가 아닙니다
+    if _MERGER_HINTS_RE.search(lowered) and not _RESULTS_HINTS_RE.search(lowered):
+        return False
+    return True
 
 
 def _record_error(report: dict | None, where: str, exc: Exception) -> None:
