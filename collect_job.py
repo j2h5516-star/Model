@@ -96,23 +96,10 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
 
     files, summary = measure_store.build_files(tickers, daily_map, reports)
 
-    # 6단계 — 자동 판정: 사전 등록 가설을 방금 수집한 데이터로 재판정해
-    # verdict.json 으로 함께 커밋합니다 (사람 개입 없음).
-    # 판정 실패가 수집까지 막으면 안 되므로 실패는 기록만 하고 계속합니다.
-    try:
-        import verdict
-        snapshot_dict = json.loads(files[f"{cfg.MEASURE_DIR}/snapshot.json"])
-        files[f"{cfg.MEASURE_DIR}/verdict.json"] = json.dumps(
-            verdict.run(snapshot_dict), ensure_ascii=False, indent=1
-        )
-        progress("자동 판정 완료 (verdict.json)")
-    except Exception as exc:
-        files[f"{cfg.MEASURE_DIR}/verdict.json"] = json.dumps(
-            {"error": f"{type(exc).__name__}: {str(exc)[:200]}"}, ensure_ascii=False
-        )
-        progress(f"⚠️ 자동 판정 실패 (수집은 계속): {type(exc).__name__}")
+    # v3 재건축 0단계: 자동 판정(verdict.py)은 v2 측정 계층과 함께 철거했습니다.
+    # 로봇은 지금 **수집만** 합니다 — 판정 장치는 v3 5단계에서 새로 만듭니다.
 
-    # 로봇 실행 기록 — 앱 진단과 다음 세션이 읽습니다
+    # 로봇 실행 기록 — 다음 세션이 읽습니다
     log = {
         "ran_at": datetime.now(timezone.utc).isoformat(),
         "tickers": len(tickers),
