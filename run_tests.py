@@ -26,6 +26,7 @@ TEST_FILES = [
     "tests/test_dataset.py",     # 데이터 계층 (v3 4단계 — 재료 손질)
     "tests/test_measure_engine.py",  # 측정 장치 (v3 5단계 — 11차 등록 구현)
     "tests/test_judge.py",       # 자동 판정 (v3 5단계 — 채택 기준 적용)
+    "tests/test_app.py",         # 계기판 도우미 (v3 6단계 — 정직화 표시)
 ]
 
 if __name__ == "__main__":
