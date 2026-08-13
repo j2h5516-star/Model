@@ -83,11 +83,24 @@ def test_recent_rows_report_facts_only():
         "quarters": quarters,
         "prices": {"SPY": {"dates": [dates[-1]], "close": [500.0]}},
     }
-    result = {r["종목"]: r["상태"] for r in app.recent_ticker_rows(ds, today=dates[-1])}
+    rows_out = app.recent_ticker_rows(ds, today=dates[-1])
+    result = {r["종목"]: r["상태"] for r in rows_out}
     assert result["NEW1"] == "신고점 첫 돌파", result
     assert result["FLAT"] == "신고점 아님", result
     # YOUNG 의 마지막 발표는 45일 밖(2024-05-01)이라 표에 없어야 합니다
     assert "YOUNG" not in result, result
+    # 섹터 꼬리표가 붙고, 모르는 종목은 "미분류"로 정직하게 표시됩니다
+    assert all("섹터" in r for r in rows_out)
+    assert {r["섹터"] for r in rows_out} == {"미분류"}
+
+
+def test_every_ticker_has_a_sector():
+    """유니버스 79종목 전부에 섹터가 있어야 합니다 (빠지면 화면에 미분류)."""
+    import config as cfg
+    missing = [t for t in cfg.TICKERS if t not in cfg.SECTORS]
+    extra = [t for t in cfg.SECTORS if t not in cfg.TICKERS]
+    assert not missing, f"섹터 없는 종목: {missing}"
+    assert not extra, f"유니버스에 없는 섹터 항목: {extra}"
 
 
 if __name__ == "__main__":
