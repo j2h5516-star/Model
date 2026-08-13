@@ -230,6 +230,61 @@ def test_snapshot_rows_carry_guidance_fields():
     assert rows[1]["guid_eps_mid"] is None      # 가이던스 없으면 없음
 
 
+# ---------------------------------------------------------------------------
+# 매출·조정 EBITDA 가이던스 (대책 2 — EPS 가이던스를 안 주는 회사 커버)
+# ---------------------------------------------------------------------------
+def test_guidance_revenue_real_amba_between_range():
+    """실물 AMBA 2024-08-27 — 'between $77.0 million and $81.0 million'.
+
+    ① 'and' 구분자(between 형식)를 읽어야 하고
+    ② "third quarter of fiscal year 2025" 는 연간이 아니라 분기 전망입니다
+       (fiscal year 라는 낱말만 보고 버리면 안 됩니다).
+    """
+    text = (
+        "Based on information available as of today, Ambarella is offering "
+        "the following guidance for the third quarter of fiscal year 2025, "
+        "ending October 31, 2024: \n \n\n•   Revenue is expected to be "
+        "between $77.0 million and $81.0 million.\n"
+    )
+    guid = fe.parse_guidance_revenue(text)
+    assert guid["low"] == 77.0e6 and guid["high"] == 81.0e6, guid
+    assert guid["mid"] == 79.0e6, guid
+
+
+def test_guidance_revenue_annual_only_is_skipped():
+    """분기 언급이 없는 연간 전망은 분기 가이던스로 쓰면 안 됩니다."""
+    text = "For the full year, the company expects revenue of $4.5 billion to $4.7 billion."
+    guid = fe.parse_guidance_revenue(text)
+    assert guid["mid"] is None, guid
+
+
+def test_guidance_ebitda_range():
+    """ZETA류 — 매출·조정 EBITDA 로만 가이던스를 주는 회사의 형식."""
+    text = (
+        "For the fourth quarter, the company expects revenue of $295 million "
+        "to $305 million and adjusted EBITDA of $58.0 million to $62.0 million."
+    )
+    guid = fe.parse_guidance_ebitda(text)
+    assert guid["low"] == 58.0e6 and guid["high"] == 62.0e6, guid
+    assert guid["mid"] == 60.0e6, guid
+
+
+def test_snapshot_rows_carry_dollar_guidance_fields():
+    """매출·EBITDA 가이던스가 snapshot 분기 행까지 도착해야 합니다 (배관 시험)."""
+    quarters = [{
+        "filing_date": "2026-06-30",
+        "adj_eps": 1.0,
+        "source": cfg.SRC_DIRECT,
+        "guidance_text": (
+            "For the second quarter, the company expects revenue to be "
+            "between $500 million and $520 million and adjusted EBITDA "
+            "of $100.0 million to $110.0 million."
+        ),
+    }]
+    row = measure_store.eps_rows(quarters)[0]
+    assert row["guid_rev_mid"] == 510.0e6, row
+    assert row["guid_ebitda_mid"] == 105.0e6, row
+
 
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]

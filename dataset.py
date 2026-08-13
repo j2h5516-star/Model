@@ -50,7 +50,9 @@ PER_SHARE_ABS_LIMIT = 100.0
 
 # 분기 행에서 통행시키는 칸 (measure_store.EPS_FIELDS + 가이던스 3칸)
 _NUMBER_FIELDS = ("revenue", "op_income", "adj_eps", "adjusted_ebitda",
-                  "gaap_eps", "guid_eps_low", "guid_eps_high", "guid_eps_mid")
+                  "gaap_eps", "guid_eps_low", "guid_eps_high", "guid_eps_mid",
+                  "guid_rev_low", "guid_rev_high", "guid_rev_mid",
+                  "guid_ebitda_low", "guid_ebitda_high", "guid_ebitda_mid")
 _PER_SHARE_FIELDS = ("adj_eps", "gaap_eps",
                      "guid_eps_low", "guid_eps_high", "guid_eps_mid")
 

@@ -55,10 +55,21 @@ def eps_rows(quarters: list[dict] | None) -> list[dict]:
     rows = []
     for quarter in quarters:
         row = {key: quarter.get(key) for key in EPS_FIELDS}
-        guid = fe.parse_guidance_eps(quarter.get("guidance_text") or "")
+        guidance_text = quarter.get("guidance_text") or ""
+        guid = fe.parse_guidance_eps(guidance_text)
         row["guid_eps_low"] = guid["low"]
         row["guid_eps_high"] = guid["high"]
         row["guid_eps_mid"] = guid["mid"]
+        # 매출·조정 EBITDA 가이던스 (대책 2) — EPS 가이던스를 안 주는
+        # 회사가 대부분이라, 회사가 직접 준 다른 전망 숫자도 원문 그대로 담습니다
+        rev = fe.parse_guidance_revenue(guidance_text)
+        row["guid_rev_low"] = rev["low"]
+        row["guid_rev_high"] = rev["high"]
+        row["guid_rev_mid"] = rev["mid"]
+        ebitda = fe.parse_guidance_ebitda(guidance_text)
+        row["guid_ebitda_low"] = ebitda["low"]
+        row["guid_ebitda_high"] = ebitda["high"]
+        row["guid_ebitda_mid"] = ebitda["mid"]
         rows.append(row)
     return rows
 
