@@ -522,6 +522,46 @@ def test_real_merger_announcement_is_not_earnings():
     assert not sf._looks_like_earnings(text)
 
 
+def test_forecast_sentence_is_not_quarterly_eps():
+    """전망·연간 목표 문장의 EPS 는 분기 실적이 아닙니다 (사고 16).
+
+    실물 (2026-08-13 의심 정수 원문 감사에서 확보):
+      · QRVO: "we continue to expect non-GAAP diluted EPS approaching $7.00"
+      · TER : "estimates in our 2024 earnings model to $4.9 billion and $8.00"
+      · TTMI: "non-GAAP net income per share to approach $5.00" — 그리고
+        같은 문서의 표에 진짜 분기 값 $0.99 가 있음 → 전망 문장을
+        건너뛰면 값이 지워지는 게 아니라 **회수**됩니다.
+    """
+    qrvo = ("For full-year fiscal 2027, we continue to expect non-GAAP gross "
+            "margin above 50% and non-GAAP diluted earnings per share "
+            "approaching $7.00.")
+    assert sf.find_eps_value(qrvo, sf.LABELS_ADJUSTED_EPS) is None
+
+    ter = ("We increased the mid-point of the revenue and non-GAAP earnings "
+           "per share estimates in our 2024 earnings model to $4.9 billion "
+           "and $8.00 respectively.")
+    assert sf.find_eps_value(ter, sf.LABELS_ADJUSTED_EPS) is None
+
+    ttmi = ("We expect non-GAAP net income per share to approach $5.00. "
+            "Our third quarter estimate and full year outlook do not include "
+            "pending acquisitions.\n"
+            "Non-GAAP earnings per diluted share       $0.99      $0.58\n")
+    assert sf.find_eps_value(ttmi, sf.LABELS_ADJUSTED_EPS) == 0.99
+
+
+def test_slide_image_line_is_not_sentence_parsed():
+    """이미지 슬라이드가 눌린 줄(<img ...)의 숫자 나열은 문장이 아닙니다.
+
+    실물 MKSI: 차트 축·값 텍스트 "Non-GAAP Earnings per Diluted Share ...
+    3,900 8.00 550" 에서 8.00(연간 차트 값)을 분기 EPS 로 물었습니다.
+    슬라이드 줄은 날짜 열 파서(분기 제목 필요)만 다루게 합니다.
+    """
+    text = (' <img height="768" src="slide14.jpg"/> 2025 YoY Growth '
+            "Revenue Non-GAAP Earnings per Diluted Share Free Cash Flow "
+            "3,900 8.00 550 35% 23%")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
