@@ -13,17 +13,16 @@ import subprocess
 import sys
 from pathlib import Path
 
+# v3 재건축 0단계 — 수집 계층만 남았습니다.
+# 측정·판정·화면 테스트는 그 코드와 함께 철거했고 (v2-final 브랜치에 봉인),
+# v3 4·5·6단계에서 새 코드와 함께 새로 씁니다.
 TEST_FILES = [
     "tests/test_parsing.py",     # 보도자료 숫자 뽑기
-    "tests/test_status.py",      # 상태 판정 핵심 (TTM·델타 방향·신고점)
     "tests/test_market.py",      # 주가·추세·상대강도
     "tests/test_quality.py",     # 숫자 검사 단계 (단위·범위·전망 배수)
     "tests/test_eps_parse.py",   # 보도자료 EPS 읽기 + 이익의 질
-    "tests/test_measure.py",     # 측정용 실데이터 저장 (연료 파이프라인)
-    "tests/test_measurement.py", # 2단계 측정 장치 (창·검열·미래 보기 차단)
+    "tests/test_measure.py",     # 수집 결과 꾸리기 (snapshot.json 만들기)
     "tests/test_collect_job.py", # 수집 로봇 (반쯤 깨진 날 방어·파일 기록)
-    "tests/test_verdict.py",     # 자동 판정 (채택 규칙·표본 분리)
-    "tests/test_app_render.py",  # 화면이 실제로 그려지는지
 ]
 
 if __name__ == "__main__":

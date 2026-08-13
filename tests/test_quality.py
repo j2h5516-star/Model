@@ -20,7 +20,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import config as cfg  # noqa: E402
 import data_quality as dq  # noqa: E402
 import forward_estimates as fe  # noqa: E402
-import status  # noqa: E402
 from fixtures import make_quarters  # noqa: E402
 
 M = 1_000_000
@@ -355,31 +354,6 @@ def test_latest_quarter_jump_is_pending_not_guessed():
 
     assert 4 in found["pending"], found
     assert any("알 수 없습니다" in r for r in found["reasons"])
-
-
-def test_direction_is_withheld_after_spike():
-    """튄 분기가 최근에 있으면 방향을 단정하지 말아야 함"""
-    quarters = [
-        {"period_label": f"Q{i}", "op_income": v, "revenue": v * 4}
-        for i, v in enumerate(
-            [80 * M, 85 * M, 90 * M, 95 * M, 100 * M, 260 * M], 1
-        )
-    ]
-    checked = dq.validate_quarters(quarters, {})
-    result = status.judge_delta(checked)
-
-    assert result["direction"] == cfg.D_UNKNOWN, result
-    assert "판정을 미룹니다" in result["detail"]
-
-
-def test_single_signal_is_not_a_firm_call():
-    """신호 하나만 방향을 보이면 단정하지 말고 '약한' 판정이어야 함"""
-    # 증가율이 매 분기 +2%p대로 오름 — 추세는 우상향이지만 단기 문턱(3%p)에는 못 미침
-    quarters = make_quarters([100 * M, 112 * M, 128 * M, 150 * M, 180 * M])
-    result = status.judge_delta(quarters)
-
-    assert result["direction"] == cfg.D_WEAK_ACCEL, result
-
 
 
 # ---------------------------------------------------------------------------
