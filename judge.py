@@ -28,17 +28,37 @@ import measure_engine as me
 
 MIN_SIGNAL_N = 10   # 사전 등록: 이보다 작으면 "판정 불가"
 
-# 가설 정의 (11차 등록): 이름 → (표본 필터, 신호 조건)
-#   표본 필터: 이 가설에서 판단 가능한 사건인가 (H5b·H6 워밍업 제외 규칙)
+# 가설 정의 (11차·12차 등록): 이름 → (표본 필터, 신호 조건)
+#   표본 필터: 이 가설에서 판단 가능한 사건인가.
+#   · H2~H6 은 **조정 EPS 잣대** 사건만 (11차 정의 그대로 — 12차에서 재확인)
+#   · H7·H8 은 각각 EBITDA·GAAP EPS 잣대 그룹 — 기준선도 같은 그룹 (12차)
 #   신호 조건: 그 표본 안에서 신호 그룹에 드는가
+def _adj(e):
+    return e.get("잣대", "adj_eps") == "adj_eps"
+
+
 HYPOTHESES: dict[str, tuple] = {
-    "H2_신고점": (lambda e: True, lambda e: e["new_high"]),
-    "H2b_신고점_첫돌파": (lambda e: True, lambda e: e["newhigh_streak"] == 1),
-    "H5_실적폭_고정20": (lambda e: e["h5"] is not None, lambda e: e["h5"] is True),
-    "H5b_실적폭_중앙값": (lambda e: e["h5b"] is not None, lambda e: e["h5b"] is True),
+    "H2_신고점": (_adj, lambda e: e["new_high"]),
+    "H2b_신고점_첫돌파": (_adj, lambda e: e["newhigh_streak"] == 1),
+    "H5_실적폭_고정20": (
+        lambda e: _adj(e) and e["h5"] is not None,
+        lambda e: e["h5"] is True,
+    ),
+    "H5b_실적폭_중앙값": (
+        lambda e: _adj(e) and e["h5b"] is not None,
+        lambda e: e["h5b"] is True,
+    ),
     "H6_결합_H5bxH2b": (
-        lambda e: e["h5b"] is not None,
+        lambda e: _adj(e) and e["h5b"] is not None,
         lambda e: e["h5b"] is True and e["newhigh_streak"] == 1,
+    ),
+    "H7_EBITDA_첫돌파": (
+        lambda e: e.get("잣대") == "adjusted_ebitda",
+        lambda e: e["newhigh_streak"] == 1,
+    ),
+    "H8_GAAPEPS_첫돌파": (
+        lambda e: e.get("잣대") == "gaap_eps",
+        lambda e: e["newhigh_streak"] == 1,
     ),
 }
 

@@ -36,6 +36,8 @@ FRESH_DAYS = 140             # 게이지: 발표가 이보다 오래되면 김�
 GAUGE_FIXED_ON_PCT = 20.0    # H5 (기존 등록) — 고정 문턱
 GAUGE_WARMUP_WEEKS = 52      # H5b — 이력이 이보다 짧으면 판단 불가
 ENTRY_MAX_GAP_DAYS = 10      # 발표 후 이 일수 안에 거래일이 없으면 못 잰다
+LADDER_MIN_QUARTERS = 8      # 12차 등록 — 잣대로 인정할 최소 보유 분기
+LADDER = ("adj_eps", "adjusted_ebitda", "gaap_eps")   # 사다리 순서 (12차 등록)
 
 
 def _to_date(text: str) -> date:
@@ -123,6 +125,23 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
             )
     states.sort(key=lambda s: s["announced"])
     return states
+
+
+# ---------------------------------------------------------------------------
+# 잣대 사다리 (12차 등록) — 회사마다 측정 잣대를 하나로 고정
+# ---------------------------------------------------------------------------
+def yardstick_of(rows: list[dict]) -> str | None:
+    """이 종목의 측정 잣대를 사다리 규칙으로 정합니다.
+
+    조정 EPS ≥ 8분기 → 조정 EPS, 아니면 조정 EBITDA ≥ 8분기 → EBITDA,
+    아니면 GAAP EPS ≥ 8분기 → GAAP EPS, 전부 미달이면 None (측정 제외).
+    한 종목 안에서 잣대를 절대 섞지 않습니다.
+    """
+    for field in LADDER:
+        have = sum(1 for r in rows or [] if r.get(field) is not None)
+        if have >= LADDER_MIN_QUARTERS:
+            return field
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -244,17 +263,26 @@ def gauge_h5b_on(series: dict, day: str) -> bool | None:
 def collect_events(ds: dict) -> tuple[list[dict], dict]:
     """모든 발표 사건 목록과 건너뛴 사유 집계를 돌려줍니다.
 
-    사건: {"ticker", "announced", "new_high", "newhigh_streak",
+    사건: {"ticker", "잣대", "announced", "new_high", "newhigh_streak",
            "h5", "h5b", "excess"}
+
+    잣대는 12차 등록의 사다리로 종목마다 하나로 고정됩니다. 게이지(H5·H5b)는
+    등록 정의 그대로 **조정 EPS 잣대**의 폭만 잽니다 (사다리와 무관).
     """
     spy = ds["prices"].get(ds["benchmark"])
     series = gauge_series(ds)
     events: list[dict] = []
-    skipped = {"주가없음": 0, "우측검열": 0, "주가시작전": 0, "기타": 0}
+    skipped = {"주가없음": 0, "우측검열": 0, "주가시작전": 0,
+               "잣대없음": 0, "기타": 0}
 
     for ticker in ds["tickers"]:
+        rows = ds["quarters"].get(ticker) or []
+        yardstick = yardstick_of(rows)
+        if yardstick is None:
+            skipped["잣대없음"] += 1        # 종목 단위 — 측정 제외 (12차 ④)
+            continue
         prices = ds["prices"].get(ticker)
-        states = earnings_states(ds["quarters"].get(ticker) or [])
+        states = earnings_states(rows, field=yardstick)
         if not prices or not prices.get("dates"):
             skipped["주가없음"] += len(states)
             continue
@@ -266,6 +294,7 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
             events.append(
                 {
                     "ticker": ticker,
+                    "잣대": yardstick,
                     "announced": state["announced"],
                     "new_high": state["new_high"],
                     "newhigh_streak": state["newhigh_streak"],

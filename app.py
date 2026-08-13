@@ -105,9 +105,15 @@ def recent_ticker_rows(ds: dict, today: str | None = None) -> list[dict]:
     if today is None:
         today = ds["prices"][ds["benchmark"]]["dates"][-1]
     cutoff = (date.fromisoformat(today) - timedelta(days=RECENT_DAYS)).isoformat()
+    yard_names = {"adj_eps": "조정 EPS", "adjusted_ebitda": "조정 EBITDA",
+                  "gaap_eps": "GAAP EPS"}
     rows = []
     for ticker in ds["tickers"]:
-        states = me.earnings_states(ds["quarters"].get(ticker) or [])
+        quarters = ds["quarters"].get(ticker) or []
+        # 측정 잣대(12차 사다리). 미달 종목도 화면에는 사실을 보여 주되
+        # 측정 제외임이 드러나게 조정 EPS 기준으로 표시합니다.
+        yardstick = me.yardstick_of(quarters) or "adj_eps"
+        states = me.earnings_states(quarters, field=yardstick)
         if not states:
             continue
         last = states[-1]
@@ -125,6 +131,7 @@ def recent_ticker_rows(ds: dict, today: str | None = None) -> list[dict]:
             {
                 "종목": ticker,
                 "섹터": cfg.SECTORS.get(ticker, "미분류"),
+                "잣대": yard_names[yardstick],
                 "발표일": last["announced"],
                 "TTM 조정EPS": (
                     round(last["ttm"], 2) if last["ttm"] is not None else None
@@ -275,10 +282,11 @@ def main():
     else:
         for row in recent:
             ttm = row["TTM 조정EPS"]
+            yard = "" if row["잣대"] == "조정 EPS" else f" · 잣대: {row['잣대']}"
             st.markdown(
-                f"**{row['종목']}** ({row['섹터']}) · {row['발표일']}  \n"
+                f"**{row['종목']}** ({row['섹터']}) · {row['발표일']}{yard}  \n"
                 f"{row['상태']}"
-                + (f" · 최근 4분기 이익 ${ttm}/주" if ttm is not None else "")
+                + (f" · 최근 4분기 ${ttm:,}" if ttm is not None else "")
             )
     st.caption("· 첫 신기록(H2b) — " + hypothesis_note(verdict if is_v3 else None,
                                                        "H2b_신고점_첫돌파"))

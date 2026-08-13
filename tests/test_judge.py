@@ -21,10 +21,10 @@ import judge  # noqa: E402
 
 
 def event(ticker="NEWCO", announced="2025-01-01", excess=0.0,
-          new_high=False, streak=0, h5=False, h5b=False):
+          new_high=False, streak=0, h5=False, h5b=False, yardstick="adj_eps"):
     return {"ticker": ticker, "announced": announced, "excess": excess,
             "new_high": new_high, "newhigh_streak": streak,
-            "h5": h5, "h5b": h5b}
+            "h5": h5, "h5b": h5b, "잣대": yardstick}
 
 
 # ---------------------------------------------------------------------------
@@ -105,9 +105,23 @@ def test_time_halves_are_reported():
 def test_verdict_covers_all_registered_hypotheses():
     result = judge.run([event() for _ in range(12)])
     for name in ("H2_신고점", "H2b_신고점_첫돌파", "H5_실적폭_고정20",
-                 "H5b_실적폭_중앙값", "H6_결합_H5bxH2b"):
+                 "H5b_실적폭_중앙값", "H6_결합_H5bxH2b",
+                 "H7_EBITDA_첫돌파", "H8_GAAPEPS_첫돌파"):
         assert name in result["가설"], name
         assert result["가설"][name]["판정"] in ("채택", "미채택", "판정 불가")
+
+
+def test_ladder_groups_have_separate_baselines():
+    """12차 등록: H7 의 기준선은 EBITDA 잣대 그룹만, H2b 는 조정 EPS 그룹만."""
+    adj = [event(excess=0.0) for _ in range(30)]
+    ebitda = [event(yardstick="adjusted_ebitda", streak=1 if i < 12 else 0,
+                    excess=50.0 if i < 12 else 0.0) for i in range(15)]
+    result = judge.run(adj + ebitda)
+    h7 = result["가설"]["H7_EBITDA_첫돌파"]["신규(판정)"]
+    assert h7["기준선"]["n"] == 15, h7          # EBITDA 그룹만
+    assert h7["신호"]["n"] == 12, h7
+    h2b = result["가설"]["H2b_신고점_첫돌파"]["신규(판정)"]
+    assert h2b["기준선"]["n"] == 30, h2b        # 조정 EPS 그룹만
 
 
 if __name__ == "__main__":

@@ -217,10 +217,49 @@ def test_gauge_h5b_median_rule():
 
 
 # ---------------------------------------------------------------------------
+# 잣대 사다리 (12차 등록)
+# ---------------------------------------------------------------------------
+def _rows_with(field, n, start="2023-01-31"):
+    from datetime import date, timedelta
+    day = date.fromisoformat(start)
+    rows = []
+    for i in range(n):
+        rows.append({"filing_date": day.isoformat(),
+                     "announced_date": day.isoformat(),
+                     "period_label": str(day)[:7], field: 1.0 + i * 0.1})
+        day += timedelta(days=91)
+    return rows
+
+
+def test_yardstick_ladder_order_and_threshold():
+    assert me.yardstick_of(_rows_with("adj_eps", 8)) == "adj_eps"
+    assert me.yardstick_of(_rows_with("adjusted_ebitda", 8)) == "adjusted_ebitda"
+    assert me.yardstick_of(_rows_with("gaap_eps", 8)) == "gaap_eps"
+    assert me.yardstick_of(_rows_with("adj_eps", 7)) is None          # 8분기 미달
+    # 조정 EPS 가 8분기 이상이면 EBITDA 가 더 많아도 상위 잣대가 이깁니다
+    both = _rows_with("adj_eps", 8)
+    for r in _rows_with("adjusted_ebitda", 12, start="2020-01-31"):
+        both.append(r)
+    assert me.yardstick_of(both) == "adj_eps"
+
+
+def test_collect_events_tags_yardstick_and_excludes_short_history():
+    """사건에 잣대가 붙고, 8분기 미달 종목은 측정에서 빠져야 합니다."""
+    ds = _mini_ds({
+        "EB": _rows_with("adjusted_ebitda", 9, start="2024-01-31"),
+        "SHORT": _rows_with("adj_eps", 5, start="2024-01-31"),
+    }, price_days=800)
+    events, skipped = me.collect_events(ds)
+    assert events and all(e["잣대"] == "adjusted_ebitda" for e in events), events[:2]
+    assert all(e["ticker"] == "EB" for e in events)
+    assert skipped["잣대없음"] == 1, skipped
+
+
+# ---------------------------------------------------------------------------
 # 사건 수집 종합
 # ---------------------------------------------------------------------------
 def test_collect_events_fields_and_censoring():
-    ds = _mini_ds({"A": _history_rows([1, 1, 1, 1, 2])}, price_days=800)
+    ds = _mini_ds({"A": _history_rows([1, 1, 1, 1, 2, 2, 2, 2])}, price_days=800)
     events, skipped = me.collect_events(ds)
     assert events, "사건이 없습니다"
     e = events[-1]
