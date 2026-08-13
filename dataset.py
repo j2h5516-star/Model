@@ -121,6 +121,16 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
                     )
                     clean[field] = None
 
+            # 매출 최저 하한: 자릿수가 무너진 매출(실물: APP 21Q4 3.55달러 —
+            # 주당·백만 단위 착오 3건 실측)은 없음으로. 이 유니버스에 분기
+            # 매출 1만 달러 미만 회사는 없습니다.
+            if clean.get("revenue") is not None and clean["revenue"] < 10_000:
+                notes.append(
+                    f"{ticker} {clean.get('period_label', '?')}: "
+                    f"매출 {clean['revenue']} 은 자릿수가 무너진 값이라 없음 처리"
+                )
+                clean["revenue"] = None
+
             # 주당 금액 상한 (2차 방어 — 위 PER_SHARE_ABS_LIMIT 주석 참조)
             for field in _PER_SHARE_FIELDS:
                 value = clean.get(field)

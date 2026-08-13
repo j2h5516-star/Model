@@ -135,6 +135,15 @@ def test_sector_gauge_rows_split_by_sector():
     assert result[cfg.SECTORS[hot_ticker]]["평소대비"] == "판단 불가"
 
 
+def test_every_ticker_has_a_theme():
+    """모든 종목이 테마(없으면 업종 대체)를 갖고, 테마 표에 죽은 항목이 없어야."""
+    import config as cfg
+    for t in cfg.TICKERS:
+        assert cfg.theme_of(t) != "미분류", t
+    extra = [t for t in cfg.THEMES if t not in cfg.TICKERS]
+    assert not extra, f"유니버스에 없는 테마 항목: {extra}"
+
+
 def test_every_ticker_has_a_sector():
     """유니버스 79종목 전부에 섹터가 있어야 합니다 (빠지면 화면에 미분류)."""
     import config as cfg
