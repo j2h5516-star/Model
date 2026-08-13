@@ -48,5 +48,14 @@ jobs:
             echo "변경 없음 — 커밋 생략"
           else
             git commit -m "자동 수집 — $(date -u +%Y-%m-%d) ($(git diff --cached --numstat | wc -l)개 파일)"
-            git push
+            # 로봇이 도는 30~40분 사이 main 에 다른 커밋(PR 머지)이 들어오면
+            # push 가 거부되어 그날 수집이 통째로 버려집니다 (2026-08-13 실제 사고
+            # — 17개 파일 수집 성공 후 push 거부). 로봇의 변경은 data/measure
+            # 뿐이라 코드와 충돌하지 않으므로, rebase 후 다시 밉니다 (3회 시도).
+            for attempt in 1 2 3; do
+              if git push; then break; fi
+              echo "push 거부 — main 을 당겨 rebase 후 재시도 ($attempt/3)"
+              git pull --rebase origin main || exit 1
+              [ "$attempt" = 3 ] && { echo "3회 실패"; exit 1; }
+            done
           fi
