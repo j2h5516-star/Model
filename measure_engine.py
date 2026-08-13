@@ -176,16 +176,20 @@ def weekly_grid(daily_dates: list[str]) -> list[str]:
     return weeks
 
 
-def gauge_series(ds: dict) -> dict:
+def gauge_series(ds: dict, tickers: list[str] | None = None) -> dict:
     """실적 폭 게이지 시계열: {"weeks": [...], "values": [...]}.
 
     각 주 마지막 거래일에, 최근 발표가 140일 이내로 신선한 종목 중
     **최근 발표가 TTM 신고점 상태였던 종목의 비율**(%). 신선한 발표가
     하나도 없으면 그 주는 None (없음은 없음으로).
+
+    tickers 로 부분집합(예: 한 섹터)을 주면 그 무리만의 폭을 잽니다.
+    ⚠️ 섹터별 게이지는 **관찰용**입니다 — 사전 등록된 가설이 아니므로
+    판정(judge)에는 쓰지 않고 계기판에 사실로만 표시합니다.
     """
     per_ticker: dict[str, list[dict]] = {
         t: earnings_states(ds["quarters"].get(t) or [])
-        for t in ds["tickers"]
+        for t in (tickers if tickers is not None else ds["tickers"])
     }
     weeks = weekly_grid(ds["prices"][ds["benchmark"]]["dates"])
     values: list[float | None] = []

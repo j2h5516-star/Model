@@ -94,6 +94,47 @@ def test_recent_rows_report_facts_only():
     assert {r["섹터"] for r in rows_out} == {"미분류"}
 
 
+def test_sector_gauge_rows_split_by_sector():
+    """섹터별 게이지: 신기록이 있는 섹터만 값이 올라가야 합니다."""
+    from datetime import date, timedelta
+
+    def rows(eps_list, start="2024-01-31"):
+        day = date.fromisoformat(start)
+        out = []
+        for eps in eps_list:
+            out.append({"filing_date": day.isoformat(),
+                        "announced_date": day.isoformat(),
+                        "period_label": str(day)[:7], "adj_eps": eps})
+            day += timedelta(days=91)
+        return out
+
+    import config as cfg
+    hot = sorted(cfg.SECTORS)[0]          # 실제 유니버스 종목 2개를 빌려 씀
+    hot_ticker = hot
+    cold_ticker = None
+    hot_sector = cfg.SECTORS[hot]
+    for t in sorted(cfg.SECTORS):
+        if cfg.SECTORS[t] != hot_sector:
+            cold_ticker = t
+            break
+    quarters = {
+        hot_ticker: rows([1, 1, 1, 1, 2]),     # 마지막 발표 = 신고점
+        cold_ticker: rows([1, 1, 1, 1, 1]),    # 신고점 아님
+    }
+    dates = [r["announced_date"] for r in rows([0] * 5)] + ["2025-02-10"]
+    ds = {
+        "benchmark": "SPY",
+        "tickers": [hot_ticker, cold_ticker],
+        "quarters": quarters,
+        "prices": {"SPY": {"dates": dates, "close": [500.0] * len(dates)}},
+    }
+    result = {r["섹터"]: r for r in app.sector_gauge_rows(ds)}
+    assert result[cfg.SECTORS[hot_ticker]]["게이지"] == 100.0, result
+    assert result[cfg.SECTORS[cold_ticker]]["게이지"] == 0.0, result
+    # 이력이 몇 주뿐이므로 "평소 대비"는 판단 불가여야 합니다
+    assert result[cfg.SECTORS[hot_ticker]]["평소대비"] == "판단 불가"
+
+
 def test_every_ticker_has_a_sector():
     """유니버스 79종목 전부에 섹터가 있어야 합니다 (빠지면 화면에 미분류)."""
     import config as cfg
