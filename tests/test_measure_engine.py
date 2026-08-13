@@ -269,6 +269,25 @@ def test_collect_events_fields_and_censoring():
     assert isinstance(e["excess"], float)
 
 
+def test_below_52wk_ma():
+    """H9 (21차 등록): 주봉 종가 vs 52주 이동평균 — 이력 부족은 판단 불가."""
+    dates, closes = _daily(300)                      # 약 60주
+    prices = {"dates": dates, "close": closes}
+    # 꾸준히 오르는 가격 → 항상 52주선 위
+    assert me.below_52wk_ma(prices, dates[-1]) is False
+    # 이력 52주 미만 시점 → 판단 불가
+    assert me.below_52wk_ma(prices, dates[100]) is None
+    # 마지막에 급락한 가격 → 52주선 아래
+    dropped = {"dates": dates, "close": closes[:-1] + [closes[0] * 0.3]}
+    assert me.below_52wk_ma(dropped, dates[-1]) is True
+
+
+def test_collect_events_carry_below52():
+    ds = _mini_ds({"A": _history_rows([1, 1, 1, 1, 2, 2, 2, 2])}, price_days=800)
+    events, _ = me.collect_events(ds)
+    assert all("below52" in e for e in events)
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

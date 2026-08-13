@@ -60,6 +60,12 @@ HYPOTHESES: dict[str, tuple] = {
         lambda e: e.get("잣대") == "gaap_eps",
         lambda e: e["newhigh_streak"] == 1,
     ),
+    # H9 (21차 등록): 잣대 TTM 첫 신고점 ∧ 주봉 종가 < 52주 이동평균.
+    # 표본 = 52주선 판단 가능 사건 (이력 52주 미만 제외)
+    "H9_저평가_첫신기록": (
+        lambda e: e.get("below52") is not None,
+        lambda e: e["newhigh_streak"] == 1 and e["below52"] is True,
+    ),
 }
 
 

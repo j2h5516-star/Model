@@ -231,6 +231,30 @@ def gauge_series(ds: dict, tickers: list[str] | None = None) -> dict:
     return {"weeks": weeks, "values": values}
 
 
+def below_52wk_ma(prices: dict, announce: str) -> bool | None:
+    """발표 시점 주봉 종가가 52주 이동평균 아래인가 (H9 — 21차 등록).
+
+    주봉 = 각 주 마지막 거래일 종가. 발표일까지의 주봉만 씁니다 (미래 금지).
+    이력이 52주 미만이면 판단 불가(None) — H9 표본에서 제외.
+    """
+    upto = str(announce)[:10]
+    weeks: list[float] = []
+    current = None
+    for day, close in zip(prices["dates"], prices["close"]):
+        if day > upto:
+            break
+        iso = date.fromisoformat(day).isocalendar()
+        key = (iso[0], iso[1])
+        if key != current:
+            weeks.append(close)
+            current = key
+        else:
+            weeks[-1] = close
+    if len(weeks) < 52:
+        return None
+    return weeks[-1] < sum(weeks[-52:]) / 52.0
+
+
 def gauge_at(series: dict, day: str) -> float | None:
     """그 날짜 기준 가장 최근 주의 게이지 값."""
     idx = bisect.bisect_right(series["weeks"], str(day)[:10]) - 1
@@ -300,6 +324,8 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
                     "newhigh_streak": state["newhigh_streak"],
                     "h5": gauge_h5_on(series, state["announced"]),
                     "h5b": gauge_h5b_on(series, state["announced"]),
+                    # H9 (21차 등록): 발표 시점 주봉 종가 < 52주 이동평균
+                    "below52": below_52wk_ma(prices, state["announced"]),
                     "excess": excess,
                 }
             )
