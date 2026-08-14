@@ -21,7 +21,9 @@ from __future__ import annotations
 import json
 import os
 import sys
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
 import config as cfg
@@ -34,9 +36,23 @@ import sec_fundamentals as sf
 
 
 def collect_fundamentals(tickers: list[str], progress=print) -> list[dict]:
-    """종목별 실적을 순차 수집합니다 (SEC 신원 창구 문제로 병렬 금지 — v1 교훈)."""
-    reports: list[dict] = []
-    for index, ticker in enumerate(tickers, start=1):
+    """종목별 실적을 **절제된 병렬**로 수집합니다 (26차 개선).
+
+    v1 사고(무절제 병렬 → SEC 403·"client has been closed")의 원인은 병렬
+    자체가 아니라 ① set_identity 경쟁 ② 속도 무제한이었습니다. ①은
+    sec_fundamentals 의 _identity_lock 이 막고(신원을 병렬 시작 **전에**
+    한 번 설정해 두 번째 방어), ②는 일꾼 수를 config.COLLECT_WORKERS(=3)
+    로 묶어 SEC 허용치(초당 10요청)의 절반 아래로 유지합니다.
+    문서 캐시(증분 수집) 덕에 평상시 요청 수 자체도 적습니다.
+    결과 목록은 입력 종목 순서 그대로 돌려줍니다 (재현성).
+    """
+    sf._ensure_identity()          # 병렬 시작 전에 신원 설정 — 경쟁 원천 차단
+    reports: list[dict | None] = [None] * len(tickers)
+    done_lock = threading.Lock()
+    done = 0
+
+    def _one(index: int, ticker: str) -> None:
+        nonlocal done
         started = time.monotonic()
         try:
             _quarters, report = sf.get_fundamentals(ticker, use_cache=False)
@@ -44,15 +60,23 @@ def collect_fundamentals(tickers: list[str], progress=print) -> list[dict]:
             report = sf.new_report(ticker)
             report["first_error"] = f"{type(exc).__name__}: {str(exc)[:160]}"
         report["seconds"] = round(time.monotonic() - started, 1)
-        reports.append(report)
-        progress(
-            f"[{index}/{len(tickers)}] {ticker}: "
-            f"직접공시 {report.get('merged_direct', 0)}건 · "
-            f"조정EPS {report.get('adj_eps_ok', 0)}건 · "
-            f"{report['seconds']}초"
-            + (f" · ⚠️ {report['first_error']}" if report.get("first_error") else "")
-        )
-    return reports
+        reports[index] = report
+        with done_lock:
+            done += 1
+            progress(
+                f"[{done}/{len(tickers)}] {ticker}: "
+                f"직접공시 {report.get('merged_direct', 0)}건 · "
+                f"조정EPS {report.get('adj_eps_ok', 0)}건 · "
+                f"캐시 {report.get('cache_hits', 0)}/신규 "
+                f"{report.get('cache_downloads', 0)} · "
+                f"{report['seconds']}초"
+                + (f" · ⚠️ {report['first_error']}" if report.get("first_error") else "")
+            )
+
+    with ThreadPoolExecutor(max_workers=cfg.COLLECT_WORKERS) as pool:
+        for index, ticker in enumerate(tickers):
+            pool.submit(_one, index, ticker)
+    return [r for r in reports if r is not None]
 
 
 def collect_prices(tickers: list[str], progress=print) -> dict:
@@ -131,6 +155,8 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
                 "adj_eps_ok": r.get("adj_eps_ok", 0),
                 "merged_direct": r.get("merged_direct", 0),
                 "seconds": r.get("seconds"),
+                "cache_hits": r.get("cache_hits", 0),
+                "cache_downloads": r.get("cache_downloads", 0),
                 "first_error": r.get("first_error", ""),
             }
             for r in reports

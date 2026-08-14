@@ -1022,6 +1022,8 @@ def new_report(ticker: str) -> dict:
         "gaap_eps_ok": 0,          # GAAP EPS 를 뽑아낸 건수 (이익의 질 검사용)
         "xbrl_quarters": 0,        # XBRL로 만든 분기 수
         "merged_direct": 0,        # 8-K 값으로 덮어쓴 분기 수
+        "cache_hits": 0,           # 원문 캐시에서 읽은 공시 수 (26차 증분 수집)
+        "cache_downloads": 0,      # SEC에서 새로 내려받은 공시 수
         "text_source": "",         # 텍스트를 어디서 얻었나 (보도자료/첨부/본문)
         "first_error": "",         # 첫 예외 (화면 요약용)
         "all_errors": [],          # 그 뒤의 예외들 — 첫 것만 보면 진짜 실패를 놓칩니다
@@ -1101,7 +1103,7 @@ def fetch_earnings_8k(
         scanned += 1
         report["filings_found"] += 1
 
-        text, text_source, had_exhibit = _earnings_text(filing, report)
+        text, text_source, had_exhibit = _earnings_text_cached(ticker, filing, report)
         if not text:
             continue
         report["text_ok"] += 1
@@ -1277,6 +1279,56 @@ def _record_error(report: dict | None, where: str, exc: Exception) -> None:
     errors = report.setdefault("all_errors", [])
     if message not in errors and len(errors) < 20:
         errors.append(message)
+
+
+def _raw8k_cache_path(ticker: str, accession: str) -> str:
+    """공시 원문 캐시 파일 경로 (data/raw8k/종목/공시번호.json)."""
+    safe = str(accession).replace("/", "-")
+    folder = os.path.join(cfg.RAW8K_CACHE_DIR, ticker)
+    os.makedirs(folder, exist_ok=True)
+    return os.path.join(folder, f"{safe}.json")
+
+
+def _earnings_text_cached(
+    ticker: str, filing, report: dict | None = None
+) -> tuple[str, str, bool]:
+    """공시 문서는 불변 — 한 번 추출한 텍스트는 캐시에서 읽습니다 (26차 개선).
+
+    · 캐시 열쇠 = 공시 고유번호(accession). 없으면 캐시 없이 그냥 받습니다.
+    · 빈 결과는 캐시하지 않습니다 — 일시적 네트워크 실패가 "이 공시엔
+      텍스트 없음"으로 영구 박제되는 것을 막기 위해서입니다.
+    · 캐시에는 **추출 텍스트**만 저장하고 해석(파싱)은 매번 새로 하므로,
+      파서를 고치면 과거 데이터에도 즉시 반영됩니다.
+    · 추출 방식 자체가 바뀌면 config.RAW8K_CACHE_VERSION 을 올려 무효화.
+    """
+    accession = (getattr(filing, "accession_no", None)
+                 or getattr(filing, "accession_number", None))
+    if accession:
+        path = _raw8k_cache_path(ticker, accession)
+        if os.path.exists(path):
+            try:
+                with open(path, encoding="utf-8") as f:
+                    payload = json.load(f)
+                if payload.get("v") == cfg.RAW8K_CACHE_VERSION:
+                    if report is not None:
+                        report["cache_hits"] = report.get("cache_hits", 0) + 1
+                    return payload["text"], payload["source"], payload["had_exhibit"]
+            except Exception:
+                pass    # 깨진 캐시는 무시하고 새로 받습니다
+
+    text, source, had_exhibit = _earnings_text(filing, report)
+
+    if accession and text:
+        try:
+            with open(_raw8k_cache_path(ticker, accession), "w", encoding="utf-8") as f:
+                json.dump({"v": cfg.RAW8K_CACHE_VERSION, "text": text,
+                           "source": source, "had_exhibit": had_exhibit},
+                          f, ensure_ascii=False)
+        except OSError:
+            pass        # 캐시 저장 실패는 수집을 막지 않습니다
+    if report is not None and text:
+        report["cache_downloads"] = report.get("cache_downloads", 0) + 1
+    return text, source, had_exhibit
 
 
 def _earnings_text(filing, report: dict | None = None) -> tuple[str, str, bool]:
