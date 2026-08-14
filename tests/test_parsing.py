@@ -725,6 +725,19 @@ def test_guidance_giant_sentence_blob_is_skipped():
     assert fe.parse_guidance_revenue(blob)["mid"] is None
 
 
+def test_fiscal_year_quarter_sentence_is_not_annual():
+    """29차 회귀: "first quarter of fiscal year 2026" 문장이 연간으로
+    오인돼 버려졌던 사고 — 분기를 직접 명명한 항목은 연간이 아닙니다."""
+    s = ("For the first quarter of fiscal year 2026, the Company expects "
+         "revenue of $500 million to $540 million.")
+    rev = fe.parse_guidance_revenue(s)
+    assert rev["low"] == 500e6 and rev["high"] == 540e6, rev
+    # 반대로, 분기 낱말 없는 연간 불릿은 여전히 버려야 합니다
+    block = ("Guidance for the second quarter of fiscal 2026:\n"
+             "• Full year revenue of $2.0 billion to $2.2 billion\n")
+    assert fe.parse_guidance_revenue(block)["mid"] is None, "연간 불릿이 통과!"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

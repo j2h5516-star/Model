@@ -384,6 +384,10 @@ _ANNUAL_CUT_RE = re.compile(
     r"|fiscal\s+year\s+20\d{2}\s+(?:guidance|outlook|to\s+include)",
     re.I,
 )
+_ITEM_ANNUAL_RE = re.compile(
+    r"full[-\s]?year|for\s+the\s+(?:full\s+)?year\b|annual\s+(?:guidance|outlook|revenue)",
+    re.I,
+)
 _BLOCK_SPAN = 1400
 
 
@@ -415,7 +419,7 @@ def _quarter_items(text: str) -> list[str]:
     각 항목은 연간 표지가 들어 있으면 버립니다.
     """
     items: list[str] = []
-    for sentence in re.split(r"(?<=[.!?])\s+", text):
+    for sentence in re.split(r"(?<=[.!?])\s+|[\n\r]+", text):
         # 구두점 없는 머리말·표 덩어리는 수백 자짜리 가짜 "문장"이 되어
         # 분기·전망·매출 낱말을 몽땅 품습니다 (AXP 실물 오탐). 진짜
         # 가이던스 문장은 이보다 짧습니다.
@@ -436,7 +440,17 @@ def _quarter_items(text: str) -> list[str]:
             bullet = line.startswith(("•", "-", "–", "▪", "●", "*", "◦"))
             if bullet or _FORWARD_RE.search(line):
                 items.append(line)
-    return [i for i in items if not _ANNUAL_HINTS.search(i)]
+    # 연간 오인 방지의 원칙: **분기를 직접 명명한 항목은 연간이 아니다.**
+    # (_ANNUAL_HINTS 에는 "fiscal year 20XX"가 들어 있어, "first quarter of
+    # fiscal year 2026" 같은 진짜 분기 문장까지 지웠던 회귀 — 29차.)
+    # 분기 낱말이 없는 상속 항목(불릿)에만 좁은 연간 표지를 적용한다.
+    # 좁은 연간 표지(full year·for the year·annual …)는 분기 낱말이 함께
+    # 있어도 버린다 — "full year … for the fourth quarter update" 같은 혼합
+    # 문장은 어느 분기 값인지 확신할 수 없다 ("없음"이 안전).
+    # 넓은 표지(_ANNUAL_HINTS 의 "fiscal year 20XX")는 여기서 쓰지 않는다 —
+    # "first quarter of fiscal year 2026" 같은 진짜 분기 문장을 죽였던
+    # 회귀(29차)의 원인이었다.
+    return [i for i in items if not _ITEM_ANNUAL_RE.search(i)]
 
 
 # ± 형 (실물: AMD "approximately $11.2 billion, plus or minus $300 million" ·
