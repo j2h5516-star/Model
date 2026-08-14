@@ -1,0 +1,4165 @@
+{
+ "설명": "야후 보관(사후 제공) 분기 서프라이즈 기록 — 추정(epsEstimate)과 실제(epsActual)는 야후가 보관한 값을 그대로 받아 적음. 추가 전용, (종목, 분기) 중복은 최초 기록 유지. 원장(consensus.json) 이후의 발표는 원장이 정본.",
+ "tickers": {
+  "CRDO": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.36055,
+    "act": 0.52,
+    "surprise_pct": 44.2
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.49534,
+    "act": 0.67,
+    "surprise_pct": 35.3
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.94073,
+    "act": 1.07,
+    "surprise_pct": 13.7
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 1.03414,
+    "act": 1.16,
+    "surprise_pct": 12.2
+   }
+  ],
+  "CLS": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.4902,
+    "act": 1.58,
+    "surprise_pct": 6.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.76198,
+    "act": 1.89,
+    "surprise_pct": 7.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.08015,
+    "act": 2.16,
+    "surprise_pct": 3.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.30818,
+    "act": 2.54,
+    "surprise_pct": 10.0
+   }
+  ],
+  "MU": [
+   {
+    "quarter": "2025-08-31",
+    "est": 2.86023,
+    "act": 3.03,
+    "surprise_pct": 5.9
+   },
+   {
+    "quarter": "2025-11-30",
+    "est": 3.96409,
+    "act": 4.78,
+    "surprise_pct": 20.6
+   },
+   {
+    "quarter": "2026-02-28",
+    "est": 9.15866,
+    "act": 12.2,
+    "surprise_pct": 33.2
+   },
+   {
+    "quarter": "2026-05-31",
+    "est": 20.68603,
+    "act": 25.11,
+    "surprise_pct": 21.4
+   }
+  ],
+  "SNDK": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.89122,
+    "act": 1.22,
+    "surprise_pct": 36.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 3.54338,
+    "act": 6.2,
+    "surprise_pct": 75.0
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 14.66111,
+    "act": 23.41,
+    "surprise_pct": 59.7
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 34.515,
+    "act": 39.25,
+    "surprise_pct": 13.7
+   }
+  ],
+  "LITE": [
+   {
+    "quarter": "2025-06-30",
+    "est": 0.80836,
+    "act": 0.88,
+    "surprise_pct": 8.9
+   },
+   {
+    "quarter": "2025-09-30",
+    "est": 0.15976,
+    "act": 0.05,
+    "surprise_pct": -68.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.40853,
+    "act": 1.67,
+    "surprise_pct": 18.6
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.96892,
+    "act": 3.23,
+    "surprise_pct": 8.8
+   }
+  ],
+  "STRL": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.8375,
+    "act": 3.48,
+    "surprise_pct": 22.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.63167,
+    "act": 3.08,
+    "surprise_pct": 17.0
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.19,
+    "act": 3.59,
+    "surprise_pct": 63.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 5.1825,
+    "act": 5.8,
+    "surprise_pct": 11.9
+   }
+  ],
+  "MXL": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.1191,
+    "act": 0.14,
+    "surprise_pct": 17.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.17875,
+    "act": 0.19,
+    "surprise_pct": 6.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.17523,
+    "act": 0.22,
+    "surprise_pct": 25.5
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.32952,
+    "act": 0.35,
+    "surprise_pct": 6.2
+   }
+  ],
+  "COHR": [
+   {
+    "quarter": "2025-06-30",
+    "est": 0.91994,
+    "act": 1.0,
+    "surprise_pct": 8.7
+   },
+   {
+    "quarter": "2025-09-30",
+    "est": 1.04249,
+    "act": 1.16,
+    "surprise_pct": 11.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.20766,
+    "act": 1.29,
+    "surprise_pct": 6.8
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.39433,
+    "act": 1.41,
+    "surprise_pct": 1.1
+   }
+  ],
+  "TTMI": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.6025,
+    "act": 0.67,
+    "surprise_pct": 11.2
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.6825,
+    "act": 0.7,
+    "surprise_pct": 2.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.6675,
+    "act": 0.75,
+    "surprise_pct": 12.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.8975,
+    "act": 0.99,
+    "surprise_pct": 10.3
+   }
+  ],
+  "ICHR": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.11857,
+    "act": 0.07,
+    "surprise_pct": -41.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": -0.05714,
+    "act": 0.01,
+    "surprise_pct": 117.5
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.13143,
+    "act": 0.15,
+    "surprise_pct": 14.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.30714,
+    "act": 0.34,
+    "surprise_pct": 10.7
+   }
+  ],
+  "AMD": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.171,
+    "act": 1.2,
+    "surprise_pct": 2.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.31917,
+    "act": 1.53,
+    "surprise_pct": 16.0
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.29468,
+    "act": 1.37,
+    "surprise_pct": 5.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.60841,
+    "act": 1.66,
+    "surprise_pct": 3.2
+   }
+  ],
+  "PLTR": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.16738,
+    "act": 0.21,
+    "surprise_pct": 25.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.2302,
+    "act": 0.25,
+    "surprise_pct": 8.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.27946,
+    "act": 0.33,
+    "surprise_pct": 18.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.34596,
+    "act": 0.41,
+    "surprise_pct": 18.5
+   }
+  ],
+  "ZETA": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.18385,
+    "act": 0.27066,
+    "surprise_pct": 47.2
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.23306,
+    "act": 0.36854,
+    "surprise_pct": 58.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.11504,
+    "act": 0.16011,
+    "surprise_pct": 39.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.19095,
+    "act": 0.26703,
+    "surprise_pct": 39.8
+   }
+  ],
+  "INTC": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.00705,
+    "act": 0.23,
+    "surprise_pct": 3162.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.08264,
+    "act": 0.15,
+    "surprise_pct": 81.5
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.01313,
+    "act": 0.29,
+    "surprise_pct": 2108.7
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.21819,
+    "act": 0.42,
+    "surprise_pct": 92.5
+   }
+  ],
+  "ENPH": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.65594,
+    "act": 0.9,
+    "surprise_pct": 37.2
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.58473,
+    "act": 0.71,
+    "surprise_pct": 21.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.44566,
+    "act": 0.47,
+    "surprise_pct": 5.5
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.46353,
+    "act": 0.46,
+    "surprise_pct": -0.8
+   }
+  ],
+  "SWKS": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.53277,
+    "act": 1.76,
+    "surprise_pct": 14.8
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.39895,
+    "act": 1.54,
+    "surprise_pct": 10.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.04446,
+    "act": 1.15,
+    "surprise_pct": 10.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.03063,
+    "act": 1.08,
+    "surprise_pct": 4.8
+   }
+  ],
+  "PYPL": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.20568,
+    "act": 1.34,
+    "surprise_pct": 11.1
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.2866,
+    "act": 1.23,
+    "surprise_pct": -4.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.26902,
+    "act": 1.34,
+    "surprise_pct": 5.6
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.2774,
+    "act": 1.38,
+    "surprise_pct": 8.0
+   }
+  ],
+  "QRVO": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.1118,
+    "act": 2.22,
+    "surprise_pct": 5.1
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.86428,
+    "act": 2.17,
+    "surprise_pct": 16.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.2116,
+    "act": 1.69,
+    "surprise_pct": 39.5
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.0643,
+    "act": 1.64,
+    "surprise_pct": 54.1
+   }
+  ],
+  "APP": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.38757,
+    "act": 2.45,
+    "surprise_pct": 2.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.94408,
+    "act": 3.24,
+    "surprise_pct": 10.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 3.44326,
+    "act": 3.56,
+    "surprise_pct": 3.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.74407,
+    "act": 3.76,
+    "surprise_pct": 0.4
+   }
+  ],
+  "NVDA": [
+   {
+    "quarter": "2025-07-31",
+    "est": 1.00867,
+    "act": 1.05,
+    "surprise_pct": 4.1
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 1.25647,
+    "act": 1.3,
+    "surprise_pct": 3.5
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 1.53812,
+    "act": 1.62,
+    "surprise_pct": 5.3
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 1.77191,
+    "act": 1.87,
+    "surprise_pct": 5.5
+   }
+  ],
+  "ANET": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.71442,
+    "act": 0.75,
+    "surprise_pct": 5.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.75804,
+    "act": 0.82,
+    "surprise_pct": 8.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.80761,
+    "act": 0.87,
+    "surprise_pct": 7.7
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.88559,
+    "act": 1.02,
+    "surprise_pct": 15.2
+   }
+  ],
+  "FN": [
+   {
+    "quarter": "2025-06-30",
+    "est": 2.62946,
+    "act": 2.65,
+    "surprise_pct": 0.8
+   },
+   {
+    "quarter": "2025-09-30",
+    "est": 2.81866,
+    "act": 2.92,
+    "surprise_pct": 3.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 3.25034,
+    "act": 3.36,
+    "surprise_pct": 3.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 3.56263,
+    "act": 3.72,
+    "surprise_pct": 4.4
+   }
+  ],
+  "SMCI": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.38923,
+    "act": 0.35,
+    "surprise_pct": -10.1
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.48789,
+    "act": 0.69,
+    "surprise_pct": 41.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.62451,
+    "act": 0.84,
+    "surprise_pct": 34.5
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.95748,
+    "act": 1.7,
+    "surprise_pct": 77.5
+   }
+  ],
+  "LSCC": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.27917,
+    "act": 0.28,
+    "surprise_pct": 0.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.31769,
+    "act": 0.32,
+    "surprise_pct": 0.7
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.36977,
+    "act": 0.41,
+    "surprise_pct": 10.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.44516,
+    "act": 0.53,
+    "surprise_pct": 19.1
+   }
+  ],
+  "SYNA": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.06249,
+    "act": 1.09,
+    "surprise_pct": 2.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.15059,
+    "act": 1.21,
+    "surprise_pct": 5.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.00771,
+    "act": 1.09,
+    "surprise_pct": 8.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.20527,
+    "act": 1.23,
+    "surprise_pct": 2.1
+   }
+  ],
+  "UCTT": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.2175,
+    "act": 0.28,
+    "surprise_pct": 28.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.225,
+    "act": 0.22,
+    "surprise_pct": -2.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.2625,
+    "act": 0.31,
+    "surprise_pct": 18.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.53076,
+    "act": 0.7,
+    "surprise_pct": 31.9
+   }
+  ],
+  "ONTO": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.86857,
+    "act": 0.92,
+    "surprise_pct": 5.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.26286,
+    "act": 1.26,
+    "surprise_pct": -0.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.41571,
+    "act": 1.42,
+    "surprise_pct": 0.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.69079,
+    "act": 1.93,
+    "surprise_pct": 14.1
+   }
+  ],
+  "IPGP": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.19571,
+    "act": 0.35,
+    "surprise_pct": 78.8
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.24833,
+    "act": 0.46,
+    "surprise_pct": 85.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.31143,
+    "act": 0.29,
+    "surprise_pct": -6.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.38857,
+    "act": 0.58,
+    "surprise_pct": 49.3
+   }
+  ],
+  "CGNX": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.29064,
+    "act": 0.33,
+    "surprise_pct": 13.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.21962,
+    "act": 0.27,
+    "surprise_pct": 22.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.24805,
+    "act": 0.34,
+    "surprise_pct": 37.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.42482,
+    "act": 0.45,
+    "surprise_pct": 5.9
+   }
+  ],
+  "AVGO": [
+   {
+    "quarter": "2025-07-31",
+    "est": 1.66338,
+    "act": 1.69,
+    "surprise_pct": 1.6
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 1.86817,
+    "act": 1.95,
+    "surprise_pct": 4.4
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 2.02326,
+    "act": 2.05,
+    "surprise_pct": 1.3
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 2.39835,
+    "act": 2.44,
+    "surprise_pct": 1.7
+   }
+  ],
+  "QCOM": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.87578,
+    "act": 3.0,
+    "surprise_pct": 4.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 3.40235,
+    "act": 3.5,
+    "surprise_pct": 2.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.56433,
+    "act": 2.65,
+    "surprise_pct": 3.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.22079,
+    "act": 2.21,
+    "surprise_pct": -0.5
+   }
+  ],
+  "TXN": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.4859,
+    "act": 1.48,
+    "surprise_pct": -0.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.30773,
+    "act": 1.27,
+    "surprise_pct": -2.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.36856,
+    "act": 1.68,
+    "surprise_pct": 22.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.937,
+    "act": 2.14,
+    "surprise_pct": 10.5
+   }
+  ],
+  "ADI": [
+   {
+    "quarter": "2025-07-31",
+    "est": 1.94629,
+    "act": 2.05,
+    "surprise_pct": 5.3
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 2.2348,
+    "act": 2.26,
+    "surprise_pct": 1.1
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 2.30877,
+    "act": 2.46,
+    "surprise_pct": 6.6
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 2.90903,
+    "act": 3.09,
+    "surprise_pct": 6.2
+   }
+  ],
+  "MCHP": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.33356,
+    "act": 0.35,
+    "surprise_pct": 4.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.42824,
+    "act": 0.44,
+    "surprise_pct": 2.7
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.50474,
+    "act": 0.57,
+    "surprise_pct": 12.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.69927,
+    "act": 0.76,
+    "surprise_pct": 8.7
+   }
+  ],
+  "NXPI": [
+   {
+    "quarter": "2025-09-30",
+    "est": 3.11837,
+    "act": 3.11,
+    "surprise_pct": -0.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 3.31109,
+    "act": 3.35,
+    "surprise_pct": 1.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.98433,
+    "act": 3.05,
+    "surprise_pct": 2.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.52842,
+    "act": 3.61,
+    "surprise_pct": 2.3
+   }
+  ],
+  "MRVL": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.67343,
+    "act": 0.67,
+    "surprise_pct": -0.5
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.73778,
+    "act": 0.76,
+    "surprise_pct": 3.0
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.79165,
+    "act": 0.8,
+    "surprise_pct": 1.1
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 0.79495,
+    "act": 0.8,
+    "surprise_pct": 0.6
+   }
+  ],
+  "KLAC": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.86172,
+    "act": 0.881,
+    "surprise_pct": 2.2
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.87978,
+    "act": 0.885,
+    "surprise_pct": 0.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.91703,
+    "act": 0.94,
+    "surprise_pct": 2.5
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.99866,
+    "act": 1.05,
+    "surprise_pct": 5.1
+   }
+  ],
+  "LRCX": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.22013,
+    "act": 1.26,
+    "surprise_pct": 3.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.16837,
+    "act": 1.27,
+    "surprise_pct": 8.7
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.3628,
+    "act": 1.47,
+    "surprise_pct": 7.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.68363,
+    "act": 1.82,
+    "surprise_pct": 8.1
+   }
+  ],
+  "AMAT": [
+   {
+    "quarter": "2025-10-31",
+    "est": 2.09366,
+    "act": 2.17,
+    "surprise_pct": 3.6
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 2.206,
+    "act": 2.38,
+    "surprise_pct": 7.9
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 2.68545,
+    "act": 2.86,
+    "surprise_pct": 6.5
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 3.3944,
+    "act": 3.5,
+    "surprise_pct": 3.1
+   }
+  ],
+  "TER": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.7911,
+    "act": 0.85,
+    "surprise_pct": 7.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.38344,
+    "act": 1.8,
+    "surprise_pct": 30.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.11685,
+    "act": 2.56,
+    "surprise_pct": 20.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.0536,
+    "act": 2.47,
+    "surprise_pct": 20.3
+   }
+  ],
+  "ENTG": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.72471,
+    "act": 0.72,
+    "surprise_pct": -0.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.664,
+    "act": 0.7,
+    "surprise_pct": 5.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.74506,
+    "act": 0.86,
+    "surprise_pct": 15.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.8215,
+    "act": 0.93,
+    "surprise_pct": 13.2
+   }
+  ],
+  "MKSI": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.85427,
+    "act": 1.93,
+    "surprise_pct": 4.1
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.46259,
+    "act": 2.47,
+    "surprise_pct": 0.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.0527,
+    "act": 2.3,
+    "surprise_pct": 12.0
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.96325,
+    "act": 3.3,
+    "surprise_pct": 11.4
+   }
+  ],
+  "FORM": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.24857,
+    "act": 0.33,
+    "surprise_pct": 32.8
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.35222,
+    "act": 0.46,
+    "surprise_pct": 30.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.43889,
+    "act": 0.56,
+    "surprise_pct": 27.6
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.61,
+    "act": 0.82,
+    "surprise_pct": 34.4
+   }
+  ],
+  "ACLS": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.00286,
+    "act": 1.21,
+    "surprise_pct": 20.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.118,
+    "act": 1.49,
+    "surprise_pct": 33.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.71,
+    "act": 0.72,
+    "surprise_pct": 1.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.894,
+    "act": 1.06,
+    "surprise_pct": 18.6
+   }
+  ],
+  "AMBA": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.05414,
+    "act": 0.15,
+    "surprise_pct": 177.1
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.20833,
+    "act": 0.27,
+    "surprise_pct": 29.6
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.10263,
+    "act": 0.13,
+    "surprise_pct": 26.7
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 0.10434,
+    "act": 0.11,
+    "surprise_pct": 5.4
+   }
+  ],
+  "POWI": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.35039,
+    "act": 0.36,
+    "surprise_pct": 2.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.1925,
+    "act": 0.23,
+    "surprise_pct": 19.5
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.23617,
+    "act": 0.25,
+    "surprise_pct": 5.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.31949,
+    "act": 0.37,
+    "surprise_pct": 15.8
+   }
+  ],
+  "DIOD": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.38333,
+    "act": 0.37,
+    "surprise_pct": -3.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.27333,
+    "act": 0.34,
+    "surprise_pct": 24.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.33,
+    "act": 0.43,
+    "surprise_pct": 30.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.605,
+    "act": 0.7,
+    "surprise_pct": 15.7
+   }
+  ],
+  "SLAB": [
+   {
+    "quarter": "2025-06-30",
+    "est": 0.0927,
+    "act": 0.11,
+    "surprise_pct": 18.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.54778,
+    "act": 0.56,
+    "surprise_pct": 2.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": -0.20667,
+    "act": -0.48,
+    "surprise_pct": -132.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.68867,
+    "act": 0.71,
+    "surprise_pct": 3.1
+   }
+  ],
+  "MPWR": [
+   {
+    "quarter": "2025-09-30",
+    "est": 4.63526,
+    "act": 4.73,
+    "surprise_pct": 2.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 4.73649,
+    "act": 4.79,
+    "surprise_pct": 1.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 4.90131,
+    "act": 5.1,
+    "surprise_pct": 4.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 5.88072,
+    "act": 6.5,
+    "surprise_pct": 10.5
+   }
+  ],
+  "CIEN": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.52523,
+    "act": 0.67,
+    "surprise_pct": 27.6
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.76964,
+    "act": 0.91,
+    "surprise_pct": 18.2
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 1.16833,
+    "act": 1.35,
+    "surprise_pct": 15.5
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 1.45989,
+    "act": 1.64,
+    "surprise_pct": 12.3
+   }
+  ],
+  "EXTR": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.2145,
+    "act": 0.22,
+    "surprise_pct": 2.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.24096,
+    "act": 0.26,
+    "surprise_pct": 7.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.2373,
+    "act": 0.26,
+    "surprise_pct": 9.6
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.28997,
+    "act": 0.32,
+    "surprise_pct": 10.4
+   }
+  ],
+  "NTAP": [
+   {
+    "quarter": "2025-07-31",
+    "est": 1.53869,
+    "act": 1.55,
+    "surprise_pct": 0.7
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 1.88496,
+    "act": 2.05,
+    "surprise_pct": 8.8
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 2.06258,
+    "act": 2.12,
+    "surprise_pct": 2.8
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 2.26646,
+    "act": 2.43,
+    "surprise_pct": 7.2
+   }
+  ],
+  "P": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.38775,
+    "act": 0.43,
+    "surprise_pct": 10.9
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.58423,
+    "act": 0.58,
+    "surprise_pct": -0.7
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.64494,
+    "act": 0.69,
+    "surprise_pct": 7.0
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 0.39544,
+    "act": 0.47,
+    "surprise_pct": 18.9
+   }
+  ],
+  "WDC": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.57623,
+    "act": 1.78,
+    "surprise_pct": 12.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.92814,
+    "act": 2.13,
+    "surprise_pct": 10.5
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.3949,
+    "act": 2.72,
+    "surprise_pct": 13.6
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.30022,
+    "act": 3.56,
+    "surprise_pct": 7.9
+   }
+  ],
+  "STX": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.39986,
+    "act": 2.61,
+    "surprise_pct": 8.8
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.83816,
+    "act": 3.11,
+    "surprise_pct": 9.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 3.51146,
+    "act": 4.1,
+    "surprise_pct": 16.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 5.09418,
+    "act": 5.71,
+    "surprise_pct": 12.1
+   }
+  ],
+  "DELL": [
+   {
+    "quarter": "2025-07-31",
+    "est": 2.29157,
+    "act": 2.32,
+    "surprise_pct": 1.2
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 2.47719,
+    "act": 2.59,
+    "surprise_pct": 4.6
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 3.51279,
+    "act": 3.89,
+    "surprise_pct": 10.7
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 2.96358,
+    "act": 4.86,
+    "surprise_pct": 64.0
+   }
+  ],
+  "VIAV": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.13134,
+    "act": 0.15,
+    "surprise_pct": 14.2
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.1877,
+    "act": 0.22,
+    "surprise_pct": 17.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.23074,
+    "act": 0.27,
+    "surprise_pct": 17.0
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.29847,
+    "act": 0.34,
+    "surprise_pct": 13.9
+   }
+  ],
+  "AAOI": [
+   {
+    "quarter": "2025-09-30",
+    "est": -0.088,
+    "act": -0.09,
+    "surprise_pct": -2.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": -0.112,
+    "act": -0.01,
+    "surprise_pct": 91.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": -0.04833,
+    "act": -0.07,
+    "surprise_pct": -44.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.015,
+    "act": 0.06,
+    "surprise_pct": 300.0
+   }
+  ],
+  "TWLO": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.06844,
+    "act": 1.25,
+    "surprise_pct": 17.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.22977,
+    "act": 1.33,
+    "surprise_pct": 8.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.27097,
+    "act": 1.5,
+    "surprise_pct": 18.0
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.32361,
+    "act": 1.47,
+    "surprise_pct": 11.1
+   }
+  ],
+  "DDOG": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.45709,
+    "act": 0.55,
+    "surprise_pct": 20.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.55486,
+    "act": 0.59,
+    "surprise_pct": 6.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.50738,
+    "act": 0.6,
+    "surprise_pct": 18.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.58324,
+    "act": 0.65,
+    "surprise_pct": 11.4
+   }
+  ],
+  "NET": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.23406,
+    "act": 0.27,
+    "surprise_pct": 15.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.27129,
+    "act": 0.28,
+    "surprise_pct": 3.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.23357,
+    "act": 0.25,
+    "surprise_pct": 7.0
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.26976,
+    "act": 0.29,
+    "surprise_pct": 7.5
+   }
+  ],
+  "MDB": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.6562,
+    "act": 1.0,
+    "surprise_pct": 52.4
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.79084,
+    "act": 1.32,
+    "surprise_pct": 66.9
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 1.47219,
+    "act": 1.65,
+    "surprise_pct": 12.1
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 1.18348,
+    "act": 1.32,
+    "surprise_pct": 11.5
+   }
+  ],
+  "SNOW": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.26646,
+    "act": 0.35,
+    "surprise_pct": 31.4
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.31114,
+    "act": 0.35,
+    "surprise_pct": 12.5
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.27169,
+    "act": 0.32,
+    "surprise_pct": 17.8
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 0.31981,
+    "act": 0.39,
+    "surprise_pct": 21.9
+   }
+  ],
+  "OKTA": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.84598,
+    "act": 0.91,
+    "surprise_pct": 7.6
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.75889,
+    "act": 0.82,
+    "surprise_pct": 8.1
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.84677,
+    "act": 0.9,
+    "surprise_pct": 6.3
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 0.85292,
+    "act": 0.91,
+    "surprise_pct": 6.7
+   }
+  ],
+  "ZS": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.80158,
+    "act": 0.89,
+    "surprise_pct": 11.0
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.86157,
+    "act": 0.96,
+    "surprise_pct": 11.4
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.89728,
+    "act": 1.01,
+    "surprise_pct": 12.6
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 1.0083,
+    "act": 1.08,
+    "surprise_pct": 7.1
+   }
+  ],
+  "CRWD": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.2075,
+    "act": 0.2325,
+    "surprise_pct": 12.0
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.23533,
+    "act": 0.24,
+    "surprise_pct": 2.0
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.2757,
+    "act": 0.28,
+    "surprise_pct": 1.6
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 0.26686,
+    "act": 0.275,
+    "surprise_pct": 3.1
+   }
+  ],
+  "S": [
+   {
+    "quarter": "2025-07-31",
+    "est": -0.19139,
+    "act": -0.22,
+    "surprise_pct": -14.9
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": -0.17497,
+    "act": -0.18,
+    "surprise_pct": -2.9
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": -0.18413,
+    "act": -0.33,
+    "surprise_pct": -79.2
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": -0.23673,
+    "act": -0.23,
+    "surprise_pct": 2.8
+   }
+  ],
+  "HUBS": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.58596,
+    "act": 2.66,
+    "surprise_pct": 2.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.98805,
+    "act": 3.09,
+    "surprise_pct": 3.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.46745,
+    "act": 2.72,
+    "surprise_pct": 10.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.01566,
+    "act": 3.26,
+    "surprise_pct": 8.1
+   }
+  ],
+  "BILL": [
+   {
+    "quarter": "2025-06-30",
+    "est": 0.40733,
+    "act": 0.53,
+    "surprise_pct": 30.1
+   },
+   {
+    "quarter": "2025-09-30",
+    "est": 0.50504,
+    "act": 0.61,
+    "surprise_pct": 20.8
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.5605,
+    "act": 0.64,
+    "surprise_pct": 14.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.55219,
+    "act": 0.68,
+    "surprise_pct": 23.1
+   }
+  ],
+  "U": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.16729,
+    "act": 0.2,
+    "surprise_pct": 19.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.20898,
+    "act": 0.24,
+    "surprise_pct": 14.8
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.24018,
+    "act": 0.23,
+    "surprise_pct": -4.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.24909,
+    "act": 0.28,
+    "surprise_pct": 12.4
+   }
+  ],
+  "ROKU": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.09333,
+    "act": 0.16,
+    "surprise_pct": 71.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.27571,
+    "act": 0.53,
+    "surprise_pct": 92.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.34667,
+    "act": 0.57,
+    "surprise_pct": 64.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.5625,
+    "act": 1.2006,
+    "surprise_pct": 113.4
+   }
+  ],
+  "SNAP": [
+   {
+    "quarter": "2025-09-30",
+    "est": -0.12142,
+    "act": -0.06,
+    "surprise_pct": 50.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": -0.03367,
+    "act": 0.03,
+    "surprise_pct": 189.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": -0.067,
+    "act": -0.05,
+    "surprise_pct": 25.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": -0.12237,
+    "act": -0.1,
+    "surprise_pct": 18.3
+   }
+  ],
+  "ZM": [
+   {
+    "quarter": "2025-07-31",
+    "est": 1.37806,
+    "act": 1.53,
+    "surprise_pct": 11.0
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 1.43722,
+    "act": 1.52,
+    "surprise_pct": 5.8
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 1.48619,
+    "act": 1.44,
+    "surprise_pct": -3.1
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 1.4159,
+    "act": 1.55,
+    "surprise_pct": 9.5
+   }
+  ],
+  "DOCU": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.84748,
+    "act": 0.92,
+    "surprise_pct": 8.6
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.91571,
+    "act": 1.01,
+    "surprise_pct": 10.3
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.94961,
+    "act": 1.01,
+    "surprise_pct": 6.4
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 0.99327,
+    "act": 1.09,
+    "surprise_pct": 9.7
+   }
+  ],
+  "TSLA": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.55885,
+    "act": 0.5,
+    "surprise_pct": -10.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.45061,
+    "act": 0.5,
+    "surprise_pct": 11.0
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.34999,
+    "act": 0.41,
+    "surprise_pct": 17.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.5353,
+    "act": 0.33,
+    "surprise_pct": -38.4
+   }
+  ],
+  "TTD": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.44183,
+    "act": 0.45,
+    "surprise_pct": 1.8
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.58033,
+    "act": 0.59,
+    "surprise_pct": 1.7
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.31958,
+    "act": 0.28,
+    "surprise_pct": -12.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.39823,
+    "act": 0.34,
+    "surprise_pct": -14.6
+   }
+  ],
+  "FSLR": [
+   {
+    "quarter": "2025-09-30",
+    "est": 4.28843,
+    "act": 4.24,
+    "surprise_pct": -1.1
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 5.16793,
+    "act": 4.84,
+    "surprise_pct": -6.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.97424,
+    "act": 3.22,
+    "surprise_pct": 8.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.87963,
+    "act": 3.92,
+    "surprise_pct": 36.1
+   }
+  ],
+  "SEDG": [
+   {
+    "quarter": "2025-09-30",
+    "est": -0.42349,
+    "act": -0.31,
+    "surprise_pct": 26.8
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": -0.2352,
+    "act": -0.14,
+    "surprise_pct": 40.5
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": -0.26895,
+    "act": -0.43,
+    "surprise_pct": -59.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.00386,
+    "act": 0.05,
+    "surprise_pct": 1195.3
+   }
+  ],
+  "GNRC": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.19733,
+    "act": 1.83,
+    "surprise_pct": -16.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.76955,
+    "act": 1.61,
+    "surprise_pct": -9.0
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.32852,
+    "act": 1.8,
+    "surprise_pct": 35.5
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.01182,
+    "act": 2.91,
+    "surprise_pct": 44.6
+   }
+  ],
+  "GOOGL": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.26199,
+    "act": 2.87,
+    "surprise_pct": 26.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.63521,
+    "act": 2.82,
+    "surprise_pct": 7.0
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.66714,
+    "act": 5.11,
+    "surprise_pct": 91.6
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.89914,
+    "act": 9.11,
+    "surprise_pct": 214.2
+   }
+  ],
+  "META": [
+   {
+    "quarter": "2025-09-30",
+    "est": 6.70696,
+    "act": 1.05,
+    "surprise_pct": -84.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 8.22253,
+    "act": 8.88,
+    "surprise_pct": 8.0
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 6.65872,
+    "act": 10.44,
+    "surprise_pct": 56.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 7.22143,
+    "act": 6.18,
+    "surprise_pct": -14.4
+   }
+  ],
+  "AMZN": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.55757,
+    "act": 1.95,
+    "surprise_pct": 25.2
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.95962,
+    "act": 1.95,
+    "surprise_pct": -0.5
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.65303,
+    "act": 2.78,
+    "surprise_pct": 68.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.8253,
+    "act": 5.75,
+    "surprise_pct": 215.0
+   }
+  ],
+  "NFLX": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.69707,
+    "act": 0.587,
+    "surprise_pct": -15.8
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.55208,
+    "act": 0.56,
+    "surprise_pct": 1.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.24746,
+    "act": 1.23,
+    "surprise_pct": -1.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.78858,
+    "act": 0.8,
+    "surprise_pct": 1.4
+   }
+  ],
+  "PINS": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.41677,
+    "act": 0.38,
+    "surprise_pct": -8.8
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.67465,
+    "act": 0.67,
+    "surprise_pct": -0.7
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.2165,
+    "act": 0.27,
+    "surprise_pct": 24.7
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.35723,
+    "act": 0.43,
+    "surprise_pct": 20.4
+   }
+  ],
+  "EBAY": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.3346,
+    "act": 1.36,
+    "surprise_pct": 1.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.35007,
+    "act": 1.41,
+    "surprise_pct": 4.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.58056,
+    "act": 1.66,
+    "surprise_pct": 5.0
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.50601,
+    "act": 1.6,
+    "surprise_pct": 6.2
+   }
+  ],
+  "ETSY": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.52016,
+    "act": 0.63,
+    "surprise_pct": 21.1
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.85486,
+    "act": 0.92,
+    "surprise_pct": 7.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.62349,
+    "act": 0.6,
+    "surprise_pct": -3.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.73271,
+    "act": -0.36,
+    "surprise_pct": -149.1
+   }
+  ],
+  "ABNB": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.32057,
+    "act": 2.21,
+    "surprise_pct": -4.8
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.6639,
+    "act": 0.56,
+    "surprise_pct": -15.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.30278,
+    "act": 0.26,
+    "surprise_pct": -14.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.2514,
+    "act": 1.37,
+    "surprise_pct": 9.5
+   }
+  ],
+  "DASH": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.67672,
+    "act": 0.55,
+    "surprise_pct": -18.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.58344,
+    "act": 0.48,
+    "surprise_pct": -17.7
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.36395,
+    "act": 0.42,
+    "surprise_pct": 15.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.47144,
+    "act": 0.46,
+    "surprise_pct": -2.4
+   }
+  ],
+  "VRT": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.99187,
+    "act": 1.24,
+    "surprise_pct": 25.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.29646,
+    "act": 1.36,
+    "surprise_pct": 4.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.0115,
+    "act": 1.17,
+    "surprise_pct": 15.7
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.42824,
+    "act": 1.52,
+    "surprise_pct": 6.4
+   }
+  ],
+  "ETN": [
+   {
+    "quarter": "2025-09-30",
+    "est": 3.05448,
+    "act": 3.07,
+    "surprise_pct": 0.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 3.31856,
+    "act": 3.33,
+    "surprise_pct": 0.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.73079,
+    "act": 2.81,
+    "surprise_pct": 2.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.07642,
+    "act": 3.15,
+    "surprise_pct": 2.4
+   }
+  ],
+  "PWR": [
+   {
+    "quarter": "2025-09-30",
+    "est": 3.25905,
+    "act": 3.33,
+    "surprise_pct": 2.2
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 3.01855,
+    "act": 3.16,
+    "surprise_pct": 4.7
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.03337,
+    "act": 2.68,
+    "surprise_pct": 31.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.30957,
+    "act": 4.24,
+    "surprise_pct": 28.1
+   }
+  ],
+  "VST": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.95628,
+    "act": 1.75,
+    "surprise_pct": -10.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.29974,
+    "act": 0.54,
+    "surprise_pct": -76.5
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.8715,
+    "act": 2.87,
+    "surprise_pct": 53.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.6308,
+    "act": 0.76,
+    "surprise_pct": -53.4
+   }
+  ],
+  "NRG": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.12647,
+    "act": 2.78,
+    "surprise_pct": 30.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.89362,
+    "act": 1.04,
+    "surprise_pct": 16.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.73331,
+    "act": 1.49,
+    "surprise_pct": -14.0
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.74005,
+    "act": 1.49,
+    "surprise_pct": -14.4
+   }
+  ],
+  "NEE": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.02155,
+    "act": 1.13,
+    "surprise_pct": 10.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.52722,
+    "act": 0.54,
+    "surprise_pct": 2.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.03156,
+    "act": 1.09,
+    "surprise_pct": 5.7
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.10787,
+    "act": 1.15,
+    "surprise_pct": 3.8
+   }
+  ],
+  "SO": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.50886,
+    "act": 1.6,
+    "surprise_pct": 6.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.55764,
+    "act": 0.55,
+    "surprise_pct": -1.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.21245,
+    "act": 1.32,
+    "surprise_pct": 8.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.01056,
+    "act": 1.13,
+    "surprise_pct": 11.8
+   }
+  ],
+  "RUN": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.117,
+    "act": 0.06,
+    "surprise_pct": -48.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": -0.06338,
+    "act": 0.38,
+    "surprise_pct": 699.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": -0.05483,
+    "act": 0.62,
+    "surprise_pct": 1230.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.24881,
+    "act": 0.42,
+    "surprise_pct": 68.8
+   }
+  ],
+  "BE": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.10201,
+    "act": 0.15,
+    "surprise_pct": 47.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.29925,
+    "act": 0.45,
+    "surprise_pct": 50.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.12849,
+    "act": 0.44,
+    "surprise_pct": 242.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.40661,
+    "act": 0.78,
+    "surprise_pct": 91.8
+   }
+  ],
+  "ADBE": [
+   {
+    "quarter": "2025-08-31",
+    "est": 5.18163,
+    "act": 5.31,
+    "surprise_pct": 2.5
+   },
+   {
+    "quarter": "2025-11-30",
+    "est": 5.39763,
+    "act": 5.5,
+    "surprise_pct": 1.9
+   },
+   {
+    "quarter": "2026-02-28",
+    "est": 5.87314,
+    "act": 6.06,
+    "surprise_pct": 3.2
+   },
+   {
+    "quarter": "2026-05-31",
+    "est": 5.81474,
+    "act": 5.96,
+    "surprise_pct": 2.5
+   }
+  ],
+  "CRM": [
+   {
+    "quarter": "2025-07-31",
+    "est": 2.77924,
+    "act": 2.91,
+    "surprise_pct": 4.7
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 2.8622,
+    "act": 3.25,
+    "surprise_pct": 13.5
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 3.05166,
+    "act": 3.81,
+    "surprise_pct": 24.9
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 3.12729,
+    "act": 3.88,
+    "surprise_pct": 24.1
+   }
+  ],
+  "NOW": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.85308,
+    "act": 0.964,
+    "surprise_pct": 13.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.88508,
+    "act": 0.92,
+    "surprise_pct": 3.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.96619,
+    "act": 0.97,
+    "surprise_pct": 0.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.85672,
+    "act": 0.9,
+    "surprise_pct": 5.1
+   }
+  ],
+  "ORCL": [
+   {
+    "quarter": "2025-08-31",
+    "est": 1.47912,
+    "act": 1.47,
+    "surprise_pct": -0.6
+   },
+   {
+    "quarter": "2025-11-30",
+    "est": 1.6372,
+    "act": 2.26,
+    "surprise_pct": 38.0
+   },
+   {
+    "quarter": "2026-02-28",
+    "est": 1.69362,
+    "act": 1.79,
+    "surprise_pct": 5.7
+   },
+   {
+    "quarter": "2026-05-31",
+    "est": 1.96241,
+    "act": 2.11,
+    "surprise_pct": 7.5
+   }
+  ],
+  "TEAM": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.83775,
+    "act": 1.04,
+    "surprise_pct": 24.1
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.14415,
+    "act": 1.22,
+    "surprise_pct": 6.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.33598,
+    "act": 1.75,
+    "surprise_pct": 31.0
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.50174,
+    "act": 1.87,
+    "surprise_pct": 24.5
+   }
+  ],
+  "WDAY": [
+   {
+    "quarter": "2025-07-31",
+    "est": 2.11613,
+    "act": 2.21,
+    "surprise_pct": 4.4
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 2.1736,
+    "act": 2.32,
+    "surprise_pct": 6.7
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 2.32123,
+    "act": 2.47,
+    "surprise_pct": 6.4
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 2.51697,
+    "act": 2.66,
+    "surprise_pct": 5.7
+   }
+  ],
+  "CSCO": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.97731,
+    "act": 0.99,
+    "surprise_pct": 1.3
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.98216,
+    "act": 1.0,
+    "surprise_pct": 1.8
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 1.02214,
+    "act": 1.04,
+    "surprise_pct": 1.7
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 1.03625,
+    "act": 1.06,
+    "surprise_pct": 2.3
+   }
+  ],
+  "HPQ": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.75028,
+    "act": 0.75,
+    "surprise_pct": -0.0
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.92299,
+    "act": 0.93,
+    "surprise_pct": 0.8
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.76695,
+    "act": 0.81,
+    "surprise_pct": 5.6
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 0.71514,
+    "act": 0.86,
+    "surprise_pct": 20.3
+   }
+  ],
+  "HPE": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.41743,
+    "act": 0.44,
+    "surprise_pct": 5.4
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.5819,
+    "act": 0.62,
+    "surprise_pct": 6.5
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.58689,
+    "act": 0.65,
+    "surprise_pct": 10.8
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 0.53369,
+    "act": 0.79,
+    "surprise_pct": 48.0
+   }
+  ],
+  "JPM": [
+   {
+    "quarter": "2025-09-30",
+    "est": 4.87467,
+    "act": 5.07,
+    "surprise_pct": 4.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 4.81831,
+    "act": 4.63,
+    "surprise_pct": -3.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 5.51098,
+    "act": 5.94,
+    "surprise_pct": 7.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 5.79998,
+    "act": 6.14,
+    "surprise_pct": 5.9
+   }
+  ],
+  "BAC": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.9461,
+    "act": 1.06,
+    "surprise_pct": 12.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.95866,
+    "act": 0.98,
+    "surprise_pct": 2.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.02044,
+    "act": 1.11,
+    "surprise_pct": 8.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.12309,
+    "act": 1.21,
+    "surprise_pct": 7.7
+   }
+  ],
+  "WFC": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.54521,
+    "act": 1.66,
+    "surprise_pct": 7.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.66753,
+    "act": 1.62,
+    "surprise_pct": -2.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.58337,
+    "act": 1.6,
+    "surprise_pct": 1.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.71847,
+    "act": 2.0,
+    "surprise_pct": 16.4
+   }
+  ],
+  "C": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.927,
+    "act": 2.263,
+    "surprise_pct": 17.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.62375,
+    "act": 1.2433,
+    "surprise_pct": -23.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.59629,
+    "act": 3.0614,
+    "surprise_pct": 17.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.7149,
+    "act": 3.13897,
+    "surprise_pct": 15.6
+   }
+  ],
+  "GS": [
+   {
+    "quarter": "2025-09-30",
+    "est": 11.08738,
+    "act": 12.25,
+    "surprise_pct": 10.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 11.65403,
+    "act": 14.01,
+    "surprise_pct": 20.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 16.39241,
+    "act": 17.55,
+    "surprise_pct": 7.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 14.54249,
+    "act": 20.98,
+    "surprise_pct": 44.3
+   }
+  ],
+  "MS": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.11118,
+    "act": 2.8,
+    "surprise_pct": 32.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.44961,
+    "act": 2.68,
+    "surprise_pct": 9.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 3.01764,
+    "act": 3.43,
+    "surprise_pct": 13.7
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.93372,
+    "act": 3.46,
+    "surprise_pct": 17.9
+   }
+  ],
+  "SCHW": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.24507,
+    "act": 1.31,
+    "surprise_pct": 5.2
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.39377,
+    "act": 1.39,
+    "surprise_pct": -0.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.39538,
+    "act": 1.43,
+    "surprise_pct": 2.5
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.54954,
+    "act": 1.62,
+    "surprise_pct": 4.5
+   }
+  ],
+  "BLK": [
+   {
+    "quarter": "2025-09-30",
+    "est": 11.2927,
+    "act": 11.55,
+    "surprise_pct": 2.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 12.19178,
+    "act": 13.16,
+    "surprise_pct": 7.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 11.45866,
+    "act": 12.53,
+    "surprise_pct": 9.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 12.68929,
+    "act": 13.91,
+    "surprise_pct": 9.6
+   }
+  ],
+  "V": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.97176,
+    "act": 2.98,
+    "surprise_pct": 0.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 3.14227,
+    "act": 3.17,
+    "surprise_pct": 0.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 3.09955,
+    "act": 3.31,
+    "surprise_pct": 6.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.23073,
+    "act": 3.32,
+    "surprise_pct": 2.8
+   }
+  ],
+  "MA": [
+   {
+    "quarter": "2025-09-30",
+    "est": 4.31425,
+    "act": 4.38,
+    "surprise_pct": 1.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 4.24031,
+    "act": 4.76,
+    "surprise_pct": 12.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 4.41328,
+    "act": 4.6,
+    "surprise_pct": 4.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 4.77606,
+    "act": 5.04,
+    "surprise_pct": 5.5
+   }
+  ],
+  "AXP": [
+   {
+    "quarter": "2025-09-30",
+    "est": 3.99559,
+    "act": 4.14,
+    "surprise_pct": 3.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 3.53362,
+    "act": 3.53,
+    "surprise_pct": -0.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 3.99336,
+    "act": 4.28,
+    "surprise_pct": 7.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 4.40307,
+    "act": 4.53,
+    "surprise_pct": 2.9
+   }
+  ],
+  "COF": [
+   {
+    "quarter": "2025-09-30",
+    "est": 4.36169,
+    "act": 5.95,
+    "surprise_pct": 36.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 4.1428,
+    "act": 3.86,
+    "surprise_pct": -6.8
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 4.57252,
+    "act": 4.42,
+    "surprise_pct": -3.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 4.69355,
+    "act": 5.81,
+    "surprise_pct": 23.8
+   }
+  ],
+  "LLY": [
+   {
+    "quarter": "2025-09-30",
+    "est": 5.89164,
+    "act": 7.02,
+    "surprise_pct": 19.2
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 6.90884,
+    "act": 7.54,
+    "surprise_pct": 9.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 6.79114,
+    "act": 8.55,
+    "surprise_pct": 25.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 6.58447,
+    "act": 8.38,
+    "surprise_pct": 27.3
+   }
+  ],
+  "UNH": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.80806,
+    "act": 2.92,
+    "surprise_pct": 4.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.10607,
+    "act": 2.11,
+    "surprise_pct": 0.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 6.60176,
+    "act": 7.23,
+    "surprise_pct": 9.5
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 4.9151,
+    "act": 6.38,
+    "surprise_pct": 29.8
+   }
+  ],
+  "JNJ": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.75894,
+    "act": 2.8,
+    "surprise_pct": 1.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.46271,
+    "act": 2.46,
+    "surprise_pct": -0.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.67727,
+    "act": 2.7,
+    "surprise_pct": 0.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.85484,
+    "act": 2.9,
+    "surprise_pct": 1.6
+   }
+  ],
+  "ABBV": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.78451,
+    "act": 1.86,
+    "surprise_pct": 4.2
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.65266,
+    "act": 2.71,
+    "surprise_pct": 2.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.67067,
+    "act": 2.65,
+    "surprise_pct": -0.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.60841,
+    "act": 3.65,
+    "surprise_pct": 1.2
+   }
+  ],
+  "MRK": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.34859,
+    "act": 2.58,
+    "surprise_pct": 9.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.01048,
+    "act": 2.04,
+    "surprise_pct": 1.5
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": -1.47384,
+    "act": -1.28,
+    "surprise_pct": 13.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": -0.25705,
+    "act": -0.13,
+    "surprise_pct": 49.4
+   }
+  ],
+  "PFE": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.63307,
+    "act": 0.87,
+    "surprise_pct": 37.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.56808,
+    "act": 0.66,
+    "surprise_pct": 16.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.72166,
+    "act": 0.75,
+    "surprise_pct": 3.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.68221,
+    "act": 0.77,
+    "surprise_pct": 12.9
+   }
+  ],
+  "AMGN": [
+   {
+    "quarter": "2025-09-30",
+    "est": 5.01464,
+    "act": 5.64,
+    "surprise_pct": 12.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 4.72583,
+    "act": 5.29,
+    "surprise_pct": 11.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 4.76655,
+    "act": 5.15,
+    "surprise_pct": 8.0
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 5.61759,
+    "act": 6.29,
+    "surprise_pct": 12.0
+   }
+  ],
+  "GILD": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.13529,
+    "act": 2.47,
+    "surprise_pct": 15.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.80898,
+    "act": 1.86,
+    "surprise_pct": 2.8
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.91073,
+    "act": 2.03,
+    "surprise_pct": 6.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": -7.2468,
+    "act": -6.75,
+    "surprise_pct": 6.9
+   }
+  ],
+  "BMY": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.51554,
+    "act": 1.63,
+    "surprise_pct": 7.6
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.20493,
+    "act": 1.26,
+    "surprise_pct": 4.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.42112,
+    "act": 1.58,
+    "surprise_pct": 11.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.59701,
+    "act": 2.04,
+    "surprise_pct": 27.7
+   }
+  ],
+  "REGN": [
+   {
+    "quarter": "2025-09-30",
+    "est": 9.64458,
+    "act": 11.83,
+    "surprise_pct": 22.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 10.75392,
+    "act": 11.44,
+    "surprise_pct": 6.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 8.90183,
+    "act": 9.47,
+    "surprise_pct": 6.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 10.20812,
+    "act": 14.29,
+    "surprise_pct": 40.0
+   }
+  ],
+  "VRTX": [
+   {
+    "quarter": "2025-09-30",
+    "est": 4.57703,
+    "act": 4.8,
+    "surprise_pct": 4.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 5.14841,
+    "act": 5.03,
+    "surprise_pct": -2.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 4.3059,
+    "act": 4.47,
+    "surprise_pct": 3.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 4.74531,
+    "act": 4.73,
+    "surprise_pct": -0.3
+   }
+  ],
+  "ISRG": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.98832,
+    "act": 2.4,
+    "surprise_pct": 20.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.26767,
+    "act": 2.53,
+    "surprise_pct": 11.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.10677,
+    "act": 2.5,
+    "surprise_pct": 18.7
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.50303,
+    "act": 2.8,
+    "surprise_pct": 11.9
+   }
+  ],
+  "WMT": [
+   {
+    "quarter": "2025-07-31",
+    "est": 0.73887,
+    "act": 0.68,
+    "surprise_pct": -8.0
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 0.60128,
+    "act": 0.62,
+    "surprise_pct": 3.1
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 0.727,
+    "act": 0.74,
+    "surprise_pct": 1.8
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 0.65872,
+    "act": 0.66,
+    "surprise_pct": 0.2
+   }
+  ],
+  "COST": [
+   {
+    "quarter": "2025-08-31",
+    "est": 5.80441,
+    "act": 5.87,
+    "surprise_pct": 1.1
+   },
+   {
+    "quarter": "2025-11-30",
+    "est": 4.27507,
+    "act": 4.5,
+    "surprise_pct": 5.3
+   },
+   {
+    "quarter": "2026-02-28",
+    "est": 4.54467,
+    "act": 4.58,
+    "surprise_pct": 0.8
+   },
+   {
+    "quarter": "2026-05-31",
+    "est": 4.92303,
+    "act": 4.93,
+    "surprise_pct": 0.1
+   }
+  ],
+  "PG": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.89677,
+    "act": 1.99,
+    "surprise_pct": 4.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.85685,
+    "act": 1.88,
+    "surprise_pct": 1.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.55547,
+    "act": 1.59,
+    "surprise_pct": 2.2
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.40817,
+    "act": 1.43,
+    "surprise_pct": 1.6
+   }
+  ],
+  "KO": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.77857,
+    "act": 0.82,
+    "surprise_pct": 5.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.56479,
+    "act": 0.58,
+    "surprise_pct": 2.7
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.81227,
+    "act": 0.86,
+    "surprise_pct": 5.9
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.93225,
+    "act": 0.97,
+    "surprise_pct": 4.0
+   }
+  ],
+  "PEP": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.25996,
+    "act": 2.29,
+    "surprise_pct": 1.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.23709,
+    "act": 2.26,
+    "surprise_pct": 1.0
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.55188,
+    "act": 1.61,
+    "surprise_pct": 3.7
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.2082,
+    "act": 2.2,
+    "surprise_pct": -0.4
+   }
+  ],
+  "MCD": [
+   {
+    "quarter": "2025-09-30",
+    "est": 3.33195,
+    "act": 3.22,
+    "surprise_pct": -3.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 3.05223,
+    "act": 3.12,
+    "surprise_pct": 2.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.74459,
+    "act": 2.83,
+    "surprise_pct": 3.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.32131,
+    "act": 3.38,
+    "surprise_pct": 1.8
+   }
+  ],
+  "SBUX": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.55621,
+    "act": 0.52,
+    "surprise_pct": -6.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.58692,
+    "act": 0.56,
+    "surprise_pct": -4.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.43664,
+    "act": 0.5,
+    "surprise_pct": 14.5
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.64988,
+    "act": 0.85,
+    "surprise_pct": 30.8
+   }
+  ],
+  "NKE": [
+   {
+    "quarter": "2025-08-31",
+    "est": 0.2656,
+    "act": 0.49,
+    "surprise_pct": 84.5
+   },
+   {
+    "quarter": "2025-11-30",
+    "est": 0.37351,
+    "act": 0.53,
+    "surprise_pct": 41.9
+   },
+   {
+    "quarter": "2026-02-28",
+    "est": 0.28165,
+    "act": 0.35,
+    "surprise_pct": 24.3
+   },
+   {
+    "quarter": "2026-05-31",
+    "est": 0.12718,
+    "act": 0.72,
+    "surprise_pct": 466.1
+   }
+  ],
+  "HD": [
+   {
+    "quarter": "2025-07-31",
+    "est": 4.69448,
+    "act": 4.68,
+    "surprise_pct": -0.3
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 3.83395,
+    "act": 3.74,
+    "surprise_pct": -2.5
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 2.5232,
+    "act": 2.72,
+    "surprise_pct": 7.8
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 3.40647,
+    "act": 3.43,
+    "surprise_pct": 0.7
+   }
+  ],
+  "LOW": [
+   {
+    "quarter": "2025-07-31",
+    "est": 4.23777,
+    "act": 4.33,
+    "surprise_pct": 2.2
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 2.9534,
+    "act": 3.06,
+    "surprise_pct": 3.6
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 1.94244,
+    "act": 1.98,
+    "surprise_pct": 1.9
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 2.967,
+    "act": 3.03,
+    "surprise_pct": 2.1
+   }
+  ],
+  "TGT": [
+   {
+    "quarter": "2025-07-31",
+    "est": 2.03342,
+    "act": 2.05,
+    "surprise_pct": 0.8
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 1.71013,
+    "act": 1.78,
+    "surprise_pct": 4.1
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 2.15979,
+    "act": 2.44,
+    "surprise_pct": 13.0
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 1.45765,
+    "act": 1.71,
+    "surprise_pct": 17.3
+   }
+  ],
+  "EL": [
+   {
+    "quarter": "2025-06-30",
+    "est": 0.08905,
+    "act": 0.09,
+    "surprise_pct": 1.1
+   },
+   {
+    "quarter": "2025-09-30",
+    "est": 0.17594,
+    "act": 0.32,
+    "surprise_pct": 81.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.83491,
+    "act": 0.89,
+    "surprise_pct": 6.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.64907,
+    "act": 0.91,
+    "surprise_pct": 40.2
+   }
+  ],
+  "CAT": [
+   {
+    "quarter": "2025-09-30",
+    "est": 4.52334,
+    "act": 4.95,
+    "surprise_pct": 9.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 4.71207,
+    "act": 5.16,
+    "surprise_pct": 9.5
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 4.64388,
+    "act": 5.54,
+    "surprise_pct": 19.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 6.19742,
+    "act": 8.17,
+    "surprise_pct": 31.8
+   }
+  ],
+  "DE": [
+   {
+    "quarter": "2025-07-31",
+    "est": 4.66126,
+    "act": 4.75,
+    "surprise_pct": 1.9
+   },
+   {
+    "quarter": "2025-10-31",
+    "est": 3.83411,
+    "act": 3.93,
+    "surprise_pct": 2.5
+   },
+   {
+    "quarter": "2026-01-31",
+    "est": 2.09668,
+    "act": 2.42,
+    "surprise_pct": 15.4
+   },
+   {
+    "quarter": "2026-04-30",
+    "est": 5.74206,
+    "act": 6.55,
+    "surprise_pct": 14.1
+   }
+  ],
+  "HON": [
+   {
+    "quarter": "2025-09-30",
+    "est": 5.13341,
+    "act": 5.64,
+    "surprise_pct": 9.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 5.07125,
+    "act": 5.18,
+    "surprise_pct": 2.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 4.64216,
+    "act": 4.9,
+    "surprise_pct": 5.6
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.81873,
+    "act": 1.95,
+    "surprise_pct": 7.2
+   }
+  ],
+  "GE": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.46885,
+    "act": 1.66,
+    "surprise_pct": 13.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.42976,
+    "act": 1.57,
+    "surprise_pct": 9.8
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.59919,
+    "act": 1.86,
+    "surprise_pct": 16.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.85961,
+    "act": 2.02,
+    "surprise_pct": 8.6
+   }
+  ],
+  "UNP": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.99613,
+    "act": 3.08,
+    "surprise_pct": 2.8
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.86999,
+    "act": 2.86,
+    "surprise_pct": -0.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 2.86063,
+    "act": 2.93,
+    "surprise_pct": 2.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.24241,
+    "act": 3.41,
+    "surprise_pct": 5.2
+   }
+  ],
+  "UPS": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.29913,
+    "act": 1.74,
+    "surprise_pct": 33.9
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.20084,
+    "act": 2.38,
+    "surprise_pct": 8.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.0206,
+    "act": 1.07,
+    "surprise_pct": 4.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.66427,
+    "act": 1.76,
+    "surprise_pct": 5.8
+   }
+  ],
+  "FDX": [
+   {
+    "quarter": "2024-11-30",
+    "est": 3.96598,
+    "act": 4.05,
+    "surprise_pct": 2.1
+   },
+   {
+    "quarter": "2025-02-28",
+    "est": 4.63268,
+    "act": 4.51,
+    "surprise_pct": -2.6
+   },
+   {
+    "quarter": "2025-05-31",
+    "est": 5.80377,
+    "act": 6.07,
+    "surprise_pct": 4.6
+   },
+   {
+    "quarter": "2025-08-31",
+    "est": 3.61287,
+    "act": 3.83,
+    "surprise_pct": 6.0
+   }
+  ],
+  "BA": [
+   {
+    "quarter": "2025-09-30",
+    "est": -2.37563,
+    "act": -7.47,
+    "surprise_pct": -214.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": -0.40902,
+    "act": 9.92,
+    "surprise_pct": 2525.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": -0.67243,
+    "act": -0.2,
+    "surprise_pct": 70.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": -0.31472,
+    "act": -0.76,
+    "surprise_pct": -141.5
+   }
+  ],
+  "T": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.53759,
+    "act": 0.54,
+    "surprise_pct": 0.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.46603,
+    "act": 0.52,
+    "surprise_pct": 11.6
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.55113,
+    "act": 0.57,
+    "surprise_pct": 3.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.58827,
+    "act": 0.65,
+    "surprise_pct": 10.5
+   }
+  ],
+  "VZ": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.19174,
+    "act": 1.21,
+    "surprise_pct": 1.5
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.0554,
+    "act": 1.09,
+    "surprise_pct": 3.3
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.2097,
+    "act": 1.28,
+    "surprise_pct": 5.8
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.26575,
+    "act": 1.3,
+    "surprise_pct": 2.7
+   }
+  ],
+  "TMUS": [
+   {
+    "quarter": "2025-09-30",
+    "est": 2.40056,
+    "act": 2.41,
+    "surprise_pct": 0.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 2.0642,
+    "act": 1.88,
+    "surprise_pct": -8.9
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.97231,
+    "act": 2.27,
+    "surprise_pct": 15.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.60324,
+    "act": 2.99,
+    "surprise_pct": 14.9
+   }
+  ],
+  "CMCSA": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.10111,
+    "act": 1.12,
+    "surprise_pct": 1.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.75837,
+    "act": 0.84,
+    "surprise_pct": 10.8
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.72949,
+    "act": 0.79,
+    "surprise_pct": 8.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.96637,
+    "act": 1.04,
+    "surprise_pct": 7.6
+   }
+  ],
+  "DIS": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.02382,
+    "act": 1.11,
+    "surprise_pct": 8.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.5758,
+    "act": 1.63,
+    "surprise_pct": 3.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.49547,
+    "act": 1.57,
+    "surprise_pct": 5.0
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.8544,
+    "act": 2.06,
+    "surprise_pct": 11.1
+   }
+  ],
+  "XOM": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.82466,
+    "act": 1.88,
+    "surprise_pct": 3.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.69102,
+    "act": 1.71,
+    "surprise_pct": 1.1
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.00743,
+    "act": 1.16,
+    "surprise_pct": 15.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.62887,
+    "act": 4.11,
+    "surprise_pct": 13.3
+   }
+  ],
+  "CVX": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.70678,
+    "act": 1.85,
+    "surprise_pct": 8.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.44481,
+    "act": 1.52,
+    "surprise_pct": 5.2
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.96868,
+    "act": 1.41,
+    "surprise_pct": 45.6
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 5.56791,
+    "act": 6.06,
+    "surprise_pct": 8.8
+   }
+  ],
+  "COP": [
+   {
+    "quarter": "2025-09-30",
+    "est": 1.41164,
+    "act": 1.61,
+    "surprise_pct": 14.1
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 1.09053,
+    "act": 1.02,
+    "surprise_pct": -6.5
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 1.69482,
+    "act": 1.89,
+    "surprise_pct": 11.5
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 2.92357,
+    "act": 3.24,
+    "surprise_pct": 10.8
+   }
+  ],
+  "SLB": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.66375,
+    "act": 0.69,
+    "surprise_pct": 4.0
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.74312,
+    "act": 0.78,
+    "surprise_pct": 5.0
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.5142,
+    "act": 0.52,
+    "surprise_pct": 1.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 0.5174,
+    "act": 0.55,
+    "surprise_pct": 6.3
+   }
+  ],
+  "OXY": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.52145,
+    "act": 0.64,
+    "surprise_pct": 22.7
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": 0.16869,
+    "act": 0.31,
+    "surprise_pct": 83.8
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": 0.58776,
+    "act": 1.06,
+    "surprise_pct": 80.3
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 1.86063,
+    "act": 2.4,
+    "surprise_pct": 29.0
+   }
+  ]
+ }
+}
