@@ -62,14 +62,24 @@ jobs:
             echo "변경 없음 — 커밋 생략"
           else
             git commit -m "자동 수집 — $(date -u +%Y-%m-%d) ($(git diff --cached --numstat | wc -l)개 파일)"
-            # 로봇이 도는 30~40분 사이 main 에 다른 커밋(PR 머지)이 들어오면
-            # push 가 거부되어 그날 수집이 통째로 버려집니다 (2026-08-13 실제 사고
-            # — 17개 파일 수집 성공 후 push 거부). 로봇의 변경은 data/measure
-            # 뿐이라 코드와 충돌하지 않으므로, rebase 후 다시 밉니다 (3회 시도).
+            # push 거부 대비 (실제 사고 2건):
+            #  · 2026-08-13: 코드 PR 이 먼저 들어와 거부 — rebase 로 해결됐음
+            #  · 2026-08-14: 다른 로봇 커밋이 먼저 들어와 snapshot.json 내용
+            #    충돌 — rebase 는 데이터 파일 충돌을 못 풀어 1시간 48분치
+            #    수집을 버림. 수집물은 파일 전체 교체 성격이라 병합이 아니라
+            #    "최신 main 위에 수집분을 통째로 다시 커밋"이 정답입니다.
+            #    (컨센서스·서프라이즈 원장은 추가 전용이지만 하루 한 번
+            #    규칙이라 같은 날 두 런의 원장 내용은 동일 — 통째 승리 안전)
             for attempt in 1 2 3; do
               if git push; then break; fi
-              echo "push 거부 — main 을 당겨 rebase 후 재시도 ($attempt/3)"
-              git pull --rebase origin main || exit 1
               [ "$attempt" = 3 ] && { echo "3회 실패"; exit 1; }
+              echo "push 거부 — 최신 main 위에 수집분 재커밋 ($attempt/3)"
+              cp -r data/measure /tmp/collected_backup
+              git fetch origin main
+              git reset --hard origin/main
+              rm -rf data/measure
+              mv /tmp/collected_backup data/measure
+              git add data/measure
+              git commit -m "자동 수집 — $(date -u +%Y-%m-%d) (충돌 재커밋)"
             done
           fi
