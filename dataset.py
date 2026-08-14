@@ -131,6 +131,27 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
                 )
                 clean["revenue"] = None
 
+            # 영업이익 단위 검사 (25차 감사): 보도자료 표는 '천/백만 달러'
+            # 단위인데 병합 때 매출만 XBRL 달러값으로 바뀌면 단위가 어긋난다
+            # (실물: CRDO 216,722 ↔ 매출 4.37억 = 마진 0.05%). 매출이 달러
+            # 단위로 확실할 때(1천만 이상) 마진이 상식 밖이면 없음 처리.
+            #   · |영업이익| < 매출의 0.1% → 단위 미환산·주당값 오인 의심
+            #   · 영업이익 > 매출의 90% → 표의 다른 숫자를 집었을 가능성
+            #   · 마진 < MARGIN_MIN_PCT(-500%) → 같은 이유
+            # 진짜 0.1% 미만 마진 분기를 잃을 수 있으나, "없음"은 안전하고
+            # "1000배 틀림"은 위험하다 (창작 금지 원칙의 버림 쪽).
+            rev, op = clean.get("revenue"), clean.get("op_income")
+            if rev is not None and op is not None and rev >= 10_000_000:
+                margin = op / rev
+                if (abs(op) < rev * 0.001 or op > rev * 0.9
+                        or margin * 100.0 < cfg.MARGIN_MIN_PCT):
+                    notes.append(
+                        f"{ticker} {clean.get('period_label', '?')}: "
+                        f"영업이익 {op} 은 매출 {rev} 대비 마진 "
+                        f"{margin * 100.0:.3f}% — 단위 착오/오인 의심이라 없음 처리"
+                    )
+                    clean["op_income"] = None
+
             # 주당 금액 상한 (2차 방어 — 위 PER_SHARE_ABS_LIMIT 주석 참조)
             for field in _PER_SHARE_FIELDS:
                 value = clean.get(field)
