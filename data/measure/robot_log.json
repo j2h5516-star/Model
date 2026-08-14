@@ -1,1127 +1,1448 @@
 {
- "ran_at": "2026-08-14T04:17:14.432115+00:00",
+ "ran_at": "2026-08-14T06:55:27.563273+00:00",
  "tickers": 160,
  "summary": "조정 EPS 시계열 160종목 · 일봉 161종목(기준지수 포함) · 파싱 실패 원문 250건",
  "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 미채택 · H6_결합_H5bxH2b: 판정 불가 · H7_EBITDA_첫돌파: 판정 불가 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 채택 · H10_논갭영업이익_저평가_첫신기록: 채택",
+ "consensus": "컨센서스: 확보 160종목 · 원장 추가 160건 · 실패 0종목",
  "per_ticker": [
   {
    "ticker": "CRDO",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 9.9,
+   "seconds": 23.4,
+   "cache_hits": 0,
+   "cache_downloads": 36,
    "first_error": ""
   },
   {
    "ticker": "CLS",
    "adj_eps_ok": 7,
    "merged_direct": 1,
-   "seconds": 18.0,
+   "seconds": 27.2,
+   "cache_hits": 0,
+   "cache_downloads": 24,
    "first_error": ""
   },
   {
    "ticker": "MU",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 16.2,
+   "seconds": 37.8,
+   "cache_hits": 0,
+   "cache_downloads": 61,
    "first_error": ""
   },
   {
    "ticker": "SNDK",
    "adj_eps_ok": 7,
    "merged_direct": 6,
-   "seconds": 8.5,
+   "seconds": 17.5,
+   "cache_hits": 0,
+   "cache_downloads": 14,
    "first_error": ""
   },
   {
    "ticker": "LITE",
    "adj_eps_ok": 18,
    "merged_direct": 0,
-   "seconds": 14.3,
+   "seconds": 31.0,
+   "cache_hits": 0,
+   "cache_downloads": 40,
    "first_error": ""
   },
   {
    "ticker": "STRL",
    "adj_eps_ok": 10,
    "merged_direct": 8,
-   "seconds": 32.0,
+   "seconds": 75.0,
+   "cache_hits": 0,
+   "cache_downloads": 50,
    "first_error": ""
   },
   {
    "ticker": "MXL",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 14.4,
+   "seconds": 35.1,
+   "cache_hits": 0,
+   "cache_downloads": 41,
    "first_error": ""
   },
   {
    "ticker": "COHR",
    "adj_eps_ok": 14,
    "merged_direct": 9,
-   "seconds": 43.5,
+   "seconds": 75.0,
+   "cache_hits": 0,
+   "cache_downloads": 65,
    "first_error": ""
   },
   {
    "ticker": "TTMI",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 10.6,
+   "seconds": 28.8,
+   "cache_hits": 0,
+   "cache_downloads": 45,
    "first_error": ""
   },
   {
    "ticker": "ICHR",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 14.8,
+   "seconds": 23.5,
+   "cache_hits": 0,
+   "cache_downloads": 43,
    "first_error": ""
   },
   {
    "ticker": "AMD",
    "adj_eps_ok": 19,
    "merged_direct": 20,
-   "seconds": 20.9,
+   "seconds": 41.1,
+   "cache_hits": 0,
+   "cache_downloads": 63,
    "first_error": ""
   },
   {
    "ticker": "PLTR",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 12.1,
+   "seconds": 17.5,
+   "cache_hits": 0,
+   "cache_downloads": 32,
    "first_error": ""
   },
   {
    "ticker": "ZETA",
    "adj_eps_ok": 0,
    "merged_direct": 7,
-   "seconds": 9.4,
+   "seconds": 22.0,
+   "cache_hits": 0,
+   "cache_downloads": 35,
    "first_error": ""
   },
   {
    "ticker": "INTC",
    "adj_eps_ok": 18,
    "merged_direct": 16,
-   "seconds": 22.9,
+   "seconds": 44.6,
+   "cache_hits": 0,
+   "cache_downloads": 71,
    "first_error": ""
   },
   {
    "ticker": "ENPH",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 13.0,
+   "seconds": 24.3,
+   "cache_hits": 0,
+   "cache_downloads": 40,
    "first_error": ""
   },
   {
    "ticker": "SWKS",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 20.1,
+   "seconds": 34.2,
+   "cache_hits": 0,
+   "cache_downloads": 53,
    "first_error": ""
   },
   {
    "ticker": "PYPL",
    "adj_eps_ok": 10,
    "merged_direct": 20,
-   "seconds": 23.0,
+   "seconds": 54.3,
+   "cache_hits": 0,
+   "cache_downloads": 71,
    "first_error": ""
   },
   {
    "ticker": "QRVO",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 15.5,
+   "seconds": 37.4,
+   "cache_hits": 0,
+   "cache_downloads": 49,
    "first_error": ""
   },
   {
    "ticker": "APP",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 33.0,
+   "seconds": 48.9,
+   "cache_hits": 0,
+   "cache_downloads": 53,
    "first_error": ""
   },
   {
    "ticker": "NVDA",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 13.3,
+   "seconds": 29.0,
+   "cache_hits": 0,
+   "cache_downloads": 46,
    "first_error": ""
   },
   {
    "ticker": "ANET",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 11.4,
+   "seconds": 25.5,
+   "cache_hits": 0,
+   "cache_downloads": 38,
    "first_error": ""
   },
   {
    "ticker": "FN",
    "adj_eps_ok": 19,
    "merged_direct": 0,
-   "seconds": 12.9,
+   "seconds": 18.4,
+   "cache_hits": 0,
+   "cache_downloads": 32,
    "first_error": ""
   },
   {
    "ticker": "SMCI",
    "adj_eps_ok": 15,
    "merged_direct": 13,
-   "seconds": 33.3,
+   "seconds": 90.5,
+   "cache_hits": 0,
+   "cache_downloads": 75,
    "first_error": ""
   },
   {
    "ticker": "LSCC",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 19.3,
+   "seconds": 29.3,
+   "cache_hits": 0,
+   "cache_downloads": 50,
    "first_error": ""
   },
   {
    "ticker": "SYNA",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 22.1,
+   "seconds": 41.5,
+   "cache_hits": 0,
+   "cache_downloads": 48,
    "first_error": ""
   },
   {
    "ticker": "UCTT",
    "adj_eps_ok": 9,
    "merged_direct": 19,
-   "seconds": 48.0,
+   "seconds": 75.1,
+   "cache_hits": 0,
+   "cache_downloads": 56,
    "first_error": ""
   },
   {
    "ticker": "ONTO",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 12.7,
+   "seconds": 23.9,
+   "cache_hits": 0,
+   "cache_downloads": 46,
    "first_error": ""
   },
   {
    "ticker": "IPGP",
    "adj_eps_ok": 10,
    "merged_direct": 6,
-   "seconds": 16.0,
+   "seconds": 34.6,
+   "cache_hits": 0,
+   "cache_downloads": 51,
    "first_error": ""
   },
   {
    "ticker": "CGNX",
    "adj_eps_ok": 15,
    "merged_direct": 17,
-   "seconds": 9.9,
+   "seconds": 24.7,
+   "cache_hits": 0,
+   "cache_downloads": 36,
    "first_error": ""
   },
   {
    "ticker": "AVGO",
    "adj_eps_ok": 19,
    "merged_direct": 1,
-   "seconds": 28.4,
+   "seconds": 54.0,
+   "cache_hits": 0,
+   "cache_downloads": 57,
    "first_error": ""
   },
   {
    "ticker": "QCOM",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 18.2,
+   "seconds": 41.7,
+   "cache_hits": 0,
+   "cache_downloads": 45,
    "first_error": ""
   },
   {
    "ticker": "TXN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 13.4,
+   "seconds": 32.7,
+   "cache_hits": 0,
+   "cache_downloads": 48,
    "first_error": ""
   },
   {
    "ticker": "ADI",
    "adj_eps_ok": 15,
    "merged_direct": 13,
-   "seconds": 21.3,
+   "seconds": 38.3,
+   "cache_hits": 0,
+   "cache_downloads": 50,
    "first_error": ""
   },
   {
    "ticker": "MCHP",
    "adj_eps_ok": 6,
    "merged_direct": 20,
-   "seconds": 19.9,
+   "seconds": 42.6,
+   "cache_hits": 0,
+   "cache_downloads": 59,
    "first_error": ""
   },
   {
    "ticker": "NXPI",
    "adj_eps_ok": 11,
    "merged_direct": 11,
-   "seconds": 14.8,
+   "seconds": 30.4,
+   "cache_hits": 0,
+   "cache_downloads": 31,
    "first_error": ""
   },
   {
    "ticker": "MRVL",
    "adj_eps_ok": 18,
    "merged_direct": 16,
-   "seconds": 16.8,
+   "seconds": 34.3,
+   "cache_hits": 0,
+   "cache_downloads": 68,
    "first_error": ""
   },
   {
    "ticker": "KLAC",
    "adj_eps_ok": 21,
    "merged_direct": 22,
-   "seconds": 16.3,
+   "seconds": 40.1,
+   "cache_hits": 0,
+   "cache_downloads": 58,
    "first_error": ""
   },
   {
    "ticker": "LRCX",
    "adj_eps_ok": 17,
    "merged_direct": 17,
-   "seconds": 12.9,
+   "seconds": 22.5,
+   "cache_hits": 0,
+   "cache_downloads": 35,
    "first_error": ""
   },
   {
    "ticker": "AMAT",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 20.1,
+   "seconds": 33.6,
+   "cache_hits": 0,
+   "cache_downloads": 46,
    "first_error": ""
   },
   {
    "ticker": "TER",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 25.0,
+   "seconds": 53.4,
+   "cache_hits": 0,
+   "cache_downloads": 47,
    "first_error": ""
   },
   {
    "ticker": "ENTG",
    "adj_eps_ok": 20,
    "merged_direct": 19,
-   "seconds": 35.5,
+   "seconds": 57.5,
+   "cache_hits": 0,
+   "cache_downloads": 78,
    "first_error": ""
   },
   {
    "ticker": "MKSI",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 22.8,
+   "seconds": 54.4,
+   "cache_hits": 0,
+   "cache_downloads": 58,
    "first_error": ""
   },
   {
    "ticker": "FORM",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 11.4,
+   "seconds": 20.1,
+   "cache_hits": 0,
+   "cache_downloads": 35,
    "first_error": ""
   },
   {
    "ticker": "ACLS",
    "adj_eps_ok": 7,
    "merged_direct": 6,
-   "seconds": 7.9,
+   "seconds": 18.1,
+   "cache_hits": 0,
+   "cache_downloads": 39,
    "first_error": ""
   },
   {
    "ticker": "AMBA",
    "adj_eps_ok": 6,
    "merged_direct": 7,
-   "seconds": 9.1,
+   "seconds": 15.3,
+   "cache_hits": 0,
+   "cache_downloads": 42,
    "first_error": ""
   },
   {
    "ticker": "POWI",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 14.6,
+   "seconds": 22.0,
+   "cache_hits": 0,
+   "cache_downloads": 35,
    "first_error": ""
   },
   {
    "ticker": "DIOD",
    "adj_eps_ok": 19,
    "merged_direct": 10,
-   "seconds": 15.2,
+   "seconds": 43.8,
+   "cache_hits": 0,
+   "cache_downloads": 40,
    "first_error": ""
   },
   {
    "ticker": "SLAB",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 12.1,
+   "seconds": 19.3,
+   "cache_hits": 0,
+   "cache_downloads": 46,
    "first_error": ""
   },
   {
    "ticker": "MPWR",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 13.0,
+   "seconds": 20.7,
+   "cache_hits": 0,
+   "cache_downloads": 42,
    "first_error": ""
   },
   {
    "ticker": "CIEN",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 34.5,
+   "seconds": 54.8,
+   "cache_hits": 0,
+   "cache_downloads": 47,
    "first_error": ""
   },
   {
    "ticker": "EXTR",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 21.2,
+   "seconds": 68.5,
+   "cache_hits": 0,
+   "cache_downloads": 37,
    "first_error": ""
   },
   {
    "ticker": "NTAP",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 114.8,
+   "seconds": 142.7,
+   "cache_hits": 0,
+   "cache_downloads": 36,
    "first_error": ""
   },
   {
    "ticker": "P",
    "adj_eps_ok": 0,
    "merged_direct": 19,
-   "seconds": 12.8,
+   "seconds": 47.9,
+   "cache_hits": 0,
+   "cache_downloads": 31,
    "first_error": ""
   },
   {
    "ticker": "WDC",
    "adj_eps_ok": 21,
    "merged_direct": 14,
-   "seconds": 35.7,
+   "seconds": 117.8,
+   "cache_hits": 0,
+   "cache_downloads": 69,
    "first_error": ""
   },
   {
    "ticker": "STX",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 24.9,
+   "seconds": 93.5,
+   "cache_hits": 0,
+   "cache_downloads": 72,
    "first_error": ""
   },
   {
    "ticker": "DELL",
    "adj_eps_ok": 18,
    "merged_direct": 17,
-   "seconds": 42.7,
+   "seconds": 80.2,
+   "cache_hits": 0,
+   "cache_downloads": 72,
    "first_error": ""
   },
   {
    "ticker": "VIAV",
    "adj_eps_ok": 17,
    "merged_direct": 7,
-   "seconds": 21.8,
+   "seconds": 44.5,
+   "cache_hits": 0,
+   "cache_downloads": 46,
    "first_error": ""
   },
   {
    "ticker": "AAOI",
    "adj_eps_ok": 19,
    "merged_direct": 2,
-   "seconds": 34.5,
+   "seconds": 65.8,
+   "cache_hits": 0,
+   "cache_downloads": 81,
    "first_error": ""
   },
   {
    "ticker": "TWLO",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 14.4,
+   "seconds": 26.8,
+   "cache_hits": 0,
+   "cache_downloads": 46,
    "first_error": ""
   },
   {
    "ticker": "DDOG",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 8.5,
+   "seconds": 21.7,
+   "cache_hits": 0,
+   "cache_downloads": 30,
    "first_error": ""
   },
   {
    "ticker": "NET",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 14.3,
+   "seconds": 267.9,
+   "cache_hits": 0,
+   "cache_downloads": 41,
    "first_error": ""
   },
   {
    "ticker": "MDB",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 12.4,
+   "seconds": 263.3,
+   "cache_hits": 0,
+   "cache_downloads": 36,
    "first_error": ""
   },
   {
    "ticker": "SNOW",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 432.0,
+   "seconds": 338.2,
+   "cache_hits": 0,
+   "cache_downloads": 36,
    "first_error": ""
   },
   {
    "ticker": "OKTA",
    "adj_eps_ok": 19,
    "merged_direct": 14,
-   "seconds": 8.4,
+   "seconds": 86.9,
+   "cache_hits": 0,
+   "cache_downloads": 41,
    "first_error": ""
   },
   {
    "ticker": "ZS",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 8.9,
+   "seconds": 88.1,
+   "cache_hits": 0,
+   "cache_downloads": 36,
    "first_error": ""
   },
   {
    "ticker": "CRWD",
    "adj_eps_ok": 19,
    "merged_direct": 15,
-   "seconds": 13.5,
+   "seconds": 23.1,
+   "cache_hits": 0,
+   "cache_downloads": 40,
    "first_error": ""
   },
   {
    "ticker": "S",
    "adj_eps_ok": 19,
    "merged_direct": 5,
-   "seconds": 11.3,
+   "seconds": 37.3,
+   "cache_hits": 0,
+   "cache_downloads": 42,
    "first_error": ""
   },
   {
    "ticker": "HUBS",
    "adj_eps_ok": 21,
    "merged_direct": 15,
-   "seconds": 27.4,
+   "seconds": 43.0,
+   "cache_hits": 0,
+   "cache_downloads": 39,
    "first_error": ""
   },
   {
    "ticker": "BILL",
    "adj_eps_ok": 19,
    "merged_direct": 16,
-   "seconds": 17.9,
+   "seconds": 33.9,
+   "cache_hits": 0,
+   "cache_downloads": 57,
    "first_error": ""
   },
   {
    "ticker": "U",
    "adj_eps_ok": 11,
    "merged_direct": 2,
-   "seconds": 20.8,
+   "seconds": 35.9,
+   "cache_hits": 0,
+   "cache_downloads": 65,
    "first_error": ""
   },
   {
    "ticker": "ROKU",
    "adj_eps_ok": 0,
    "merged_direct": 13,
-   "seconds": 14.8,
+   "seconds": 34.4,
+   "cache_hits": 0,
+   "cache_downloads": 45,
    "first_error": ""
   },
   {
    "ticker": "SNAP",
    "adj_eps_ok": 12,
    "merged_direct": 9,
-   "seconds": 24.2,
+   "seconds": 49.1,
+   "cache_hits": 0,
+   "cache_downloads": 50,
    "first_error": ""
   },
   {
    "ticker": "ZM",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 8.9,
+   "seconds": 18.4,
+   "cache_hits": 0,
+   "cache_downloads": 41,
    "first_error": ""
   },
   {
    "ticker": "DOCU",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 15.4,
+   "seconds": 22.6,
+   "cache_hits": 0,
+   "cache_downloads": 49,
    "first_error": ""
   },
   {
    "ticker": "TSLA",
    "adj_eps_ok": 13,
    "merged_direct": 0,
-   "seconds": 9.9,
+   "seconds": 36.6,
+   "cache_hits": 0,
+   "cache_downloads": 59,
    "first_error": ""
   },
   {
    "ticker": "TTD",
    "adj_eps_ok": 20,
    "merged_direct": 5,
-   "seconds": 9.8,
+   "seconds": 19.0,
+   "cache_hits": 0,
+   "cache_downloads": 50,
    "first_error": ""
   },
   {
    "ticker": "FSLR",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 16.9,
+   "seconds": 25.9,
+   "cache_hits": 0,
+   "cache_downloads": 42,
    "first_error": ""
   },
   {
    "ticker": "SEDG",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 27.4,
+   "seconds": 43.2,
+   "cache_hits": 0,
+   "cache_downloads": 53,
    "first_error": ""
   },
   {
    "ticker": "GNRC",
    "adj_eps_ok": 5,
    "merged_direct": 18,
-   "seconds": 17.5,
+   "seconds": 35.6,
+   "cache_hits": 0,
+   "cache_downloads": 37,
    "first_error": ""
   },
   {
    "ticker": "GOOGL",
    "adj_eps_ok": 0,
    "merged_direct": 1,
-   "seconds": 23.2,
+   "seconds": 54.8,
+   "cache_hits": 0,
+   "cache_downloads": 58,
    "first_error": ""
   },
   {
    "ticker": "META",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 20.0,
+   "seconds": 38.4,
+   "cache_hits": 0,
+   "cache_downloads": 58,
    "first_error": ""
   },
   {
    "ticker": "AMZN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 30.8,
+   "seconds": 58.6,
+   "cache_hits": 0,
+   "cache_downloads": 48,
    "first_error": ""
   },
   {
    "ticker": "NFLX",
    "adj_eps_ok": 0,
    "merged_direct": 5,
-   "seconds": 26.7,
+   "seconds": 44.9,
+   "cache_hits": 0,
+   "cache_downloads": 48,
    "first_error": ""
   },
   {
    "ticker": "PINS",
    "adj_eps_ok": 20,
    "merged_direct": 4,
-   "seconds": 15.7,
+   "seconds": 39.4,
+   "cache_hits": 0,
+   "cache_downloads": 49,
    "first_error": ""
   },
   {
    "ticker": "EBAY",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 17.4,
+   "seconds": 28.1,
+   "cache_hits": 0,
+   "cache_downloads": 54,
    "first_error": ""
   },
   {
    "ticker": "ETSY",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 16.9,
+   "seconds": 32.6,
+   "cache_hits": 0,
+   "cache_downloads": 50,
    "first_error": ""
   },
   {
    "ticker": "ABNB",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 15.4,
+   "seconds": 25.3,
+   "cache_hits": 0,
+   "cache_downloads": 34,
    "first_error": ""
   },
   {
    "ticker": "DASH",
    "adj_eps_ok": 0,
    "merged_direct": 6,
-   "seconds": 16.0,
+   "seconds": 49.1,
+   "cache_hits": 0,
+   "cache_downloads": 50,
    "first_error": ""
   },
   {
    "ticker": "VRT",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 61.0,
+   "seconds": 121.8,
+   "cache_hits": 0,
+   "cache_downloads": 76,
    "first_error": ""
   },
   {
    "ticker": "ETN",
    "adj_eps_ok": 14,
    "merged_direct": 24,
-   "seconds": 19.3,
+   "seconds": 44.0,
+   "cache_hits": 0,
+   "cache_downloads": 37,
    "first_error": ""
   },
   {
    "ticker": "PWR",
    "adj_eps_ok": 21,
    "merged_direct": 0,
-   "seconds": 24.9,
+   "seconds": 84.6,
+   "cache_hits": 0,
+   "cache_downloads": 51,
    "first_error": ""
   },
   {
    "ticker": "VST",
    "adj_eps_ok": 0,
    "merged_direct": 1,
-   "seconds": 87.5,
+   "seconds": 160.8,
+   "cache_hits": 0,
+   "cache_downloads": 86,
    "first_error": ""
   },
   {
    "ticker": "NRG",
    "adj_eps_ok": 10,
    "merged_direct": 13,
-   "seconds": 49.0,
+   "seconds": 109.9,
+   "cache_hits": 0,
+   "cache_downloads": 64,
    "first_error": ""
   },
   {
    "ticker": "NEE",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 37.2,
+   "seconds": 123.6,
+   "cache_hits": 0,
+   "cache_downloads": 95,
    "first_error": ""
   },
   {
    "ticker": "SO",
    "adj_eps_ok": 1,
    "merged_direct": 0,
-   "seconds": 64.9,
+   "seconds": 92.9,
+   "cache_hits": 0,
+   "cache_downloads": 97,
    "first_error": ""
   },
   {
    "ticker": "RUN",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 16.0,
+   "seconds": 28.7,
+   "cache_hits": 0,
+   "cache_downloads": 39,
    "first_error": ""
   },
   {
    "ticker": "BE",
    "adj_eps_ok": 15,
    "merged_direct": 15,
-   "seconds": 27.1,
+   "seconds": 56.8,
+   "cache_hits": 0,
+   "cache_downloads": 63,
    "first_error": ""
   },
   {
    "ticker": "ADBE",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 24.0,
+   "seconds": 42.6,
+   "cache_hits": 0,
+   "cache_downloads": 47,
    "first_error": ""
   },
   {
    "ticker": "CRM",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 29.3,
+   "seconds": 61.4,
+   "cache_hits": 0,
+   "cache_downloads": 51,
    "first_error": ""
   },
   {
    "ticker": "NOW",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 26.2,
+   "seconds": 55.8,
+   "cache_hits": 0,
+   "cache_downloads": 42,
    "first_error": ""
   },
   {
    "ticker": "ORCL",
    "adj_eps_ok": 18,
    "merged_direct": 19,
-   "seconds": 31.7,
+   "seconds": 67.5,
+   "cache_hits": 0,
+   "cache_downloads": 47,
    "first_error": ""
   },
   {
    "ticker": "TEAM",
    "adj_eps_ok": 17,
    "merged_direct": 16,
-   "seconds": 12.9,
+   "seconds": 35.2,
+   "cache_hits": 0,
+   "cache_downloads": 39,
    "first_error": ""
   },
   {
    "ticker": "WDAY",
    "adj_eps_ok": 9,
    "merged_direct": 15,
-   "seconds": 17.1,
+   "seconds": 30.7,
+   "cache_hits": 0,
+   "cache_downloads": 57,
    "first_error": ""
   },
   {
    "ticker": "CSCO",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 31.2,
+   "seconds": 67.6,
+   "cache_hits": 0,
+   "cache_downloads": 58,
    "first_error": ""
   },
   {
    "ticker": "HPQ",
    "adj_eps_ok": 19,
    "merged_direct": 1,
-   "seconds": 42.3,
+   "seconds": 74.3,
+   "cache_hits": 0,
+   "cache_downloads": 63,
    "first_error": ""
   },
   {
    "ticker": "HPE",
    "adj_eps_ok": 1,
    "merged_direct": 13,
-   "seconds": 52.2,
+   "seconds": 77.6,
+   "cache_hits": 0,
+   "cache_downloads": 68,
    "first_error": ""
   },
   {
    "ticker": "JPM",
    "adj_eps_ok": 0,
    "merged_direct": 24,
-   "seconds": 91.4,
+   "seconds": 130.6,
+   "cache_hits": 0,
+   "cache_downloads": 66,
    "first_error": ""
   },
   {
    "ticker": "BAC",
    "adj_eps_ok": 0,
    "merged_direct": 24,
-   "seconds": 22.1,
+   "seconds": 70.4,
+   "cache_hits": 0,
+   "cache_downloads": 50,
    "first_error": ""
   },
   {
    "ticker": "WFC",
    "adj_eps_ok": 0,
    "merged_direct": 21,
-   "seconds": 44.2,
+   "seconds": 90.2,
+   "cache_hits": 0,
+   "cache_downloads": 88,
    "first_error": ""
   },
   {
    "ticker": "C",
    "adj_eps_ok": 0,
    "merged_direct": 22,
-   "seconds": 262.7,
+   "seconds": 301.6,
+   "cache_hits": 0,
+   "cache_downloads": 100,
    "first_error": ""
   },
   {
    "ticker": "GS",
    "adj_eps_ok": 0,
    "merged_direct": 23,
-   "seconds": 73.5,
+   "seconds": 286.7,
+   "cache_hits": 0,
+   "cache_downloads": 97,
    "first_error": ""
   },
   {
    "ticker": "MS",
    "adj_eps_ok": 6,
    "merged_direct": 20,
-   "seconds": 28.9,
+   "seconds": 205.6,
+   "cache_hits": 0,
+   "cache_downloads": 52,
    "first_error": ""
   },
   {
    "ticker": "SCHW",
    "adj_eps_ok": 0,
    "merged_direct": 20,
-   "seconds": 39.0,
+   "seconds": 220.2,
+   "cache_hits": 0,
+   "cache_downloads": 58,
    "first_error": ""
   },
   {
    "ticker": "BLK",
    "adj_eps_ok": 1,
    "merged_direct": 5,
-   "seconds": 28.2,
+   "seconds": 619.1,
+   "cache_hits": 0,
+   "cache_downloads": 24,
    "first_error": ""
   },
   {
    "ticker": "V",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 1093.1,
+   "seconds": 842.4,
+   "cache_hits": 0,
+   "cache_downloads": 78,
    "first_error": ""
   },
   {
    "ticker": "MA",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 23.2,
+   "seconds": 640.1,
+   "cache_hits": 0,
+   "cache_downloads": 57,
    "first_error": ""
   },
   {
    "ticker": "AXP",
    "adj_eps_ok": 6,
    "merged_direct": 15,
-   "seconds": 20.0,
+   "seconds": 260.3,
+   "cache_hits": 0,
+   "cache_downloads": 100,
    "first_error": ""
   },
   {
    "ticker": "COF",
    "adj_eps_ok": 0,
    "merged_direct": 24,
-   "seconds": 17.3,
+   "seconds": 89.1,
+   "cache_hits": 0,
+   "cache_downloads": 71,
    "first_error": ""
   },
   {
    "ticker": "LLY",
    "adj_eps_ok": 22,
    "merged_direct": 24,
-   "seconds": 32.7,
+   "seconds": 42.8,
+   "cache_hits": 0,
+   "cache_downloads": 46,
    "first_error": ""
   },
   {
    "ticker": "UNH",
    "adj_eps_ok": 17,
    "merged_direct": 0,
-   "seconds": 28.2,
+   "seconds": 54.4,
+   "cache_hits": 0,
+   "cache_downloads": 79,
    "first_error": ""
   },
   {
    "ticker": "JNJ",
    "adj_eps_ok": 23,
    "merged_direct": 24,
-   "seconds": 17.2,
+   "seconds": 33.1,
+   "cache_hits": 0,
+   "cache_downloads": 57,
    "first_error": ""
   },
   {
    "ticker": "ABBV",
    "adj_eps_ok": 21,
    "merged_direct": 0,
-   "seconds": 23.1,
+   "seconds": 129.6,
+   "cache_hits": 0,
+   "cache_downloads": 74,
    "first_error": ""
   },
   {
    "ticker": "MRK",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 25.1,
+   "seconds": 181.9,
+   "cache_hits": 0,
+   "cache_downloads": 35,
    "first_error": ""
   },
   {
    "ticker": "PFE",
    "adj_eps_ok": 5,
    "merged_direct": 24,
-   "seconds": 482.5,
+   "seconds": 385.0,
+   "cache_hits": 0,
+   "cache_downloads": 45,
    "first_error": ""
   },
   {
    "ticker": "AMGN",
    "adj_eps_ok": 16,
    "merged_direct": 16,
-   "seconds": 18.4,
+   "seconds": 293.7,
+   "cache_hits": 0,
+   "cache_downloads": 42,
    "first_error": ""
   },
   {
    "ticker": "GILD",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 23.3,
+   "seconds": 912.7,
+   "cache_hits": 0,
+   "cache_downloads": 49,
    "first_error": ""
   },
   {
    "ticker": "BMY",
    "adj_eps_ok": 19,
    "merged_direct": 24,
-   "seconds": 21.4,
+   "seconds": 886.6,
+   "cache_hits": 0,
+   "cache_downloads": 43,
    "first_error": ""
   },
   {
    "ticker": "REGN",
    "adj_eps_ok": 22,
    "merged_direct": 0,
-   "seconds": 1253.4,
+   "seconds": 858.9,
+   "cache_hits": 0,
+   "cache_downloads": 34,
    "first_error": ""
   },
   {
    "ticker": "VRTX",
    "adj_eps_ok": 5,
    "merged_direct": 19,
-   "seconds": 8.7,
+   "seconds": 188.5,
+   "cache_hits": 0,
+   "cache_downloads": 41,
    "first_error": ""
   },
   {
    "ticker": "ISRG",
    "adj_eps_ok": 0,
    "merged_direct": 18,
-   "seconds": 28.3,
+   "seconds": 32.3,
+   "cache_hits": 0,
+   "cache_downloads": 39,
    "first_error": ""
   },
   {
    "ticker": "WMT",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 146.7,
+   "seconds": 171.1,
+   "cache_hits": 0,
+   "cache_downloads": 58,
    "first_error": ""
   },
   {
    "ticker": "COST",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 5.8,
+   "seconds": 17.3,
+   "cache_hits": 0,
+   "cache_downloads": 33,
    "first_error": ""
   },
   {
    "ticker": "PG",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 16.0,
+   "seconds": 71.3,
+   "cache_hits": 0,
+   "cache_downloads": 52,
    "first_error": ""
   },
   {
    "ticker": "KO",
    "adj_eps_ok": 0,
    "merged_direct": 20,
-   "seconds": 29.8,
+   "seconds": 154.4,
+   "cache_hits": 0,
+   "cache_downloads": 53,
    "first_error": ""
   },
   {
    "ticker": "PEP",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 26.8,
+   "seconds": 102.8,
+   "cache_hits": 0,
+   "cache_downloads": 47,
    "first_error": ""
   },
   {
    "ticker": "MCD",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 13.2,
+   "seconds": 548.6,
+   "cache_hits": 0,
+   "cache_downloads": 56,
    "first_error": ""
   },
   {
    "ticker": "SBUX",
    "adj_eps_ok": 20,
    "merged_direct": 17,
-   "seconds": 40.2,
+   "seconds": 616.7,
+   "cache_hits": 0,
+   "cache_downloads": 69,
    "first_error": ""
   },
   {
    "ticker": "NKE",
    "adj_eps_ok": 0,
    "merged_direct": 20,
-   "seconds": 759.3,
+   "seconds": 581.6,
+   "cache_hits": 0,
+   "cache_downloads": 48,
    "first_error": ""
   },
   {
    "ticker": "HD",
    "adj_eps_ok": 8,
    "merged_direct": 7,
-   "seconds": 16.0,
+   "seconds": 85.8,
+   "cache_hits": 0,
+   "cache_downloads": 58,
    "first_error": ""
   },
   {
    "ticker": "LOW",
    "adj_eps_ok": 18,
    "merged_direct": 8,
-   "seconds": 32.4,
+   "seconds": 50.0,
+   "cache_hits": 0,
+   "cache_downloads": 44,
    "first_error": ""
   },
   {
    "ticker": "TGT",
    "adj_eps_ok": 19,
    "merged_direct": 2,
-   "seconds": 16.2,
+   "seconds": 59.7,
+   "cache_hits": 0,
+   "cache_downloads": 56,
    "first_error": ""
   },
   {
    "ticker": "EL",
    "adj_eps_ok": 12,
    "merged_direct": 19,
-   "seconds": 61.7,
+   "seconds": 85.0,
+   "cache_hits": 0,
+   "cache_downloads": 61,
    "first_error": ""
   },
   {
    "ticker": "CAT",
    "adj_eps_ok": 0,
    "merged_direct": 13,
-   "seconds": 49.3,
+   "seconds": 98.1,
+   "cache_hits": 0,
+   "cache_downloads": 33,
    "first_error": ""
   },
   {
    "ticker": "DE",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 27.7,
+   "seconds": 120.6,
+   "cache_hits": 0,
+   "cache_downloads": 55,
    "first_error": ""
   },
   {
    "ticker": "HON",
    "adj_eps_ok": 17,
    "merged_direct": 0,
-   "seconds": 35.7,
+   "seconds": 86.3,
+   "cache_hits": 0,
+   "cache_downloads": 65,
    "first_error": ""
   },
   {
    "ticker": "GE",
    "adj_eps_ok": 18,
    "merged_direct": 24,
-   "seconds": 40.1,
+   "seconds": 62.7,
+   "cache_hits": 0,
+   "cache_downloads": 53,
    "first_error": ""
   },
   {
    "ticker": "UNP",
    "adj_eps_ok": 6,
    "merged_direct": 6,
-   "seconds": 22.0,
+   "seconds": 44.5,
+   "cache_hits": 0,
+   "cache_downloads": 57,
    "first_error": ""
   },
   {
    "ticker": "UPS",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 16.5,
+   "seconds": 40.8,
+   "cache_hits": 0,
+   "cache_downloads": 40,
    "first_error": ""
   },
   {
    "ticker": "FDX",
    "adj_eps_ok": 13,
    "merged_direct": 1,
-   "seconds": 37.0,
+   "seconds": 80.2,
+   "cache_hits": 0,
+   "cache_downloads": 61,
    "first_error": ""
   },
   {
    "ticker": "BA",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 31.0,
+   "seconds": 61.1,
+   "cache_hits": 0,
+   "cache_downloads": 60,
    "first_error": ""
   },
   {
    "ticker": "T",
    "adj_eps_ok": 15,
    "merged_direct": 14,
-   "seconds": 30.1,
+   "seconds": 57.6,
+   "cache_hits": 0,
+   "cache_downloads": 49,
    "first_error": ""
   },
   {
    "ticker": "VZ",
    "adj_eps_ok": 17,
    "merged_direct": 0,
-   "seconds": 33.1,
+   "seconds": 65.6,
+   "cache_hits": 0,
+   "cache_downloads": 67,
    "first_error": ""
   },
   {
    "ticker": "TMUS",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 25.9,
+   "seconds": 81.7,
+   "cache_hits": 0,
+   "cache_downloads": 92,
    "first_error": ""
   },
   {
    "ticker": "CMCSA",
    "adj_eps_ok": 21,
    "merged_direct": 10,
-   "seconds": 34.9,
+   "seconds": 65.3,
+   "cache_hits": 0,
+   "cache_downloads": 71,
    "first_error": ""
   },
   {
    "ticker": "DIS",
    "adj_eps_ok": 8,
    "merged_direct": 0,
-   "seconds": 26.8,
+   "seconds": 45.5,
+   "cache_hits": 0,
+   "cache_downloads": 54,
    "first_error": ""
   },
   {
    "ticker": "XOM",
    "adj_eps_ok": 1,
    "merged_direct": 23,
-   "seconds": 21.6,
+   "seconds": 50.2,
+   "cache_hits": 0,
+   "cache_downloads": 83,
    "first_error": ""
   },
   {
    "ticker": "CVX",
    "adj_eps_ok": 15,
    "merged_direct": 21,
-   "seconds": 22.4,
+   "seconds": 38.4,
+   "cache_hits": 0,
+   "cache_downloads": 68,
    "first_error": ""
   },
   {
    "ticker": "COP",
    "adj_eps_ok": 10,
    "merged_direct": 11,
-   "seconds": 12.6,
+   "seconds": 23.2,
+   "cache_hits": 0,
+   "cache_downloads": 51,
    "first_error": ""
   },
   {
    "ticker": "SLB",
    "adj_eps_ok": 0,
    "merged_direct": 3,
-   "seconds": 31.5,
+   "seconds": 48.4,
+   "cache_hits": 0,
+   "cache_downloads": 58,
    "first_error": ""
   },
   {
    "ticker": "OXY",
    "adj_eps_ok": 20,
    "merged_direct": 23,
-   "seconds": 50.2,
+   "seconds": 60.0,
+   "cache_hits": 0,
+   "cache_downloads": 72,
    "first_error": ""
   }
  ]
