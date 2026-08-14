@@ -159,6 +159,16 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         consensus_note = f"컨센서스 수집 실패: {type(exc).__name__}: {str(exc)[:160]}"
         progress(f"⚠️ {consensus_note}")
 
+    # A축 소급 — 야후 보관 서프라이즈 기록 (31차). 실패해도 커밋 안 막음.
+    try:
+        archive = consensus_feed.load_surprises(f"{cfg.MEASURE_DIR}/surprise.json")
+        surprise_note = consensus_feed.collect_surprises(tickers, archive,
+                                                         progress=progress)
+        files[f"{cfg.MEASURE_DIR}/surprise.json"] = consensus_feed.to_json(archive)
+    except Exception as exc:
+        surprise_note = f"서프라이즈 수집 실패: {type(exc).__name__}: {str(exc)[:160]}"
+        progress(f"⚠️ {surprise_note}")
+
     # 로봇 실행 기록 — 다음 세션이 읽습니다
     log = {
         "ran_at": datetime.now(timezone.utc).isoformat(),
@@ -166,6 +176,7 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         "summary": summary,
         "verdict": verdict_note,
         "consensus": consensus_note,
+        "surprise": surprise_note,
         "per_ticker": [
             {
                 "ticker": r.get("ticker"),

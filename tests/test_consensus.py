@@ -119,6 +119,25 @@ def test_revenue_frame_merges_and_guards():
     assert "rev_avg" not in rows2["0q"] and dropped2, (rows2, dropped2)
 
 
+def test_surprise_archive_guards_and_dedup():
+    """31차: 야후 보관 서프라이즈 — 검사(상한·추정0)와 (종목,분기) 중복 방지."""
+    df = frame({
+        "2026-03-31": {"epsEstimate": 1.0, "epsActual": 1.2},
+        "2026-06-30": {"epsEstimate": 0.0, "epsActual": 0.5},      # 추정 0 → 제외
+        "2025-12-31": {"epsEstimate": 202.0, "epsActual": 1.0},    # 상한 → 제외
+    })
+    rows, dropped = cf.surprises_from_frame(df)
+    assert len(rows) == 1 and rows[0]["surprise_pct"] == 20.0, (rows, dropped)
+    assert len(dropped) == 2
+
+    arc = cf.empty_surprise_archive()
+    assert cf.merge_surprises(arc, "TT", rows) == 1
+    first = dict(arc["tickers"]["TT"][0])
+    again = [{"quarter": "2026-03-31", "est": 9.9, "act": 9.9, "surprise_pct": 0.0}]
+    assert cf.merge_surprises(arc, "TT", again) == 0          # 최초 기록 유지
+    assert arc["tickers"]["TT"][0] == first
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
