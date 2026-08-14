@@ -34,6 +34,7 @@ import measure_engine
 import measure_store
 import consensus_feed
 import sec_fundamentals as sf
+import sector_model
 
 
 def collect_fundamentals(tickers: list[str], progress=print) -> list[dict]:
@@ -135,6 +136,9 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         # H10 (23차 등록) — 논갭 영업이익 단독 사건은 별도 목록으로
         op_events = measure_engine.collect_metric_events(ds, "op_income")
         verdict = judge.run(events, op_events=op_events)
+        # H11·H11b (33차 등록) — 섹터 정배열 폭 모델
+        breadth_events = sector_model.collect_breadth_events(ds)
+        verdict["가설"].update(judge.judge_sector_breadth(breadth_events))
         files[f"{cfg.MEASURE_DIR}/verdict.json"] = judge.to_json(verdict)
         verdict_note = " · ".join(
             f"{name}: {entry['판정']}" for name, entry in verdict["가설"].items()

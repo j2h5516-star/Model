@@ -173,5 +173,47 @@ def run(events: list[dict], op_events: list[dict] | None = None) -> dict:
     return out
 
 
+# H11·H11b (33차 등록): 섹터 정배열 폭이 처음 문턱을 넘긴 주 →
+# 250거래일 뒤 섹터 동일가중 초과수익. 사건 목록이 종목 발표가 아니라
+# **(섹터, 주)** 라서 별도 인자로 받습니다.
+H11_NAME = "H11_섹터정배열폭_60"
+H11B_NAME = "H11b_섹터정배열폭_80"
+_H11_SURGE_PP = 20.0        # 33차 등록 — 1년 창의 폭등 문턱
+
+
+def _sector_stats(group: list[dict]) -> dict:
+    n = len(group)
+    hits = sum(1 for e in group if e["excess"] >= _H11_SURGE_PP)
+    low, high = wilson_interval(hits, n)
+    return {"n": n, "rate": round(hits / n * 100.0, 1) if n else None,
+            "ci": [round(low, 1), round(high, 1)]}
+
+
+def _judge_sector(signal: list[dict], baseline: list[dict]) -> dict:
+    signal_stats = _sector_stats(signal)
+    base_stats = _sector_stats(baseline)
+    if signal_stats["n"] < MIN_SIGNAL_N:
+        verdict = "판정 불가"
+    elif signal_stats["ci"][0] > base_stats["ci"][1]:
+        verdict = "채택"
+    else:
+        verdict = "미채택"
+    return {"신호": signal_stats, "기준선": base_stats, "판정": verdict}
+
+
+def judge_sector_breadth(events: list[dict]) -> dict:
+    """H11·H11b 판정 — 기준선은 판단 가능한 모든 (섹터, 주)."""
+    out: dict = {}
+    for name, key in ((H11_NAME, "cross60"), (H11B_NAME, "cross80")):
+        signal = [e for e in events if e.get(key)]
+        entry = {"신규(판정)": _judge_sector(signal, events)}
+        front, back = _halves(events)
+        entry["신규_앞시기"] = _sector_stats([e for e in front if e.get(key)])
+        entry["신규_뒤시기"] = _sector_stats([e for e in back if e.get(key)])
+        entry["판정"] = entry["신규(판정)"]["판정"]
+        out[name] = entry
+    return out
+
+
 def to_json(verdict: dict) -> str:
     return json.dumps(verdict, ensure_ascii=False, indent=1)
