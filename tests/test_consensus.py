@@ -102,6 +102,23 @@ def test_collect_counts_failures_honestly():
     assert "AA" in led["tickers"] and "BAD" not in led["tickers"]
 
 
+def test_revenue_frame_merges_and_guards():
+    """매출 추정(30차): EPS 행에 합쳐지고, 단위 의심(1백만 미만)은 버립니다."""
+    eps = frame({"0q": {"avg": 1.0, "low": 0.9, "high": 1.1,
+                        "numberOfAnalysts": 4, "yearAgoEps": 0.8}})
+    rows, _ = cf.rows_from_frame(eps)
+    rev = frame({"0q": {"avg": 2.5e9, "low": 2.4e9, "high": 2.6e9,
+                        "numberOfAnalysts": 10}})
+    dropped = cf.merge_revenue_frame(rows, rev)
+    assert rows["0q"]["rev_avg"] == 2.5e9 and rows["0q"]["rev_analysts"] == 10
+    assert dropped == []
+    bad = frame({"0q": {"avg": 250.0, "low": None, "high": None,
+                        "numberOfAnalysts": 3}})
+    rows2, _ = cf.rows_from_frame(eps)
+    dropped2 = cf.merge_revenue_frame(rows2, bad)
+    assert "rev_avg" not in rows2["0q"] and dropped2, (rows2, dropped2)
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

@@ -192,7 +192,8 @@ SPREAD_MIN_N = 3           # 이보다 표본이 적은 섹터는 "표본 부족
 
 
 def forward_spread_rows(ds: dict, ledger: dict | None,
-                        today: str | None = None) -> list[dict]:
+                        today: str | None = None,
+                        metric: str = "eps") -> list[dict]:
     """종목별 전망 스프레드 = (가이던스 중간값 − 컨센서스 평균) / |컨센서스|.
 
     관찰 전용 (헌법 제1조 개정 조건 — 판정·점수에 안 씀).
@@ -206,10 +207,12 @@ def forward_spread_rows(ds: dict, ledger: dict | None,
         today = ds["prices"][ds["benchmark"]]["dates"][-1]
     tickers_ledger = (ledger or {}).get("tickers", {})
     rows = []
+    guid_key = "guid_eps_mid" if metric == "eps" else "guid_rev_mid"
+    cons_key = "avg" if metric == "eps" else "rev_avg"
     for ticker in ds["tickers"]:
         quarters = ds["quarters"].get(ticker) or []
         guided = [r for r in quarters
-                  if r.get("guid_eps_mid") is not None and r.get("announced_date")]
+                  if r.get(guid_key) is not None and r.get("announced_date")]
         if not guided:
             continue
         last = max(guided, key=lambda r: r["announced_date"])
@@ -221,15 +224,15 @@ def forward_spread_rows(ds: dict, ledger: dict | None,
         if not entries:
             continue
         cons = (entries[-1].get("rows") or {}).get("0q") or {}
-        avg = cons.get("avg")
+        avg = cons.get(cons_key)
         if not avg:
-            continue                      # 컨센서스 0이면 나눗셈 무의미 — 제외
-        spread = (last["guid_eps_mid"] - avg) / abs(avg) * 100.0
+            continue                      # 컨센서스 없음/0 — 제외
+        spread = (last[guid_key] - avg) / abs(avg) * 100.0
         rows.append({
             "ticker": ticker,
             "섹터": cfg.SECTORS.get(ticker, "미분류"),
             "테마": cfg.theme_of(ticker),
-            "가이던스": last["guid_eps_mid"],
+            "가이던스": last[guid_key],
             "컨센서스": avg,
             "스프레드%": round(spread, 1),
             "발표일": last["announced_date"],
@@ -240,13 +243,14 @@ def forward_spread_rows(ds: dict, ledger: dict | None,
 
 def sector_spread_rows(ds: dict, ledger: dict | None,
                        today: str | None = None,
-                       group_key: str = "섹터") -> list[dict]:
+                       group_key: str = "섹터",
+                       metric: str = "eps") -> list[dict]:
     """섹터(또는 테마)별 전망 스프레드 중앙값 — 주도 섹터 관찰용.
 
     스프레드가 큰 순서로 정렬하되, 표본이 SPREAD_MIN_N 미만인 그룹은
     "표본 부족"을 함께 표시합니다 (숨기지 않고 정직하게).
     """
-    per_ticker = forward_spread_rows(ds, ledger, today)
+    per_ticker = forward_spread_rows(ds, ledger, today, metric=metric)
     groups: dict[str, list[dict]] = {}
     for row in per_ticker:
         groups.setdefault(row[group_key], []).append(row)
@@ -405,6 +409,16 @@ def main():
             f"스프레드 중앙 {row['스프레드중앙%']:+.1f}%"
             + (" · ⚠️ 표본 부족" if row["표본"] == "표본 부족" else "")
             + f"  \n{row['종목']}"
+        )
+    st.markdown("**매출 스프레드** (가이던스 매출 vs 컨센서스 매출 — EPS 보다 표본이 넓음)")
+    rev_sectors = sector_spread_rows(ds, consensus, metric="rev")
+    if not rev_sectors:
+        st.caption("매출 스프레드 표본 없음 — 원장에 매출 추정이 쌓이면 나타납니다.")
+    for row in rev_sectors:
+        st.markdown(
+            f"**{row['섹터']}** ({row['종목수']}종목) — "
+            f"중앙 {row['스프레드중앙%']:+.1f}%"
+            + (" · ⚠️ 표본 부족" if row["표본"] == "표본 부족" else "")
         )
 
     # 종목별 발표 목록은 별도 "원자료" 페이지로 옮겼습니다 (2026-08-13 요청).
