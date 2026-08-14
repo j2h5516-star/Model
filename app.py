@@ -187,6 +187,85 @@ def sector_gauge_rows(ds: dict) -> list[dict]:
     return rows
 
 
+GUID_FRESH_DAYS = 140      # 가이던스 신선도 — 게이지(FRESH_DAYS)와 같은 기준
+SPREAD_MIN_N = 3           # 이보다 표본이 적은 섹터는 "표본 부족"으로 표시
+
+
+def forward_spread_rows(ds: dict, ledger: dict | None,
+                        today: str | None = None) -> list[dict]:
+    """종목별 전망 스프레드 = (가이던스 중간값 − 컨센서스 평균) / |컨센서스|.
+
+    관찰 전용 (헌법 제1조 개정 조건 — 판정·점수에 안 씀).
+    짝짓기 규칙: 마지막 실적 발표에서 나온 다음 분기 가이던스 ↔ 컨센서스
+    "이번 분기(0q)" 추정 (둘 다 "다음에 발표될 분기"를 가리킴 — 발표
+    주기 정렬 가정, 27차 한계에 기록). 조건:
+      · 가이던스 발표가 GUID_FRESH_DAYS 안 (철 지난 가이던스 제외)
+      · 컨센서스는 원장 마지막 스냅샷 (원장이 비면 그 종목은 제외)
+    """
+    if today is None:
+        today = ds["prices"][ds["benchmark"]]["dates"][-1]
+    tickers_ledger = (ledger or {}).get("tickers", {})
+    rows = []
+    for ticker in ds["tickers"]:
+        quarters = ds["quarters"].get(ticker) or []
+        guided = [r for r in quarters
+                  if r.get("guid_eps_mid") is not None and r.get("announced_date")]
+        if not guided:
+            continue
+        last = max(guided, key=lambda r: r["announced_date"])
+        age = (date.fromisoformat(today)
+               - date.fromisoformat(last["announced_date"])).days
+        if age > GUID_FRESH_DAYS or age < 0:
+            continue
+        entries = tickers_ledger.get(ticker) or []
+        if not entries:
+            continue
+        cons = (entries[-1].get("rows") or {}).get("0q") or {}
+        avg = cons.get("avg")
+        if not avg:
+            continue                      # 컨센서스 0이면 나눗셈 무의미 — 제외
+        spread = (last["guid_eps_mid"] - avg) / abs(avg) * 100.0
+        rows.append({
+            "ticker": ticker,
+            "섹터": cfg.SECTORS.get(ticker, "미분류"),
+            "테마": cfg.theme_of(ticker),
+            "가이던스": last["guid_eps_mid"],
+            "컨센서스": avg,
+            "스프레드%": round(spread, 1),
+            "발표일": last["announced_date"],
+            "컨센서스일": entries[-1].get("as_of"),
+        })
+    return rows
+
+
+def sector_spread_rows(ds: dict, ledger: dict | None,
+                       today: str | None = None,
+                       group_key: str = "섹터") -> list[dict]:
+    """섹터(또는 테마)별 전망 스프레드 중앙값 — 주도 섹터 관찰용.
+
+    스프레드가 큰 순서로 정렬하되, 표본이 SPREAD_MIN_N 미만인 그룹은
+    "표본 부족"을 함께 표시합니다 (숨기지 않고 정직하게).
+    """
+    per_ticker = forward_spread_rows(ds, ledger, today)
+    groups: dict[str, list[dict]] = {}
+    for row in per_ticker:
+        groups.setdefault(row[group_key], []).append(row)
+    out = []
+    for name, members in groups.items():
+        spreads = sorted(r["스프레드%"] for r in members)
+        mid = spreads[len(spreads) // 2] if len(spreads) % 2 else round(
+            (spreads[len(spreads) // 2 - 1] + spreads[len(spreads) // 2]) / 2, 1)
+        out.append({
+            group_key: name,
+            "종목수": len(members),
+            "스프레드중앙%": mid,
+            "표본": "표본 부족" if len(members) < SPREAD_MIN_N else "충분",
+            "종목": ", ".join(r["ticker"] for r in members),
+        })
+    out.sort(key=lambda r: r["스프레드중앙%"], reverse=True)
+    return out
+
+
 def hypothesis_note(verdict: dict | None, name: str) -> str:
     """정직화 문구: 그 상태의 과거 실측 + 판정 상태 (verdict 에서 복사)."""
     if not verdict or name not in (verdict.get("가설") or {}):
@@ -302,6 +381,30 @@ def main():
         st.markdown(
             f"**{row['섹터']}** ({row['종목수']}종목) — {value_text}"
             + (f" · {row['평소대비']}" if row["게이지"] is not None else "")
+        )
+
+    # --- 주도 섹터 — 전망 스프레드 (관찰, 헌법 개정 2026-08-14) ---
+    st.subheader("주도 섹터 — 전망 스프레드 (관찰)")
+    st.caption(
+        "스프레드 = (회사 가이던스 − 애널리스트 컨센서스) ÷ 컨센서스. "
+        "회사가 시장 기대보다 높게 부를수록 큰 값입니다. 관찰 전용 — "
+        "판정·추천에 쓰지 않으며, 평균을 내지 않고 차이를 그대로 봅니다. "
+        "컨센서스 원장이 쌓이기 시작한 2026-08-14 이후 데이터만 있습니다."
+    )
+    consensus = load_json("consensus.json")
+    spread_sectors = sector_spread_rows(ds, consensus)
+    if not spread_sectors:
+        st.info(
+            "아직 표시할 스프레드가 없습니다 — 신선한 가이던스와 컨센서스가 "
+            "둘 다 있는 종목이 없습니다. 로봇이 컨센서스 원장을 쌓는 대로 "
+            "여기 나타납니다."
+        )
+    for row in spread_sectors:
+        st.markdown(
+            f"**{row['섹터']}** ({row['종목수']}종목) — "
+            f"스프레드 중앙 {row['스프레드중앙%']:+.1f}%"
+            + (" · ⚠️ 표본 부족" if row["표본"] == "표본 부족" else "")
+            + f"  \n{row['종목']}"
         )
 
     # 종목별 발표 목록은 별도 "원자료" 페이지로 옮겼습니다 (2026-08-13 요청).

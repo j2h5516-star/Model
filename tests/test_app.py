@@ -153,6 +153,65 @@ def test_every_ticker_has_a_sector():
     assert not extra, f"유니버스에 없는 섹터 항목: {extra}"
 
 
+# ---------------------------------------------------------------------------
+# 전망 스프레드 (관찰) — 가이던스 vs 컨센서스, 주도 섹터
+# ---------------------------------------------------------------------------
+def _spread_ds(tickers_rows, today="2026-08-14"):
+    """전망 스프레드 시험용 미니 데이터: 가격은 SPY 하나면 충분합니다."""
+    return {
+        "benchmark": "SPY",
+        "tickers": list(tickers_rows),
+        "quarters": tickers_rows,
+        "prices": {"SPY": {"dates": [today], "close": [500.0]}},
+    }
+
+
+def _guided_row(announced, mid):
+    return {"filing_date": announced, "announced_date": announced,
+            "period_label": announced[:7], "adj_eps": 1.0,
+            "guid_eps_mid": mid}
+
+
+def _ledger(ticker, as_of, avg):
+    return {"tickers": {ticker: [{"as_of": as_of,
+                                  "rows": {"0q": {"avg": avg, "low": None,
+                                                  "high": None, "analysts": 5,
+                                                  "year_ago": None}}}]}}
+
+
+def test_forward_spread_pairs_guidance_with_consensus():
+    """스프레드 = (가이던스 − 컨센서스)/|컨센서스| — 부호와 값이 맞아야 합니다."""
+    import config as cfg
+    t = sorted(cfg.SECTORS)[0]
+    ds = _spread_ds({t: [_guided_row("2026-07-01", 1.10)]})
+    rows = app.forward_spread_rows(ds, _ledger(t, "2026-08-14", 1.00))
+    assert len(rows) == 1, rows
+    assert rows[0]["스프레드%"] == 10.0, rows[0]
+    assert rows[0]["섹터"] == cfg.SECTORS[t]
+
+
+def test_forward_spread_excludes_stale_and_missing():
+    """철 지난 가이던스(140일 초과)·컨센서스 없는 종목은 빠져야 합니다."""
+    import config as cfg
+    t1, t2 = sorted(cfg.SECTORS)[0], sorted(cfg.SECTORS)[1]
+    ds = _spread_ds({
+        t1: [_guided_row("2026-01-01", 1.10)],   # 226일 전 — 철 지남
+        t2: [_guided_row("2026-07-01", 1.10)],   # 신선하나 컨센서스 없음
+    })
+    assert app.forward_spread_rows(ds, _ledger(t1, "2026-08-14", 1.0)) == []
+
+
+def test_sector_spread_marks_small_samples():
+    """표본 부족(n<3) 섹터는 숨기지 않고 '표본 부족'으로 표시해야 합니다."""
+    import config as cfg
+    t = sorted(cfg.SECTORS)[0]
+    ds = _spread_ds({t: [_guided_row("2026-07-01", 0.90)]})
+    rows = app.sector_spread_rows(ds, _ledger(t, "2026-08-14", 1.00))
+    assert len(rows) == 1
+    assert rows[0]["표본"] == "표본 부족" and rows[0]["종목수"] == 1
+    assert rows[0]["스프레드중앙%"] == -10.0
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
