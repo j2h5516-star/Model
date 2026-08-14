@@ -1198,7 +1198,9 @@ def fetch_earnings_8k(
                 # 화면의 "원문 보기" 링크에 사용 (사용자가 직접 공시를 확인할 수 있도록)
                 "filing_url": _safe_filing_url(filing),
                 "derivation": parsed.get("derivation", ""),  # 어떻게 계산했는지 설명
-                "guidance_text": text[-6000:],  # 가이던스는 보도자료 뒷부분에 나옵니다
+                # 가이던스는 대개 뒷부분이지만 결과 요약 직후(중간)에 두는
+                # 회사(AMD 등)도 있어 12,000자로 넉넉히 담습니다 (28차 확대)
+                "guidance_text": text[-12000:],
             }
         )
 

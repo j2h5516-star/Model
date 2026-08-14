@@ -636,6 +636,95 @@ def test_xbrl_eps_is_not_q4_filled():
     assert op.get("2024-12-31") == 200.0, op     # 500 − (100×3) = 200 채움
 
 
+# ---------------------------------------------------------------------------
+# 28차 확대 — 분기 선언 구획 상속 · ± 형 · between 형 (전부 실물 발췌)
+# ---------------------------------------------------------------------------
+AMBA_BULLET_STYLE = """Based on information available as of today, Ambarella is
+offering the following guidance for the second quarter of fiscal year 2027,
+ending July 31, 2026:
+•   Revenue is expected to be between $105.0 million and $111.0 million.
+•   Gross margin on a non-GAAP basis is expected to be between 59.0% and 60.5%.
+"""
+
+AMD_PLUSMINUS_STYLE = ("For the second quarter of 2026, AMD expects revenue to "
+                       "be approximately $11.2 billion, plus or minus $300 million.")
+
+MCHP_RECITED_TRAP = (
+    "Our December quarter guidance provided on November 5 was net sales of "
+    "$1.186 billion. Taking all these factors into account, we expect March "
+    "quarter net sales of $1.260 billion plus or minus $20.0 million."
+)
+
+CIEN_ANNUAL_THEN_QUARTER = """Ciena expects fiscal year 2026 to include:
+• Revenue in the range of $5.7 billion to $6.1 billion
+Ciena expects fiscal first quarter 2026 to include:
+• Revenue in the range of $1.35 billion to $1.43 billion
+"""
+
+UNH_TRAPS = (
+    "UnitedHealth Group Reports First Quarter 2026 Results; Revises Full Year "
+    "Guidance\n"
+    "• Revenues of $63.7 billion grew nearly 10 percent year over year.\n"
+    "The company entered into an arrangement to buy back at least $2 billion "
+    "of its common stock, which it expects to complete by the end of the "
+    "second quarter 2026.\n"
+)
+
+UCTT_EPS_BETWEEN = (
+    "Second Quarter Fiscal 2026 Outlook\n"
+    "For the second quarter, the Company expects revenue in the range of "
+    "$565 million to $605 million. The Company expects GAAP diluted net income "
+    "per share to be between $0.20 and $0.36 and non-GAAP diluted net income "
+    "per share to be between $0.44 and $0.60."
+)
+
+
+def test_guidance_block_inherits_quarter_context():
+    """분기 선언 아래 불릿(분기 낱말 없음)도 매출 가이던스로 읽어야 합니다."""
+    rev = fe.parse_guidance_revenue(AMBA_BULLET_STYLE)
+    assert rev["low"] == 105.0e6 and rev["high"] == 111.0e6, rev
+
+
+def test_guidance_plus_minus_dollar():
+    """± 형: $11.2 billion ± $300 million → 10.9~11.5B."""
+    rev = fe.parse_guidance_revenue(AMD_PLUSMINUS_STYLE)
+    assert rev["low"] == 10.9e9 and rev["high"] == 11.5e9 and rev["mid"] == 11.2e9, rev
+
+
+def test_guidance_band_beats_recited_single():
+    """지난번 가이던스 재인용(단일값)보다 새 범위(밴드)가 이겨야 합니다."""
+    rev = fe.parse_guidance_revenue(MCHP_RECITED_TRAP)
+    assert rev["low"] == 1.24e9 and rev["high"] == 1.28e9, rev
+
+
+def test_guidance_quarter_block_not_annual():
+    """연간 블록 뒤에 분기 블록이 오면 분기 수치만 읽어야 합니다 (CIEN 실물)."""
+    rev = fe.parse_guidance_revenue(CIEN_ANNUAL_THEN_QUARTER)
+    assert rev["low"] == 1.35e9 and rev["high"] == 1.43e9, rev
+
+
+def test_guidance_ignores_buyback_and_results_bullets():
+    """자사주 매입의 "expects ... quarter"와 실적 하이라이트 불릿은
+    가이던스가 아닙니다 (UNH 실물 오탐 회귀)."""
+    rev = fe.parse_guidance_revenue(UNH_TRAPS)
+    assert rev["mid"] is None, rev
+
+
+def test_guidance_eps_between_prefers_nongaap_band():
+    """between $A and $B 형 EPS — GAAP 나란히 있어도 non-GAAP 범위를 집습니다."""
+    eps = fe.parse_guidance_eps(UCTT_EPS_BETWEEN)
+    assert eps["low"] == 0.44 and eps["high"] == 0.6, eps
+
+
+def test_guidance_giant_sentence_blob_is_skipped():
+    """구두점 없는 머리말·표 뭉치(500자 초과 가짜 문장)는 건너뜁니다."""
+    blob = ("EXHIBIT 99.1 " + "AMERICAN EXPRESS COMPANY " * 30
+            + " second quarter expects revenue guidance "
+            + " $3.1 billion " + "x " * 120)
+    assert len(blob) > 500
+    assert fe.parse_guidance_revenue(blob)["mid"] is None
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
