@@ -2,23 +2,13 @@
   "permissions": {
     "defaultMode": "bypassPermissions",
     "allow": [
-      "Bash",
-      "Edit",
-      "Write",
-      "NotebookEdit",
-      "WebSearch",
-      "WebFetch",
-      "Agent",
-      "Workflow",
-      "Skill",
-      "ToolSearch",
-      "Monitor",
-      "TaskCreate",
-      "TaskUpdate",
-      "TaskGet",
-      "TaskList",
-      "mcp__github",
-      "mcp__Claude_Code_Remote"
+      "Bash", "Edit", "Write", "NotebookEdit", "Glob", "Grep", "Read",
+      "WebSearch", "WebFetch", "Agent", "Workflow", "Skill", "ToolSearch",
+      "Monitor", "TaskCreate", "TaskUpdate", "TaskGet", "TaskList",
+      "SendUserFile", "Artifact",
+      "mcp__github", "mcp__github__*",
+      "mcp__Claude_Code_Remote", "mcp__Claude_Code_Remote__*",
+      "mcp__claude-code-remote", "mcp__claude-code-remote__*"
     ]
   }
 }
