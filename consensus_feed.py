@@ -43,6 +43,39 @@ def _num(value) -> float | None:
     return out if math.isfinite(out) else None
 
 
+REV_MIN_DOLLARS = 1e6      # 매출 추정이 이보다 작으면 단위 착오 의심 — 버림
+
+
+def merge_revenue_frame(rows: dict, frame) -> list[str]:
+    """야후 매출 추정 표(revenue_estimate)를 기존 행에 합칩니다 (30차).
+
+    같은 원칙: 값은 그대로 받아 적고, 상식 밖(1백만 달러 미만·역전 범위)은
+    버립니다. 매출 추정이 없어도 EPS 행은 그대로 살아 있습니다.
+    """
+    dropped: list[str] = []
+    if frame is None or getattr(frame, "empty", True):
+        return dropped
+    for label in PERIOD_LABELS:
+        if label not in frame.index or label not in rows:
+            continue
+        record = frame.loc[label]
+        avg = _num(record.get("avg"))
+        low = _num(record.get("low"))
+        high = _num(record.get("high"))
+        analysts = _num(record.get("numberOfAnalysts"))
+        if avg is None:
+            continue
+        if avg < REV_MIN_DOLLARS:
+            dropped.append(f"{label}: 매출 추정 {avg} 단위 의심")
+            continue
+        if (low is not None and low > avg) or (high is not None and avg > high):
+            dropped.append(f"{label}: 매출 low≤avg≤high 위반")
+            continue
+        rows[label].update(rev_avg=avg, rev_low=low, rev_high=high,
+                           rev_analysts=int(analysts) if analysts is not None else None)
+    return dropped
+
+
 def rows_from_frame(frame) -> tuple[dict, list[str]]:
     """yfinance earnings_estimate 표에서 원장 행을 만듭니다.
 
@@ -85,11 +118,17 @@ def rows_from_frame(frame) -> tuple[dict, list[str]]:
 
 
 def fetch_one(ticker: str) -> tuple[dict, list[str]]:
-    """야후에서 한 종목의 EPS 추정 표를 받아 원장 행으로 바꿉니다."""
+    """야후에서 한 종목의 EPS·매출 추정 표를 받아 원장 행으로 바꿉니다."""
     import yfinance as yf
 
-    frame = yf.Ticker(ticker).earnings_estimate
-    return rows_from_frame(frame)
+    tk = yf.Ticker(ticker)
+    rows, dropped = rows_from_frame(tk.earnings_estimate)
+    if rows:
+        try:
+            dropped += merge_revenue_frame(rows, tk.revenue_estimate)
+        except Exception:
+            pass    # 매출 추정 실패는 EPS 행을 막지 않습니다
+    return rows, dropped
 
 
 def empty_ledger() -> dict:
