@@ -92,6 +92,35 @@ def test_normal_large_eps_passes():
     assert dataset.build(snap)["quarters"]["AAA"][0]["adj_eps"] == 39.25
 
 
+def test_op_income_unit_mismatch_is_dropped():
+    """영업이익 단위 미환산(25차 감사 실물: CRDO 216,722 ↔ 매출 4.37억)은
+    없음 처리. 보도자료 표가 '천 달러' 단위인데 달러로 저장된 값은
+    매출(달러 확정) 대비 마진이 0.1% 미만으로 나타납니다."""
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(revenue=437_003_000.0, op_income=216_722.0),   # 천 달러 착오
+        quarter_row(filing_date="2026-03-31", period_label="26 Q3",
+                    revenue=430_949_000.0, op_income=-2.0),        # 주당값 오인
+        quarter_row(filing_date="2025-12-31", period_label="26 Q2",
+                    revenue=1_168_179_000.0, op_income=1_100_000_000.0),  # 마진 94%
+    ]})
+    result = dataset.build(snap)
+    rows = result["quarters"]["AAA"]
+    assert all(r["op_income"] is None for r in rows), rows
+    assert sum("단위" in n or "마진" in n for n in result["notes"]) >= 3
+
+
+def test_real_op_income_passes_unit_guard():
+    """정상 마진(10%)과 근소 적자(-3%)는 그대로 통과해야 합니다."""
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(revenue=1_000_000_000.0, op_income=100_000_000.0),
+        quarter_row(filing_date="2026-03-31", period_label="26 Q3",
+                    revenue=1_000_000_000.0, op_income=-30_000_000.0),
+    ]})
+    rows = dataset.build(snap)["quarters"]["AAA"]
+    assert rows[0]["op_income"] == -30_000_000.0     # 정렬 후 첫 행 = 26 Q3
+    assert rows[1]["op_income"] == 100_000_000.0
+
+
 def test_non_number_becomes_none():
     """숫자가 아닌 값(NaN·문자)은 고치지 않고 없음 처리합니다."""
     snap = make_snapshot(
