@@ -32,6 +32,7 @@ import judge
 import market_data as md
 import measure_engine
 import measure_store
+import consensus_feed
 import sec_fundamentals as sf
 
 
@@ -143,12 +144,28 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         verdict_note = f"판정 실패: {type(exc).__name__}: {str(exc)[:160]}"
         progress(f"⚠️ {verdict_note}")
 
+    # 전망 축 ② — 야후 컨센서스 원장 (헌법 2장 제1조 개정, 2026-08-14).
+    # 추가 전용: 오늘 스냅샷만 붙이고 과거 항목은 절대 고치지 않습니다.
+    # 실패해도 그날의 데이터 커밋은 막지 않습니다 (관찰 전용 축).
+    try:
+        ledger = consensus_feed.load(f"{cfg.MEASURE_DIR}/consensus.json")
+        consensus_note = consensus_feed.collect(
+            tickers, ledger,
+            as_of=datetime.now(timezone.utc).date().isoformat(),
+            progress=progress,
+        )
+        files[f"{cfg.MEASURE_DIR}/consensus.json"] = consensus_feed.to_json(ledger)
+    except Exception as exc:
+        consensus_note = f"컨센서스 수집 실패: {type(exc).__name__}: {str(exc)[:160]}"
+        progress(f"⚠️ {consensus_note}")
+
     # 로봇 실행 기록 — 다음 세션이 읽습니다
     log = {
         "ran_at": datetime.now(timezone.utc).isoformat(),
         "tickers": len(tickers),
         "summary": summary,
         "verdict": verdict_note,
+        "consensus": consensus_note,
         "per_ticker": [
             {
                 "ticker": r.get("ticker"),
