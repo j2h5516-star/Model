@@ -197,3 +197,102 @@ def collect(tickers: list[str], ledger: dict, as_of: str, progress=print) -> str
 
 def to_json(ledger: dict) -> str:
     return json.dumps(ledger, ensure_ascii=False, indent=1)
+
+
+# ---------------------------------------------------------------------------
+# A축 소급 — 야후 보관 서프라이즈 기록 (31차)
+# ---------------------------------------------------------------------------
+# 야후 earnings_history 는 지난 4개 분기의 "발표 당시 추정 vs 실제"를
+# 보관해 제공합니다. 우리 원장(매일 직접 박제)이 생기기 전의 과거를
+# 소급해 채울 수 있는 유일한 창구입니다.
+#
+# 출처 구분 (정직): 이 값은 **야후가 사후 제공하는 보관 기록**이라
+# "그날 우리가 직접 본 값"이 아닙니다. 그래서 원장(consensus.json)과
+# 섞지 않고 별도 파일(surprise.json)에 담고 출처를 명시합니다.
+# 원장이 자란 뒤의 발표는 원장(발표일 이전 마지막 스냅샷)이 정본입니다.
+
+def empty_surprise_archive() -> dict:
+    return {
+        "설명": (
+            "야후 보관(사후 제공) 분기 서프라이즈 기록 — 추정(epsEstimate)과 "
+            "실제(epsActual)는 야후가 보관한 값을 그대로 받아 적음. 추가 전용, "
+            "(종목, 분기) 중복은 최초 기록 유지. 원장(consensus.json) 이후의 "
+            "발표는 원장이 정본."
+        ),
+        "tickers": {},
+    }
+
+
+def load_surprises(path: str) -> dict:
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return empty_surprise_archive()
+
+
+def surprises_from_frame(frame) -> tuple[list[dict], list[str]]:
+    """earnings_history 표 → [{quarter, est, act, surprise_pct}] (검사 포함)."""
+    rows: list[dict] = []
+    dropped: list[str] = []
+    if frame is None or getattr(frame, "empty", True):
+        return rows, dropped
+    for idx, record in frame.iterrows():
+        est = _num(record.get("epsEstimate"))
+        act = _num(record.get("epsActual"))
+        quarter = str(idx)[:10]
+        if est is None or act is None:
+            dropped.append(f"{quarter}: 추정/실제 없음")
+            continue
+        if abs(est) > PER_SHARE_ABS_LIMIT or abs(act) > PER_SHARE_ABS_LIMIT:
+            dropped.append(f"{quarter}: 주당 상한 초과 ({est},{act})")
+            continue
+        if est == 0:
+            dropped.append(f"{quarter}: 추정 0 — 서프라이즈% 정의 불가")
+            continue
+        rows.append({
+            "quarter": quarter,
+            "est": est,
+            "act": act,
+            "surprise_pct": round((act - est) / abs(est) * 100.0, 1),
+        })
+    return rows, dropped
+
+
+def fetch_surprises(ticker: str) -> tuple[list[dict], list[str]]:
+    import yfinance as yf
+
+    return surprises_from_frame(yf.Ticker(ticker).earnings_history)
+
+
+def merge_surprises(archive: dict, ticker: str, rows: list[dict]) -> int:
+    """(종목, 분기) 단위 추가 전용 병합 — 이미 있는 분기는 최초 기록 유지."""
+    if not rows:
+        return 0
+    entries = archive.setdefault("tickers", {}).setdefault(ticker, [])
+    seen = {e["quarter"] for e in entries}
+    added = 0
+    for row in rows:
+        if row["quarter"] in seen:
+            continue
+        entries.append(dict(row))
+        seen.add(row["quarter"])
+        added += 1
+    entries.sort(key=lambda e: e["quarter"])
+    return added
+
+
+def collect_surprises(tickers: list[str], archive: dict, progress=print) -> str:
+    fetched = added = failed = 0
+    for ticker in tickers:
+        try:
+            rows, _dropped = fetch_surprises(ticker)
+        except Exception:
+            failed += 1
+            continue
+        if rows:
+            fetched += 1
+            added += merge_surprises(archive, ticker, rows)
+    summary = f"서프라이즈: 확보 {fetched}종목 · 신규 {added}분기 · 실패 {failed}종목"
+    progress(summary)
+    return summary
