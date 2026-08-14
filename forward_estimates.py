@@ -334,8 +334,124 @@ def looks_annual(text: str) -> bool:
 #    net income per share to be in the range of $44.00 to $46.00."
 # CRDO 처럼 매출·GM 가이던스만 주고 EPS 가이던스는 없는 회사도 있습니다 —
 # 그때는 없음(None)으로 둡니다 (창작 금지).
+_MONTHS_RE_TEXT = (
+    "January|February|March|April|May|June|July|August|September|"
+    "October|November|December"
+)
 _GUID_EPS_QUARTER_RE = re.compile(
-    r"(?:first|second|third|fourth)\s+quarter|next\s+quarter|\bQ[1-4]\b", re.I
+    r"(?:fiscal\s+)?(?:first|second|third|fourth)\s+(?:fiscal\s+)?quarter"
+    r"|next\s+quarter|\bQ[1-4]\b"
+    rf"|(?:{_MONTHS_RE_TEXT})\s+quarter",       # "March quarter" (MCHP 실물)
+    re.I,
+)
+
+# --- 28차 확대: 분기 선언 구획 상속 -----------------------------------------
+# 실물 근거 (전부 data/measure/raw 의 실제 보도자료):
+#   · AMBA: "guidance for the second quarter of fiscal year 2027 ...:" 선언 뒤
+#     불릿 "• Revenue is expected to be between $105.0 million and $111.0
+#     million." — 불릿 자체엔 분기 낱말이 없어 종전 파서가 전부 놓쳤습니다.
+#   · CIEN: 연간 블록("fiscal year 2026 to include:")과 분기 블록("fiscal
+#     first quarter 2026 to include:")이 연달아 나옴 — 분기 선언에서 시작해
+#     연간 표지가 나오면 잘라야 연간 수치가 섞이지 않습니다.
+# 규칙: 분기 가이던스 선언 지점부터 (다음 연간 표지 전까지, 최대 1,400자)를
+# "분기 전망 구획"으로 보고, 그 안의 문장·불릿은 분기 문맥을 상속합니다.
+# 앞을 보는 말 — 과거 실적 문장("Revenue for the first quarter was $X")이
+# 가이던스로 오인되는 회귀를 막습니다 (분기+매출+달러가 다 있어도 과거는 과거).
+_FORWARD_RE = re.compile(
+    r"expect|anticipat|guidance|outlook|forecast|project(?:s|ed|ion)"
+    r"|is\s+projected|to\s+be\s+(?:approximately|between|in\s+the\s+range)",
+    re.I,
+)
+
+# ⚠️ 구획 닻은 guidance/outlook/to include 가 든 **선언**만 인정합니다.
+#    맨몸 "expects ... quarter"는 자사주 매입("expects to complete by the end
+#    of the second quarter" — UNH 실물 오탐) 같은 무관한 문장도 열어 버립니다.
+#    값과 분기가 한 문장에 같이 있는 경우(AMD·MCHP)는 문장 경로가 처리합니다.
+_QUARTER_DECL_RE = re.compile(
+    r"(?:guidance|outlook)[^.\n]{0,120}?"
+    r"(?:fiscal\s+)?(?:first|second|third|fourth|next|current)\s+(?:fiscal\s+)?quarter"
+    r"|(?:fiscal\s+)?(?:first|second|third|fourth)\s+quarter"
+    r"[^.\n]{0,90}?(?:guidance|outlook|to\s+include)"
+    rf"|(?:{_MONTHS_RE_TEXT})\s+quarter[^.\n]{{0,60}}?(?:guidance|outlook)"
+    r"|\bQ[1-4]\s*(?:FY\s*)?20\d{2}[^.\n]{0,50}?(?:guidance|outlook)",
+    re.I,
+)
+# 구획을 자르는 연간 표지 — "fiscal year 20xx" 단독은 분기 선언에도 나오므로
+# (예: "second quarter of fiscal year 2027") 여기서는 쓰지 않습니다.
+_ANNUAL_CUT_RE = re.compile(
+    r"full[-\s]?year|for\s+the\s+(?:full\s+)?year\b"
+    r"|annual\s+(?:guidance|outlook)"
+    r"|fiscal\s+year\s+20\d{2}\s+(?:guidance|outlook|to\s+include)",
+    re.I,
+)
+_BLOCK_SPAN = 1400
+
+
+def quarterly_guidance_blocks(text: str) -> list[str]:
+    """분기 가이던스 선언부터 시작하는 구획들 (연간 표지에서 자름)."""
+    blocks = []
+    tail = text
+    for match in _QUARTER_DECL_RE.finditer(tail):
+        # 가짜 선언 걸러내기:
+        #  · 보도자료 제목("First Quarter 2026 Results ... Revises Full Year
+        #    Guidance")은 선언이 아닙니다 (UNH 실물 오탐)
+        #  · "quarter ... expects" 꼴 산문(구두점 없는 뭉치 속)도 아님
+        if re.search(r"results|full[-\s]?year|quarter[^.\n]{0,60}?expect",
+                     match.group(0), re.I):
+            continue
+        segment = tail[match.start():match.start() + _BLOCK_SPAN]
+        cut = _ANNUAL_CUT_RE.search(segment, 60)   # 선언 문구 자신은 건너뜀
+        if cut:
+            segment = segment[:cut.start()]
+        blocks.append(segment)
+    return blocks
+
+
+def _quarter_items(text: str) -> list[str]:
+    """분기 문맥을 가진 항목(문장·불릿)들 — 두 경로의 합집합.
+
+    ① 분기 낱말을 직접 품은 문장 (종전 방식 그대로)
+    ② 분기 선언 구획 안의 문장·불릿 (선언의 분기 문맥을 상속)
+    각 항목은 연간 표지가 들어 있으면 버립니다.
+    """
+    items: list[str] = []
+    for sentence in re.split(r"(?<=[.!?])\s+", text):
+        # 구두점 없는 머리말·표 덩어리는 수백 자짜리 가짜 "문장"이 되어
+        # 분기·전망·매출 낱말을 몽땅 품습니다 (AXP 실물 오탐). 진짜
+        # 가이던스 문장은 이보다 짧습니다.
+        if len(sentence) > 500:
+            continue
+        if (_GUID_EPS_QUARTER_RE.search(sentence)
+                and _FORWARD_RE.search(sentence)):
+            items.append(sentence)
+    for block in quarterly_guidance_blocks(text):
+        # 구획 안에서도 아무 문장이나 받지 않습니다: 불릿 표시가 있는 줄
+        # (선언 바로 아래 항목들) 또는 앞보는 말이 있는 줄만. 실물 근거:
+        # UNH 보도자료에서 구획이 과거 실적 산문("Optum ... driving revenues
+        # of $63.7 billion")까지 삼켜 오탐이 났습니다.
+        for line in block.splitlines():
+            line = line.strip()
+            if len(line) < 12 or len(line) > 500:
+                continue
+            bullet = line.startswith(("•", "-", "–", "▪", "●", "*", "◦"))
+            if bullet or _FORWARD_RE.search(line):
+                items.append(line)
+    return [i for i in items if not _ANNUAL_HINTS.search(i)]
+
+
+# ± 형 (실물: AMD "approximately $11.2 billion, plus or minus $300 million" ·
+# MCHP "net sales of $1.260 billion plus or minus $20.0 million").
+# 회사가 준 두 숫자의 덧셈·뺄셈만 합니다 (창작 아님 — 범위의 양 끝 계산).
+_PLUSMINUS_DOLLAR_RE = re.compile(
+    r"\$\s*(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\s*(billion|million|bn|mm)?\s*,?\s*"
+    r"(?:plus\s+or\s+minus|\+/-|±)\s*"
+    r"\$\s*(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\s*(billion|million|bn|mm)?",
+    re.I,
+)
+_PLUSMINUS_PCT_RE = re.compile(
+    r"\$\s*(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\s*(billion|million|bn|mm)?\s*,?\s*"
+    r"(?:plus\s+or\s+minus|\+/-|±)\s*(\d{1,2}(?:\.\d+)?)\s*%",
+    re.I,
 )
 # "non-GAAP … per share/EPS … $A to $B" — 괄호는 회계 표기의 음수입니다
 _GUID_EPS_RANGE_RE = re.compile(
@@ -345,6 +461,19 @@ _GUID_EPS_RANGE_RE = re.compile(
 )
 _GUID_EPS_SINGLE_RE = re.compile(
     r"non[-\s]?GAAP[^.]{0,120}?(?:per\s+share|EPS)[^.$\d]{0,60}?(\()?\$\s*(\d+\.\d{1,2})\)?",
+    re.I,
+)
+# between 형 EPS (28차 실물: UCTT "non-GAAP diluted net income per share to be
+# between $0.44 and $0.60" — and 구분자는 between 뒤에서만 범위로 인정)
+_GUID_EPS_BETWEEN_RE = re.compile(
+    r"non[-\s]?GAAP[^.]{0,120}?(?:per\s+share|EPS)[^.$\d]{0,60}?"
+    r"between\s+\$\s*(\d+\.\d{1,2})\s+and\s+\$\s*(\d+\.\d{1,2})",
+    re.I,
+)
+# ± 형 EPS (28차): "non-GAAP EPS of $0.61, plus or minus $0.05"
+_GUID_EPS_PM_RE = re.compile(
+    r"non[-\s]?GAAP[^.]{0,120}?(?:per\s+share|EPS)[^.$\d]{0,60}?"
+    r"\$\s*(\d+\.\d{1,2})\s*,?\s*(?:plus\s+or\s+minus|\+/-|±)\s*\$\s*(\d+\.\d{1,2})",
     re.I,
 )
 
@@ -358,12 +487,15 @@ def parse_guidance_eps(text: str) -> dict:
     result = {"low": None, "high": None, "mid": None}
     if not text:
         return result
-    # 가이던스는 보도자료 뒷부분에 있습니다 (quarters 행의 guidance_text 가 그 조각)
-    for sentence in re.split(r"(?<=[.!?])\s+", text[-8000:]):
-        if not _GUID_EPS_QUARTER_RE.search(sentence):
-            continue
-        if _ANNUAL_HINTS.search(sentence):
-            continue
+    single_result: dict | None = None      # 밴드(범위·±)가 항상 단일값을 이깁니다
+    for sentence in _quarter_items(text):
+        match = _GUID_EPS_BETWEEN_RE.search(sentence)
+        if match:
+            low, high = float(match.group(1)), float(match.group(2))
+            if low > high:
+                low, high = high, low
+            result.update(low=low, high=high, mid=round((low + high) / 2, 4))
+            return result
         match = _GUID_EPS_RANGE_RE.search(sentence)
         if match:
             low = float(match.group(2)) * (-1 if match.group(1) else 1)
@@ -372,12 +504,18 @@ def parse_guidance_eps(text: str) -> dict:
                 low, high = high, low
             result.update(low=low, high=high, mid=round((low + high) / 2, 4))
             return result
-        match = _GUID_EPS_SINGLE_RE.search(sentence)
-        if match:
-            value = float(match.group(2)) * (-1 if match.group(1) else 1)
-            result.update(low=value, high=value, mid=value)
+        pm = _GUID_EPS_PM_RE.search(sentence)
+        if pm:
+            centre, radius = float(pm.group(1)), float(pm.group(2))
+            result.update(low=round(centre - radius, 4),
+                          high=round(centre + radius, 4), mid=centre)
             return result
-    return result
+        if single_result is None:
+            match = _GUID_EPS_SINGLE_RE.search(sentence)
+            if match:
+                value = float(match.group(2)) * (-1 if match.group(1) else 1)
+                single_result = {"low": value, "high": value, "mid": value}
+    return single_result or result
 
 
 # --- 다음 분기 가이던스의 매출·조정 EBITDA (대책 2 — 2026-08-13) ---
@@ -407,9 +545,11 @@ def _parse_guidance_dollar(text: str, keyword_re: re.Pattern) -> dict:
     result = {"low": None, "high": None, "mid": None}
     if not text:
         return result
-    for sentence in re.split(r"(?<=[.!?])\s+", text[-8000:]):
-        if not _GUID_EPS_QUARTER_RE.search(sentence):
-            continue                      # 분기를 가리키는 문장만
+    # 1차: 범위·± 형(밴드)만 찾는다 — 2차: 그래도 없으면 단일값.
+    # 같은 보도자료 안에 "지난번 가이던스 재인용"(단일값)이 새 가이던스
+    # (범위)보다 먼저 나오는 실물(MCHP)이 있어, 밴드가 항상 이깁니다.
+    single_result: dict | None = None
+    for sentence in _quarter_items(text):
         keyword = keyword_re.search(sentence)
         if not keyword:
             continue
@@ -426,12 +566,28 @@ def _parse_guidance_dollar(text: str, keyword_re: re.Pattern) -> dict:
                 continue
             result.update(low=low, high=high, mid=round((low + high) / 2, 2))
             return result
-        match = _SINGLE_RE.search(area)
-        if match:
-            value = _to_dollars(match.group(1), match.group(2), 1e6)
-            result.update(low=value, high=value, mid=value)
-            return result
-    return result
+        pm = _PLUSMINUS_DOLLAR_RE.search(area)
+        if pm:
+            centre = _to_dollars(pm.group(1), pm.group(2), 1e6)
+            radius = _to_dollars(pm.group(3), pm.group(4), 1e6)
+            if 0 < radius < centre:       # 반경이 중심보다 크면 잘못 읽은 것
+                result.update(low=centre - radius, high=centre + radius,
+                              mid=centre)
+                return result
+        pm = _PLUSMINUS_PCT_RE.search(area)
+        if pm:
+            centre = _to_dollars(pm.group(1), pm.group(2), 1e6)
+            pct = float(pm.group(3)) / 100.0
+            if 0 < pct < 0.5:
+                result.update(low=round(centre * (1 - pct), 2),
+                              high=round(centre * (1 + pct), 2), mid=centre)
+                return result
+        if single_result is None:
+            match = _SINGLE_RE.search(area)
+            if match:
+                value = _to_dollars(match.group(1), match.group(2), 1e6)
+                single_result = {"low": value, "high": value, "mid": value}
+    return single_result or result
 
 
 def parse_guidance_revenue(text: str) -> dict:
