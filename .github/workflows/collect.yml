@@ -32,6 +32,18 @@ jobs:
           python-version: "3.11"
           cache: pip
 
+      # 26차 개선 — 증분 수집: 공시 원문(추출 텍스트)은 불변이므로 실행
+      # 캐시로 다음 런에 전달합니다. 매일 런은 공시 목록만 확인하고 못 본
+      # 문서만 내려받아 수집 시간이 크게 줄어듭니다. 캐시가 비면(만료 등)
+      # 자동으로 예전처럼 전체 수집합니다 — 정확성은 캐시에 의존하지 않음.
+      - name: 공시 원문 캐시 복원
+        uses: actions/cache@v4
+        with:
+          path: data/raw8k
+          key: raw8k-v1-${{ github.run_id }}
+          restore-keys: |
+            raw8k-v1-
+
       - name: 의존성 설치
         run: pip install -r requirements.txt
 

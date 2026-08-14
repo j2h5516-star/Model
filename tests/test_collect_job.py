@@ -123,6 +123,73 @@ def test_run_aborts_when_mostly_failed():
     assert code == 1
 
 
+# ---------------------------------------------------------------------------
+# 26차 개선 — 증분 수집(원문 캐시) + 절제된 병렬
+# ---------------------------------------------------------------------------
+class _FakeFiling:
+    def __init__(self, accession):
+        self.accession_no = accession
+
+
+def test_raw8k_cache_serves_second_read(tmp_dir="/tmp/claude-0/raw8k_test"):
+    """같은 공시는 두 번째부터 캐시에서 읽고(다운로드 1회),
+    빈 결과는 캐시하지 않아야 합니다 (일시 실패의 영구화 방지)."""
+    import shutil
+    sf = cj.sf
+    original_dir = cfg.RAW8K_CACHE_DIR
+    original_fetch = sf._earnings_text
+    calls = {"n": 0}
+    cfg.RAW8K_CACHE_DIR = tmp_dir
+    shutil.rmtree(tmp_dir, ignore_errors=True)
+
+    def fake_ok(filing, report=None):
+        calls["n"] += 1
+        return "실적 본문", "보도자료", True
+
+    def fake_empty(filing, report=None):
+        calls["n"] += 1
+        return "", "", False
+
+    try:
+        sf._earnings_text = fake_ok
+        filing = _FakeFiling("0001-23-000045")
+        report = sf.new_report("TT")
+        assert sf._earnings_text_cached("TT", filing, report) == ("실적 본문", "보도자료", True)
+        assert sf._earnings_text_cached("TT", filing, report) == ("실적 본문", "보도자료", True)
+        assert calls["n"] == 1, calls          # 두 번째는 캐시에서
+        assert report["cache_hits"] == 1 and report["cache_downloads"] == 1, report
+
+        sf._earnings_text = fake_empty
+        empty = _FakeFiling("0001-23-000099")
+        sf._earnings_text_cached("TT", empty)
+        sf._earnings_text_cached("TT", empty)
+        assert calls["n"] == 3, calls          # 빈 결과는 매번 다시 시도
+    finally:
+        sf._earnings_text = original_fetch
+        cfg.RAW8K_CACHE_DIR = original_dir
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
+def test_collect_fundamentals_parallel_keeps_order():
+    """병렬 수집이 결과를 입력 종목 순서 그대로, 빠짐없이 돌려줘야 합니다."""
+    import time as _t
+    tickers = ["T1", "T2", "T3", "T4", "T5", "T6"]
+    original_get = cj.sf.get_fundamentals
+
+    def fake(ticker, use_cache=False):
+        _t.sleep(0.05 if ticker in ("T1", "T4") else 0.0)   # 완료 순서 뒤섞기
+        report = cj.sf.new_report(ticker)
+        report["adj_eps_ok"] = 1
+        return [], report
+
+    cj.sf.get_fundamentals = fake
+    try:
+        reports = cj.collect_fundamentals(tickers, progress=_quiet)
+    finally:
+        cj.sf.get_fundamentals = original_get
+    assert [r["ticker"] for r in reports] == tickers, [r.get("ticker") for r in reports]
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
