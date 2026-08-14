@@ -48,6 +48,38 @@ HYPOTHESIS_LABELS = {
     "H8_GAAPEPS_첫돌파": "GAAP EPS 첫 신기록 (H8)",
     "H9_저평가_첫신기록": "첫 신기록 × 주가 52주선 아래 (H9)",
     "H10_논갭영업이익_저평가_첫신기록": "영업이익 첫 신기록 × 52주선 아래 (H10)",
+    "H11_섹터정배열폭_60": "섹터 정배열 폭 60% 첫 돌파 (H11)",
+    "H11b_섹터정배열폭_80": "섹터 정배열 폭 80% 첫 돌파 (H11b)",
+}
+
+# 미채택·대기 신호를 화면에서 쉬운 말로 풀어 주는 설명 (지시 1의 이행).
+# "무엇을 재봤는가 / 왜 안 쓰는가"를 한 줄씩 적습니다.
+HYPOTHESIS_DETAILS = {
+    "H2_신고점": (
+        "이익(TTM)이 과거 최고를 넘은 발표를 사면 이기는가? — 신기록 자체만으로는 "
+        "아무 발표나 산 것과 차이가 없었습니다."),
+    "H2b_신고점_첫돌파": (
+        "그중에서도 **처음** 넘은 발표만 골라도 되는가? — 연속 돌파보다 낫지만 "
+        "기준선과 갈라질 만큼은 아니었습니다."),
+    "H5_실적폭_고정20": (
+        "시장 전체에서 신기록이 20% 이상 나오는 '좋은 장세'에 사면 되는가? — "
+        "고정 문턱으로는 갈라지지 않았습니다."),
+    "H5b_실적폭_중앙값": (
+        "장세가 '그 시장의 평소보다' 좋을 때 사면 되는가? — 한때 채택됐다가 "
+        "데이터가 늘자 미채택으로 뒤집혔습니다 (장치가 정직하게 작동한 사례)."),
+    "H6_결합_H5bxH2b": (
+        "좋은 장세 × 첫 신기록을 겹치면 되는가? — 두 조건을 다 만족하는 발표가 "
+        "아직 10건이 안 돼 판정을 미루고 있습니다."),
+    "H7_EBITDA_첫돌파": (
+        "조정 EPS 를 발표하지 않는 회사는 EBITDA 로 같은 것을 봅니다 — "
+        "해당 회사가 적어 표본이 아직 부족합니다."),
+    "H8_GAAPEPS_첫돌파": (
+        "EBITDA 도 없으면 GAAP EPS 로 봅니다 — 기준선과 갈라지지 않았습니다."),
+    "H11_섹터정배열폭_60": (
+        "섹터의 주가가 무리로 정배열되면(60% 돌파) 그 뒤 1년이 좋은가? — "
+        "**오히려 나빴습니다**(9.4% vs 기준선 26.8%). 다 오른 뒤라 늦습니다."),
+    "H11b_섹터정배열폭_80": (
+        "더 강한 합의(80%)면 다른가? — 그런 경우가 7건뿐이라 판정 불가입니다."),
 }
 
 
@@ -289,173 +321,357 @@ def hypothesis_note(verdict: dict | None, name: str) -> str:
 # ---------------------------------------------------------------------------
 # 화면 (streamlit)
 # ---------------------------------------------------------------------------
-def main():
-    import streamlit as st
+# --- 정배열 폭 구간별 과거 실측 (34차 탐색 — 등록 근거 아님, 표시용) ---
+# 숫자는 34차 실행 출력에서 복사. 화면에 "탐색값"임을 반드시 함께 적습니다.
+BREADTH_ZONES = [
+    (60.0, 101.0, "정배열 완성 구간", 7.7,
+     "무리 전체가 이미 정배열 — 과거 1년 폭등률이 가장 낮았습니다"),
+    (40.0, 60.0, "쌓이는 중 (역사적 최적)", 33.3,
+     "절반쯤 정배열 — 과거 1년 폭등률이 가장 높았던 구간"),
+    (25.0, 40.0, "초기", 25.8, "이제 모이기 시작하는 단계"),
+    (0.0, 25.0, "약함", 27.0, "정배열 종목이 드문 상태"),
+]
+BREADTH_BASELINE = 26.8      # 34차 기준선 (모든 섹터·주, n=1,872)
 
-    st.set_page_config(page_title="측정 계기판", layout="centered")
-    st.title("측정 계기판")
+
+def surprise_sector_rows(surprise: dict | None, quarters: int = 2) -> list[dict]:
+    """섹터별 실적 서프라이즈 중앙값 (야후 보관 기록 — 관찰용).
+
+    최근 quarters 개 분기만 씁니다. 값이 없으면 빈 목록.
+    """
+    from statistics import median
+
+    entries = (surprise or {}).get("tickers") or {}
+    groups: dict[str, list[float]] = {}
+    for ticker, rows in entries.items():
+        sector = cfg.SECTORS.get(ticker, "미분류")
+        for row in rows[-quarters:]:
+            if row.get("surprise_pct") is not None:
+                groups.setdefault(sector, []).append(row["surprise_pct"])
+    out = [{"섹터": name, "건수": len(values),
+            "중앙%": round(median(values), 1)}
+           for name, values in groups.items()]
+    out.sort(key=lambda r: r["중앙%"], reverse=True)
+    return out
+
+
+ZONE_COLORS = {
+    "쌓이는 중 (역사적 최적)": "#2E9E5B",   # 초록 — 과거 가장 좋았던 구간
+    "초기": "#3B82C4",                      # 파랑 — 모이기 시작
+    "약함": "#8A8F98",                      # 회색 — 아직 아님
+    "정배열 완성 구간": "#C4553B",          # 주황빨강 — 과거 가장 나빴던 구간
+    "판단 불가": "#4A4F58",
+}
+
+
+def sorted_bar_chart(labels, values, value_title, colors=None,
+                     positive_negative=False):
+    """값 순으로 정렬된 가로 막대 그래프 (모바일 412px 기준).
+
+    st.bar_chart 는 축을 가나다순으로 다시 정렬해 버려 '한눈에'가 깨집니다.
+    그래서 알테어로 정렬 순서를 직접 고정합니다.
+    colors: 라벨별 색 (없으면 값의 부호로 색을 나눔)
+    """
+    import altair as alt
+    import pandas as pd
+
+    frame = pd.DataFrame({"이름": list(labels), "값": list(values)})
+    if colors:
+        frame["색"] = [colors.get(label, "#3B82C4") for label in labels]
+        color = alt.Color("색:N", scale=None, legend=None)
+    elif positive_negative:
+        frame["색"] = ["#2E9E5B" if v >= 0 else "#C4553B" for v in values]
+        color = alt.Color("색:N", scale=None, legend=None)
+    else:
+        color = alt.value("#3B82C4")
+    return (
+        alt.Chart(frame)
+        .mark_bar(cornerRadiusEnd=3)
+        .encode(
+            y=alt.Y("이름:N", sort=list(labels), title=None,
+                    axis=alt.Axis(labelLimit=120)),
+            x=alt.X("값:Q", title=value_title),
+            color=color,
+            tooltip=["이름", "값"],
+        )
+        .properties(height=max(200, 30 * len(frame)))
+    )
+
+
+def breadth_zone(breadth: float | None) -> dict:
+    """폭 값 → 구간 이름·과거 실측 폭등률 (34차 탐색값)."""
+    if breadth is None:
+        return {"zone": "판단 불가", "rate": None, "note": "이력이 부족합니다"}
+    for low, high, name, rate, note in BREADTH_ZONES:
+        if low <= breadth < high:
+            return {"zone": name, "rate": rate, "note": note}
+    return {"zone": "판단 불가", "rate": None, "note": ""}
+
+
+def live_signal_rows(ds: dict, days: int = 90) -> list[dict]:
+    """지금 채택 신호(H9·H10)가 켜진 종목 — 최근 days 일 발표 중.
+
+    H9 = 잣대 TTM 첫 신기록 ∧ 주봉 종가 < 52주선
+    H10 = 논갭 영업이익 첫 신기록 ∧ 같은 조건
+    """
+    today = ds["prices"][ds["benchmark"]]["dates"][-1]
+    cutoff = (date.fromisoformat(today) - timedelta(days=days)).isoformat()
+    rows = []
+    for ticker in ds["tickers"]:
+        quarters = ds["quarters"].get(ticker) or []
+        prices = ds["prices"].get(ticker)
+        if not prices or not prices.get("dates"):
+            continue
+        hits = []
+        yardstick = me.yardstick_of(quarters)
+        if yardstick:
+            states = me.earnings_states(quarters, field=yardstick)
+            if states and states[-1]["announced"] >= cutoff \
+                    and states[-1]["newhigh_streak"] == 1 \
+                    and me.below_52wk_ma(prices, states[-1]["announced"]) is True:
+                hits.append("H9")
+        op_rows = [r for r in quarters if r.get("op_income") is not None]
+        if len(op_rows) >= me.LADDER_MIN_QUARTERS:
+            op_states = me.earnings_states(quarters, field="op_income")
+            if op_states and op_states[-1]["announced"] >= cutoff \
+                    and op_states[-1]["newhigh_streak"] == 1 \
+                    and me.below_52wk_ma(prices, op_states[-1]["announced"]) is True:
+                hits.append("H10")
+        if hits:
+            last = (me.earnings_states(quarters, field=yardstick or "op_income")
+                    or [{}])[-1]
+            rows.append({
+                "종목": ticker,
+                "섹터": cfg.SECTORS.get(ticker, "미분류"),
+                "신호": " · ".join(hits),
+                "발표일": last.get("announced", ""),
+            })
+    rows.sort(key=lambda r: r["발표일"], reverse=True)
+    return rows
+
+
+def main():
+    import pandas as pd
+    import streamlit as st
+    import sector_model as sm
+
+    st.set_page_config(page_title="상승 섹터 포착 계기판", layout="centered")
+    st.title("상승 섹터 포착 계기판")
 
     verdict = load_json("verdict.json")
     log = load_json("robot_log.json")
+    consensus = load_json("consensus.json")
+    surprise = load_json("surprise.json")
     is_v3 = verdict_is_v3(verdict)
+    snapshot = dataset.load()
+    ds = dataset.build(snapshot)
 
-    # --- 로봇·데이터 상태 ---
     if log:
         st.caption(f"로봇 마지막 수집: {str(log.get('ran_at', '?'))[:16]} UTC · "
                    f"{log.get('summary', '')}")
+    price_dates = ds["prices"][ds["benchmark"]]["dates"]
+    st.caption(f"측정 기간: {price_dates[0]} ~ {price_dates[-1]} "
+               f"(주가 {len(price_dates):,}거래일 · 약 5년) · "
+               "전망: 다음 1분기 (가이던스·컨센서스)")
 
-    # --- 판정 현황 (가장 위 — 이 프로젝트의 답) ---
-    st.subheader("판정 현황")
+    # =====================================================================
+    # 1. 메인 — 앞으로 상승할 섹터 후보 (정배열 폭 모델, 33·34차)
+    # =====================================================================
+    st.header("① 앞으로 상승할 섹터 후보")
+    st.caption(
+        "각 섹터에서 **주가가 완전 정배열**(주봉 종가 > 4주 > 13주 > 26주 > "
+        "52주선)인 종목의 비율입니다. 옆 숫자는 **그 구간이 과거에 1년 뒤 "
+        "시장을 20%p 이상 이긴 비율**(34차 탐색값)입니다."
+    )
+
+    breadth_rows = sm.current_breadth(ds)
+    measured = [r for r in breadth_rows if r["폭"] is not None]
+    if measured:
+        st.altair_chart(
+            sorted_bar_chart(
+                [r["섹터"] for r in measured],
+                [r["폭"] for r in measured],
+                "정배열 폭 (%)",
+                colors={r["섹터"]: ZONE_COLORS[breadth_zone(r["폭"])["zone"]]
+                        for r in measured},
+            ),
+            use_container_width=True,
+        )
+        st.caption(
+            "🟩 쌓이는 중(40~59%) — 과거 1년 폭등률 33.3%로 최고 · "
+            "🟥 정배열 완성(60%+) — 7.7%로 최저 · 🟦 초기 · ⬜ 약함"
+        )
+
+    for row in breadth_rows:
+        zone = breadth_zone(row["폭"])
+        if row["폭"] is None:
+            st.markdown(f"**{row['섹터']}** ({row['종목수']}종목) — 판단 불가 (이력 부족)")
+            continue
+        moved = ""
+        if row["직전폭"] is not None:
+            delta = row["폭"] - row["직전폭"]
+            moved = f" · 지난주 대비 {delta:+.0f}%p"
+        st.markdown(
+            f"**{row['섹터']}** {row['폭']:.0f}% ({row['종목수']}종목){moved}  \n"
+            f"{row['상태']} — {zone['zone']} · 이 구간의 과거 1년 폭등률 "
+            f"**{zone['rate']}%** (기준선 {BREADTH_BASELINE}%)  \n"
+            f"<span style='color:gray;font-size:0.85em'>{zone['note']}</span>",
+            unsafe_allow_html=True,
+        )
+
+    st.warning(
+        "**이 모델의 판정 상태 (정직화)**  \n"
+        "· **H11(폭 60% 첫 돌파) — 미채택**: 실측 9.4% vs 기준선 26.8%. "
+        "정배열이 다 찬 뒤 사는 것은 **오히려 불리**했습니다 (33차).  \n"
+        "· **H12(폭 40~59% 진입) — 판정 대기**: 탐색에서 33.3%로 가장 좋았으나 "
+        "탐색값은 근거가 못 되어, 2026-08-14 이후 새 신호로만 판정합니다 (34차).  \n"
+        "· 따라서 위 순위는 **아직 매수 근거가 아닌 관찰**입니다."
+    )
+
+    # =====================================================================
+    # 2. 메인 — 채택된 신호
+    # =====================================================================
+    st.header("② 채택된 신호")
     adopted = adopted_names(verdict) if is_v3 else []
     if not is_v3:
-        st.warning(
-            "지금 판정 파일은 v2 유물입니다. 새 판정(11차 등록)은 다음 "
-            "로봇 수집 때 자동 계산됩니다 — 그때까지 아래 신호 상태는 "
-            "판단 근거가 아닙니다."
-        )
+        st.warning("판정 파일이 v3 형식이 아닙니다 — 다음 로봇 수집 때 갱신됩니다.")
     elif adopted:
-        st.success("채택된 신호: " + " · ".join(adopted))
+        st.success("채택: " + " · ".join(adopted))
+        for name, entry in (verdict.get("가설") or {}).items():
+            if entry.get("판정") != "채택":
+                continue
+            judged = entry.get("신규(판정)") or {}
+            s, b = judged.get("신호") or {}, judged.get("기준선") or {}
+            st.markdown(
+                f"**{HYPOTHESIS_LABELS.get(name, name)}**  \n"
+                f"이 신호가 켜진 발표는 60거래일 뒤 시장을 20%p 이상 이긴 비율이 "
+                f"**{s.get('rate')}%** (n={s.get('n')}), 아무 발표나 샀을 때는 "
+                f"{b.get('rate')}% 였습니다.  \n"
+                f"앞시기 {entry.get('신규_앞시기', {}).get('rate')}% · "
+                f"뒤시기 {entry.get('신규_뒤시기', {}).get('rate')}%"
+            )
+        live = live_signal_rows(ds)
+        st.markdown("**지금 이 신호가 켜진 종목** (최근 90일 발표)")
+        if not live:
+            st.caption("현재 없음 — 새 실적 발표를 기다립니다.")
+        else:
+            st.dataframe(pd.DataFrame(live), width="stretch", hide_index=True)
     else:
         st.info("채택된 신호 없음 — 어떤 상태도 매수 판단의 근거가 아닙니다.")
-    if verdict:
-        st.caption(f"판정 계산 시각: {str(verdict.get('computed_at', '?'))[:16]} UTC · "
-                   "채택 = 신호 윌슨 하한 > 기준선 상한 (신규 표본, n≥10)")
-        for row in verdict_rows(verdict):
+    st.caption(
+        "⚠️ 채택 표본에는 그 가설을 찾아낸 탐색 종목이 섞여 있습니다. "
+        "완전한 독립 확인은 등록 이후 새 발표가 쌓여야 완성됩니다."
+    )
+
+    # =====================================================================
+    # 3. 섹터 한눈에 보기 (차트)
+    # =====================================================================
+    st.header("③ 섹터 한눈에 보기")
+
+    st.subheader("실적 신기록 폭")
+    st.caption("최근 발표한 종목 중 이익 신기록이 나온 비율 (관찰).")
+    gauge_rows = [r for r in sector_gauge_rows(ds) if r["게이지"] is not None]
+    if gauge_rows:
+        st.altair_chart(
+            sorted_bar_chart([r["섹터"] for r in gauge_rows],
+                             [r["게이지"] for r in gauge_rows], "신기록 폭 (%)"),
+            use_container_width=True)
+
+    st.subheader("실적 서프라이즈 (컨센서스 대비)")
+    st.caption("최근 2분기 발표가 애널리스트 추정을 몇 % 넘겼는지 (중앙값, 관찰).")
+    sur_rows = surprise_sector_rows(surprise)
+    if sur_rows:
+        st.altair_chart(
+            sorted_bar_chart([r["섹터"] for r in sur_rows],
+                             [r["중앙%"] for r in sur_rows],
+                             "서프라이즈 중앙 (%)", positive_negative=True),
+            use_container_width=True)
+        st.caption("⚠️ 적자 근처 종목은 % 가 크게 튑니다 (분모가 0에 가까움).")
+    else:
+        st.caption("아직 서프라이즈 원장이 비어 있습니다.")
+
+    st.subheader("전망 스프레드 (가이던스 − 컨센서스)")
+    st.caption("회사가 시장 기대보다 높게 부를수록 큰 값 (다음 1분기, 관찰).")
+    spread_rows = sector_spread_rows(ds, consensus)
+    if spread_rows:
+        st.altair_chart(
+            sorted_bar_chart([r["섹터"] for r in spread_rows],
+                             [r["스프레드중앙%"] for r in spread_rows],
+                             "스프레드 중앙 (%)", positive_negative=True),
+            use_container_width=True)
+        for row in spread_rows:
+            if row["표본"] == "표본 부족":
+                st.caption(f"⚠️ {row['섹터']}: {row['종목수']}종목뿐 — 표본 부족")
+    else:
+        st.caption("신선한 가이던스와 컨센서스가 함께 있는 종목이 아직 없습니다.")
+
+    # =====================================================================
+    # 4. 접기 — 미채택·판정 대기 신호 상세
+    # =====================================================================
+    with st.expander("④ 미채택·판정 대기 신호 — 무엇을 재봤고 왜 안 쓰는가"):
+        st.caption(
+            "아래는 사전 등록해 측정했으나 **채택 기준(신호 구간이 기준선 "
+            "구간과 완전히 갈라짐, n≥10)을 넘지 못한** 신호들입니다. "
+            "판단·점수·추천에 쓰지 않되, 버리지 않고 로봇이 계속 재판정합니다."
+        )
+        for name, entry in (verdict.get("가설") or {}).items():
+            if entry.get("판정") == "채택":
+                continue
+            judged = entry.get("신규(판정)") or {}
+            s, b = judged.get("신호") or {}, judged.get("기준선") or {}
+            label = HYPOTHESIS_LABELS.get(name, name)
+            detail = HYPOTHESIS_DETAILS.get(name, "")
+            rate_text = (
+                f"실측 {s.get('rate')}% (n={s.get('n')}) vs 기준선 {b.get('rate')}%"
+                if s.get("n") else "표본이 아직 없습니다"
+            )
             st.markdown(
-                f"**{row['가설']}** — {row['판정']}  \n"
-                f"신호 {row['신호']} · 기준선 {row['기준선']}"
+                f"**{label}** — {entry.get('판정', '?')}  \n"
+                f"{detail}  \n"
+                f"<span style='color:gray;font-size:0.9em'>{rate_text}</span>",
+                unsafe_allow_html=True,
             )
 
-    # --- 실물 데이터 (사실 표시) ---
-    try:
-        ds = dataset.build(dataset.load())
-    except (FileNotFoundError, ValueError) as exc:
-        st.error(f"데이터를 읽지 못했습니다: {exc}")
-        return
-
-    st.subheader("시장 — 지금이 폭등 잘 나오는 장세인가")
-    gauge = gauge_now(ds)
-    if gauge["value"] is None:
-        st.write("게이지 값 없음 (신선한 발표 부족)")
-    else:
-        h5b_text = {True: "평소(자기 과거 중앙값)보다 높음",
-                    False: "평소(자기 과거 중앙값) 이하",
-                    None: "판단 불가 (이력 부족)"}[gauge["h5b"]]
-        st.metric("이익 신기록 종목 비율", f"{gauge['value']}%",
-                  help="최근 140일 안에 실적을 발표한 종목 중, 그 발표가 "
-                  "이익(TTM 조정 EPS) 신기록이었던 종목의 비율")
-        st.write(f"상태: **{h5b_text}** ({gauge['asof']} 기준)")
-    st.caption("· 시장 게이지(H5b) — " + hypothesis_note(verdict if is_v3 else None,
-                                                        "H5b_실적폭_중앙값"))
-
-    # --- 사이클 테마별 폭 (관찰) — 2026 AI 사이클 기준 (저장소 주인 정의) ---
-    st.subheader("사이클 테마별 실적 폭 (관찰 · 2026 AI 사이클)")
-    st.caption(
-        "업종이 아니라 현재 사이클(AI)의 역할로 묶은 관찰값입니다. "
-        "분류는 사람의 판단이며, 사전 등록된 신호가 아니므로 판정·추천에 "
-        "쓰지 않습니다. 사이클이 바뀌면 분류를 새로 정의합니다."
-    )
-    by_theme: dict = {}
-    for ticker in ds["tickers"]:
-        by_theme.setdefault(cfg.theme_of(ticker), []).append(ticker)
-    theme_rows = []
-    today = ds["prices"][ds["benchmark"]]["dates"][-1]
-    for theme, members in by_theme.items():
-        series = me.gauge_series(ds, tickers=members)
-        value = me.gauge_at(series, today)
-        above = me.gauge_h5b_on(series, today)
-        theme_rows.append((theme, len(members), value,
-                           {True: "평소보다 높음", False: "평소 이하",
-                            None: "판단 불가"}[above]))
-    theme_rows.sort(key=lambda r: (r[2] is not None, r[2] or 0), reverse=True)
-    for theme, n, value, above in theme_rows:
-        vt = f"{value}%" if value is not None else "값 없음"
-        st.markdown(f"**{theme}** ({n}종목) — {vt}"
-                    + (f" · {above}" if value is not None else ""))
-
-    # --- 섹터별 폭 (관찰) — 어느 무리에서 신기록이 나오고 있나 ---
-    st.subheader("섹터별 실적 폭 (관찰)")
-    st.caption(
-        "시장 게이지를 섹터 무리별로 쪼갠 관찰값입니다. 사전 등록된 신호가 "
-        "아니므로 판정·추천에 쓰지 않습니다. 종목 수가 적은 섹터일수록 "
-        "값이 계단처럼 크게 튑니다 — 참고로만 보세요."
-    )
-    for row in sector_gauge_rows(ds):
-        value_text = f"{row['게이지']}%" if row["게이지"] is not None else "값 없음"
-        st.markdown(
-            f"**{row['섹터']}** ({row['종목수']}종목) — {value_text}"
-            + (f" · {row['평소대비']}" if row["게이지"] is not None else "")
-        )
-
-    # --- 주도 섹터 — 전망 스프레드 (관찰, 헌법 개정 2026-08-14) ---
-    st.subheader("주도 섹터 — 전망 스프레드 (관찰)")
-    st.caption(
-        "스프레드 = (회사 가이던스 − 애널리스트 컨센서스) ÷ 컨센서스. "
-        "회사가 시장 기대보다 높게 부를수록 큰 값입니다. 관찰 전용 — "
-        "판정·추천에 쓰지 않으며, 평균을 내지 않고 차이를 그대로 봅니다. "
-        "컨센서스 원장이 쌓이기 시작한 2026-08-14 이후 데이터만 있습니다."
-    )
-    consensus = load_json("consensus.json")
-    spread_sectors = sector_spread_rows(ds, consensus)
-    if not spread_sectors:
-        st.info(
-            "아직 표시할 스프레드가 없습니다 — 신선한 가이던스와 컨센서스가 "
-            "둘 다 있는 종목이 없습니다. 로봇이 컨센서스 원장을 쌓는 대로 "
-            "여기 나타납니다."
-        )
-    for row in spread_sectors:
-        st.markdown(
-            f"**{row['섹터']}** ({row['종목수']}종목) — "
-            f"스프레드 중앙 {row['스프레드중앙%']:+.1f}%"
-            + (" · ⚠️ 표본 부족" if row["표본"] == "표본 부족" else "")
-            + f"  \n{row['종목']}"
-        )
-    st.markdown("**매출 스프레드** (가이던스 매출 vs 컨센서스 매출 — EPS 보다 표본이 넓음)")
-    rev_sectors = sector_spread_rows(ds, consensus, metric="rev")
-    if not rev_sectors:
-        st.caption("매출 스프레드 표본 없음 — 원장에 매출 추정이 쌓이면 나타납니다.")
-    for row in rev_sectors:
-        st.markdown(
-            f"**{row['섹터']}** ({row['종목수']}종목) — "
-            f"중앙 {row['스프레드중앙%']:+.1f}%"
-            + (" · ⚠️ 표본 부족" if row["표본"] == "표본 부족" else "")
-        )
-
-    # 종목별 발표 목록은 별도 "원자료" 페이지로 옮겼습니다 (2026-08-13 요청).
-    # 메인 화면은 판정·시장·섹터 요약만 남깁니다.
-    st.subheader("종목")
+    # =====================================================================
+    # 5. 원자료·용어·한계
+    # =====================================================================
     st.page_link("pages/1_원자료.py",
                  label="원자료 보기 — 종목별 최근 발표·전 종목 상태 →")
 
-    # --- 용어 풀이 (알파벳·통계 용어를 쉬운 말로) ---
     with st.expander("용어 풀이"):
         st.markdown(
-            "- **TTM 조정 EPS** — 최근 4개 분기의 조정 주당순이익 합. "
-            "회사가 보도자료에 직접 발표한 숫자만 씁니다\n"
-            "- **신기록(신고점)** — 그 회사의 수집 이력 안에서 TTM 이익이 "
-            "과거 최고를 넘은 것. **첫 신기록**은 그 첫 번째 돌파\n"
-            "- **시장 게이지** — 최근에 발표한 종목 중 이익 신기록 비율. "
-            "높으면 신기록이 무리 지어 나오는 장세\n"
-            "- **SPY** — 미국 S&P500 지수를 따라가는 ETF. '시장 평균'의 "
-            "기준으로, 폭등 = 60거래일 수익이 SPY보다 +20%p 이상\n"
-            "- **n** — 표본 수 (그 상태였던 발표 사건의 개수)\n"
-            "- **윌슨 구간** — 적중률의 신뢰 범위. 표본이 적을수록 넓어져 "
-            "과신을 막습니다\n"
-            "- **H2·H2b·H5·H5b·H6** — 사전 등록된 가설의 일련번호 "
-            "(측정결과.md 의 등록 문서와 잇는 꼬리표)\n"
+            "- **완전 정배열** — 주봉 종가가 4·13·26·52주 이동평균 위에 있고, "
+            "그 이동평균들도 짧은 것부터 순서대로 위에 있는 상태\n"
+            "- **정배열 폭** — 그 섹터 종목 중 완전 정배열인 비율\n"
+            "- **TTM 조정 EPS** — 최근 4개 분기 조정 주당순이익 합 "
+            "(회사가 보도자료에 직접 발표한 숫자만)\n"
+            "- **첫 신기록** — TTM 이익이 과거 최고를 처음 넘은 발표\n"
+            "- **52주선 아래** — 주가가 자기 1년 평균 아래 (아직 안 오른 상태)\n"
+            "- **컨센서스** — 애널리스트들의 실적 추정 평균 (야후)\n"
+            "- **가이던스** — 회사가 직접 발표한 다음 분기 전망\n"
+            "- **서프라이즈** — 실제 실적이 컨센서스를 넘긴 정도\n"
+            "- **폭등** — 60거래일(1년 모델은 250거래일) 수익이 SPY보다 +20%p 이상\n"
+            "- **기준선** — 아무 때나 샀을 때의 같은 비율 (비교 대상)\n"
+            "- **n** — 표본 수 · **윌슨 구간** — 적중률의 신뢰 범위 "
+            "(표본이 적을수록 넓어져 과신을 막습니다)\n"
+            "- **채택/미채택/판정 불가** — 신호 구간이 기준선 구간과 완전히 "
+            "갈라지면 채택, 겹치면 미채택, 표본 10건 미만이면 판정 불가\n"
+            "- **H번호** — 사전 등록된 가설의 일련번호 (측정결과.md 와 잇는 꼬리표)\n"
             "- **UTC** — 국제 표준시. 한국 시각보다 9시간 늦습니다"
         )
 
-    # --- 한계 명시 (감추지 않는다) ---
-    st.subheader("한계")
-    st.caption(
-        "· 위 상태들은 사실의 표시일 뿐, 채택되지 않은 신호는 판단·점수·"
-        "추천에 쓰지 않습니다.\n"
-        "· 조정 EPS 를 발표하지 않는 종목(TXN·TSLA·FSLR 등)은 이 화면에서 "
-        "빠지거나 '판단 불가'로 나옵니다 — 없는 값은 없음으로 둡니다.\n"
-        "· 같은 시기의 발표들은 같은 장세를 공유하므로 통계 구간은 실제보다 "
-        "좁게 나올 수 있습니다."
-    )
+    with st.expander("한계 (감추지 않습니다)"):
+        st.markdown(
+            "- 채택되지 않은 신호는 판단·점수·추천에 쓰지 않습니다.\n"
+            "- 정배열 폭 모델의 과거 실측(34차)은 **탐색값**이라 채택 근거가 "
+            "아닙니다. H12 는 등록 이후 새 신호로만 판정합니다.\n"
+            "- 컨센서스·서프라이즈는 야후 제공값입니다. 서프라이즈 소급분은 "
+            "야후가 사후 보관한 기록이라 우리가 직접 박제한 원장과 구분해 둡니다.\n"
+            "- 조정 EPS 를 발표하지 않는 종목은 EBITDA·GAAP EPS 잣대로 넘어가거나 "
+            "'판단 불가'로 나옵니다 — 없는 값은 없음으로 둡니다.\n"
+            "- 같은 시기의 사건들은 같은 장세를 공유하므로 통계 구간이 실제보다 "
+            "좁게 나올 수 있습니다."
+        )
 
 
 if __name__ == "__main__":

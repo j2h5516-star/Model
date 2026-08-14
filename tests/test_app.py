@@ -212,6 +212,43 @@ def test_sector_spread_marks_small_samples():
     assert rows[0]["스프레드중앙%"] == -10.0
 
 
+# ---------------------------------------------------------------------------
+# 33·34차 — 정배열 폭 구간 · 서프라이즈 섹터 · 채택 신호 종목
+# ---------------------------------------------------------------------------
+def test_breadth_zone_boundaries():
+    """구간 경계(40·60)가 등록 정의대로 갈려야 합니다."""
+    assert app.breadth_zone(39.9)["zone"] == "초기"
+    assert app.breadth_zone(40.0)["zone"].startswith("쌓이는 중")
+    assert app.breadth_zone(59.9)["zone"].startswith("쌓이는 중")
+    assert app.breadth_zone(60.0)["zone"] == "정배열 완성 구간"
+    assert app.breadth_zone(None)["zone"] == "판단 불가"
+    # 최적 구간의 실측이 완성 구간보다 높아야 합니다 (34차 결과)
+    assert app.breadth_zone(45)["rate"] > app.breadth_zone(75)["rate"]
+
+
+def test_surprise_sector_rows_uses_recent_quarters_only():
+    """서프라이즈는 최근 2분기만 — 오래된 분기가 섞이면 안 됩니다."""
+    import config as cfg
+    t = sorted(cfg.SECTORS)[0]
+    arc = {"tickers": {t: [
+        {"quarter": "2024-03-31", "surprise_pct": 999.0},   # 오래됨 — 제외
+        {"quarter": "2026-03-31", "surprise_pct": 10.0},
+        {"quarter": "2026-06-30", "surprise_pct": 20.0},
+    ]}}
+    rows = app.surprise_sector_rows(arc)
+    assert len(rows) == 1 and rows[0]["건수"] == 2, rows
+    assert rows[0]["중앙%"] == 15.0, rows
+    assert app.surprise_sector_rows(None) == []
+
+
+def test_hypothesis_details_cover_non_adopted():
+    """미채택 신호는 화면에 설명이 함께 나와야 합니다 (지시 1)."""
+    for name in ("H2_신고점", "H5b_실적폭_중앙값", "H11_섹터정배열폭_60"):
+        assert name in app.HYPOTHESIS_DETAILS, name
+        assert len(app.HYPOTHESIS_DETAILS[name]) > 20
+        assert name in app.HYPOTHESIS_LABELS, name
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
