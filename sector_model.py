@@ -24,6 +24,7 @@ from datetime import date
 from statistics import mean
 
 import config as cfg
+import measure_engine as me
 
 # --- 33차 사전 등록 상수 (옮겨 적음 — 여기서 고치지 않는다) ---
 MA_WEEKS = (4, 13, 26, 52)      # 주봉 이동평균
@@ -231,7 +232,11 @@ def _delta_series(ds: dict, ticker: str) -> list[tuple[str, bool]]:
     for i in range(1, len(values)):
         gap = (date.fromisoformat(values[i][0])
                - date.fromisoformat(values[i - 1][0])).days
-        if 55 <= gap <= 200:            # 연속 분기만 (사고 7 규칙)
+        # 사고 7 규칙: 측정 장치와 **같은** 간격을 써야 한다.
+        # 200일 창을 쓰면 반년(182일) 점프가 연속 분기로 통과해 사이 분기를
+        # 건너뛴 가짜 델타가 생긴다 (41차 검증단 실측: 72쌍, 그중 37쌍은
+        # 사이 분기가 존재하는데 잣대값이 비어서 생긴 것).
+        if me.SPACING_MIN_DAYS <= gap <= me.SPACING_MAX_DAYS:
             out.append((values[i][0], values[i][1] > values[i - 1][1]))
     return out
 
