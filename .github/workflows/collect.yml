@@ -67,16 +67,23 @@ jobs:
             #  · 2026-08-14: 다른 로봇 커밋이 먼저 들어와 snapshot.json 내용
             #    충돌 — rebase 는 데이터 파일 충돌을 못 풀어 1시간 48분치
             #    수집을 버림. 수집물은 파일 전체 교체 성격이라 병합이 아니라
-            #    "최신 main 위에 수집분을 통째로 다시 커밋"이 정답입니다.
+            #    "최신 그 브랜치 위에 수집분을 통째로 다시 커밋"이 정답입니다.
             #    (컨센서스·서프라이즈 원장은 추가 전용이지만 하루 한 번
             #    규칙이라 같은 날 두 런의 원장 내용은 동일 — 통째 승리 안전)
+            #  · 2026-08-15: 이 되돌리기가 origin/main 으로 **하드코딩**돼
+            #    있었습니다. 검증하려고 브랜치에서 수동 실행하면 그 브랜치를
+            #    main 으로 되돌려 버려 수집분과 코드가 함께 날아갑니다.
+            #    → 지금 돌고 있는 브랜치(GITHUB_REF_NAME)로 되돌립니다.
+            BRANCH="${GITHUB_REF_NAME:-main}"
+            echo "대상 브랜치: $BRANCH"
             for attempt in 1 2 3; do
-              if git push; then break; fi
+              if git push origin "HEAD:$BRANCH"; then break; fi
               [ "$attempt" = 3 ] && { echo "3회 실패"; exit 1; }
-              echo "push 거부 — 최신 main 위에 수집분 재커밋 ($attempt/3)"
+              echo "push 거부 — 최신 $BRANCH 위에 수집분 재커밋 ($attempt/3)"
+              rm -rf /tmp/collected_backup
               cp -r data/measure /tmp/collected_backup
-              git fetch origin main
-              git reset --hard origin/main
+              git fetch origin "$BRANCH"
+              git reset --hard "origin/$BRANCH"
               rm -rf data/measure
               mv /tmp/collected_backup data/measure
               git add data/measure
