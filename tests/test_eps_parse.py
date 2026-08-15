@@ -591,18 +591,21 @@ def test_bare_pattern_does_not_steal_nongaap():
 
 
 def test_specific_labels_still_win_first():
-    """수식어 없는 라벨은 **맨 뒤**에 있어야 합니다.
+    """수식어 없는 라벨은 **맨 뒤**에 있어야 합니다 — 실물 HD 2023-11-14.
 
-    보도자료에는 실적 숫자 말고 **전망 문장**에도 "earnings per share" 가
-    나옵니다. 수식어 없는 라벨이 앞에 오면 전망치(다음 분기 3.00)를
-    이번 분기 실적으로 집습니다. 구체적인 이름이 먼저 이겨야 합니다.
+    실적표에는 Basic 과 Diluted 가 나란히 있고 Basic 이 **위**에 옵니다.
+    수식어 없는 라벨이 앞에 오면 Basic($3.83)을 먼저 물고, 정답인
+    Diluted($3.81)를 놓칩니다. 전수 비교로 확인한 실제 차이입니다
+    (원문 120건 중 3건에서 순서가 값을 바꿨습니다).
     """
     text = (
-        "The company expects earnings per share of $3.00 next quarter.\n"
-        "GAAP diluted earnings per share was $1.20 for the quarter."
+        "in millions, except per share data\n"
+        "Basic earnings per share       $3.83     $4.25\n"
+        "Diluted earnings per share     $3.81     $4.24\n"
     )
     got = sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True)
-    assert got == 1.20, f"전망치를 실적으로 집었습니다: {got}"
+    assert got == 3.81, f"Basic 을 집었습니다: {got}"
+
 
 if __name__ == "__main__":
     tests = [
