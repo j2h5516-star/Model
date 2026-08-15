@@ -394,6 +394,14 @@ LABELS_GAAP_EPS = [
     rf"net\s+{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
     rf"diluted\s+{_PROFIT_WORD}\s+per\s+share",
     rf"{_PROFIT_WORD}\s+per\s+diluted\s+share",
+    # 47차 감사 — "earnings per share of $2.14" 처럼 **아무 수식어 없이**
+    # 쓰는 회사가 있습니다(TXN·은행권 등). 위 다섯 개는 전부 GAAP·net·
+    # diluted 중 하나를 요구해서 이 문장을 놓쳤고, 그 결과 잣대 사다리를
+    # 못 넘어 **측정에서 통째로 빠진 종목이 24개**였습니다.
+    # 가장 마지막에 둡니다 — 앞의 구체적인 이름이 먼저 이깁니다.
+    # 'adjusted/non-GAAP earnings per share' 는 exclude_nongaap 의 같은 줄
+    # 되돌아보기가 막아 줍니다 (이 목록은 항상 그 옵션과 함께 쓰입니다).
+    rf"{_PROFIT_WORD}\s+per\s+share",
 ]
 
 # 매칭된 이름 앞쪽에 이 말이 있으면 GAAP 이 아니라 논갭 수치입니다.

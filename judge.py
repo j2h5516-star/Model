@@ -261,5 +261,52 @@ def judge_completion_gap(events: list[dict], start_day: str,
     return {H18_NAME: out}
 
 
+# H19·H20·H21 (44차 등록): 주도섹터 판정 · 전환 · 분기점.
+# 사건 단위가 "국면"이라 표본이 매우 작습니다. 44차에서 **미리 적은 대로**
+# n≥10 에 오래 못 미칠 것이므로, 여기서는 억지 결론을 내지 않고
+# 사실(국면 목록·성공/실패)과 "판정 불가"를 그대로 기록만 합니다.
+H19_NAME = "H19_주도섹터_판정"
+H20_NAME = "H20_주도섹터_전환"
+H21_NAME = "H21_주도섹터_분기점"
+
+
+def judge_leadership(timeline: list[dict], switches: list[dict],
+                     inflections: list[dict]) -> dict:
+    """44차 등록의 세 가설을 기록합니다 (판정은 채택 기준 그대로 적용).
+
+    입력은 leadership.py 가 만든 목록입니다. 이 함수는 세지 않은 것을
+    만들지 않습니다 — 표적을 못 잰 사건은 분모에서 빠집니다.
+    """
+    def _verdict(events: list[dict]) -> dict:
+        usable = [e for e in events if e.get("성공") is not None]
+        hits = sum(1 for e in usable if e["성공"])
+        low, high = wilson_interval(hits, len(usable))
+        return {
+            "n": len(usable),
+            "성공": hits,
+            "rate": round(hits / len(usable) * 100.0, 1) if usable else None,
+            "ci": [round(low, 1), round(high, 1)],
+            "판정": "판정 불가" if len(usable) < MIN_SIGNAL_N else (
+                "채택" if low > 50.0 else "미채택"
+            ),
+        }
+
+    현재 = timeline[-1] if timeline else {}
+    out = {
+        H19_NAME: {
+            "현재_주도": 현재.get("주도"),
+            "기준주": 현재.get("주"),
+            "점수": 현재.get("점수"),
+            "완성수": 현재.get("완성수"),
+            "델타폭": 현재.get("델타폭"),
+            "국면수": len({r["주도"] for r in timeline if r.get("주도")}),
+            "판정": "판정 불가",     # 44차 ⑤ — 국면 표본으로는 채택 불가
+        },
+        H20_NAME: {**_verdict(switches), "사건": switches},
+        H21_NAME: {**_verdict(inflections), "사건": inflections},
+    }
+    return out
+
+
 def to_json(verdict: dict) -> str:
     return json.dumps(verdict, ensure_ascii=False, indent=1)

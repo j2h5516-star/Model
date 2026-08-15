@@ -562,6 +562,48 @@ def test_slide_image_line_is_not_sentence_parsed():
     assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
 
 
+
+# ---------------------------------------------------------------------------
+# 수식어 없는 "earnings per share" (47차 감사)
+# ---------------------------------------------------------------------------
+def test_bare_earnings_per_share_is_read():
+    """실물 TXN 문장: "earnings per share of $2.14".
+
+    GAAP·net·diluted 중 어느 수식어도 없어서 예전 라벨 다섯 개가 전부
+    놓쳤고, 그 결과 잣대 사다리를 못 넘어 측정에서 통째로 빠진 종목이
+    24개였습니다.
+    """
+    text = (
+        "TI reports second quarter 2026 financial results\n"
+        "DALLAS (July 22, 2026) - Texas Instruments Incorporated today "
+        "reported second quarter revenue of $5.46 billion, net income of "
+        "$1.98 billion and earnings per share of $2.14."
+    )
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True) == 2.14
+
+
+def test_bare_pattern_does_not_steal_nongaap():
+    """"adjusted earnings per share" 는 GAAP 값으로 잡히면 안 됩니다."""
+    text = "The company reported adjusted earnings per share of $3.10 for the quarter."
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True) is None
+    text2 = "Non-GAAP earnings per share was $1.55 in the fourth quarter."
+    assert sf.find_eps_value(text2, sf.LABELS_GAAP_EPS, exclude_nongaap=True) is None
+
+
+def test_specific_labels_still_win_first():
+    """수식어 없는 라벨은 **맨 뒤**에 있어야 합니다.
+
+    보도자료에는 실적 숫자 말고 **전망 문장**에도 "earnings per share" 가
+    나옵니다. 수식어 없는 라벨이 앞에 오면 전망치(다음 분기 3.00)를
+    이번 분기 실적으로 집습니다. 구체적인 이름이 먼저 이겨야 합니다.
+    """
+    text = (
+        "The company expects earnings per share of $3.00 next quarter.\n"
+        "GAAP diluted earnings per share was $1.20 for the quarter."
+    )
+    got = sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True)
+    assert got == 1.20, f"전망치를 실적으로 집었습니다: {got}"
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

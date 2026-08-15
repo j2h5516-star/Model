@@ -34,6 +34,7 @@ import measure_engine
 import measure_store
 import consensus_feed
 import sec_fundamentals as sf
+import leadership
 import sector_model
 
 
@@ -145,6 +146,17 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
             sector_model.completion_events(ds),
             sector_model.H18_START_DAY, sector_model.H18_GAP_MIN,
         ))
+        # H19·H20·H21 (44차 등록) — 주도섹터 판정·전환·분기점.
+        # 45차 확정 분류(config.GROUPS)로 매일 다시 셉니다. 표본이 국면
+        # 단위라 오래 "판정 불가"로 남을 것이며, 그것을 그대로 적습니다.
+        states = leadership.weekly_group_state(ds)
+        timeline = leadership.leadership_timeline(states)
+        switches = leadership.evaluate_switches(
+            ds, leadership.switch_events(timeline))
+        inflections = leadership.evaluate_inflections(
+            ds, leadership.inflection_events(timeline))
+        verdict["가설"].update(
+            judge.judge_leadership(timeline, switches, inflections))
         files[f"{cfg.MEASURE_DIR}/verdict.json"] = judge.to_json(verdict)
         verdict_note = " · ".join(
             f"{name}: {entry['판정']}" for name, entry in verdict["가설"].items()
