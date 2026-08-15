@@ -267,6 +267,41 @@ def test_confirmation_rows_require_all_three(monkey=None):
     assert sm.CONFIRM_PAST_DAYS == 63
 
 
+
+# ---------------------------------------------------------------------------
+# 미채택 칸의 한 줄 요약 (48차 — 모양이 다른 가설을 뭉개지 않기)
+# ---------------------------------------------------------------------------
+def test_signal_summary_uses_signal_when_present():
+    entry = {"신규(판정)": {}}
+    got = app.signal_summary(entry, {"n": 12, "rate": 40.0}, {"n": 100, "rate": 25.0})
+    assert "40.0%" in got and "n=12" in got and "25.0%" in got, got
+
+
+def test_signal_summary_reports_leadership_state():
+    """H19 는 성공률이 없는 가설입니다 — '표본이 아직 없습니다'로 뭉개면 안 됩니다."""
+    entry = {"현재_주도": "광통신·대역폭 장비·부품", "국면수": 4}
+    got = app.signal_summary(entry, {}, {})
+    assert "광통신" in got and "4개" in got, got
+    assert "표본이 아직 없습니다" not in got
+
+
+def test_signal_summary_reports_episode_counts():
+    """H20·H21 은 사건 성공/전체로 적고, 있으면 기준선도 함께 적습니다."""
+    entry = {"n": 3, "성공": 1, "rate": 33.3}
+    got = app.signal_summary(entry, {}, {})
+    assert "1/3" in got and "33.3%" in got, got
+    entry2 = {"n": 5, "성공": 2, "rate": 40.0,
+              "기준선(참고)": {"n": 3123, "rate": 24.2}}
+    got2 = app.signal_summary(entry2, {}, {})
+    assert "24.2%" in got2 and "3123" in got2, got2
+
+
+def test_signal_summary_shows_exploration_when_judgment_sample_empty():
+    """H19b 처럼 판정 표본이 0건이면 탐색 표본 수치를 그 사실과 함께 적습니다."""
+    entry = {"신규(판정)": {"n": 0}, "탐색표본(참고)": {"n": 43, "rate": 14.0}}
+    got = app.signal_summary(entry, {}, {})
+    assert "판정 표본 0건" in got and "14.0%" in got and "43" in got, got
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

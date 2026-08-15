@@ -157,6 +157,36 @@ def verdict_rows(verdict: dict | None) -> list[dict]:
     return rows
 
 
+
+def signal_summary(entry: dict, signal: dict, base: dict) -> str:
+    """미채택 칸에 적을 한 줄 — 그 가설이 실제로 몇 번 맞았는지.
+
+    가설마다 결과의 모양이 다릅니다:
+      · H2~H18  : 신규(판정) 안에 {신호, 기준선}
+      · H19     : 국면 상태(현재 주도·국면 수) — 성공률이라는 게 없습니다
+      · H20·H21 : 사건 목록의 성공/전체 (국면 단위)
+    모양을 못 알아보면 **"표본이 아직 없습니다"로 뭉개지 않고** 그 사실을
+    그대로 적습니다.
+    """
+    if signal.get("n"):
+        return (f"실측 {signal.get('rate')}% (n={signal.get('n')}) "
+                f"vs 기준선 {base.get('rate')}%")
+    if entry.get("현재_주도") is not None or "국면수" in entry:
+        leader = entry.get("현재_주도") or "없음"
+        return f"현재 지목: {leader} · 국면 {entry.get('국면수', 0)}개 (성공률 아님)"
+    if entry.get("n"):
+        line = f"실측 {entry.get('성공')}/{entry.get('n')}건 = {entry.get('rate')}%"
+        ref = entry.get("기준선(참고)") or {}
+        if ref.get("n"):
+            line += f" vs 기준선 {ref.get('rate')}% (n={ref.get('n')})"
+        return line
+    explore = entry.get("탐색표본(참고)") or {}
+    if explore.get("n"):
+        return (f"판정 표본 0건 — 탐색 표본에서는 "
+                f"{explore.get('rate')}% (n={explore.get('n')})")
+    return "표본이 아직 없습니다"
+
+
 def adopted_names(verdict: dict | None) -> list[str]:
     if not verdict or "가설" not in verdict:
         return []
@@ -748,10 +778,7 @@ def main():
             s, b = judged.get("신호") or {}, judged.get("기준선") or {}
             label = HYPOTHESIS_LABELS.get(name, name)
             detail = HYPOTHESIS_DETAILS.get(name, "")
-            rate_text = (
-                f"실측 {s.get('rate')}% (n={s.get('n')}) vs 기준선 {b.get('rate')}%"
-                if s.get("n") else "표본이 아직 없습니다"
-            )
+            rate_text = signal_summary(entry, s, b)
             st.markdown(
                 f"**{label}** — {entry.get('판정', '?')}  \n"
                 f"{detail}  \n"
