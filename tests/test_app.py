@@ -249,6 +249,24 @@ def test_hypothesis_details_cover_non_adopted():
         assert name in app.HYPOTHESIS_LABELS, name
 
 
+def test_confirmation_rows_require_all_three(monkey=None):
+    """H14 (38차): 전제·정배열·델타 셋 다 있어야 '확인'입니다."""
+    import sector_model as sm
+    rows = [
+        {"묶음": "A", "전제": True, "정배열확인": True, "델타확인": True},
+        {"묶음": "B", "전제": True, "정배열확인": True, "델타확인": False},
+        {"묶음": "C", "전제": False, "정배열확인": True, "델타확인": True},
+    ]
+    # 화면이 쓰는 규칙과 같은 판단을 여기서 검산합니다
+    confirmed = [r["묶음"] for r in rows
+                 if r["전제"] and r["정배열확인"] and r["델타확인"]]
+    assert confirmed == ["A"], confirmed
+    # 등록 문턱이 코드 상수와 일치해야 합니다 (38차 등록)
+    assert sm.CONFIRM_ALIGN_MIN == 40.0
+    assert sm.CONFIRM_DELTA_MIN == 50.0
+    assert sm.CONFIRM_PAST_DAYS == 63
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

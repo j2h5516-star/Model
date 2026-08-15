@@ -335,3 +335,116 @@ def ai_members(ds: dict) -> tuple[list[str], list[str]]:
     ai = [t for t in ds["tickers"] if cfg.theme_of(t).startswith("AI-")]
     other = [t for t in ds["tickers"] if not cfg.theme_of(t).startswith("AI-")]
     return ai, other
+
+
+# ---------------------------------------------------------------------------
+# H14 (38차 등록) — 주도 교체 "확인" 신호
+# ---------------------------------------------------------------------------
+CONFIRM_PAST_DAYS = 63      # 전제 (a): 직전 3개월
+CONFIRM_ALIGN_MIN = 40.0    # (b) 정배열 폭 문턱
+CONFIRM_DELTA_MIN = 50.0    # (c) 이익 델타 폭 문턱
+
+
+def _group_excess(ds: dict, members: list[str], day: str,
+                  window: int, forward: bool) -> float | None:
+    """섹터 동일가중 초과수익 — forward=False 면 직전 window 거래일."""
+    spy = ds["prices"][ds["benchmark"]]
+    values = []
+    for ticker in members:
+        prices = ds["prices"].get(ticker)
+        if not prices:
+            continue
+        dates, closes = prices["dates"], prices["close"]
+        if forward:
+            i0 = bisect.bisect_right(dates, day)
+            if i0 >= len(dates) or i0 + window >= len(dates):
+                continue
+            i1 = i0 + window
+        else:
+            i1 = bisect.bisect_right(dates, day) - 1
+            i0 = i1 - window
+            if i0 < 0:
+                continue
+        s0 = bisect.bisect_right(spy["dates"], dates[i0]) - 1
+        s1 = bisect.bisect_right(spy["dates"], dates[i1]) - 1
+        if s0 < 0 or s1 <= s0:
+            continue
+        values.append((closes[i1] / closes[i0] - 1) * 100.0
+                      - (spy["close"][s1] / spy["close"][s0] - 1) * 100.0)
+    return mean(values) if len(values) >= MIN_MEMBERS else None
+
+
+def confirmation_rows(ds: dict) -> list[dict]:
+    """지금 각 묶음(섹터·테마)의 H14 확인 상태 (화면용 — 판단 아님).
+
+    반환 행: {묶음, 종류, 3개월상대, 정배열폭, 직전정배열폭, 델타폭,
+              직전델타폭, 전제, 정배열확인, 델타확인, 확인}
+    """
+    spy_dates = ds["prices"][ds["benchmark"]]["dates"]
+    months = month_end_days(spy_dates)
+    if len(months) < 2:
+        return []
+    today, previous_month = spy_dates[-1], months[-2]
+    groups = [(name, members, "섹터")
+              for name, members in sector_members(ds, "섹터").items()]
+    groups += [(name, members, "테마")
+               for name, members in sector_members(ds, "테마").items()]
+
+    rows = []
+    for name, members, kind in groups:
+        now = _breadths_at(ds, members, today)
+        before = _breadths_at(ds, members, previous_month)
+        if now is None or before is None:
+            continue
+        past = _group_excess(ds, members, today, CONFIRM_PAST_DAYS, forward=False)
+        if past is None:
+            continue
+        align_ok = now[0] >= CONFIRM_ALIGN_MIN and now[0] > before[0]
+        delta_ok = now[1] >= CONFIRM_DELTA_MIN and now[1] > before[1]
+        rows.append({
+            "묶음": name, "종류": kind,
+            "3개월상대": round(past, 1),
+            "정배열폭": now[0], "직전정배열폭": before[0],
+            "델타폭": now[1], "직전델타폭": before[1],
+            "전제": past > 0,
+            "정배열확인": align_ok, "델타확인": delta_ok,
+            "확인": past > 0 and align_ok and delta_ok,
+        })
+    rows.sort(key=lambda r: (r["확인"], r["델타확인"], r["정배열확인"],
+                             r["3개월상대"]), reverse=True)
+    return rows
+
+
+def _breadths_at(ds: dict, members: list[str], day: str):
+    """(정배열 폭, 델타 폭) — 판단 가능 종목 3개 미만이면 None."""
+    import measure_engine as me
+
+    decidable = aligned = delta_up = 0
+    for ticker in members:
+        prices = ds["prices"].get(ticker)
+        if not prices:
+            continue
+        flags = aligned_flags(prices)
+        if not flags:
+            continue
+        keys = sorted(flags)
+        index = bisect.bisect_right(keys, day) - 1
+        if index < 0:
+            continue
+        series = _delta_series(ds, ticker)
+        if not series:
+            continue
+        days = [s[0] for s in series]
+        di = bisect.bisect_right(days, day) - 1
+        if di < 0:
+            continue
+        if (date.fromisoformat(day)
+                - date.fromisoformat(days[di])).days > DELTA_FRESH_DAYS:
+            continue
+        decidable += 1
+        aligned += bool(flags[keys[index]])
+        delta_up += bool(series[di][1])
+    if decidable < MIN_MEMBERS:
+        return None
+    return (round(aligned / decidable * 100.0, 1),
+            round(delta_up / decidable * 100.0, 1))
