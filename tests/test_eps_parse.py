@@ -607,6 +607,53 @@ def test_specific_labels_still_win_first():
     assert got == 3.81, f"Basic 을 집었습니다: {got}"
 
 
+
+# ---------------------------------------------------------------------------
+# 은행·금융 표기 (50차) — "per common share" 와 "숫자가 이름 앞"
+# ---------------------------------------------------------------------------
+def test_per_common_share_is_read():
+    """실물: GS·WFC 는 "per **common** share" 로 씁니다.
+
+    이 한 낱말이 없어서 대형 은행 5곳이 통째로 측정에서 빠져 있었습니다.
+    """
+    gs = "Diluted earnings per common share (EPS)1 was $20.98 for the second quarter"
+    assert sf.find_eps_value(gs, sf.LABELS_GAAP_EPS, exclude_nongaap=True) == 20.98
+    wfc = "Diluted earnings per common share                 2.00    1.60"
+    assert sf.find_eps_value(wfc, sf.LABELS_GAAP_EPS, exclude_nongaap=True) == 2.00
+
+
+def test_bare_eps_of_is_read_but_footnotes_are_not():
+    """실물 BLK "EPS of $12.19" 는 읽고, GS 각주 "EPS1"·"EPS Impact" 는 안 읽습니다."""
+    blk = "EPS of $12.19, or $13.91 as adjusted"
+    assert sf.find_eps_value(blk, sf.LABELS_GAAP_EPS, exclude_nongaap=True) == 12.19
+    noise = "basic EPS1 and diluted EPS1 are shown in Note 21. EPS Impact was 3.00"
+    assert sf.find_eps_value(noise, sf.LABELS_GAAP_EPS, exclude_nongaap=True) is None
+
+
+def test_eps_before_per_share_phrase():
+    """실물 COF: "…or $4.73 per diluted common share" — 숫자가 이름 **앞**."""
+    cof = ("net income for the second quarter of 2026 of $3.0 billion, "
+           "or $4.73 per diluted common share, compared")
+    assert sf.find_eps_before_per_share(cof) == 4.73
+    loss = "net loss of $4.3 billion, or $(8.58) per diluted common share"
+    assert sf.find_eps_before_per_share(loss) == -8.58
+
+
+def test_eps_before_prefers_diluted_and_skips_basic():
+    """희석을 먼저 쓰고, basic 만 있으면 쓰지 않습니다."""
+    both = "or $3.83 per basic share and $3.81 per diluted share"
+    assert sf.find_eps_before_per_share(both) == 3.81
+    only_basic = "or $3.83 per basic share for the quarter"
+    assert sf.find_eps_before_per_share(only_basic) is None
+
+
+def test_eps_before_blocks_nongaap_and_forecast():
+    """논갭·전망 문맥은 GAAP 실적이 아닙니다 (사고 16 규칙 그대로)."""
+    assert sf.find_eps_before_per_share(
+        "adjusted net income, or $5.20 per diluted share, excluded charges") is None
+    assert sf.find_eps_before_per_share(
+        "The company expects full year results of $9.00 per diluted share.") is None
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

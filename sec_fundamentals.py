@@ -387,13 +387,20 @@ LABELS_ADJUSTED_EPS = [
 # ⚠️ "non-GAAP" 안에도 "GAAP" 글자가 들어 있습니다. 뒤쪽 패턴들은 아무 수식어 없이
 #    매칭되므로, 실제 채택할 때 앞을 되돌아보며 논갭 표기를 걸러 냅니다
 #    (find_eps_value 의 exclude_nongaap).
+# 50차 감사 — 은행·금융은 "per **common** share" 로 씁니다.
+# 실물: GS "Diluted earnings per common share (EPS)1 was $20.98" ·
+#       WFC "Diluted earnings per common share 2.00" ·
+#       COF "$4.73 per diluted common share".
+# 이 한 낱말이 없어서 대형 은행 5곳이 통째로 측정에서 빠져 있었습니다.
+_SHARE = r"(?:common\s+|ordinary\s+)?share"
+
 LABELS_GAAP_EPS = [
     rf"(?<!non-)(?<!non )GAAP\s+(?:(?:net|diluted)\s+){{0,2}}\(?{_PROFIT_WORD}\)?"
-    r"\s+per\s+(?:diluted\s+)?(?:ordinary\s+)?share",
+    rf"\s+per\s+(?:diluted\s+)?{_SHARE}",
     r"(?<!non-)(?<!non )GAAP\s+(?:diluted\s+)?EPS",
-    rf"net\s+{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
-    rf"diluted\s+{_PROFIT_WORD}\s+per\s+share",
-    rf"{_PROFIT_WORD}\s+per\s+diluted\s+share",
+    rf"net\s+{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?{_SHARE}",
+    rf"diluted\s+{_PROFIT_WORD}\s+per\s+{_SHARE}",
+    rf"{_PROFIT_WORD}\s+per\s+diluted\s+{_SHARE}",
     # 47차 감사 — "earnings per share of $2.14" 처럼 **아무 수식어 없이**
     # 쓰는 회사가 있습니다(TXN·은행권 등). 위 다섯 개는 전부 GAAP·net·
     # diluted 중 하나를 요구해서 이 문장을 놓쳤고, 그 결과 잣대 사다리를
@@ -401,7 +408,12 @@ LABELS_GAAP_EPS = [
     # 가장 마지막에 둡니다 — 앞의 구체적인 이름이 먼저 이깁니다.
     # 'adjusted/non-GAAP earnings per share' 는 exclude_nongaap 의 같은 줄
     # 되돌아보기가 막아 줍니다 (이 목록은 항상 그 옵션과 함께 쓰입니다).
-    rf"{_PROFIT_WORD}\s+per\s+share",
+    rf"{_PROFIT_WORD}\s+per\s+{_SHARE}",
+    # 50차 — "EPS of $12.19, or $13.91 as adjusted" (실물 BLK).
+    # 이름 없이 EPS 만 쓰는 회사가 있습니다. **"EPS of" 형태로만** 좁혀
+    # 잡습니다 — 맨 EPS 는 각주 표시(GS "EPS1")나 "EPS Impact"(COF) 같은
+    # 문구까지 물어 엉뚱한 숫자를 집습니다.
+    r"(?<!non-)(?<!non )\bEPS\s+of\b",
 ]
 
 # 매칭된 이름 앞쪽에 이 말이 있으면 GAAP 이 아니라 논갭 수치입니다.
@@ -594,6 +606,57 @@ def _cell_per_share(cell: str) -> float | None:
     if value > cfg.EPS_MAX_ABS:
         return None
     return -value if negative else value
+
+
+
+# 50차 — "…net income of $3.0 billion, **or $4.73 per diluted common share**"
+# 처럼 **숫자가 이름 앞**에 오는 문장 (실물: COF·CAT·HD·MCD 등 다수).
+# 기존 find_eps_value 는 이름 뒤에서 숫자를 찾으므로 이 형태를 못 읽습니다.
+# 괄호형("($43.97 diluted net income per share)")은 이미 따로 처리하고 있고,
+# 이것은 그 사촌뻘입니다.
+_EPS_BEFORE_RE = re.compile(
+    r"\$?\s*(\(?-?[\d,]+\.\d{2}\)?)\s+per\s+"
+    r"(?P<kind>diluted\s+|basic\s+)?(?:common\s+|ordinary\s+)?share",
+    re.I,
+)
+
+
+def find_eps_before_per_share(text: str) -> float | None:
+    """"$4.73 per diluted common share" 형태에서 주당 금액을 읽습니다.
+
+    · **희석(diluted)** 표기를 먼저 찾고, 없으면 수식어 없는 것을 씁니다.
+      'basic' 은 쓰지 않습니다 — 희석이 회사가 대표로 내세우는 값입니다.
+    · 같은 줄 앞쪽에 'non-GAAP'·'adjusted' 가 있으면 건너뜁니다.
+    · 괄호 표기 "$(8.58)" 는 음수입니다 (회계 표기).
+    · 전망 문맥(사고 16)이면 건너뜁니다.
+    """
+    if not text:
+        return None
+    for want_diluted in (True, False):
+        for match in _EPS_BEFORE_RE.finditer(text):
+            kind = (match.group("kind") or "").strip().lower()
+            if kind == "basic":
+                continue
+            if want_diluted and kind != "diluted":
+                continue
+            start = match.start()
+            line_start = text.rfind("\n", 0, start) + 1
+            window = text[max(line_start, start - _NONGAAP_LOOKBACK):start]
+            if _NONGAAP_NEAR_RE.search(window):
+                continue
+            back = max(start - _FORECAST_BACK, line_start,
+                       text.rfind(". ", 0, start) + 2)
+            if _FORECAST_NEAR_RE.search(text[back:match.end()]):
+                continue
+            raw = match.group(1)
+            negative = raw.startswith("(") and raw.endswith(")")
+            value = float(raw.strip("()").replace(",", ""))
+            if negative:
+                value = -value
+            if abs(value) > cfg.EPS_MAX_ABS:
+                continue
+            return value
+    return None
 
 
 def find_eps_in_column_table(text: str) -> dict:
@@ -791,6 +854,9 @@ def parse_press_release(text: str) -> dict:
     result["gaap_eps"] = find_eps_value(
         text, LABELS_GAAP_EPS, exclude_nongaap=True
     )
+    if result["gaap_eps"] is None:
+        # 숫자가 이름 앞에 오는 문장 (50차) — 이름 뒤 탐색이 실패한 뒤에만
+        result["gaap_eps"] = find_eps_before_per_share(text)
 
     # 문장형으로 못 찾았을 때만 열 방향 표를 시도합니다 (실물: CGNX —
     # 열 제목이 여러 줄에 쌓인 표. 확신이 안 서면 그대로 없음).
