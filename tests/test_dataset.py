@@ -121,6 +121,37 @@ def test_real_op_income_passes_unit_guard():
     assert rows[1]["op_income"] == 100_000_000.0
 
 
+def test_adjusted_ebitda_unit_mismatch_is_dropped():
+    """조정 EBITDA 단위 미환산(46차 감사 실물 85건)은 없음 처리.
+
+    가장 아픈 예: CIEN 25 Q3 157,962,000 → 25 Q4 **205,536**.
+    저장값으로는 99.9% 급감이지만 실제로는 205,536천 달러(2.06억)로
+    **증가**입니다. 이 오염이 광통신 묶음의 이익 델타를 통째로 뒤집어
+    주도섹터 판정을 틀리게 만들고 있었습니다.
+    """
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(revenue=1_047_000_000.0, adjusted_ebitda=205_536.0),   # 천 달러 착오
+        quarter_row(filing_date="2026-03-31", period_label="26 Q3",
+                    revenue=1_000_000_000.0, adjusted_ebitda=1_200_000_000.0),  # 매출 초과
+    ]})
+    result = dataset.build(snap)
+    rows = result["quarters"]["AAA"]
+    assert all(r["adjusted_ebitda"] is None for r in rows), rows
+    assert sum("EBITDA" in n for n in result["notes"]) >= 2, result["notes"]
+
+
+def test_real_adjusted_ebitda_passes_unit_guard():
+    """정상 EBITDA 마진(20%)과 소폭 적자는 그대로 통과해야 합니다."""
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(revenue=1_000_000_000.0, adjusted_ebitda=200_000_000.0),
+        quarter_row(filing_date="2026-03-31", period_label="26 Q3",
+                    revenue=1_000_000_000.0, adjusted_ebitda=-50_000_000.0),
+    ]})
+    rows = dataset.build(snap)["quarters"]["AAA"]
+    assert rows[0]["adjusted_ebitda"] == -50_000_000.0
+    assert rows[1]["adjusted_ebitda"] == 200_000_000.0
+
+
 def test_non_number_becomes_none():
     """숫자가 아닌 값(NaN·문자)은 고치지 않고 없음 처리합니다."""
     snap = make_snapshot(

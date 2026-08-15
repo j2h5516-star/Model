@@ -152,6 +152,27 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
                     )
                     clean["op_income"] = None
 
+            # 조정 EBITDA 단위 검사 (46차 감사) — 위 영업이익 가드와 같은 사고가
+            # EBITDA 칸에서도 일어나고 있었습니다. 실물 85건 · 10종목
+            # (BE CIEN CMCSA ENTG ETSY GNRC PINS PWR SNAP TTMI).
+            # 가장 아픈 예: CIEN 은 25 Q3 157,962,000 → 25 Q4 **205,536** 으로
+            # 저장돼 있어 **99.9% 급감**으로 읽혔습니다. 실제로는 205,536천 달러
+            # (2.06억)로 **증가**입니다. 이 오염이 광통신 묶음의 "이익 델타"를
+            # 통째로 뒤집어, 주도섹터 판정을 틀리게 만들고 있었습니다.
+            # EBITDA 는 이익이므로 매출을 넘을 수 없고, 매출의 0.1% 미만이면
+            # 천/백만 단위 미환산입니다. 고치지 않고 버립니다 (창작 금지).
+            ebitda = clean.get("adjusted_ebitda")
+            if rev is not None and ebitda is not None and rev >= 10_000_000:
+                ratio = ebitda / rev
+                if (abs(ebitda) < rev * 0.001 or ebitda > rev
+                        or ratio * 100.0 < cfg.MARGIN_MIN_PCT):
+                    notes.append(
+                        f"{ticker} {clean.get('period_label', '?')}: "
+                        f"조정 EBITDA {ebitda} 은 매출 {rev} 대비 "
+                        f"{ratio * 100.0:.3f}% — 단위 착오 의심이라 없음 처리"
+                    )
+                    clean["adjusted_ebitda"] = None
+
             # 주당 금액 상한 (2차 방어 — 위 PER_SHARE_ABS_LIMIT 주석 참조)
             for field in _PER_SHARE_FIELDS:
                 value = clean.get(field)

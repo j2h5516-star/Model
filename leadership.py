@@ -143,10 +143,19 @@ def weekly_group_state(ds: dict, groups: dict[str, str] | None = None) -> list[d
             recent = sorted(latest.values())
             count = len(recent)
             density = count / len(usable) * 100.0
+            # 델타를 못 재는 완성은 분모에서 뺍니다 (판단 불가를 실패로 세면
+            # 없는 사실을 만드는 것). 그런데 **뺀 뒤 남은 것이 너무 적으면
+            # 그것도 사실을 만드는 것**입니다 — 46차 감사 실물: 금융 묶음은
+            # 완성 9종목 중 델타를 잴 수 있는 것이 3종목뿐인데(나머지 6종목은
+            # EPS 값 자체가 수집되지 않음) 그 3종목이 전부 상승이라
+            # "완성 종목의 100%가 델타 동반"으로 찍혔고, 그 힘으로 금융이
+            # 주도섹터를 차지했습니다.
+            # → 판단 가능한 완성이 MIN_COMPLETIONS 미만이면 **판단 불가**로
+            #   두어 조건을 충족시키지 않습니다 (이 파일의 다른 곳과 같은 규칙).
             decidable = [row for row in recent if row[2] is not None]
             share = (
                 sum(1 for row in decidable if row[2]) / len(decidable) * 100.0
-                if decidable else None
+                if len(decidable) >= MIN_COMPLETIONS else None
             )
             # 델타폭 — 묶음 전체 기준 (H21)
             states = [_delta_at(deltas.get(t) or [], day) for t in usable]

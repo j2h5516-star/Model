@@ -167,14 +167,30 @@ def test_condition_needs_all_three():
     assert weak["델타동반"] == 33.3 and weak["조건충족"] is False, weak
 
 
+def test_share_needs_enough_decidable_completions():
+    """판단 가능한 완성이 3건 미만이면 델타동반은 **판단 불가**여야 합니다.
+
+    46차 감사 실물: 금융 묶음은 완성 9종목 중 델타를 잴 수 있는 것이
+    3종목뿐인데(나머지는 EPS 값 자체가 수집 안 됨) 그 3종목이 전부 상승이라
+    "100% 동반"으로 찍혀 주도섹터를 차지했습니다. 1~2종목으로 과반을
+    주장하는 것은 없는 사실을 만드는 것입니다.
+    """
+    # 완성 5종목 중 4종목이 판단 불가(발표 끊김), 1종목만 상승 → 판단 불가
+    ds, groups = _fake_ds(n_group=10, n_rising=5, delta_up=1, stale=9)
+    rows = [r for r in ld.weekly_group_state(ds, groups) if r["완성수"] == 5]
+    assert rows, "완성 5건짜리 주가 없습니다"
+    assert rows[0]["델타동반"] is None, rows[0]
+    assert rows[0]["조건충족"] is False, rows[0]
+
+
 def test_undecidable_delta_leaves_denominator():
     """델타를 못 재는 완성은 분모에서 빠집니다 — 실패로 세지 않습니다.
 
-    완성 3종목 중 1개가 판단 불가, 나머지 2개가 상승이면
-    동반 비율은 2/3(66.7%)이 아니라 **2/2(100%)** 여야 합니다.
+    완성 4종목 중 1개가 판단 불가, 나머지 3개가 상승이면
+    동반 비율은 3/4(75%)가 아니라 **3/3(100%)** 여야 합니다.
     """
-    ds, groups = _fake_ds(n_group=10, n_rising=3, delta_up=2, stale=8)
-    rows = [r for r in ld.weekly_group_state(ds, groups) if r["완성수"] == 3]
+    ds, groups = _fake_ds(n_group=10, n_rising=4, delta_up=3, stale=7)
+    rows = [r for r in ld.weekly_group_state(ds, groups) if r["완성수"] == 4]
     assert rows, "완성 3건짜리 주가 없습니다"
     assert rows[0]["델타동반"] == 100.0, rows[0]
 
