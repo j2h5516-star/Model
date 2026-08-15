@@ -27,6 +27,7 @@ TEST_FILES = [
     "tests/test_dataset.py",     # 데이터 계층 (v3 4단계 — 재료 손질)
     "tests/test_measure_engine.py",  # 측정 장치 (v3 5단계 — 11차 등록 구현)
     "tests/test_sector_model.py",    # 정배열 장치 (39·43차 등록 — 완성·이격도)
+    "tests/test_leadership.py",      # 주도섹터 모델 (44차 등록 — 판정·전환·분기점)
     "tests/test_judge.py",       # 자동 판정 (v3 5단계 — 채택 기준 적용)
     "tests/test_app.py",         # 계기판 도우미 (v3 6단계 — 정직화 표시)
 ]
