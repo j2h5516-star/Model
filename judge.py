@@ -215,5 +215,51 @@ def judge_sector_breadth(events: list[dict]) -> dict:
     return out
 
 
+# H18 (43차 등록): 정배열 **완성** 시점의 52주선 이격도.
+# 42차 탐색에서 나온 후보이므로 **탐색 표본은 판정에 못 씁니다**(원칙 5).
+# 등록일 뒤에 새로 생긴 완성 사건만 세고, 그 전 것은 참고로만 붙입니다.
+H18_NAME = "H18_완성시_52주선이격도"
+_H18_SURGE_PP = 20.0        # 측정 기본형 — 폭등 = SPY 대비 +20%p
+
+
+def _completion_stats(group: list[dict]) -> dict:
+    n = len(group)
+    hits = sum(1 for e in group if e["초과60"] >= _H18_SURGE_PP)
+    low, high = wilson_interval(hits, n)
+    return {"n": n, "rate": round(hits / n * 100.0, 1) if n else None,
+            "ci": [round(low, 1), round(high, 1)]}
+
+
+def judge_completion_gap(events: list[dict], start_day: str,
+                         gap_min: float) -> dict:
+    """H18 판정 — 정배열 완성 사건 중 이격도가 문턱 이상인 군.
+
+    입력은 sector_model.completion_events 의 사건 목록입니다.
+    표적이 아직 안 끝난 사건(초과60 없음)과 이격도를 못 잰 사건은
+    표본에서 뺍니다 — 값을 만들지 않습니다.
+    """
+    usable = [e for e in events
+              if e.get("초과60") is not None and e.get("이격도") is not None]
+    out: dict = {}
+    for label, pool in (
+        ("신규(판정)", [e for e in usable if e["day"] > start_day]),
+        ("탐색표본(참고)", [e for e in usable if e["day"] <= start_day]),
+    ):
+        signal = [e for e in pool if e["이격도"] >= gap_min]
+        signal_stats = _completion_stats(signal)
+        base_stats = _completion_stats(pool)
+        if signal_stats["n"] < MIN_SIGNAL_N:
+            verdict = "판정 불가"
+        elif signal_stats["ci"][0] > base_stats["ci"][1]:
+            verdict = "채택"
+        else:
+            verdict = "미채택"
+        out[label] = {"신호": signal_stats, "기준선": base_stats,
+                      "판정": verdict}
+    out["판정"] = out["신규(판정)"]["판정"]
+    out["등록일"] = start_day
+    return {H18_NAME: out}
+
+
 def to_json(verdict: dict) -> str:
     return json.dumps(verdict, ensure_ascii=False, indent=1)

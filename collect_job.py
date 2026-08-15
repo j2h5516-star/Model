@@ -139,6 +139,12 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         # H11·H11b (33차 등록) — 섹터 정배열 폭 모델
         breadth_events = sector_model.collect_breadth_events(ds)
         verdict["가설"].update(judge.judge_sector_breadth(breadth_events))
+        # H18 (43차 등록) — 정배열 완성 시점의 52주선 이격도.
+        # 42차 탐색에서 나온 후보라 등록일 뒤의 새 완성만 판정 표본입니다.
+        verdict["가설"].update(judge.judge_completion_gap(
+            sector_model.completion_events(ds),
+            sector_model.H18_START_DAY, sector_model.H18_GAP_MIN,
+        ))
         files[f"{cfg.MEASURE_DIR}/verdict.json"] = judge.to_json(verdict)
         verdict_note = " · ".join(
             f"{name}: {entry['판정']}" for name, entry in verdict["가설"].items()

@@ -233,6 +233,21 @@ def test_merge_without_xbrl_uses_press_only():
     assert len(merged) == 1 and merged[0]["source"] == "직접공시"
 
 
+def test_merge_without_xbrl_still_stamps_announced_date():
+    """XBRL이 비어도 발표일 도장은 찍혀야 함 (41차 검증 발견 결함).
+
+    측정은 발표일로만 전 종목을 줄 세우므로(전략.md 7장), 도장이 없으면
+    그 종목은 측정에서 통째로 빠집니다. 실물에서 22종목(은행·제약·에너지·
+    산업재 전부와 KLAC)이 이 구멍으로 빠져 '판단 불가'군이 업종 편향이
+    됐습니다.
+    """
+    press = [_press_row("2025-04-25", 111.0), _press_row("2025-01-30", 90.0)]
+    merged = sf.merge_quarters([], press)
+    assert [r["announced_date"] for r in merged] == ["2025-01-30", "2025-04-25"], merged
+    # 원본 8-K 목록은 건드리지 않습니다 (원본 불변)
+    assert "announced_date" not in press[0]
+
+
 def test_merge_without_press_keeps_xbrl():
     """8-K가 하나도 없으면 XBRL 뼈대를 그대로 유지해야 함"""
     xbrl = [_xbrl_row("2025-03-31", 100.0)]

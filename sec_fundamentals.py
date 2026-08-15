@@ -1855,7 +1855,19 @@ def merge_quarters(
             return None
 
     if not xbrl_quarters:
-        return sorted(press_quarters, key=lambda q: q["filing_date"])
+        # XBRL 뼈대가 통째로 비면 보도자료 행을 그대로 돌려주는데, 예전에는
+        # 여기서 **발표일 도장을 찍지 않고** 나갔습니다. 측정은 발표일로만
+        # 전 종목을 줄 세우므로(전략.md 7장), 도장이 없는 행은 측정에서
+        # 통째로 빠집니다. 실제로 22종목(은행·제약·에너지·산업재 전부와
+        # KLAC)이 이 구멍으로 빠져 나가, 41차 검증에서 "판단 불가"군이
+        # 무작위가 아니라 **업종 편향**이 되는 원인이 됐습니다.
+        # → 아래 승격 경로와 똑같이 8-K 제출일을 발표일로 찍어 줍니다.
+        stamped = []
+        for press in sorted(press_quarters, key=lambda q: q["filing_date"]):
+            row = dict(press)
+            row["announced_date"] = press.get("filing_date", "")
+            stamped.append(row)
+        return stamped
     if not press_quarters:
         return xbrl_quarters
 
