@@ -195,6 +195,28 @@ def test_undecidable_delta_leaves_denominator():
     assert rows[0]["델타동반"] == 100.0, rows[0]
 
 
+
+def test_incumbent_peak_expires_after_13_weeks_of_no_data():
+    """현 주도가 **13주 넘게 판단 불가**면 옛 점수는 만료돼야 합니다.
+
+    51차 실측: 데이터센터 묶음이 10주 넘게 완성 0건이라 점수를 못 재는데도
+    옛 점수(60.0)가 살아남아 도전자(의약 33.3)를 계속 막고 있었습니다.
+    44차 등록문의 "직전 13주"는 **시간**이지 "최근 판단 가능한 13개"가
+    아닙니다.
+    """
+    rows = [state("2025-01-03", "A", count=6, usable=10)]        # 점수 60.0
+    weeks = [f"2025-{m:02d}-{d:02d}" for m, d in
+             ((1, 10), (1, 17), (1, 24), (1, 31), (2, 7), (2, 14), (2, 21),
+              (2, 28), (3, 7), (3, 14), (3, 21), (3, 28), (4, 4), (4, 11))]
+    for week in weeks:
+        rows.append(state(week, "A", count=0, usable=10, share=None))  # 판단 불가
+        rows.append(state(week, "B", count=4, usable=10))              # 점수 40.0
+    timeline = ld.leadership_timeline(rows)
+    # 13주 안에서는 옛 점수 60.0 이 살아 있어 B(40.0)가 못 넘는다
+    assert timeline[5]["주도"] == "A", timeline[5]
+    # 13주가 지나면 만료되어 B 가 주도가 된다
+    assert timeline[-1]["주도"] == "B", [(r["주"], r["주도"]) for r in timeline]
+
 def test_switch_events_lists_only_changes():
     rows = []
     for week, group, count in (("2025-01-03", "A", 5), ("2025-01-10", "A", 5),

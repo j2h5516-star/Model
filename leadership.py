@@ -201,16 +201,22 @@ def leadership_timeline(states: list[dict]) -> list[dict]:
         by_week.setdefault(row["주"], []).append(row)
 
     leader: str | None = None
-    recent_scores: list[float] = []       # 현 주도의 최근 13주 점수
+    # 현 주도의 **직전 13주** 점수 (44차 등록문 그대로). 판단 불가 주는
+    # None 으로 자리를 채웁니다 — 자리를 안 채우면 "최근 판단 가능한 13개"가
+    # 되어 창이 시간과 무관하게 늘어납니다.
+    # 51차 실측: 데이터센터 묶음이 10주 넘게 판단 불가인데도 옛 점수가
+    # 살아남아 도전자를 막고 있었습니다. 등록문의 "직전 13주"는 시간입니다.
+    recent_scores: list[float | None] = []
     timeline: list[dict] = []
     for day in sorted(by_week):
         rows = by_week[day]
         qualified = [r for r in rows if r["조건충족"]]
         current = next((r for r in rows if r["묶음"] == leader), None)
-        if current is not None and current["주도점수"] is not None:
-            recent_scores.append(current["주도점수"])
+        if leader is not None:
+            recent_scores.append(current["주도점수"] if current else None)
             recent_scores = recent_scores[-WINDOW_WEEKS:]
-        incumbent_best = max(recent_scores) if recent_scores else 0.0
+        known = [s for s in recent_scores if s is not None]
+        incumbent_best = max(known) if known else 0.0
 
         reason = "주도 유지" if leader else "주도 없음"
         if leader is None:
