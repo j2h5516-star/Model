@@ -174,6 +174,9 @@ def weekly_group_state(ds: dict, groups: dict[str, str] | None = None) -> list[d
                 "묶음": name,
                 "완성수": count,
                 "완성종목": [row[1] for row in recent],
+                # H19b 가 "완성 **이후** 첫 발표"를 찾으려면 종목별 완성일이
+                # 필요합니다 (완성일에는 몰라도 확인일에는 아는 값).
+                "완성일": {row[1]: row[0] for row in recent},
                 "판단가능": len(usable),
                 "완성밀도": round(density, 1),
                 "델타동반": None if share is None else round(share, 1),
@@ -350,4 +353,88 @@ def evaluate_inflections(ds: dict, events: list[dict],
                     "직후": None if after is None else round(after, 1),
                     "차이": gap,
                     "성공": None if gap is None else gap <= BREAK_LOSS_PP})
+    return out
+
+
+# ---------------------------------------------------------------------------
+# ⑤ H19b — **완성 후 확인형** (46차 ⑦ 등록)
+# ---------------------------------------------------------------------------
+# 46차에서 실측한 것: 저장소 주인이 지목한 광통신 국면에서 정배열 완성은
+# 넘치게 일어났는데(밀도 42.9~71.4%) 이익 델타는 **완성 뒤 5~61일**에 왔다.
+# "동시에"가 아니라 "완성 → 다음 실적에서 확인"이 실제 순서였다.
+# 그래서 확인 시점을 신호로 삼는 판을 따로 등록해 나란히 잰다.
+#
+# ⚠️ H19 를 폐기하지 않는다. 어느 시점이 맞는지는 새 데이터가 정한다.
+H19B_START_DAY = "2026-08-15"   # 이 날 **뒤**의 확인만 판정 표본 (원칙 5)
+
+
+def confirmation_events(ds: dict, groups: dict[str, str] | None = None,
+                        states: list[dict] | None = None) -> list[dict]:
+    """[{주, 묶음, 확인종목, 상승, 판단가능, 완성수, 완성밀도}] — 확인이 선 첫 주.
+
+    한 묶음이 "완성 무리"(최근 13주 완성 3종목 이상 ∧ 밀도 30% 이상) 상태일 때,
+    그 완성 종목들의 **완성 이후 첫 발표**를 모아 델타 상승이 과반이 되는
+    **첫 주**를 잡습니다. 무리가 흩어지면(조건이 깨지면) 다시 잡을 수 있게
+    초기화합니다.
+
+    완성일에는 알 수 없지만 **확인일에는 실제로 알 수 있는** 값만 씁니다 —
+    사후 정보가 아닙니다.
+    """
+    groups = groups or default_groups()
+    if states is None:
+        states = weekly_group_state(ds, groups)
+    deltas = delta_state_series(ds)
+
+    by_week: dict[str, list[dict]] = {}
+    for row in states:
+        by_week.setdefault(row["주"], []).append(row)
+
+    fired: set[str] = set()          # 지금 무리에서 이미 확인이 선 묶음
+    out: list[dict] = []
+    for day in sorted(by_week):
+        for row in by_week[day]:
+            name = row["묶음"]
+            cluster = (row["완성수"] >= MIN_COMPLETIONS
+                       and row["완성밀도"] >= DENSITY_MIN)
+            if not cluster:
+                fired.discard(name)      # 무리가 흩어짐 — 다음 무리에서 다시
+                continue
+            if name in fired:
+                continue
+            # 완성 종목마다 **완성 이후 첫 발표**의 델타를 찾습니다.
+            confirmed, decidable = [], []
+            for ticker in row["완성종목"]:
+                series = deltas.get(ticker) or []
+                after = [s for s in series if s[0] > row["완성일"].get(ticker, "")
+                         and s[0] <= day]
+                if not after:
+                    continue
+                decidable.append(ticker)
+                if after[0][1]:
+                    confirmed.append(ticker)
+            if len(decidable) < MIN_COMPLETIONS:
+                continue                  # 판단 불가 — 값을 만들지 않는다
+            if len(confirmed) / len(decidable) * 100.0 < DELTA_SHARE_MIN:
+                continue
+            fired.add(name)
+            out.append({
+                "주": day, "묶음": name,
+                "확인종목": confirmed, "상승": len(confirmed),
+                "판단가능": len(decidable),
+                "완성수": row["완성수"], "완성밀도": row["완성밀도"],
+            })
+    return out
+
+
+def evaluate_confirmations(ds: dict, events: list[dict],
+                           groups: dict[str, str] | None = None) -> list[dict]:
+    """H19b 표적: 확인 다음 거래일부터 60거래일, 묶음 동일가중 초과수익."""
+    groups = groups or default_groups()
+    members = group_members(ds, groups)
+    out = []
+    for event in events:
+        excess = group_excess(ds, members.get(event["묶음"]) or [], event["주"])
+        out.append({**event,
+                    "초과": None if excess is None else round(excess, 1),
+                    "성공": None if excess is None else excess >= SWITCH_WIN_PP})
     return out

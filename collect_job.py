@@ -155,8 +155,24 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
             ds, leadership.switch_events(timeline))
         inflections = leadership.evaluate_inflections(
             ds, leadership.inflection_events(timeline))
-        verdict["가설"].update(
-            judge.judge_leadership(timeline, switches, inflections))
+        # H19b (46차 ⑦ 등록) — 완성 후 확인형. 기준선은 확인이 서지 않은
+        # 모든 (묶음, 주)이며, 판정 표본은 등록일 뒤의 확인만입니다.
+        confirmations = leadership.evaluate_confirmations(
+            ds, leadership.confirmation_events(ds, states=states))
+        fired = {(e["주"], e["묶음"]) for e in confirmations}
+        members = leadership.group_members(ds, leadership.default_groups())
+        baseline = []
+        for row in states:
+            if (row["주"], row["묶음"]) in fired:
+                continue
+            value = leadership.group_excess(
+                ds, members.get(row["묶음"]) or [], row["주"])
+            if value is not None:
+                baseline.append(value)
+        verdict["가설"].update(judge.judge_leadership(
+            timeline, switches, inflections,
+            confirmations=confirmations, baseline=baseline,
+            start_day=leadership.H19B_START_DAY))
         files[f"{cfg.MEASURE_DIR}/verdict.json"] = judge.to_json(verdict)
         verdict_note = " · ".join(
             f"{name}: {entry['판정']}" for name, entry in verdict["가설"].items()

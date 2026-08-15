@@ -270,8 +270,14 @@ H20_NAME = "H20_주도섹터_전환"
 H21_NAME = "H21_주도섹터_분기점"
 
 
+H19B_NAME = "H19b_주도섹터_완성후확인"
+
+
 def judge_leadership(timeline: list[dict], switches: list[dict],
-                     inflections: list[dict]) -> dict:
+                     inflections: list[dict],
+                     confirmations: list[dict] | None = None,
+                     baseline: list[float] | None = None,
+                     start_day: str | None = None) -> dict:
     """44차 등록의 세 가설을 기록합니다 (판정은 채택 기준 그대로 적용).
 
     입력은 leadership.py 가 만든 목록입니다. 이 함수는 세지 않은 것을
@@ -305,6 +311,27 @@ def judge_leadership(timeline: list[dict], switches: list[dict],
         H20_NAME: {**_verdict(switches), "사건": switches},
         H21_NAME: {**_verdict(inflections), "사건": inflections},
     }
+    if confirmations is not None:
+        # H19b (46차 ⑦ 등록) — 탐색에서 나온 후보이므로 **등록일 뒤**의
+        # 확인만 판정 표본입니다. 그 전 것은 참고 칸에만 넣습니다 (원칙 5).
+        cut = start_day or ""
+        new_only = [e for e in confirmations if e.get("주", "") > cut]
+        entry = {
+            "신규(판정)": _verdict(new_only),
+            "탐색표본(참고)": _verdict(
+                [e for e in confirmations if e.get("주", "") <= cut]),
+            "등록일": cut,
+        }
+        if baseline:
+            hits = sum(1 for v in baseline if v >= 10.0)
+            low, high = wilson_interval(hits, len(baseline))
+            entry["기준선(참고)"] = {
+                "n": len(baseline),
+                "rate": round(hits / len(baseline) * 100.0, 1),
+                "ci": [round(low, 1), round(high, 1)],
+            }
+        entry["판정"] = entry["신규(판정)"]["판정"]
+        out[H19B_NAME] = entry
     return out
 
 

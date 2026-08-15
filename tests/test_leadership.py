@@ -242,6 +242,50 @@ def test_inflection_ignores_undecidable_weeks():
     assert ld.inflection_events(timeline) == []
 
 
+
+# ---------------------------------------------------------------------------
+# H19b — 완성 후 확인형 (46차 ⑦ 등록)
+# ---------------------------------------------------------------------------
+def test_confirmation_needs_announcement_after_completion():
+    """확인은 **완성 이후에 나온** 발표로만 셉니다.
+
+    46차 실측: 광통신은 완성 시점의 직전 발표가 대부분 하락이었고,
+    델타 상승은 완성 뒤 5~61일에 왔습니다. 완성 **전** 발표를 세면
+    H19 와 같은 것을 두 번 재는 셈이 됩니다.
+    """
+    ds, groups = _fake_ds(n_group=10, n_rising=3, delta_up=3)
+    states = ld.weekly_group_state(ds, groups)
+    events = ld.confirmation_events(ds, groups, states)
+    assert events, "확인 사건이 하나도 안 나왔습니다"
+    first = events[0]
+    # 확인 주는 완성이 무리를 이룬 뒤여야 합니다
+    cluster = [r for r in states if r["주"] == first["주"]][0]
+    assert cluster["완성수"] >= ld.MIN_COMPLETIONS
+    assert cluster["완성밀도"] >= ld.DENSITY_MIN
+    # 확인에 쓰인 발표는 전부 그 종목의 완성일 **뒤** 여야 합니다
+    for ticker in first["확인종목"]:
+        completed = cluster["완성일"][ticker]
+        after = [d for d, _ in ld.delta_state_series(ds)[ticker]
+                 if d > completed and d <= first["주"]]
+        assert after, (ticker, completed, first["주"])
+
+
+def test_confirmation_fires_once_per_cluster():
+    """한 완성 무리에서 확인은 **한 번만** 섭니다."""
+    ds, groups = _fake_ds(n_group=10, n_rising=3, delta_up=3)
+    events = ld.confirmation_events(ds, groups)
+    weeks = [e["주"] for e in events if e["묶음"] == "G"]
+    assert len(weeks) == len(set(weeks)), weeks
+    assert len(weeks) <= 1, f"같은 무리에서 여러 번 섰습니다: {weeks}"
+
+
+def test_confirmation_requires_majority_and_enough_decidable():
+    """판단 가능한 확인이 3건 미만이거나 상승이 과반이 아니면 서지 않습니다."""
+    ds, groups = _fake_ds(n_group=10, n_rising=3, delta_up=0)   # 전부 하락
+    assert ld.confirmation_events(ds, groups) == []
+    ds2, groups2 = _fake_ds(n_group=10, n_rising=3, delta_up=3, stale=9)
+    assert ld.confirmation_events(ds2, groups2) == []           # 판단 가능 <3
+
 # ---------------------------------------------------------------------------
 # 재료 계산 — 실물 자료로 불변 조건만
 # ---------------------------------------------------------------------------
