@@ -209,3 +209,129 @@ def current_breadth(ds: dict, group: str = "섹터") -> list[dict]:
         })
     rows.sort(key=lambda r: (r["폭"] is not None, r["폭"] or 0), reverse=True)
     return rows
+
+
+# ---------------------------------------------------------------------------
+# 사이클 추적 시계열 (37차) — 정배열 폭 · 이익 델타 폭 · 상대수익
+# ---------------------------------------------------------------------------
+DELTA_FRESH_DAYS = 140      # 발표 신선도 (게이지와 같은 기준)
+
+
+def _delta_series(ds: dict, ticker: str) -> list[tuple[str, bool]]:
+    """종목의 [(발표일, 델타 상승 여부)] — 연속 분기끼리만 비교."""
+    rows = ds["quarters"].get(ticker) or []
+    yardstick = yardstick_of_safe(ds, ticker)
+    if not yardstick:
+        return []
+    values = sorted(
+        (r["announced_date"], r[yardstick]) for r in rows
+        if r.get(yardstick) is not None and r.get("announced_date")
+    )
+    out = []
+    for i in range(1, len(values)):
+        gap = (date.fromisoformat(values[i][0])
+               - date.fromisoformat(values[i - 1][0])).days
+        if 55 <= gap <= 200:            # 연속 분기만 (사고 7 규칙)
+            out.append((values[i][0], values[i][1] > values[i - 1][1]))
+    return out
+
+
+def yardstick_of_safe(ds: dict, ticker: str) -> str | None:
+    import measure_engine as me
+    return me.yardstick_of(ds["quarters"].get(ticker) or [])
+
+
+def month_end_days(dates: list[str]) -> list[str]:
+    """각 달의 마지막 거래일."""
+    out, previous = [], None
+    for index, day in enumerate(dates):
+        if previous is not None and day[:7] != previous[0]:
+            out.append(dates[previous[1]])
+        previous = (day[:7], index)
+    if previous:
+        out.append(dates[previous[1]])
+    return out
+
+
+def cycle_series(ds: dict, members: list[str], base_day: str,
+                 since: str = "2024-01-01") -> list[dict]:
+    """월별 [{"월", "정배열폭", "델타폭", "상대수익"}] — 그 시점까지 알려진 값만.
+
+    상대수익 = base_day 이후 동일가중 누적 수익 − SPY 누적 수익 (%p).
+    미래 엿보기 금지: 델타는 발표일이 그 시점 이전인 것만, 140일 넘으면 제외.
+    """
+    spy = ds["prices"][ds["benchmark"]]
+    deltas = {t: _delta_series(ds, t) for t in members}
+    aligns = {}
+    for ticker in members:
+        prices = ds["prices"].get(ticker)
+        if prices:
+            flags = aligned_flags(prices)
+            if flags:
+                aligns[ticker] = (sorted(flags), flags)
+
+    def delta_at(ticker, day):
+        series = deltas.get(ticker) or []
+        days = [s[0] for s in series]
+        index = bisect.bisect_right(days, day) - 1
+        if index < 0:
+            return None
+        if (date.fromisoformat(day)
+                - date.fromisoformat(days[index])).days > DELTA_FRESH_DAYS:
+            return None
+        return series[index][1]
+
+    def aligned_at(ticker, day):
+        entry = aligns.get(ticker)
+        if not entry:
+            return None
+        keys, flags = entry
+        index = bisect.bisect_right(keys, day) - 1
+        return flags[keys[index]] if index >= 0 else None
+
+    def relative(day):
+        gains = []
+        for ticker in members:
+            prices = ds["prices"].get(ticker)
+            if not prices:
+                continue
+            dates, closes = prices["dates"], prices["close"]
+            i0 = bisect.bisect_right(dates, base_day) - 1
+            i1 = bisect.bisect_right(dates, day) - 1
+            if i0 < 0 or i1 <= i0:
+                continue
+            gains.append((closes[i1] / closes[i0] - 1) * 100.0)
+        if not gains:
+            return None
+        s0 = bisect.bisect_right(spy["dates"], base_day) - 1
+        s1 = bisect.bisect_right(spy["dates"], day) - 1
+        if s0 < 0 or s1 <= s0:
+            return None
+        market = (spy["close"][s1] / spy["close"][s0] - 1) * 100.0
+        return mean(gains) - market
+
+    out = []
+    for day in month_end_days(spy["dates"]):
+        if day < since:
+            continue
+        decidable = [t for t in members
+                     if delta_at(t, day) is not None and aligned_at(t, day) is not None]
+        if len(decidable) < MIN_MEMBERS:
+            continue
+        out.append({
+            "월": day,
+            "정배열폭": round(sum(1 for t in decidable if aligned_at(t, day))
+                              / len(decidable) * 100.0, 1),
+            "델타폭": round(sum(1 for t in decidable if delta_at(t, day))
+                            / len(decidable) * 100.0, 1),
+            "상대수익": (round(relative(day), 1)
+                         if relative(day) is not None else None),
+        })
+    return out
+
+
+def ai_members(ds: dict) -> tuple[list[str], list[str]]:
+    """(AI 사이클 종목, 비AI 종목) — config.theme_of 기준."""
+    ai = [t for t in ds["tickers"] if cfg.theme_of(t).startswith("AI-")]
+    other = [t for t in ds["tickers"] if not cfg.theme_of(t).startswith("AI-")]
+    return ai, other
