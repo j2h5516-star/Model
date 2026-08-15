@@ -529,6 +529,57 @@ def main():
     )
 
     # =====================================================================
+    # 1-2. AI 사이클 추적 (37차) — 저장소 주인 관찰 국면의 실제 순서
+    # =====================================================================
+    st.header("① -2 사이클 추적 — 정배열·이익 델타·주가")
+    st.caption(
+        "AI 사이클 종목 묶음의 **정배열 폭**(주가가 정배열인 비율)과 "
+        "**이익 델타 폭**(직전 분기보다 이익이 는 비율), 그리고 "
+        "**상대수익**(2024년 말 기준 SPY 대비 누적)을 함께 봅니다. "
+        "세 선의 **순서**가 이 모델의 핵심 질문입니다."
+    )
+    ai_members, non_ai = sm.ai_members(ds)
+    ai_series = sm.cycle_series(ds, ai_members, "2024-12-31", since="2025-01-01")
+    non_series = sm.cycle_series(ds, non_ai, "2024-12-31", since="2025-01-01")
+    if ai_series:
+        import altair as alt
+        frames = []
+        for label, series in (("AI 정배열 폭", ai_series), ("AI 이익 델타 폭", ai_series)):
+            key = "정배열폭" if "정배열" in label else "델타폭"
+            frames += [{"월": r["월"][:7], "선": label, "값": r[key]} for r in series]
+        width_df = pd.DataFrame(frames)
+        st.altair_chart(
+            alt.Chart(width_df).mark_line(point=True).encode(
+                x=alt.X("월:N", title=None, axis=alt.Axis(labelAngle=-60)),
+                y=alt.Y("값:Q", title="폭 (%)"),
+                color=alt.Color("선:N", title=None,
+                                scale=alt.Scale(range=["#2E9E5B", "#E0A030"]),
+                                legend=alt.Legend(orient="top")),
+            ).properties(height=230),
+            use_container_width=True)
+        rel_df = pd.DataFrame(
+            [{"월": r["월"][:7], "선": "AI 사이클", "값": r["상대수익"]}
+             for r in ai_series if r["상대수익"] is not None]
+            + [{"월": r["월"][:7], "선": "비AI", "값": r["상대수익"]}
+               for r in non_series if r["상대수익"] is not None])
+        st.altair_chart(
+            alt.Chart(rel_df).mark_line(point=True).encode(
+                x=alt.X("월:N", title=None, axis=alt.Axis(labelAngle=-60)),
+                y=alt.Y("값:Q", title="SPY 대비 누적 (%p)"),
+                color=alt.Color("선:N", title=None,
+                                scale=alt.Scale(range=["#C4553B", "#8A8F98"]),
+                                legend=alt.Legend(orient="top")),
+            ).properties(height=230),
+            use_container_width=True)
+        low = min(ai_series, key=lambda r: r["정배열폭"])
+        st.info(
+            f"**실측 순서 (37차)**: AI 정배열 폭 최저는 **{low['월'][:7]} "
+            f"{low['정배열폭']}%** — 이익 델타 폭도 이 무렵 바닥이었고, "
+            "**주가가 먼저 돌아선 뒤** 정배열과 델타가 뒤따랐습니다. "
+            "'정배열·델타가 먼저, 주가가 나중'이 아니라 **반대 순서**입니다."
+        )
+
+    # =====================================================================
     # 2. 메인 — 채택된 신호
     # =====================================================================
     st.header("② 채택된 신호")
