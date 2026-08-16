@@ -195,6 +195,66 @@ def test_keep_raw_text_respects_caps():
     assert len(one["raw_texts"][0]["text"]) == cfg.MEASURE_RAW_TEXT_CAP
 
 
+def test_wanted_raw_list_is_read_from_the_repo(tmpdir=None):
+    """조사가 부탁한 (종목, 발표일)만 True 가 되어야 합니다 (73차).
+
+    이 길이 막히면 "잘못 읽은 값"의 원문이 영영 안 들어옵니다 —
+    지금 보관되는 것은 **못 읽은** 공시뿐이기 때문입니다.
+    """
+    import json as _json
+    import tempfile
+
+    이전_dir, 이전_cache = cfg.MEASURE_DIR, sf._WANTED_CACHE
+    폴더 = tempfile.mkdtemp()
+    try:
+        with open(os.path.join(폴더, "wanted_raw.json"), "w",
+                  encoding="utf-8") as f:
+            _json.dump({"목록": [
+                {"종목": "VZ", "발표일": "2023-01-24"},
+                {"종목": "GS", "발표일": "2022-01-18"},
+            ]}, f, ensure_ascii=False)
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = 폴더, None
+
+        assert sf._is_wanted_raw("VZ", "2023-01-24")
+        assert sf._is_wanted_raw("GS", "2022-01-18T00:00:00")   # 시각이 붙어도
+        assert not sf._is_wanted_raw("VZ", "2023-04-25")        # 다른 날
+        assert not sf._is_wanted_raw("AAPL", "2023-01-24")      # 다른 종목
+    finally:
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = 이전_dir, 이전_cache
+
+
+def test_missing_wanted_list_does_not_break_collection():
+    """부탁 목록 파일이 없어도 수집은 그대로 돌아야 합니다.
+
+    이 파일은 '있으면 더 담아 오는' 부탁일 뿐, 수집의 전제가 아닙니다.
+    """
+    import tempfile
+
+    이전_dir, 이전_cache = cfg.MEASURE_DIR, sf._WANTED_CACHE
+    try:
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = tempfile.mkdtemp(), None
+        assert sf._wanted_raw_set() == set()
+        assert sf._is_wanted_raw("VZ", "2023-01-24") is False
+    finally:
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = 이전_dir, 이전_cache
+
+
+def test_broken_wanted_list_does_not_break_collection():
+    """목록 파일이 깨져 있어도 수집은 멈추지 않습니다."""
+    import tempfile
+
+    이전_dir, 이전_cache = cfg.MEASURE_DIR, sf._WANTED_CACHE
+    폴더 = tempfile.mkdtemp()
+    try:
+        with open(os.path.join(폴더, "wanted_raw.json"), "w",
+                  encoding="utf-8") as f:
+            f.write("{이건 JSON 이 아니다")
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = 폴더, None
+        assert sf._wanted_raw_set() == set()
+    finally:
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = 이전_dir, 이전_cache
+
+
 def test_only_total_parse_failures_are_kept():
     """잣대값을 하나라도 읽었으면 보관하지 않습니다 (60차).
 

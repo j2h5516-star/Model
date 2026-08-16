@@ -164,6 +164,38 @@ def summary(quarters: dict) -> dict:
     }
 
 
+def wanted_raw_filings(quarters: dict, limit: int = 60) -> list[dict]:
+    """로봇에게 "이 공시 원문은 꼭 가져와 달라"고 부탁할 목록.
+
+    **왜 필요한가** — 지금 막혀 있는 곳이 정확히 여기입니다.
+    VZ 5.18 · GS 59.45 · IPGP 99.10 같은 칸이 왜 그렇게 들어왔는지 알려면
+    **그 보도자료 원문**을 봐야 하는데, 개발 환경은 SEC 가 막혀 있어 받을
+    수 없습니다. 지금 보관되는 원문은 "잣대값을 하나도 못 읽은" 실패
+    공시뿐이라, **잘못 읽은** 공시는 한 건도 남지 않습니다.
+
+    그래서 조사가 찾아낸 칸의 (종목, 발표일)을 목록으로 적어 저장소에
+    커밋하면, 다음 로봇 실행이 그 공시만 골라 원문을 담아 옵니다.
+    다음 세션은 그 실물로 파서를 고칠 수 있습니다.
+
+    발표일이 없는 행은 담지 않습니다 — 어느 공시인지 짚을 수 없습니다.
+    """
+    out = []
+    for cell in spike_cells(quarters):
+        if not cell.get("발표일"):
+            continue
+        out.append({
+            "종목": cell["종목"],
+            "발표일": cell["발표일"],
+            "칸": cell["칸"],
+            "값": cell["값"],
+            "배수": round(cell["배수"], 1),
+            "이유": "이웃 분기보다 크게 튐",
+        })
+        if len(out) >= limit:
+            break
+    return out
+
+
 def one_line(quarters: dict) -> str:
     """계기판에 그대로 띄울 한 줄 (모바일 폭에서도 읽히도록 짧게)."""
     s = summary(quarters)
@@ -173,3 +205,41 @@ def one_line(quarters: dict) -> str:
             f"기간 라벨 겹침 {s['라벨겹침_행']}행({s['라벨겹침_종목']}종목). "
             "지우지 않고 세기만 합니다 — 지울 규칙을 만들면 진짜 실적까지 "
             "지운다는 것을 66차·73차에 실측했습니다.")
+
+
+# ---------------------------------------------------------------------------
+# 실행 방법:  python3 audit_data.py
+#   조사 결과를 화면에 찍고, 로봇에게 부탁할 원문 목록을 파일로 적습니다.
+# ---------------------------------------------------------------------------
+WANTED_PATH = "data/measure/wanted_raw.json"
+
+
+def write_wanted(quarters: dict, path: str = WANTED_PATH) -> int:
+    """로봇이 읽을 '원문 부탁 목록'을 파일로 적고, 건수를 돌려줍니다."""
+    import json
+
+    목록 = wanted_raw_filings(quarters)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump({
+            "설명": ("조사(audit_data.py)가 고른 '원문이 필요한 공시' 목록입니다. "
+                   "수집 로봇이 이 목록에 있는 공시는 값을 읽었더라도 원문을 "
+                   "함께 담아 옵니다 — 잘못 읽은 값의 원인을 다음 세션이 "
+                   "실물로 확인할 수 있게 하려는 것입니다. 값은 지우지 않습니다."),
+            "목록": 목록,
+        }, f, ensure_ascii=False, indent=1)
+    return len(목록)
+
+
+if __name__ == "__main__":
+    import dataset
+
+    _ds = dataset.build(dataset.load())
+    _q = _ds["quarters"]
+    print(one_line(_q))
+    print()
+    for _row in spike_cells(_q)[:20]:
+        print(f"  {_row['배수']:6.1f}배 {_row['종목']:6s} {_row['칸']:16s} "
+              f"{str(_row['라벨']):8s} {_row['앞']:>12,.2f} → "
+              f"{_row['값']:>12,.2f} → {_row['뒤']:>12,.2f}")
+    print()
+    print(f"원문 부탁 목록 {write_wanted(_q)}건 → {WANTED_PATH}")

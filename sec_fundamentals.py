@@ -1112,6 +1112,39 @@ def new_report(ticker: str) -> dict:
     }
 
 
+# 원문 부탁 목록 (73차) — 조사(audit_data.py)가 "이 공시는 값을 읽었더라도
+# 원문이 필요하다"고 적어 둔 목록입니다.
+# ---------------------------------------------------------------------------
+# 왜 필요한가: 지금 보관되는 원문은 "잣대값을 하나도 못 읽은" **실패** 공시
+# 뿐입니다. 그래서 VZ 5.18 · GS 59.45 처럼 **잘못 읽은** 값의 원인을 볼
+# 방법이 없었습니다 (개발 환경은 SEC 차단). 목록에 적힌 공시는 값을
+# 읽었어도 원문을 함께 담아 옵니다. **값은 지우지 않습니다.**
+_WANTED_CACHE: dict | None = None
+
+
+def _wanted_raw_set() -> set[tuple[str, str]]:
+    """{(종목, 발표일)} 집합. 파일이 없거나 깨졌으면 빈 집합 (조용히 넘어감)."""
+    global _WANTED_CACHE
+    if _WANTED_CACHE is None:
+        wanted: set[tuple[str, str]] = set()
+        try:
+            with open(os.path.join(cfg.MEASURE_DIR, "wanted_raw.json"),
+                      encoding="utf-8") as f:
+                for row in (json.load(f).get("목록") or []):
+                    종목, 날짜 = row.get("종목"), str(row.get("발표일") or "")[:10]
+                    if 종목 and 날짜:
+                        wanted.add((종목, 날짜))
+        except (OSError, ValueError, AttributeError):
+            pass          # 목록이 없어도 수집은 그대로 돌아야 합니다
+        _WANTED_CACHE = wanted
+    return _WANTED_CACHE
+
+
+def _is_wanted_raw(ticker: str, filing_date) -> bool:
+    """이 공시가 '원문 부탁 목록'에 있는가."""
+    return (ticker, str(filing_date)[:10]) in _wanted_raw_set()
+
+
 def _should_keep_raw(had_exhibit: bool, parsed: dict, text: str) -> bool:
     """이 보도자료 원문을 고칠 재료로 보관할 것인가.
 
@@ -1256,6 +1289,15 @@ def fetch_earnings_8k(
                 and had_exhibit):
             _keep_raw_text(
                 report, f"의심정수_{filing.filing_date}",
+                _safe_filing_url(filing), text,
+            )
+
+        # 조사(73차)가 콕 집어 부탁한 공시 — 값을 읽었더라도 원문을 담아 옵니다.
+        # 다음 세션이 "왜 이 값이 들어왔는지"를 실물로 볼 수 있게 하려는 것이고,
+        # **값은 그대로 둡니다** (65차 §④ "표시부터, 지우지 말고").
+        if had_exhibit and _is_wanted_raw(ticker, filing.filing_date):
+            _keep_raw_text(
+                report, f"부탁_{filing.filing_date}",
                 _safe_filing_url(filing), text,
             )
 

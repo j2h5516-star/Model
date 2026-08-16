@@ -141,6 +141,53 @@ def test_one_line_says_it_does_not_delete():
     assert "1개" in 줄 or "1개" in 줄.replace(" ", ""), 줄
 
 
+def test_wanted_list_only_holds_rows_with_a_date():
+    """발표일이 없는 행은 부탁 목록에 담지 않습니다.
+
+    날짜가 없으면 로봇이 **어느 공시인지 짚을 수 없어** 아무 소용이 없고,
+    자리만 차지합니다.
+    """
+    값들 = [1.18, 1.22, 5.18, 1.20, 1.21, 9.99, 1.19, 1.20]
+    rows = [분기(f"Q{i}", adj_eps=v) for i, v in enumerate(값들)]
+    rows[2]["announced_date"] = "2023-01-24"      # 5.18 — 날짜 있음
+    rows[5]["announced_date"] = None              # 9.99 — 날짜 없음
+    목록 = audit_data.wanted_raw_filings({"VZ": rows})
+    assert [r["발표일"] for r in 목록] == ["2023-01-24"], 목록
+    assert 목록[0]["종목"] == "VZ" and 목록[0]["값"] == 5.18
+
+
+def test_wanted_list_is_capped():
+    """부탁 목록에는 상한이 있습니다 — 로봇 보관 자리가 유한합니다."""
+    quarters = {}
+    for t in range(20):
+        값들 = [1.0, 1.0, 9.0, 1.0, 1.0, 9.0, 1.0, 1.0]
+        rows = [분기(f"Q{i}", adj_eps=v, announced_date=f"2023-01-{i + 1:02d}")
+                for i, v in enumerate(값들)]
+        quarters[f"T{t}"] = rows
+    assert len(audit_data.wanted_raw_filings(quarters, limit=5)) == 5
+
+
+def test_writing_the_wanted_list_does_not_change_the_data():
+    """목록을 적는 것도 재료를 읽기만 합니다."""
+    import json
+    import tempfile
+
+    값들 = [1.18, 1.22, 5.18, 1.20, 1.21]
+    rows = [분기(f"Q{i}", adj_eps=v, announced_date=f"2023-0{i + 1}-01")
+            for i, v in enumerate(값들)]
+    quarters = {"VZ": rows}
+    이전 = [dict(r) for r in rows]
+
+    경로 = tempfile.mktemp(suffix=".json")
+    개수 = audit_data.write_wanted(quarters, 경로)
+    assert 개수 == 1
+    with open(경로, encoding="utf-8") as f:
+        적힌것 = json.load(f)
+    assert 적힌것["목록"][0]["종목"] == "VZ"
+    assert "지우지 않습니다" in 적힌것["설명"]
+    assert quarters["VZ"] == 이전, "목록을 적으면서 재료를 바꿨습니다"
+
+
 def test_empty_material_does_not_crash():
     """재료가 비어도 무너지지 않고 '확인 못함'으로 말해야 합니다."""
     s = audit_data.summary({})
