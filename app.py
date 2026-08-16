@@ -225,10 +225,17 @@ def signal_summary(entry: dict, signal: dict, base: dict) -> str:
         # 확정된 사실로 읽습니다. 반드시 함께 적습니다.
         shake = entry.get("안정성") or {}
         if shake.get("바뀐비율_중앙값") is not None:
+            # 58차 — 중앙값만 적으면 정밀도를 과장합니다. 실측: 같은 6%를
+            # 4번 지웠더니 49·60·82·113주로 나왔습니다. **흔들림을 재는 자
+            # 자체가 흔들립니다.** 그래서 범위를 함께 적습니다.
+            low, high = shake.get("바뀐주_최소"), shake.get("바뀐주_최대")
+            span = (f" (뽑기마다 {low}~{high}주로 갈림)"
+                    if low is not None and high is not None and low != high
+                    else "")
             line += (
                 f"  ⚠️ 흔들림: 잣대값을 {shake.get('지운비율', 0) * 100:.0f}% 만 "
                 f"지워도 주도가 {shake['바뀐주_중앙값']}/{shake['판정주수']}주"
-                f"({shake['바뀐비율_중앙값']}%) 바뀝니다 · 지금 지목도 "
+                f"({shake['바뀐비율_중앙값']}%) 바뀝니다{span} · 지금 지목도 "
                 f"{shake.get('반복', 0)}번 중 {shake.get('마지막주_불일치', 0)}번 달라짐"
             )
         return line

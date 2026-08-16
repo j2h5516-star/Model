@@ -323,6 +323,39 @@ def test_signal_summary_always_shows_instability():
     assert "8번 중 4번" in got, got
 
 
+def test_instability_shows_the_spread_not_just_the_median():
+    """중앙값만 적으면 정밀도를 과장합니다 (58차).
+
+    같은 6%를 4번 지웠더니 49·60·82·113주로 나왔습니다 — **흔들림을 재는
+    자 자체가 흔들립니다.** 그래서 뽑기 사이 범위를 함께 적습니다.
+    """
+    entry = {
+        "현재_주도": "기기 OEM 반도체", "국면수": 18,
+        "안정성": {"판정주수": 210, "지운비율": 0.06, "반복": 8,
+                   "바뀐주_중앙값": 54, "바뀐비율_중앙값": 25.7,
+                   "바뀐주_최소": 16, "바뀐주_최대": 104,
+                   "마지막주_불일치": 4},
+    }
+    got = app.signal_summary(entry, {}, {})
+    assert "16~104" in got, got
+    assert "54/210" in got, got          # 중앙값도 그대로 남아야 합니다
+
+
+def test_no_fake_spread_when_every_draw_agreed():
+    """뽑기마다 같은 답이 나왔으면 범위를 적지 않습니다 — 없는 폭을
+    만들어 보이면 그것도 창작입니다."""
+    entry = {
+        "현재_주도": "A", "국면수": 3,
+        "안정성": {"판정주수": 210, "지운비율": 0.06, "반복": 8,
+                   "바뀐주_중앙값": 7, "바뀐비율_중앙값": 3.3,
+                   "바뀐주_최소": 7, "바뀐주_최대": 7,
+                   "마지막주_불일치": 0},
+    }
+    got = app.signal_summary(entry, {}, {})
+    assert "갈림" not in got, got
+    assert "7/210" in got, got
+
+
 def test_signal_summary_without_stability_still_works():
     """안정성이 아직 없으면(옛 판정 파일) 지목만 적고 조용히 넘어갑니다."""
     entry = {"현재_주도": "금융 중개·자본시장", "국면수": 4}
