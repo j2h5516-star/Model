@@ -140,6 +140,39 @@ def test_raw_failure_texts_become_files():
     assert "1건" in summary
 
 
+def test_snapshot_carries_gross_margin():
+    """매출총이익률이 스냅샷에 담겨야 합니다 (69차).
+
+    수집기는 예전부터 보도자료·XBRL 에서 이 값을 읽고 있었는데 스냅샷에
+    담지 않아 개발 환경에서 쓸 수가 없었습니다. 저장만 안 했을 뿐입니다.
+    """
+    quarters = [{
+        "ticker": "TEST", "filing_date": "2025-01-31",
+        "announced_date": "2025-03-04", "period_label": "25 Q3",
+        "revenue": 135 * M, "op_income": 40 * M, "adj_eps": 0.45,
+        "gross_margin_pct": 63.4, "source": cfg.SRC_DIRECT,
+    }]
+    files, _ = measure_store.build_files(
+        ["TEST"], {"TEST": _fake_daily(), cfg.BENCHMARK: _fake_daily()}, [],
+        load_quarters=lambda t: quarters)
+    row = json.loads(files[f"{cfg.MEASURE_DIR}/snapshot.json"])["eps"]["TEST"][0]
+    assert row["gross_margin_pct"] == 63.4, row
+
+
+def test_missing_gross_margin_stays_none():
+    """회사가 안 줬으면 없음 그대로 — 지어내지 않습니다."""
+    quarters = [{
+        "ticker": "TEST", "filing_date": "2025-01-31",
+        "announced_date": "2025-03-04", "period_label": "25 Q3",
+        "revenue": 135 * M, "adj_eps": 0.45, "source": cfg.SRC_DIRECT,
+    }]
+    files, _ = measure_store.build_files(
+        ["TEST"], {"TEST": _fake_daily(), cfg.BENCHMARK: _fake_daily()}, [],
+        load_quarters=lambda t: quarters)
+    row = json.loads(files[f"{cfg.MEASURE_DIR}/snapshot.json"])["eps"]["TEST"][0]
+    assert row["gross_margin_pct"] is None, row
+
+
 # ---------------------------------------------------------------------------
 # 실패 원문 보관 (sec_fundamentals 쪽)
 # ---------------------------------------------------------------------------

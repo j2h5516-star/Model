@@ -110,6 +110,23 @@ def test_three_repeats_are_not_enough():
     assert all(r["revenue"] is not None for r in kept), kept
 
 
+def test_impossible_gross_margin_is_dropped():
+    """이익률은 100%를 넘을 수 없습니다 (매출총이익 ≤ 매출) — 69차."""
+    for bad in (101.0, 250.0, -150.0):
+        snap = make_snapshot(eps={"AAA": [quarter_row(gross_margin_pct=bad)]})
+        result = dataset.build(snap)
+        assert result["quarters"]["AAA"][0]["gross_margin_pct"] is None, bad
+        assert any("매출총이익률" in n for n in result["notes"]), bad
+
+
+def test_normal_gross_margin_passes():
+    """정상 범위(적자 마진 포함)는 그대로 통과해야 합니다."""
+    for ok in (63.4, 0.0, 100.0, -30.0, -100.0):
+        snap = make_snapshot(eps={"AAA": [quarter_row(gross_margin_pct=ok)]})
+        row = dataset.build(snap)["quarters"]["AAA"][0]
+        assert row["gross_margin_pct"] == ok, ok
+
+
 # ---------------------------------------------------------------------------
 # 67차 — 같은 발표일에 두 행 (배당금이 EPS 자리에 들어온 실물)
 # ---------------------------------------------------------------------------

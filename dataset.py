@@ -51,7 +51,8 @@ PER_SHARE_ABS_LIMIT = 100.0
 
 # 분기 행에서 통행시키는 칸 (measure_store.EPS_FIELDS + 가이던스 3칸)
 _NUMBER_FIELDS = ("revenue", "op_income", "adj_eps", "adjusted_ebitda",
-                  "gaap_eps", "guid_eps_low", "guid_eps_high", "guid_eps_mid",
+                  "gaap_eps", "gross_margin_pct",
+                  "guid_eps_low", "guid_eps_high", "guid_eps_mid",
                   "guid_rev_low", "guid_rev_high", "guid_rev_mid",
                   "guid_ebitda_low", "guid_ebitda_high", "guid_ebitda_mid")
 _PER_SHARE_FIELDS = ("adj_eps", "gaap_eps",
@@ -176,6 +177,18 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
                         f"{ratio * 100.0:.3f}% — 단위 착오 의심이라 없음 처리"
                     )
                     clean["adjusted_ebitda"] = None
+
+            # 매출총이익률 범위 검사 (69차). 이익률은 100%를 넘을 수 없고
+            # (매출총이익 ≤ 매출), -100% 아래면 원가가 매출의 2배를 넘는
+            # 것이라 표의 다른 숫자를 집었을 가능성이 큽니다. 고치지 않고
+            # 버립니다 (창작 금지).
+            gm = clean.get("gross_margin_pct")
+            if gm is not None and not (-100.0 <= gm <= 100.0):
+                notes.append(
+                    f"{ticker} {clean.get('period_label', '?')}: "
+                    f"매출총이익률 {gm}% 는 -100~100 범위 밖이라 없음 처리"
+                )
+                clean["gross_margin_pct"] = None
 
             # 주당 금액 상한 (2차 방어 — 위 PER_SHARE_ABS_LIMIT 주석 참조)
             for field in _PER_SHARE_FIELDS:
