@@ -277,7 +277,8 @@ def judge_leadership(timeline: list[dict], switches: list[dict],
                      inflections: list[dict],
                      confirmations: list[dict] | None = None,
                      baseline: list[float] | None = None,
-                     start_day: str | None = None) -> dict:
+                     start_day: str | None = None,
+                     stability: dict | None = None) -> dict:
     """44차 등록의 세 가설을 기록합니다 (판정은 채택 기준 그대로 적용).
 
     입력은 leadership.py 가 만든 목록입니다. 이 함수는 세지 않은 것을
@@ -306,6 +307,10 @@ def judge_leadership(timeline: list[dict], switches: list[dict],
             "완성수": 현재.get("완성수"),
             "델타폭": 현재.get("델타폭"),
             "국면수": len({r["주도"] for r in timeline if r.get("주도")}),
+            # 52차 감사의 요구 — 이 판정이 얼마나 흔들리는지를 **함께** 적는다.
+            # 없으면 사람이 "지금 주도는 X" 만 읽고 그것이 한두 종목으로
+            # 뒤집힌다는 사실을 모른다.
+            "안정성": stability,
             "판정": "판정 불가",     # 44차 ⑤ — 국면 표본으로는 채택 불가
         },
         H20_NAME: {**_verdict(switches), "사건": switches},

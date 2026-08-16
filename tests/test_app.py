@@ -302,6 +302,33 @@ def test_signal_summary_shows_exploration_when_judgment_sample_empty():
     got = app.signal_summary(entry, {}, {})
     assert "판정 표본 0건" in got and "14.0%" in got and "43" in got, got
 
+
+def test_signal_summary_always_shows_instability():
+    """주도섹터를 적을 때는 **흔들림을 반드시 함께** 적습니다 (52차 감사).
+
+    지목만 적고 흔들림을 빼면 사람이 그것을 확정된 사실로 읽습니다.
+    실측: 잣대값 6% 만 지워도 주도가 210주 중 54주(25.7%) 바뀌고,
+    지금 지목한 주도도 8번 중 4번 달라집니다.
+    """
+    entry = {
+        "현재_주도": "기기 OEM 반도체", "국면수": 18,
+        "안정성": {"판정주수": 210, "지운비율": 0.06, "반복": 8,
+                   "바뀐주_중앙값": 54, "바뀐비율_중앙값": 25.7,
+                   "마지막주_불일치": 4},
+    }
+    got = app.signal_summary(entry, {}, {})
+    assert "기기 OEM 반도체" in got
+    assert "흔들림" in got, got
+    assert "25.7%" in got and "54/210" in got, got
+    assert "8번 중 4번" in got, got
+
+
+def test_signal_summary_without_stability_still_works():
+    """안정성이 아직 없으면(옛 판정 파일) 지목만 적고 조용히 넘어갑니다."""
+    entry = {"현재_주도": "금융 중개·자본시장", "국면수": 4}
+    got = app.signal_summary(entry, {}, {})
+    assert "금융" in got and "흔들림" not in got, got
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

@@ -444,3 +444,98 @@ def evaluate_confirmations(ds: dict, events: list[dict],
                     "초과": None if excess is None else round(excess, 1),
                     "성공": None if excess is None else excess >= SWITCH_WIN_PP})
     return out
+
+
+# ---------------------------------------------------------------------------
+# ⑥ 안정성 — 이 판정이 얼마나 흔들리는가 (52차 감사의 요구)
+# ---------------------------------------------------------------------------
+# 감사단이 찾아낸 가장 무거운 사실: **데이터를 완벽히 고쳐도 판정이
+# 재현되지 않는다.** 깨끗한 잣대값 2,514개 중 무작위 6%만 지워도 주도섹터가
+# 210주 중 중앙값 54주(25.7%) 바뀐다. 원인은 표본 두께다 —
+# 주도로 뽑힌 묶음의 완성수 중앙값이 3종목으로 **문턱과 똑같고**,
+# 1위와 2위의 점수 차이 중앙값이 7.9점뿐이다.
+#
+# 그래서 주도섹터를 말할 때는 **얼마나 흔들리는지를 반드시 함께** 적는다.
+# 이것은 신호가 아니라 **그 신호를 믿어도 되는가**에 대한 사실이다.
+#
+# ⚠️ 문턱(MIN_COMPLETIONS 등)은 건드리지 않는다. 결과를 보고 문턱을
+#    만지면 사전 등록 규율 위반이다 (44차 ⑥).
+STABILITY_DROP_RATE = 0.06     # 잣대값을 이 비율만큼 무작위로 지워 본다
+STABILITY_TRIALS = 8           # 몇 번 반복하는가
+STABILITY_SEED = 20260816      # 재현 가능하게 고정 (실행마다 같은 답)
+
+
+def _drop_random_values(ds: dict, rate: float, seed: int) -> dict:
+    """잣대 칸을 무작위로 rate 만큼 지운 **사본**을 만듭니다 (원본 불변)."""
+    import random
+    rng = random.Random(seed)
+    fields = ("adj_eps", "adjusted_ebitda", "gaap_eps")
+    quarters = {}
+    for ticker, rows in ds["quarters"].items():
+        copied = []
+        for row in rows:
+            new = dict(row)
+            for field in fields:
+                if new.get(field) is not None and rng.random() < rate:
+                    new[field] = None
+            copied.append(new)
+        quarters[ticker] = copied
+    return {**ds, "quarters": quarters}
+
+
+def stability_report(ds: dict, groups: dict[str, str] | None = None,
+                     trials: int = STABILITY_TRIALS,
+                     rate: float = STABILITY_DROP_RATE) -> dict:
+    """잣대값을 조금 지워 봤을 때 주도섹터가 얼마나 바뀌는지 잽니다.
+
+    돌려주는 것 (전부 사실, 판단 아님):
+      · 바뀐주_중앙값 / 최소 / 최대  — 210주 중 몇 주가 달라졌나
+      · 마지막주_불일치 — 지금 지목한 주도가 몇 번이나 달라졌나
+      · 완성수_중앙값 · 점수차_중앙값 · 동점주 — 왜 흔들리는지의 재료
+    """
+    groups = groups or default_groups()
+    base_states = weekly_group_state(ds, groups)
+    base_line = leadership_timeline(base_states)
+    base_map = {row["주"]: row["주도"] for row in base_line}
+    base_last = base_line[-1]["주도"] if base_line else None
+
+    changed, last_mismatch = [], 0
+    for trial in range(trials):
+        shaken = _drop_random_values(ds, rate, STABILITY_SEED + trial)
+        line = leadership_timeline(weekly_group_state(shaken, groups))
+        differ = sum(1 for row in line if base_map.get(row["주"]) != row["주도"])
+        changed.append(differ)
+        if line and line[-1]["주도"] != base_last:
+            last_mismatch += 1
+
+    # 왜 흔들리는가 — 표본 두께
+    by_week: dict[str, list[dict]] = {}
+    for row in base_states:
+        by_week.setdefault(row["주"], []).append(row)
+    counts, gaps, ties = [], [], 0
+    for day, rows in by_week.items():
+        qualified = sorted((r for r in rows if r["조건충족"]),
+                           key=lambda r: -r["주도점수"])
+        if not qualified:
+            continue
+        counts.append(qualified[0]["완성수"])
+        if len(qualified) > 1:
+            gap = qualified[0]["주도점수"] - qualified[1]["주도점수"]
+            gaps.append(gap)
+            if gap == 0:
+                ties += 1
+    from statistics import median
+    return {
+        "판정주수": len(base_line),
+        "지운비율": rate,
+        "반복": trials,
+        "바뀐주_중앙값": int(median(changed)) if changed else 0,
+        "바뀐주_최소": min(changed) if changed else 0,
+        "바뀐주_최대": max(changed) if changed else 0,
+        "바뀐비율_중앙값": (round(median(changed) / len(base_line) * 100.0, 1)
+                            if changed and base_line else None),
+        "마지막주_불일치": last_mismatch,
+        "완성수_중앙값": int(median(counts)) if counts else None,
+        "점수차_중앙값": round(median(gaps), 1) if gaps else None,
+        "동점주": ties,
+    }

@@ -169,10 +169,16 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
                 ds, members.get(row["묶음"]) or [], row["주"])
             if value is not None:
                 baseline.append(value)
+        # 안정성 (52차 감사) — 잣대값을 조금 지워 봤을 때 주도가 얼마나
+        # 바뀌는가. 실패해도 판정 자체는 계속되게 따로 감쌉니다.
+        try:
+            stability = leadership.stability_report(ds)
+        except Exception as exc:
+            stability = {"오류": f"{type(exc).__name__}: {str(exc)[:120]}"}
         verdict["가설"].update(judge.judge_leadership(
             timeline, switches, inflections,
             confirmations=confirmations, baseline=baseline,
-            start_day=leadership.H19B_START_DAY))
+            start_day=leadership.H19B_START_DAY, stability=stability))
         files[f"{cfg.MEASURE_DIR}/verdict.json"] = judge.to_json(verdict)
         verdict_note = " · ".join(
             f"{name}: {entry['판정']}" for name, entry in verdict["가설"].items()

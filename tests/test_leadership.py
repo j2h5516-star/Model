@@ -144,6 +144,34 @@ def _fake_ds(n_weeks=120, n_group=10, n_rising=3, delta_up=3, stale=0):
             {t: "G" for t in tickers})
 
 
+
+def _competing_ds(n_weeks=140):
+    """주도를 다투는 **두 묶음**짜리 가짜 자료.
+
+    한 묶음이 근소하게 앞서 있어, 잣대값이 조금만 지워져도 주도가 넘어갑니다.
+    안정성 지표가 살아 있는지 가르려면 이런 판이 있어야 합니다 —
+    한 묶음짜리 판은 아무리 지워도 주도가 그대로라 지표를 못 가릅니다.
+    """
+    dates = _weekly_dates(n_weeks)
+    prices = {"SPY": {"dates": dates, "close": [100.0] * n_weeks}}
+    quarters, groups = {}, {}
+    for group, turn, members in (("A", 70, 6), ("B", 74, 6)):
+        for i in range(members):
+            name = f"{group}{i}"
+            groups[name] = group
+            if i < 4:                      # 네 종목은 정배열을 완성한다
+                prices[name] = {"dates": dates,
+                                "close": _rising(n_weeks, turn + i)}
+                quarters[name] = _quarters(dates, rising=True)
+            else:                          # 나머지는 분모만 채운다
+                prices[name] = {"dates": dates,
+                                "close": [100.0 - j * 0.01 for j in range(n_weeks)]}
+                quarters[name] = _quarters(dates, rising=False)
+    ds = {"tickers": list(groups), "benchmark": "SPY",
+          "prices": prices, "quarters": quarters}
+    return ds, groups
+
+
 def _last_state(n_rising, delta_up, n_group=10):
     ds, groups = _fake_ds(n_group=n_group, n_rising=n_rising, delta_up=delta_up)
     rows = [r for r in ld.weekly_group_state(ds, groups) if r["완성수"] > 0]
@@ -307,6 +335,52 @@ def test_confirmation_requires_majority_and_enough_decidable():
     assert ld.confirmation_events(ds, groups) == []
     ds2, groups2 = _fake_ds(n_group=10, n_rising=3, delta_up=3, stale=9)
     assert ld.confirmation_events(ds2, groups2) == []           # 판단 가능 <3
+
+
+# ---------------------------------------------------------------------------
+# 안정성 지표 (52차 감사의 요구)
+# ---------------------------------------------------------------------------
+def test_stability_report_is_reproducible():
+    """같은 자료로 두 번 재면 **같은 답**이 나와야 합니다.
+
+    안정성 지표 자체가 실행마다 흔들리면 아무것도 못 믿습니다.
+    씨앗을 고정한 이유입니다.
+    """
+    ds, groups = _competing_ds()
+    # 시행마다 결과가 갈리는 비율을 씁니다. 너무 많이 지우면 전부 같은 값으로
+    # 포화돼(전 주가 다 바뀜) 씨앗을 바꿔도 답이 같아져 시험이 못 가릅니다.
+    first = ld.stability_report(ds, groups, trials=4, rate=0.3)
+    second = ld.stability_report(ds, groups, trials=4, rate=0.3)
+    assert first["바뀐주_최소"] != first["바뀐주_최대"], (
+        f"시행끼리 결과가 같아 포화됐습니다 — 이 판으로는 못 가릅니다: {first}")
+    assert first == second, (first, second)
+
+
+def test_stability_report_does_not_touch_original():
+    """지워 보는 것은 **사본**에서만 — 원본 자료는 그대로여야 합니다."""
+    ds, groups = _competing_ds()
+    before = [r.get("adj_eps") for rows in ds["quarters"].values() for r in rows]
+    ld.stability_report(ds, groups, trials=2, rate=0.5)
+    after = [r.get("adj_eps") for rows in ds["quarters"].values() for r in rows]
+    assert before == after, "원본 분기 자료가 바뀌었습니다"
+
+
+def test_stability_worsens_as_more_is_dropped():
+    """더 많이 지울수록 더 많이 흔들려야 합니다 — 지표가 살아 있다는 증거."""
+    ds, groups = _competing_ds()
+    light = ld.stability_report(ds, groups, trials=3, rate=0.0)
+    assert light["바뀐주_중앙값"] == 0, light   # 아무것도 안 지우면 안 바뀐다
+    heavy = ld.stability_report(ds, groups, trials=3, rate=0.9)
+    assert heavy["바뀐주_중앙값"] > 0, f"많이 지워도 안 흔들립니다: {heavy}"
+
+
+def test_stability_report_reports_sample_thickness():
+    """왜 흔들리는지의 재료(완성수·점수차·동점)를 함께 돌려줍니다."""
+    ds, groups = _competing_ds()
+    report = ld.stability_report(ds, groups, trials=2, rate=0.5)
+    for key in ("판정주수", "바뀐주_중앙값", "마지막주_불일치",
+                "완성수_중앙값", "점수차_중앙값", "동점주"):
+        assert key in report, (key, report)
 
 # ---------------------------------------------------------------------------
 # 재료 계산 — 실물 자료로 불변 조건만

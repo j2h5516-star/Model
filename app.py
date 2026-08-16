@@ -173,7 +173,18 @@ def signal_summary(entry: dict, signal: dict, base: dict) -> str:
                 f"vs 기준선 {base.get('rate')}%")
     if entry.get("현재_주도") is not None or "국면수" in entry:
         leader = entry.get("현재_주도") or "없음"
-        return f"현재 지목: {leader} · 국면 {entry.get('국면수', 0)}개 (성공률 아님)"
+        line = f"현재 지목: {leader} · 국면 {entry.get('국면수', 0)}개 (성공률 아님)"
+        # 52차 감사의 요구 — 지목만 적고 흔들림을 안 적으면 사람이 그것을
+        # 확정된 사실로 읽습니다. 반드시 함께 적습니다.
+        shake = entry.get("안정성") or {}
+        if shake.get("바뀐비율_중앙값") is not None:
+            line += (
+                f"  ⚠️ 흔들림: 잣대값을 {shake.get('지운비율', 0) * 100:.0f}% 만 "
+                f"지워도 주도가 {shake['바뀐주_중앙값']}/{shake['판정주수']}주"
+                f"({shake['바뀐비율_중앙값']}%) 바뀝니다 · 지금 지목도 "
+                f"{shake.get('반복', 0)}번 중 {shake.get('마지막주_불일치', 0)}번 달라짐"
+            )
+        return line
     if entry.get("n"):
         line = f"실측 {entry.get('성공')}/{entry.get('n')}건 = {entry.get('rate')}%"
         ref = entry.get("기준선(참고)") or {}
