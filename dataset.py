@@ -194,6 +194,7 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
         # 정렬 뒤에야 "직전 4분기"를 말할 수 있으므로 여기서 누적값을 거릅니다
         _drop_cumulative_values(ticker, kept, notes)
         _drop_parse_debris(ticker, kept, notes)
+        _drop_same_day_siblings(ticker, kept, notes)
         for row in kept:
             row.pop("_raw_revenue", None)      # 내부용 표시는 밖으로 내보내지 않습니다
         cleaned[ticker] = kept
@@ -267,6 +268,63 @@ _SIBLING_REVENUE_RATIO = 100.0    # 형제 행 매출이 이 배수 이상 크�
 def _revenue_before_guard(row: dict) -> float:
     """매출 하한 가드가 지우기 **전**의 값 (없으면 지금 값)."""
     return row.get("_raw_revenue") or row.get("revenue") or 0.0
+
+
+_SAME_DAY_NOTE = (
+    "같은 발표일에 두 행이 있어 어느 쪽이 그 분기 실적인지 가릴 수 없습니다"
+)
+
+
+def _drop_same_day_siblings(ticker: str, rows: list[dict],
+                            notes: list[str]) -> None:
+    """같은 발표일 형제 행인데 **어느 쪽도 매출로 가릴 수 없으면** 둘 다 버립니다.
+
+    이 저장소는 이미 형제 행을 매출 비율(100배)로 가려냅니다
+    (`_drop_parse_debris`) — 배당금 행은 매출이 19.3 처럼 무너져 있고
+    진짜 실적 행은 17,653 이라 잘 갈립니다.
+
+    67차에 그 규칙이 **못 잡는 경우**를 찾았습니다: **양쪽 매출이 다
+    무너진 날**입니다.
+      JPM 2025-01-15 → 매출 20.3 / gaap 1.4  (배당금)
+                       매출 13.0 / gaap 4.82 (진짜 실적)
+    비율이 1.56배뿐이라 100배 규칙이 안 걸리고, 게다가 **가짜 쪽 매출이
+    더 큽니다.** 그래서 두 행이 다 남아 JPM 이익 시계열이
+    1.4 → 5.08 → 1.4 → 5.25 로 톱니가 됐습니다(TTM·신기록·델타가 무의미).
+
+    1.4·1.5 가 배당금인 근거: JPM 의 분기 배당 인상 일정
+    (1.15 → 1.25 → 1.40 → 1.50) 과 값·시점이 정확히 일치합니다.
+
+    **왜 골라서 남기지 않는가**: "큰 쪽이 진짜"는 크기 규칙이고, 54차에
+    크기 규칙으로 **진짜 실적 하락 71건을 지운** 사고가 있었습니다.
+    매출로도 못 가리는 것이 이 경우의 정의입니다. 가릴 방법이 없으면
+    **없음**으로 둡니다 — 없음은 안전하고 틀림은 위험합니다 (원칙 1).
+
+    ⚠️ 매출이 하나라도 멀쩡한 날은 건드리지 않습니다. 그 경우는 기존
+    100배 규칙의 영역이고, 그 규칙이 "비슷한 크기면 둘 다 남긴다"고
+    이미 정해 두었습니다(54차 등록).
+    """
+    by_day: dict[str, list[dict]] = {}
+    for row in rows:
+        day = row.get("announced_date")
+        if day:
+            by_day.setdefault(day, []).append(row)
+    for day, group in by_day.items():
+        if len(group) < 2:
+            continue
+        # 매출이 하한 검사를 통과한 행이 하나라도 있으면 가릴 수 있다 → 넘어감
+        if any(row.get("revenue") is not None for row in group):
+            continue
+        for row in group:
+            dropped = [f for f in _CUMULATIVE_FIELDS if row.get(f) is not None]
+            if not dropped:
+                continue
+            notes.append(
+                f"{ticker} {row.get('period_label', '?')} ({day}): "
+                "같은 발표일 형제 행인데 양쪽 매출이 다 무너져 어느 쪽이 그 "
+                f"분기 실적인지 가릴 수 없어 {'·'.join(dropped)} 없음 처리"
+            )
+            for field in dropped:
+                row[field] = None
 
 
 def _drop_parse_debris(ticker: str, rows: list[dict], notes: list[str]) -> None:

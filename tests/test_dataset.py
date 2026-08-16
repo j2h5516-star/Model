@@ -61,6 +61,99 @@ def quarter_row(**overrides) -> dict:
     return row
 
 
+
+# ---------------------------------------------------------------------------
+# 67차 — 같은 발표일에 두 행 (배당금이 EPS 자리에 들어온 실물)
+# ---------------------------------------------------------------------------
+def test_same_day_siblings_are_both_dropped():
+    """한 발표일에 잣대값 행이 둘이면 **둘 다** 버립니다.
+
+    실물(JPM 2025-04-11): gaap_eps 1.4 와 5.08 이 같은 날에 함께 있습니다.
+    1.4 는 분기 **배당금**이고(1.15→1.25→1.40→1.50 인상 일정과 일치),
+    매출도 22.6 으로 말이 안 됩니다(실제 17,653 백만). 두 행이 번갈아
+    남아 이익 시계열이 톱니가 됐습니다.
+
+    "큰 쪽이 진짜"로 고르지 않는 이유: 크기 규칙은 54차에 **진짜 실적
+    하락 71건을 지운** 사고를 냈습니다. 매출로도 못 가릅니다 — 실물에서
+    **가짜 행 매출이 더 큰** 경우가 있습니다(20.3 vs 13.0).
+    """
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2026-03-31", announced_date="2026-04-11",
+                    period_label="26 Q1", gaap_eps=5.08, adj_eps=None,
+                    revenue=13.0),
+        quarter_row(filing_date="2026-03-30", announced_date="2026-04-11",
+                    period_label="25 Q4", gaap_eps=1.40, adj_eps=None,
+                    revenue=22.6),
+    ]})
+    result = dataset.build(snap)
+    rows = result["quarters"]["AAA"]
+    assert len(rows) == 2, "행 자체는 남습니다 (이력이므로)"
+    assert all(r["gaap_eps"] is None for r in rows), rows
+    assert any("같은 발표일" in n for n in result["notes"]), result["notes"]
+
+
+def test_single_row_per_day_is_untouched():
+    """하루에 한 행이면 건드리지 않습니다 — 멀쩡한 값을 지우면 안 됩니다."""
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2026-03-31", announced_date="2026-04-11",
+                    gaap_eps=5.08, adj_eps=1.25, revenue=17_653_000_000.0),
+        quarter_row(filing_date="2026-06-30", announced_date="2026-07-11",
+                    gaap_eps=5.25, adj_eps=1.30, revenue=17_701_000_000.0),
+    ]})
+    rows = dataset.build(snap)["quarters"]["AAA"]
+    assert [r["gaap_eps"] for r in rows] == [5.08, 5.25], rows
+    assert [r["adj_eps"] for r in rows] == [1.25, 1.30], rows
+
+
+def test_rows_without_announced_date_are_not_grouped():
+    """발표일이 없는 행끼리는 같은 날로 묶으면 안 됩니다.
+
+    None 을 하나의 날짜처럼 묶으면 발표일 없는 행이 서로를 지웁니다.
+    """
+    # 매출도 무너뜨려 둡니다 — 안 그러면 매출 검사에서 먼저 걸러져
+    # 이 시험이 "발표일로 묶는가"를 가리지 못합니다 (가짜 초록불).
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2026-03-31", announced_date=None,
+                    revenue=13.0, gaap_eps=5.08),
+        quarter_row(filing_date="2026-06-30", announced_date=None,
+                    revenue=22.6, gaap_eps=5.25),
+    ]})
+    rows = dataset.build(snap)["quarters"]["AAA"]
+    assert [r["gaap_eps"] for r in rows] == [5.08, 5.25], rows
+
+
+def test_same_day_drop_is_recorded_not_silent():
+    """조용히 버리지 않습니다 — 무엇을 왜 버렸는지 notes 에 남깁니다."""
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(announced_date="2026-04-11", period_label="A",
+                    revenue=13.0, gaap_eps=5.0),
+        quarter_row(announced_date="2026-04-11", period_label="B",
+                    revenue=22.6, gaap_eps=1.4),
+    ]})
+    notes = [n for n in dataset.build(snap)["notes"] if "가릴 수 없어" in n]
+    assert len(notes) == 2, notes
+    assert any("A" in n for n in notes) and any("B" in n for n in notes), notes
+
+
+def test_one_good_revenue_sibling_is_left_to_the_ratio_rule():
+    """형제 중 매출이 멀쩡한 행이 있으면 이 가드는 손대지 않습니다.
+
+    그 경우는 기존 100배 규칙의 영역이고, 54차가 "비슷한 크기면 둘 다
+    남긴다"고 이미 정해 뒀습니다. 새 가드가 그 결정을 덮어쓰면 안 됩니다.
+    """
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2024-03-31", period_label="24 Q1",
+                    announced_date="2024-04-12", revenue=17_653.0,
+                    adj_eps=None, gaap_eps=4.45),
+        quarter_row(filing_date="2023-12-31", period_label="23 Q4",
+                    announced_date="2024-04-12", revenue=900.0,
+                    adj_eps=None, gaap_eps=1.15),
+    ]})
+    rows = {r["period_label"]: r for r in dataset.build(snap)["quarters"]["AAA"]}
+    assert rows["24 Q1"]["gaap_eps"] == 4.45, rows
+    assert rows["23 Q4"]["gaap_eps"] == 1.15, rows
+
+
 # ---------------------------------------------------------------------------
 # 값 검사 — 탈락은 "없음"으로, 고치지 않는다
 # ---------------------------------------------------------------------------
