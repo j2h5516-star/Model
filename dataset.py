@@ -34,6 +34,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import statistics
 from datetime import datetime
 
 import config as cfg
@@ -187,8 +188,55 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
             kept.append(clean)
 
         kept.sort(key=lambda r: r["filing_date"])
+        # 정렬 뒤에야 "직전 4분기"를 말할 수 있으므로 여기서 누적값을 거릅니다
+        _drop_cumulative_values(ticker, kept, notes)
         cleaned[ticker] = kept
     return cleaned
+
+
+
+# 누적(YTD·연간)값이 분기 칸에 들어온 것 (52차 감사 — 산술로 확증)
+# ---------------------------------------------------------------------------
+# 보도자료에는 "이번 분기"와 "누적 6개월/9개월/연간"이 나란히 실립니다.
+# 파서가 누적 쪽을 물면 그 분기만 몇 배로 튀고, **다음 분기에 정상으로
+# 돌아오면서 가짜 급등·급락을 한 쌍 만듭니다.** 이익 델타가 통째로 뒤집힙니다.
+#
+# 산술 지문: 누적값은 **직전 4분기의 합과 거의 같습니다**
+#   (사업이 평평하거나 완만히 자라면 연간 ≈ 최근 4분기 합)
+#   실측: QCOM 10.22 vs 9.77 · GS 30.06 vs 29.24 · MU 12.20 vs 11.28
+#
+# 판정에 쓰는 값은 **그 행보다 앞선 값들뿐**입니다 — 미래를 보지 않습니다.
+# 부호가 다르면(적자 분기) 누적이 아니므로 건드리지 않습니다.
+# 고치지 않고 버립니다 (창작 금지).
+_CUMULATIVE_FIELDS = ("adj_eps", "adjusted_ebitda", "gaap_eps")
+_CUMULATIVE_MULTIPLE = 2.5      # 지난 값들의 중앙값 대비 이 배수를 넘고
+_CUMULATIVE_TOLERANCE = 0.20    # 직전 4분기 합과 이 비율 안으로 같으면
+_CUMULATIVE_MIN_HISTORY = 4     # 비교할 지난 분기가 이만큼은 있어야 한다
+
+
+def _drop_cumulative_values(ticker: str, rows: list[dict], notes: list[str]) -> None:
+    """분기 칸에 들어온 누적(YTD·연간)값을 없음 처리합니다 (제자리 수정)."""
+    for field in _CUMULATIVE_FIELDS:
+        seen = [(index, row[field]) for index, row in enumerate(rows)
+                if row.get(field) is not None]
+        for position in range(_CUMULATIVE_MIN_HISTORY, len(seen)):
+            index, value = seen[position]
+            # 아래 `value > middle * 배수` 가 음수·0 을 이미 배제합니다.
+            # 적자 분기는 누적값일 수 없으므로 건드리지 않게 됩니다.
+            past = [v for _, v in seen[:position]]
+            middle = statistics.median(abs(v) for v in past)
+            total = sum(v for _, v in seen[position - 4:position])
+            if middle <= 0 or total <= 0:
+                continue
+            if (value > middle * _CUMULATIVE_MULTIPLE
+                    and abs(value - total) / total < _CUMULATIVE_TOLERANCE):
+                notes.append(
+                    f"{ticker} {rows[index].get('period_label', '?')}: "
+                    f"{field}={value} 는 직전 4분기 합 {total:.2f} 과 거의 같고 "
+                    f"지난 중앙값 {middle:.2f} 의 {value / middle:.1f}배 — "
+                    "누적(YTD·연간)값이 분기 칸에 들어온 것으로 보아 없음 처리"
+                )
+                rows[index][field] = None
 
 
 def _clean_prices(price_map: dict, notes: list[str]) -> dict:

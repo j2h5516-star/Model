@@ -152,6 +152,76 @@ def test_real_adjusted_ebitda_passes_unit_guard():
     assert rows[1]["adjusted_ebitda"] == 200_000_000.0
 
 
+
+def test_cumulative_value_in_quarterly_slot_is_dropped():
+    """누적(YTD·연간)값이 분기 칸에 들어온 것은 없음 처리 (52차 감사).
+
+    실물 QCOM: 분기 EPS 가 2.4~2.6 인데 2024-09-29 마감 행만 10.22 —
+    직전 4분기 합 9.77 과 거의 같다. 보도자료의 '연간' 칸을 문 것이다.
+    이런 값은 그 분기에 가짜 급등, 다음 분기에 가짜 급락을 한 쌍 만들어
+    이익 델타를 통째로 뒤집는다.
+    """
+    rows = []
+    day = 1
+    for i, value in enumerate([2.4, 2.5, 2.4, 2.6, 2.5, 2.5, 10.22, 2.6]):
+        rows.append(quarter_row(
+            filing_date=f"2024-{(i % 12) + 1:02d}-28",
+            period_label=f"Q{i}", adj_eps=value))
+    result = dataset.build(make_snapshot(eps={"AAA": rows}))
+    kept = [r["adj_eps"] for r in result["quarters"]["AAA"]]
+    assert 10.22 not in kept, kept
+    assert kept.count(2.5) == 3 and 2.6 in kept, kept   # 정상값은 그대로
+    assert any("누적" in n for n in result["notes"]), result["notes"]
+
+
+def test_growth_quarter_is_not_mistaken_for_cumulative():
+    """빠르게 크는 회사의 정상 분기를 누적으로 오인하면 안 됩니다.
+
+    직전 4분기 합과 **닮지 않으면** 건드리지 않습니다.
+    """
+    rows = []
+    for i, value in enumerate([0.10, 0.15, 0.22, 0.33, 0.50, 0.75, 1.10, 1.60]):
+        rows.append(quarter_row(
+            filing_date=f"2024-{(i % 12) + 1:02d}-28",
+            period_label=f"Q{i}", adj_eps=value))
+    kept = [r["adj_eps"] for r in
+            dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]]
+    assert kept == [0.10, 0.15, 0.22, 0.33, 0.50, 0.75, 1.10, 1.60], kept
+
+
+def test_loss_quarter_is_never_treated_as_cumulative():
+    """적자(음수) 분기는 누적값일 수 없으므로 건드리지 않습니다."""
+    rows = []
+    for i, value in enumerate([2.0, 2.1, 2.0, 2.2, 2.1, 2.0, -8.3, 2.1]):
+        rows.append(quarter_row(
+            filing_date=f"2024-{(i % 12) + 1:02d}-28",
+            period_label=f"Q{i}", adj_eps=value))
+    kept = [r["adj_eps"] for r in
+            dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]]
+    assert -8.3 in kept, kept
+
+
+def test_cumulative_guard_uses_only_past_values():
+    """판정에 쓰는 것은 그 행보다 **앞선** 값들뿐 — 미래를 보지 않습니다.
+
+    앞부분이 똑같은 두 자료를 넣되 **뒤에만** 아주 큰 값을 붙입니다.
+    미래까지 보고 중앙값을 내면 그 큰 값이 중앙값을 끌어올려 앞의 누적값이
+    살아남습니다. 앞엣값의 운명이 뒤엣값에 좌우되면 미래 엿보기입니다.
+    """
+    head = [1.0, 1.0, 1.0, 1.0, 4.2]      # 4.2 = 직전 4분기 합 4.0 과 거의 같음
+
+    def build(tail):
+        rows = [quarter_row(filing_date=f"2024-{(i % 12) + 1:02d}-28",
+                            period_label=f"Q{i}", adj_eps=v)
+                for i, v in enumerate(head + tail)]
+        got = dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]
+        return [r["adj_eps"] for r in got][:len(head)]
+
+    assert build([])[-1] is None, "누적값 4.2 를 못 잡았습니다"
+    assert build([50.0, 50.0, 50.0, 50.0])[-1] is None, (
+        "뒤에 붙은 큰 값이 앞엣값 판정을 바꿨습니다 — 미래를 보고 있습니다")
+
+
 def test_non_number_becomes_none():
     """숫자가 아닌 값(NaN·문자)은 고치지 않고 없음 처리합니다."""
     snap = make_snapshot(
