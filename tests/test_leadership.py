@@ -510,6 +510,34 @@ def test_gate_still_uses_raw_ratios():
         f"문턱 아래 값이 없어 이 검사가 무의미합니다: {sorted(shares)}")
 
 
+# ---------------------------------------------------------------------------
+# 62차 사전 등록 — H22·H23 은 "맞히는 힘"으로 판정한다
+# ---------------------------------------------------------------------------
+def test_h22_registration_constants_exist():
+    """등록문의 값이 코드에 상수로 박혀 있어야 나중에 못 바꿉니다.
+
+    문서에만 적고 코드에 없으면, 판정할 때가 됐을 때 슬쩍 달라져도
+    아무도 모릅니다.
+    """
+    assert ld.H22_START_DAY == "2026-08-16", ld.H22_START_DAY
+    assert ld.H22_SCORE_MODE == "wilson_product", ld.H22_SCORE_MODE
+    assert ld.H23_SCORE_MODE == "wilson_single", ld.H23_SCORE_MODE
+    # 등록된 방식은 실제로 돌아가는 방식이어야 합니다
+    for mode in (ld.H22_SCORE_MODE, ld.H23_SCORE_MODE):
+        assert mode in ld.SCORE_MODES, mode
+    # 기본값은 여전히 raw — 윌슨판이 표적에서 이겨야 본판이 됩니다
+    assert ld.SCORE_MODES[0] == "raw", ld.SCORE_MODES
+
+
+def test_registered_start_day_is_not_in_the_past():
+    """판정 표본 시작일이 과거면 이미 본 자료로 판정하게 됩니다 (원칙 5 위반).
+
+    H19b(2026-08-15) 선례대로, 등록일 **뒤**에 생기는 사건만 셉니다.
+    """
+    assert ld.H22_START_DAY >= ld.H19B_START_DAY, (
+        f"H22 시작일 {ld.H22_START_DAY} 이 H19b {ld.H19B_START_DAY} 보다 앞섭니다")
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
