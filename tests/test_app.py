@@ -329,6 +329,60 @@ def test_signal_summary_without_stability_still_works():
     got = app.signal_summary(entry, {}, {})
     assert "금융" in got and "흔들림" not in got, got
 
+
+# ---------------------------------------------------------------------------
+# 52차 감사 수리 ⑤ — 판정이 옛 코드로 계산됐는지 알리기
+# ---------------------------------------------------------------------------
+def test_old_code_verdict_raises_banner():
+    """판정 파일의 코드 판번호가 지금 코드와 다르면 경고합니다.
+
+    실제 사고: verdict 는 "데이터센터"를 주도로 적었는데 같은 원자료로
+    현재 코드를 돌리면 "기기 OEM 반도체"가 나왔습니다. 코드가 달랐던
+    것인데 화면에는 계산 시각만 있어 알 방법이 없었습니다.
+    """
+    got = app.verdict_code_warning({"code_rev": "47e7141"}, current="0713820")
+    assert got is not None, "옛 코드 판정인데 아무 말도 하지 않았습니다"
+    assert "47e7141" in got and "0713820" in got, got
+    assert "옛 코드" in got, got
+
+
+def test_same_code_verdict_is_silent():
+    """같은 판번호면 조용합니다 — 늘 뜨는 경고는 아무도 안 봅니다."""
+    assert app.verdict_code_warning({"code_rev": "abc1234"},
+                                    current="abc1234") is None
+
+
+def test_unknown_revision_never_warns():
+    """판번호를 못 알아낸 채 적혀 있으면 비교가 안 되니 겁주지 않습니다."""
+    assert app.verdict_code_warning({"code_rev": "알수없음"},
+                                    current="abc1234") is None
+    assert app.verdict_code_warning({"code_rev": "abc1234"},
+                                    current="알수없음") is None
+    assert app.verdict_code_warning(None, current="abc1234") is None
+
+
+def test_verdict_without_code_rev_is_flagged_as_old():
+    """판번호 칸이 아예 없으면 이 수리 이전 판정 — 옛 코드가 확실합니다.
+
+    52차가 걸린 실제 판정 파일이 바로 이 모양이었습니다. 여기서 조용히
+    넘어가면 정작 사고를 일으킨 파일을 놓칩니다.
+    """
+    got = app.verdict_code_warning({"computed_at": "2026-08-15T13:33:32Z"},
+                                   current="abc1234")
+    assert got is not None, "판번호 없는 옛 판정을 그냥 넘겼습니다"
+    assert "판번호가 없" in got, got
+
+
+def test_current_revision_defaults_to_running_code():
+    """current 를 안 주면 지금 돌고 있는 코드의 판번호를 씁니다."""
+    import judge
+    now = judge.code_revision()
+    if now == "알수없음":          # git 이 없는 환경이면 건너뜁니다
+        return
+    assert app.verdict_code_warning({"code_rev": now}) is None
+    assert app.verdict_code_warning({"code_rev": "0" * 7}) is not None
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

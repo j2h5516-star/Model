@@ -26,6 +26,7 @@ from datetime import date, timedelta
 
 import config as cfg
 import dataset
+import judge
 import measure_engine as me
 
 # 화면에 "최근 발표"로 보여 줄 기간 (표시용 — 측정 규칙 아님)
@@ -130,6 +131,52 @@ def verdict_is_v3(verdict: dict | None) -> bool:
     if not verdict or "가설" not in verdict:
         return False
     return all(name in verdict["가설"] for name in V3_HYPOTHESES)
+
+
+def verdict_code_warning(verdict: dict | None,
+                         current: str | None = None) -> str | None:
+    """판정이 **지금 코드와 다른 판**으로 계산됐으면 경고 문장, 아니면 None.
+
+    52차 감사가 찾아낸 사고: verdict.json 은 주도 섹터를 "데이터센터"로
+    적고 있었지만, 같은 원자료(snapshot)로 현재 코드를 돌리면
+    "기기 OEM 반도체"가 나왔습니다. 데이터가 아니라 **코드가 달랐던**
+    것입니다 — 51차 수리가 그 판정 계산보다 뒤였습니다. 그런데 화면에는
+    계산 시각만 있고 코드 판번호가 없어 사람이 알아챌 방법이 없었습니다.
+
+    그래서 judge 가 판정 파일에 code_rev(git 짧은 해시)를 적고,
+    화면은 그것이 지금 코드와 다르면 여기서 배너를 띄웁니다.
+
+    아무 말도 하지 않는 경우(=None):
+      - 두 판번호가 같다 (정상)
+      - 판번호를 못 알아낸 채로 적혀 있다("알수없음") → 비교할 수가
+        없으니 근거 없이 겁주지 않습니다
+
+    판번호가 **아예 없는** 판정 파일은 다릅니다. 이 수리(52차) 이전에
+    계산됐다는 뜻이므로 옛 코드인 것이 확실합니다 — 그때는 알립니다.
+    """
+    if not verdict:
+        return None
+    if current is None:
+        current = judge.code_revision()
+    tail = ("그 사이 고친 것이 판정 결과를 바꿨을 수 있습니다 — "
+            "다음 로봇 수집 때 다시 계산됩니다.")
+
+    if "code_rev" not in verdict:
+        return (
+            "⚠️ 이 판정에는 **코드 판번호가 없습니다** — 판번호를 적기 "
+            "시작한 수리(52차)보다 먼저 계산됐다는 뜻입니다. " + tail
+        )
+
+    recorded = verdict.get("code_rev")
+    unknown = (None, "", "알수없음")
+    if recorded in unknown or current in unknown:
+        return None
+    if recorded == current:
+        return None
+    return (
+        f"⚠️ 이 판정은 **옛 코드**로 계산됐습니다 "
+        f"(판정 {recorded} · 지금 코드 {current}). " + tail
+    )
 
 
 def verdict_rows(verdict: dict | None) -> list[dict]:
@@ -541,6 +588,11 @@ def main():
     if log:
         st.caption(f"로봇 마지막 수집: {str(log.get('ran_at', '?'))[:16]} UTC · "
                    f"{log.get('summary', '')}")
+    # 판정이 옛 코드로 계산됐으면 맨 위에서 알립니다 (52차 감사 수리 ⑤)
+    code_warning = verdict_code_warning(verdict)
+    if code_warning:
+        st.warning(code_warning)
+
     price_dates = ds["prices"][ds["benchmark"]]["dates"]
     st.caption(f"측정 기간: {price_dates[0]} ~ {price_dates[-1]} "
                f"(주가 {len(price_dates):,}거래일 · 약 5년) · "

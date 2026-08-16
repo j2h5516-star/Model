@@ -21,6 +21,7 @@ data/measure/verdict.json 으로 기록합니다. 수집 로봇이 매일 수집
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timezone
 
 import config as cfg
@@ -134,6 +135,8 @@ def run(events: list[dict], op_events: list[dict] | None = None) -> dict:
 
     out: dict = {
         "computed_at": datetime.now(timezone.utc).isoformat(),
+        # 어느 판 코드로 계산했는가 (52차 감사 — 낡은 판정 식별용)
+        "code_rev": code_revision(),
         "규칙": (
             "11차 사전 등록 — 채택 = 신호 윌슨 하한 > 기준선 윌슨 상한 "
             "(신규 표본, n≥10. n<10 은 판정 불가)"
@@ -338,6 +341,31 @@ def judge_leadership(timeline: list[dict], switches: list[dict],
         entry["판정"] = entry["신규(판정)"]["판정"]
         out[H19B_NAME] = entry
     return out
+
+
+
+def code_revision() -> str:
+    """지금 돌고 있는 코드의 git 판번호 (짧은 해시).
+
+    52차 감사가 찾아낸 사고: verdict.json 은 "데이터센터"를 주도로 적고
+    있는데 같은 snapshot 으로 현재 코드를 돌리면 "기기 OEM 반도체"가
+    나왔다. **데이터가 아니라 코드가 달랐기 때문**이다(51차 수리가 판정
+    계산보다 뒤였다). 그런데 화면에는 계산 시각만 있고 코드 판번호가 없어
+    사람이 알아챌 방법이 없었다.
+
+    못 알아내면 "알수없음" 을 돌려줍니다 — 지어내지 않습니다.
+    """
+    import subprocess
+    try:
+        out = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            capture_output=True, text=True, timeout=5,
+            cwd=os.path.dirname(os.path.abspath(__file__)),
+        )
+        value = out.stdout.strip()
+        return value if out.returncode == 0 and value else "알수없음"
+    except Exception:
+        return "알수없음"
 
 
 def to_json(verdict: dict) -> str:

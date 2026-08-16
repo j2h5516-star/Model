@@ -201,6 +201,58 @@ def test_leadership_can_adopt_only_with_enough_episodes():
     assert h20["ci"][0] < 50.0, h20                # 하한은 못 넘는다
     assert h20["판정"] == "미채택", h20
 
+
+# ---------------------------------------------------------------------------
+# 52차 감사 수리 ⑤ — 판정 파일에 코드 판번호를 남긴다
+# ---------------------------------------------------------------------------
+def test_verdict_records_code_revision():
+    """판정 결과에 지금 코드의 git 판번호가 들어 있어야 합니다.
+
+    없으면 나중에 "이 판정이 어느 판 코드로 나온 것인가"를 되짚을 수
+    없습니다 (52차 감사의 실제 사고).
+    """
+    out = judge.run([event(ticker=f"T{i}") for i in range(12)])
+    assert "code_rev" in out, "판정에 코드 판번호가 없습니다"
+    assert out["code_rev"] == judge.code_revision(), out["code_rev"]
+    assert out["code_rev"], "코드 판번호가 빈 값입니다"
+
+
+def test_code_revision_never_invents_a_value():
+    """git 을 못 부르면 지어내지 말고 '알수없음' 이어야 합니다.
+
+    '지어내지 않는다'는 실제로 실패시켜 봐야 확인됩니다 — 성공한 결과만
+    보면 가짜 해시를 돌려주는 코드도 통과합니다.
+    """
+    import subprocess
+    real_run = subprocess.run
+
+    class Failed:                       # git 이 오류로 끝난 척
+        returncode = 128
+        stdout = ""
+
+    try:
+        subprocess.run = lambda *a, **k: Failed()
+        assert judge.code_revision() == "알수없음", "git 실패인데 값을 지어냈습니다"
+
+        subprocess.run = lambda *a, **k: type("R", (), {"returncode": 0,
+                                                        "stdout": "  \n"})()
+        assert judge.code_revision() == "알수없음", "빈 출력인데 값을 지어냈습니다"
+
+        def boom(*a, **k):
+            raise FileNotFoundError("git 이 없는 환경")
+        subprocess.run = boom
+        assert judge.code_revision() == "알수없음", "git 이 없는데 값을 지어냈습니다"
+    finally:
+        subprocess.run = real_run
+
+    # 정상일 때는 짧은 해시 모양이어야 합니다
+    got = judge.code_revision()
+    assert isinstance(got, str) and got, got
+    if got != "알수없음":
+        assert all(c in "0123456789abcdef" for c in got), got
+        assert 6 <= len(got) <= 12, got
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
