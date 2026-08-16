@@ -1112,21 +1112,53 @@ def new_report(ticker: str) -> dict:
     }
 
 
+def _should_keep_raw(had_exhibit: bool, parsed: dict, text: str) -> bool:
+    """이 보도자료 원문을 고칠 재료로 보관할 것인가.
+
+    보관 자리는 종목당 몇 칸뿐이라 **무엇을 넣느냐가 중요합니다.**
+
+    60차 — 조건을 "조정 EPS 를 못 읽음"에서 "**잣대값을 하나도** 못 읽음"
+    으로 좁혔습니다. 잣대 사다리는 셋(조정EPS·EBITDA·GAAP EPS) 중 아무거나
+    8분기면 되는데, 옛 조건은 GAAP EPS 나 EBITDA 를 멀쩡히 읽은 원문까지
+    보관했습니다. 실측: 보관된 153건을 지금 파서로 다시 읽어 보니
+    **47건(31%)이 이미 잣대값을 읽을 수 있는 것**이었고, 그것들이 정작
+    막힌 종목이 써야 할 자리를 차지하고 있었습니다.
+
+    보도자료 첨부(EX-99)가 아니거나 실적발표로 보이지 않으면 보관하지
+    않습니다 — 파트너십 발표 같은 비실적 8-K 가 자리를 차지한 실물 사고가
+    있었습니다(LITE·COHR 2026-03-02).
+    """
+    if not had_exhibit:
+        return False
+    if any(parsed.get(f) is not None
+           for f in ("adj_eps", "adjusted_ebitda", "gaap_eps")):
+        return False
+    return _looks_like_earnings(text)
+
+
 def _keep_raw_text(report: dict, filing_date: str, url: str, text: str) -> None:
     """조정 EPS 를 읽지 못한 보도자료 원문을 진단 리포트에 남깁니다.
 
     파싱 실패 사례가 가장 값진 디버깅 자료입니다 — 지금까지 파서가 계속
     어긋난 이유가 "가짜(지어낸) 예제로만 테스트해서"였기 때문입니다.
-    저장소가 무한히 커지지 않게 종목당 건수와 글자 수에 상한을 둡니다.
+    저장소가 무한히 커지지 않게 종목당 **건수·글자수·총량** 셋 다 막습니다.
+
+    총량 상한이 왜 따로 필요한가 (60차): 건수만 막으면 최악의 경우
+    12건 × 120,000자 = 1.4MB 가 한 종목에 쌓입니다. 실패 종목이 66개면
+    저장소가 93MB 까지 부풀 수 있습니다. 실측 평균은 23KB 라 보통은
+    문제가 안 되지만, **보통을 믿고 상한을 안 두면 언젠가 터집니다.**
     """
     kept = report.setdefault("raw_texts", [])
     if len(kept) >= cfg.MEASURE_RAW_MAX:
+        return
+    piece = text[: cfg.MEASURE_RAW_TEXT_CAP]
+    if sum(len(k["text"]) for k in kept) + len(piece) > cfg.MEASURE_RAW_TOTAL_CAP:
         return
     kept.append(
         {
             "filing_date": filing_date,
             "url": url,
-            "text": text[: cfg.MEASURE_RAW_TEXT_CAP],
+            "text": piece,
         }
     )
 
@@ -1210,7 +1242,7 @@ def fetch_earnings_8k(
         # ⚠️ 실적발표로 보이는 것만 남깁니다. 실제 저장해 보니 파트너십 발표 같은
         #    비실적 8-K(EPS 가 원래 없는 문서)가 보관 상한(종목당 2건)을 차지해
         #    정작 파서가 진 실적 원문이 못 담겼습니다 (실물: LITE·COHR 2026-03-02).
-        if had_exhibit and parsed["adj_eps"] is None and _looks_like_earnings(text):
+        if _should_keep_raw(had_exhibit, parsed, text):
             _keep_raw_text(
                 report, str(filing.filing_date), _safe_filing_url(filing), text
             )

@@ -144,14 +144,85 @@ def test_raw_failure_texts_become_files():
 # 실패 원문 보관 (sec_fundamentals 쪽)
 # ---------------------------------------------------------------------------
 def test_keep_raw_text_respects_caps():
-    """종목당 건수 상한과 글자 수 상한을 지켜야 저장소가 무한히 안 커짐."""
+    """종목당 건수 상한과 글자 수 상한을 지켜야 저장소가 무한히 안 커짐.
+
+    60차에 총량 상한이 생겨서, 상한 셋이 각각 언제 무는지 나눠 봅니다.
+    보통 크기(23KB) 원문에서는 **건수 상한**이 먼저 뭅니다.
+    """
     report = sf.new_report("TEST")
-    long_text = "가" * (cfg.MEASURE_RAW_TEXT_CAP + 500)
+    normal = "가" * 23_000
     for i in range(cfg.MEASURE_RAW_MAX + 3):
-        sf._keep_raw_text(report, f"2025-0{i + 1}-01", "url", long_text)
+        sf._keep_raw_text(report, f"2025-{i + 1:02d}-01", "url", normal)
     assert len(report["raw_texts"]) == cfg.MEASURE_RAW_MAX
-    for kept in report["raw_texts"]:
-        assert len(kept["text"]) == cfg.MEASURE_RAW_TEXT_CAP
+
+    # 한 건이 글자 수 상한을 넘으면 잘라서 담습니다
+    one = sf.new_report("TEST2")
+    sf._keep_raw_text(one, "2025-01-01", "url",
+                      "가" * (cfg.MEASURE_RAW_TEXT_CAP + 500))
+    assert len(one["raw_texts"][0]["text"]) == cfg.MEASURE_RAW_TEXT_CAP
+
+
+def test_only_total_parse_failures_are_kept():
+    """잣대값을 하나라도 읽었으면 보관하지 않습니다 (60차).
+
+    보관 자리는 종목당 몇 칸뿐입니다. 실측: 보관된 153건 중 47건(31%)이
+    이미 잣대값을 읽을 수 있는 것이었고, 그 탓에 정작 잣대가 막힌
+    9종목(CAT·PG·VRTX…)은 고칠 원문이 손에 없었습니다.
+    """
+    earnings = ("Acme Corp Reports Third Quarter Results. "
+                "Revenue was $1,234.5 million for the quarter ended "
+                "September 30, 2025. Net income was $100.0 million.")
+    none_read = {"adj_eps": None, "adjusted_ebitda": None, "gaap_eps": None}
+    assert sf._should_keep_raw(True, none_read, earnings)
+
+    # 셋 중 하나라도 읽혔으면 자리를 쓰지 않습니다
+    for field in ("adj_eps", "adjusted_ebitda", "gaap_eps"):
+        parsed = dict(none_read, **{field: 1.23})
+        assert not sf._should_keep_raw(True, parsed, earnings), field
+
+
+def test_non_earnings_filings_do_not_take_a_slot():
+    """실적발표가 아닌 8-K 는 보관하지 않습니다 (LITE·COHR 실물 사고)."""
+    none_read = {"adj_eps": None, "adjusted_ebitda": None, "gaap_eps": None}
+    partnership = ("Acme Corp Announces Strategic Partnership With Globex "
+                   "to expand its distribution network in Europe.")
+    assert not sf._should_keep_raw(True, none_read, partnership)
+    # 보도자료 첨부(EX-99)가 아예 없으면 파서가 진 것이 아닙니다
+    earnings = ("Acme Corp Reports Third Quarter Results. Revenue was "
+                "$1,234.5 million for the quarter ended September 30, 2025.")
+    assert not sf._should_keep_raw(False, none_read, earnings)
+
+
+def test_raw_cap_is_big_enough_to_repair_a_blocked_ticker():
+    """상한이 너무 작으면 고칠 재료가 안 모입니다 (60차에 2 → 12).
+
+    잣대가 막힌 종목은 분기가 14~16개 비어 있었는데 보관된 원문은 2~3건
+    뿐이라 파서를 고칠 수가 없었습니다. 최소 3년치(12분기)는 담겨야 합니다.
+    """
+    assert cfg.MEASURE_RAW_MAX >= 12, cfg.MEASURE_RAW_MAX
+
+
+def test_raw_total_size_is_capped_per_ticker():
+    """건수만 막으면 한 종목이 1.4MB 까지 쌓입니다 (60차).
+
+    12건 × 120,000자 = 1.4MB, 실패 종목 66개면 저장소 93MB.
+    실측 평균은 23KB 라 보통은 문제가 안 되지만, **보통을 믿고 상한을
+    안 두면 언젠가 터집니다.**
+    """
+    report = sf.new_report("TEST")
+    big = "가" * cfg.MEASURE_RAW_TEXT_CAP
+    for i in range(cfg.MEASURE_RAW_MAX):
+        sf._keep_raw_text(report, f"2025-01-{i + 1:02d}", "url", big)
+    total = sum(len(k["text"]) for k in report["raw_texts"])
+    assert total <= cfg.MEASURE_RAW_TOTAL_CAP, total
+    # 건수 상한에 닿기 전에 총량으로 먼저 막혔어야 합니다
+    assert len(report["raw_texts"]) < cfg.MEASURE_RAW_MAX, len(report["raw_texts"])
+
+    # 보통 크기(23KB)면 12건이 다 들어가야 합니다 — 너무 빡빡하면 안 됩니다
+    normal = sf.new_report("TEST2")
+    for i in range(cfg.MEASURE_RAW_MAX):
+        sf._keep_raw_text(normal, f"2025-01-{i + 1:02d}", "url", "가" * 23_000)
+    assert len(normal["raw_texts"]) == cfg.MEASURE_RAW_MAX, len(normal["raw_texts"])
 
 
 # ---------------------------------------------------------------------------
