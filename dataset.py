@@ -235,8 +235,8 @@ _CUMULATIVE_TOLERANCE = 0.20    # 직전 4분기 합과 이 비율 안으로 같
 _CUMULATIVE_MIN_HISTORY = 4     # 비교할 지난 분기가 이만큼은 있어야 한다
 
 
-def _drop_cumulative_values(ticker: str, rows: list[dict], notes: list[str]) -> None:
-    """분기 칸에 들어온 누적(YTD·연간)값을 없음 처리합니다 (제자리 수정)."""
+def _one_cumulative_pass(ticker: str, rows: list[dict], notes: list[str]) -> bool:
+    """누적값을 **한 칸만** 찾아 없음 처리하고, 지웠으면 True 를 돌려줍니다."""
     for field in _CUMULATIVE_FIELDS:
         seen = [(index, row[field]) for index, row in enumerate(rows)
                 if row.get(field) is not None]
@@ -258,6 +258,38 @@ def _drop_cumulative_values(ticker: str, rows: list[dict], notes: list[str]) -> 
                     "누적(YTD·연간)값이 분기 칸에 들어온 것으로 보아 없음 처리"
                 )
                 rows[index][field] = None
+                return True
+    return False
+
+
+def _drop_cumulative_values(ticker: str, rows: list[dict], notes: list[str]) -> None:
+    """분기 칸에 들어온 누적(YTD·연간)값을 없음 처리합니다 (제자리 수정).
+
+    **왜 한 번이 아니라 변화가 없을 때까지 반복하는가** (73차, 실물 VZ·GS):
+      이 검사는 "직전 4분기 합과 거의 같은가"를 봅니다. 그런데 그 직전
+      4분기 안에 **이미 오염된 값이 끼어 있으면 합이 부풀어** 진짜 연간값이
+      통과해 버립니다. 오염이 오염을 가려 주는 것입니다.
+
+      실물 VZ(조정 EPS): 1월 발표 행마다 연간값이 들어와 있습니다 —
+        5.18 · 4.71 · 4.59 · 4.71 (분기 실제는 1.2 안팎)
+      두 번째 4.71 을 잴 때 직전 4분기 합이 5.18+1.2+1.21+1.22 = 8.81 로
+      부풀어 "합과 다르다"고 판정돼 살아남았습니다. 앞의 5.18 을 먼저
+      지우고 다시 재면 합이 4.95 가 되어 4.71 이 제대로 걸립니다.
+
+      그래서 **앞에서부터 한 칸씩 지우고 매번 다시 재기**를, 더 지울 것이
+      없을 때까지 반복합니다. 문턱은 하나도 바꾸지 않았습니다 — 같은 자를
+      끝까지 대 보는 것뿐입니다 (원칙 6: 신호보다 장치를 먼저 의심).
+
+      실측(73차): 한 번만 재면 38칸, 반복하면 57칸 (10종목 19칸 추가 —
+      GS 연간 EPS 22.87/40.54/51.32, DELL 7.99/7.98/8.38 등).
+
+    한 번에 한 칸씩만 지우므로 칸 수만큼 돌면 반드시 멈춥니다. 그래도
+    무한 반복을 원천 봉쇄하려고 상한을 걸어 둡니다.
+    """
+    limit = len(rows) * len(_CUMULATIVE_FIELDS) + 1
+    for _ in range(limit):
+        if not _one_cumulative_pass(ticker, rows, notes):
+            return
 
 
 

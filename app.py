@@ -24,6 +24,7 @@ import json
 import os
 from datetime import date, timedelta
 
+import audit_data
 import config as cfg
 import dataset
 import judge
@@ -604,6 +605,25 @@ def main():
     st.caption(f"측정 기간: {price_dates[0]} ~ {price_dates[-1]} "
                f"(주가 {len(price_dates):,}거래일 · 약 5년) · "
                "전망: 다음 1분기 (가이던스·컨센서스)")
+
+    # 재료가 얼마나 더러운지 감추지 않습니다 (73차 — 65차 §④ 등록 방침).
+    # 자동으로 지우지 않고 **세어서 보여 주기만** 합니다: 지울 규칙을
+    # 만들면 진짜 실적까지 지운다는 것을 66차·73차에 실측했습니다.
+    with st.expander("재료 상태 (수집 데이터 오염 조사)"):
+        st.caption(audit_data.one_line(ds["quarters"]))
+        튄칸 = audit_data.spike_cells(ds["quarters"])[:15]
+        if 튄칸:
+            st.caption("이웃 분기보다 크게 튄 칸 (큰 것부터 15개) — 참고용:")
+            # 휴대폰 폭(412px)에서 열이 가려지지 않도록 4열로 줄이고,
+            # 앞·뒤 이웃은 한 칸에 모아 적습니다.
+            짧은칸 = {"adj_eps": "조정EPS", "adjusted_ebitda": "EBITDA",
+                    "gaap_eps": "GAAP"}
+            st.dataframe(pd.DataFrame([
+                {"종목": r["종목"], "칸": 짧은칸.get(r["칸"], r["칸"]),
+                 "값": f"{r['값']:,.2f}",
+                 "앞→뒤": f"{r['앞']:,.2f} → {r['뒤']:,.2f}",
+                 "배수": f"{r['배수']:.1f}배"} for r in 튄칸
+            ]), width="stretch", hide_index=True)
 
     # =====================================================================
     # 0. 최상단 메인 — 주도 교체 확인 신호 (H14, 38차 등록)

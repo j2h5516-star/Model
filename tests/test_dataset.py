@@ -390,6 +390,42 @@ def test_cumulative_guard_uses_only_past_values():
 
 
 
+def test_yearly_values_hidden_behind_each_other_are_all_dropped():
+    """오염이 오염을 가려 주는 것을 뚫어야 합니다 (73차, 실물 VZ·GS).
+
+    VZ 는 **1월 발표 행마다 연간 EPS** 가 들어와 있습니다 (분기 실제는
+    1.2 안팎인데 4.7~5.2). 검사는 "직전 4분기 합과 거의 같은가"를 보는데,
+    그 직전 4분기 안에 앞의 연간값이 끼어 있으면 합이 8.4 로 부풀어
+    "합과 다르다"고 판정돼 뒤의 연간값이 살아남습니다.
+
+    그래서 한 칸 지울 때마다 처음부터 다시 재야 합니다. 한 번만 재는
+    코드로 되돌리면 뒤의 두 칸(4.80 · 4.80)이 살아남아 이 검사가
+    빨간 불이 됩니다.
+    """
+    분기 = [1.18, 1.22, 1.19, 1.21]        # 네 분기 합이 정확히 4.80
+    값들 = (분기 + [4.80]                    # ← 연간값 ①
+            + [1.18, 1.22, 1.19] + [4.80]   # ← 연간값 ② (①에 가려짐)
+            + [1.21, 1.18, 1.22] + [4.80])  # ← 연간값 ③ (②에 가려짐)
+    def 날짜(i):
+        """13개 행이 필요하므로 해를 넘겨 가며 날짜를 만듭니다."""
+        return f"{2023 + i // 12}-{i % 12 + 1:02d}-28"
+
+    rows = [quarter_row(filing_date=날짜(i), announced_date=날짜(i),
+                        # 매출·날짜는 분기마다 달라야 합니다 (자리채움 가드)
+                        revenue=1_000_000.0 + i * 7_000,
+                        period_label=f"Q{i}", adj_eps=v)
+            for i, v in enumerate(값들)]
+
+    result = dataset.build(make_snapshot(eps={"AAA": rows}))
+    kept = [r["adj_eps"] for r in result["quarters"]["AAA"]]
+
+    assert 4.80 not in kept, f"연간값이 살아남았습니다: {kept}"
+    assert kept.count(None) == 3, f"세 칸 모두 지워져야 합니다: {kept}"
+    assert len([v for v in kept if v is not None]) == 10, kept
+    누적메모 = [n for n in result["notes"] if "누적" in n]
+    assert len(누적메모) == 3, 누적메모
+
+
 def test_parse_debris_row_is_dropped():
     """같은 발표일의 형제 행보다 매출이 100배 작으면 파싱 잔해로 보고 버립니다.
 
