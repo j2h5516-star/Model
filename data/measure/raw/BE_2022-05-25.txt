@@ -1,0 +1,139 @@
+# 조정 EPS 파싱 실패 원문 — BE 2022-05-25
+# 출처: https://www.sec.gov/Archives/edgar/data/1664703/000119312522159844/d278706d8k.htm
+
+EX-99.1
+
+  <img alt="Slide 1" src="g278706ex99_1s1g1.jpg">  WED, MAY 25, 2022 Exhibit 99.1
+ 
+ <img alt="Slide 2" src="g278706ex99_1s2g1.jpg">  Forward-looking statements and non-GAAP financial measures This presentation contains "forward-looking" statements that are based on our beliefs and assumptions and on information currently available to us. Forward-looking statements include all statements other than statements of historical fact, including information or predictions concerning our future financial performance and financial outlook for fiscal year 2022; our forecasted growth rate and financial projections for 2026 and 2031; our business plans and objectives; forecasted cost reduction in manufacturing, installing and servicing our product and resulting future delivered cost of electricity; potential growth and market opportunities in our base business as well as new international markets; potential growth and market opportunities in new product markets, including the carbon capture, waste to energy and marine markets; our expectations around hydrogen-powered fuel cells, electrolyzers, and the hydrogen market; our competitive position and available addressable market; future technological or market trends; our anticipated roadmap; and statements regarding new applications across the energy landscape. Forward-looking statements are subject to known and unknown risks, uncertainties, assumptions, and other factors including, but not limited to, our limited operating history, the emerging nature of the distributed generation market and rapidly evolving market trends, the significant losses we have incurred in the past, our ability to service our existing debt obligations, our ability to succeed in the the hydrogen fuel cell market, the significant upfront costs of our Energy Servers and R&D costs of new products to address emerging markets, delays in the development and introduction of new products or updates to existing products, market acceptance and adoption of our products, our ability to continue to drive cost reductions, the risk of manufacturing defects, the accuracy of our estimates regarding the useful life of our Energy Servers, the availability of rebates, tax credits and other tax benefits, our reliance on tax equity financing arrangements, our ability to successfully enter new international markets, our reliance upon a limited number of customers, our lengthy sales and installation cycle, construction, utility interconnection and other delays and cost overruns related to the installation of our Energy Servers, potential supply chain constraints, business and economic conditions and growth trends in commercial and industrial energy markets, global economic conditions and uncertainties in the geopolitical environment, overall electricity generation market, the COVID 19 pandemic and other risks and uncertainties. Moreover, we operate in very competitive and rapidly changing environments, and new risks may emerge from time to time. It is not possible for us to predict all risks, nor can we assess the impact of all factors on our business or the extent to which any factor, or combination of factors, may cause actual results to differ materially from those contained in any forward-looking statements we may make. You should not rely upon forward-looking statements as predictions of future events. Although we believe that the expectations reflected in our forward-looking statements are reasonable, we cannot guarantee that the future results, performance, or events and circumstances described in the forward-looking statements will be achieved or occur. Moreover, neither we, nor any other person, assume responsibility for the accuracy and completeness of the forward-looking statements. We undertake no obligation to update any forward-looking statements for any reason after the date of this presentation to conform these statements to actual results or to changes in our expectations, except as required by law. These forward-looking statements should also be read in conjunction with the other cautionary statements that are included elsewhere in our public filings, including under the heading “Risk Factors” in our Annual Report on Form 10-K for the year ended December 31, 2021, our Quarterly Report on Form 10-Q for the quarter ended March 31, 2022 and subsequent filings with the SEC filed from time-to-time. This presentation also includes certain historical, and in prospective, non-GAAP financial measures related to gross margin and operating margin. These non-GAAP financial measures are in addition to, and not a substitute for or superior to, measures of financial performance prepared in accordance with U.S. GAAP. There are a number of limitations related to the use of these non-GAAP financial measures versus their nearest GAAP equivalents. For example, other companies may calculate non-GAAP financial measures differently or may use other measures to evaluate their performance, all of which could reduce the usefulness of our non-GAAP financial measures as tools for comparison. A reconciliation of the historical non-GAAP measures used in this presentation to our GAAP results for the relevant period can be found in the Appendix to this presentation. With respect to our expectations regarding “”2022 Financial Outlook” and other long-term financial targets, we are not able to provide a quantitative reconciliation of non-GAAP gross margin and operating margin measures to the corresponding gross profit and gross profit percentage without unreasonable efforts. 
+ 
+ <img alt="Slide 3" src="g278706ex99_1s3g1.jpg"> 
+
+ <img alt="Slide 4" src="g278706ex99_1s4g1.jpg">  Company Vision: Mission Decarbonization KR Sridhar Founder, Chairman & CEO
+ 
+ <img alt="Slide 5" src="g278706ex99_1s5g1.jpg">  12 9 3 6 
+ 
+ <img alt="Slide 6" src="g278706ex99_1s6g1.jpg">  Value of CO2 Reduction Time (Years) Time value of carbon $ $ $ $ $ $ $ $ $ $
+ 
+ <img alt="Slide 7" src="g278706ex99_1s7g1.jpg">  EU wants to allow natural gas, nuclear in green investment The European Commission wants to include nuclear energy and natural gas in its plans for building a climate-friendly future “Four technology value chains contribute about half of the cumulative CO2 savings: technologies to widely electrify end-use sectors; carbon capture, utilization and storage (CCUS); hydrogen and hydrogen-related fuels; and bioenergy.”
+ 
+ <img alt="Slide 8" src="g278706ex99_1s8g1.jpg">  Decarbonization Platform Based on mitigation potential from the SDS. IEA (2020), Energy Technology Perspectives 2020, IEA, Paris https://www.iea.org/reports/energy-technology-perspectives-2020 Curbing Methane Emissions, McKinsey Aligned with a net-zero future Shift to Cleaner Fuels Electrification Hydrogen Waste to Energy Carbon Capture Eliminate T&D Losses. DC Power Firming of Power
+ 
+ <img alt="Slide 9" src="g278706ex99_1s9g1.jpg"> 
+
+ <img alt="Slide 10" src="g278706ex99_1s10g1.jpg">  Decarbonization Resiliency 
+ 
+ <img alt="Slide 11" src="g278706ex99_1s11g1.jpg">  Resiliency Decarbonization 
+ 
+ <img alt="Slide 1" src="g278706ex99_1s12g1.jpg">
+
+ <img alt="Slide 13" src="g278706ex99_1s13g1.jpg">
+
+ <img alt="Slide 14" src="g278706ex99_1s14g1.jpg">  Electrolyzer Mode Fuel Cell Mode Chemical Energy Electrical Energy Reversible technology Electrical Energy Chemical Energy 
+ 
+ <img alt="Slide 15" src="g278706ex99_1s15g1.jpg">  A flexible energy platform Inputs Natural Gas Biogas Hydrogen Intermittent Energy Sources Electricity Outputs AC Power DC Power Flexible Voltage Flexible Current Hydrogen Water Oxygen
+ 
+ <img alt="Slide 16" src="g278706ex99_1s16g1.jpg">  ~10 years > 65 million fuel cells > 2 million stacks > 30,000 server modules > 700 installations > 20 billion kWh Transistor Server Blade Integrated Chip Rack Data Center Driving innovation: computing and digital power Power for the Digital Economy Fuel Cell Server Module Stack System Power Center 
+ 
+ <img alt="Slide 17" src="g278706ex99_1s17g1.jpg">  ~10 years > 65 million fuel cells > 2 million stacks > 30,000 server modules > 700 installations > 20 billion kWh Driving innovation: computing and digital power Power for the Digital Economy Fuel Cell Server Module Stack System Power Center 
+ 
+ <img alt="Slide 18" src="g278706ex99_1s18g1.jpg">  3 kW/m2 8 kW/m2 9 kW/m2 11 kW/m2 229 kg/kW 109 kg/kW 87 kg/kW 70 kg/kW 26 kW/m2 37 kW/m2 41 kg/kW 32 kg/kW 200 kW 250 kW 100 kW 500 kW 5 kW Power density Material leverage 750 kW 12x 8x Energy Server evolution
+ 
+ <img alt="Slide 19" src="g278706ex99_1s19g1.jpg">  Kaiser Permanente Blue chip customers AT&T APPLE DISNEY COSTCO
+ 
+ <img alt="Slide 20" src="g278706ex99_1s20g1.jpg">  SK partnership November 2018: Partnership Formalized
+ 
+ <img alt="Slide 21" src="g278706ex99_1s21g1.jpg">  SK partnership KOEN Bundang Size: 8.35 MW COD: December 2018 KT Daeduk Size: 900 kW COD: September 2019 2018 2019
+ 
+ <img alt="Slide 22" src="g278706ex99_1s22g1.jpg">  SK partnership Hwasung Size: 19.8 MW COD: May 2020 EWP Donghae Size: 15 MW COD: October 2020 2020
+ 
+ <img alt="Slide 23" src="g278706ex99_1s23g1.jpg">  SK partnership Paju Size: 8.1 MW COD: October 2020 EWP Honam Size: 15 MW COD: December 2021 2021
+ 
+ <img alt="Slide 24" src="g278706ex99_1s24g1.jpg">  SK partnership 99.85% fleet availability factor and 100% economic evaluation win rate in Korean utility RFPs - October ‘18 to October ’21 SK Ecoplant expanded the partnership by: Making a significant investment in Bloom Executing a $4.5B take-or-pay contract Opportunities in hydrogen fuel cells and electrolyzers to further help Korea achieve its aggressive Hydrogen Economy Roadmap goals
+ 
+ <img alt="Slide 25" src="g278706ex99_1s25g1.jpg">  Hydrogen in Korea Hydrogen SOFC Pilot Size: 100 kW COD: April 2021 Electrolyzer Pilot Size: 130 kW COD: January 2022 2022 
+ 
+ <img alt="Slide 26" src="g278706ex99_1s26g1.jpg">  Global expansion Stationary fuel cells over the last 3 years United States Korea Europe 80% market share 80%+ market share Next frontier
+ 
+ <img alt="Slide 27" src="g278706ex99_1s27g1.jpg"> 
+
+ <img alt="Slide 28" src="g278706ex99_1s28g1.jpg">  Greg Cameron EVP and Chief Financial Officer Financial Overview: A Plan For Profitable Growth 
+ 
+ <img alt="Slide 29" src="g278706ex99_1s29g1.jpg">  Decarbonization Platform The platform enables our profitable growth strategy: Smart market expansion Scaling Up for cost efficiency Simplifying our operations Power Generation Hydrogen/ Carbon Capture Marine 
+ 
+ <img alt="Slide 30" src="g278706ex99_1s30g1.jpg">  Leading Decarbonization Platform Solid Oxide Platform Shift to Cleaner Fuels Electrification Hydrogen Waste to Energy Carbon Capture 
+ 
+ <img alt="Slide 31" src="g278706ex99_1s31g1.jpg"> 
+
+ <img alt="Slide 32" src="g278706ex99_1s32g1.jpg">  Cost down opportunity Product Install Service % of Revenue1 ~65% ~15% ~20% Expected Annual Reduction Avenues for Cost Reduction Increasing power density Reducing complexity Leveraging volumes Partnerships Leveraging technological improvements Increasing life and reducing cost Leveraging performance data Reuse, refurbish, recycle ~10-15% ~10% ~12%
+ 
+ <img alt="Slide 33" src="g278706ex99_1s33g1.jpg">  14¢ 9¢ Tolling Fuel US PPA Example Cost ($/kWh) Note: Cost/kWh is the cost of electricity for a 15 year PPA for similar installations.. Delivered cost of electricity
+ 
+ <img alt="Slide 34" src="g278706ex99_1s34g1.jpg">  Reaffirming 2022 financial outlook 1With respect to Bloom’s expectations regarding its 2022 Outlook, Bloom is not able to provide a quantitative reconciliation of non-GAAP gross margin and non-GAAP operating margin measures to the corresponding GAAP measures without unreasonable efforts. Metric 2022 Outlook Total Revenue $1.1-$1.15B Product & Service Revenue ~$1B Non-GAAP Gross Margin %1 ~24% Non-GAAP Operating Margin %1 ~1% Cash Flows from Operations Positive ü ü ü ü ü
+ 
+ <img alt="Slide 35" src="g278706ex99_1s35g1.jpg">  $232 $366 2017 2021 $808 $972 Fiscal Year Revenue ($MM) Product & Service Install & Electricity 36% CAGR 28% CAGR Total Growth since the IPO (3%) 22% 2017 2021 Non-GAAP Gross Margin % +25 pts 1Please reference appendix for GAAP to Non-GAAP reconciliations
+ 
+ <img alt="Slide 36" src="g278706ex99_1s36g1.jpg">  Bloom’s forecasted growth rate $2.5-3B $8-10B 2021 2026 E 2031 E $1-2B $6-8B Power Gen (SOFC) $1-2B $4-5B $1B $15-20B 30-35% Total Company CAGR Marine 25-30% CAGR Decarbonizing Technologies +5pp CAGR Power Gen Power gen includes Product, Install, Electricity & Service for our current SOFC business including natural gas, renewable fuels and hydrogen Decarbonizing technologies includes sales for Electrolyzers & Utility-scale Carbon Capture Marine represents the future SOFC business on the Marine platform.
+ 
+ <img alt="Slide 37" src="g278706ex99_1s37g1.jpg">  1.With respect to Bloom’s expectations regarding its 2022 Outlook, Bloom is not able to provide a quantitative reconciliation of non-GAAP gross margin and non-GAAP operating margin measures to the corresponding GAAP measures without unreasonable efforts. 30% - 35% Revenue Growth (through 2031) Leverage Core Platform Across Applications and Geographies CAGR Long-term growth model 30% 15% Non-GAAP Gross Margin1 (by 2025) Increasing Volumes, Lower Costs, Pricing Power Non-GAAP Operating Margin1 (by 2025) Platform Technology Enables Asymmetric Investment to Payoff Ratio
+ 
+ <img alt="Slide 38" src="g278706ex99_1s38g1.jpg"> 
+
+ <img alt="Slide 39" src="g278706ex99_1s39g1.jpg">  Leveraging Across Markets and Applications Mature, Proven Technology Cash Generative Leading energy platform 
+ 
+ <img alt="Slide 40" src="g278706ex99_1s40g1.jpg">  Smart Market Expansion Sharelynn Moore Market Development and Chief Marketing Officer
+ 
+ <img alt="Slide 41" src="g278706ex99_1s41g1.jpg">  Decarbonization Platform Smart Market Expansion Tailored solutions Value Driven: Resiliency Predictability Sustainability Expand with partners Power Generation Hydrogen/ Carbon Capture Marine 
+ 
+ <img alt="Slide 42" src="g278706ex99_1s42g1.jpg">  1. According to The Hydrogen Analysis Resource Center’s FY21Q4 stationary fuel cell data > Over 80% market share1 Leader in deployed MW Technology leader Low environmental impact Easy install, low maintenance Fuel-flexible High efficiency Lower CO2, no air pollution, no noise Highest availability of any power technology RSG, H2, biomethane Market Leadership 
+ 
+ <img alt="Slide 43" src="g278706ex99_1s43g1.jpg">  Power Generation Microgrids Primary Power Waste to Energy Utility-Scale Power Hydrogen/Carbon Capture Electrolyzers: Green Hydrogen Electrolyzers: Pink Hydrogen SOFC with CCUS: Net-Zero Electricity Marine Three businesses focused on decarbonization TAM $70 BILLION TAM $340 BILLION TAM $1.4 TRILLION Auxiliary Power Hotel Load Propulsion: SOFC & Batteries Fuel-Flexible Platform 34%
+ 
+ <img alt="Slide 44" src="g278706ex99_1s44g1.jpg">  Roadmap update International Announce new SK type partner in Europe First deployments Ramp Hydrogen CCUS Manufacture demo systems Demonstration projects First commercial projects Ramp Biogas Marine Demonstration hardware Begin commercial sales First commercial projects Ramp US C&I (Target Selling States) 2021 2022 2023 2024 2025 
+ 
+ <img alt="Slide 45" src="g278706ex99_1s45g1.jpg"> 
+
+ <img alt="Slide 46" src="g278706ex99_1s46g1.jpg">  Increasing need for resiliency Predictability - escalating grid costs, time to power Sustainability Increasing demand Hydrogen/ Carbon Capture Marine Power Generation 
+ 
+ <img alt="Slide 47" src="g278706ex99_1s47g1.jpg">  Packaged Servers Rapid installation Capacity when needed Bloom is Ready to Deliver Power Now Time to power: fast and dependable “First, we needed a solution that would deliver power in months, not years. Second, we wanted to decrease our overall carbon footprint. Bloom delivered on both fronts.” –CTO, recent customer Order to power: 9 months Power Generation 
+ 
+ <img alt="Slide 48" src="g278706ex99_1s48g1.jpg">  Packaged Servers Time to power: fast and dependable “First, we needed a solution that would deliver power in months, not years. Second, we wanted to decrease our overall carbon footprint. Bloom delivered on both fronts.” –CTO, recent customer Order to power: 9 months Power Generation 
+ 
+ <img alt="Slide 49" src="g278706ex99_1s49g1.jpg">  Bloom’s Value Proposition Alternative to methane flaring Improve LCFS value Resiliency for critical infrastructure Growing Market Opportunity 15,000 wastewater treatment plants 10X increase in biofuels plants this decade Waste to energy expands solutions Power Generation 
+ 
+ <img alt="Slide 50" src="g278706ex99_1s50g1.jpg">  Hydrogen & Carbon Capture Rick Beuttel Hydrogen Business 
+ 
+ <img alt="Slide 51" src="g278706ex99_1s51g1.jpg">  Power Generation Marine Platform superiority for net-zero Leveraging competitive advantage Hydrogen Production Most efficient electrolyzer on market today Carbon Capture Proven technology Superior economics Hydrogen & Carbon Capture 
+ 
+ <img alt="Slide 52" src="g278706ex99_1s52g1.jpg">  75% of green hydrogen projects are a good fit for high efficiency solid oxide Excellent Fit Refining Ammonia Methanol Iron & Steel Synfuels Biofuels Nuclear & Hydro Power Likely Fit Non-Nuclear or Hydro Power “Other Industry” Less Likely Fit Mobility Residential & Commercial Heat 1. Announced projects refer to all projects with an assigned end-use sector in The International Energy Agency’s October 2021 Hydrogen Projects Database. Several projects do not have assigned end-use sectors and are not included above. Without knowing the sector, we cannot determine if the project is an excellent, likely or less likely fit for Bloom. 52% 26% 22% Hydrogen & Carbon Capture 
+ 
+ <img alt="Slide 53" src="g278706ex99_1s53g1.jpg">  Alkaline: 54.0 kWh/kg PEM: 49.9 kWh/kg Solid Oxide: 45.0 kWh/kg Solid Oxide with Steam: 39.6 kWh/kg Levelized Cost of Hydrogen ($/kg)1 Electrolyzer Type Starting Efficiency SOECs offer lowest-cost hydrogen Assumptions: Funded by project finance at 8% WACC, 98% capacity factor, 30-year plant lifetime, publicly released cost and technical values, includes impacts of replacement capex and degradation as appropriate. High efficiency Proven performance Manufacturing platform Modular approach $ / kg H2 Hydrogen & Carbon Capture 
+ 
+ <img alt="Slide 54" src="g278706ex99_1s54g1.jpg">  Pathway to scale Key Steps Product developed/launched: Small scale demonstrations: 10MW demonstrations: 2022 Large orders: starting H2 2023
+ 
+ <img alt="Slide 55" src="g278706ex99_1s55g1.jpg">  Anode Exhaust Sequestration Utilization Upstream Downstream (Illustrative) 95% Purity CO2 Drying No NOx, SOx, or particulates Carbon capture 15x higher CO2 concentration; 16x less mass flow 240x combined advantage Hydrogen & Carbon Capture 
+ 
+ <img alt="Slide 56" src="g278706ex99_1s56g1.jpg">  Low cost, zero-carbon, 24/7 power Simpler carbon capture from power generation Scale to drive further cost efficiency Low barriers to siting Cost of combine cycle source: Lazard’s 2021 Levelized Cost of Energy, Cost of Combine Cycle + CCUS source: Global CCS Institute, The Costs of CO2 Capture, Transport and Storage. Bloom’s CCUS costs include 45Q Tax Credit Economic, zero-carbon power 6¢/kwh 10¢/kwh 6.5¢/kwh Hydrogen & Carbon Capture 
+ 
+ <img alt="Slide 57" src="g278706ex99_1s57g1.jpg">  Marine & International Tim Schweikert International Business and Marine
+ 
+ <img alt="Slide 58" src="g278706ex99_1s58g1.jpg">  A new market to meet IMO goals Marine Hydrogen/ Carbon Capture Power Generation Platform Advantage No NOx, SOx, PM, methane slip Future Proof: LNG today, net zero fuels tomorrow Efficiency: 20-30% more efficient vs ICE, more efficient vessel designs 
+ 
+ <img alt="Slide 59" src="g278706ex99_1s59g1.jpg">  Go to Market Launch Segment Cruise hotel load applications Expand Freight vessel generator replacement Partnerships Ship builders, ancillary equipment providers Marine 30% NEW VESSELS IN 2021 POWERED BY LNG 
+ 
+ <img alt="Slide 60" src="g278706ex99_1s60g1.jpg">  Global expansion Stationary fuel cells over the last 3 years United States Korea Europe 80% market share 80%+ market share Next frontier 
+ 
+ <img alt="Slide 61" src="g278706ex99_1s61g1.jpg">  Europe Market Drivers Time to Power: 3-7 years Subsidies: 75% efficiency requires CHP Future Proof: fuel flexibility Energy Security: expedited H2 transition High efficiency: lower LCoE, increased gas prices Net Zero by 2050 Roadmap First Win:+15MW industrial application +200MW SOFC pipeline: Italy, UK, Germany, Ireland Partnerships: project development, financing, EPC’s, solution integrators Hydrogen: Spain, France, UK, Germany Building Capacity: senior leaders installed in Germany, UK, France Marine 
+ 
+ <img alt="Slide 62" src="g278706ex99_1s62g1.jpg">  Driving Capacity Up & Cost Down Greg Cameron, Chief Financial Officer Glen Griffiths, Operations and Services Satish Chitoori, Procurement and Supply Chain Carl Cottuli, Global Engineering 
+ 
+ <img alt="Slide 63" src="g278706ex99_1s63g1.jpg">  Greg Cameron EVP and Chief Financial Officer Key Takeaways 
+ 
+ <img alt="Slide 64" src="g278706ex99_1s64g1.jpg">  Q&A We will now take your questions
+ 
+ <img alt="Slide 65" src="g278706ex99_1s65g1.jpg"> 
+
+ <img alt="Slide 66" src="g278706ex99_1s66g1.jpg">  Appendix 
+ 
+ <img alt="Slide 67" src="g278706ex99_1s67g1.jpg">  GAAP to Non-GAAP reconciliation: Gross margin $ in millions 2017 2021 Revenue $366 $972 GAAP gross profit ($16) $197 GAAP gross margin % (4%) 20% Stock-based compensation expense – COGS $6 $14 Non-GAAP gross profit ($10) $211 Non-GAAP gross margin % (3%) 22%
+
