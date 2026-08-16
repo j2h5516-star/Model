@@ -94,7 +94,52 @@ def _measurable_from(ds: dict, ticker: str) -> str | None:
 # ---------------------------------------------------------------------------
 # ① 매주 묶음 상태 (H19 의 재료)
 # ---------------------------------------------------------------------------
-def weekly_group_state(ds: dict, groups: dict[str, str] | None = None) -> list[dict]:
+# ---------------------------------------------------------------------------
+# 주도점수를 매기는 세 가지 방식 (57차 등록 — 기본값은 바뀌지 않는다)
+# ---------------------------------------------------------------------------
+# 왜 필요한가: 이 장치는 매주 **최고점 하나**를 뽑는다. 그런데 완성밀도도
+# 델타동반도 **비율**이라, 분모가 얇으면 값이 크게 튄다. 최고점 뽑기에서는
+# 평균이 높은 쪽이 아니라 **잘 튀는 쪽**이 이긴다.
+#
+# 얼마나 심한가 (57차 실측): 160종목을 섹터와 **무관하게** 같은 크기의
+# 묶음에 무작위로 재배치해도, 9종목 이하 묶음이 주도 주의 중앙 76.6%를
+# 가져간다. 섹터 정보가 0인데도 그렇다 — 장치의 성질이다.
+#
+# 그래서 "표본이 얇으면 잘한 것을 곧이곧대로 믿지 않고 깎아서 본다"를
+# 점수에 넣는다. 이 저장소가 채택 기준에서 이미 쓰는 **윌슨 95% 하한**을
+# 그대로 가져다 쓴다 (새 문턱·새 손잡이를 만들지 않는다).
+#
+# ⚠️ 기본값은 "raw" — 지금까지와 **글자 그대로 같다.** 나머지 둘은 사전
+#    등록(H22·H23) 뒤 새 데이터로만 판정한다. 5년 표본에서 잰 결과는
+#    전부 탐색이며 채택 근거가 아니다 (원칙 5).
+SCORE_MODES = ("raw", "wilson_product", "wilson_single")
+
+
+def _score(mode: str, count: int, usable: int,
+           up: int, decidable: int) -> float | None:
+    """주도점수. count/usable = 완성밀도, up/decidable = 델타동반.
+
+    · raw            — 완성밀도 × 델타동반 ÷ 100 (지금까지의 방식)
+    · wilson_product — 두 비율을 각각 윌슨 하한으로 깎은 뒤 곱한다 (H22)
+    · wilson_single  — 실은 비율이 **하나**다. 델타를 못 잰 완성을 관측된
+                       비율로 안분하면 점수 = (실효적중수 ÷ 판단가능) 이다.
+                       그 하나에만 윌슨을 씌운다 (H23).
+    """
+    if decidable <= 0 or usable <= 0:
+        return None
+    if mode == "raw":
+        return round(count / usable * 100.0 * (up / decidable), 1)
+    import judge
+    if mode == "wilson_product":
+        return round(judge.wilson_interval(count, usable)[0]
+                     * judge.wilson_interval(up, decidable)[0] / 100.0, 1)
+    if mode == "wilson_single":
+        return round(judge.wilson_interval(count * up / decidable, usable)[0], 1)
+    raise ValueError(f"모르는 점수 방식: {mode}")
+
+
+def weekly_group_state(ds: dict, groups: dict[str, str] | None = None,
+                       score_mode: str = "raw") -> list[dict]:
     """[{주, 묶음, 완성수, 완성밀도, 델타동반, 주도점수, 델타폭, 조건충족}]
 
     · 완성수   = 최근 13주 안의 정배열 완성 종목 수
@@ -153,8 +198,9 @@ def weekly_group_state(ds: dict, groups: dict[str, str] | None = None) -> list[d
             # → 판단 가능한 완성이 MIN_COMPLETIONS 미만이면 **판단 불가**로
             #   두어 조건을 충족시키지 않습니다 (이 파일의 다른 곳과 같은 규칙).
             decidable = [row for row in recent if row[2] is not None]
+            up = sum(1 for row in decidable if row[2])
             share = (
-                sum(1 for row in decidable if row[2]) / len(decidable) * 100.0
+                up / len(decidable) * 100.0
                 if len(decidable) >= MIN_COMPLETIONS else None
             )
             # 델타폭 — 묶음 전체 기준 (H21)
@@ -180,7 +226,11 @@ def weekly_group_state(ds: dict, groups: dict[str, str] | None = None) -> list[d
                 "판단가능": len(usable),
                 "완성밀도": round(density, 1),
                 "델타동반": None if share is None else round(share, 1),
-                "주도점수": round(density * share / 100.0, 1) if share is not None else None,
+                # 관문(조건충족)은 늘 생비율로 판단합니다 — 사전 등록 문턱은
+                # 손대지 않고, **순위를 매기는 점수만** 방식을 고릅니다.
+                "주도점수": (None if share is None else
+                             _score(score_mode, count, len(usable),
+                                    up, len(decidable))),
                 "델타폭": None if breadth is None else round(breadth, 1),
                 "조건충족": ok,
             })
@@ -450,10 +500,26 @@ def evaluate_confirmations(ds: dict, events: list[dict],
 # ⑥ 안정성 — 이 판정이 얼마나 흔들리는가 (52차 감사의 요구)
 # ---------------------------------------------------------------------------
 # 감사단이 찾아낸 가장 무거운 사실: **데이터를 완벽히 고쳐도 판정이
-# 재현되지 않는다.** 깨끗한 잣대값 2,514개 중 무작위 6%만 지워도 주도섹터가
-# 210주 중 중앙값 54주(25.7%) 바뀐다. 원인은 표본 두께다 —
-# 주도로 뽑힌 묶음의 완성수 중앙값이 3종목으로 **문턱과 똑같고**,
-# 1위와 2위의 점수 차이 중앙값이 7.9점뿐이다.
+# 재현되지 않는다.** 실제로 쓰이는 잣대값 2,490개 중 무작위 6%만 지워도
+# 주도섹터가 210주 중 중앙값 54주(25.7%) 바뀐다.
+#
+# ⚠️ 57차 정정 — 여기에 적혀 있던 원인 설명이 **틀렸었다.**
+#   옛 주석: "원인은 표본 두께다 (주도 묶음 완성수 중앙 3 = 문턱과 같고,
+#             1·2위 점수차 중앙 7.9)"
+#   실행값: 완성수 중앙 6 · 점수차 중앙 7.8 (52차 감사단의 숫자를 그대로
+#           옮겨 적고 우리 장치 출력으로 검산하지 않은 탓).
+#   그리고 원인 자체가 두께가 아니다 — 잣대를 6% 지워도 **완성수·완성밀도·
+#   판단가능 종목수가 바뀐 칸은 0개**이고, 바뀌는 것은 델타동반뿐이다.
+#   완성은 주가 정배열로만 정해지므로 잣대 삭제가 밀도에 닿을 길이 없다.
+#   → 흔들림의 원인은 **델타동반의 분모**(델타를 잴 수 있는 완성 수,
+#     중앙 4 · 주도 묶음은 3)이지 묶음 종목 수가 아니다.
+#     이 둘은 서로 다른 분모다 (57차에서 섞어 쓴 것을 바로잡음).
+#
+# 참고 — _drop_random_values 는 잣대 3종을 모두 지우지만, 종목마다 실제로
+# 쓰는 잣대는 사다리로 하나만 정해진다. 그래서 "284칸 삭제"라고 적으면
+# 오해를 부른다: 판정에 닿는 것은 그중 152칸이다. 다만 삭제가 무작위라
+# 분자·분모가 같은 비율로 줄어 **실효 선량은 2,490칸의 6.10%** 로 의도한
+# 6% 와 같다 (감사단은 "2배 부풀림"이라고 했으나 검산 결과 아니었다).
 #
 # 그래서 주도섹터를 말할 때는 **얼마나 흔들리는지를 반드시 함께** 적는다.
 # 이것은 신호가 아니라 **그 신호를 믿어도 되는가**에 대한 사실이다.

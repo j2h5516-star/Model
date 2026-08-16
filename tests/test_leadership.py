@@ -415,6 +415,101 @@ def test_small_groups_are_undecidable_on_real_data():
         assert row["판단가능"] >= ld.MIN_MEMBERS, row
 
 
+
+# ---------------------------------------------------------------------------
+# 57차 등록 — 주도점수 방식 갈래 (기본값은 바뀌지 않는다)
+# ---------------------------------------------------------------------------
+def test_raw_mode_is_the_default_and_unchanged():
+    """기본값 raw 는 옛 공식(완성밀도 × 델타동반 ÷ 100) 그대로여야 합니다.
+
+    갈래를 넣으면서 기본 동작이 바뀌면 지난 5년 판정이 전부 달라집니다.
+    그래서 공식뿐 아니라 **인자를 안 줬을 때 무엇이 쓰이는지**까지 봅니다 —
+    공식만 검사하면 기본값을 몰래 바꿔도 초록불이 그대로입니다.
+    """
+    # 완성 3/판단가능 10 = 밀도 30% · 델타 2/3 = 66.7% → 30 × 66.7 / 100 = 20.0
+    assert ld._score("raw", 3, 10, 2, 3) == 20.0
+    assert ld._score("raw", 4, 4, 4, 4) == 100.0      # 전원 완성·전원 상승
+    assert ld._score("raw", 3, 4, 2, 3) == 50.0       # 4종목 묶음의 산술 바닥
+
+    # 인자를 안 주면 raw 와 같고, 윌슨과는 달라야 합니다
+    ds, groups = _competing_ds()
+    default = [r["주도점수"] for r in ld.weekly_group_state(ds, groups)]
+    raw = [r["주도점수"] for r in ld.weekly_group_state(ds, groups, score_mode="raw")]
+    wil = [r["주도점수"] for r in
+           ld.weekly_group_state(ds, groups, score_mode="wilson_product")]
+    assert default == raw, "기본값이 raw 가 아닙니다"
+    assert default != wil, "raw 와 윌슨이 구분되지 않아 이 검사가 무의미합니다"
+
+
+def test_wilson_modes_shrink_thin_samples_more():
+    """같은 비율이라도 표본이 두꺼우면 덜 깎입니다 — 그게 요점입니다."""
+    for mode in ("wilson_product", "wilson_single"):
+        thin = ld._score(mode, 3, 4, 3, 3)        # 75% × 100%, 표본 4
+        thick = ld._score(mode, 15, 20, 15, 15)   # 75% × 100%, 표본 20
+        assert thin is not None and thick is not None
+        assert thick > thin, f"{mode}: 두꺼운 쪽 {thick} 이 얇은 쪽 {thin} 보다 커야 함"
+        # 생비율은 둘 다 75.0 으로 **같습니다** — 깎기 전에는 구분이 없었다는 뜻
+    assert ld._score("raw", 3, 4, 3, 3) == ld._score("raw", 15, 20, 15, 15)
+
+
+def test_wilson_modes_never_exceed_raw():
+    """윌슨 하한은 관측값보다 클 수 없습니다 (하한이니까)."""
+    for count, usable, up, dec in ((3, 4, 3, 3), (6, 20, 4, 6), (10, 12, 8, 10)):
+        raw = ld._score("raw", count, usable, up, dec)
+        for mode in ("wilson_product", "wilson_single"):
+            got = ld._score(mode, count, usable, up, dec)
+            assert got <= raw, f"{mode} {got} 이 생값 {raw} 보다 큽니다"
+
+
+def test_unknown_score_mode_is_refused():
+    """모르는 방식을 조용히 raw 로 처리하면 잘못된 판정이 조용히 섞입니다."""
+    try:
+        ld._score("대충아무거나", 3, 10, 2, 3)
+    except ValueError:
+        return
+    raise AssertionError("모르는 방식인데 값을 돌려줬습니다")
+
+
+def test_score_mode_reaches_weekly_state():
+    """갈래가 실제로 weekly_group_state 까지 연결돼 있는지 (실행 증명).
+
+    상수만 만들어 두고 배선을 안 하면 아무 효과가 없습니다 — 실제로
+    다른 값이 나오는지 확인합니다.
+    """
+    ds, groups = _competing_ds()
+    raw = ld.weekly_group_state(ds, groups, score_mode="raw")
+    wil = ld.weekly_group_state(ds, groups, score_mode="wilson_product")
+    pairs = [(a["주도점수"], b["주도점수"]) for a, b in zip(raw, wil)
+             if a["주도점수"] is not None]
+    assert pairs, "점수가 있는 칸이 하나도 없습니다"
+    assert any(a != b for a, b in pairs), "갈래가 배선되지 않았습니다"
+    # 관문은 방식과 무관해야 합니다 (사전 등록 문턱 불변)
+    assert [a["조건충족"] for a in raw] == [b["조건충족"] for b in wil]
+
+
+def test_gate_still_uses_raw_ratios():
+    """점수 방식을 바꿔도 조건충족(관문)은 생비율로만 판단해야 합니다.
+
+    문턱은 사전 등록 상수입니다. 점수 방식에 딸려 문턱까지 움직이면
+    등록문 위반인데, 화면에는 티가 나지 않습니다.
+
+    검사가 갈리려면 **문턱 근처에 걸친 판**이 있어야 합니다 —
+    델타동반이 33.3%(3개 중 1개 상승)인 자료를 씁니다. 50% 문턱에는
+    못 미치므로 어떤 방식에서도 관문을 통과해선 안 됩니다.
+    """
+    ds, groups = _fake_ds(n_group=10, n_rising=3, delta_up=1)
+    shares = set()
+    for mode in ld.SCORE_MODES:
+        st = ld.weekly_group_state(ds, groups, score_mode=mode)
+        for row in st:
+            if row["델타동반"] is not None:
+                shares.add(row["델타동반"])
+            assert not row["조건충족"], (
+                f"{mode}: 델타동반 {row['델타동반']}% 인데 관문을 통과했습니다")
+    assert any(10.0 <= s < ld.DELTA_SHARE_MIN for s in shares), (
+        f"문턱 아래 값이 없어 이 검사가 무의미합니다: {sorted(shares)}")
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
