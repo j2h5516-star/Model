@@ -755,6 +755,40 @@ def test_eps_search_never_crosses_a_line():
     assert got is None, got
 
 
+def test_label_on_a_heading_line_still_finds_the_next_line_value():
+    """이름이 **제목 줄**이고 값이 다음 줄에 오는 형식도 읽어야 합니다.
+
+    실물 HPE 2026-03-09 — 74차 전수 비교에서 이 형식 2건을 잃는 것을
+    보고 탐색 범위를 "같은 줄"에서 "같은 문단"으로 넓혔습니다.
+    한쪽만 막으면 반대로 넘어집니다.
+    """
+    text = ("Diluted net earnings per share (\u201cEPS\u201d): \n"
+            "\u25e6GAAP of $0.31, down $0.13 from the prior-year period\n")
+    got = sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True)
+    assert got == 0.31, got
+
+
+def test_comparison_to_a_prior_fiscal_year_is_not_annual_context():
+    """"in the fourth quarter of fiscal year 2022" 는 **비교 대상**입니다.
+
+    실물 NTAP — 이것까지 "연간"으로 보면 바로 뒤의 진짜 분기값 1.54 를
+    버리고, 같은 줄 끝의 환율 영향 0.08 을 뭅니다. 74차 전수 비교가
+    잡아낸 제 실수입니다.
+    """
+    line = ("\u2022Earnings per share: GAAP net income per share6 of $1.13 "
+            "compared to $1.14 in the fourth quarter of fiscal year 2022; "
+            "non-GAAP net income per share of $1.54 compared to $1.42 in the "
+            "fourth quarter of fiscal year 2022. The year-over-year "
+            "fluctuations include an unfavorable impact of approximately "
+            "$0.08 from foreign currency exchange rate changes.\n")
+    assert sf.find_eps_value(line, sf.LABELS_ADJUSTED_EPS) == 1.54
+
+    # 반대쪽: 줄이 "Fiscal year 2023 …" 으로 **시작**하면 그 줄은 연간입니다
+    연간줄 = ("\u2022Fiscal year 2023 GAAP net income per share of $5.79; "
+           "fiscal year 2023 non-GAAP net income per share of $5.59\n")
+    assert sf.find_eps_value(연간줄, sf.LABELS_ADJUSTED_EPS) is None
+
+
 def test_normal_quarterly_sentence_still_reads(): 
     """멀쩡한 분기 문장은 그대로 읽혀야 합니다 (한쪽만 막으면 안 됨)."""
     for 문장, 답 in (

@@ -475,7 +475,21 @@ _SHARE_COUNT_LOOKBACK = 60
 # 이름 앞(full year/fiscal year) 또는 값 바로 뒤(for the year ended /
 # for the twelve months ended)에 이 말이 있으면 그 자리는 분기가 아닙니다.
 # **추측이 아니라 원문이 스스로 밝힌 사실**이라 안전합니다.
+# ⚠️ 이름 **앞쪽 되돌아보기**에 쓰는 것은 좁게 잡아야 합니다.
+#    "fiscal year 2022" 는 연간값 표시가 아니라 **비교 대상**으로 늘 나옵니다:
+#      "GAAP net income per share of $1.13 compared to $1.14 in the fourth
+#       quarter of **fiscal year 2022**; non-GAAP net income per share of $1.54"
+#    이것까지 연간이라 보면 진짜 분기값 1.54 를 버립니다 (실물 NTAP —
+#    74차 전수 비교에서 실제로 그렇게 됐고, 0.08(환율 영향)을 물었습니다).
 _ANNUAL_BEFORE_RE = re.compile(
+    r"\bfull[-\s]?year\b|\bfor\s+the\s+(?:full\s+)?year\b"
+    r"|\btwelve\s+months\b|\bfiscal\s+year\s+ended\b",
+    re.I,
+)
+# 줄머리에서는 넓게 봐도 됩니다 — 줄이 "Fiscal year 2023 …" 으로 **시작**
+# 하면 그 줄은 연간 실적 줄입니다 ("Fourth quarter of fiscal year 2023 …"
+# 처럼 분기로 시작하는 줄은 맨 앞이 안 맞아 걸리지 않습니다).
+_ANNUAL_LINE_HEAD_RE = re.compile(
     r"\bfull[-\s]?year\b|\bfor\s+the\s+(?:full\s+)?year\b"
     r"|\btwelve\s+months\b|\bfiscal\s+year\s+(?:20\d{2}|ended)\b",
     re.I,
@@ -503,6 +517,14 @@ _ANNUAL_LINE_HEAD = 24   # 줄머리에서 이만큼 안에 "Full-year" 가 있�
 # 늘려도 되는 이유: 아래에서 탐색을 **같은 줄 안으로** 못박았기 때문에,
 # 횟수를 늘려도 문단을 건너뛰어 엉뚱한 숫자로 갈 수가 없습니다.
 _EPS_RETRY = 10
+
+# 이름 뒤 숫자를 어디까지 찾을 것인가 (74차)
+#   · 빈 줄(문단 끝)을 넘지 않는다
+#   · 그 안에서도 이 글자 수까지만 (한 문장에 연간·전년·분기가 줄줄이
+#     이어지는 GS 형식이 약 120자라 넉넉히 잡되, 문단을 건너뛸 만큼
+#     길지는 않게)
+_EPS_SPAN = 300
+_BLANK_LINE_RE = re.compile(r"\n[ \t]*\n")
 
 
 def find_eps_value(
@@ -587,7 +609,7 @@ def find_eps_value(
             # (EPS) of $5.06 … adjusted EPS1 … of $5.18"). 이름이 줄머리에서
             # 멀어 위의 60자 되돌아보기로는 닿지 않습니다. 줄머리 쪽만
             # 짧게 확인합니다 — 문장 중간의 'full year' 은 보지 않습니다.
-            if _ANNUAL_BEFORE_RE.match(
+            if _ANNUAL_LINE_HEAD_RE.match(
                 text[_line_start:_line_start + _ANNUAL_LINE_HEAD].lstrip("•·-– \t")
             ):
                 continue
@@ -623,14 +645,22 @@ def find_eps_value(
                 continue   # 괄호형인데 값을 못 읽으면 이 자리는 건너뜁니다
 
             search_from = label_match.end()
-            # 탐색은 **이름과 같은 줄 안에서만** 합니다 (74차 — 실물 IPGP).
+            # 탐색은 **같은 문단 안에서만** 합니다 (74차 — 실물 IPGP).
             #   각주 "… excluded from the calculation of **adjusted EPS**,
-            #   stock based compensation of $11.0 million …" 뒤로 줄과 문단을
-            #   넘어 300자 뒤의 "**Exhibit 99.1**" 을 물어 조정 EPS 가 99.10 이
-            #   됐습니다. 진짜 EPS 문장은 이름과 숫자가 늘 같은 줄에 있습니다.
-            line_end = text.find("\n", label_match.end())
-            if line_end == -1:
-                line_end = len(text)
+            #   stock based compensation of $11.0 million …" 뒤로 문단을 넘어
+            #   300자 뒤의 "**Exhibit 99.1**"(공시 번호)을 물어 조정 EPS 가
+            #   99.10 이 됐습니다.
+            #
+            # ⚠️ "같은 **줄**"로 못박으면 너무 좁습니다. 이름이 **제목 줄**이고
+            #    값이 다음 줄에 오는 형식이 실제로 흔합니다 (실물 HPE:
+            #    "net earnings per share (“EPS”):⏎◦GAAP of $0.31"). 74차 전수
+            #    비교에서 이 형식 2건을 잃는 것을 보고 문단 단위로 넓혔습니다.
+            #
+            # 문단의 끝 = **빈 줄**. 거기에 글자 수 상한을 함께 겁니다.
+            line_end = min(label_match.end() + _EPS_SPAN, len(text))
+            blank = _BLANK_LINE_RE.search(text, label_match.end(), line_end)
+            if blank:
+                line_end = blank.start()
             for _ in range(_EPS_RETRY):
                 parsed = _parse_number_at(text, search_from)
                 if parsed is None:
