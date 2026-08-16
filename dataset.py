@@ -126,6 +126,9 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
             # 주당·백만 단위 착오 3건 실측)은 없음으로. 이 유니버스에 분기
             # 매출 1만 달러 미만 회사는 없습니다.
             if clean.get("revenue") is not None and clean["revenue"] < 10_000:
+                # 잔해 판정은 "형제 행보다 매출이 100배 작은가"를 보는데,
+                # 여기서 먼저 지워 버리면 비교할 값이 사라집니다. 기억해 둡니다.
+                clean["_raw_revenue"] = clean["revenue"]
                 notes.append(
                     f"{ticker} {clean.get('period_label', '?')}: "
                     f"매출 {clean['revenue']} 은 자릿수가 무너진 값이라 없음 처리"
@@ -190,6 +193,9 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
         kept.sort(key=lambda r: r["filing_date"])
         # 정렬 뒤에야 "직전 4분기"를 말할 수 있으므로 여기서 누적값을 거릅니다
         _drop_cumulative_values(ticker, kept, notes)
+        _drop_parse_debris(ticker, kept, notes)
+        for row in kept:
+            row.pop("_raw_revenue", None)      # 내부용 표시는 밖으로 내보내지 않습니다
         cleaned[ticker] = kept
     return cleaned
 
@@ -237,6 +243,61 @@ def _drop_cumulative_values(ticker: str, rows: list[dict], notes: list[str]) -> 
                     "누적(YTD·연간)값이 분기 칸에 들어온 것으로 보아 없음 처리"
                 )
                 rows[index][field] = None
+
+
+
+# 같은 발표일에 두 행이 있고 한쪽 매출만 무너진 경우 (52차 감사 — 원문 확증)
+# ---------------------------------------------------------------------------
+# 실적 보도자료 한 장에서 두 행이 만들어질 때가 있습니다. 한쪽은 진짜 실적이고,
+# 다른 한쪽은 파서가 **배당금·주식수·수익률 표**를 실적으로 오인한 잔해입니다.
+# 잔해 쪽은 매출이 함께 무너져 있어 구별할 수 있습니다.
+#
+# 실물 (JPM, 원문 확증): 같은 발표일 2024-04-12 에
+#   · 매출 17,653 · gaap_eps 4.45   ← 진짜 분기 실적
+#   · 매출     19.3 · gaap_eps 1.15   ← **분기 배당금**이 EPS 칸에 들어옴
+# 이 잔해가 남아 있으면 JPM 델타 9쌍이 전부 "하락"으로 읽힙니다.
+#
+# ⚠️ "매출이 작다"만으로 자르면 안 됩니다. 매출을 **백만 달러 단위**로 적는
+#    회사(AMD 4,313 · MCHP 1,649)의 정상 행까지 지웁니다 — 실측 172칸.
+#    그래서 **같은 발표일에 100배 이상 큰 매출을 가진 형제 행이 있을 때만**
+#    자릅니다. 고치지 않고 버립니다 (창작 금지).
+_SIBLING_REVENUE_RATIO = 100.0    # 형제 행 매출이 이 배수 이상 크면 잔해로 본다
+
+
+def _revenue_before_guard(row: dict) -> float:
+    """매출 하한 가드가 지우기 **전**의 값 (없으면 지금 값)."""
+    return row.get("_raw_revenue") or row.get("revenue") or 0.0
+
+
+def _drop_parse_debris(ticker: str, rows: list[dict], notes: list[str]) -> None:
+    """같은 발표일의 형제 행보다 매출이 100배 이상 작은 행의 값을 버립니다."""
+    by_day: dict[str, list[dict]] = {}
+    for row in rows:
+        day = row.get("announced_date")
+        if day:
+            by_day.setdefault(day, []).append(row)
+    for day, group in by_day.items():
+        if len(group) < 2:
+            continue
+        revenues = [_revenue_before_guard(r) for r in group]
+        biggest = max(revenues)
+        if biggest <= 0:
+            continue
+        for row in group:
+            revenue = _revenue_before_guard(row)
+            if not (0 < revenue < biggest / _SIBLING_REVENUE_RATIO):
+                continue
+            dropped = [f for f in _CUMULATIVE_FIELDS if row.get(f) is not None]
+            if not dropped:
+                continue
+            notes.append(
+                f"{ticker} {row.get('period_label', '?')} ({day}): "
+                f"같은 발표일 형제 행의 매출 {biggest:,.0f} 에 견줘 이 행 매출은 "
+                f"{revenue} — 배당금·주식수 표를 실적으로 오인한 잔해로 보아 "
+                f"{'·'.join(dropped)} 없음 처리"
+            )
+            for field in dropped:
+                row[field] = None
 
 
 def _clean_prices(price_map: dict, notes: list[str]) -> dict:

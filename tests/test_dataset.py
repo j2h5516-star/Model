@@ -222,6 +222,67 @@ def test_cumulative_guard_uses_only_past_values():
         "뒤에 붙은 큰 값이 앞엣값 판정을 바꿨습니다 — 미래를 보고 있습니다")
 
 
+
+def test_parse_debris_row_is_dropped():
+    """같은 발표일의 형제 행보다 매출이 100배 작으면 파싱 잔해로 보고 버립니다.
+
+    실물 JPM(원문 확증): 같은 발표일에
+      · 매출 17,653 · gaap_eps 4.45  ← 진짜 분기 실적
+      · 매출     19.3 · gaap_eps 1.15  ← **분기 배당금**이 EPS 칸에 들어옴
+    이 잔해가 남으면 JPM 델타 9쌍이 전부 '하락'으로 읽힙니다.
+    """
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2024-03-31", period_label="24 Q1",
+                    announced_date="2024-04-12", revenue=17_653.0,
+                    adj_eps=None, gaap_eps=4.45),
+        quarter_row(filing_date="2023-09-30", period_label="23 Q3",
+                    announced_date="2024-04-12", revenue=19.3,
+                    adj_eps=None, gaap_eps=1.15),
+    ]})
+    result = dataset.build(snap)
+    rows = {r["period_label"]: r for r in result["quarters"]["AAA"]}
+    assert rows["24 Q1"]["gaap_eps"] == 4.45, rows       # 진짜는 남는다
+    assert rows["23 Q3"]["gaap_eps"] is None, rows       # 잔해는 버린다
+    assert any("잔해" in n for n in result["notes"]), result["notes"]
+
+
+def test_millions_revenue_rows_are_not_mistaken_for_debris():
+    """매출을 **백만 달러 단위**로 적는 회사의 정상 행을 지우면 안 됩니다.
+
+    '매출이 작다'만으로 자르면 AMD 4,313 · MCHP 1,649 같은 정상 행 172칸이
+    함께 지워집니다. 형제 행이 없으면 건드리지 않습니다.
+    """
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2024-03-31", period_label="24 Q1",
+                    announced_date="2024-04-30", revenue=4_313.0,
+                    adj_eps=0.73, gaap_eps=0.75),
+        quarter_row(filing_date="2024-06-30", period_label="24 Q2",
+                    announced_date="2024-07-30", revenue=5_887.0,
+                    adj_eps=1.13, gaap_eps=0.56),
+    ]})
+    rows = dataset.build(snap)["quarters"]["AAA"]
+    assert [r["adj_eps"] for r in rows] == [0.73, 1.13], rows
+    assert [r["gaap_eps"] for r in rows] == [0.75, 0.56], rows
+
+
+def test_sibling_rows_of_similar_size_are_both_kept():
+    """형제 행이라도 매출 차이가 100배 미만이면 둘 다 남깁니다."""
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2024-03-31", period_label="24 Q1",
+                    announced_date="2024-04-12", revenue=17_653.0, gaap_eps=4.45),
+        quarter_row(filing_date="2023-12-31", period_label="23 Q4",
+                    announced_date="2024-04-12", revenue=900.0, gaap_eps=1.15),
+    ]})
+    rows = dataset.build(snap)["quarters"]["AAA"]
+    assert all(r["gaap_eps"] is not None for r in rows), rows
+
+
+def test_internal_revenue_marker_does_not_leak():
+    """잔해 판정에 쓴 내부 표시는 밖으로 나가면 안 됩니다."""
+    snap = make_snapshot(eps={"AAA": [quarter_row(revenue=3.55)]})
+    for row in dataset.build(snap)["quarters"]["AAA"]:
+        assert "_raw_revenue" not in row, row
+
 def test_non_number_becomes_none():
     """숫자가 아닌 값(NaN·문자)은 고치지 않고 없음 처리합니다."""
     snap = make_snapshot(
