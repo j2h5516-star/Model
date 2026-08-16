@@ -24,6 +24,7 @@ TEST_FILES = [
     "tests/test_measure.py",     # 수집 결과 꾸리기 (snapshot.json 만들기)
     "tests/test_collect_job.py", # 수집 로봇 (반쯤 깨진 날 방어·파일 기록)
     "tests/test_consensus.py",   # 야후 컨센서스 원장 (추가 전용·오염 차단)
+    "tests/test_vendor_feed.py", # 두 번째 자 — 야후 분기표 (75차, 섞지 않는 대조용)
     "tests/test_dataset.py",     # 데이터 계층 (v3 4단계 — 재료 손질)
     "tests/test_audit_data.py",  # 재료 오염 전수조사 (73차 — 지우지 않고 세기)
     "tests/test_measure_engine.py",  # 측정 장치 (v3 5단계 — 11차 등록 구현)

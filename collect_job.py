@@ -33,6 +33,7 @@ import market_data as md
 import measure_engine
 import measure_store
 import consensus_feed
+import vendor_feed
 import sec_fundamentals as sf
 import leadership
 import sector_model
@@ -213,6 +214,22 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         surprise_note = f"서프라이즈 수집 실패: {type(exc).__name__}: {str(exc)[:160]}"
         progress(f"⚠️ {surprise_note}")
 
+    # 두 번째 자 — 데이터 회사(야후) 분기표 (75차, 주인 질문에서 나온 것).
+    # **snapshot.json 과 섞지 않습니다.** 우리 파서 값과 대조해 불일치를
+    # 재기 위한 관찰 전용 축입니다. 실패해도 그날 커밋을 막지 않습니다.
+    try:
+        옛 = vendor_feed.load(f"{cfg.MEASURE_DIR}/vendor.json")
+        보관, vendor_note = vendor_feed.collect(
+            tickers, 옛,
+            as_of=datetime.now(timezone.utc).date().isoformat(),
+            progress=progress,
+        )
+        files[f"{cfg.MEASURE_DIR}/vendor.json"] = vendor_feed.to_json(보관)
+        progress(vendor_note)
+    except Exception as exc:
+        vendor_note = f"두 번째 자 수집 실패: {type(exc).__name__}: {str(exc)[:160]}"
+        progress(f"⚠️ {vendor_note}")
+
     # 로봇 실행 기록 — 다음 세션이 읽습니다
     log = {
         "ran_at": datetime.now(timezone.utc).isoformat(),
@@ -221,6 +238,7 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         "verdict": verdict_note,
         "consensus": consensus_note,
         "surprise": surprise_note,
+        "vendor": vendor_note,
         "per_ticker": [
             {
                 "ticker": r.get("ticker"),
