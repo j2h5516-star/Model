@@ -192,6 +192,7 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
 
         kept.sort(key=lambda r: r["filing_date"])
         # 정렬 뒤에야 "직전 4분기"를 말할 수 있으므로 여기서 누적값을 거릅니다
+        _drop_repeated_revenue(ticker, kept, notes)
         _drop_cumulative_values(ticker, kept, notes)
         _drop_parse_debris(ticker, kept, notes)
         _drop_same_day_siblings(ticker, kept, notes)
@@ -273,6 +274,51 @@ def _revenue_before_guard(row: dict) -> float:
 _SAME_DAY_NOTE = (
     "같은 발표일에 두 행이 있어 어느 쪽이 그 분기 실적인지 가릴 수 없습니다"
 )
+
+
+_REPEATED_REVENUE_MIN = 4
+
+
+def _drop_repeated_revenue(ticker: str, rows: list[dict],
+                           notes: list[str]) -> None:
+    """한 종목 안에서 **똑같은 매출값**이 여러 분기에 반복되면 자리채움입니다.
+
+    진짜 매출은 분기마다 다릅니다. 소수점까지 똑같은 값이 4개 분기 이상
+    나온다면 그것은 측정값이 아니라 채워 넣은 값입니다.
+
+    실물 (68차 실측):
+      OXY  매출 1           이 23분기 중 20개
+      BAC  매출 2,000,000   이 24분기 중 17개  (실제 매출은 250억 달러대)
+      COF  매출 -5,000,000  이 24분기 중  8개  (**음수 매출**)
+      PG   매출 2           이 20분기 중  6개
+      BE   매출 1,000 · MRK 매출 -9 · ETN 매출 232억(연간값으로 보임)
+
+    왜 고쳐야 하나: 매출은 잣대가 아니지만 **다른 가드들의 잣대**입니다.
+    형제 행 잔해 판정(100배 비율)·영업이익 마진 검사·EBITDA 단위 검사가
+    모두 매출을 기준으로 삼습니다. 가짜 매출이 통행하면 그 가드들이
+    **틀린 기준으로 판단**합니다. 실제로 BAC 은 형제 행 매출이 둘 다
+    2,000,000 으로 같아 비율 규칙이 아무것도 못 걸렀습니다.
+
+    값을 고치지 않고 **없음**으로 둡니다 (창작 금지). 매출이 없으면 그
+    가드들은 그냥 넘어갑니다 — 틀린 기준으로 판단하는 것보다 낫습니다.
+    """
+    from collections import Counter
+    values = [row.get("revenue") for row in rows if row.get("revenue") is not None]
+    if len(values) < _REPEATED_REVENUE_MIN:
+        return
+    counts = Counter(values)
+    fake = {v for v, n in counts.items() if n >= _REPEATED_REVENUE_MIN}
+    if not fake:
+        return
+    for row in rows:
+        if row.get("revenue") in fake:
+            notes.append(
+                f"{ticker} {row.get('period_label', '?')}: "
+                f"매출 {row['revenue']:,.0f} 이 이 종목의 "
+                f"{counts[row['revenue']]}개 분기에 똑같이 나와 자리채움 값으로 "
+                "보고 없음 처리 (진짜 매출은 분기마다 다릅니다)"
+            )
+            row["revenue"] = None
 
 
 def _drop_same_day_siblings(ticker: str, rows: list[dict],

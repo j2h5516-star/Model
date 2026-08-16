@@ -62,6 +62,54 @@ def quarter_row(**overrides) -> dict:
 
 
 
+def test_repeated_revenue_is_placeholder_not_measurement():
+    """한 종목에 똑같은 매출값이 4분기 이상 나오면 자리채움입니다 (68차).
+
+    실물: OXY 매출 1 이 23분기 중 20개, BAC 매출 2,000,000 이 24분기 중
+    17개, COF 매출 **-5,000,000**(음수!)이 8개.
+
+    매출은 잣대가 아니지만 **다른 가드들의 잣대**입니다 — 형제 행 잔해
+    판정(100배)·마진 검사·EBITDA 단위 검사가 다 매출을 기준으로 씁니다.
+    가짜 매출이 통행하면 그 가드들이 틀린 기준으로 판단합니다.
+    """
+    rows = [quarter_row(filing_date=f"2024-{m:02d}-28",
+                        announced_date=f"2024-{m:02d}-28",
+                        period_label=f"Q{m}", revenue=2_000_000.0)
+            for m in (1, 4, 7, 10)]
+    result = dataset.build(make_snapshot(eps={"AAA": rows}))
+    kept = result["quarters"]["AAA"]
+    assert all(r["revenue"] is None for r in kept), kept
+    assert any("자리채움" in n for n in result["notes"]), result["notes"]
+
+
+def test_varying_revenue_is_left_alone():
+    """분기마다 다른 진짜 매출은 건드리면 안 됩니다."""
+    rows = [quarter_row(filing_date=f"2024-{m:02d}-28",
+                        announced_date=f"2024-{m:02d}-28",
+                        period_label=f"Q{m}",
+                        revenue=1_000_000.0 + m * 7_000)
+            for m in (1, 4, 7, 10)]
+    kept = dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]
+    assert all(r["revenue"] is not None for r in kept), kept
+
+
+def test_three_repeats_are_not_enough():
+    """3개까지는 우연일 수 있으므로 건드리지 않습니다 (문턱은 4).
+
+    한쪽으로만 막으면 반대로 넘어집니다 — 너무 예민하면 진짜 매출을
+    지웁니다.
+    """
+    rows = [quarter_row(filing_date=f"2024-{m:02d}-28",
+                        announced_date=f"2024-{m:02d}-28",
+                        period_label=f"Q{m}", revenue=2_000_000.0)
+            for m in (1, 4, 7)]
+    rows.append(quarter_row(filing_date="2024-11-28",
+                            announced_date="2024-11-28",
+                            period_label="Q11", revenue=3_100_000.0))
+    kept = dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]
+    assert all(r["revenue"] is not None for r in kept), kept
+
+
 # ---------------------------------------------------------------------------
 # 67차 — 같은 발표일에 두 행 (배당금이 EPS 자리에 들어온 실물)
 # ---------------------------------------------------------------------------
@@ -259,6 +307,9 @@ def test_cumulative_value_in_quarterly_slot_is_dropped():
     for i, value in enumerate([2.4, 2.5, 2.4, 2.6, 2.5, 2.5, 10.22, 2.6]):
         rows.append(quarter_row(
             filing_date=f"2024-{(i % 12) + 1:02d}-28",
+            announced_date=f"2024-{(i % 12) + 1:02d}-28",
+            # 매출은 분기마다 달라야 합니다 — 똑같으면 자리채움으로 걸립니다
+            revenue=1_000_000.0 + i * 1_000,
             period_label=f"Q{i}", adj_eps=value))
     result = dataset.build(make_snapshot(eps={"AAA": rows}))
     kept = [r["adj_eps"] for r in result["quarters"]["AAA"]]
@@ -276,6 +327,9 @@ def test_growth_quarter_is_not_mistaken_for_cumulative():
     for i, value in enumerate([0.10, 0.15, 0.22, 0.33, 0.50, 0.75, 1.10, 1.60]):
         rows.append(quarter_row(
             filing_date=f"2024-{(i % 12) + 1:02d}-28",
+            announced_date=f"2024-{(i % 12) + 1:02d}-28",
+            # 매출은 분기마다 달라야 합니다 — 똑같으면 자리채움으로 걸립니다
+            revenue=1_000_000.0 + i * 1_000,
             period_label=f"Q{i}", adj_eps=value))
     kept = [r["adj_eps"] for r in
             dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]]
@@ -288,6 +342,9 @@ def test_loss_quarter_is_never_treated_as_cumulative():
     for i, value in enumerate([2.0, 2.1, 2.0, 2.2, 2.1, 2.0, -8.3, 2.1]):
         rows.append(quarter_row(
             filing_date=f"2024-{(i % 12) + 1:02d}-28",
+            announced_date=f"2024-{(i % 12) + 1:02d}-28",
+            # 매출은 분기마다 달라야 합니다 — 똑같으면 자리채움으로 걸립니다
+            revenue=1_000_000.0 + i * 1_000,
             period_label=f"Q{i}", adj_eps=value))
     kept = [r["adj_eps"] for r in
             dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]]
