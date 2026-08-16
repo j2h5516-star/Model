@@ -437,6 +437,73 @@ _FORECAST_NEAR_RE = re.compile(
 _FORECAST_BACK = 80      # 이름 앞
 _FORECAST_AHEAD = 80     # 이름 뒤 (값과 이름 사이의 to approach 류)
 
+# 주식 수 행 (74차 — 실물 원문으로 확증)
+# ---------------------------------------------------------------------------
+# 손익계산서 맨 아래에는 EPS 바로 다음에 **주식 수** 표가 붙습니다:
+#
+#   Net loss per share attributable to UCT common stockholders:
+#   Basic                                   $(0.40)      $(0.11)
+#   Diluted                                 $(0.40)      $(0.11)
+#   Shares used in computing net loss per share:      ← 이 줄도 "per share" 다!
+#   Basic                                     45.3         45.1
+#   Diluted                                   45.3         45.1
+#
+# 파서가 아래쪽 이름을 물어 **45.3 을 EPS 로** 읽었고, 이름에 loss 가 있어
+# 부호까지 뒤집어 **−45.30** 이 됐습니다. UCTT 는 세 해 연속 같은 사고를
+# 냈고(−45.30 · −45.10 · −44.60), 주식 수는 해마다 비슷하니 오염도 비슷한
+# 크기로 되풀이됐습니다.
+#
+# 이름 **앞쪽**에 "shares used in computing" · "weighted average shares" 가
+# 있으면 그 자리는 EPS 가 아니라 주식 수입니다. 건너뜁니다.
+_SHARE_COUNT_NEAR_RE = re.compile(
+    r"(?:shares?\s+(?:used|outstanding)|weighted[-\s]average"
+    r"|number\s+of\s+shares)", re.I,
+)
+_SHARE_COUNT_LOOKBACK = 60
+
+# 연간(누적) 값이라고 **원문이 직접 말하는** 자리 (74차 — 실물로 확증)
+# ---------------------------------------------------------------------------
+# 결산 분기 보도자료에는 분기와 연간이 나란히 실리고, 연간 쪽이 헤드라인인
+# 회사가 많습니다. 원문이 그것을 글자로 적어 두므로 추측할 필요가 없습니다:
+#
+#   GS  "Diluted earnings per common share (EPS) was **$59.45 for the year
+#        ended December 31, 2021** … and was **$10.81 for the fourth quarter**"
+#        → 진짜 분기값은 10.81 인데 59.45 를 읽었습니다.
+#   VZ  "**Full-year** 2022 … adjusted EPS … of **$5.18**"
+#        → 분기 실제는 1.2 안팎입니다.
+#
+# 이름 앞(full year/fiscal year) 또는 값 바로 뒤(for the year ended /
+# for the twelve months ended)에 이 말이 있으면 그 자리는 분기가 아닙니다.
+# **추측이 아니라 원문이 스스로 밝힌 사실**이라 안전합니다.
+_ANNUAL_BEFORE_RE = re.compile(
+    r"\bfull[-\s]?year\b|\bfor\s+the\s+(?:full\s+)?year\b"
+    r"|\btwelve\s+months\b|\bfiscal\s+year\s+(?:20\d{2}|ended)\b",
+    re.I,
+)
+_ANNUAL_AFTER_RE = re.compile(
+    r"^\s*(?:in\s+|of\s+)?for\s+(?:the\s+)?(?:full\s+)?"
+    r"(?:year|twelve\s+months|fiscal\s+year)\b"
+    # "…of $59.45 **for 2021**" — 헤드라인이 연도만 적는 형식 (실물 GS)
+    r"|^\s*for\s+(?:fiscal\s+)?20\d{2}\b",
+    re.I,
+)
+_ANNUAL_BACK = 60        # 이름 앞 몇 글자까지 (줄을 넘지 않습니다)
+_ANNUAL_AHEAD = 40       # 값 뒤 몇 글자까지
+_ANNUAL_LINE_HEAD = 24   # 줄머리에서 이만큼 안에 "Full-year" 가 있으면 그 줄은 연간
+
+# 이름 뒤 숫자를 몇 번까지 다시 찾을 것인가 (74차에 4 → 10)
+# ---------------------------------------------------------------------------
+# 왜 늘리는가 (실물 GS): 한 문장에 연간·전년·분기가 줄줄이 있습니다.
+#   "was $59.45 for the year ended December 31, 2021 compared with $24.74
+#    for the year ended December 31, 2020, and was $10.81 for the fourth
+#    quarter of 2021"
+# 앞의 두 연간값과 그 사이의 날짜 정수(31 · 2021 · 31 · 2020)를 건너뛰다
+# 보면 4번으로는 **진짜 분기값 10.81 에 닿기도 전에 포기**합니다.
+#
+# 늘려도 되는 이유: 아래에서 탐색을 **같은 줄 안으로** 못박았기 때문에,
+# 횟수를 늘려도 문단을 건너뛰어 엉뚱한 숫자로 갈 수가 없습니다.
+_EPS_RETRY = 10
+
 
 def find_eps_value(
     text: str, label_patterns: list[str], *, exclude_nongaap: bool = False
@@ -498,6 +565,33 @@ def find_eps_value(
                 if _NONGAAP_NEAR_RE.search(text[window_start:start]):
                     continue
 
+            # 주식 수 행이면 EPS 가 아닙니다 (74차 — 실물 UCTT).
+            # "Shares used in computing net loss per share:" 도 'per share' 라
+            # 이름에 걸립니다. 앞쪽만 보고, 줄을 넘지 않습니다.
+            _start = label_match.start()
+            _line_start = text.rfind("\n", 0, _start) + 1
+            if _SHARE_COUNT_NEAR_RE.search(
+                text[max(_line_start, _start - _SHARE_COUNT_LOOKBACK):_start]
+            ):
+                continue
+
+            # 원문이 "연간"이라고 **직접 말하는** 자리면 분기값이 아닙니다
+            # (74차 — 실물 GS 59.45 · VZ 5.18). 이름 앞쪽만 여기서 보고,
+            # 값 뒤쪽은 숫자를 읽은 자리에서 다시 봅니다.
+            if _ANNUAL_BEFORE_RE.search(
+                text[max(_line_start, _start - _ANNUAL_BACK):_start]
+            ):
+                continue
+            # 줄(=글머리표 항목)이 "Full-year …" 로 **시작하면** 그 줄의 값은
+            # 전부 연간입니다 (실물 VZ: "•Full-year 2022 earnings per share
+            # (EPS) of $5.06 … adjusted EPS1 … of $5.18"). 이름이 줄머리에서
+            # 멀어 위의 60자 되돌아보기로는 닿지 않습니다. 줄머리 쪽만
+            # 짧게 확인합니다 — 문장 중간의 'full year' 은 보지 않습니다.
+            if _ANNUAL_BEFORE_RE.match(
+                text[_line_start:_line_start + _ANNUAL_LINE_HEAD].lstrip("•·-– \t")
+            ):
+                continue
+
             label_text = label_match.group(0)
 
             # 이름이 "적자"라고 말하면 양수를 음수로 뒤집습니다 (아래 두 곳 공용).
@@ -529,11 +623,21 @@ def find_eps_value(
                 continue   # 괄호형인데 값을 못 읽으면 이 자리는 건너뜁니다
 
             search_from = label_match.end()
-            for _ in range(4):    # 같은 문장 안에서 최대 4번까지 다시 시도
+            # 탐색은 **이름과 같은 줄 안에서만** 합니다 (74차 — 실물 IPGP).
+            #   각주 "… excluded from the calculation of **adjusted EPS**,
+            #   stock based compensation of $11.0 million …" 뒤로 줄과 문단을
+            #   넘어 300자 뒤의 "**Exhibit 99.1**" 을 물어 조정 EPS 가 99.10 이
+            #   됐습니다. 진짜 EPS 문장은 이름과 숫자가 늘 같은 줄에 있습니다.
+            line_end = text.find("\n", label_match.end())
+            if line_end == -1:
+                line_end = len(text)
+            for _ in range(_EPS_RETRY):
                 parsed = _parse_number_at(text, search_from)
                 if parsed is None:
                     break
                 value, num_start, number_end, _had_scale, num_end = parsed
+                if num_start >= line_end:
+                    break            # 줄을 넘었습니다 — 이 이름 자리는 포기
 
                 # 퍼센트 숫자는 EPS 가 아닙니다 (예: "grew 20% to $1.00")
                 tail_line = text[num_end : num_end + 24].split("\n", 1)[0]
@@ -555,6 +659,15 @@ def find_eps_value(
                 # 그래서 모든 EPS 후보에 적용합니다. 소수점 값을 끝내 못 찾으면
                 # 답은 "없음"입니다 — 없음이 틀림보다 안전합니다.
                 if "." not in text[num_start:num_end]:
+                    search_from = number_end
+                    continue
+
+                # 값 **바로 뒤**가 "for the year ended …" 면 그 숫자는 연간값
+                # 입니다 (74차 — 실물 GS: "was $59.45 for the year ended
+                # December 31, 2021 … and was $10.81 for the fourth quarter").
+                # 이 자리는 건너뛰고 다음 숫자를 계속 찾습니다 — 바로 뒤에
+                # 진짜 분기값이 이어지는 경우가 많습니다.
+                if _ANNUAL_AFTER_RE.match(text[num_end:num_end + _ANNUAL_AHEAD]):
                     search_from = number_end
                     continue
 

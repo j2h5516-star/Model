@@ -167,15 +167,38 @@ def build_files(
         )
     }
 
-    # 파싱 실패 원문 — 다음 세션이 파서를 고칠 실물 자료
+    # 원문 보관 — 다음 세션이 파서를 고칠 실물 자료
+    #
+    # 두 종류가 섞여 들어옵니다. 이름표(filing_date 앞에 붙는 말머리)로
+    # 구분하고, **파일 이름과 머리말에 그 뜻을 그대로 적습니다.**
+    #   (없음)   잣대값을 하나도 못 읽은 공시 — "못 읽음"
+    #   의심정수_ 정수 EPS 가 남은 공시 — "값은 있는데 수상함"
+    #   부탁_    조사가 콕 집어 부탁한 공시 (73차) — "잘못 읽은 것 같음"
+    #
+    # ⚠️ 예전에는 날짜를 앞 10글자로 잘라 "부탁_2025-02" 처럼 **달까지만**
+    #    남아, 같은 달에 두 건이면 파일이 서로 덮어썼습니다(실측 3건).
+    #    말머리와 날짜를 따로 다루어 날짜를 온전히 남깁니다.
     raw_count = 0
+    이름표 = {"의심정수_": "의심정수", "부탁_": "부탁"}
+    설명 = {
+        "": "잣대값 파싱 실패 원문",
+        "의심정수": "정수 EPS 의심 원문 (값은 그대로 두고 감사용으로 보관)",
+        "부탁": "조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용)",
+    }
     for report in reports:
         ticker = report.get("ticker", "종목미상")
         for raw in report.get("raw_texts") or []:
-            date_text = str(raw.get("filing_date", ""))[:10] or "날짜미상"
-            path = f"{cfg.MEASURE_DIR}/raw/{ticker}_{date_text}.txt"
+            원본 = str(raw.get("filing_date", ""))
+            종류 = ""
+            for 말머리, 이름 in 이름표.items():
+                if 원본.startswith(말머리):
+                    종류, 원본 = 이름, 원본[len(말머리):]
+                    break
+            date_text = 원본[:10] or "날짜미상"
+            꼬리 = f"_{종류}" if 종류 else ""
+            path = f"{cfg.MEASURE_DIR}/raw/{ticker}_{date_text}{꼬리}.txt"
             header = (
-                f"# 조정 EPS 파싱 실패 원문 — {ticker} {date_text}\n"
+                f"# {설명[종류]} — {ticker} {date_text}\n"
                 f"# 출처: {raw.get('url', '')}\n\n"
             )
             files[path] = header + str(raw.get("text", ""))

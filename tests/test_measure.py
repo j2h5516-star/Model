@@ -195,6 +195,37 @@ def test_keep_raw_text_respects_caps():
     assert len(one["raw_texts"][0]["text"]) == cfg.MEASURE_RAW_TEXT_CAP
 
 
+def test_raw_file_names_keep_the_whole_date_and_say_why():
+    """원문 파일 이름은 **날짜를 온전히** 담고, 왜 보관했는지 말해야 합니다 (74차).
+
+    예전에는 말머리까지 합쳐 앞 10글자만 잘라 써서 "부탁_2025-02" 처럼
+    **달까지만** 남았습니다. 같은 달에 두 건이면 서로 덮어썼습니다
+    (실측 3건: BE·INTC·ABNB). 머리말도 전부 "조정 EPS 파싱 실패"라고
+    적혀 있어, 잘못 읽은 원문을 실패 원문으로 오해하게 만들었습니다.
+    """
+    보고 = [{"ticker": "GS", "raw_texts": [
+        {"filing_date": "부탁_2025-02-11", "url": "u1", "text": "가"},
+        {"filing_date": "부탁_2025-02-25", "url": "u2", "text": "나"},
+        {"filing_date": "의심정수_2024-01-16", "url": "u3", "text": "다"},
+        {"filing_date": "2023-07-19", "url": "u4", "text": "라"},
+    ]}]
+    files, _ = measure_store.build_files(
+        tickers=["GS"], daily_map={}, reports=보고,
+        load_quarters=lambda t: [],
+    )
+    이름들 = [k.rsplit("/", 1)[-1] for k in files if k.endswith(".txt")]
+    assert "GS_2025-02-11_부탁.txt" in 이름들, 이름들
+    assert "GS_2025-02-25_부탁.txt" in 이름들, 이름들
+    assert "GS_2024-01-16_의심정수.txt" in 이름들, 이름들
+    assert "GS_2023-07-19.txt" in 이름들, 이름들
+    assert len(이름들) == 4, f"같은 달 두 건이 서로 덮어썼습니다: {이름들}"
+
+    부탁본 = files[[k for k in files if k.endswith("GS_2025-02-11_부탁.txt")][0]]
+    assert "조사가 부탁한 원문" in 부탁본, 부탁본[:120]
+    실패본 = files[[k for k in files if k.endswith("GS_2023-07-19.txt")][0]]
+    assert "파싱 실패" in 실패본, 실패본[:120]
+
+
 def test_wanted_raw_list_is_read_from_the_repo(tmpdir=None):
     """조사가 부탁한 (종목, 발표일)만 True 가 되어야 합니다 (73차).
 
