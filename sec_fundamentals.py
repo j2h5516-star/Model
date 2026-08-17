@@ -71,6 +71,12 @@ _NUMBER_RE = re.compile(
     re.I | re.X,
 )
 
+# 창 끝에 걸친 숫자를 **끝까지 읽기 위해** 덧대는 여유 글자 수 (87차).
+# 가장 긴 형태 "(1,234,567.89) billion" 이 30자쯤이라 넉넉히 40 을 둡니다.
+# 이 여유는 숫자를 **끝맺는 데만** 쓰고, 여기서 새로 시작하는 숫자는
+# 위 _parse_number_at 에서 물리치므로 탐색 범위가 넓어지지는 않습니다.
+_NUMBER_TAIL = 40
+
 # 숫자 바로 뒤에 붙어 "이건 퍼센트다"를 뜻하는 표기들.
 # "%" 기호만 보면 "82 percent" 같은 낱말 표기를 금액으로 오인합니다.
 _PERCENT_AFTER_RE = re.compile(
@@ -113,10 +119,32 @@ def _parse_number_at(
     """지정한 위치부터 오른쪽으로 훑으며 첫 번째 숫자를 찾아 값으로 바꿉니다.
 
     반환값: (숫자값, 시작위치, 끝위치, 단위단어가붙었는지, 숫자자체의끝) — 못 찾으면 None
+
+    ⚠️ 창(search_len)이 **숫자 한가운데를 자르던 결함** (87차, 실물 CRM):
+       표의 이름과 값 사이가 공백 40칸쯤 벌어지면 160자 창의 끝이 값 위에
+       떨어집니다. 실측 — 창 끝이 197, 값 "$1.59" 는 194~198:
+
+           "GAAP diluted net income per share        $1.5|9"
+                                            창 끝 ────┘
+
+       그래서 1.59 가 아니라 **1** 로 읽혔고, 그 뒤 남은 ".59" 와 옆 칸의
+       전년 값 1.56 까지 후보로 올라와 결국 **전년 값**이 채택됐습니다.
+
+       고치는 방향: 창은 "숫자를 **어디까지 찾아 나설지**"를 정하는 것이지
+       "숫자를 어디서 자를지"가 아닙니다. 그래서 찾는 범위는 그대로 두되
+       (시작 위치가 창 안이어야 함), 숫자가 창 밖으로 이어지면 **끝까지
+       읽습니다.** 창을 그냥 넓히는 것은 답이 아닙니다 — 넓힌 자리에서
+       같은 사고가 다시 납니다.
     """
-    segment = text[search_from : search_from + search_len]
+    segment = text[search_from : search_from + search_len + _NUMBER_TAIL]
     match = _NUMBER_RE.search(segment)
     if not match:
+        return None
+    # 창 밖에서 **시작**한 숫자는 이 자리의 값이 아닙니다.
+    # ⚠️ match.start() 가 아니라 match.start("num") 을 봅니다 — 패턴이
+    #    앞의 공백·괄호·$ 까지 포함해서 시작하므로, match.start() 는
+    #    이름 바로 뒤(공백의 시작)를 가리켜 이 검사가 늘 통과해 버립니다.
+    if match.start("num") >= search_len:
         return None
 
     raw = match.group("num").replace(",", "")
@@ -715,6 +743,10 @@ _EPS_SPAN = 300
 # 숫자 앞의 "이상/약" 표기 — 목표·전망에만 붙습니다 (실적에는 안 붙습니다)
 _TARGET_SIGN_RE = re.compile(r"[>≥~]\s*\$?\s*$")
 
+# 주당 이름 뒤의 "by 숫자" — 영향(변화)을 말하는 문장의 표시 (87차)
+# 마침표·줄바꿈을 넘지 않으므로 **같은 문장 안**에서만 봅니다.
+_PER_SHARE_BY_RE = re.compile(r"[^.\n]{0,25}\bby\s+\$?\s*\(?-?\d", re.I)
+
 # 범위 표기 "$18.45 - $18.95" 의 앞끝/뒤끝
 _RANGE_AFTER_RE = re.compile(r"^\s*[-–]\s*\$\s*\d")
 _RANGE_BEFORE_RE = re.compile(r"\d[\d.,]*\s*[-–]\s*\$?\s*$")
@@ -825,6 +857,30 @@ def find_eps_value(
                 continue
 
             label_text = label_match.group(0)
+
+            # 이름 바로 뒤가 "**by** $숫자" 면 그것은 **영향(변화)을 말하는
+            # 문장**이지 실적이 아닙니다 (87차 — 실물 CRM):
+            #   "gains (losses) on strategic investments **impacted GAAP
+            #    diluted net income per share by $0.00** and $(0.03)"
+            # 이 한 문장 때문에 CRM 의 조정 EPS·GAAP EPS 가 **둘 다 0.00** 이
+            # 됐습니다 (진짜 값은 같은 문서의 표에 2.91·1.96 으로 있었는데도).
+            # 이름 하나에 두 잣대가 같은 값으로 무너지는 것이 이 결함의 표시입니다.
+            #
+            # 저장소 원문 732건 실측 — **반례가 0건**입니다. 이 꼴로 나온 20곳은
+            # 전부 영향·변화 문장이었습니다:
+            #   CRM "impacted … per share by $0.00" · GOOGL "increased …
+            #   per share by $2.35" · IPGP "decreased … earnings per share
+            #   by $0.03" · EL "impact … per share growth by 6%" ·
+            #   GS "Book value per common share increased by 20.4%"
+            # 진짜 실적 표는 "Diluted net income per share (3)   $1.96" 처럼
+            # 이름과 값 사이에 "by" 가 없습니다.
+            #
+            # 그 숫자 하나만 건너뛰지 않고 **이름 자리를 통째로 포기**합니다 —
+            # "by $0.00 **and $(0.03)**" 처럼 같은 문장에 숫자가 이어지면
+            # 뒤엣것도 영향값이라 건너뛰기만으로는 또 뭅니다.
+            if _PER_SHARE_BY_RE.match(text[label_match.end():
+                                           label_match.end() + 48]):
+                continue
 
             # 이름이 "적자"라고 말하면 양수를 음수로 뒤집습니다 (아래 두 곳 공용).
             # "net income (loss) per share" 같은 겸용 표기는 선언이 아니므로 제외.

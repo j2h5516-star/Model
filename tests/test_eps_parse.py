@@ -952,6 +952,77 @@ def test_normal_quarterly_sentence_still_reads():
     assert got == -0.42, got
 
 
+def test_impact_sentence_is_not_earnings():
+    """"…per share **by** $0.00" 은 영향을 말하는 문장이지 실적이 아닙니다.
+
+    실물 (87차, CRM 2025-09-03 보도자료 원문 그대로):
+    이 한 문장 때문에 조정 EPS 와 GAAP EPS 가 **둘 다 0.00** 이 됐습니다.
+    진짜 값은 같은 문서의 표에 2.91·1.96 으로 있었습니다.
+    """
+    문장 = (
+        "During the three months ended July 31, 2025 and 2024, gains (losses) "
+        "on strategic investments impacted GAAP diluted net income per share "
+        "by $0.00 and $(0.03) based on a U.S. tax rate of 23.5% and 24.5%, "
+        "respectively, and non-GAAP diluted net income per share by $0.00 "
+        "and $(0.03) based on a non-GAAP tax rate of 22.0%.\n"
+    )
+    assert sf.find_eps_value(문장, sf.LABELS_ADJUSTED_EPS) is None
+    assert sf.find_eps_value(문장, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+
+def test_impact_sentence_does_not_hide_the_real_table_row():
+    """영향 문장을 건너뛴 뒤 **진짜 표의 값**은 그대로 읽어야 합니다.
+
+    걷어내기만 하고 진짜 값까지 놓치면 고친 것이 아닙니다.
+    """
+    글 = (
+        "gains on strategic investments impacted GAAP diluted net income "
+        "per share by $0.00 and $(0.03).\n"
+        "Diluted net income per share      $1.96      $1.47\n"
+    )
+    assert sf.find_eps_value(글, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == 1.96
+
+
+def test_number_at_the_edge_of_the_search_window_is_read_whole():
+    """찾는 창의 끝이 숫자 위에 떨어져도 숫자를 **자르지 않아야** 합니다.
+
+    실물 (87차, CRM): 표의 이름과 값 사이가 공백 40칸쯤 벌어지자 160자
+    창의 끝이 "$1.5|9" 한가운데에 떨어져 **1** 로 읽혔고, 그 뒤 옆 칸의
+    전년 값 1.56 이 채택됐습니다.
+    """
+    이름 = "Diluted net income per share"
+    # 창(160자) 끝이 값 한가운데 오도록 공백을 맞춥니다
+    빈칸 = " " * (160 - 3)
+    글 = f"{이름}{빈칸}$1.59      $1.56\n"
+    자리 = len(이름)
+    읽은값 = sf._parse_number_at(글, 자리)
+    assert 읽은값 is not None and 읽은값[0] == 1.59, 읽은값
+
+
+def test_number_starting_inside_the_tail_is_still_refused():
+    """여유 글자는 숫자를 **끝맺는 데만** 씁니다.
+
+    여유 구간(창 뒤 40자) 안에서 **새로 시작하는** 숫자까지 주워 오면
+    탐색 범위가 160자에서 200자로 몰래 넓어집니다. 그래서 이 시험은
+    숫자를 여유 구간 한가운데(창 끝 +5자)에 두고, 거절되는지 봅니다.
+    """
+    이름 = "Diluted net income per share"
+
+    def 글(숫자시작: int) -> str:
+        """이름 뒤 `숫자시작` 번째 자리에 숫자의 **첫 글자**가 오도록 만듭니다.
+        ("$" 가 한 칸 앞에 붙으므로 공백은 그만큼 덜 넣습니다)"""
+        return 이름 + " " * (숫자시작 - 1) + "$1.59\n"
+
+    # 창(160) 밖 · 여유(40) 안에서 시작하는 숫자 → 거절
+    assert sf._parse_number_at(글(165), len(이름)) is None
+
+    # 창 마지막 자리에서 시작하는 숫자 → 읽어야 합니다 (거절이 과하지 않은지)
+    읽은값 = sf._parse_number_at(글(159), len(이름))
+    assert 읽은값 is not None and 읽은값[0] == 1.59, 읽은값
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
