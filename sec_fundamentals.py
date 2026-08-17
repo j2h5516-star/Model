@@ -313,6 +313,18 @@ def _scan_labeled_value(
                 is_percent_value = bool(_PERCENT_AFTER_RE.match(tail_line))
 
                 if is_percent:
+                    # **베이시스 포인트는 언제나 '변화'** 이지 수준이 아닙니다
+                    # (81차 — 실물 WMT "Gross margin rate **up 2 bps**",
+                    #  "Gross profit rate increased **19 bps**").
+                    # 파서는 이 2 를 매출총이익률 2% 로 저장하고 있었습니다.
+                    # 월마트 실제 매출총이익률은 24~25% 입니다. 이 회사는
+                    # 보도자료에 **수준을 아예 안 적고 변화만** 적으므로
+                    # 정답은 **없음**입니다.
+                    # 이익률 수준을 bps 로 적는 회사는 없습니다("2,450 bps"
+                    # 라고 쓰지 않습니다) — 그래서 bps 는 통째로 거릅니다.
+                    if _BPS_UNIT_RE.match(text[num_end:num_end + 20]):
+                        search_from = number_end
+                        continue
                     # "from A% to B%" 의 A 는 **지난 기간** 값입니다 (78차 —
                     # 실물 BMY "gross margin decreased **from 77.3% to
                     # 76.1%**"). 이번 분기 값은 B 입니다. A 를 건너뛰면
@@ -387,6 +399,9 @@ _GM_DIFFERENCE_LOOKBACK = 70
 
 # 슬라이드 이미지 태그가 라벨 앞 이만큼 안에 있으면 그 줄은 차트 숫자 나열
 _SLIDE_LOOKBACK = 150
+
+# 베이시스 포인트 단위 — 이익률의 **변화**를 적는 단위입니다 (수준이 아님)
+_BPS_UNIT_RE = re.compile(r"\s*(?:basis\s+points?\b|bps\b|bp\b)", re.I)
 
 # 사이에 낱말 없이 이어지는 퍼센트 3개 이상 = 그래프의 값 나열
 _PCT_SERIES_RE = re.compile(r"(?:\d+(?:\.\d+)?%\s+){2,}\d+(?:\.\d+)?%")

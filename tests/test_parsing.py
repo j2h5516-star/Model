@@ -886,6 +886,28 @@ def test_sentence_with_several_percents_still_reads():
                                  is_percent=True) == 74.0
 
 
+def test_basis_points_are_a_change_not_a_level():
+    """베이시스 포인트는 **변화**이지 이익률 수준이 아닙니다 (81차).
+
+    실물 WMT: "Gross margin rate **up 2 bps**" · "Gross profit rate
+    increased **19 bps**". 파서는 이 2 를 매출총이익률 2% 로 저장하고
+    있었습니다 — 월마트 실제는 24~25% 입니다.
+    이익률 수준을 bps 로 적는 회사는 없습니다("2,450 bps" 라고 쓰지
+    않습니다). 그래서 bps 는 통째로 거릅니다.
+
+    ⚠️ 이 규칙만으로 WMT 가 고쳐지지는 **않습니다** — 그 보도자료에는
+       수준이 아예 안 적혀 있어 정답이 "없음"인데, 파서는 계속 다른
+       숫자를 찾아냅니다. 그 부분은 아직 못 고쳤습니다(측정결과.md).
+    """
+    text = ("\u2022Gross margin rate up 2 bps, led by Walmart U.S.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) is None
+
+    text2 = ("Gross profit rate increased 19 basis points versus last year.\n")
+    assert sf.find_labeled_value(text2, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) is None
+
+
 def test_plain_margin_sentence_still_reads():
     """멀쩡한 이익률 문장은 그대로 읽혀야 합니다 (한쪽만 막으면 안 됨)."""
     for 문장, 답 in (
