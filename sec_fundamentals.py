@@ -711,6 +711,13 @@ _EPS_RETRY = 10
 #     이어지는 GS 형식이 약 120자라 넉넉히 잡되, 문단을 건너뛸 만큼
 #     길지는 않게)
 _EPS_SPAN = 300
+
+# 숫자 앞의 "이상/약" 표기 — 목표·전망에만 붙습니다 (실적에는 안 붙습니다)
+_TARGET_SIGN_RE = re.compile(r"[>≥~]\s*\$?\s*$")
+
+# 범위 표기 "$18.45 - $18.95" 의 앞끝/뒤끝
+_RANGE_AFTER_RE = re.compile(r"^\s*[-–]\s*\$\s*\d")
+_RANGE_BEFORE_RE = re.compile(r"\d[\d.,]*\s*[-–]\s*\$?\s*$")
 _BLANK_LINE_RE = re.compile(r"\n[ \t]*\n")
 
 
@@ -892,6 +899,30 @@ def find_eps_value(
                 # 그래서 모든 EPS 후보에 적용합니다. 소수점 값을 끝내 못 찾으면
                 # 답은 "없음"입니다 — 없음이 틀림보다 안전합니다.
                 if "." not in text[num_start:num_end]:
+                    search_from = number_end
+                    continue
+
+                # 숫자 바로 앞이 ">" · "≥" · "~" 면 그것은 **목표·전망**이지
+                # 실적이 아닙니다 (84차 — 실물 UNH 전망표):
+                #   "Diluted Net Earnings per Share to UNH Shareholders
+                #    **> $17.10**   $18.45 - $18.95"
+                # 83차에 슬라이드 규칙을 좁히자 이 전망표가 새로 읽히면서
+                # UNH 분기 EPS 가 6.04 → 17.10 으로 **틀려졌습니다.**
+                # "이상/약" 표기를 붙인 실적 숫자는 없습니다.
+                if _TARGET_SIGN_RE.search(text[max(num_start - 4, 0):
+                                               num_start]):
+                    search_from = number_end
+                    continue
+
+                # **범위 표기의 양끝**도 전망입니다 (84차 — 실물 UNH 전망표
+                # "Earnings per Share **$18.45 - $18.95**  $19.50 - $20.00").
+                # 실적을 범위로 적는 회사는 없습니다.
+                #   앞끝: 숫자 뒤에 " - $숫자" 가 이어진다
+                #   뒤끝: 숫자 앞이 "숫자 - $" 다 (적자 표기 "-$0.40" 은
+                #         대시 앞에 숫자가 없어 걸리지 않습니다)
+                if (_RANGE_AFTER_RE.match(text[num_end:num_end + 14])
+                        or _RANGE_BEFORE_RE.search(
+                            text[max(num_start - 16, 0):num_start])):
                     search_from = number_end
                     continue
 

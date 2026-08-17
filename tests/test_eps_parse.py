@@ -881,6 +881,45 @@ def test_slide_guard_measures_distance_not_the_whole_line():
                              exclude_nongaap=True) is None
 
 
+def test_target_and_range_numbers_are_not_actuals():
+    """">$17.10" 과 "$18.45 - $18.95" 는 전망입니다 (84차 — 실물 UNH).
+
+    83차에 슬라이드 규칙을 좁히자 UNH **전망표**가 새로 읽히면서
+    분기 EPS 가 6.04 → 17.10 으로 **틀려졌습니다.** 내가 낸 회귀입니다.
+
+        UnitedHealth Group Reports Second Quarter 2026 Results
+        • **Earnings of $6.04 Per Share** …            ← 진짜 실적
+        Diluted Net Earnings per Share  **> $17.10**   ← 전망(이상)
+        Earnings per Share  **$18.45 - $18.95**        ← 전망(범위)
+
+    실적에 "이상" 표기를 붙이거나 범위로 적는 회사는 없습니다.
+    """
+    전망 = ("Diluted Net Earnings per Share to Shareholders > $17.10 "
+          "$18.45 - $18.95\n")
+    assert sf.find_eps_value(전망, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+    # 같은 문서의 진짜 실적 문장은 읽어야 합니다.
+    # (이 형식은 숫자가 이름 앞에 오므로 다른 경로가 읽습니다)
+    실적 = "Earnings of $6.04 per diluted share for the second quarter.\n"
+    assert sf.find_eps_before_per_share(실적) == 6.04
+
+    # 둘이 한 문서에 있을 때 전망이 아니라 실적이 나와야 합니다
+    합친것 = 실적 + 전망
+    assert sf.parse_press_release(합친것)["gaap_eps"] == 6.04
+
+
+def test_negative_eps_is_not_mistaken_for_a_range_end():
+    """적자 표기 "-$0.40" 을 범위 뒤끝으로 보면 안 됩니다.
+
+    범위 뒤끝은 **대시 앞에 숫자**가 있습니다("18.45 - $18.95").
+    적자 표기는 그렇지 않습니다. 한쪽만 막으면 반대로 넘어집니다.
+    """
+    text = "GAAP net loss per diluted share was -$0.40 for the quarter.\n"
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == -0.40
+
+
 def test_core_eps_is_non_gaap():
     """"Core EPS" 는 논갭입니다 (83차 — 실물 PG).
 
