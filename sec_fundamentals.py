@@ -409,6 +409,12 @@ LABELS_GAAP_EPS = [
     # 'adjusted/non-GAAP earnings per share' 는 exclude_nongaap 의 같은 줄
     # 되돌아보기가 막아 줍니다 (이 목록은 항상 그 옵션과 함께 쓰입니다).
     rf"{_PROFIT_WORD}\s+per\s+{_SHARE}",
+    # 76차 — "•Diluted net EPS: ⏎◦GAAP of $0.49" (실물 HPE). 구역 제목으로
+    # 연간/분기를 나누는 회사는 분기 쪽 이름을 **줄여서** 적습니다.
+    # 위 이름들은 전부 "per share" 를 요구해 이 줄을 놓쳤고, 그 바람에
+    # 연간값(1.54)이나 배당금(0.13)이 EPS 자리에 들어왔습니다.
+    # "net EPS" 로 좁혀 잡습니다 — 맨 EPS 는 각주 표시까지 뭅니다.
+    r"(?:diluted\s+)?net\s+EPS\b",
     # 50차 — "EPS of $12.19, or $13.91 as adjusted" (실물 BLK).
     # 이름 없이 EPS 만 쓰는 회사가 있습니다. **"EPS of" 형태로만** 좁혀
     # 잡습니다 — 맨 EPS 는 각주 표시(GS "EPS1")나 "EPS Impact"(COF) 같은
@@ -422,6 +428,10 @@ LABELS_GAAP_EPS = [
 #    'non-GAAP' 이 낱말 하나 건너에 있습니다. 그래서 범위를 두고 훑습니다.
 _NONGAAP_NEAR_RE = re.compile(r"non[-\s]?GAAP|adjusted", re.I)
 _NONGAAP_LOOKBACK = 40   # 이름 앞 몇 글자까지 되돌아볼 것인가
+
+# 배당금 문맥 — "$0.13 per share" 앞에 배당 이야기가 있으면 EPS 가 아닙니다
+# (76차 — 실물 HPE "regular cash dividend of $0.13 per share").
+_DIVIDEND_NEAR_RE = re.compile(r"\bdividends?\b|\bdistribution\b", re.I)
 
 # 전망·목표 문맥 — 이 낱말들이 EPS 이름 주변에 있으면 그 자리는
 # 분기 **실적**이 아니라 전망·연간 목표입니다 (사고 16 — 실물:
@@ -504,6 +514,53 @@ _ANNUAL_AFTER_RE = re.compile(
 _ANNUAL_BACK = 60        # 이름 앞 몇 글자까지 (줄을 넘지 않습니다)
 _ANNUAL_AHEAD = 40       # 값 뒤 몇 글자까지
 _ANNUAL_LINE_HEAD = 24   # 줄머리에서 이만큼 안에 "Full-year" 가 있으면 그 줄은 연간
+
+# 구역 제목으로 연간/분기를 가르기 (76차 — 실물 HPE 로 확증)
+# ---------------------------------------------------------------------------
+# 보도자료는 흔히 **구역 제목**으로 연간과 분기를 나눠 적습니다:
+#
+#   Fiscal 2023 Full-Year Financial Results          ← 구역 제목 ①
+#   •Diluted net earnings per share ("EPS"):
+#   ◦GAAP of $1.54, up 133% …                        ← 연간값
+#   …
+#   Fourth Quarter Fiscal 2023 Financial Results     ← 구역 제목 ②
+#   •Diluted net EPS:
+#   ◦GAAP of $0.49, up 313% …                        ← 진짜 분기값
+#
+# 값이 있는 줄만 봐서는 둘을 가를 수 없습니다 — 글자가 똑같습니다.
+# 가르는 정보는 **몇 줄 위의 구역 제목**에 있습니다.
+#
+# ⚠️ 문서 제목과 구역 제목을 반드시 구분해야 합니다. 문서 제목은
+#    "Western Digital **Reports** Fiscal Fourth Quarter and Fiscal Year
+#    2022 Financial Results" 처럼 **길고** 회사 이름·Reports 가 들어갑니다.
+#    이것을 구역 제목으로 오인해 연간이라 판정하면 **문서 전체를**
+#    버립니다. 그래서 구역 제목은 ⑴ 짧고 ⑵ Reports/Announces 가 없는
+#    줄만 인정합니다.
+# ⚠️ 제목에 "quarter" 가 함께 있으면(예: "Fourth Quarter and Full Year
+#    2025 Financial Results") 분기값도 그 아래 있으므로 건너뛰지 않습니다.
+_SECTION_TITLE_RE = re.compile(r"financial\s+results", re.I)
+_SECTION_DOC_TITLE_RE = re.compile(r"\b(?:reports?|announces?|announced)\b", re.I)
+_SECTION_QUARTER_RE = re.compile(r"\bquarter(?:ly)?\b|\bQ[1-4]\b", re.I)
+_SECTION_MAX_CHARS = 60       # 이보다 길면 문서 제목으로 봅니다
+_SECTION_LOOKBACK_LINES = 12  # 이름에서 몇 줄 위까지 구역 제목을 찾을까
+
+
+def _in_annual_section(text: str, line_start: int) -> bool:
+    """이 줄이 **연간 구역** 안에 있는가 (가장 가까운 구역 제목으로 판단).
+
+    구역 제목을 못 찾으면 False — 모르면 건드리지 않습니다.
+    """
+    줄들 = text[:line_start].split("\n")[-(_SECTION_LOOKBACK_LINES + 1):]
+    for line in reversed(줄들):
+        조각 = line.strip()
+        if not _SECTION_TITLE_RE.search(조각):
+            continue
+        if len(조각) > _SECTION_MAX_CHARS or _SECTION_DOC_TITLE_RE.search(조각):
+            return False              # 문서 제목 — 구역 제목이 아닙니다
+        if _SECTION_QUARTER_RE.search(조각):
+            return False              # 분기 구역
+        return bool(_ANNUAL_LINE_HEAD_RE.search(조각))
+    return False
 
 # 이름 뒤 숫자를 몇 번까지 다시 찾을 것인가 (74차에 4 → 10)
 # ---------------------------------------------------------------------------
@@ -612,6 +669,10 @@ def find_eps_value(
             if _ANNUAL_LINE_HEAD_RE.match(
                 text[_line_start:_line_start + _ANNUAL_LINE_HEAD].lstrip("•·-– \t")
             ):
+                continue
+            # 몇 줄 위의 **구역 제목**이 연간 구역이라고 말하면 건너뜁니다
+            # (실물 HPE — 위 _in_annual_section 주석 참조)
+            if _in_annual_section(text, _line_start):
                 continue
 
             label_text = label_match.group(0)
@@ -786,6 +847,10 @@ def find_eps_before_per_share(text: str) -> float | None:
             line_start = text.rfind("\n", 0, start) + 1
             window = text[max(line_start, start - _NONGAAP_LOOKBACK):start]
             if _NONGAAP_NEAR_RE.search(window):
+                continue
+            # 배당금은 EPS 가 아닙니다 (76차 — 실물 HPE). 67차에도 JPM
+            # 배당금이 EPS 자리에 들어와 이익 시계열을 톱니로 만들었습니다.
+            if _DIVIDEND_NEAR_RE.search(text[line_start:start]):
                 continue
             back = max(start - _FORECAST_BACK, line_start,
                        text.rfind(". ", 0, start) + 2)

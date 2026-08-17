@@ -789,6 +789,76 @@ def test_comparison_to_a_prior_fiscal_year_is_not_annual_context():
     assert sf.find_eps_value(연간줄, sf.LABELS_ADJUSTED_EPS) is None
 
 
+def test_section_title_separates_annual_from_quarterly():
+    """구역 제목이 연간/분기를 가릅니다 (76차 — 실물 HPE 2023-11-28).
+
+    값이 있는 줄만 보면 둘을 가를 수 없습니다 — 글자가 똑같습니다.
+    가르는 정보는 **몇 줄 위의 구역 제목**에 있습니다. 이 실물에서
+    파서는 연간 1.54 를 물고 있었고, 진짜 분기값은 0.49 입니다.
+    """
+    text = (
+        "Fiscal 2023 Full-Year Financial Results\n"
+        "\u2022Revenue: $29.1 billion, up 2%\n"
+        "\u2022Diluted net earnings per share (\u201cEPS\u201d): \n"
+        "\u25e6GAAP of $1.54, up 133% from the prior-year period\n"
+        "Fourth Quarter Fiscal 2023 Financial Results  \n"
+        "\u2022Revenue: $7.4 billion, down 7%\n"
+        "\u2022Diluted net EPS: \n"
+        "\u25e6GAAP of $0.49, up 313% from the prior-year period\n"
+    )
+    got = sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True)
+    assert got == 0.49, got
+
+
+def test_document_title_is_not_mistaken_for_a_section_title():
+    """문서 제목을 구역 제목으로 오인하면 **문서 전체**를 버립니다.
+
+    문서 제목은 길고 회사 이름·Reports 가 들어갑니다. 이것을 연간
+    구역이라 보면 그 아래 진짜 분기값까지 전부 사라집니다.
+    """
+    본문 = "\u2022Diluted net EPS: \n\u25e6GAAP of $1.30 for the quarter\n"
+
+    # ⑴ 분기가 함께 적힌 문서 제목 (실물 Western Digital)
+    제목1 = ("Western Digital Reports Fiscal Fourth Quarter and Fiscal Year "
+           "2022 Financial Results\n")
+    # ⑵ 연간만 적힌 문서 제목 — "Reports" 로 알아봅니다
+    제목2 = "Acme Corporation Reports Full Year 2025 Financial Results\n"
+    # ⑶ Reports 도 없는 긴 제목 — **길이**로 알아봅니다
+    제목3 = ("Acme Corporation Global Holdings Limited Full Year 2025 "
+           "Financial Results\n")
+
+    for 제목 in (제목1, 제목2, 제목3):
+        got = sf.find_eps_value(제목 + 본문, sf.LABELS_GAAP_EPS,
+                                exclude_nongaap=True)
+        assert got == 1.30, (제목.strip(), got)
+
+
+def test_section_title_naming_both_periods_is_not_annual_only():
+    """제목에 분기가 함께 있으면 분기값도 그 아래 있습니다.
+
+    실물: "Fourth Quarter and Full Year 2025 Financial Results".
+    """
+    text = ("Fourth Quarter and Full Year 2025 Financial Results\n"
+            "\u2022Diluted net EPS: \n\u25e6GAAP of $0.77\n")
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == 0.77
+
+
+def test_dividend_per_share_is_never_eps():
+    """배당금은 EPS 가 아닙니다 (76차 — 실물 HPE).
+
+    67차에도 JPM 배당금이 EPS 자리에 들어와 이익 시계열을 톱니로
+    만든 적이 있습니다. 같은 사고가 다른 경로로 또 났습니다.
+    """
+    text = ("The Board of Directors declared a regular cash dividend of "
+            "$0.13 per share on the company\u2019s common stock.\n")
+    assert sf.find_eps_before_per_share(text) is None
+
+    # 반대쪽: 진짜 EPS 문장은 그대로 읽어야 합니다
+    진짜 = "net loss was $(17.9) million or $(0.40) per diluted share.\n"
+    assert sf.find_eps_before_per_share(진짜) == -0.40
+
+
 def test_normal_quarterly_sentence_still_reads(): 
     """멀쩡한 분기 문장은 그대로 읽혀야 합니다 (한쪽만 막으면 안 됨)."""
     for 문장, 답 in (
