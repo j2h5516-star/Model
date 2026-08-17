@@ -279,15 +279,44 @@ def one_line(quarters: dict) -> str:
 WANTED_PATH = "data/measure/wanted_raw.json"
 
 
-def write_wanted(quarters: dict, path: str = WANTED_PATH) -> int:
-    """로봇이 읽을 '원문 부탁 목록'을 파일로 적고, 건수를 돌려줍니다."""
+def merge_wanted(*목록들: list[dict], limit: int = 60) -> list[dict]:
+    """여러 곳에서 모은 부탁 목록을 하나로 합칩니다 (앞엣것이 우선).
+
+    같은 공시를 두 번 적어도 로봇은 한 번만 담아 오므로, (종목, 발표일)이
+    겹치면 **먼저 온 것만** 남깁니다. 86차부터 두 곳에서 옵니다 —
+    바깥 자(야후)와 어긋난 칸, 그리고 이웃과 어긋난 칸(조사).
+    야후 쪽을 앞에 두는 이유: 그쪽은 **바깥 증거**라 우리 착각이 섞일
+    여지가 적습니다.
+    """
+    본 = set()
+    out = []
+    for 목록 in 목록들:
+        for row in 목록 or []:
+            열쇠 = (row.get("종목"), str(row.get("발표일") or "")[:10])
+            if not 열쇠[0] or not 열쇠[1] or 열쇠 in 본:
+                continue
+            본.add(열쇠)
+            out.append(row)
+            if len(out) >= limit:
+                return out
+    return out
+
+
+def write_wanted(quarters: dict, path: str = WANTED_PATH,
+                 extra: list[dict] | None = None) -> int:
+    """로봇이 읽을 '원문 부탁 목록'을 파일로 적고, 건수를 돌려줍니다.
+
+    extra 로 바깥 자(야후)와 어긋난 칸을 함께 넘기면 앞자리에 놓습니다.
+    """
     import json
 
-    목록 = wanted_raw_filings(quarters)
+    목록 = merge_wanted(extra or [], wanted_raw_filings(quarters))
     with open(path, "w", encoding="utf-8") as f:
         json.dump({
-            "설명": ("조사(audit_data.py)가 고른 '원문이 필요한 공시' 목록입니다. "
-                   "수집 로봇이 이 목록에 있는 공시는 값을 읽었더라도 원문을 "
+            "설명": ("'원문이 필요한 공시' 목록입니다. 두 곳에서 옵니다 — "
+                   "바깥 자(야후)와 어긋난 칸(vendor_compare)과 "
+                   "이웃 분기와 어긋난 칸(audit_data). "
+                   "수집 로봇은 이 목록에 있는 공시는 값을 읽었더라도 원문을 "
                    "함께 담아 옵니다 — 잘못 읽은 값의 원인을 다음 세션이 "
                    "실물로 확인할 수 있게 하려는 것입니다. 값은 지우지 않습니다."),
             "목록": 목록,
@@ -307,4 +336,17 @@ if __name__ == "__main__":
               f"{str(_row['라벨']):8s} {_row['앞']:>12,.2f} → "
               f"{_row['값']:>12,.2f} → {_row['뒤']:>12,.2f}")
     print()
-    print(f"원문 부탁 목록 {write_wanted(_q)}건 → {WANTED_PATH}")
+    # 바깥 자(야후)와 어긋난 칸도 함께 부탁합니다 (86차) — 조사는 이웃과
+    # 비교하므로 CRM 처럼 여러 분기가 나란히 무너지면 못 봅니다.
+    _바깥 = []
+    try:
+        import json as _json
+
+        import vendor_compare as _vc
+
+        with open("data/measure/vendor.json", encoding="utf-8") as _f:
+            _바깥 = _vc.wanted_from_mismatch(_q, _json.load(_f))
+        print(f"바깥 자(야후)와 어긋난 칸 {len(_바깥)}건을 목록 앞자리에 둡니다.")
+    except (OSError, ValueError) as _e:
+        print(f"야후 파일을 못 읽어 바깥 자 없이 적습니다: {_e}")
+    print(f"원문 부탁 목록 {write_wanted(_q, extra=_바깥)}건 → {WANTED_PATH}")

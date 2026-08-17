@@ -243,6 +243,59 @@ def test_empty_material_does_not_crash():
     assert "확인 못함" in audit_data.one_line({})
 
 
+def test_write_wanted_actually_puts_the_outside_ruler_in_front():
+    """합치는 규칙만 맞고 **부르는 쪽이 순서를 뒤집으면** 소용없습니다.
+
+    82차에 겪은 일 — 규칙은 옳은데 배선이 틀려도 시험이 초록이었습니다.
+    그래서 여기서는 규칙이 아니라 `write_wanted` 가 실제로 적어 낸
+    **파일 내용**을 봅니다.
+    """
+    import json
+    import tempfile
+
+    값들 = [1.18, 1.22, 5.18, 1.20, 1.21]
+    rows = [분기(f"Q{i}", adj_eps=v, announced_date=f"2023-0{i + 1}-01")
+            for i, v in enumerate(값들)]
+    바깥 = [{"종목": "CRM", "발표일": "2025-09-03", "이유": "야후는 1.96"}]
+
+    경로 = tempfile.mktemp(suffix=".json")
+    개수 = audit_data.write_wanted({"VZ": rows}, 경로, extra=바깥)
+    with open(경로, encoding="utf-8") as f:
+        목록 = json.load(f)["목록"]
+    assert 개수 == 2
+    assert [r["종목"] for r in 목록] == ["CRM", "VZ"], "바깥 자가 앞자리여야 합니다"
+
+
+def test_merge_wanted_keeps_the_outside_ruler_first_and_drops_repeats():
+    """두 곳에서 온 부탁을 합칠 때 바깥 자(야후)를 앞자리에 둡니다 (86차).
+
+    같은 공시가 양쪽에 있으면 한 번만 남깁니다 — 로봇은 어차피 한 번만
+    담아 오는데, 두 줄이 목록 자리를 두 칸 먹으면 다른 공시가 밀립니다.
+    """
+    야후 = [{"종목": "CRM", "발표일": "2025-09-03", "이유": "야후는 1.96"}]
+    조사 = [{"종목": "CRM", "발표일": "2025-09-03", "이유": "이웃보다 튐"},
+          {"종목": "AMBA", "발표일": "2026-02-26", "이유": "이웃보다 튐"}]
+    합 = audit_data.merge_wanted(야후, 조사)
+    assert [r["종목"] for r in 합] == ["CRM", "AMBA"]
+    assert 합[0]["이유"] == "야후는 1.96"          # 야후 쪽이 살아남는다
+
+
+def test_merge_wanted_drops_rows_that_cannot_point_at_a_filing():
+    """종목이나 발표일이 비면 어느 공시인지 짚을 수 없어 버립니다."""
+    합 = audit_data.merge_wanted([
+        {"종목": "AAA", "발표일": None},
+        {"종목": None, "발표일": "2026-01-01"},
+        {"종목": "BBB", "발표일": "2026-01-01"},
+    ])
+    assert [r["종목"] for r in 합] == ["BBB"]
+
+
+def test_merge_wanted_respects_the_limit():
+    """목록이 무한정 길어지지 않아야 합니다 (로봇 보관 자리는 유한)."""
+    많이 = [{"종목": f"T{i}", "발표일": "2026-01-01"} for i in range(100)]
+    assert len(audit_data.merge_wanted(많이, limit=7)) == 7
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

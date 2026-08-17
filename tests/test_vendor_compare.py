@@ -161,6 +161,89 @@ def test_ticker_missing_from_vendor_is_skipped_not_counted():
     assert r["칸별"]["GAAP EPS"]["다름"] == 0
 
 
+def test_wanted_asks_for_the_filing_behind_a_gaap_eps_disagreement():
+    """야후와 어긋난 GAAP EPS 칸은 원문을 부탁해야 합니다 (86차 CRM 실물).
+
+    실물: CRM 2025-07-31 분기 — 우리 0.00 ↔ 야후 1.96.
+    이웃 분기까지 나란히 무너져 조사(audit_data)는 못 보는 자리입니다.
+    """
+    q = {"CRM": [우리분기("2025-07-31", gaap_eps=0.0,
+                        announced_date="2025-09-03")]}
+    v = 보관(CRM=[야후분기("2025-07-31", gaap_eps=1.96)])
+    목록 = vc.wanted_from_mismatch(q, v)
+    assert [r["종목"] for r in 목록] == ["CRM"]
+    assert 목록[0]["발표일"] == "2025-09-03"      # 분기끝이 아니라 **발표일**
+    assert "1.96" in 목록[0]["이유"]
+
+
+def test_wanted_ignores_gross_margin_because_the_gap_is_a_definition_gap():
+    """매출총이익률 차이는 결함이 아니라 정의 차이라 부탁하지 않습니다.
+
+    실물(86차): CSCO 우리 67.5(회사 발표 논갭) ↔ 야후 63.2(갭 계산).
+    이걸 부탁 목록에 넣으면 멀쩡한 공시가 자리를 다 차지합니다.
+    """
+    q = {"CSCO": [우리분기("2025-07-26", gross_margin_pct=67.5,
+                         announced_date="2025-08-13")]}
+    v = 보관(CSCO=[야후분기("2025-07-26", gross_margin_pct=63.2)])
+    r = vc.compare(q, v)
+    assert r["칸별"]["매출총이익률"]["다름"] == 1      # 재기는 한다
+    assert vc.wanted_from_mismatch(q, v) == []      # 부탁은 안 한다
+
+
+def test_wanted_ranks_under_reads_as_high_as_over_reads():
+    """우리가 **작게** 읽은 칸도 앞자리에 와야 합니다 (86차에 실제로 당함).
+
+    자리는 유한한데 '우리÷야후' 큰 순으로만 줄을 세우면, 우리가 작게 읽은
+    칸(CRM 0.00 ↔ 야후 1.96)은 배수가 0 이라 맨 뒤로 밀립니다.
+    정작 원문이 가장 급한 칸이 그것이었습니다.
+    """
+    q = {
+        "OVER": [우리분기("2026-03-31", gaap_eps=4.00,
+                        announced_date="2026-04-20")],   # 4배 크게 읽음
+        "UNDER": [우리분기("2026-03-31", gaap_eps=0.00,
+                         announced_date="2026-04-21")],  # 통째로 놓침
+        "SMALL": [우리분기("2026-03-31", gaap_eps=1.30,
+                         announced_date="2026-04-22")],  # 살짝 어긋남
+    }
+    v = 보관(OVER=[야후분기("2026-03-31", gaap_eps=1.00)],
+           UNDER=[야후분기("2026-03-31", gaap_eps=1.96)],
+           SMALL=[야후분기("2026-03-31", gaap_eps=1.00)])
+    이름 = [r["종목"] for r in vc.wanted_from_mismatch(q, v, limit=2)]
+    assert "UNDER" in 이름, f"작게 읽은 칸이 밀렸습니다: {이름}"
+    assert "SMALL" not in 이름, f"살짝 어긋난 칸이 앞자리를 먹었습니다: {이름}"
+
+
+def test_wanted_does_not_let_one_ticker_eat_the_whole_list():
+    """한 종목이 목록을 다 먹으면 안 됩니다 (86차 실물: 단위 차이 한 종류가
+    자리 30칸 중 24칸을 차지했습니다). 같은 회사는 형식이 같아 여러 건을
+    봐도 배우는 게 없습니다."""
+    q = {"NFLX": [우리분기(f"2025-0{i}-30", gaap_eps=9.9,
+                         announced_date=f"2025-0{i}-30") for i in range(1, 6)],
+         "OTHER": [우리분기("2025-06-30", gaap_eps=8.8,
+                          announced_date="2025-06-30")]}
+    v = 보관(NFLX=[야후분기(f"2025-0{i}-30", gaap_eps=1.0) for i in range(1, 6)],
+           OTHER=[야후분기("2025-06-30", gaap_eps=1.0)])
+    목록 = vc.wanted_from_mismatch(q, v)
+    assert sum(r["종목"] == "NFLX" for r in 목록) == vc._PER_TICKER_MAX
+    assert any(r["종목"] == "OTHER" for r in 목록), "다른 종목이 밀려났습니다"
+
+
+def test_wanted_skips_rows_with_no_announcement_date():
+    """발표일이 없으면 어느 공시인지 짚을 수 없어 담지 않습니다."""
+    q = {"AAA": [우리분기("2026-03-31", gaap_eps=9.9, announced_date=None)]}
+    v = 보관(AAA=[야후분기("2026-03-31", gaap_eps=1.0)])
+    assert vc.compare(q, v)["칸별"]["GAAP EPS"]["다름"] == 1
+    assert vc.wanted_from_mismatch(q, v) == []
+
+
+def test_wanted_stays_silent_when_the_two_rulers_agree():
+    """두 자가 같으면 부탁할 것이 없습니다 (조용해야 정상)."""
+    q = {"AAA": [우리분기("2026-03-31", gaap_eps=1.20, revenue=1_000.0,
+                        announced_date="2026-04-20")]}
+    v = 보관(AAA=[야후분기("2026-03-31", gaap_eps=1.20, revenue=1_000.0)])
+    assert vc.wanted_from_mismatch(q, v) == []
+
+
 def test_empty_inputs_do_not_crash():
     """재료가 비어도 무너지지 않고 '확인 못함'으로 말해야 합니다."""
     r = vc.compare({}, {})
