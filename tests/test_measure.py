@@ -226,6 +226,34 @@ def test_raw_file_names_keep_the_whole_date_and_say_why():
     assert "파싱 실패" in 실패본, 실패본[:120]
 
 
+def test_investor_slide_deck_is_not_an_earnings_release():
+    """투자자 설명회 자료는 실적발표가 아닙니다 (85차).
+
+    80·84차에 KLAC·QRVO·MKSI 세 건이 설명회 자료인데 실적발표로 통과해
+    엉뚱한 값을 냈습니다 (KLAC 4.93·35% 는 모델 가정과 KPI 표,
+    MKSI 5.59 는 분기인지 연간인지도 확정 못 한 값).
+
+    갈라주는 표시는 **이미지 파일 이름**입니다 — 설명회 자료는 장마다
+    그림이라 쪽 번호가 박힌 이름을 씁니다. 저장소 원문 694건 실측에서
+    쪽 그림 0개가 672건, 10개 이상이 20건이고 그 사이는 2건뿐입니다.
+    """
+    슬라이드 = "".join(
+        f'<img src="q3fy2026slides{i:03d}.jpg" title="slide{i}"/> 내용\n'
+        for i in range(1, 15)
+    ) + "Fourth Quarter Results net income per share of $1.00\n"
+    assert sf._looks_like_slide_deck(슬라이드)
+    assert not sf._looks_like_earnings(슬라이드)
+
+    # 그림이 있는 **정상 보도자료**는 통과해야 합니다 (BAC 는 19장인데
+    # 쪽 번호가 박힌 이름이 하나도 없습니다)
+    정상 = "".join(
+        f'<img src="bac-logo{i}.jpg"/> 내용\n' for i in range(1, 20)
+    ) + ("Bank of America Reports Third Quarter Results. Diluted earnings "
+         "per share of $1.06 compared to $0.81.\n")
+    assert not sf._looks_like_slide_deck(정상)
+    assert sf._looks_like_earnings(정상)
+
+
 def test_wanted_raw_list_is_read_from_the_repo(tmpdir=None):
     """조사가 부탁한 (종목, 발표일)만 True 가 되어야 합니다 (73차).
 

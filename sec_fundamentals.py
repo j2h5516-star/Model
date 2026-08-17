@@ -1630,6 +1630,12 @@ def fetch_earnings_8k(
         if text_source and not report["text_source"]:
             report["text_source"] = text_source
 
+        # 투자자 설명회 자료는 첨부(EX-99)로 와도 실적발표가 아닙니다 (85차).
+        # 이 검사를 아래 표지 판별보다 **먼저** 두는 이유: 설명회 자료는
+        # 대개 EX-99 첨부라, 표지 판별을 건너뛰는 길로 그대로 들어옵니다.
+        if _looks_like_slide_deck(text):
+            continue
+
         # EX-99 첨부(보도자료)를 확보했다면 표지 문구 판별은 건너뜁니다.
         # 표지에는 숫자가 없어 실적발표인데도 탈락하는 경우가 있기 때문입니다.
         if not had_exhibit and not _looks_like_earnings(text):
@@ -1787,6 +1793,32 @@ _RESULTS_HINTS_RE = re.compile(
 )
 
 
+# 투자자 설명회 자료(슬라이드 묶음)를 실적발표와 가르는 표시 (85차)
+# ---------------------------------------------------------------------------
+# 80·84차에 KLAC·QRVO·MKSI 세 건이 **투자자 설명회 자료인데 실적발표로
+# 통과**해 엉뚱한 값을 냈습니다(KLAC 4.93·35% 는 모델 가정과 KPI 표,
+# MKSI 5.59 는 분기인지 연간인지도 확정 못 한 값). 그때는 근거가 모자라
+# 미뤘는데, 세 번째 사례가 나와 실물로 재 봤습니다.
+#
+# 갈라주는 표시는 **이미지 파일 이름**입니다. 설명회 자료는 장마다 그림이라
+# `src="…slide7.jpg"` · `…p14g1.jpg` · `…ex99_1p81g1.jpg` 처럼 **쪽 번호가
+# 박힌 이름**을 씁니다. 실적발표문에도 그림(로고·차트)은 있지만 그런
+# 이름은 아닙니다.
+#
+# 저장소 원문 694건 실측 — 경계가 아주 깨끗합니다:
+#     쪽 그림 0개   672건   (BAC 19·JPM 14·UNH 17 은 전부 0)
+#     쪽 그림 1~9개   2건
+#     쪽 그림 10개+  20건   (KLAC 142 · GS 118 · QRVO 95 · MKSI 51 · PG 35)
+# 2개와 10개 사이가 비어 있어 문턱을 10으로 둡니다.
+_SLIDE_SRC_RE = re.compile(r'src="[^"]*(?:slide|p\d+g\d+|ex99_1p\d)', re.I)
+_SLIDE_DECK_MIN = 10
+
+
+def _looks_like_slide_deck(text: str) -> bool:
+    """쪽 번호가 박힌 그림이 여럿이면 투자자 설명회 자료입니다."""
+    return len(_SLIDE_SRC_RE.findall(text)) >= _SLIDE_DECK_MIN
+
+
 def _looks_like_earnings(text: str) -> bool:
     """이 공시가 실적발표인지 대략 판별합니다."""
     lowered = text[:20000].lower()
@@ -1794,6 +1826,9 @@ def _looks_like_earnings(text: str) -> bool:
         return False
     # 합병·인수 발표인데 실적 신호가 없으면 실적발표가 아닙니다
     if _MERGER_HINTS_RE.search(lowered) and not _RESULTS_HINTS_RE.search(lowered):
+        return False
+    # 투자자 설명회 자료는 실적발표가 아닙니다 (위 상자 참조)
+    if _looks_like_slide_deck(text):
         return False
     return True
 
