@@ -237,6 +237,25 @@ def _scan_labeled_value(
                 if _ANNUAL_CONTEXT_RE.search(text[window_start:start]):
                     continue
 
+            # 두 이익률의 **차이**를 말하는 자리면 이익률이 아닙니다
+            # (77차 — 실물 AMBA). 라벨 앞쪽만 보고, 줄을 넘지 않습니다.
+            if is_percent:
+                _s = label_match.start()
+                _ls = text.rfind("\n", 0, _s) + 1
+                if _GM_DIFFERENCE_NEAR_RE.search(
+                    text[max(_ls, _s - _GM_DIFFERENCE_LOOKBACK):_s]
+                ):
+                    continue
+                # 전망 문맥이면 실적이 아닙니다 (77차 — 실물 AMBA:
+                # "Gross margin on a non-GAAP basis **is expected to be**
+                # between 59.0% and 60.5%"). 실제 4분기 값은 59.8% 인데
+                # 가까이 붙은 전망값 59.0 을 물고 있었습니다.
+                # 전망 말은 라벨 **뒤**에 오므로 같은 줄의 앞뒤를 다 봅니다.
+                _le = text.find("\n", label_match.end())
+                _le = _le if _le != -1 else len(text)
+                if _PCT_FORECAST_RE.search(text[_ls:_le]):
+                    continue
+
             search_from = label_match.end()
             if same_line_only:
                 line_end = text.find("\n", search_from)
@@ -309,12 +328,40 @@ LABELS_NONGAAP_OP_INCOME = [
 ]
 
 # 논갭 매출총이익률(%)
+# 77차 실물(AMBA)에서 배운 것: 회사는 **어순을 바꿔** 적습니다 —
+#   "Gross margin **on a non-GAAP basis** for the fourth quarter … was 60.7%"
+# 아래 이름들은 전부 "non-GAAP" 이 앞에 오는 형태만 잡아서 이 문장을
+# 놓쳤고, 그 바람에 훨씬 뒤쪽 각주의 "The difference between GAAP and
+# non-GAAP gross margin was **1.4%**" 를 물어 **1.4% 를 매출총이익률로**
+# 저장했습니다. AMBA 실제 매출총이익률은 60% 안팎입니다.
 LABELS_NONGAAP_GM_PCT = [
     r"non[-\s]?GAAP\s+gross\s+margin(?:\s+percentage)?",
     r"adjusted\s+gross\s+margin",
     r"gross\s+margin\s*\(non[-\s]?GAAP\)",
     r"non[-\s]?GAAP\s+gross\s+profit\s+margin",
+    # 어순이 뒤집힌 형태 (실물 AMBA) — 가장 마지막에 둡니다
+    r"gross\s+margin\s+on\s+an?\s+non[-\s]?GAAP\s+basis",
+    r"gross\s+margin\s+on\s+an?\s+adjusted\s+basis",
 ]
+
+# 매출총이익률 이름 앞에 이 말이 있으면 **이익률이 아니라 두 이익률의 차이**
+# 입니다 (77차 — 실물 AMBA "The difference between GAAP and non-GAAP gross
+# margin was 1.4%"). 차이는 1~3% 라 범위 검사(-100~100%)를 그대로 통과해
+# 그동안 아무도 못 잡았습니다.
+_GM_DIFFERENCE_NEAR_RE = re.compile(
+    r"\bdifference\b|\bgap\s+between\b|\bbridge\b|\breconcil", re.I)
+_GM_DIFFERENCE_LOOKBACK = 70
+
+# 이익률 자리의 **전망** 문맥 (77차 — 실물 AMBA "Gross margin on a non-GAAP
+# basis **is expected to be** between 59.0% and 60.5%"). 실제 4분기 값은
+# 59.8% 인데 가까이 붙은 전망값 59.0 을 물고 있었습니다.
+# ⚠️ 기존 _FORECAST_NEAR_RE 는 "expects/expecting" 만 잡고 **"expected"**
+#    를 못 잡습니다. 그 규칙은 EPS 경로도 함께 쓰므로 건드리지 않고,
+#    이익률 전용 규칙을 따로 둡니다 (고치는 범위를 좁게).
+_PCT_FORECAST_RE = re.compile(
+    r"\b(?:expect(?:s|ed|ing)?|anticipat(?:e|es|ed|ing)|guidance|outlook"
+    r"|estimat(?:e|es|ed)|project(?:s|ed|ing)?|target(?:s|ed|ing)?"
+    r"|reaffirm(?:s|ing|ed)?)\b", re.I)
 
 # GAAP 매출총이익률(%) — 논갭이 없을 때 대체
 LABELS_GAAP_GM_PCT = [

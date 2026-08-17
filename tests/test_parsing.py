@@ -753,6 +753,73 @@ def test_fiscal_year_quarter_sentence_is_not_annual():
     assert fe.parse_guidance_revenue(block)["mid"] is None, "연간 불릿이 통과!"
 
 
+# ---------------------------------------------------------------------------
+# 77차 — 매출총이익률이 44% 어긋난 원인 (실물 AMBA 로 확증)
+# ---------------------------------------------------------------------------
+
+def test_difference_between_margins_is_not_a_margin():
+    """"두 이익률의 **차이**"를 이익률로 읽으면 안 됩니다 (실물 AMBA).
+
+    각주에 "The difference between GAAP and non-GAAP gross margin was
+    1.4%" 가 있는데, 파서가 이 1.4 를 **매출총이익률**로 저장하고
+    있었습니다. AMBA 실제 매출총이익률은 60% 안팎입니다.
+    차이는 1~3% 라 범위 검사(-100~100%)를 그대로 통과했습니다.
+    """
+    text = ("The difference between GAAP and non-GAAP gross margin was "
+            "1.4% and 2.0%, or $1.4 million and $1.7 million.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) is None
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) is None
+
+
+def test_reversed_word_order_margin_is_read():
+    """회사는 어순을 바꿔 적습니다 — "Gross margin **on a non-GAAP basis**".
+
+    기존 이름들은 전부 "non-GAAP" 이 앞에 오는 형태만 잡아 이 문장을
+    놓쳤고, 그래서 훨씬 뒤쪽 각주의 1.4% 를 물었습니다.
+    """
+    text = ("Gross margin on a non-GAAP basis for the fourth quarter of "
+            "fiscal 2026 \n    was 59.8%, compared with 62.0% for the same "
+            "period in fiscal 2025.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) == 59.8
+
+
+def test_forecast_margin_is_not_an_actual():
+    """전망 이익률을 실적으로 읽으면 안 됩니다 (실물 AMBA).
+
+    "is expected to be between 59.0% and 60.5%" 의 59.0 이 실제 4분기
+    값 59.8 보다 라벨에 가까이 붙어 있어 그쪽을 물고 있었습니다.
+    ⚠️ 기존 전망 규칙은 "expects/expecting" 만 잡고 **"expected"** 를
+       못 잡습니다 — 그래서 이익률 전용 규칙을 따로 뒀습니다.
+    """
+    전망만 = ("Gross margin on a non-GAAP basis is expected to be between "
+            "59.0% and 60.5%.\n")
+    assert sf.find_labeled_value(전망만, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) is None
+
+    # 실적과 전망이 함께 있으면 **실적**을 골라야 합니다
+    둘다 = ("Gross margin on a non-GAAP basis for the fourth quarter \n"
+           "    was 59.8%, compared with 62.0% for the same period.\n"
+           "\u2022   Gross margin on a non-GAAP basis is expected to be "
+           "between 59.0% and 60.5%\n")
+    assert sf.find_labeled_value(둘다, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) == 59.8
+
+
+def test_plain_margin_sentence_still_reads():
+    """멀쩡한 이익률 문장은 그대로 읽혀야 합니다 (한쪽만 막으면 안 됨)."""
+    for 문장, 답 in (
+        ("Non-GAAP gross margin was 60.7% for the quarter.\n", 60.7),
+        ("GAAP gross margin was 59.2% in the fourth quarter.\n", 59.2),
+        ("Adjusted gross margin of 45.1% for the period.\n", 45.1),
+    ):
+        got = sf.find_labeled_value(문장, sf.LABELS_NONGAAP_GM_PCT + sf.LABELS_GAAP_GM_PCT,
+                                    is_percent=True)
+        assert got == 답, (문장, got)
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
