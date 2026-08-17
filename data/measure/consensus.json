@@ -293,6 +293,33 @@
       "rev_analysts": 18
      }
     }
+   },
+   {
+    "as_of": "2026-08-17",
+    "rows": {
+     "0q": {
+      "avg": 3.63134,
+      "low": 3.2,
+      "high": 4.13,
+      "analysts": 20,
+      "year_ago": 1.1,
+      "rev_avg": 1158430840.0,
+      "rev_low": 1077900000.0,
+      "rev_high": 1261000000.0,
+      "rev_analysts": 18
+     },
+     "+1q": {
+      "avg": 4.38118,
+      "low": 3.69,
+      "high": 5.26,
+      "analysts": 20,
+      "year_ago": 1.67,
+      "rev_avg": 1359984380.0,
+      "rev_low": 1218900000.0,
+      "rev_high": 1525000000.0,
+      "rev_analysts": 18
+     }
+    }
    }
   ],
   "STRL": [
