@@ -553,7 +553,10 @@ LABELS_GAAP_EPS = [
 # ⚠️ 바로 앞 한 낱말만 봐서는 안 됩니다. "Non-GAAP net income per diluted share" 에서
 #    'income per diluted share' 부분만 매칭되면 그 앞은 "Non-GAAP net " 이라
 #    'non-GAAP' 이 낱말 하나 건너에 있습니다. 그래서 범위를 두고 훑습니다.
-_NONGAAP_NEAR_RE = re.compile(r"non[-\s]?GAAP|adjusted", re.I)
+# 83차 — "Core EPS" 도 논갭입니다 (실물 PG). P&G 는 자기네 논갭 지표를
+# "Core" 라고 부릅니다: "Diluted EPS $1.63 … **Core EPS $1.59**".
+# 이 말을 모르면 논갭 값이 GAAP 칸에 들어갑니다.
+_NONGAAP_NEAR_RE = re.compile(r"non[-\s]?GAAP|adjusted|\bcore\b", re.I)
 _NONGAAP_LOOKBACK = 40   # 이름 앞 몇 글자까지 되돌아볼 것인가
 
 # 배당금 문맥 — "$0.13 per share" 앞에 배당 이야기가 있으면 EPS 가 아닙니다
@@ -740,9 +743,21 @@ def find_eps_value(
         for label_match in pattern.finditer(text):
             # 이미지 슬라이드가 눌린 줄은 문장이 아니라 차트 숫자 나열입니다
             # (실물: MKSI 8.00 — 연간 차트 값). 슬라이드는 날짜 열 파서만 다룹니다.
+            #
+            # ⚠️ 83차 — "줄 안에 `<img` 가 **있기만** 하면"으로 재던 것을
+            #    **라벨 앞 거리**로 바꿉니다. 눌린 문서는 한 줄이 수천 자라,
+            #    이미지 뒤에 이어지는 **멀쩡한 문장까지 통째로** 버렸습니다.
+            #
+            #    실물 BAC 2025-10-15: "Diluted earnings per share of $1.06
+            #    compared to $0.81" 이 진짜 값인데, 그 줄 맨 앞에 이미지가
+            #    있다는 이유로 건너뛰어 **BAC 전 분기가 "없음"** 이었습니다.
+            #    라벨과 이미지의 실측 거리: BAC 1,094~4,751자 · PG 슬라이드
+            #    잡음 104자. 80차에 매출총이익률 쪽에서 같은 판단을 이미
+            #    했고(150자), 같은 자를 EPS 쪽에도 댑니다.
             line_start = text.rfind("\n", 0, label_match.start()) + 1
-            line_end_pos = text.find("\n", label_match.end())
-            if "<img" in text[line_start : line_end_pos if line_end_pos > 0 else len(text)]:
+            if "<img" in text[max(line_start,
+                                 label_match.start() - _SLIDE_LOOKBACK):
+                             label_match.start()]:
                 continue
 
             # 전망·연간 목표 문맥이면 이 자리는 분기 실적이 아닙니다 (사고 16).

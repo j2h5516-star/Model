@@ -859,6 +859,45 @@ def test_dividend_per_share_is_never_eps():
     assert sf.find_eps_before_per_share(진짜) == -0.40
 
 
+def test_slide_guard_measures_distance_not_the_whole_line():
+    """슬라이드 규칙은 **라벨 앞 거리**로 재야 합니다 (83차 — 실물 BAC).
+
+    눌린 문서는 한 줄이 수천 자입니다. "줄 안에 <img 가 있기만 하면"
+    으로 재면 이미지 뒤에 이어지는 **멀쩡한 문장까지** 버립니다.
+    BAC 는 그래서 **전 분기가 "없음"** 이었습니다 — 진짜 값 1.06 이
+    원문에 그대로 있는데도.
+    실측 거리: BAC 진짜 문장 1,094~4,751자 · PG 슬라이드 잡음 104자.
+    """
+    # 이미지가 **멀리** 있으면 그 뒤 문장은 읽어야 합니다
+    멀리 = ('<img src="a.jpg"/> ' + "x" * 400 +
+          " Diluted earnings per share of $1.06 compared to $0.81.\n")
+    assert sf.find_eps_value(멀리, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == 1.06
+
+    # 이미지가 **바로 앞**이면 차트 숫자 나열이므로 건너뜁니다
+    가까이 = ('<img src="b.jpg"/> \u2022 Core gross margin \u2022 diluted '
+           'earnings per share 5 2 1 6 3\n')
+    assert sf.find_eps_value(가까이, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+
+def test_core_eps_is_non_gaap():
+    """"Core EPS" 는 논갭입니다 (83차 — 실물 PG).
+
+    P&G 는 자기네 논갭 지표를 "Core" 라고 부릅니다:
+    "Diluted EPS $1.63 … **Core EPS $1.59**".
+    이 말을 모르면 논갭 값이 GAAP 칸에 들어갑니다.
+    """
+    text = "Core earnings per share were $1.59, +3% vs the prior year.\n"
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+    # 진짜 GAAP 줄은 그대로 읽어야 합니다
+    진짜 = "Diluted net earnings per share were $1.63 for the quarter.\n"
+    assert sf.find_eps_value(진짜, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == 1.63
+
+
 def test_normal_quarterly_sentence_still_reads(): 
     """멀쩡한 분기 문장은 그대로 읽혀야 합니다 (한쪽만 막으면 안 됨)."""
     for 문장, 답 in (
