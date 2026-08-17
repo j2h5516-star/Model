@@ -546,6 +546,49 @@ def test_label_unit_still_never_multiplies_per_share_values():
     assert result["gaap_eps"] == 0.92, f"주당 금액에 단위가 곱해졌습니다: {result['gaap_eps']}"
 
 
+def test_segment_revenue_is_not_read_as_total_revenue():
+    """"Product revenue" 는 매출의 **한 조각**이지 전체 매출이 아닙니다.
+
+    실물 (89차, SNOW): 머리기사가 "Product revenue of $1.16 billion" 이고
+    전체 매출은 뒤쪽 재무제표에만 있습니다. 이름과 값의 거리로 고르는
+    규칙이라 가까운 조각이 이겨, 전체 매출 자리에 조각이 들어갔습니다.
+    """
+    글 = (
+        "(in thousands)\n"
+        "Product revenue                      $ 1,090,500\n"
+        "Total revenue                        $ 1,144,969\n"
+    )
+    assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 1_144_969_000
+
+
+def test_fragment_is_used_when_the_release_publishes_nothing_else():
+    """조각만 실린 보도자료에서는 **조각이라도 씁니다.**
+
+    실물 (89차, VRTX): 문서 전체에 "Total/Net revenue" 가 한 번도 안 나오고
+    "Product revenue of $2.69 billion" 뿐인데 그 값이 곧 전체 매출입니다.
+    처음엔 조각을 무조건 걸러 냈다가 **맞는 값을 잃는 것**을 전수 대조에서
+    보고 규칙을 "전체가 있을 때만 조각을 버린다"로 고쳤습니다.
+    """
+    글 = "(in thousands)\nProduct revenue      $ 400,000\n"
+    assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 400_000_000
+
+
+def test_fragment_loses_to_the_whole_for_every_segment_word():
+    """전체 매출이 함께 실려 있으면 어떤 조각도 이기지 못해야 합니다."""
+    for 조각 in ("Product", "Subscription", "Deferred", "Service",
+                "Advertising", "Interest"):
+        글 = (f"(in thousands)\n{조각} revenue      $ 400,000\n"
+             f"Total revenue                 $ 500,000\n")
+        assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 500_000_000, 조각
+
+
+def test_total_and_net_revenue_are_still_read():
+    """조각을 걸러내면서 **전체 매출까지 잃으면** 고친 것이 아닙니다."""
+    for 이름 in ("Total revenue", "Net revenues", "Net sales", "Revenue"):
+        글 = f"(in thousands)\n{이름}      $ 500,000\n"
+        assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 500_000_000, 이름
+
+
 def test_annual_figures_are_not_read_as_quarterly():
     """'4분기 및 연간' 보도자료에서 연간 숫자를 분기 자리에 넣으면 안 됩니다.
 

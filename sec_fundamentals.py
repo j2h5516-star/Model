@@ -282,6 +282,39 @@ def _scan_labeled_value(
     for pattern_str in label_patterns:
         pattern = re.compile(pattern_str, re.I)
         for label_match in pattern.finditer(text):
+            # 맨 이름 "revenue" 앞에 **부문 이름**이 붙어 있으면 그것은
+            # 전체 매출이 아니라 **한 조각**입니다 (89차 — 실물 SNOW).
+            #
+            # SNOW 보도자료의 머리기사는 "**Product revenue** of $1.16
+            # billion" 이고, 전체 매출(Total revenue)은 뒤쪽 재무제표에만
+            # 있습니다. 이름과 값의 거리로 고르는 규칙이라 가까운 쪽인
+            # 조각이 이겼습니다.
+            #
+            # 88차 전에는 이 값이 단위 없이 1,090.5 로 들어와 뒷단 검사에
+            # 걸려 XBRL 의 올바른 값(1,144,969,000)이 살아남았습니다.
+            # 88차가 단위를 맞춰 주자 **그럴듯한 크기**가 되면서 올바른
+            # 값을 밀어냈습니다 — 88차 ④에 "그럴듯해져서 더 위험하다"고
+            # 적어 둔 일이 SNOW 네 분기에서 실제로 일어났습니다.
+            #
+            # 저장소 원문 실측 — "revenue" 앞 낱말: deferred 298 · product
+            # 264 · service(s) 290 · organic 151 · other 143 · interest 104
+            # · trading 103 · advertising 94 · subscription 85.
+            # 전부 전체 매출이 아닙니다 (deferred 는 아예 부채 항목).
+            #
+            # 조각만 싣는 회사는 매출이 **없음**이 됩니다 — 조각을 전체라고
+            # 하는 것보다 안전합니다 (헌법 1조).
+            # ⚠️ 다만 **전체 매출이 그 문서에 있을 때만** 조각을 물립니다.
+            #    조각만 싣는 회사가 실제로 있습니다 — 실물 VRTX: 문서 전체에
+            #    "Total/Net revenue" 가 **한 번도 안 나오고** "Product revenue
+            #    of $2.69 billion" 뿐인데, 그 값이 곧 전체 매출입니다.
+            #    무조건 걸러 냈더니 **맞는 값(26.9억)을 잃었습니다.**
+            #    "전체가 있으면 조각을 버리고, 조각뿐이면 조각을 쓴다."
+            if _SEGMENT_REVENUE_RE.search(
+                text[max(0, label_match.start() - _SEGMENT_LOOKBACK):
+                     label_match.end()]
+            ) and _WHOLE_REVENUE_RE.search(text):
+                continue
+
             if avoid_annual:
                 # 라벨 앞쪽(줄을 넘지 않고)에 '연간'을 뜻하는 말이 있으면 건너뜁니다.
                 start = label_match.start()
@@ -503,6 +536,23 @@ LABELS_GAAP_GM_PCT = [
 ]
 
 # 매출
+# "revenue" 앞에 붙어 **전체가 아니라 한 조각**임을 뜻하는 말들 (89차).
+# 끝($)에 못박아, 지금 걸린 이름이 바로 그 "조각 매출"일 때만 걸립니다 —
+# "total revenue" · "net revenue" 는 여기 없으므로 그대로 통과합니다.
+_SEGMENT_REVENUE_RE = re.compile(
+    r"\b(?:product|services?|subscription|deferred|organic|other|interest"
+    r"|trading|advertising|licens\w*|maintenance|hardware|software)\s+"
+    r"revenues?\s*$",
+    re.I,
+)
+_SEGMENT_LOOKBACK = 30
+
+# "전체 매출"을 뜻하는 이름이 이 문서에 하나라도 있는가 (89차).
+# 있으면 조각을 버리고, 없으면 조각이라도 씁니다.
+_WHOLE_REVENUE_RE = re.compile(
+    r"\b(?:total\s+revenues?|net\s+revenues?|net\s+sales)\b", re.I
+)
+
 LABELS_REVENUE = [
     r"total\s+revenues?",
     r"net\s+revenues?",
