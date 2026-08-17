@@ -289,6 +289,15 @@ def _scan_labeled_value(
                 is_percent_value = bool(_PERCENT_AFTER_RE.match(tail_line))
 
                 if is_percent:
+                    # "from A% to B%" 의 A 는 **지난 기간** 값입니다 (78차 —
+                    # 실물 BMY "gross margin decreased **from 77.3% to
+                    # 76.1%**"). 이번 분기 값은 B 입니다. A 를 건너뛰면
+                    # 다음 바퀴에서 B 를 찾습니다.
+                    if (is_percent_value
+                            and _FROM_BEFORE_RE.search(
+                                text[label_match.end():number_start])):
+                        search_from = number_end
+                        continue
                     # 퍼센트를 찾는 중: %가 붙어 있고 0~100 범위여야 채택
                     if is_percent_value and 0 < value <= 100:
                         gap = number_start - label_match.end()
@@ -351,6 +360,17 @@ LABELS_NONGAAP_GM_PCT = [
 _GM_DIFFERENCE_NEAR_RE = re.compile(
     r"\bdifference\b|\bgap\s+between\b|\bbridge\b|\breconcil", re.I)
 _GM_DIFFERENCE_LOOKBACK = 70
+
+# "from A% to B%" — A 는 지난 기간, B 가 이번 기간입니다 (78차, 실물 BMY:
+# "On a GAAP basis, gross margin decreased from 77.3% to 76.1%").
+# 이름과 숫자 사이에 from 이 있고, 숫자 뒤가 "to 숫자" 면 그 숫자는 A 입니다.
+# 창을 20자로 좁게 잡습니다 — "benefited from higher pricing and was 76.1%"
+# 처럼 from 이 우연히 멀리 있는 문장까지 건너뛰면 안 됩니다.
+#
+# ⚠️ 처음엔 "숫자 뒤에 to 숫자가 따라오는가"까지 확인했는데, 저장소
+#    원문 652건을 훑어 보니 **그 확인이 필요한 사례가 0건**이었습니다
+#    (반대로 from~to 형태는 12건). 근거 없는 검사는 넣지 않습니다.
+_FROM_BEFORE_RE = re.compile(r"\bfrom\b[^.\n]{0,20}$", re.I)
 
 # 이익률 자리의 **전망** 문맥 (77차 — 실물 AMBA "Gross margin on a non-GAAP
 # basis **is expected to be** between 59.0% and 60.5%"). 실제 4분기 값은

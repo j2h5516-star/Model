@@ -808,6 +808,36 @@ def test_forecast_margin_is_not_an_actual():
                                  is_percent=True) == 59.8
 
 
+def test_from_a_to_b_takes_the_current_value():
+    """"from A% to B%" 에서 이번 기간 값은 **B** 입니다 (78차 — 실물 BMY).
+
+    "gross margin decreased from 77.3% to 76.1%" 에서 파서가 앞의 77.3
+    (지난 기간)을 물고 있었습니다.
+    """
+    text = ("\u2022On a GAAP basis, gross margin decreased from 77.3% to "
+            "76.1% for the quarter.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) == 76.1
+
+
+def test_compared_to_sentence_is_not_a_from_to():
+    """"71% for Q4-22 **compared to** 72%" 는 from~to 가 아닙니다.
+
+    한쪽만 막으면 반대로 넘어집니다 — 비교 문장의 앞값이 이번 기간입니다.
+    """
+    text = ("Gross margin was 71% for Q4-22 compared to 72% for Q4-21 "
+            "and 73% for Q3-22.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) == 71.0
+
+    # from 이 **멀리** 있으면(20자 밖) 건드리지 않습니다.
+    # 이 창을 넓히면 아래 같은 정상 문장의 값을 통째로 잃습니다.
+    문장 = ("Gross margin benefited from higher pricing and was 76.1% "
+          "for the quarter.\n")
+    assert sf.find_labeled_value(문장, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) == 76.1
+
+
 def test_plain_margin_sentence_still_reads():
     """멀쩡한 이익률 문장은 그대로 읽혀야 합니다 (한쪽만 막으면 안 됨)."""
     for 문장, 답 in (
