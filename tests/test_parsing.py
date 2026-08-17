@@ -908,6 +908,42 @@ def test_basis_points_are_a_change_not_a_level():
                                  is_percent=True) is None
 
 
+def test_money_between_label_and_number_is_recognised():
+    """금액 행을 알아보는 규칙 자체를 검사합니다 (82차 — 실물 DELL).
+
+        Non-GAAP gross margin   $5,057   $4,992   **1%**   ← 증감률 열
+        Non-GAAP gross margin     20.7 %   21.6 %          ← 진짜 비율
+
+    파서는 저 1 을 매출총이익률 1% 로 저장하고 있었습니다.
+    실물에서 이 규칙을 넣자 DELL 이 **1.0 → 21.1** 로 바로잡혔습니다.
+
+    ⚠️ 정직하게 적어 둡니다: 이 규칙이 **배선까지 제대로 걸렸는지**를
+       가짜 예제로 재현하지 못했습니다(가짜 예제는 규칙을 빼도 통과합니다
+       — 실물의 다른 줄들이 만드는 거리 관계를 못 흉내 냅니다).
+       근거는 **실물 DELL 파일**이고, 여기서는 규칙 자체만 검사합니다.
+    """
+    금액행 = "                           $5,057                           $4,992                   "
+    비율행 = "                                                  20.7     "
+    assert sf._MONEY_BEFORE_RE.search(금액행), "금액 행을 못 알아봤습니다"
+    assert not sf._MONEY_BEFORE_RE.search(비율행), "비율 행을 금액으로 봤습니다"
+    # 문장형 정상 표기도 금액으로 보면 안 됩니다
+    assert not sf._MONEY_BEFORE_RE.search(" was ")
+    assert not sf._MONEY_BEFORE_RE.search(" on a non-GAAP basis was ")
+
+
+def test_money_before_the_label_does_not_block():
+    """금액이 이름 **앞**에 있는 정상 문장은 건드리면 안 됩니다.
+
+    실물 MDB: "gross profit was $466.2 million, representing a 74%
+    non-GAAP gross margin" — 금액이 앞에 있을 뿐입니다.
+    한쪽만 막으면 반대로 넘어집니다.
+    """
+    text = ("Non-GAAP gross profit was $466.2 million. Non-GAAP gross "
+            "margin was 74% for the quarter.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) == 74.0
+
+
 def test_plain_margin_sentence_still_reads():
     """멀쩡한 이익률 문장은 그대로 읽혀야 합니다 (한쪽만 막으면 안 됨)."""
     for 문장, 답 in (

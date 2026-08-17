@@ -313,6 +313,18 @@ def _scan_labeled_value(
                 is_percent_value = bool(_PERCENT_AFTER_RE.match(tail_line))
 
                 if is_percent:
+                    # 이름과 숫자 사이에 **금액**이 끼어 있으면 그 줄은
+                    # 금액 행이고, 끝의 퍼센트는 **증감률 열**입니다
+                    # (82차 — 실물 DELL):
+                    #     Gross margin      $5,057   $4,992   **1** %
+                    #     % of net revenue   21.1 %   22.0 %
+                    # 파서는 저 1 을 매출총이익률 1% 로 저장하고 있었습니다.
+                    # 진짜 비율(21.1%)은 **다음 줄**에 있습니다.
+                    # 비율만 적힌 줄에는 금액이 없으므로 이 규칙에 안 걸립니다.
+                    if _MONEY_BEFORE_RE.search(
+                            text[label_match.end():number_start]):
+                        search_from = number_end
+                        continue
                     # **베이시스 포인트는 언제나 '변화'** 이지 수준이 아닙니다
                     # (81차 — 실물 WMT "Gross margin rate **up 2 bps**",
                     #  "Gross profit rate increased **19 bps**").
@@ -399,6 +411,9 @@ _GM_DIFFERENCE_LOOKBACK = 70
 
 # 슬라이드 이미지 태그가 라벨 앞 이만큼 안에 있으면 그 줄은 차트 숫자 나열
 _SLIDE_LOOKBACK = 150
+
+# 이름과 숫자 사이의 금액 표기 ($5,057 류) — 그 줄은 금액 행입니다
+_MONEY_BEFORE_RE = re.compile(r"[$€£]\s*[\d,]+")
 
 # 베이시스 포인트 단위 — 이익률의 **변화**를 적는 단위입니다 (수준이 아님)
 _BPS_UNIT_RE = re.compile(r"\s*(?:basis\s+points?\b|bps\b|bp\b)", re.I)
