@@ -493,6 +493,59 @@ def test_table_unit_headers_are_all_recognised():
         assert sf._detect_table_unit(text, len(text)) == expected, header
 
 
+def test_unit_written_into_the_label_is_recognised():
+    """단위를 표 제목이 아니라 **이름에 붙여** 적는 형식도 알아봐야 합니다.
+
+    실물 (88차, AMD): 문서 어디에도 "(in millions)" 가 없고
+        "Revenue ($M)      $10,270"
+        "(Millions except per share amounts and percentages)"
+    이렇게만 적혀 있어, 10,270 이 그대로 들어갔습니다 (참값 102.7억).
+    매출 단위가 종목마다 · 한 종목 안에서도 뒤섞인 원인이 이것입니다.
+    """
+    cases = {
+        "Revenue ($M)": 1_000_000,
+        "Revenue ($B)": 1_000_000_000,
+        "Revenue ($K)": 1_000,
+        "(Millions)": 1_000_000,
+        "(Millions except per share amounts and percentages) (Unaudited)": 1_000_000,
+        "(Thousands) (Unaudited)": 1_000,
+    }
+    for header, expected in cases.items():
+        text = header + "\nNon-GAAP operating income   250,000\n"
+        assert sf._detect_table_unit(text, len(text)) == expected, header
+
+
+def test_share_count_unit_is_not_treated_as_a_money_unit():
+    """"Shares (M)" 는 **주식 수**의 단위지 금액의 단위가 아닙니다.
+
+    달러 기호 없는 "(M)" 을 단위로 받아들이면 매출이 100만 배 틀립니다.
+    각주 기호 "(A) (B) (C)" 와도 구별이 안 됩니다.
+    실물 (88차): 달러기호 없는 "(M)" 180곳이 전부 "Shares (M)" 였습니다.
+    """
+    text = "Shares (M)\nNon-GAAP operating income   250,000\n"
+    assert sf._detect_table_unit(text, len(text)) == 1
+
+    # 각주 기호도 단위가 아닙니다
+    text2 = "Net revenue (B)\nNon-GAAP operating income   250,000\n"
+    assert sf._detect_table_unit(text2, len(text2)) == 1
+
+
+def test_label_unit_still_never_multiplies_per_share_values():
+    """이름에 붙은 단위라도 **주당 금액에는 절대 곱하지 않아야** 합니다.
+
+    이 저장소에서 가장 중요한 검사입니다 — $1.00 이 $100만이 되면
+    모든 계산이 무너집니다.
+    """
+    text = (
+        "GAAP Quarterly Financial Results\n"
+        "Revenue ($M)                     $10,270\n"
+        "Diluted earnings per share       $0.92\n"
+    )
+    result = sf.parse_press_release(text)
+    assert result["revenue"] == 10_270 * 1_000_000, result["revenue"]
+    assert result["gaap_eps"] == 0.92, f"주당 금액에 단위가 곱해졌습니다: {result['gaap_eps']}"
+
+
 def test_annual_figures_are_not_read_as_quarterly():
     """'4분기 및 연간' 보도자료에서 연간 숫자를 분기 자리에 넣으면 안 됩니다.
 

@@ -53,9 +53,34 @@ _UNIT_PATTERNS = [
     (re.compile(rf"\(\s*\$\s*in\s+{_SCALE_WORDS}\b", re.I), None),
     (re.compile(rf"\bamounts?\s+in\s+{_SCALE_WORDS}\b", re.I), None),
     (re.compile(rf"\bdollars?\s+in\s+{_SCALE_WORDS}\b", re.I), None),
+    # 87차 — 위 넷은 전부 "in" 을 요구합니다. 그런데 단위를 **이름에 붙여**
+    # 적는 회사가 많습니다. 실물 AMD:
+    #     "Revenue ($M)      $10,270      $7,658"
+    # 여기에는 "(in millions)" 표기가 문서 어디에도 없어, 10,270 이 그대로
+    # 들어갔습니다 (야후 10,270,000,000). 매출 단위가 종목마다 · 심지어
+    # 한 종목 안에서도 뒤섞인 원인이 이것입니다 (86차 ⑫ — 44곳/20종목).
+    #
+    # 저장소 원문 732건 실측:
+    #   "($M)" 꼴 (달러기호 있음)   300곳 / 19종목  ← 넣는다
+    #   "(Millions…" 꼴 (in 없음)  335곳 / 25종목  ← 넣는다
+    #   "(M)"  꼴 (달러기호 없음)   180곳 / 11종목  ← **넣지 않는다**
+    #
+    # 마지막 것을 뺀 이유: 실물이 전부 "Shares (M)" — **주식 수**의 단위지
+    # 금액의 단위가 아닙니다. 이걸 매출에 곱하면 값이 100만 배 틀립니다.
+    # 각주 기호 "(A) (B) (C)" 와도 구별이 안 됩니다. 그래서 달러 기호가
+    # 붙은 것만 인정합니다.
+    #
+    # 두 번째 것에 닫는 괄호를 요구하지 않는 이유 — 실물 AMD 손익계산서
+    # 머리글이 "**(Millions except per share amounts and percentages)**"
+    # 입니다. 괄호가 **단위 낱말로 시작하면** 그것은 단위 선언입니다.
+    (re.compile(r"\(\s*\$\s*([MBK])\s*\)"), None),
+    (re.compile(rf"\(\s*\$?\s*{_SCALE_WORDS}\b", re.I), None),
 ]
-# 잡아낸 낱말 → 배수
-_SCALE_MULTIPLIER = {"thousand": 1_000, "million": 1_000_000, "billion": 1_000_000_000}
+# 잡아낸 낱말 → 배수 (약자 M·B·K 포함 — 87차)
+_SCALE_MULTIPLIER = {
+    "thousand": 1_000, "million": 1_000_000, "billion": 1_000_000_000,
+    "k": 1_000, "m": 1_000_000, "b": 1_000_000_000,
+}
 
 # 숫자 하나를 나타내는 패턴 — 예: $ 1,234.5  /  (1,234)  /  45.1
 _NUMBER_RE = re.compile(
