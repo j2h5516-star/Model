@@ -242,6 +242,30 @@ def _scan_labeled_value(
             if is_percent:
                 _s = label_match.start()
                 _ls = text.rfind("\n", 0, _s) + 1
+                # 슬라이드가 눌린 줄은 문장이 아니라 **차트 숫자 나열**입니다
+                # (13차에 EPS 경로에 넣은 규칙을 79차에 이익률에도 적용).
+                # 실물 PG: "<img …/> • Core gross margin • Core operating
+                # margin • Total productivity savings 5% 2% 1% 6% 3% 0% 3%"
+                # — 여기서 읽은 값은 그때그때 달라집니다(51.2 · 30.0 · 100.0).
+                # PG 실제 매출총이익률은 50% 안팎입니다. 읽을 수 없는
+                # 문서에서는 **없음**이 정답입니다.
+                # ⚠️ "줄 안에 <img 가 있는가"로 재면 너무 넓습니다 — 눌린
+                #    문서는 한 줄이 수천 자라, 멀쩡한 문장까지 걸립니다
+                #    (실물 MDB "representing a **74% non-GAAP gross margin**"
+                #     을 잃었습니다). 라벨 **바로 앞**에 있을 때만 봅니다.
+                #    실측 거리: PG 슬라이드 라벨 84~93자 · MDB 정상 문장 447자.
+                if "<img" in text[max(_ls, _s - _SLIDE_LOOKBACK):_s]:
+                    continue
+                # 이미지 태그가 멀어도, **퍼센트가 줄줄이 이어지면** 차트
+                # 계열입니다 (실물 MKSI: "… 46.9% Non-GAAP gross margin
+                # **43.8% 45.0% 44.3% 43.3% 44.7% …**"). 문장이 아니라
+                # 그래프의 값 나열이라 어느 하나를 이번 분기라 할 수 없습니다.
+                # **사이에 낱말이 없는** 퍼센트 3개 이상만 봅니다 —
+                # "71% for Q4-22 compared to 72% … and 73%"(CGNX) 처럼
+                # 낱말이 끼어 있는 정상 문장은 걸리지 않습니다.
+                if _PCT_SERIES_RE.search(text[label_match.end():
+                                              label_match.end() + 80]):
+                    continue
                 if _GM_DIFFERENCE_NEAR_RE.search(
                     text[max(_ls, _s - _GM_DIFFERENCE_LOOKBACK):_s]
                 ):
@@ -360,6 +384,12 @@ LABELS_NONGAAP_GM_PCT = [
 _GM_DIFFERENCE_NEAR_RE = re.compile(
     r"\bdifference\b|\bgap\s+between\b|\bbridge\b|\breconcil", re.I)
 _GM_DIFFERENCE_LOOKBACK = 70
+
+# 슬라이드 이미지 태그가 라벨 앞 이만큼 안에 있으면 그 줄은 차트 숫자 나열
+_SLIDE_LOOKBACK = 150
+
+# 사이에 낱말 없이 이어지는 퍼센트 3개 이상 = 그래프의 값 나열
+_PCT_SERIES_RE = re.compile(r"(?:\d+(?:\.\d+)?%\s+){2,}\d+(?:\.\d+)?%")
 
 # "from A% to B%" — A 는 지난 기간, B 가 이번 기간입니다 (78차, 실물 BMY:
 # "On a GAAP basis, gross margin decreased from 77.3% to 76.1%").

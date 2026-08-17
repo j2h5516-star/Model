@@ -838,6 +838,54 @@ def test_compared_to_sentence_is_not_a_from_to():
                                  is_percent=True) == 76.1
 
 
+def test_slide_deck_numbers_are_not_margins():
+    """슬라이드가 눌린 줄은 문장이 아니라 **차트 숫자 나열**입니다 (79차).
+
+    실물 PG: 보도자료가 슬라이드 묶음이라 이렇게 눌립니다 —
+    "<img …/> • Core gross margin • Core operating margin • Total
+    productivity savings 5% 2% 1% 6% 3% 0% 3%".
+    여기서 읽은 값은 그때그때 달라졌습니다(51.2 · 30.0 · 100.0).
+    PG 실제 매출총이익률은 50% 안팎입니다 — **없음**이 정답입니다.
+    """
+    text = ('<img height="1055" src="slide7.jpg"/> \u2022 Core gross margin '
+            '\u2022 Core operating margin \u2022 Total productivity savings '
+            '5% 2% 1% 6% 3% 0% 3%\n')
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) is None
+
+
+def test_percent_series_is_a_chart_not_a_sentence():
+    """이미지 태그가 멀어도 퍼센트가 줄줄이면 그래프입니다 (실물 MKSI).
+
+    "… 46.9% Non-GAAP gross margin **43.8% 45.0% 44.3% 43.3% 44.7%**" —
+    어느 하나를 이번 분기라 할 수 없습니다.
+    """
+    text = ("45.7% 47.3% 47.6% 46.9% Non-GAAP gross margin 43.8% 45.0% "
+            "44.3% 43.3% 44.7% 45.3%\n")
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) is None
+
+
+def test_sentence_with_several_percents_still_reads():
+    """낱말이 끼어 있는 정상 비교 문장은 걸리지 않아야 합니다.
+
+    실물 CGNX: "Gross margin was 71% for Q4-22 compared to 72% for Q4-21
+    and 73% for Q3-22" — 퍼센트가 셋이지만 그래프가 아닙니다.
+    한쪽만 막으면 반대로 넘어집니다.
+    """
+    text = ("Gross margin was 71% for Q4-22 compared to 72% for Q4-21 "
+            "and 73% for Q3-22.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) == 71.0
+
+    # 이미지 태그가 **멀리** 있는 정상 문장도 그대로 읽어야 합니다
+    #   (실물 MDB — 이 창을 "줄 전체"로 넓히면 74.0 을 잃습니다)
+    멀리 = ('<img src="a.jpg"/> ' + "x" * 300 +
+          " Non-GAAP gross margin was 74%, compared to 77% a year ago.\n")
+    assert sf.find_labeled_value(멀리, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) == 74.0
+
+
 def test_plain_margin_sentence_still_reads():
     """멀쩡한 이익률 문장은 그대로 읽혀야 합니다 (한쪽만 막으면 안 됨)."""
     for 문장, 답 in (
