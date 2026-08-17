@@ -164,6 +164,53 @@ def summary(quarters: dict) -> dict:
     }
 
 
+# 매출총이익률이 한 종목 안에서 크게 오르내리는 것 (77·78차)
+# ---------------------------------------------------------------------------
+# 야후와 대조해 보니 매출총이익률이 44% 어긋났고, 실물(AMBA)로 원인을
+# 확인했습니다 — 각주의 "두 이익률의 **차이** 1.4%" 를 이익률로 읽고
+# 있었습니다. WMT·DELL 은 원문이 없어 원인을 확인 못 했습니다.
+#
+# 매출총이익률은 회사의 **체질**이라 분기마다 몇 %p 안에서 움직입니다.
+# 한 종목 안에서 60% ↔ 2% 를 오간다면 **둘 중 하나는 틀린 값**입니다.
+#
+# ⚠️ 처음엔 "종목 중앙값에서 멀면 이상치"로 재려 했는데 **거꾸로 나왔습니다** —
+#    AMBA 는 틀린 값(2% 대)이 더 많아 중앙값이 3.9% 가 되고, 그러면 진짜
+#    값(63%)이 이상치로 찍힙니다. 어느 쪽이 옳은지 우리는 모릅니다.
+#    그래서 **어느 쪽이 틀렸는지 정하지 않고**, "이 종목은 폭이 너무 넓다"는
+#    사실만 말하고 **양 끝 원문을 둘 다** 부탁합니다. 원문을 봐야 압니다.
+GM_SPAN_PCT = 20.0     # 한 종목 안 최대-최소가 이만큼(%p)을 넘으면 표시
+
+
+def gross_margin_unstable(quarters: dict,
+                          span: float = GM_SPAN_PCT) -> list[dict]:
+    """매출총이익률 폭이 너무 넓은 종목과, 그 **양 끝** 행.
+
+    어느 쪽이 틀렸는지 정하지 않습니다 — 양 끝을 둘 다 돌려줍니다.
+    **아무것도 지우지 않습니다.**
+    """
+    out = []
+    for ticker, rows in sorted(quarters.items()):
+        있는행 = [r for r in rows if r.get("gross_margin_pct") is not None]
+        if len(있는행) < MIN_SERIES:
+            continue
+        차례 = sorted(있는행, key=lambda r: r["gross_margin_pct"])
+        폭 = 차례[-1]["gross_margin_pct"] - 차례[0]["gross_margin_pct"]
+        if 폭 < span:
+            continue
+        for row, 쪽 in ((차례[0], "가장 낮음"), (차례[-1], "가장 높음")):
+            out.append({
+                "종목": ticker,
+                "칸": "gross_margin_pct",
+                "라벨": row.get("period_label"),
+                "발표일": row.get("announced_date"),
+                "값": row["gross_margin_pct"],
+                "폭": round(폭, 1),
+                "쪽": 쪽,
+            })
+    out.sort(key=lambda r: -r["폭"])
+    return out
+
+
 def wanted_raw_filings(quarters: dict, limit: int = 60) -> list[dict]:
     """로봇에게 "이 공시 원문은 꼭 가져와 달라"고 부탁할 목록.
 
@@ -191,6 +238,24 @@ def wanted_raw_filings(quarters: dict, limit: int = 60) -> list[dict]:
             "배수": round(cell["배수"], 1),
             "이유": "이웃 분기보다 크게 튐",
         })
+        if len(out) >= limit // 2:
+            break
+    # 매출총이익률 이상치도 절반쯤 담습니다 (78차) — 이 칸의 원인을 아직
+    # 원문으로 확인 못 한 종목이 있습니다(WMT·DELL).
+    담긴종목 = {r["종목"] for r in out}
+    for cell in gross_margin_unstable(quarters):
+        if not cell.get("발표일"):
+            continue
+        out.append({
+            "종목": cell["종목"],
+            "발표일": cell["발표일"],
+            "칸": cell["칸"],
+            "값": cell["값"],
+            "배수": None,
+            "이유": f"매출총이익률 폭이 {cell['폭']}%p 로 넓음 "
+                  f"({cell['쪽']} 쪽 — 어느 쪽이 틀렸는지는 원문을 봐야 압니다)",
+        })
+        담긴종목.add(cell["종목"])
         if len(out) >= limit:
             break
     return out

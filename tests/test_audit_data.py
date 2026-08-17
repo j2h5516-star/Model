@@ -157,14 +157,19 @@ def test_wanted_list_only_holds_rows_with_a_date():
 
 
 def test_wanted_list_is_capped():
-    """부탁 목록에는 상한이 있습니다 — 로봇 보관 자리가 유한합니다."""
+    """부탁 목록에는 상한이 있습니다 — 로봇 보관 자리가 유한합니다.
+
+    78차부터 목록을 두 이유(튐 / 매출총이익률 폭)가 **나눠 씁니다**.
+    한쪽만 있는 재료에서는 그쪽 몫(상한의 절반)까지만 담깁니다.
+    """
     quarters = {}
     for t in range(20):
         값들 = [1.0, 1.0, 9.0, 1.0, 1.0, 9.0, 1.0, 1.0]
         rows = [분기(f"Q{i}", adj_eps=v, announced_date=f"2023-01-{i + 1:02d}")
                 for i, v in enumerate(값들)]
         quarters[f"T{t}"] = rows
-    assert len(audit_data.wanted_raw_filings(quarters, limit=5)) == 5
+    담김 = audit_data.wanted_raw_filings(quarters, limit=10)
+    assert len(담김) == 5, f"튐만 있는 재료에서는 절반(5)까지: {len(담김)}"
 
 
 def test_writing_the_wanted_list_does_not_change_the_data():
@@ -186,6 +191,48 @@ def test_writing_the_wanted_list_does_not_change_the_data():
     assert 적힌것["목록"][0]["종목"] == "VZ"
     assert "지우지 않습니다" in 적힌것["설명"]
     assert quarters["VZ"] == 이전, "목록을 적으면서 재료를 바꿨습니다"
+
+
+def test_wide_gross_margin_swing_is_flagged_from_both_ends():
+    """매출총이익률 폭이 넓으면 **양 끝을 둘 다** 부탁합니다 (78차).
+
+    ⚠️ 처음엔 "종목 중앙값에서 멀면 이상치"로 재려 했는데 **거꾸로**
+    나왔습니다 — AMBA 는 틀린 값(2% 대)이 더 많아 중앙값이 3.9% 가 되고,
+    그러면 진짜 값(63%)이 이상치로 찍힙니다. 어느 쪽이 옳은지 우리는
+    모릅니다. 그래서 폭만 말하고 양 끝을 둘 다 담습니다.
+    """
+    값들 = [63.3, 63.0, 2.0, 2.0, 61.2, 61.1, 1.4]     # 실물 AMBA 모양
+    rows = [분기(f"Q{i}", gross_margin_pct=v,
+                announced_date=f"2025-0{i % 9 + 1}-01")
+            for i, v in enumerate(값들)]
+    걸린 = audit_data.gross_margin_unstable({"AMBA": rows})
+    assert len(걸린) == 2, 걸린
+    쪽 = {r["쪽"]: r["값"] for r in 걸린}
+    assert 쪽["가장 낮음"] == 1.4 and 쪽["가장 높음"] == 63.3, 쪽
+    # 틀린 쪽이 다수라도 진짜 값을 "이상치"라 부르지 않습니다
+    assert all(r["폭"] > 60 for r in 걸린), 걸린
+
+
+def test_steady_gross_margin_is_not_flagged():
+    """분기마다 몇 %p 안에서 움직이는 정상 종목은 걸리지 않습니다."""
+    값들 = [58.4, 59.2, 59.8, 60.7, 60.1, 59.5]
+    rows = [분기(f"Q{i}", gross_margin_pct=v) for i, v in enumerate(값들)]
+    assert audit_data.gross_margin_unstable({"AAA": rows}) == []
+
+
+def test_wanted_list_mixes_both_reasons():
+    """부탁 목록에는 두 가지 이유가 **섞여** 담겨야 합니다.
+
+    한쪽이 목록을 다 차지하면 다른 쪽 원인을 영영 못 봅니다.
+    """
+    튐 = [분기(f"Q{i}", adj_eps=v, announced_date=f"2024-0{i+1}-01")
+         for i, v in enumerate([1.0, 1.1, 9.0, 1.0, 1.05, 1.02])]
+    폭 = [분기(f"Q{i}", gross_margin_pct=v, announced_date=f"2025-0{i+1}-01")
+         for i, v in enumerate([63.0, 2.0, 61.0, 1.5, 62.0, 2.2])]
+    목록 = audit_data.wanted_raw_filings({"AAA": 튐, "BBB": 폭}, limit=10)
+    이유들 = {("매출총이익률" if "매출총이익률" in r["이유"] else "튐")
+            for r in 목록}
+    assert 이유들 == {"튐", "매출총이익률"}, 목록
 
 
 def test_empty_material_does_not_crash():
