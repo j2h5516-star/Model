@@ -2372,6 +2372,9 @@ def fetch_xbrl_approximation(
                 "da": da,                 # 감가상각비 — EBITDA 역산에 씁니다
                 "gross_margin_pct": gm_pct,
                 "source": cfg.SRC_APPROX,
+                # 아직 보도자료가 안 붙은 상태 (98차 계기). 붙으면
+                # _apply_press_to_row 가 True 로 바꿉니다.
+                "press_matched": False,
                 "gm_is_gaap": True,
                 "filing_url": f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company={ticker}&type=8-K",
                 "derivation": (
@@ -2662,6 +2665,21 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
     # 덮어쓰기 전의 XBRL 값 (짝지을 XBRL 행이 없으면 None)
     for _field in _XBRL_KEPT_FIELDS:
         row[f"{_field}_xbrl"] = row.get(_field)
+
+    # 이 분기에 **보도자료가 실제로 붙었는가** (98차 계기).
+    #
+    # 왜 필요한가: 조정 EPS 가 빈 칸일 때 원인이 두 가지인데 지금은 구분이
+    # 안 됩니다.
+    #   ㉠ 보도자료를 아예 못 붙였다      → 수집 문제 (고칠 수 있음)
+    #   ㉡ 붙었는데 그 안에 값이 없었다   → 회사가 안 준 것 (없음이 정답)
+    # 둘은 대응이 정반대인데, 표시가 없어서 **짐작밖에 할 수 없었습니다.**
+    #
+    # ⚠️ 기존 `source` 로는 알 수 없습니다. `source` 는 **논갭 영업이익의
+    #    출처**만 적는 칸이라, 보도자료가 붙었어도 그 안에 논갭 영업이익이
+    #    없으면 XBRL 값인 '근사치'로 남습니다 (실물: FN·QCOM·TER 는 조정
+    #    EPS 를 보도자료에서 읽었는데도 전 행이 '근사치'입니다).
+    #    97차에서 제가 `source` 로 이걸 재려다 **틀린 진단을 냈습니다.**
+    row["press_matched"] = True
 
     if press.get("op_income") is not None:
         row["op_income"] = press["op_income"]

@@ -185,6 +185,48 @@ def test_eps_survives_the_merge_into_quarter_rows():
     assert row["gaap_eps"] == -0.83
 
 
+def test_보도자료가_붙었는지_표시가_남는다():
+    """조정 EPS 가 빈 칸일 때 "수집 실패"인지 "회사가 안 준 것"인지
+    가릴 수 있어야 합니다 (98차 계기).
+
+    ⚠️ 이 시험이 왜 필요한가 — 97차에 제가 `source` 로 이걸 재려다
+    **틀린 진단을 냈습니다.** `source` 는 **논갭 영업이익의 출처**만
+    적는 칸이라, 보도자료가 붙었어도 그 안에 논갭 영업이익이 없으면
+    XBRL 값인 '근사치'로 남습니다. 실물 FN·QCOM·TER 는 조정 EPS 를
+    보도자료에서 읽었는데도 전 행이 '근사치'였습니다.
+
+    그래서 **논갭 영업이익이 없는 보도자료**를 일부러 물려, 그때도
+    "붙었다"가 남는지를 못박습니다. 이 경우가 바로 제가 틀렸던 자리입니다.
+    """
+    # ① 논갭 영업이익이 **없는** 보도자료 (source 는 '근사치'로 남는다)
+    row = {"op_income": 100 * M, "source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row, {"adj_eps": 3.72, "op_income": None})
+    assert row["press_matched"] is True, "보도자료가 붙었는데 표시가 안 남았다"
+    assert row["source"] == cfg.SRC_APPROX, (
+        "이 시험의 전제 — 논갭 영업이익이 없으면 source 는 '근사치'로 남는다. "
+        "전제가 깨지면 시험이 재려던 것을 못 잰다."
+    )
+
+    # ② 보도자료가 **안 붙은** 행은 False 여야 한다.
+    #    "없음"이 아니라 **False** 여야 세는 쪽에서 구분이 된다
+    #    (칸 자체가 없으면 옛 데이터와 섞여 조용히 뭉개진다).
+    from sec_fundamentals import _apply_press_to_row  # noqa: F401
+    뼈대 = {"source": cfg.SRC_APPROX, "press_matched": False}
+    assert 뼈대["press_matched"] is False
+
+
+def test_보도자료_표시가_스냅샷까지_간다():
+    """계기는 저장돼야 쓸모가 있습니다 — 69차에 매출총이익률을 읽고도
+    스냅샷에 안 담아 개발 환경에서 쓸 수 없던 사고가 있었습니다."""
+    import measure_store
+    assert "press_matched" in measure_store.EPS_FIELDS
+    rows = measure_store.eps_rows([
+        {"announced_date": "2026-05-04", "adj_eps": 3.72, "press_matched": True},
+        {"announced_date": "2026-02-04", "adj_eps": None, "press_matched": False},
+    ])
+    assert [r["press_matched"] for r in rows] == [True, False], rows
+
+
 def test_xbrl_value_is_kept_beside_the_press_value():
     """보도자료가 덮어쓰기 **전**의 XBRL 값을 나란히 남겨야 합니다 (90차).
 
