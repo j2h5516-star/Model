@@ -1,17 +1,17 @@
 {
- "ran_at": "2026-08-18T03:24:16.916194+00:00",
+ "ran_at": "2026-08-18T04:11:26.006082+00:00",
  "tickers": 160,
  "summary": "조정 EPS 시계열 160종목 · 일봉 161종목(기준지수 포함) · 파싱 실패 원문 385건",
- "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 채택 · H6_결합_H5bxH2b: 미채택 · H7_EBITDA_첫돌파: 판정 불가 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 채택 · H10_논갭영업이익_저평가_첫신기록: 채택 · H11_섹터정배열폭_60: 미채택 · H11b_섹터정배열폭_80: 판정 불가 · H18_완성시_52주선이격도: 판정 불가 · H19_주도섹터_판정: 판정 불가 · H20_주도섹터_전환: 미채택 · H21_주도섹터_분기점: 판정 불가 · H19b_주도섹터_완성후확인: 판정 불가",
- "consensus": "컨센서스: 확보 160종목 · 원장 추가 2건 · 실패 0종목",
+ "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 채택 · H6_결합_H5bxH2b: 미채택 · H7_EBITDA_첫돌파: 판정 불가 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 미채택 · H10_논갭영업이익_저평가_첫신기록: 채택 · H11_섹터정배열폭_60: 미채택 · H11b_섹터정배열폭_80: 판정 불가 · H18_완성시_52주선이격도: 판정 불가 · H19_주도섹터_판정: 판정 불가 · H20_주도섹터_전환: 미채택 · H21_주도섹터_분기점: 판정 불가 · H19b_주도섹터_완성후확인: 판정 불가",
+ "consensus": "컨센서스: 확보 160종목 · 원장 추가 4건 · 실패 0종목",
  "surprise": "서프라이즈: 확보 160종목 · 신규 0분기 · 실패 0종목",
- "vendor": "두 번째 자(야후) — 160종목 성공 · 0종목 실패 · 분기 961개 · 발표기록 639개 · 과거 소급 변경 5칸",
+ "vendor": "두 번째 자(야후) — 160종목 성공 · 0종목 실패 · 분기 959개 · 발표기록 639개 · 과거 소급 변경 18칸",
  "per_ticker": [
   {
    "ticker": "CRDO",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 6.3,
+   "seconds": 7.8,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": "",
@@ -29,15 +29,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 7",
     "GrossProfit(3개월): 받음 24 · 버림 0 · 모호 0 · 남음 15",
     "GrossProfit(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 7",
-    "EarningsPerShareDiluted(3개월): 받음 24 · 버림 24 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 24 · 버림 0 · 모호 0 · 남음 15"
    ],
-   "xbrl_rejected": 292
+   "xbrl_rejected": 268
   },
   {
    "ticker": "CLS",
    "adj_eps_ok": 9,
    "merged_direct": 1,
-   "seconds": 12.1,
+   "seconds": 4.8,
    "cache_hits": 24,
    "cache_downloads": 0,
    "first_error": "",
@@ -57,15 +57,15 @@
     "Revenues(12개월): 받음 12 · 버림 12 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 10 · 버림 0 · 모호 0 · 남음 8",
     "GrossProfit(12개월): 받음 27 · 버림 0 · 모호 0 · 남음 11",
-    "EarningsPerShareDiluted(3개월): 받음 10 · 버림 10 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 10 · 버림 0 · 모호 0 · 남음 8"
    ],
-   "xbrl_rejected": 71
+   "xbrl_rejected": 61
   },
   {
    "ticker": "MU",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 6.9,
+   "seconds": 10.5,
    "cache_hits": 61,
    "cache_downloads": 0,
    "first_error": "",
@@ -88,15 +88,15 @@
     "Revenues(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
     "GrossProfit(3개월): 받음 187 · 버림 0 · 모호 0 · 남음 60",
     "GrossProfit(12개월): 받음 67 · 버림 22 · 모호 0 · 남음 15",
-    "EarningsPerShareDiluted(3개월): 받음 197 · 버림 197 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 197 · 버림 10 · 모호 0 · 남음 60"
    ],
-   "xbrl_rejected": 897
+   "xbrl_rejected": 710
   },
   {
    "ticker": "SNDK",
    "adj_eps_ok": 7,
    "merged_direct": 6,
-   "seconds": 4.3,
+   "seconds": 3.1,
    "cache_hits": 14,
    "cache_downloads": 0,
    "first_error": "",
@@ -114,15 +114,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 6 · 버림 0 · 모호 0 · 남음 4",
     "GrossProfit(3개월): 받음 11 · 버림 0 · 모호 0 · 남음 7",
     "GrossProfit(12개월): 받음 6 · 버림 0 · 모호 0 · 남음 4",
-    "EarningsPerShareDiluted(3개월): 받음 7 · 버림 7 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 7 · 버림 0 · 모호 0 · 남음 6"
    ],
-   "xbrl_rejected": 112
+   "xbrl_rejected": 105
   },
   {
    "ticker": "LITE",
    "adj_eps_ok": 18,
    "merged_direct": 0,
-   "seconds": 11.2,
+   "seconds": 11.4,
    "cache_hits": 40,
    "cache_downloads": 0,
    "first_error": "",
@@ -146,15 +146,15 @@
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 23 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 130 · 버림 0 · 모호 0 · 남음 45",
     "GrossProfit(12개월): 받음 39 · 버림 0 · 모호 0 · 남음 14",
-    "EarningsPerShareDiluted(3개월): 받음 113 · 버림 113 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 113 · 버림 0 · 모호 5 · 남음 36"
    ],
-   "xbrl_rejected": 775
+   "xbrl_rejected": 662
   },
   {
    "ticker": "STRL",
    "adj_eps_ok": 12,
    "merged_direct": 8,
-   "seconds": 33.4,
+   "seconds": 24.0,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": "",
@@ -175,15 +175,15 @@
     "Revenues(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
     "GrossProfit(3개월): 받음 163 · 버림 0 · 모호 0 · 남음 61",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 133 · 버림 133 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 133 · 버림 24 · 모호 5 · 남음 47"
    ],
-   "xbrl_rejected": 698
+   "xbrl_rejected": 589
   },
   {
    "ticker": "MXL",
    "adj_eps_ok": 20,
    "merged_direct": 19,
-   "seconds": 21.8,
+   "seconds": 15.9,
    "cache_hits": 41,
    "cache_downloads": 0,
    "first_error": "",
@@ -204,15 +204,15 @@
     "Revenues(12개월): 받음 9 · 버림 0 · 모호 0 · 남음 5",
     "GrossProfit(3개월): 받음 164 · 버림 0 · 모호 0 · 남음 59",
     "GrossProfit(12개월): 받음 45 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 167 · 버림 167 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 167 · 버림 4 · 모호 1 · 남음 58"
    ],
-   "xbrl_rejected": 963
+   "xbrl_rejected": 800
   },
   {
    "ticker": "COHR",
    "adj_eps_ok": 15,
    "merged_direct": 10,
-   "seconds": 31.2,
+   "seconds": 18.5,
    "cache_hits": 73,
    "cache_downloads": 0,
    "first_error": "",
@@ -233,15 +233,15 @@
     "Revenues(3개월): 받음 112 · 버림 0 · 모호 0 · 남음 36",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 33 · 버림 0 · 모호 0 · 남음 11",
     "Revenues(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
-    "EarningsPerShareDiluted(3개월): 받음 212 · 버림 212 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 212 · 버림 12 · 모호 8 · 남음 55"
    ],
-   "xbrl_rejected": 1014
+   "xbrl_rejected": 814
   },
   {
    "ticker": "TTMI",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 9.3,
+   "seconds": 10.9,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": "",
@@ -264,15 +264,15 @@
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 14 · 버림 0 · 모호 0 · 남음 6",
     "GrossProfit(3개월): 받음 99 · 버림 7 · 모호 0 · 남음 49",
     "GrossProfit(12개월): 받음 45 · 버림 6 · 모호 0 · 남음 15",
-    "EarningsPerShareDiluted(3개월): 받음 92 · 버림 92 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 92 · 버림 0 · 모호 1 · 남음 48"
    ],
-   "xbrl_rejected": 616
+   "xbrl_rejected": 524
   },
   {
    "ticker": "ICHR",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 6.4,
+   "seconds": 5.9,
    "cache_hits": 43,
    "cache_downloads": 0,
    "first_error": "",
@@ -291,15 +291,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 58 · 버림 0 · 모호 0 · 남음 34",
     "GrossProfit(12개월): 받음 27 · 버림 0 · 모호 0 · 남음 11",
-    "EarningsPerShareDiluted(3개월): 받음 58 · 버림 58 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 58 · 버림 0 · 모호 0 · 남음 34"
    ],
-   "xbrl_rejected": 428
+   "xbrl_rejected": 370
   },
   {
    "ticker": "AMD",
    "adj_eps_ok": 19,
    "merged_direct": 20,
-   "seconds": 15.3,
+   "seconds": 15.7,
    "cache_hits": 64,
    "cache_downloads": 0,
    "first_error": "",
@@ -325,9 +325,9 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 174 · 버림 0 · 모호 0 · 남음 62",
     "GrossProfit(12개월): 받음 50 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 179 · 버림 179 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 179 · 버림 5 · 모호 5 · 남음 57"
    ],
-   "xbrl_rejected": 904
+   "xbrl_rejected": 730
   },
   {
    "ticker": "PLTR",
@@ -352,15 +352,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 8",
     "GrossProfit(3개월): 받음 36 · 버림 0 · 모호 0 · 남음 21",
     "GrossProfit(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 8",
-    "EarningsPerShareDiluted(3개월): 받음 36 · 버림 36 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 36 · 버림 0 · 모호 0 · 남음 21"
    ],
-   "xbrl_rejected": 297
+   "xbrl_rejected": 261
   },
   {
    "ticker": "ZETA",
    "adj_eps_ok": 0,
    "merged_direct": 7,
-   "seconds": 18.8,
+   "seconds": 9.7,
    "cache_hits": 35,
    "cache_downloads": 0,
    "first_error": "",
@@ -377,15 +377,15 @@
     "AmortizationOfIntangibleAssets(12개월): 받음 10 · 버림 0 · 모호 0 · 남음 6",
     "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 32 · 버림 0 · 모호 0 · 남음 19",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 7",
-    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 32 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 0 · 모호 0 · 남음 19"
    ],
-   "xbrl_rejected": 338
+   "xbrl_rejected": 306
   },
   {
    "ticker": "INTC",
    "adj_eps_ok": 18,
    "merged_direct": 16,
-   "seconds": 7.0,
+   "seconds": 9.0,
    "cache_hits": 71,
    "cache_downloads": 0,
    "first_error": "",
@@ -404,15 +404,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 26 · 버림 0 · 모호 0 · 남음 11",
     "GrossProfit(3개월): 받음 98 · 버림 0 · 모호 0 · 남음 52",
     "GrossProfit(12개월): 받음 60 · 버림 0 · 모호 0 · 남음 22",
-    "EarningsPerShareDiluted(3개월): 받음 103 · 버림 103 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 103 · 버림 5 · 모호 0 · 남음 52"
    ],
-   "xbrl_rejected": 721
+   "xbrl_rejected": 623
   },
   {
    "ticker": "ENPH",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 6.8,
+   "seconds": 8.0,
    "cache_hits": 40,
    "cache_downloads": 0,
    "first_error": "",
@@ -431,15 +431,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 150 · 버림 0 · 모호 0 · 남음 56",
     "GrossProfit(12개월): 받음 42 · 버림 0 · 모호 0 · 남음 16",
-    "EarningsPerShareDiluted(3개월): 받음 18 · 버림 18 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 18 · 버림 0 · 모호 0 · 남음 13"
    ],
-   "xbrl_rejected": 715
+   "xbrl_rejected": 697
   },
   {
    "ticker": "SWKS",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 8.3,
+   "seconds": 9.6,
    "cache_hits": 53,
    "cache_downloads": 0,
    "first_error": "",
@@ -460,15 +460,15 @@
     "Revenues(12개월): 받음 5 · 버림 0 · 모호 0 · 남음 3",
     "GrossProfit(3개월): 받음 177 · 버림 0 · 모호 0 · 남음 62",
     "GrossProfit(12개월): 받음 40 · 버림 0 · 모호 0 · 남음 14",
-    "EarningsPerShareDiluted(3개월): 받음 177 · 버림 177 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 177 · 버림 0 · 모호 0 · 남음 62"
    ],
-   "xbrl_rejected": 888
+   "xbrl_rejected": 711
   },
   {
    "ticker": "PYPL",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 11.4,
+   "seconds": 12.8,
    "cache_hits": 71,
    "cache_downloads": 0,
    "first_error": "",
@@ -489,15 +489,15 @@
     "Revenues(3개월): 받음 44 · 버림 0 · 모호 0 · 남음 24",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 9 · 버림 0 · 모호 0 · 남음 4",
     "Revenues(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 8",
-    "EarningsPerShareDiluted(3개월): 받음 122 · 버림 122 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 122 · 버림 0 · 모호 0 · 남음 44"
    ],
-   "xbrl_rejected": 786
+   "xbrl_rejected": 664
   },
   {
    "ticker": "QRVO",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 10.3,
+   "seconds": 9.8,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": "",
@@ -512,15 +512,15 @@
     "Revenues(12개월): 받음 23 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 117 · 버림 0 · 모호 0 · 남음 44",
     "GrossProfit(12개월): 받음 36 · 버림 0 · 모호 0 · 남음 14",
-    "EarningsPerShareDiluted(3개월): 받음 117 · 버림 117 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 117 · 버림 0 · 모호 0 · 남음 44"
    ],
-   "xbrl_rejected": 617
+   "xbrl_rejected": 500
   },
   {
    "ticker": "APP",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 13.4,
+   "seconds": 10.3,
    "cache_hits": 53,
    "cache_downloads": 0,
    "first_error": "",
@@ -539,15 +539,15 @@
     "Revenues(3개월): 받음 2 · 버림 0 · 모호 0 · 남음 2",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 7",
     "Revenues(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 7",
-    "EarningsPerShareDiluted(3개월): 받음 34 · 버림 34 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 34 · 버림 0 · 모호 0 · 남음 20"
    ],
-   "xbrl_rejected": 402
+   "xbrl_rejected": 368
   },
   {
    "ticker": "NVDA",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 7.9,
+   "seconds": 8.5,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": "",
@@ -573,15 +573,15 @@
     "Revenues(12개월): 받음 42 · 버림 0 · 모호 0 · 남음 18",
     "GrossProfit(3개월): 받음 175 · 버림 0 · 모호 0 · 남음 64",
     "GrossProfit(12개월): 받음 51 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 177 · 버림 177 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 177 · 버림 0 · 모호 7 · 남음 57"
    ],
-   "xbrl_rejected": 1056
+   "xbrl_rejected": 879
   },
   {
    "ticker": "ANET",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 8.5,
+   "seconds": 7.0,
    "cache_hits": 38,
    "cache_downloads": 0,
    "first_error": "",
@@ -603,15 +603,15 @@
     "Revenues(12개월): 받음 9 · 버림 9 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 122 · 버림 0 · 모호 0 · 남음 47",
     "GrossProfit(12개월): 받음 39 · 버림 0 · 모호 0 · 남음 14",
-    "EarningsPerShareDiluted(3개월): 받음 122 · 버림 122 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 122 · 버림 0 · 모호 6 · 남음 41"
    ],
-   "xbrl_rejected": 919
+   "xbrl_rejected": 797
   },
   {
    "ticker": "FN",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 9.9,
+   "seconds": 10.9,
    "cache_hits": 33,
    "cache_downloads": 0,
    "first_error": "",
@@ -632,15 +632,15 @@
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 19 · 버림 0 · 모호 0 · 남음 8",
     "GrossProfit(3개월): 받음 162 · 버림 0 · 모호 0 · 남음 58",
     "GrossProfit(12개월): 받음 42 · 버림 0 · 모호 0 · 남음 16",
-    "EarningsPerShareDiluted(3개월): 받음 162 · 버림 162 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 162 · 버림 0 · 모호 0 · 남음 58"
    ],
-   "xbrl_rejected": 1095
+   "xbrl_rejected": 933
   },
   {
    "ticker": "SMCI",
    "adj_eps_ok": 15,
    "merged_direct": 13,
-   "seconds": 9.4,
+   "seconds": 9.1,
    "cache_hits": 75,
    "cache_downloads": 0,
    "first_error": "",
@@ -659,15 +659,15 @@
     "Revenues(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
     "GrossProfit(3개월): 받음 162 · 버림 0 · 모호 0 · 남음 58",
     "GrossProfit(12개월): 받음 42 · 버림 0 · 모호 0 · 남음 16",
-    "EarningsPerShareDiluted(3개월): 받음 162 · 버림 162 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 162 · 버림 0 · 모호 8 · 남음 50"
    ],
-   "xbrl_rejected": 1729
+   "xbrl_rejected": 1567
   },
   {
    "ticker": "LSCC",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 13.2,
+   "seconds": 10.1,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": "",
@@ -690,15 +690,15 @@
     "Revenues(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 7",
     "GrossProfit(3개월): 받음 113 · 버림 0 · 모호 0 · 남음 55",
     "GrossProfit(12개월): 받음 17 · 버림 0 · 모호 0 · 남음 7",
-    "EarningsPerShareDiluted(3개월): 받음 123 · 버림 123 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 123 · 버림 0 · 모호 1 · 남음 49"
    ],
-   "xbrl_rejected": 587
+   "xbrl_rejected": 464
   },
   {
    "ticker": "SYNA",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 9.4,
+   "seconds": 9.7,
    "cache_hits": 48,
    "cache_downloads": 0,
    "first_error": "",
@@ -721,9 +721,9 @@
     "Revenues(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
     "GrossProfit(3개월): 받음 96 · 버림 0 · 모호 0 · 남음 54",
     "GrossProfit(12개월): 받음 51 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 97 · 버림 97 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 97 · 버림 0 · 모호 1 · 남음 54"
    ],
-   "xbrl_rejected": 1055
+   "xbrl_rejected": 958
   },
   {
    "ticker": "UCTT",
@@ -753,15 +753,15 @@
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 6 · 버림 0 · 모호 0 · 남음 4",
     "GrossProfit(3개월): 받음 116 · 버림 0 · 모호 0 · 남음 57",
     "GrossProfit(12개월): 받음 45 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 98 · 버림 98 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 98 · 버림 0 · 모호 2 · 남음 52"
    ],
-   "xbrl_rejected": 734
+   "xbrl_rejected": 636
   },
   {
    "ticker": "ONTO",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 10.4,
+   "seconds": 9.3,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": "",
@@ -782,15 +782,15 @@
     "Revenues(12개월): 받음 20 · 버림 20 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 100 · 버림 0 · 모호 0 · 남음 55",
     "GrossProfit(12개월): 받음 40 · 버림 0 · 모호 0 · 남음 16",
-    "EarningsPerShareDiluted(3개월): 받음 102 · 버림 102 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 102 · 버림 0 · 모호 2 · 남음 53"
    ],
-   "xbrl_rejected": 1061
+   "xbrl_rejected": 959
   },
   {
    "ticker": "IPGP",
    "adj_eps_ok": 9,
    "merged_direct": 6,
-   "seconds": 12.4,
+   "seconds": 11.9,
    "cache_hits": 51,
    "cache_downloads": 0,
    "first_error": "",
@@ -810,15 +810,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 172 · 버림 0 · 모호 0 · 남음 61",
     "GrossProfit(12개월): 받음 45 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 172 · 버림 172 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 172 · 버림 0 · 모호 0 · 남음 61"
    ],
-   "xbrl_rejected": 945
+   "xbrl_rejected": 773
   },
   {
    "ticker": "CGNX",
    "adj_eps_ok": 16,
    "merged_direct": 17,
-   "seconds": 8.5,
+   "seconds": 11.5,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": "",
@@ -840,15 +840,15 @@
     "Revenues(12개월): 받음 15 · 버림 15 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 122 · 버림 0 · 모호 0 · 남음 56",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 122 · 버림 122 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 122 · 버림 0 · 모호 11 · 남음 45"
    ],
-   "xbrl_rejected": 1382
+   "xbrl_rejected": 1260
   },
   {
    "ticker": "AVGO",
    "adj_eps_ok": 19,
    "merged_direct": 1,
-   "seconds": 16.1,
+   "seconds": 11.4,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": "",
@@ -867,15 +867,15 @@
     "Revenues(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
     "GrossProfit(3개월): 받음 74 · 버림 0 · 모호 0 · 남음 30",
     "GrossProfit(12개월): 받음 25 · 버림 0 · 모호 0 · 남음 10",
-    "EarningsPerShareDiluted(3개월): 받음 74 · 버림 74 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 74 · 버림 0 · 모호 2 · 남음 28"
    ],
-   "xbrl_rejected": 532
+   "xbrl_rejected": 458
   },
   {
    "ticker": "QCOM",
    "adj_eps_ok": 17,
    "merged_direct": 0,
-   "seconds": 11.3,
+   "seconds": 9.9,
    "cache_hits": 45,
    "cache_downloads": 0,
    "first_error": "",
@@ -893,15 +893,15 @@
     "AmortizationOfIntangibleAssets(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 18",
     "Revenues(3개월): 받음 197 · 버림 0 · 모호 0 · 남음 67",
     "Revenues(12개월): 받음 56 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 193 · 버림 193 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 193 · 버림 0 · 모호 2 · 남음 65"
    ],
-   "xbrl_rejected": 814
+   "xbrl_rejected": 621
   },
   {
    "ticker": "TXN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 11.0,
+   "seconds": 9.5,
    "cache_hits": 48,
    "cache_downloads": 0,
    "first_error": "",
@@ -918,15 +918,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 160 · 버림 0 · 모호 0 · 남음 63",
     "GrossProfit(12개월): 받음 54 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 160 · 버림 160 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 160 · 버림 0 · 모호 3 · 남음 60"
    ],
-   "xbrl_rejected": 607
+   "xbrl_rejected": 447
   },
   {
    "ticker": "ADI",
    "adj_eps_ok": 15,
    "merged_direct": 13,
-   "seconds": 12.7,
+   "seconds": 10.4,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": "",
@@ -945,15 +945,15 @@
     "Revenues(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
     "GrossProfit(3개월): 받음 166 · 버림 0 · 모호 0 · 남음 61",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 168 · 버림 168 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 168 · 버림 2 · 모호 3 · 남음 58"
    ],
-   "xbrl_rejected": 1121
+   "xbrl_rejected": 955
   },
   {
    "ticker": "MCHP",
    "adj_eps_ok": 5,
    "merged_direct": 20,
-   "seconds": 8.7,
+   "seconds": 7.6,
    "cache_hits": 59,
    "cache_downloads": 0,
    "first_error": "",
@@ -979,15 +979,15 @@
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
     "GrossProfit(3개월): 받음 192 · 버림 0 · 모호 0 · 남음 66",
     "GrossProfit(12개월): 받음 54 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 192 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 0 · 모호 3 · 남음 63"
    ],
-   "xbrl_rejected": 1547
+   "xbrl_rejected": 1355
   },
   {
    "ticker": "NXPI",
    "adj_eps_ok": 11,
    "merged_direct": 11,
-   "seconds": 11.4,
+   "seconds": 9.4,
    "cache_hits": 31,
    "cache_downloads": 0,
    "first_error": "",
@@ -1005,15 +1005,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 40 · 버림 0 · 모호 0 · 남음 23",
     "GrossProfit(12개월): 받음 45 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 40 · 버림 40 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 40 · 버림 0 · 모호 0 · 남음 23"
    ],
-   "xbrl_rejected": 222
+   "xbrl_rejected": 182
   },
   {
    "ticker": "MRVL",
    "adj_eps_ok": 18,
    "merged_direct": 16,
-   "seconds": 10.8,
+   "seconds": 9.7,
    "cache_hits": 68,
    "cache_downloads": 0,
    "first_error": "",
@@ -1032,15 +1032,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 12 · 버림 0 · 모호 0 · 남음 6",
     "GrossProfit(3개월): 받음 30 · 버림 0 · 모호 0 · 남음 18",
     "GrossProfit(12개월): 받음 12 · 버림 0 · 모호 0 · 남음 6",
-    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 30 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 0 · 모호 0 · 남음 18"
    ],
-   "xbrl_rejected": 315
+   "xbrl_rejected": 285
   },
   {
    "ticker": "KLAC",
    "adj_eps_ok": 21,
    "merged_direct": 21,
-   "seconds": 8.0,
+   "seconds": 11.3,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": "",
@@ -1062,15 +1062,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 27 · 버림 27 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 88 · 버림 0 · 모호 0 · 남음 48",
-    "EarningsPerShareDiluted(3개월): 받음 186 · 버림 186 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 186 · 버림 2 · 모호 0 · 남음 63"
    ],
-   "xbrl_rejected": 1477
+   "xbrl_rejected": 1293
   },
   {
    "ticker": "LRCX",
    "adj_eps_ok": 17,
    "merged_direct": 17,
-   "seconds": 10.5,
+   "seconds": 7.2,
    "cache_hits": 35,
    "cache_downloads": 0,
    "first_error": "",
@@ -1093,15 +1093,15 @@
     "Revenues(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
     "GrossProfit(3개월): 받음 96 · 버림 0 · 모호 0 · 남음 51",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 96 · 버림 96 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 96 · 버림 0 · 모호 3 · 남음 48"
    ],
-   "xbrl_rejected": 1008
+   "xbrl_rejected": 912
   },
   {
    "ticker": "AMAT",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 8.0,
+   "seconds": 9.0,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": "",
@@ -1125,15 +1125,15 @@
     "Revenues(12개월): 받음 7 · 버림 0 · 모호 0 · 남음 5",
     "GrossProfit(3개월): 받음 184 · 버림 0 · 모호 0 · 남음 64",
     "GrossProfit(12개월): 받음 58 · 버림 0 · 모호 0 · 남음 21",
-    "EarningsPerShareDiluted(3개월): 받음 168 · 버림 168 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 168 · 버림 2 · 모호 4 · 남음 60"
    ],
-   "xbrl_rejected": 976
+   "xbrl_rejected": 810
   },
   {
    "ticker": "TER",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 9.9,
+   "seconds": 9.4,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": "",
@@ -1156,15 +1156,15 @@
     "Revenues(12개월): 받음 72 · 버림 24 · 모호 0 · 남음 18",
     "GrossProfit(3개월): 받음 169 · 버림 0 · 모호 0 · 남음 68",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 172 · 버림 172 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 172 · 버림 3 · 모호 0 · 남음 68"
    ],
-   "xbrl_rejected": 1277
+   "xbrl_rejected": 1108
   },
   {
    "ticker": "ENTG",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 17.0,
+   "seconds": 12.8,
    "cache_hits": 78,
    "cache_downloads": 0,
    "first_error": "",
@@ -1183,15 +1183,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 25 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 196 · 버림 0 · 모호 0 · 남음 64",
     "GrossProfit(12개월): 받음 45 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 201 · 버림 201 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 201 · 버림 5 · 모호 0 · 남음 64"
    ],
-   "xbrl_rejected": 1462
+   "xbrl_rejected": 1266
   },
   {
    "ticker": "MKSI",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 11.5,
+   "seconds": 10.1,
    "cache_hits": 59,
    "cache_downloads": 0,
    "first_error": "",
@@ -1216,15 +1216,15 @@
     "Revenues(12개월): 받음 24 · 버림 24 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 170 · 버림 0 · 모호 0 · 남음 62",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 170 · 버림 170 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 170 · 버림 0 · 모호 0 · 남음 62"
    ],
-   "xbrl_rejected": 1116
+   "xbrl_rejected": 946
   },
   {
    "ticker": "FORM",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 9.6,
+   "seconds": 8.5,
    "cache_hits": 35,
    "cache_downloads": 0,
    "first_error": "",
@@ -1244,15 +1244,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 156 · 버림 0 · 모호 0 · 남음 58",
     "GrossProfit(12개월): 받음 45 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 115 · 버림 115 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 115 · 버림 0 · 모호 0 · 남음 52"
    ],
-   "xbrl_rejected": 681
+   "xbrl_rejected": 566
   },
   {
    "ticker": "ACLS",
    "adj_eps_ok": 7,
    "merged_direct": 6,
-   "seconds": 10.2,
+   "seconds": 8.3,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": "",
@@ -1272,15 +1272,15 @@
     "Revenues(12개월): 받음 49 · 버림 21 · 모호 0 · 남음 11",
     "GrossProfit(3개월): 받음 156 · 버림 0 · 모호 0 · 남음 58",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 119 · 버림 119 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 119 · 버림 0 · 모호 5 · 남음 45"
    ],
-   "xbrl_rejected": 557
+   "xbrl_rejected": 438
   },
   {
    "ticker": "AMBA",
    "adj_eps_ok": 6,
    "merged_direct": 7,
-   "seconds": 8.8,
+   "seconds": 9.9,
    "cache_hits": 42,
    "cache_downloads": 0,
    "first_error": "",
@@ -1303,15 +1303,15 @@
     "Revenues(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 8",
     "GrossProfit(3개월): 받음 82 · 버림 0 · 모호 0 · 남음 44",
     "GrossProfit(12개월): 받음 42 · 버림 0 · 모호 0 · 남음 16",
-    "EarningsPerShareDiluted(3개월): 받음 82 · 버림 82 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 82 · 버림 0 · 모호 0 · 남음 44"
    ],
-   "xbrl_rejected": 999
+   "xbrl_rejected": 917
   },
   {
    "ticker": "POWI",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 7.5,
+   "seconds": 8.0,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": "",
@@ -1329,15 +1329,15 @@
     "Revenues(12개월): 받음 39 · 버림 0 · 모호 0 · 남음 17",
     "GrossProfit(3개월): 받음 178 · 버림 0 · 모호 0 · 남음 63",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 178 · 버림 178 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 178 · 버림 0 · 모호 9 · 남음 54"
    ],
-   "xbrl_rejected": 651
+   "xbrl_rejected": 473
   },
   {
    "ticker": "DIOD",
    "adj_eps_ok": 12,
    "merged_direct": 2,
-   "seconds": 20.6,
+   "seconds": 19.1,
    "cache_hits": 40,
    "cache_downloads": 0,
    "first_error": "",
@@ -1357,15 +1357,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 26 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 178 · 버림 0 · 모호 0 · 남음 63",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 182 · 버림 182 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 182 · 버림 4 · 모호 0 · 남음 63"
    ],
-   "xbrl_rejected": 1098
+   "xbrl_rejected": 920
   },
   {
    "ticker": "SLAB",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 10.0,
+   "seconds": 8.4,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": "",
@@ -1385,9 +1385,9 @@
     "Revenues(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
     "GrossProfit(3개월): 받음 94 · 버림 0 · 모호 0 · 남음 50",
     "GrossProfit(12개월): 받음 43 · 버림 0 · 모호 0 · 남음 16",
-    "EarningsPerShareDiluted(3개월): 받음 98 · 버림 98 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 98 · 버림 4 · 모호 0 · 남음 50"
    ],
-   "xbrl_rejected": 952
+   "xbrl_rejected": 858
   },
   {
    "ticker": "MPWR",
@@ -1414,15 +1414,15 @@
     "Revenues(12개월): 받음 16 · 버림 1 · 모호 0 · 남음 7",
     "GrossProfit(3개월): 받음 151 · 버림 0 · 모호 0 · 남음 58",
     "GrossProfit(12개월): 받음 45 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 151 · 버림 151 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 151 · 버림 0 · 모호 3 · 남음 55"
    ],
-   "xbrl_rejected": 1099
+   "xbrl_rejected": 948
   },
   {
    "ticker": "CIEN",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 33.4,
+   "seconds": 10.0,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": "",
@@ -1440,15 +1440,15 @@
     "Revenues(12개월): 받음 46 · 버림 24 · 모호 0 · 남음 11",
     "GrossProfit(3개월): 받음 94 · 버림 0 · 모호 0 · 남음 53",
     "GrossProfit(12개월): 받음 46 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 94 · 버림 94 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 94 · 버림 0 · 모호 0 · 남음 53"
    ],
-   "xbrl_rejected": 574
+   "xbrl_rejected": 480
   },
   {
    "ticker": "EXTR",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 5.8,
+   "seconds": 8.5,
    "cache_hits": 37,
    "cache_downloads": 0,
    "first_error": "",
@@ -1469,15 +1469,15 @@
     "Revenues(12개월): 받음 16 · 버림 16 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 99 · 버림 0 · 모호 0 · 남음 49",
     "GrossProfit(12개월): 받음 43 · 버림 0 · 모호 0 · 남음 16",
-    "EarningsPerShareDiluted(3개월): 받음 114 · 버림 114 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 114 · 버림 21 · 모호 1 · 남음 48"
    ],
-   "xbrl_rejected": 917
+   "xbrl_rejected": 824
   },
   {
    "ticker": "NTAP",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 91.6,
+   "seconds": 60.2,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": "",
@@ -1503,15 +1503,15 @@
     "Revenues(12개월): 받음 21 · 버림 12 · 모호 0 · 남음 7",
     "GrossProfit(3개월): 받음 128 · 버림 0 · 모호 0 · 남음 56",
     "GrossProfit(12개월): 받음 49 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 128 · 버림 128 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 128 · 버림 0 · 모호 5 · 남음 51"
    ],
-   "xbrl_rejected": 1027
+   "xbrl_rejected": 899
   },
   {
    "ticker": "P",
    "adj_eps_ok": 0,
    "merged_direct": 19,
-   "seconds": 65.2,
+   "seconds": 59.3,
    "cache_hits": 31,
    "cache_downloads": 0,
    "first_error": "",
@@ -1534,15 +1534,15 @@
     "Revenues(12개월): 받음 9 · 버림 9 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 64 · 버림 0 · 모호 0 · 남음 35",
     "GrossProfit(12개월): 받음 33 · 버림 0 · 모호 0 · 남음 13",
-    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 30 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 0 · 모호 0 · 남음 18"
    ],
-   "xbrl_rejected": 524
+   "xbrl_rejected": 494
   },
   {
    "ticker": "WDC",
    "adj_eps_ok": 21,
    "merged_direct": 14,
-   "seconds": 86.5,
+   "seconds": 67.0,
    "cache_hits": 69,
    "cache_downloads": 0,
    "first_error": "",
@@ -1563,15 +1563,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 23 · 버림 0 · 모호 1 · 남음 9",
     "GrossProfit(3개월): 받음 189 · 버림 0 · 모호 1 · 남음 63",
     "GrossProfit(12개월): 받음 49 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 188 · 버림 188 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 188 · 버림 0 · 모호 1 · 남음 63"
    ],
-   "xbrl_rejected": 1578
+   "xbrl_rejected": 1390
   },
   {
    "ticker": "STX",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 41.2,
+   "seconds": 13.9,
    "cache_hits": 72,
    "cache_downloads": 0,
    "first_error": "",
@@ -1591,15 +1591,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 45 · 버림 0 · 모호 0 · 남음 25",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 23 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 7",
-    "EarningsPerShareDiluted(3개월): 받음 93 · 버림 93 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 93 · 버림 0 · 모호 0 · 남음 48"
    ],
-   "xbrl_rejected": 531
+   "xbrl_rejected": 438
   },
   {
    "ticker": "DELL",
    "adj_eps_ok": 18,
    "merged_direct": 17,
-   "seconds": 23.4,
+   "seconds": 17.3,
    "cache_hits": 74,
    "cache_downloads": 0,
    "first_error": "",
@@ -1618,15 +1618,15 @@
     "Revenues(12개월): 받음 25 · 버림 5 · 모호 0 · 남음 8",
     "GrossProfit(3개월): 받음 112 · 버림 0 · 모호 0 · 남음 40",
     "GrossProfit(12개월): 받음 25 · 버림 0 · 모호 0 · 남음 10",
-    "EarningsPerShareDiluted(3개월): 받음 45 · 버림 45 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 45 · 버림 0 · 모호 6 · 남음 20"
    ],
-   "xbrl_rejected": 302
+   "xbrl_rejected": 257
   },
   {
    "ticker": "VIAV",
    "adj_eps_ok": 18,
    "merged_direct": 7,
-   "seconds": 18.2,
+   "seconds": 17.4,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": "",
@@ -1647,15 +1647,15 @@
     "Revenues(12개월): 받음 9 · 버림 9 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 203 · 버림 0 · 모호 0 · 남음 62",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 186 · 버림 186 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 186 · 버림 0 · 모호 4 · 남음 58"
    ],
-   "xbrl_rejected": 657
+   "xbrl_rejected": 471
   },
   {
    "ticker": "AAOI",
    "adj_eps_ok": 19,
    "merged_direct": 2,
-   "seconds": 16.0,
+   "seconds": 11.7,
    "cache_hits": 81,
    "cache_downloads": 0,
    "first_error": "",
@@ -1676,15 +1676,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 156 · 버림 0 · 모호 0 · 남음 53",
     "GrossProfit(12개월): 받음 42 · 버림 0 · 모호 0 · 남음 15",
-    "EarningsPerShareDiluted(3개월): 받음 156 · 버림 156 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 156 · 버림 0 · 모호 0 · 남음 53"
    ],
-   "xbrl_rejected": 472
+   "xbrl_rejected": 316
   },
   {
    "ticker": "TWLO",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 12.2,
+   "seconds": 10.2,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": "",
@@ -1705,15 +1705,15 @@
     "Revenues(12개월): 받음 6 · 버림 0 · 모호 0 · 남음 4",
     "GrossProfit(3개월): 받음 62 · 버림 0 · 모호 0 · 남음 34",
     "GrossProfit(12개월): 받음 30 · 버림 0 · 모호 0 · 남음 12",
-    "EarningsPerShareDiluted(3개월): 받음 34 · 버림 34 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 34 · 버림 0 · 모호 0 · 남음 20"
    ],
-   "xbrl_rejected": 441
+   "xbrl_rejected": 407
   },
   {
    "ticker": "DDOG",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 7.6,
+   "seconds": 7.9,
    "cache_hits": 30,
    "cache_downloads": 0,
    "first_error": "",
@@ -1734,15 +1734,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
     "GrossProfit(3개월): 받음 42 · 버림 0 · 모호 0 · 남음 24",
     "GrossProfit(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
-    "EarningsPerShareDiluted(3개월): 받음 39 · 버림 39 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 39 · 버림 0 · 모호 0 · 남음 23"
    ],
-   "xbrl_rejected": 503
+   "xbrl_rejected": 464
   },
   {
    "ticker": "NET",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 100.3,
+   "seconds": 23.5,
    "cache_hits": 41,
    "cache_downloads": 0,
    "first_error": "",
@@ -1761,15 +1761,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
     "GrossProfit(3개월): 받음 42 · 버림 0 · 모호 0 · 남음 24",
     "GrossProfit(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
-    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 32 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 0 · 모호 0 · 남음 19"
    ],
-   "xbrl_rejected": 439
+   "xbrl_rejected": 407
   },
   {
    "ticker": "MDB",
    "adj_eps_ok": 20,
    "merged_direct": 17,
-   "seconds": 381.4,
+   "seconds": 210.4,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": "",
@@ -1789,15 +1789,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 52 · 버림 0 · 모호 0 · 남음 29",
     "GrossProfit(12개월): 받음 27 · 버림 0 · 모호 0 · 남음 11",
-    "EarningsPerShareDiluted(3개월): 받음 2 · 버림 2 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 2 · 버림 0 · 모호 0 · 남음 2"
    ],
-   "xbrl_rejected": 386
+   "xbrl_rejected": 384
   },
   {
    "ticker": "SNOW",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 442.3,
+   "seconds": 286.9,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": "",
@@ -1816,15 +1816,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 8",
     "GrossProfit(3개월): 받음 34 · 버림 0 · 모호 0 · 남음 20",
     "GrossProfit(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 8",
-    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 30 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 0 · 모호 0 · 남음 18"
    ],
-   "xbrl_rejected": 666
+   "xbrl_rejected": 636
   },
   {
    "ticker": "OKTA",
    "adj_eps_ok": 19,
    "merged_direct": 14,
-   "seconds": 347.8,
+   "seconds": 262.4,
    "cache_hits": 41,
    "cache_downloads": 0,
    "first_error": "",
@@ -1845,15 +1845,15 @@
     "Revenues(12개월): 받음 3 · 버림 3 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 56 · 버림 0 · 모호 0 · 남음 31",
     "GrossProfit(12개월): 받음 27 · 버림 0 · 모호 0 · 남음 11",
-    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 32 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 0 · 모호 0 · 남음 19"
    ],
-   "xbrl_rejected": 499
+   "xbrl_rejected": 467
   },
   {
    "ticker": "ZS",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 71.3,
+   "seconds": 84.0,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": "",
@@ -1871,15 +1871,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 50 · 버림 0 · 모호 0 · 남음 28",
     "GrossProfit(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
-    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 30 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 0 · 모호 0 · 남음 18"
    ],
-   "xbrl_rejected": 434
+   "xbrl_rejected": 404
   },
   {
    "ticker": "CRWD",
    "adj_eps_ok": 19,
    "merged_direct": 15,
-   "seconds": 8.4,
+   "seconds": 14.8,
    "cache_hits": 40,
    "cache_downloads": 0,
    "first_error": "",
@@ -1897,15 +1897,15 @@
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
     "GrossProfit(3개월): 받음 44 · 버림 0 · 모호 0 · 남음 25",
     "GrossProfit(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
-    "EarningsPerShareDiluted(3개월): 받음 34 · 버림 34 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 34 · 버림 2 · 모호 1 · 남음 18"
    ],
-   "xbrl_rejected": 341
+   "xbrl_rejected": 309
   },
   {
    "ticker": "S",
    "adj_eps_ok": 19,
    "merged_direct": 5,
-   "seconds": 32.0,
+   "seconds": 21.2,
    "cache_hits": 42,
    "cache_downloads": 0,
    "first_error": "",
@@ -1925,15 +1925,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 7",
     "GrossProfit(3개월): 받음 30 · 버림 0 · 모호 0 · 남음 18",
     "GrossProfit(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 7",
-    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 30 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 0 · 모호 0 · 남음 18"
    ],
-   "xbrl_rejected": 192
+   "xbrl_rejected": 162
   },
   {
    "ticker": "HUBS",
    "adj_eps_ok": 21,
    "merged_direct": 15,
-   "seconds": 20.2,
+   "seconds": 15.2,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": "",
@@ -1956,15 +1956,15 @@
     "Revenues(12개월): 받음 12 · 버림 0 · 모호 0 · 남음 6",
     "GrossProfit(3개월): 받음 128 · 버림 0 · 모호 0 · 남음 49",
     "GrossProfit(12개월): 받음 36 · 버림 0 · 모호 0 · 남음 14",
-    "EarningsPerShareDiluted(3개월): 받음 26 · 버림 26 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 26 · 버림 0 · 모호 3 · 남음 13"
    ],
-   "xbrl_rejected": 490
+   "xbrl_rejected": 464
   },
   {
    "ticker": "BILL",
    "adj_eps_ok": 19,
    "merged_direct": 16,
-   "seconds": 17.7,
+   "seconds": 12.8,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": "",
@@ -1985,15 +1985,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 8",
     "GrossProfit(3개월): 받음 48 · 버림 0 · 모호 0 · 남음 26",
     "GrossProfit(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 8",
-    "EarningsPerShareDiluted(3개월): 받음 26 · 버림 26 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 26 · 버림 0 · 모호 0 · 남음 15"
    ],
-   "xbrl_rejected": 517
+   "xbrl_rejected": 491
   },
   {
    "ticker": "U",
    "adj_eps_ok": 11,
    "merged_direct": 2,
-   "seconds": 8.8,
+   "seconds": 8.2,
    "cache_hits": 65,
    "cache_downloads": 0,
    "first_error": "",
@@ -2014,15 +2014,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 8",
     "GrossProfit(3개월): 받음 36 · 버림 0 · 모호 0 · 남음 21",
     "GrossProfit(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 8",
-    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 32 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 0 · 모호 0 · 남음 19"
    ],
-   "xbrl_rejected": 338
+   "xbrl_rejected": 306
   },
   {
    "ticker": "ROKU",
    "adj_eps_ok": 0,
    "merged_direct": 13,
-   "seconds": 9.9,
+   "seconds": 10.8,
    "cache_hits": 45,
    "cache_downloads": 0,
    "first_error": "",
@@ -2043,15 +2043,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 85 · 버림 0 · 모호 0 · 남음 36",
     "GrossProfit(12개월): 받음 27 · 버림 0 · 모호 0 · 남음 11",
-    "EarningsPerShareDiluted(3개월): 받음 62 · 버림 62 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 62 · 버림 0 · 모호 0 · 남음 33"
    ],
-   "xbrl_rejected": 698
+   "xbrl_rejected": 636
   },
   {
    "ticker": "SNAP",
    "adj_eps_ok": 12,
    "merged_direct": 9,
-   "seconds": 15.5,
+   "seconds": 10.2,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": "",
@@ -2070,15 +2070,15 @@
     "Revenues(3개월): 받음 8 · 버림 0 · 모호 0 · 남음 7",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
-    "EarningsPerShareDiluted(3개월): 받음 58 · 버림 58 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 58 · 버림 0 · 모호 0 · 남음 32"
    ],
-   "xbrl_rejected": 213
+   "xbrl_rejected": 155
   },
   {
    "ticker": "ZM",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 9.0,
+   "seconds": 6.3,
    "cache_hits": 41,
    "cache_downloads": 0,
    "first_error": "",
@@ -2097,15 +2097,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
     "GrossProfit(3개월): 받음 60 · 버림 0 · 모호 0 · 남음 28",
     "GrossProfit(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
-    "EarningsPerShareDiluted(3개월): 받음 60 · 버림 60 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 60 · 버림 0 · 모호 0 · 남음 28"
    ],
-   "xbrl_rejected": 457
+   "xbrl_rejected": 397
   },
   {
    "ticker": "DOCU",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 7.6,
+   "seconds": 13.1,
    "cache_hits": 49,
    "cache_downloads": 0,
    "first_error": "",
@@ -2124,15 +2124,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 50 · 버림 0 · 모호 0 · 남음 28",
     "GrossProfit(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
-    "EarningsPerShareDiluted(3개월): 받음 36 · 버림 36 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 36 · 버림 4 · 모호 0 · 남음 19"
    ],
-   "xbrl_rejected": 459
+   "xbrl_rejected": 427
   },
   {
    "ticker": "TSLA",
    "adj_eps_ok": 13,
    "merged_direct": 0,
-   "seconds": 15.5,
+   "seconds": 14.8,
    "cache_hits": 59,
    "cache_downloads": 0,
    "first_error": "",
@@ -2154,15 +2154,15 @@
     "Revenues(12개월): 받음 61 · 버림 13 · 모호 0 · 남음 17",
     "GrossProfit(3개월): 받음 172 · 버림 0 · 모호 0 · 남음 61",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 63 · 버림 63 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 63 · 버림 0 · 모호 8 · 남음 26"
    ],
-   "xbrl_rejected": 643
+   "xbrl_rejected": 580
   },
   {
    "ticker": "TTD",
    "adj_eps_ok": 20,
    "merged_direct": 5,
-   "seconds": 6.6,
+   "seconds": 5.9,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": "",
@@ -2180,15 +2180,15 @@
     "Revenues(3개월): 받음 10 · 버림 10 · 모호 0 · 남음 0",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 6 · 버림 6 · 모호 0 · 남음 0",
-    "EarningsPerShareDiluted(3개월): 받음 60 · 버림 60 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 60 · 버림 0 · 모호 3 · 남음 30"
    ],
-   "xbrl_rejected": 603
+   "xbrl_rejected": 543
   },
   {
    "ticker": "FSLR",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 7.3,
+   "seconds": 7.0,
    "cache_hits": 42,
    "cache_downloads": 0,
    "first_error": "",
@@ -2210,15 +2210,15 @@
     "Revenues(12개월): 받음 26 · 버림 2 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 104 · 버림 0 · 모호 0 · 남음 55",
     "GrossProfit(12개월): 받음 51 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 104 · 버림 104 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 104 · 버림 0 · 모호 4 · 남음 51"
    ],
-   "xbrl_rejected": 884
+   "xbrl_rejected": 780
   },
   {
    "ticker": "SEDG",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 8.5,
+   "seconds": 9.3,
    "cache_hits": 53,
    "cache_downloads": 0,
    "first_error": "",
@@ -2239,15 +2239,15 @@
     "Revenues(12개월): 받음 30 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 68 · 버림 0 · 모호 1 · 남음 37",
     "GrossProfit(12개월): 받음 42 · 버림 0 · 모호 0 · 남음 13",
-    "EarningsPerShareDiluted(3개월): 받음 66 · 버림 66 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 66 · 버림 0 · 모호 1 · 남음 35"
    ],
-   "xbrl_rejected": 496
+   "xbrl_rejected": 430
   },
   {
    "ticker": "GNRC",
    "adj_eps_ok": 5,
    "merged_direct": 18,
-   "seconds": 10.1,
+   "seconds": 15.3,
    "cache_hits": 37,
    "cache_downloads": 0,
    "first_error": "",
@@ -2266,15 +2266,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 188 · 버림 0 · 모호 0 · 남음 62",
     "GrossProfit(12개월): 받음 45 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 190 · 버림 190 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 190 · 버림 4 · 모호 0 · 남음 61"
    ],
-   "xbrl_rejected": 960
+   "xbrl_rejected": 774
   },
   {
    "ticker": "GOOGL",
    "adj_eps_ok": 0,
    "merged_direct": 1,
-   "seconds": 12.1,
+   "seconds": 7.8,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": "",
@@ -2290,15 +2290,15 @@
     "Revenues(3개월): 받음 34 · 버림 0 · 모호 0 · 남음 25",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 9",
     "Revenues(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 12",
-    "EarningsPerShareDiluted(3개월): 받음 60 · 버림 60 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 60 · 버림 0 · 모호 3 · 남음 31"
    ],
-   "xbrl_rejected": 390
+   "xbrl_rejected": 330
   },
   {
    "ticker": "META",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 8.7,
+   "seconds": 8.5,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": "",
@@ -2317,15 +2317,15 @@
     "Revenues(3개월): 받음 40 · 버림 0 · 모호 0 · 남음 23",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 8",
-    "EarningsPerShareDiluted(3개월): 받음 89 · 버림 89 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 89 · 버림 0 · 모호 4 · 남음 42"
    ],
-   "xbrl_rejected": 601
+   "xbrl_rejected": 512
   },
   {
    "ticker": "AMZN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 18.7,
+   "seconds": 10.3,
    "cache_hits": 48,
    "cache_downloads": 0,
    "first_error": "",
@@ -2348,15 +2348,15 @@
     "Revenues(12개월): 받음 21 · 버림 21 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 4 · 버림 0 · 모호 0 · 남음 4",
     "GrossProfit(12개월): 받음 6 · 버림 3 · 모호 0 · 남음 3",
-    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 192 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 0 · 모호 11 · 남음 56"
    ],
-   "xbrl_rejected": 757
+   "xbrl_rejected": 565
   },
   {
    "ticker": "NFLX",
    "adj_eps_ok": 0,
    "merged_direct": 5,
-   "seconds": 18.2,
+   "seconds": 11.9,
    "cache_hits": 48,
    "cache_downloads": 0,
    "first_error": "",
@@ -2375,15 +2375,15 @@
     "Revenues(12개월): 받음 54 · 버림 0 · 모호 0 · 남음 19",
     "GrossProfit(3개월): 받음 116 · 버림 0 · 모호 1 · 남음 48",
     "GrossProfit(12개월): 받음 9 · 버림 0 · 모호 0 · 남음 5",
-    "EarningsPerShareDiluted(3개월): 받음 194 · 버림 194 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 194 · 버림 0 · 모호 7 · 남음 59"
    ],
-   "xbrl_rejected": 1736
+   "xbrl_rejected": 1542
   },
   {
    "ticker": "PINS",
    "adj_eps_ok": 20,
    "merged_direct": 4,
-   "seconds": 15.8,
+   "seconds": 12.8,
    "cache_hits": 49,
    "cache_downloads": 0,
    "first_error": "",
@@ -2400,15 +2400,15 @@
     "AmortizationOfIntangibleAssets(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
     "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 46 · 버림 0 · 모호 0 · 남음 26",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
-    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 32 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 0 · 모호 0 · 남음 19"
    ],
-   "xbrl_rejected": 390
+   "xbrl_rejected": 358
   },
   {
    "ticker": "EBAY",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 9.8,
+   "seconds": 11.1,
    "cache_hits": 54,
    "cache_downloads": 0,
    "first_error": "",
@@ -2434,15 +2434,15 @@
     "Revenues(12개월): 받음 18 · 버림 3 · 모호 0 · 남음 6",
     "GrossProfit(3개월): 받음 206 · 버림 4 · 모호 0 · 남음 68",
     "GrossProfit(12개월): 받음 54 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 204 · 버림 204 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 204 · 버림 2 · 모호 0 · 남음 68"
    ],
-   "xbrl_rejected": 904
+   "xbrl_rejected": 702
   },
   {
    "ticker": "ETSY",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 19.3,
+   "seconds": 17.7,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": "",
@@ -2463,15 +2463,15 @@
     "Revenues(12개월): 받음 9 · 버림 0 · 모호 0 · 남음 5",
     "GrossProfit(3개월): 받음 70 · 버림 0 · 모호 0 · 남음 38",
     "GrossProfit(12개월): 받음 33 · 버림 0 · 모호 0 · 남음 13",
-    "EarningsPerShareDiluted(3개월): 받음 60 · 버림 60 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 60 · 버림 0 · 모호 0 · 남음 33"
    ],
-   "xbrl_rejected": 754
+   "xbrl_rejected": 694
   },
   {
    "ticker": "ABNB",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 16.8,
+   "seconds": 10.8,
    "cache_hits": 34,
    "cache_downloads": 0,
    "first_error": "",
@@ -2495,7 +2495,7 @@
    "ticker": "DASH",
    "adj_eps_ok": 0,
    "merged_direct": 6,
-   "seconds": 9.8,
+   "seconds": 8.4,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": "",
@@ -2512,15 +2512,15 @@
     "AmortizationOfIntangibleAssets(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 8",
     "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 34 · 버림 0 · 모호 0 · 남음 20",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 8",
-    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 32 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 0 · 모호 0 · 남음 19"
    ],
-   "xbrl_rejected": 496
+   "xbrl_rejected": 464
   },
   {
    "ticker": "VRT",
    "adj_eps_ok": 8,
    "merged_direct": 20,
-   "seconds": 24.1,
+   "seconds": 11.8,
    "cache_hits": 76,
    "cache_downloads": 0,
    "first_error": "",
@@ -2537,15 +2537,15 @@
     "Revenues(3개월): 받음 10 · 버림 0 · 모호 0 · 남음 8",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 8",
     "Revenues(12개월): 받음 5 · 버림 0 · 모호 0 · 남음 3",
-    "EarningsPerShareDiluted(3개월): 받음 48 · 버림 48 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 48 · 버림 0 · 모호 4 · 남음 20"
    ],
-   "xbrl_rejected": 383
+   "xbrl_rejected": 335
   },
   {
    "ticker": "ETN",
    "adj_eps_ok": 14,
    "merged_direct": 24,
-   "seconds": 8.2,
+   "seconds": 9.9,
    "cache_hits": 37,
    "cache_downloads": 0,
    "first_error": "",
@@ -2562,15 +2562,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 50 · 버림 0 · 모호 0 · 남음 27",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 7",
-    "EarningsPerShareDiluted(3개월): 받음 90 · 버림 90 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 90 · 버림 0 · 모호 0 · 남음 44"
    ],
-   "xbrl_rejected": 685
+   "xbrl_rejected": 595
   },
   {
    "ticker": "PWR",
    "adj_eps_ok": 21,
    "merged_direct": 0,
-   "seconds": 11.6,
+   "seconds": 11.1,
    "cache_hits": 51,
    "cache_downloads": 0,
    "first_error": "",
@@ -2588,15 +2588,15 @@
     "Revenues(12개월): 받음 32 · 버림 30 · 모호 0 · 남음 2",
     "GrossProfit(3개월): 받음 192 · 버림 0 · 모호 0 · 남음 65",
     "GrossProfit(12개월): 받음 54 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 154 · 버림 154 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 154 · 버림 56 · 모호 0 · 남음 54"
    ],
-   "xbrl_rejected": 721
+   "xbrl_rejected": 623
   },
   {
    "ticker": "VST",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 23.8,
+   "seconds": 14.8,
    "cache_hits": 86,
    "cache_downloads": 0,
    "first_error": "",
@@ -2617,15 +2617,15 @@
     "Revenues(3개월): 받음 62 · 버림 1 · 모호 0 · 남음 32",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 8",
     "Revenues(12개월): 받음 23 · 버림 0 · 모호 0 · 남음 9",
-    "EarningsPerShareDiluted(3개월): 받음 61 · 버림 61 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 61 · 버림 1 · 모호 0 · 남음 31"
    ],
-   "xbrl_rejected": 287
+   "xbrl_rejected": 227
   },
   {
    "ticker": "NRG",
    "adj_eps_ok": 9,
    "merged_direct": 13,
-   "seconds": 21.2,
+   "seconds": 14.1,
    "cache_hits": 64,
    "cache_downloads": 0,
    "first_error": "",
@@ -2646,15 +2646,15 @@
     "Revenues(3개월): 받음 218 · 버림 10 · 모호 0 · 남음 66",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 23 · 버림 0 · 모호 0 · 남음 8",
     "Revenues(12개월): 받음 72 · 버림 12 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 196 · 버림 196 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 196 · 버림 0 · 모호 7 · 남음 59"
    ],
-   "xbrl_rejected": 667
+   "xbrl_rejected": 471
   },
   {
    "ticker": "NEE",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 23.7,
+   "seconds": 15.8,
    "cache_hits": 94,
    "cache_downloads": 0,
    "first_error": "",
@@ -2670,15 +2670,15 @@
     "RevenueFromContractWithCustomerIncludingAssessedTax(3개월): 받음 47 · 버림 0 · 모호 0 · 남음 25",
     "Revenues(12개월): 받음 12 · 버림 0 · 모호 0 · 남음 6",
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 8",
-    "EarningsPerShareDiluted(3개월): 받음 194 · 버림 194 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 194 · 버림 4 · 모호 9 · 남음 57"
    ],
-   "xbrl_rejected": 293
+   "xbrl_rejected": 103
   },
   {
    "ticker": "SO",
    "adj_eps_ok": 1,
    "merged_direct": 0,
-   "seconds": 10.6,
+   "seconds": 8.8,
    "cache_hits": 97,
    "cache_downloads": 0,
    "first_error": "",
@@ -2696,15 +2696,15 @@
     "RevenueFromContractWithCustomerIncludingAssessedTax(3개월): 받음 40 · 버림 0 · 모호 0 · 남음 24",
     "Revenues(12개월): 받음 51 · 버림 6 · 모호 0 · 남음 19",
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
-    "EarningsPerShareDiluted(3개월): 받음 148 · 버림 148 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 148 · 버림 0 · 모호 0 · 남음 62"
    ],
-   "xbrl_rejected": 581
+   "xbrl_rejected": 433
   },
   {
    "ticker": "RUN",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 9.8,
+   "seconds": 8.8,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": "",
@@ -2724,15 +2724,15 @@
     "Revenues(3개월): 받음 58 · 버림 2 · 모호 0 · 남음 22",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 8",
     "Revenues(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 7",
-    "EarningsPerShareDiluted(3개월): 받음 87 · 버림 87 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 87 · 버림 0 · 모호 2 · 남음 35"
    ],
-   "xbrl_rejected": 665
+   "xbrl_rejected": 578
   },
   {
    "ticker": "BE",
    "adj_eps_ok": 16,
    "merged_direct": 15,
-   "seconds": 17.1,
+   "seconds": 13.1,
    "cache_hits": 63,
    "cache_downloads": 0,
    "first_error": "",
@@ -2749,15 +2749,15 @@
     "Revenues(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 66 · 버림 0 · 모호 2 · 남음 29",
     "GrossProfit(12개월): 받음 24 · 버림 0 · 모호 1 · 남음 9",
-    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 30 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 30 · 버림 0 · 모호 1 · 남음 17"
    ],
-   "xbrl_rejected": 346
+   "xbrl_rejected": 316
   },
   {
    "ticker": "ADBE",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 9.4,
+   "seconds": 8.8,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": "",
@@ -2780,15 +2780,15 @@
     "Revenues(12개월): 받음 74 · 버림 26 · 모호 0 · 남음 19",
     "GrossProfit(3개월): 받음 183 · 버림 0 · 모호 0 · 남음 65",
     "GrossProfit(12개월): 받음 48 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 186 · 버림 186 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 186 · 버림 3 · 모호 0 · 남음 65"
    ],
-   "xbrl_rejected": 597
+   "xbrl_rejected": 414
   },
   {
    "ticker": "CRM",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 10.7,
+   "seconds": 12.6,
    "cache_hits": 51,
    "cache_downloads": 0,
    "first_error": "",
@@ -2816,15 +2816,15 @@
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 2 · 버림 0 · 모호 0 · 남음 2",
     "GrossProfit(3개월): 받음 190 · 버림 0 · 모호 0 · 남음 65",
     "GrossProfit(12개월): 받음 57 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 190 · 버림 190 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 190 · 버림 1 · 모호 7 · 남음 58"
    ],
-   "xbrl_rejected": 1229
+   "xbrl_rejected": 1040
   },
   {
    "ticker": "NOW",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 16.3,
+   "seconds": 13.3,
    "cache_hits": 42,
    "cache_downloads": 0,
    "first_error": "",
@@ -2844,15 +2844,15 @@
     "Revenues(12개월): 받음 33 · 버림 18 · 모호 0 · 남음 7",
     "GrossProfit(3개월): 받음 86 · 버림 0 · 모호 0 · 남음 46",
     "GrossProfit(12개월): 받음 42 · 버림 0 · 모호 0 · 남음 16",
-    "EarningsPerShareDiluted(3개월): 받음 61 · 버림 61 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 61 · 버림 4 · 모호 2 · 남음 32"
    ],
-   "xbrl_rejected": 983
+   "xbrl_rejected": 926
   },
   {
    "ticker": "ORCL",
    "adj_eps_ok": 18,
    "merged_direct": 19,
-   "seconds": 13.5,
+   "seconds": 11.1,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": "",
@@ -2871,15 +2871,15 @@
     "Revenues(12개월): 받음 68 · 버림 26 · 모호 0 · 남음 18",
     "GrossProfit(3개월): 받음 12 · 버림 0 · 모호 0 · 남음 9",
     "GrossProfit(12개월): 받음 6 · 버림 0 · 모호 0 · 남음 4",
-    "EarningsPerShareDiluted(3개월): 받음 162 · 버림 162 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 162 · 버림 60 · 모호 1 · 남음 53"
    ],
-   "xbrl_rejected": 1514
+   "xbrl_rejected": 1412
   },
   {
    "ticker": "TEAM",
    "adj_eps_ok": 17,
    "merged_direct": 16,
-   "seconds": 52.6,
+   "seconds": 18.0,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": "",
@@ -2896,15 +2896,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 12 · 버림 0 · 모호 0 · 남음 6",
     "GrossProfit(3개월): 받음 24 · 버림 0 · 모호 0 · 남음 15",
     "GrossProfit(12개월): 받음 27 · 버림 0 · 모호 0 · 남음 11",
-    "EarningsPerShareDiluted(3개월): 받음 24 · 버림 24 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 24 · 버림 0 · 모호 0 · 남음 15"
    ],
-   "xbrl_rejected": 75
+   "xbrl_rejected": 51
   },
   {
    "ticker": "WDAY",
    "adj_eps_ok": 9,
    "merged_direct": 15,
-   "seconds": 8.9,
+   "seconds": 9.4,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": "",
@@ -2924,15 +2924,15 @@
     "Revenues(3개월): 받음 110 · 버림 42 · 모호 0 · 남음 26",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 36 · 버림 18 · 모호 0 · 남음 8",
-    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 32 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 32 · 버림 0 · 모호 0 · 남음 19"
    ],
-   "xbrl_rejected": 564
+   "xbrl_rejected": 532
   },
   {
    "ticker": "CSCO",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 8.1,
+   "seconds": 7.5,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": "",
@@ -2956,15 +2956,15 @@
     "Revenues(12개월): 받음 47 · 버림 29 · 모호 0 · 남음 9",
     "GrossProfit(3개월): 받음 152 · 버림 0 · 모호 0 · 남음 60",
     "GrossProfit(12개월): 받음 55 · 버림 0 · 모호 0 · 남음 20",
-    "EarningsPerShareDiluted(3개월): 받음 151 · 버림 151 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 151 · 버림 1 · 모호 0 · 남음 60"
    ],
-   "xbrl_rejected": 1411
+   "xbrl_rejected": 1261
   },
   {
    "ticker": "HPQ",
    "adj_eps_ok": 19,
    "merged_direct": 1,
-   "seconds": 44.0,
+   "seconds": 32.1,
    "cache_hits": 63,
    "cache_downloads": 0,
    "first_error": "",
@@ -2987,15 +2987,15 @@
     "Revenues(12개월): 받음 84 · 버림 24 · 모호 2 · 남음 17",
     "GrossProfit(3개월): 받음 16 · 버림 0 · 모호 0 · 남음 11",
     "GrossProfit(12개월): 받음 6 · 버림 0 · 모호 0 · 남음 4",
-    "EarningsPerShareDiluted(3개월): 받음 106 · 버림 106 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 106 · 버림 0 · 모호 4 · 남음 50"
    ],
-   "xbrl_rejected": 976
+   "xbrl_rejected": 870
   },
   {
    "ticker": "HPE",
    "adj_eps_ok": 1,
    "merged_direct": 13,
-   "seconds": 48.7,
+   "seconds": 34.4,
    "cache_hits": 68,
    "cache_downloads": 0,
    "first_error": "",
@@ -3012,15 +3012,15 @@
     "AmortizationOfIntangibleAssets(12개월): 받음 33 · 버림 0 · 모호 2 · 남음 11",
     "Revenues(3개월): 받음 106 · 버림 18 · 모호 0 · 남음 39",
     "Revenues(12개월): 받음 45 · 버림 12 · 모호 0 · 남음 13",
-    "EarningsPerShareDiluted(3개월): 받음 80 · 버림 80 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 80 · 버림 0 · 모호 0 · 남음 39"
    ],
-   "xbrl_rejected": 440
+   "xbrl_rejected": 360
   },
   {
    "ticker": "JPM",
    "adj_eps_ok": 0,
    "merged_direct": 24,
-   "seconds": 75.2,
+   "seconds": 77.8,
    "cache_hits": 66,
    "cache_downloads": 0,
    "first_error": "",
@@ -3033,15 +3033,15 @@
     "AmortizationOfIntangibleAssets(12개월): 받음 27 · 버림 0 · 모호 0 · 남음 12",
     "Revenues(3개월): 받음 110 · 버림 70 · 모호 0 · 남음 20",
     "Revenues(12개월): 받음 87 · 버림 33 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 110 · 버림 110 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 110 · 버림 0 · 모호 1 · 남음 54"
    ],
-   "xbrl_rejected": 415
+   "xbrl_rejected": 305
   },
   {
    "ticker": "BAC",
    "adj_eps_ok": 2,
    "merged_direct": 24,
-   "seconds": 44.7,
+   "seconds": 32.4,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": "",
@@ -3055,15 +3055,15 @@
     "AmortizationOfIntangibleAssets(12개월): 받음 64 · 버림 0 · 모호 1 · 남음 18",
     "Revenues(3개월): 받음 104 · 버림 0 · 모호 0 · 남음 55",
     "Revenues(12개월): 받음 64 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 104 · 버림 104 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 104 · 버림 0 · 모호 7 · 남음 48"
    ],
-   "xbrl_rejected": 462
+   "xbrl_rejected": 358
   },
   {
    "ticker": "WFC",
    "adj_eps_ok": 0,
    "merged_direct": 21,
-   "seconds": 15.4,
+   "seconds": 13.7,
    "cache_hits": 88,
    "cache_downloads": 0,
    "first_error": "",
@@ -3079,15 +3079,15 @@
     "FiniteLivedIntangibleAssetsAmortizationExpense(12개월): 받음 2 · 버림 0 · 모호 0 · 남음 2",
     "Revenues(3개월): 받음 52 · 버림 34 · 모호 0 · 남음 12",
     "Revenues(12개월): 받음 26 · 버림 18 · 모호 0 · 남음 4",
-    "EarningsPerShareDiluted(3개월): 받음 104 · 버림 104 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 104 · 버림 0 · 모호 5 · 남음 50"
    ],
-   "xbrl_rejected": 511
+   "xbrl_rejected": 407
   },
   {
    "ticker": "C",
    "adj_eps_ok": 0,
    "merged_direct": 22,
-   "seconds": 281.4,
+   "seconds": 178.8,
    "cache_hits": 100,
    "cache_downloads": 0,
    "first_error": "",
@@ -3104,15 +3104,15 @@
     "Revenues(12개월): 받음 66 · 버림 0 · 모호 0 · 남음 19",
     "GrossProfit(3개월): 받음 66 · 버림 66 · 모호 0 · 남음 0",
     "GrossProfit(12개월): 받음 54 · 버림 54 · 모호 0 · 남음 0",
-    "EarningsPerShareDiluted(3개월): 받음 234 · 버림 234 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 234 · 버림 0 · 모호 8 · 남음 57"
    ],
-   "xbrl_rejected": 721
+   "xbrl_rejected": 487
   },
   {
    "ticker": "GS",
    "adj_eps_ok": 0,
    "merged_direct": 22,
-   "seconds": 648.3,
+   "seconds": 197.8,
    "cache_hits": 97,
    "cache_downloads": 0,
    "first_error": "",
@@ -3125,15 +3125,15 @@
     "AmortizationOfIntangibleAssets(12개월): 받음 52 · 버림 0 · 모호 1 · 남음 17",
     "Revenues(3개월): 받음 78 · 버림 78 · 모호 0 · 남음 0",
     "Revenues(12개월): 받음 42 · 버림 42 · 모호 0 · 남음 0",
-    "EarningsPerShareDiluted(3개월): 받음 105 · 버림 105 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 105 · 버림 0 · 모호 0 · 남음 56"
    ],
-   "xbrl_rejected": 486
+   "xbrl_rejected": 381
   },
   {
    "ticker": "MS",
    "adj_eps_ok": 6,
    "merged_direct": 20,
-   "seconds": 269.0,
+   "seconds": 184.0,
    "cache_hits": 52,
    "cache_downloads": 0,
    "first_error": "",
@@ -3150,15 +3150,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 1 · 버림 0 · 모호 0 · 남음 1",
     "Revenues(3개월): 받음 192 · 버림 114 · 모호 0 · 남음 28",
     "Revenues(12개월): 받음 51 · 버림 33 · 모호 0 · 남음 8",
-    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 192 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 0 · 모호 0 · 남음 67"
    ],
-   "xbrl_rejected": 573
+   "xbrl_rejected": 381
   },
   {
    "ticker": "SCHW",
    "adj_eps_ok": 0,
    "merged_direct": 20,
-   "seconds": 27.4,
+   "seconds": 17.9,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": "",
@@ -3172,15 +3172,15 @@
     "AmortizationOfIntangibleAssets(12개월): 받음 44 · 버림 0 · 모호 0 · 남음 15",
     "Revenues(3개월): 받음 200 · 버림 0 · 모호 0 · 남음 67",
     "Revenues(12개월): 받음 54 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 196 · 버림 196 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 196 · 버림 0 · 모호 0 · 남음 66"
    ],
-   "xbrl_rejected": 791
+   "xbrl_rejected": 595
   },
   {
    "ticker": "BLK",
    "adj_eps_ok": 1,
    "merged_direct": 5,
-   "seconds": 579.5,
+   "seconds": 17.3,
    "cache_hits": 24,
    "cache_downloads": 0,
    "first_error": "",
@@ -3196,15 +3196,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 12 · 버림 0 · 모호 0 · 남음 9",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 6 · 버림 0 · 모호 0 · 남음 4",
     "Revenues(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
-    "EarningsPerShareDiluted(3개월): 받음 12 · 버림 12 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 12 · 버림 0 · 모호 0 · 남음 9"
    ],
-   "xbrl_rejected": 89
+   "xbrl_rejected": 77
   },
   {
    "ticker": "V",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 838.6,
+   "seconds": 544.3,
    "cache_hits": 78,
    "cache_downloads": 0,
    "first_error": "",
@@ -3229,7 +3229,7 @@
    "ticker": "MA",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 472.6,
+   "seconds": 327.6,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": "",
@@ -3248,15 +3248,15 @@
     "Revenues(3개월): 받음 144 · 버림 0 · 모호 0 · 남음 61",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 9 · 버림 0 · 모호 0 · 남음 4",
     "Revenues(12개월): 받음 42 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 184 · 버림 184 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 184 · 버림 0 · 모호 7 · 남음 59"
    ],
-   "xbrl_rejected": 938
+   "xbrl_rejected": 754
   },
   {
    "ticker": "AXP",
    "adj_eps_ok": 6,
    "merged_direct": 15,
-   "seconds": 262.5,
+   "seconds": 226.8,
    "cache_hits": 100,
    "cache_downloads": 0,
    "first_error": "",
@@ -3275,15 +3275,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
     "Revenues(12개월): 받음 30 · 버림 27 · 모호 0 · 남음 3",
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
-    "EarningsPerShareDiluted(3개월): 받음 164 · 버림 164 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 164 · 버림 0 · 모호 0 · 남음 67"
    ],
-   "xbrl_rejected": 565
+   "xbrl_rejected": 401
   },
   {
    "ticker": "COF",
    "adj_eps_ok": 0,
    "merged_direct": 24,
-   "seconds": 25.7,
+   "seconds": 207.0,
    "cache_hits": 72,
    "cache_downloads": 0,
    "first_error": "",
@@ -3304,15 +3304,15 @@
     "Revenues(3개월): 받음 78 · 버림 0 · 모호 0 · 남음 42",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 8",
     "Revenues(12개월): 받음 45 · 버림 0 · 모호 0 · 남음 18",
-    "EarningsPerShareDiluted(3개월): 받음 126 · 버림 126 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 126 · 버림 0 · 모호 4 · 남음 54"
    ],
-   "xbrl_rejected": 407
+   "xbrl_rejected": 281
   },
   {
    "ticker": "LLY",
    "adj_eps_ok": 22,
    "merged_direct": 24,
-   "seconds": 20.2,
+   "seconds": 215.7,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": "",
@@ -3328,15 +3328,15 @@
     "FiniteLivedIntangibleAssetsAmortizationExpense(12개월): 받음 6 · 버림 0 · 모호 0 · 남음 4",
     "Revenues(3개월): 받음 170 · 버림 0 · 모호 0 · 남음 63",
     "Revenues(12개월): 받음 54 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 144 · 버림 144 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 144 · 버림 0 · 모호 0 · 남음 52"
    ],
-   "xbrl_rejected": 326
+   "xbrl_rejected": 182
   },
   {
    "ticker": "UNH",
    "adj_eps_ok": 19,
    "merged_direct": 0,
-   "seconds": 22.9,
+   "seconds": 122.1,
    "cache_hits": 79,
    "cache_downloads": 0,
    "first_error": "",
@@ -3353,15 +3353,15 @@
     "FiniteLivedIntangibleAssetsAmortizationExpense(12개월): 받음 9 · 버림 0 · 모호 0 · 남음 4",
     "Revenues(3개월): 받음 226 · 버림 82 · 모호 0 · 남음 60",
     "Revenues(12개월): 받음 96 · 버림 42 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 144 · 버림 144 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 144 · 버림 0 · 모호 0 · 남음 60"
    ],
-   "xbrl_rejected": 874
+   "xbrl_rejected": 730
   },
   {
    "ticker": "JNJ",
    "adj_eps_ok": 23,
    "merged_direct": 24,
-   "seconds": 18.5,
+   "seconds": 12.5,
    "cache_hits": 55,
    "cache_downloads": 0,
    "first_error": "",
@@ -3384,15 +3384,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 9",
     "GrossProfit(3개월): 받음 194 · 버림 5 · 모호 0 · 남음 66",
     "GrossProfit(12개월): 받음 48 · 버림 6 · 모호 0 · 남음 16",
-    "EarningsPerShareDiluted(3개월): 받음 189 · 버림 189 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 189 · 버림 0 · 모호 1 · 남음 65"
    ],
-   "xbrl_rejected": 730
+   "xbrl_rejected": 541
   },
   {
    "ticker": "ABBV",
    "adj_eps_ok": 21,
    "merged_direct": 0,
-   "seconds": 19.8,
+   "seconds": 32.0,
    "cache_hits": 74,
    "cache_downloads": 0,
    "first_error": "",
@@ -3410,15 +3410,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 62 · 버림 0 · 모호 0 · 남음 38",
-    "EarningsPerShareDiluted(3개월): 받음 146 · 버림 146 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 146 · 버림 2 · 모호 0 · 남음 58"
    ],
-   "xbrl_rejected": 664
+   "xbrl_rejected": 520
   },
   {
    "ticker": "MRK",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 14.6,
+   "seconds": 146.5,
    "cache_hits": 35,
    "cache_downloads": 0,
    "first_error": "",
@@ -3433,15 +3433,15 @@
     "FiniteLivedIntangibleAssetsAmortizationExpense(12개월): 받음 6 · 버림 0 · 모호 0 · 남음 4",
     "Revenues(3개월): 받음 56 · 버림 0 · 모호 0 · 남음 34",
     "Revenues(12개월): 받음 30 · 버림 0 · 모호 0 · 남음 14",
-    "EarningsPerShareDiluted(3개월): 받음 113 · 버림 113 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 113 · 버림 9 · 모호 2 · 남음 53"
    ],
-   "xbrl_rejected": 957
+   "xbrl_rejected": 853
   },
   {
    "ticker": "PFE",
    "adj_eps_ok": 5,
    "merged_direct": 24,
-   "seconds": 445.5,
+   "seconds": 284.4,
    "cache_hits": 45,
    "cache_downloads": 0,
    "first_error": "",
@@ -3459,15 +3459,15 @@
     "Revenues(3개월): 받음 22 · 버림 0 · 모호 0 · 남음 14",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 8",
     "Revenues(12개월): 받음 12 · 버림 0 · 모호 0 · 남음 6",
-    "EarningsPerShareDiluted(3개월): 받음 104 · 버림 104 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 104 · 버림 0 · 모호 1 · 남음 54"
    ],
-   "xbrl_rejected": 422
+   "xbrl_rejected": 318
   },
   {
    "ticker": "AMGN",
    "adj_eps_ok": 16,
    "merged_direct": 16,
-   "seconds": 144.9,
+   "seconds": 126.6,
    "cache_hits": 42,
    "cache_downloads": 0,
    "first_error": "",
@@ -3491,15 +3491,15 @@
     "Revenues(12개월): 받음 39 · 버림 0 · 모호 0 · 남음 14",
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 12 · 버림 0 · 모호 0 · 남음 6",
     "GrossProfit(3개월): 받음 96 · 버림 0 · 모호 0 · 남음 48",
-    "EarningsPerShareDiluted(3개월): 받음 200 · 버림 200 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 200 · 버림 0 · 모호 0 · 남음 67"
    ],
-   "xbrl_rejected": 738
+   "xbrl_rejected": 538
   },
   {
    "ticker": "GILD",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 442.8,
+   "seconds": 199.7,
    "cache_hits": 49,
    "cache_downloads": 0,
    "first_error": "",
@@ -3520,15 +3520,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 11",
     "GrossProfit(3개월): 받음 88 · 버림 0 · 모호 0 · 남음 48",
-    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 192 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 1 · 모호 7 · 남음 60"
    ],
-   "xbrl_rejected": 925
+   "xbrl_rejected": 734
   },
   {
    "ticker": "BMY",
    "adj_eps_ok": 22,
    "merged_direct": 24,
-   "seconds": 507.8,
+   "seconds": 268.1,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": "",
@@ -3546,15 +3546,15 @@
     "Revenues(12개월): 받음 33 · 버림 9 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 88 · 버림 0 · 모호 0 · 남음 48",
     "GrossProfit(12개월): 받음 22 · 버림 0 · 모호 0 · 남음 12",
-    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 192 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 0 · 모호 0 · 남음 67"
    ],
-   "xbrl_rejected": 652
+   "xbrl_rejected": 460
   },
   {
    "ticker": "REGN",
    "adj_eps_ok": 22,
    "merged_direct": 0,
-   "seconds": 201.8,
+   "seconds": 117.7,
    "cache_hits": 34,
    "cache_downloads": 0,
    "first_error": "",
@@ -3572,15 +3572,15 @@
     "Revenues(3개월): 받음 114 · 버림 10 · 모호 0 · 남음 35",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 27 · 버림 3 · 모호 0 · 남음 10",
-    "EarningsPerShareDiluted(3개월): 받음 162 · 버림 162 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 162 · 버림 0 · 모호 5 · 남음 51"
    ],
-   "xbrl_rejected": 702
+   "xbrl_rejected": 540
   },
   {
    "ticker": "VRTX",
    "adj_eps_ok": 5,
    "merged_direct": 18,
-   "seconds": 102.4,
+   "seconds": 67.4,
    "cache_hits": 41,
    "cache_downloads": 0,
    "first_error": "",
@@ -3598,15 +3598,15 @@
     "Revenues(3개월): 받음 114 · 버림 0 · 모호 0 · 남음 37",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
-    "EarningsPerShareDiluted(3개월): 받음 168 · 버림 168 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 168 · 버림 0 · 모호 0 · 남음 63"
    ],
-   "xbrl_rejected": 1302
+   "xbrl_rejected": 1134
   },
   {
    "ticker": "ISRG",
    "adj_eps_ok": 0,
    "merged_direct": 18,
-   "seconds": 113.8,
+   "seconds": 20.4,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": "",
@@ -3626,15 +3626,15 @@
     "Revenues(12개월): 받음 27 · 버림 27 · 모호 0 · 남음 0",
     "GrossProfit(3개월): 받음 200 · 버림 0 · 모호 0 · 남음 68",
     "GrossProfit(12개월): 받음 51 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 204 · 버림 204 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 204 · 버림 4 · 모호 10 · 남음 58"
    ],
-   "xbrl_rejected": 1686
+   "xbrl_rejected": 1486
   },
   {
    "ticker": "WMT",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 577.6,
+   "seconds": 362.8,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": "",
@@ -3652,15 +3652,15 @@
     "Revenues(3개월): 받음 168 · 버림 0 · 모호 0 · 남음 63",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 51 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 185 · 버림 185 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 185 · 버림 1 · 모호 4 · 남음 61"
    ],
-   "xbrl_rejected": 360
+   "xbrl_rejected": 176
   },
   {
    "ticker": "COST",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 14.9,
+   "seconds": 9.3,
    "cache_hits": 33,
    "cache_downloads": 0,
    "first_error": "",
@@ -3679,15 +3679,15 @@
     "Revenues(12개월): 받음 75 · 버림 0 · 모호 0 · 남음 15",
     "GrossProfit(3개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
     "GrossProfit(12개월): 받음 1 · 버림 0 · 모호 0 · 남음 1",
-    "EarningsPerShareDiluted(3개월): 받음 180 · 버림 180 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 180 · 버림 8 · 모호 0 · 남음 60"
    ],
-   "xbrl_rejected": 981
+   "xbrl_rejected": 809
   },
   {
    "ticker": "PG",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 50.3,
+   "seconds": 31.9,
    "cache_hits": 61,
    "cache_downloads": 0,
    "first_error": "",
@@ -3706,15 +3706,15 @@
     "AmortizationOfIntangibleAssets(12개월): 받음 66 · 버림 0 · 모호 0 · 남음 19",
     "Revenues(3개월): 받음 72 · 버림 0 · 모호 0 · 남음 30",
     "Revenues(12개월): 받음 30 · 버림 0 · 모호 0 · 남음 13",
-    "EarningsPerShareDiluted(3개월): 받음 224 · 버림 224 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 224 · 버림 0 · 모호 0 · 남음 66"
    ],
-   "xbrl_rejected": 1258
+   "xbrl_rejected": 1034
   },
   {
    "ticker": "KO",
    "adj_eps_ok": 0,
    "merged_direct": 20,
-   "seconds": 44.1,
+   "seconds": 30.7,
    "cache_hits": 53,
    "cache_downloads": 0,
    "first_error": "",
@@ -3731,15 +3731,15 @@
     "Revenues(12개월): 받음 39 · 버림 9 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 102 · 버림 0 · 모호 0 · 남음 54",
     "GrossProfit(12개월): 받음 63 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 102 · 버림 102 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 102 · 버림 2 · 모호 3 · 남음 50"
    ],
-   "xbrl_rejected": 729
+   "xbrl_rejected": 629
   },
   {
    "ticker": "PEP",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 23.4,
+   "seconds": 43.1,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": "",
@@ -3761,15 +3761,15 @@
     "Revenues(12개월): 받음 27 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 78 · 버림 0 · 모호 0 · 남음 40",
     "GrossProfit(12개월): 받음 42 · 버림 0 · 모호 0 · 남음 14",
-    "EarningsPerShareDiluted(3개월): 받음 112 · 버림 112 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 112 · 버림 2 · 모호 0 · 남음 56"
    ],
-   "xbrl_rejected": 1170
+   "xbrl_rejected": 1060
   },
   {
    "ticker": "MCD",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 34.7,
+   "seconds": 45.2,
    "cache_hits": 56,
    "cache_downloads": 0,
    "first_error": "",
@@ -3785,15 +3785,15 @@
     "DepreciationAndAmortization(12개월): 받음 51 · 버림 0 · 모호 0 · 남음 19",
     "Revenues(3개월): 받음 184 · 버림 0 · 모호 0 · 남음 66",
     "Revenues(12개월): 받음 51 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 184 · 버림 184 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 184 · 버림 0 · 모호 1 · 남음 65"
    ],
-   "xbrl_rejected": 1274
+   "xbrl_rejected": 1090
   },
   {
    "ticker": "SBUX",
    "adj_eps_ok": 20,
    "merged_direct": 17,
-   "seconds": 450.2,
+   "seconds": 285.6,
    "cache_hits": 69,
    "cache_downloads": 0,
    "first_error": "",
@@ -3813,15 +3813,15 @@
     "FiniteLivedIntangibleAssetsAmortizationExpense(12개월): 받음 4 · 버림 0 · 모호 0 · 남음 3",
     "Revenues(3개월): 받음 105 · 버림 10 · 모호 0 · 남음 47",
     "Revenues(12개월): 받음 36 · 버림 5 · 모호 0 · 남음 12",
-    "EarningsPerShareDiluted(3개월): 받음 160 · 버림 160 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 160 · 버림 2 · 모호 5 · 남음 57"
    ],
-   "xbrl_rejected": 1055
+   "xbrl_rejected": 897
   },
   {
    "ticker": "NKE",
    "adj_eps_ok": 0,
    "merged_direct": 20,
-   "seconds": 438.6,
+   "seconds": 271.6,
    "cache_hits": 48,
    "cache_downloads": 0,
    "first_error": "",
@@ -3839,15 +3839,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "GrossProfit(3개월): 받음 102 · 버림 0 · 모호 0 · 남음 54",
     "GrossProfit(12개월): 받음 51 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 102 · 버림 102 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 102 · 버림 0 · 모호 6 · 남음 48"
    ],
-   "xbrl_rejected": 474
+   "xbrl_rejected": 372
   },
   {
    "ticker": "HD",
    "adj_eps_ok": 8,
    "merged_direct": 7,
-   "seconds": 34.8,
+   "seconds": 12.5,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": "",
@@ -3869,15 +3869,15 @@
     "Revenues(12개월): 받음 22 · 버림 20 · 모호 0 · 남음 2",
     "GrossProfit(3개월): 받음 180 · 버림 0 · 모호 0 · 남음 61",
     "GrossProfit(12개월): 받음 44 · 버림 0 · 모호 0 · 남음 15",
-    "EarningsPerShareDiluted(3개월): 받음 165 · 버림 165 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 165 · 버림 0 · 모호 0 · 남음 59"
    ],
-   "xbrl_rejected": 693
+   "xbrl_rejected": 528
   },
   {
    "ticker": "LOW",
    "adj_eps_ok": 18,
    "merged_direct": 8,
-   "seconds": 39.1,
+   "seconds": 33.5,
    "cache_hits": 44,
    "cache_downloads": 0,
    "first_error": "",
@@ -3898,15 +3898,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 20 · 버림 0 · 모호 0 · 남음 8",
     "GrossProfit(3개월): 받음 98 · 버림 0 · 모호 0 · 남음 51",
     "GrossProfit(12개월): 받음 44 · 버림 0 · 모호 0 · 남음 16",
-    "EarningsPerShareDiluted(3개월): 받음 98 · 버림 98 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 98 · 버림 0 · 모호 0 · 남음 51"
    ],
-   "xbrl_rejected": 582
+   "xbrl_rejected": 484
   },
   {
    "ticker": "TGT",
    "adj_eps_ok": 19,
    "merged_direct": 2,
-   "seconds": 57.0,
+   "seconds": 31.3,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": "",
@@ -3928,15 +3928,15 @@
     "Revenues(12개월): 받음 18 · 버림 0 · 모호 0 · 남음 7",
     "GrossProfit(3개월): 받음 47 · 버림 0 · 모호 0 · 남음 18",
     "GrossProfit(12개월): 받음 8 · 버림 0 · 모호 0 · 남음 4",
-    "EarningsPerShareDiluted(3개월): 받음 172 · 버림 172 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 172 · 버림 0 · 모호 0 · 남음 61"
    ],
-   "xbrl_rejected": 561
+   "xbrl_rejected": 389
   },
   {
    "ticker": "EL",
    "adj_eps_ok": 13,
    "merged_direct": 19,
-   "seconds": 72.9,
+   "seconds": 37.4,
    "cache_hits": 61,
    "cache_downloads": 0,
    "first_error": "",
@@ -3959,15 +3959,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 25 · 버림 0 · 모호 0 · 남음 9",
     "GrossProfit(3개월): 받음 176 · 버림 0 · 모호 0 · 남음 62",
     "GrossProfit(12개월): 받음 45 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 176 · 버림 176 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 176 · 버림 0 · 모호 5 · 남음 57"
    ],
-   "xbrl_rejected": 562
+   "xbrl_rejected": 386
   },
   {
    "ticker": "CAT",
    "adj_eps_ok": 0,
    "merged_direct": 13,
-   "seconds": 75.5,
+   "seconds": 24.6,
    "cache_hits": 33,
    "cache_downloads": 0,
    "first_error": "",
@@ -3986,15 +3986,15 @@
     "Revenues(12개월): 받음 59 · 버림 0 · 모호 0 · 남음 19",
     "GrossProfit(3개월): 받음 138 · 버림 34 · 모호 0 · 남음 49",
     "GrossProfit(12개월): 받음 18 · 버림 18 · 모호 0 · 남음 0",
-    "EarningsPerShareDiluted(3개월): 받음 208 · 버림 208 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 208 · 버림 0 · 모호 7 · 남음 61"
    ],
-   "xbrl_rejected": 1193
+   "xbrl_rejected": 985
   },
   {
    "ticker": "DE",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 48.0,
+   "seconds": 30.7,
    "cache_hits": 55,
    "cache_downloads": 0,
    "first_error": "",
@@ -4013,15 +4013,15 @@
     "Revenues(3개월): 받음 194 · 버림 0 · 모호 0 · 남음 66",
     "Revenues(12개월): 받음 68 · 버림 18 · 모호 0 · 남음 19",
     "GrossProfit(3개월): 받음 94 · 버림 0 · 모호 0 · 남음 49",
-    "EarningsPerShareDiluted(3개월): 받음 194 · 버림 194 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 194 · 버림 0 · 모호 0 · 남음 66"
    ],
-   "xbrl_rejected": 515
+   "xbrl_rejected": 321
   },
   {
    "ticker": "HON",
    "adj_eps_ok": 17,
    "merged_direct": 0,
-   "seconds": 46.6,
+   "seconds": 33.3,
    "cache_hits": 65,
    "cache_downloads": 0,
    "first_error": "",
@@ -4042,15 +4042,15 @@
     "Revenues(12개월): 받음 36 · 버림 27 · 모호 0 · 남음 5",
     "GrossProfit(3개월): 받음 96 · 버림 0 · 모호 0 · 남음 56",
     "GrossProfit(12개월): 받음 22 · 버림 0 · 모호 0 · 남음 12",
-    "EarningsPerShareDiluted(3개월): 받음 200 · 버림 200 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 200 · 버림 0 · 모호 10 · 남음 59"
    ],
-   "xbrl_rejected": 430
+   "xbrl_rejected": 230
   },
   {
    "ticker": "GE",
    "adj_eps_ok": 18,
    "merged_direct": 24,
-   "seconds": 23.5,
+   "seconds": 17.9,
    "cache_hits": 53,
    "cache_downloads": 0,
    "first_error": "",
@@ -4073,15 +4073,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 3",
     "Revenues(12개월): 받음 133 · 버림 51 · 모호 1 · 남음 18",
     "GrossProfit(3개월): 받음 24 · 버림 0 · 모호 0 · 남음 24",
-    "EarningsPerShareDiluted(3개월): 받음 254 · 버림 254 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 254 · 버림 0 · 모호 14 · 남음 57"
    ],
-   "xbrl_rejected": 619
+   "xbrl_rejected": 365
   },
   {
    "ticker": "UNP",
    "adj_eps_ok": 6,
    "merged_direct": 6,
-   "seconds": 11.8,
+   "seconds": 11.7,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": "",
@@ -4096,15 +4096,15 @@
     "Revenues(3개월): 받음 164 · 버림 0 · 모호 0 · 남음 53",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 15 · 버림 0 · 모호 0 · 남음 7",
     "Revenues(12개월): 받음 39 · 버림 0 · 모호 0 · 남음 14",
-    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 192 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 0 · 모호 5 · 남음 62"
    ],
-   "xbrl_rejected": 642
+   "xbrl_rejected": 450
   },
   {
    "ticker": "UPS",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 10.1,
+   "seconds": 12.7,
    "cache_hits": 40,
    "cache_downloads": 0,
    "first_error": "",
@@ -4123,15 +4123,15 @@
     "Revenues(3개월): 받음 140 · 버림 0 · 모호 0 · 남음 50",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 27 · 버림 0 · 모호 0 · 남음 11",
-    "EarningsPerShareDiluted(3개월): 받음 198 · 버림 198 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 198 · 버림 6 · 모호 7 · 남음 60"
    ],
-   "xbrl_rejected": 388
+   "xbrl_rejected": 196
   },
   {
    "ticker": "FDX",
    "adj_eps_ok": 13,
    "merged_direct": 1,
-   "seconds": 16.5,
+   "seconds": 10.6,
    "cache_hits": 61,
    "cache_downloads": 0,
    "first_error": "",
@@ -4152,15 +4152,15 @@
     "Revenues(3개월): 받음 136 · 버림 0 · 모호 0 · 남음 44",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 30 · 버림 0 · 모호 0 · 남음 11",
-    "EarningsPerShareDiluted(3개월): 받음 190 · 버림 190 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 190 · 버림 0 · 모호 7 · 남음 58"
    ],
-   "xbrl_rejected": 985
+   "xbrl_rejected": 795
   },
   {
    "ticker": "BA",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 17.6,
+   "seconds": 12.6,
    "cache_hits": 60,
    "cache_downloads": 0,
    "first_error": "",
@@ -4181,15 +4181,15 @@
     "Revenues(12개월): 받음 84 · 버림 33 · 모호 0 · 남음 19",
     "GrossProfit(3개월): 받음 104 · 버림 0 · 모호 1 · 남음 54",
     "GrossProfit(12개월): 받음 51 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 192 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 192 · 버림 0 · 모호 4 · 남음 63"
    ],
-   "xbrl_rejected": 971
+   "xbrl_rejected": 779
   },
   {
    "ticker": "T",
    "adj_eps_ok": 15,
    "merged_direct": 14,
-   "seconds": 21.5,
+   "seconds": 13.3,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": "",
@@ -4206,15 +4206,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 2 · 버림 0 · 모호 0 · 남음 2",
     "Revenues(3개월): 받음 215 · 버림 0 · 모호 0 · 남음 69",
     "Revenues(12개월): 받음 57 · 버림 0 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 193 · 버림 193 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 193 · 버림 2 · 모호 7 · 남음 59"
    ],
-   "xbrl_rejected": 605
+   "xbrl_rejected": 414
   },
   {
    "ticker": "VZ",
    "adj_eps_ok": 17,
    "merged_direct": 0,
-   "seconds": 29.3,
+   "seconds": 20.3,
    "cache_hits": 67,
    "cache_downloads": 0,
    "first_error": "",
@@ -4231,15 +4231,15 @@
     "FiniteLivedIntangibleAssetsAmortizationExpense(12개월): 받음 6 · 버림 0 · 모호 0 · 남음 4",
     "Revenues(3개월): 받음 228 · 버림 18 · 모호 0 · 남음 66",
     "Revenues(12개월): 받음 78 · 버림 15 · 모호 0 · 남음 19",
-    "EarningsPerShareDiluted(3개월): 받음 210 · 버림 210 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 210 · 버림 0 · 모호 6 · 남음 60"
    ],
-   "xbrl_rejected": 394
+   "xbrl_rejected": 184
   },
   {
    "ticker": "TMUS",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 47.5,
+   "seconds": 28.2,
    "cache_hits": 92,
    "cache_downloads": 0,
    "first_error": "",
@@ -4256,15 +4256,15 @@
     "Revenues(3개월): 받음 144 · 버림 50 · 모호 0 · 남음 32",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 54 · 버림 30 · 모호 0 · 남음 10",
-    "EarningsPerShareDiluted(3개월): 받음 194 · 버림 194 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 194 · 버림 0 · 모호 5 · 남음 58"
    ],
-   "xbrl_rejected": 749
+   "xbrl_rejected": 555
   },
   {
    "ticker": "CMCSA",
    "adj_eps_ok": 21,
    "merged_direct": 10,
-   "seconds": 22.7,
+   "seconds": 16.5,
    "cache_hits": 71,
    "cache_downloads": 0,
    "first_error": "",
@@ -4285,15 +4285,15 @@
     "Revenues(3개월): 받음 232 · 버림 48 · 모호 0 · 남음 59",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 6 · 버림 0 · 모호 0 · 남음 4",
     "Revenues(12개월): 받음 75 · 버림 27 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 211 · 버림 211 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 211 · 버림 11 · 모호 4 · 남음 63"
    ],
-   "xbrl_rejected": 813
+   "xbrl_rejected": 613
   },
   {
    "ticker": "DIS",
    "adj_eps_ok": 7,
    "merged_direct": 0,
-   "seconds": 15.3,
+   "seconds": 12.6,
    "cache_hits": 54,
    "cache_downloads": 0,
    "first_error": "",
@@ -4310,15 +4310,15 @@
     "AmortizationOfIntangibleAssets(12개월): 받음 23 · 버림 0 · 모호 0 · 남음 9",
     "Revenues(3개월): 받음 77 · 버림 0 · 모호 0 · 남음 33",
     "Revenues(12개월): 받음 23 · 버림 0 · 모호 0 · 남음 9",
-    "EarningsPerShareDiluted(3개월): 받음 77 · 버림 77 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 77 · 버림 0 · 모호 0 · 남음 33"
    ],
-   "xbrl_rejected": 496
+   "xbrl_rejected": 419
   },
   {
    "ticker": "XOM",
    "adj_eps_ok": 1,
    "merged_direct": 23,
-   "seconds": 17.5,
+   "seconds": 28.6,
    "cache_hits": 83,
    "cache_downloads": 0,
    "first_error": "",
@@ -4331,15 +4331,15 @@
     "Revenues(3개월): 받음 50 · 버림 0 · 모호 0 · 남음 28",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 9 · 버림 0 · 모호 0 · 남음 5",
     "Revenues(12개월): 받음 45 · 버림 0 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 106 · 버림 106 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 106 · 버림 4 · 모호 0 · 남음 54"
    ],
-   "xbrl_rejected": 326
+   "xbrl_rejected": 224
   },
   {
    "ticker": "CVX",
    "adj_eps_ok": 15,
    "merged_direct": 21,
-   "seconds": 9.5,
+   "seconds": 10.7,
    "cache_hits": 68,
    "cache_downloads": 0,
    "first_error": "",
@@ -4355,15 +4355,15 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 버림 0 · 모호 0 · 남음 8",
     "Revenues(12개월): 받음 78 · 버림 24 · 모호 0 · 남음 19",
     "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 3 · 버림 0 · 모호 0 · 남음 2",
-    "EarningsPerShareDiluted(3개월): 받음 108 · 버림 108 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 108 · 버림 0 · 모호 0 · 남음 56"
    ],
-   "xbrl_rejected": 664
+   "xbrl_rejected": 556
   },
   {
    "ticker": "COP",
    "adj_eps_ok": 10,
    "merged_direct": 11,
-   "seconds": 15.9,
+   "seconds": 8.7,
    "cache_hits": 51,
    "cache_downloads": 0,
    "first_error": "",
@@ -4378,15 +4378,15 @@
     "Revenues(3개월): 받음 101 · 버림 12 · 모호 0 · 남음 48",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 27 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 54 · 버림 6 · 모호 0 · 남음 17",
-    "EarningsPerShareDiluted(3개월): 받음 105 · 버림 105 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 105 · 버림 0 · 모호 2 · 남음 53"
    ],
-   "xbrl_rejected": 627
+   "xbrl_rejected": 522
   },
   {
    "ticker": "SLB",
    "adj_eps_ok": 0,
    "merged_direct": 3,
-   "seconds": 25.2,
+   "seconds": 17.0,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": "",
@@ -4405,15 +4405,15 @@
     "Revenues(3개월): 받음 66 · 버림 12 · 모호 0 · 남음 30",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 33 · 버림 6 · 모호 0 · 남음 11",
-    "EarningsPerShareDiluted(3개월): 받음 110 · 버림 110 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 110 · 버림 6 · 모호 0 · 남음 55"
    ],
-   "xbrl_rejected": 581
+   "xbrl_rejected": 477
   },
   {
    "ticker": "OXY",
    "adj_eps_ok": 20,
    "merged_direct": 23,
-   "seconds": 25.6,
+   "seconds": 17.4,
    "cache_hits": 72,
    "cache_downloads": 0,
    "first_error": "",
@@ -4428,9 +4428,9 @@
     "Revenues(3개월): 받음 60 · 버림 0 · 모호 0 · 남음 36",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 25 · 버림 0 · 모호 0 · 남음 10",
     "Revenues(12개월): 받음 49 · 버림 24 · 모호 0 · 남음 9",
-    "EarningsPerShareDiluted(3개월): 받음 104 · 버림 104 · 모호 0 · 남음 0"
+    "EarningsPerShareDiluted(3개월): 받음 104 · 버림 0 · 모호 0 · 남음 55"
    ],
-   "xbrl_rejected": 440
+   "xbrl_rejected": 336
   }
  ]
 }
