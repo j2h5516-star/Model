@@ -1592,6 +1592,33 @@
       "rev_analysts": 9
      }
     }
+   },
+   {
+    "as_of": "2026-08-18",
+    "rows": {
+     "0q": {
+      "avg": 2.30202,
+      "low": 2.28,
+      "high": 2.38,
+      "analysts": 11,
+      "year_ago": 0.92,
+      "rev_avg": 391605500.0,
+      "rev_low": 389516050.0,
+      "rev_high": 398239000.0,
+      "rev_analysts": 10
+     },
+     "+1q": {
+      "avg": 2.46901,
+      "low": 2.37,
+      "high": 2.62,
+      "analysts": 11,
+      "year_ago": 1.26,
+      "rev_avg": 411933520.0,
+      "rev_low": 400000000.0,
+      "rev_high": 425000000.0,
+      "rev_analysts": 10
+     }
+    }
    }
   ],
   "IPGP": [
@@ -9228,6 +9255,33 @@
       "analysts": 21,
       "year_ago": 0.78,
       "rev_avg": 10020351440.0,
+      "rev_low": 8947600000.0,
+      "rev_high": 10250894910.0,
+      "rev_analysts": 20
+     }
+    }
+   },
+   {
+    "as_of": "2026-08-18",
+    "rows": {
+     "0q": {
+      "avg": 0.62139,
+      "low": 0.59,
+      "high": 0.68,
+      "analysts": 22,
+      "year_ago": 0.69,
+      "rev_avg": 9264752090.0,
+      "rev_low": 8943300000.0,
+      "rev_high": 9309000000.0,
+      "rev_analysts": 20
+     },
+     "+1q": {
+      "avg": 0.79165,
+      "low": 0.73,
+      "high": 0.866,
+      "analysts": 21,
+      "year_ago": 0.78,
+      "rev_avg": 10035751440.0,
       "rev_low": 8947600000.0,
       "rev_high": 10250894910.0,
       "rev_analysts": 20
