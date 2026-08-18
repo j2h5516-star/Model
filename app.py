@@ -330,7 +330,9 @@ def sector_gauge_rows(ds: dict) -> list[dict]:
 
     rows = []
     for sector, members in by_sector.items():
-        series = me.gauge_series(ds, tickers=members)
+        # 섹터 게이지는 관찰용 — 종목수를 함께 보여 주므로 최소치를
+        # 걸지 않습니다 (100차. 시장 전체 게이지에만 걸립니다)
+        series = me.gauge_series(ds, tickers=members, min_tickers=1)
         value = me.gauge_at(series, today)
         above = me.gauge_h5b_on(series, today)
         rows.append(
