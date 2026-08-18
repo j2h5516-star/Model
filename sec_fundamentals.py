@@ -1546,6 +1546,29 @@ def extract_period_label(text: str, filing_date: str) -> str:
     return f"{filing_date[2:4]}/{filing_date[5:7]}"
 
 
+def orphan_counts(series: dict, period_ends, start_date: str) -> dict:
+    """분기 목록에 **짝이 없어 버려지는** XBRL 사실을 셉니다 (106차 계기).
+
+    분기 목록(`period_ends`)은 **논갭 영업이익에서만** 만들어집니다.
+    다른 항목은 그 날짜를 열쇠로 찾으므로, 영업이익이 없는 분기의 값은
+    찾아 놓고도 버려집니다.
+
+    실물로 그 꼴이 보였습니다 — BAC 는 `Revenues` 가 55건 살아남는데
+    스냅샷의 `revenue_xbrl` 은 44행 전부 비어 있고, 대신 보도자료의
+    쓰레기 값(8달러)이 들어갔습니다. 은행·보험은 `OperatingIncomeLoss`
+    를 신고하지 않습니다(이자수익·대손충당금 구조).
+
+    ⚠️ **세기만 합니다.** 분기 목록의 뼈대를 바꾸면 모든 종목의 행이
+    달라져 판정까지 흔들리므로, 먼저 숫자를 보고 고칠지 정합니다.
+    """
+    보유 = set(period_ends)
+    out = {"분기목록(영업이익 기준)": len(보유)}
+    for key in ("revenue", "gaap_eps", "gross_profit"):
+        있는날 = {d for d in (series.get(key) or {}) if d >= start_date}
+        out[key] = len(있는날 - 보유)
+    return out
+
+
 def period_end_label(period_end: str) -> str:
     """기간종료일(2026-01-31)을 짧은 표시로 바꿉니다 → "26/01" """
     return f"{period_end[2:4]}/{period_end[5:7]}"
@@ -2339,6 +2362,28 @@ def fetch_xbrl_approximation(
     period_ends = sorted(
         d for d in series.get("op_income", {}) if d >= start_date
     )
+
+    # 106차 계기 — **분기 목록을 논갭 영업이익에서만 만든다**는 사실을
+    # 숫자로 남깁니다.
+    #
+    # 무엇이 의심스러운가: 아래에서 매출·이익률 등은 이 `period_ends` 를
+    # 열쇠로 찾습니다. 그러니 영업이익이 없는 분기의 매출은 **찾아 놓고도
+    # 버려집니다.** 실측으로 그 꼴이 이미 보였습니다 —
+    #
+    #   BAC  Revenues(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 남음 55
+    #   그런데 스냅샷의 revenue_xbrl 은 44행 전부 None
+    #
+    #   은행·보험은 `OperatingIncomeLoss` 를 신고하지 않습니다 (이자수익·
+    #   대손충당금 구조라 "영업이익" 줄이 없습니다). 제약사도 분기에 따라
+    #   빠집니다. 그러면 이 종목들은 XBRL 매출이 **한 칸도** 안 붙고,
+    #   92차 설계상 언제나 보도자료로 떨어져 쓰레기 값이 들어갑니다
+    #   (실물 BAC 8달러 · C −500만 — 106차에 전수로 182칸 확인).
+    #
+    # ⚠️ 아직 **고치지 않습니다.** 분기 목록의 뼈대를 바꾸면 모든 종목의
+    #    행이 달라져 판정까지 흔들립니다. 먼저 **얼마나 버려지는지** 세고,
+    #    그 숫자를 보고 고칠지 정합니다 (짐작으로 뼈대를 건드리지 않는다).
+    if report is not None:
+        report["xbrl_orphan"] = orphan_counts(series, period_ends, start_date)
 
     # ⚠️ **되돌릴 항목은 모든 분기에 있을 때만 씁니다.**
     #

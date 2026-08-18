@@ -271,6 +271,10 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
                 "xbrl_rejected": r.get("xbrl_rejected", 0),
                 # 94차 — 시간 예산에 걸려 옛 분기를 못 받았나. "10년치를
                 # 받았다"고 짐작하지 말고 이 표시와 note 를 보세요.
+                # 106차 계기 — 분기 목록은 논갭 영업이익에서만 만들어지므로,
+                # 영업이익이 없는 분기의 매출은 찾아 놓고도 버려집니다.
+                # 얼마나 버려지는지 세어 둡니다 (아직 고치지 않고 잽니다).
+                "xbrl_orphan": r.get("xbrl_orphan") or {},
                 "시간초과": bool(r.get("시간초과")),
                 "note": r.get("note", ""),
             }
