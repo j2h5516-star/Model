@@ -1,0 +1,197 @@
+# 잣대값 파싱 실패 원문 — ENPH 2019-12-12
+# 출처: https://www.sec.gov/Archives/edgar/data/1463101/000146310119000169/a121220198k.htm
+
+a12122019ex99_1
+
+    <img height="1055" src="a12122019ex99_1001.jpg" title="slide1" width="1365"/> Analyst Day Profitable Growth December 12, 2019
+
+
+
+ <img height="1055" src="a12122019ex99_1002.jpg" title="slide2" width="1365"/>  Safe Harbor Use of Forward-Looking Statements This presentation contains forward-looking statements made pursuant to the Safe Harbor provisions of the Private Securities Litigation Reform Act of 1995, including but not limited to statements concerning financial performance and guidance, including revenues, gross margin, operating results, expenses and costs; our business strategies, including our operations and anticipated trends and developments in markets in which we operate and in the markets in which we plan to expand; the anticipated market adoption of Enphase’s energy management system; the capabilities and performance of our technology and products, including product scalability, the ability to operate without a grid, the ability to optimize and customize products, load disaggregation, monitoring, and management, and reduction in installation, logistics and supply chain times; the capacity and availability of our products; our performance in operations, including product quality, safety, reliability, cost management, and customer service are based upon current expectations that involve risks and uncertainties. Any statements that are not of historical fact, may be forward-looking statements. Words used such as “anticipates,” “believes,” “continues,” “designed,” “estimates,” “expects,” “goal,” “intends,” “likely,” “may,” “ongoing,” “plans,” “projects,” “pursuing,” “seeks,” “should,” “will,” “would” and similar expressions are intended to identify forward-looking statements, although not all forward-looking statements contain these words. All forward-looking statements are based on our current assumptions, expectations and beliefs, and involve substantial risks and uncertainties that may cause results, performance or achievement to materially differ from those expressed or implied by these forward-looking statements. Therefore, you should not place undue reliance on our forward-looking statements. A detailed discussion of risk factors that affect our business is included in the filings we make with the Securities and Exchange Commission (SEC) from time to time, including our most recent reports on Form 10-K and Form 10-Q, particularly under the heading “Risk Factors.” Copies of these filings are available on the Enphase website at http://investor.enphase.com/sec.cfm, or on the SEC website at www.sec.gov. All forward-looking statements in this presentation are based on information currently available to us, and we assume no obligation to update these forward-looking statements in light of new information or future events. Industry Information Information regarding market and industry statistics in this presentation is based on information available to us that we believe is accurate. It is generally based on publications that are not produced for purposes of economic analysis. Non-GAAP Financial Metrics The Company has presented certain non-GAAP financial measures in this presentation. Generally, a non-GAAP financial measure is a numerical measure of a company’s performance, financial position, or cash flows that either excludes or includes amounts that are not normally excluded or included in the most directly comparable measure calculated and presented in accordance with generally accepted accounting principles in the United States of America, or GAAP. Reconciliation of each non-GAAP financial measure to the most directly comparable GAAP financial measure can be found in the Appendix to this presentation. Non-GAAP financial measures presented by the Company include non-GAAP gross margin, operating expenses, income (loss) from operations, net loss and adjusted free cash flow. These non-GAAP financial measures do not reflect a comprehensive system of accounting, differ from GAAP measures with the same captions and may differ from non-GAAP financial measures with the same or similar captions that are used by other companies. In addition, these non-GAAP measures have limitations in that they do not reflect all of the amounts associated with the Company’s results of operations as determined in accordance with GAAP. As such, these non-GAAP measures should be considered as a supplement to, and not as a substitute for, or superior to, financial measures calculated in accordance with GAAP. The Company uses these non-GAAP financial measures to analyze its operating performance and future prospects, develop internal budgets and financial goals, and to facilitate period-to-period comparisons. Enphase believes that these non-GAAP financial measures reflect an additional way of viewing aspects of its operations that, when viewed with its GAAP results, provide a more complete understanding of factors and trends affecting its business. As presented in the “Reconciliation of Non-GAAP Financial Measures” table in the Appendix to this presentation, each of the non-GAAP financial measures excludes one or more of the following items for purposes of calculating non-GAAP financial measures to facilitate an evaluation of the Company’s current operating performance and a comparison to its past operating performance: Stock-based compensation expense. The Company excludes stock-based compensation expense from its non-GAAP measures primarily because they are non-cash in nature. Moreover, the impact of this expense is significantly affected by the Company’s stock price at the time of an award over which management has limited to no control. Restructuring charges. The Company excludes restructuring charges due to the nature of the expenses being unplanned and arising outside the ordinary course of continuing operations. These costs primarily consist of fees paid for restructuring-related management consulting services, cash-based severance costs related to workforce reduction actions, asset write-downs of property and equipment and lease loss reserves, and other contract termination costs resulting from restructuring initiatives. Reserve for non-recurring legal matter. This item represents a charge taken for the potential settlement cost related to a dispute with a vendor. This item is excluded as it relates to a specific matter and is not reflective of the Company’s ongoing financial performance. Acquisition related expenses and amortization. This item represents expenses incurred related to the Company’s acquisition of SunPower’s microinverter business, which are non-recurring in nature, and amortization of acquired intangible assets, which is a non-cash expense. Acquisition related expenses and amortization of acquired intangible assets are not reflective of the Company's ongoing financial performance. Non-recurring debt prepayment fees and non-cash interest. This item consists primarily of amortization of debt issuance costs and non-recurring debt settlement costs, because these expenses does not represent a cash outflow for the Company except in the period the financing was secured or when the financing was settled, and such amortization expense or settlement of debt costs is not reflective of the Company’s ongoing financial performance. Adjusted free cash flow. This item represents cash flows from operating activities excluding payments for the acquisition reported in operating activities less purchases of property and equipment. The Company believes the adjusted free cash flow is the best measure of how much cash the business generates after accounting for capital expenditures. This presentation is being made exclusively to qualified institutional buyers (“QIBs”) as defined in Rule 144A (“Rule 144A”) under the U.S. Securities Act of 1933, as amended (the “Securities Act”). The securities described herein have not been and will not be registered under the Securities Act and may not be offered or sold in the United States except to QIBs in reliance on Rule 144A or pursuant to another exemption from, or transaction not subject to, the registration requirements of the Securities Act. This document does not constitute an offer to sell, or a solicitation of an offer to purchase, any securities in any jurisdiction where such offer or sale is not permitted. Any purchaser of such securities will be deemed to have made certain representations and acknowledgments, including, without limitation, that the purchaser is a “qualified institutional buyer” as defined in Rule 144A under the Securities Act. 2 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1003.jpg" title="slide3" width="1365"/> Agenda Badri Kothandaraman Chief Executive Officer Raghu Belur Chief Product Officer Arthur Souritzidis | Marc Jones CEO - Momentum Solar CEO - Sunpro Solar Eric Branderiz Chief Financial Officer Q & A Product Demos Fremont HQ
+
+
+
+ <img height="1055" src="a12122019ex99_1004.jpg" title="slide4" width="1365"/> Badri Kothandaraman Chief Executive Officer
+
+
+
+ <img height="1055" src="a12122019ex99_1005.jpg" title="slide5" width="1365"/>  2019 Financial Performance $619M $122M Revenue Operating Income +96% +495% Assumes midpoint of Q4’19 guidance 5 | © 2019 Enphase Energy, Inc. All numbers are Non-GAAP. Refer to appendix for GAAP reconcilition 
+
+
+
+ <img height="1055" src="a12122019ex99_1006.jpg" title="slide6" width="1365"/>  &1TTP'FHP&Y࣢ <JINI࣢FKJ\࣢YMNSLX\JQQFSISJJIYTRFPJTYMJWYMNSLXGJYYJW Exceeded Introduced Further financial target SJ\LJSJWFYNTS improved quality of 30-20-10 IQTM products and customer service Forecasting 500Ku Fixed Strong Growth in Microinverters from supply chain LWT\YMin International Flex Mexico in Q4’19 issues North America Assumes midpoint of Q4’19 guidance 6 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1007.jpg" title="slide7" width="1365"/>  Our Core Differentiation Semiconductor 8TKY\FWJ *SXJRGQJTM Energy Management Technology SOLAR GRID GENERATOR AC STORAGE LOADS Predictive 8TKY\FWJ)JKNSJI Home Energy Control Architecture Management 7 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1008.jpg" title="slide8" width="1365"/>  Operational Excellence Customer Experience Quality Customer Service 5X 1 54%1 Better than Worldwide M Series NPS 500 dppm 30 sec Reliability Wait Time Target Target Laser Focus on Quality and Customer Service 15X refers to actual results of IQ 7TM Microinverters as of Q3’19, NPS refers to Net Promoter Score as of Q3’19 8 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1009.jpg" title="slide9" width="1365"/>  Operational Excellence Gross Margin Management Price Cost Value Based Product Pricing Innovation Performance, ASIC, Transformers, Quality, Service FETs, Connectors Product Supply Chain Segmentation Optimization IQ 7/7+/7X/7A™ Tariff, Expedites, Procurement, CM 5WTIZHY.SST[FYNTS2F]NRN_NSL;FQZJ2ZQYNXTZWHNSL 9 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1010.jpg" title="slide10" width="1365"/>  8HFQFGQJ'ZXNSJXX2TIJQ CAPEX Lite OPEX Efficient No Big Headcount1 Factories 35% INDIA/CHINA 47% 4% EMEA NA 14% ANZ Capacity 23of 3.5M Microinverters and 120MWh Storage Per Quarter in Q4’20 1 Percentage of worldwide headcount as of Q3’19 2 Estimated CAPEX spending $25M for 2020 doubles capacity 3 10 | © 2019 Enphase Energy, Inc. Ramping Flex-Mexico capacity from 500K to 1M Microinverters per quarter from Q4’19 to Q4’20
+
+
+
+ <img height="1055" src="a12122019ex99_1011.jpg" title="slide11" width="1365"/>  *SXJRGQJ TM Great technology Great products Laying the and intellectual enabling new vectors KNSFSHNFQ࣢KTZSIFYNTS UWTUJWY^࣢ TKUWTKNYFGQJ࣢LWT\YM for the next decade 11 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1012.jpg" title="slide12" width="1365"/>  Residential Solar $4B 1 2022 SAM $2.5B 2019 SAM 1 .SYWTIZHJ*SXJRGQJ™*SYJW3J\7JLNTSX+THZXTS9NJW.SYFQQJWX 1Source: GTM/Wood Mackenzie Research (US PV Market Forecast) 2019, IHS Research (IHS EMEA Report 2019), SunWiz Research 2019, ENPH Estimates 12 | © 2019 Enphase Energy, Inc. 2022 SAM of 16GW: NA/LATAM 4.4GW, EMEA 4GW, Japan 3GW, APAC 4.6GW
+
+
+
+ <img height="1055" src="a12122019ex99_1013.jpg" title="slide13" width="1365"/>  *ZWTUJ,WT\YM5QFS Target To Grow Revenue 2X By 2020 )TZGQJ 9WFSXKJW Sales Headcount Top Talent to in 6 Months Europe ICELAND FINLAND NORWAY SWEDEN NORTH SEA ESTONIA BALTIC SEA LATVIA DENMARK Enter Focus LITHUANIA LUXEMBURG 8 Countries Small Systems BELARUS IRELAND in 2020 Social Housing UNITED KINGDOM POLAND Roofing NETHERLANDS GERMANY BELGIUM CZECH REPUBLIC SLOVAKIA UKRAINE MOLDOVA AUSTRIA HUNGARY FRANCE SWITZERLAND SLOVENIA CROATIA ROMANIA ITALY BOSNIA AND HERZEGOVINA ANDORRA SERBIA ,WT\ 2FWPJY LIECHENSTEIN BULGARIA MONTENEGRO MONACO Small and To Homeowners MACEDONIA ALBANIA Medium and Increase SPAIN GREECE Installer Base Awareness PORTUGAL MALTA ,WJFY5WTIZHY2FWPJY+NY9NRJ9T*]JHZYJ 13 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1014.jpg" title="slide14" width="1365"/>  3J\;JHYTWXTK5WTKNYFGQJ,WT\YM Increasing SAM from $3.3B in 2019 to $12.5B in 2022 Residential Residential Small Commercial Offgrid Solar Storage Solar Solar & Storage 14 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1015.jpg" title="slide15" width="1365"/>  Residential Storage New Installs $2B 1 2022 SAM 1 Enphase Installed Base $1B 2 $500M 2022 SAM 2019 SAM 1 4SJXYTUXMTU7JQNFGQJ8HFQFGQJ8NRUQJ8FKJ 1 Source: GTM/Wood Mackenzie Research (Global Energy Storage Outlook 2019), IHS Research (IHS EMEA Report 2019), ENPH Estimates 2022 SAM of 3.6GWh: NA/LATAM 1.6GWh, EMEA 1GWh, APAC 900MWh 2 15 | © 2019 Enphase Energy, Inc. ENPH assumption: Retrofit opportunity of ~ 1.5M Enphase homes over 10 years
+
+
+
+ <img height="1055" src="a12122019ex99_1016.jpg" title="slide16" width="1365"/>  Small Commercial Solar $1.5B 1 2022 SAM $300M 2019 SAM 1 7JQNFGQJ7FUNI8MZYIT\S(TRUQNFSY<TWQI(QFXX(TXY Source:1 GTM/Wood Mackenzie Research (US State DG Market Prospector) 2019, IHS Research (IHS EMEA Report 2019), ENPH Estimates 2022 SAM of 11GW: NA/LATAM 4.2GW, EMEA 3GW, APAC 3.8GW 16 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1017.jpg" title="slide17" width="1365"/>  Offgrid Solar and Storage Focus on Indian Market Providing Farmers Solar Water Pump 7JQNFGQJ8TZWHJTK*SJWL^ $2B 2022 SAM1 Standalone System Reducing Energy Poverty $1.5B 2022 SAM 2 Air Cooler Mitigating $0.5B Extreme Heat 2022 SAM3 Source: MNRE, Govt. of India; CEEW India; India Census Data 2011; Symphony Annual Report 2019; ENPH Estimates 1Installed base of ~30M pumps in 2022. ENPH assumption: Convert 10% of installed base to solar per year for 0.5 - 3HP pumps 2Total number of homes per 2011 census data is ~123M. ENPH assumption: Convert 3% of installed base to solar and storage every year 3Installed base of ~20M air coolers in 2022. ENPH assumption: Convert 10% of installed base to solar every year 17 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1018.jpg" title="slide18" width="1365"/>  Recap Increasing SAM from $3.3B in 2019 to $12.5B in 2022 Residential Residential Small Commercial Offgrid Solar Storage Solar Solar & Storage $4B1 $3B 1 $1.5B1 $4B1 1All the numbers refer to 2022 SAM 18 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1019.jpg" title="slide19" width="1365"/> Conclusion Revenue Q3’18 Q4’18 Q1’19 Q2’19 Q3’19 Three Pillars of Relentless Focus Ensemble™ SAM Expanding Differentiation: on Customer Enables from $3.3B in 2019 Semiconductor, Experience and New Vectors to $12.5B in 2022 Software and GM Management for Profitable Ensemble™ with a Scalable Growth Business Model 19 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1020.jpg" title="slide20" width="1365"/> Raghu Belur Chief Product Officer
+
+
+
+ <img height="1055" src="a12122019ex99_1021.jpg" title="slide21" width="1365"/>  9MJ5T\JWTK8JRNHTSIZHYTWX8TKY\FWJFSI*SXJRGQJӴ High Quality Safety Higher Efficiency, Fewer Components No High Voltage DC IoT System, Over-the-air Upgrades Lithium Iron Phosphate Chemistry Flexibility Exceptional Value Modular Design Grid Independence AC Market Place AC Module Supply Chain Efficiency Low Cost One Hardware Platform Resonant Architecture, Power Scaling Configurable SKUs Semiconductor Integration Great Customer Experience One-stop-shop 21 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1022.jpg" title="slide22" width="1365"/>  *SXJRGQJTM *SJWL^2FSFLJRJSY9JHMSTQTL^ Automatically manages energy resources in your home such as solar, storage, grid, loads and generator SOLAR GRID GENERATOR AC STORAGE LOADS (Backup, Time of Use) 22 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1023.jpg" title="slide23" width="1365"/>  4SYMJ(ZXU࣢TK*SXJRGQJ™ 1.0 Enlighten92 Cloud WiFi/Cellular Wireless 1 .6Ӵ.6 Ӵ 3 2 .6Ӵ 1 3 *SUT\JWӴ HTRGNSJW X\NYHM M P<M P<M 5T\JW1NSJ(TRRZSNHFYNTS Main Load Panel Wireless Generator 2 *SHMFWLJӴ storage system Home Loads IQ 8Ӵ *SHMFWLJӴ8YTWFLJ8^XYJR2FPJX9MJ8^XYJR&Q\F^X4SӴ 23 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1024.jpg" title="slide24" width="1365"/>  IQ 8™ Residential Microinverter World’s First Grid Forming Microinverter System 24 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1025.jpg" title="slide25" width="1365"/>  EnchargeӴ Storage System Available In Two Configurations 10.1kWh 3.4kWh 4SJXYTUXMTU7JQNFGQJ8HFQFGQJ8NRUQJ8FKJ 25 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1026.jpg" title="slide26" width="1365"/>  ,JFWNSLZUKTW࣢*SXJRGQJ™ 2.0 Enlighten92 Cloud WiFi/Cellular Wireless + .6Ӵ *SUT\JWӴ IQ 8Ӵ HTRGNSJW X\NYHM M 5T\JW1NSJ(TRRZSNHFYNTS Main Load Panel PCS Wireless 5T\JW Control System Generator *SHMFWLJӴ storage system Home Loads IQ 8Ӵ &IINYNTSTK.6 Ӵ,WNI.SIJUJSIJSY8TQFW8NLSNKNHFSYQ^.RUWT[JX5JWKTWRFSHJ 26 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1027.jpg" title="slide27" width="1365"/>  IQ 8D™ Commercial Microinverter One 640WAC Microinverter Supports Two 400WDC Panels 50% Greater 5T\JW Density1 500 dppm 7JQNFGNQNY^ 9FWLJY 97.5% Efficiency IQ 8™ IQ 8D™ 1 Power Density in W/cm3 compared to IQ 8™ 27 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1028.jpg" title="slide28" width="1365"/>  Offgrid Solar and Storage *SXJRGQJ.S&'T]Ӵ AC Power Communication Battery Sockets Module Microinverter 2 Battery Smart Phone Solar Panel Connectivity Inputs 1.2P<M &(5T\JW LFP1 8THPJYX Battery Solar Microinverters 8ZUUTWYX2ZQYNUQJ&UUQNHFYNTSXKTWYMJ.SINFS2FWPJY 1 Lithium Iron Phosphate 28 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1029.jpg" title="slide29" width="1365"/>  Solar Water Pump 5WTGQJR Farmers in India have unreliable and intermittent grid power Current solutions with Variable Frequency Drive (VFD) and Inverters are inefficient Current Solutions 1 3 Utility Solar Controller Solar Grid Water Pump (VFD) Water Pump 2 Solar Panels 8\NYHM String Utility Grid Inverter Solar Panels Controller Solar (VFD) Water Pump Enphase Solution Solar *SXJRGQJ.SYJLWFYJX Water Pump VFD and Inversion Functions Utility Grid Solar Panels Rugged, Simple and Safe *SXJRGQJ.S&'T]92 29 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1030.jpg" title="slide30" width="1365"/>  Air Cooler 5WTGQJR No viable solution for extreme heat in certain regions of India Both grid and diesel generators are unreliable Current Solutions 1 2 Utility Grid Air Cooler Diesel Generator Air Cooler Enphase Solution *SXJRGQJ-JQUX5WT[NIJF 7JQNFGQJ8TZWHJTK*SJWL^ Rugged, Simple and Safe Solar Panels Air Cooler *SXJRGQJ.S&'T]92 30 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1031.jpg" title="slide31" width="1365"/>  Standalone System 5WTGQJR 1 Over 300 million people in Asia, mainly in India, are living in energy poverty Current solutions with DC systems are inefficient Current Solutions Solar Panels )(8^XYJR\NYM DC Appliances Lead Acid Battery Enphase Solution *SXJRGQJ-JQUX5WT[NIJF ;NFGQJ8TZWHJTK*SJWL^ Solar Panels Standard AC Rugged, Simple and Safe *SXJRGQJ.S&'T]92 Appliances 1 Bloomberg New Energy Finance Report, 2018 31 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1032.jpg" title="slide32" width="1365"/>  Recap Increasing SAM from $3.3B in 2019 to $12.5B in 2022 Residential Residential Small Commercial Offgrid Solar Storage Solar Solar & Storage ™ ™ ™ *SXJRGQJ IQ 8 Encharge IQ 8D .S&'T]™ $4B1 $3B 1 $1.5B 1 $4B1 1All the numbers refer to 2022 SAM 32 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1033.jpg" title="slide33" width="1365"/>  *SXJRGQJTM It’s a game changer... 33 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1034.jpg" title="slide34" width="1365"/> Conclusion SOLAR GRID GENERATOR AC STORAGE LOADS Semiconductors Software Defined Ensemble™ One-stop-shop Bring Greater Architecture Enables New for Home Efficiencies in Creates Flexible Categories of Energy Integration and Future Proof Products Management Designs 34 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1035.jpg" title="slide35" width="1365"/> Introducing 9\TTK4ZW 9TU(ZXYTRJWX Arthur Souritzidis Marc Jones Founder and Chief Executive Officer Founder and Chief Executive Officer
+
+
+
+ <img height="1055" src="a12122019ex99_1036.jpg" title="slide36" width="1365"/> Introducing Founded in 2009 Momentum Solar Enabling customers to take control over rising energy costs by generating cleaner, price-protected power Industry leading growth; recognized by Deloitte and Inc.500 as fastest growing residential solar company in the nation Over 2,000 employees with operations in New Jersey, New York, California, Florida, Texas, Pennsylvania and Connecticut Focus on customer experience, forward thinking in terms of technology and very successful in their markets
+
+
+
+ <img height="1055" src="a12122019ex99_1037.jpg" title="slide37" width="1365"/>  Strategic Partnership >JFW*SI*RUQT^JJ(TZSY Optimal Performance 2016 362 Durable Equipment NJ Long-term Warranties 2017 Simplified O&m 618 3/3>+1(& Best-in-class Monitoring 2018 Installation Efficiency 1,166 3/3>+1(&9=5&(9 Product Innovation Supply Chain Management 2019 (As of November) 2,253 Current # of States 7 3/3>+1(&9=5&(9 Current # of Offices 17 2020 New Offices in Existing Markets (Q1) 2020 New Markets (Q1) Jacksonville, Florida Phoenix, Arizona Weslaco, Texas Boston, Massachusetts San Diego, California Charleston, South Carolina 37 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1038.jpg" title="slide38" width="1365"/> Introducing Founded in 2008 Sunpro Solar Sunpro Solar is one of the leading providers of rooftop solar for Gulf Coast and Southeast regions Ranked #8 for 2019 in Solar Power World’s Magazine - Top Solar Rooftop Contractors Worldwide Approximately 1100 employees with operations in Louisiana, Mississippi, Arkansas, Tennessee, Oklahoma, Texas, Georgia, South Carolina and Florida Focus on customer experience, forward thinking in terms of technology, and very successful in their markets
+
+
+
+ <img height="1055" src="a12122019ex99_1039.jpg" title="slide39" width="1365"/>   *SJWLN_JIG^ 50 MW 170,000 Installed Enphase in 2019 Inverters Revenue Current Territories 39 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1040.jpg" title="slide40" width="1365"/> Eric Branderiz Chief Financial Officer
+
+
+
+ <img height="1055" src="a12122019ex99_1041.jpg" title="slide41" width="1365"/>  3J\'FXJQNSJ+NSFSHNFQ2TIJQ 35% 15% 20% Gross Operating Operating Margin Expenses1 Income1 Pricing Management Executive Leadership in the U.S. Sustainable Profitability New Products Core teams in India & New Zealand Strong Cash Generating Model Cost Reductions No Compromise on Innovation 1 All numbers are Non-GAAP 41 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1042.jpg" title="slide42" width="1365"/>  7J[JSZJ,WT\YM+WFRJ\TWP Residential Residential Small Commercial Offgrid Solar Storage Solar Solar & Storage $2K1 revenue Adds Over $8K $1.5B SAM in 2022 Blue Ocean per home now revenue2 per home Opportunity 2020 17% SAM CAGR ~5% ENPH attach3 Product launch 2020 to 2022 on new homes in Product launch US by Q4’20 Targeting similar IQ 8TM brings market share as added value $80M retrofit residential by 2022 Continue share gain revenue for every in NA, Grow Europe, 1% of ENPH Enter Japan installed base 1ENPH Assumption: ASP of $100 per Microinverter system and 20 Microinverters per home 2ENPH Assumption: $8K for 10KWh of Storage and Smart Switch 42 | © 2019 Enphase Energy, Inc. 3ENPH Estimate
+
+
+
+ <img height="1055" src="a12122019ex99_1043.jpg" title="slide43" width="1365"/>  Strong Balance Sheet Adjusted FCF $80M 1 2019 $22M 2018 ($33M) $250M Ending Cash1 2017 $106M Ending Cash $29M Ending Cash 12019 assumes midpoint of Q4’19 guidance. Refer to Appendix for adjusted FCF reconciliation to the most comparable GAAP measure 2019 ending cash is subject to prepayments received for the ITC safe harbor product shipments 43 | © 2019 Enphase Energy, Inc. we will make in Q1’20
+
+
+
+ <img height="1055" src="a12122019ex99_1044.jpg" title="slide44" width="1365"/> Conclusion 35-15-20 Revenue Growth Strong Balance Laying The Our New Baseline Framework Sheet and Healthy Financial Financial Model Built on Ensemble™ Free Cash Foundation Flow Generation For The Next Decade 44 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1045.jpg" title="slide45" width="1365"/> Q & A
+
+
+
+ <img height="1055" src="a12122019ex99_1046.jpg" title="slide46" width="1365"/> Appendix
+
+
+
+ <img height="1055" src="a12122019ex99_1047.jpg" title="slide47" width="1365"/>  ,&&5YT3TS,&&57JHTSHNQNFYNTS 1 1 $ in Millions Q1’19 Q2’19 Q3’19 Q4’19 FY19 Income (loss) from operations (GAAP) $7.1 $17.4 $33.7 $40.3 $98.5 Stock-based compensation expenses, restructuring and acquisition $4.2 $5.8 $6.5 $7.0 $23.5 realted amortization .SHTRJ QTXXKWTRTUJWFYNTSX 3TS,&&5 $11.3 $23.2 $40.2 $47.3 $122.0 1 $ in Millions 2017 2018 2019 (FXMKQT\XKWTRTUJWFYNSLFHYN[NYNJX $(28) $16 $90 Payments for acquisition reported in cash flows from operating activities - 10 - Purchases of property and equipment (4) (4) (10) &IOZXYJIKWJJHFXMKQT\ $(33) $22 $80 1Assumes midpoint of guidance for Q4’19 47 | © 2019 Enphase Energy, Inc.
+
+
+
+ <img height="1055" src="a12122019ex99_1048.jpg" title="slide48" width="1365"/>  Thank You © 2019 Enphase Energy, Inc. All rights reserved. Enphase Energy®, the Enphase logo, Encharge, Encharge 3, Encharge 10, Always-On, Ensemble-In-A-Box, Enlighten, Enlighten Manager, Empower, Ensemble, Envoy, MyEnlighten, IQ, IQ 6, IQ 7, IQ 7+, IQ 7A, IQ 7X, IQ 8, IQ 8D and other trademarks or service names are the trademarks of Enphase Energy, Inc. Other names are for informational purposes and may be trademarks of their respective owners.
+
+
+

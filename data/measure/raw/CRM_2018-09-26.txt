@@ -1,0 +1,297 @@
+# 잣대값 파싱 실패 원문 — CRM 2018-09-26
+# 출처: https://www.sec.gov/Archives/edgar/data/1108524/000110852418000069/a8-kdreamforce2018.htm
+
+ex9912018investorday
+
+    <img height="576" src="ex9912018investorday001.jpg" title="slide1" width="1024"/>  Salesforce Investor Day September 26, 2018 Charlie Sylvia Kroll Kawn Ellevest Ellevest 1 
+
+
+
+ <img height="576" src="ex9912018investorday002.jpg" title="slide2" width="1024"/> Safe Harbor "Safe harbor" statement under the Private Securities Litigation Reform Act of 1995:  This presentation contains forward-looking statements about our financial results, which may include expected GAAP and non-GAAP financial and other operating and non-operating results, including revenue, net income, diluted earnings per share, operating cash flow growth, operating margin improvement, unearned revenue (previously referred to as deferred revenue) growth, expected revenue growth, expected tax rates, stock-based compensation expenses, amortization of purchased intangibles, and shares outstanding.  The achievement or success of the matters covered by such forward-looking statements involves risks, uncertainties and assumptions.  If any such risks or uncertainties materialize or if any of the assumptions prove incorrect, the company’s results could differ materially from the results expressed or implied by the forward- looking statements we make. The risks and uncertainties referred to above include -- but are not limited to -- risks associated with the effect of general economic and market conditions; the impact of foreign currency exchange rate and interest rate fluctuations on our results; our business strategy and our plan to build our business, including our strategy to be the leading provider of enterprise cloud computing applications and platforms; the pace of change and innovation in enterprise cloud computing services; the competitive nature of the market in which we participate; our international expansion strategy; our service performance and security, including the resources and costs required to prevent, detect and remediate potential security breaches; the expenses associated with new data centers and third-party infrastructure providers; additional data center capacity; real estate and office facilities space; our operating results and cash flows; new services and product features; our strategy of acquiring or making investments in complementary businesses, joint ventures, services, technologies and intellectual property rights; the performance and fair value of our investments in complementary businesses through our strategic investment portfolio; our ability to realize the benefits from strategic partnerships and investments; our ability to successfully integrate acquired businesses and technologies, including the operations of MuleSoft, Inc.; our ability to continue to grow and maintain unearned revenue and remaining performance obligation; our ability to protect our intellectual property rights; our ability to develop our brands; our reliance on third-party hardware, software and platform providers; our dependency on the development and maintenance of the infrastructure of the Internet; the effect of evolving domestic and foreign government regulations, including those related to the provision of services on the Internet, those related to accessing the Internet, and those addressing data privacy and import and export controls; the valuation of our deferred tax assets; the potential availability of additional tax assets in the future; the impact of new accounting pronouncements and tax laws, including the U.S. Tax Cuts and Jobs Act, and interpretations thereof; uncertainties affecting our ability to estimate our non-GAAP tax rate; the impact of future gains or losses from our strategic investment portfolio; the impact of expensing stock options and other equity awards; the sufficiency of our capital resources; factors related to our outstanding debt, revolving credit facility, term loans and loan associated with 50 Fremont; compliance with our debt covenants and capital lease obligations; current and potential litigation involving us; and the impact of climate change. Further information on these and other factors that could affect the company’s financial results is included in the reports on Forms 10-K, 10-Q and 8-K and in other filings we make with the Securities and Exchange Commission from time to time.  These documents are available on the SEC Filings section of the Investor Information section of the company’s website at www.salesforce.com/investor. Salesforce.com, inc. assumes no obligation and does not intend to update these forward-looking statements, except as required by law. 2 
+
+
+
+ <img height="576" src="ex9912018investorday003.jpg" title="slide3" width="1024"/> Mark Hawkins President and CFO 3 
+
+
+
+ <img height="576" src="ex9912018investorday004.jpg" title="slide4" width="1024"/> Durable Growth Powered by Competitive Advantage 4 
+
+
+
+ <img height="576" src="ex9912018investorday005.jpg" title="slide5" width="1024"/> Durable Growth $21B - $23B FY22 target FY21 Revenue Growth FY20 $13.175B FY19 guidance2 20% FY19 Projected CAGR FY19-FY221 1 Compound annual growth rate based on high end of guide in footnote 2 and high end of projected target of $21 billion to $23 billion in FY22. 2 High end of Salesforce FY2019 revenue guidance provided on August 29, 2018. Revenue for Salesforce's full ﬁscal year 2019 is projected to be in the 5 range of $13.125 billion to $13.175 billion. 
+
+
+
+ <img height="576" src="ex9912018investorday006.jpg" title="slide6" width="1024"/>  Consistent Execution Balancing revenue growth with increasing non-GAAP proﬁtability and cash ﬂow Total Revenue and Operating Margin Operating Cash Flow $10.5B $2.7B 16.5% 13.6% 14.5% 5.9% 4.3% 2.3% $1.1B $0.2B FY09 FY10 FY11 FY12 FY13 FY14 FY15 FY16 FY17 FY18 FY09 FY10 FY11 FY12 FY13 FY14 FY15 FY16 FY17 FY18 Revenue (ASC 605) GAAP Operating Margin 605 GAAP Operating Margin 606 Revenue (ASC 606) NG Operating Margin 605 NG Operating Margin 606 Note: As of February 1, 2018, Salesforce adopted the requirements of Accounting Standards Update No. 2014-09, Revenue from Contracts with Customers, known as ASC 606. Starting with Q1 FY19, financial results are reported under this new 6 standard. Additionally, select historical data was restated. Refer to the Salesforce Investor Relations website for SEC filings that include additional information about these new accounting standards and adoption. 
+
+
+
+ <img height="576" src="ex9912018investorday007.jpg" title="slide7" width="1024"/>  Consistent Execution Balancing revenue growth with increasing non-GAAP proﬁtability and cash ﬂow $13.125B - +15%-16% $13.175B1 Total Revenue Operating Cash Flow Y/Y $1.1B $0.2B FY09 FY10 FY11 FY12 FY13 FY14 FY15 FY16 FY17 FY18FY19E FY09 FY10 FY11 FY12 FY13 FY14 FY15 FY16 FY17 FY18 FY19E Revenue (ASC 605) Revenue (ASC 606) Note: As of February 1, 2018, Salesforce adopted the requirements of Accounting Standards Update No. 2014-09, Revenue from Contracts with Customers, known as Topic 606. Starting with Q1 FY19, financial results are reported under this new 7 standard. Additionally, select historical data was restated. Refer to the Salesforce Investor Relations website for SEC filings that include additional information about these new accounting standards and adoption. 1Guidance as of August 29, 2018. 
+
+
+
+ <img height="576" src="ex9912018investorday008.jpg" title="slide8" width="1024"/> Market Opportunity 8 
+
+
+
+ <img height="576" src="ex9912018investorday009.jpg" title="slide9" width="1024"/> Right Market at the Right Time CRM is the fastest growing segment in enterprise software “Customer experience will overtake price and product quality as the key brand differentiator.”1 Operating ERP Database CRM Operating ERP Database CRM Operating ERP Database CRM Systems Systems Systems FY12 FY17 FY22 Enterprise Software Addressable Market Source: Salesforce estimates. Historical data from Cowen, Societe Generale, CLSA and Deutsche Bank research. 1VisionCritical, “7 habits of customer-obsessed companies.” 9 
+
+
+
+ <img height="576" src="ex9912018investorday010.jpg" title="slide10" width="1024"/> We Are a Generational Company Never underestimate what can be done in a decade Operating ERP Database CRM Operating ERP Database CRM Operating ERP Database CRM Systems Systems Systems FY12 FY17 FY22 Enterprise Software Addressable Market Source: Salesforce estimates. Historical data from Cowen, Societe Generale, CLSA and Deutsche Bank research. 10 
+
+
+
+ <img height="576" src="ex9912018investorday011.jpg" title="slide11" width="1024"/> The Digital Transformation Imperative DX initiatives are a top priority for CIOs IDC FutureScape: Worldwide IT Industry 2018 Top 10 Predictions1 DX Economy Tipping Point 1 By 2020 By 2020 DX Platforms Cloud 2.0: 2 Distributed and Open Companywide specialized 3 10 API Ecosystems Everyone a Data Provider 8 Hyperagile AI 5 Apps Everywhere 4 Multiple business units business 60% 90% departments or departments Everyone a 7 Developer 9 6 Blockchain and ORGANIZATIONAL IMPACT ORGANIZATIONAL of enterprises will have of enterprises will use HD Interfaces Digital Trust fully articulated an multiple cloud organization-wide services and A single department or department a business unit a business digital transformation platforms1 platform strategy1 2018 2019 2020 2021 TIME TO MAINSTREAM Salesforce addresses2 Salesforce does not address2 Size of the bubble indicates complexity/cost to address. 1 IDC FutureScape: Worldwide IT Industry 2018 Predictions, October 2017. 2Designation made by Salesforce. 11 
+
+
+
+ <img height="576" src="ex9912018investorday012.jpg" title="slide12" width="1024"/> Competitive Advantage 12 
+
+
+
+ <img height="576" src="ex9912018investorday013.jpg" title="slide13" width="1024"/> Our Values Drive Our Competitive Advantage A diﬀerentiated company since our inception TRUST Communicate openly and deliver the highest level of service CUSTOMER SUCCESS Focus on customer success to drive mutual growth INNOVATION Deliver new technology that empowers Trailblazers to innovate EQUALITY Respect and value a diversity of people 13 
+
+
+
+ <img height="576" src="ex9912018investorday014.jpg" title="slide14" width="1024"/> Ultimate Competitive Advantage: The Customer The customer is at the center of everything we do “The only sustainable source of competitive advantage, the only defensible position, is to concentrate on knowledge of and engagement with customers.” —Forrester1 1 Forrester, Competitive Strategy In The Age Of The Customer, October 2013. 14 
+
+
+
+ <img height="576" src="ex9912018investorday015.jpg" title="slide15" width="1024"/>  Technology Advantage Driven by strong organic and inorganic innovation Datorama Integration Cloud MuleSoft B2B Commerce Quip Lightning Marketing Platform Commerce Cloud Analytics Einstein Cloud Salesforce Trailhead Salesforce IoT Mobile Chatter Heroku Salesforce Platform Service Cloud & AppExchange AI for Sales Everyone Cloud 15 
+
+
+
+ <img height="576" src="ex9912018investorday016.jpg" title="slide16" width="1024"/> Product Advantage Most complete portfolio in the industry Cloud Sales Service Marketing eCommerce Communities Collaboration Integration Industries Platform 16 
+
+
+
+ <img height="576" src="ex9912018investorday017.jpg" title="slide17" width="1024"/> Product Advantage Unmatched depth of functionality Cloud Sales Service Marketing eCommerce Communities Collaboration Platform Integration Industries Inbox Field Service Social Studio B2B & B2C Self Service Slides & Sheets Heroku Connectivity Government Media CPQ Self Service DMP Order Management PRM Social Chat IoT API Design & Mgmt Mfg Retail PRM Engagement Journeys AI-Powered Portal Custom Workflows Analytics Dev Exchange Fin Serv HCLS Commerce High Velocity Sales Bots Digital Advertising Mobile Trailhead Cloud & On-Prem Automotive Comms Sales Service Audience Einstein Monitoring Transportation Consumer Intelligence Intelligence Builder & Security & Hospitality Goods AppExchange 17 
+
+
+
+ <img height="576" src="ex9912018investorday018.jpg" title="slide18" width="1024"/>  Success in Core Markets Momentum across all segments of CRM Sales Service Marketing Commerce Platform & Other Market Share 32%1 19%1 10%1 5%1 8%2 CY17 Market Rank #11 #11 #21 #31 n/a CY17 Market Growth 11%3 12%3 13%3 15%3 7%4 CY18 - CY22 CAGR Revenue Growth 13%5 27%5 37%5 32%5 Fiscal Q219 Y/Y Calculations performed by Salesforce and graphics created by Salesforce based on Gartner research. 1Source: Sales, Service, Marketing, and Commerce per Gartner, Market Share: Enterprise Application Software, Worldwide, 2017, 5.30.18. 2Platform & Other defined from two Gartner reports: (1) Collaboration Services per Gartner, Market Share: Enterprise Application Software, Worldwide, 2017, 5.30.18; (2) Portal and Digital Engagement Technologies, Application Platform as a Service (aPaaS), Application Platform Software, Mobile App Development Platforms, Other AD, Business Process Management Suites, Testing, Identity Governance and Administration, Web Access Management (WAM) per Gartner, Market Share: Enterprise Infrastructure Software, Worldwide, 2017, 5.31.18. 3Source: Gartner, Forecast: Enterprise Application Software, Worldwide, 2016-2022, 2Q18 Update, 29 Jun 2018. 4Platform & Other defined from two Gartner reports based on the markets in footnote 2: Gartner, Forecast: Enterprise Application Software, Worldwide, 2016-2022, 2Q18 Update, 29 Jun 2018, Gartner, Forecast: Enterprise Infrastructure Software, Worldwide, 2016-2022, 2Q18 Update, 16 Jul 2018. 5Revenue growth based on Salesforce’s quarterly cloud financial results. Marketing & Commerce Cloud revenue reported together. Platform & Other revenue 18 growth excludes the impact MuleSoft. 
+
+
+
+ <img height="576" src="ex9912018investorday019.jpg" title="slide19" width="1024"/>  Large and Growing Addressable Markets More products, more opportunities Total Addressable Market CY18 to CY22 $, Growth CAGR % Total TAM Sales $16B, 11%1 Service $26B, 12%1 $140B Marketing $17B, 13%1 Commerce $11B, 15%1 Platform & Other $35B, 7%2 Analytics $23B, 8%1 Integration $12B, 10%3 Calculations performed by Salesforce and graphics created by Salesforce based on Gartner research. 1Source: Gartner, Forecast: Enterprise Application Software, Worldwide, 2016-2022, 2Q18 Update, 29 Jun 2018. Analytics market defined as Modern BI Platforms, Traditional BI Platforms, Analytic Applications, Data Science Platforms. 2Platform & Other defined from two Gartner reports: (1) Collaboration Services per Gartner, Forecast: Enterprise Application Software, Worldwide, 2016-2022, 2Q18 Update, 29 Jun 2018; (2) Portal and Digital Engagement Technologies, Application Platform as a Service (aPaaS), Application Platform Software, Mobile App Development Platforms, Other AD, Business Process Management Suites, Testing, Identity Governance and Administration, Web Access Management (WAM) per Gartner, Forecast: Enterprise Infrastructure Software, Worldwide, 2016-2022, 2Q18 Update, 16 Jul 2018. 3Source: Gartner, Forecast: Enterprise Infrastructure Software, Worldwide, 2016-2022, 2Q18 Update, 16 Jul 2018. Integration market defined as Full Life Cycle API Management, Integration Platform as a Service (iPaaS), Application Integration Suite, Data Integration Tools. 19 
+
+
+
+ <img height="576" src="ex9912018investorday020.jpg" title="slide20" width="1024"/> Cloud Leadership Advantage Growth and scale across clouds 26% Growth Y/Y CORE PRODUCTS Q219 Q2 annualized revenue Q215 49% cloud revenue 13% Sales ~$4.0B (% total) 15% 27% Service ~$3.6B 10% 32%1 Platform & Other ~$2.5B1 34% 30% 37% Marketing & Commerce ~$1.8B Q219 cloud revenue (% total) 15% 21%1 1 Platform & Other revenue and growth rate exclude MuleSoft. 20 
+
+
+
+ <img height="576" src="ex9912018investorday021.jpg" title="slide21" width="1024"/> Cloud Leadership Advantage Product add-ons enhance core growth Growth Y/Y CORE PRODUCTS ADD-ONS Growth Y/Y Q219 Q2 annualized revenue Q2 annualized revenue Q219 13% Sales ~$4.0B >$100M Salesforce CPQ ~100% 27% Service ~$3.6B >$80M Field Service ~800% 32%1 Platform & Other ~$2.5B1 >$250M Heroku ~30% >$200M Analytics ~80% 37% Marketing & Commerce ~$1.8B >$250M Pardot ~30% >$80M DMP ~80% 1 Platform & Other revenue and growth rate exclude MuleSoft. 21 
+
+
+
+ <img height="576" src="ex9912018investorday022.jpg" title="slide22" width="1024"/> Multi-Cloud Advantage Customers want a 360 degree view of their customers Average Spend 38% 92% 38% 92% of customers of revenue from are multi-cloud multi-cloud >10X customers multi-cloud 62% 8% customers vs Multi-Cloud Multi-Cloud Single Cloud Single Cloud single cloud Note: Data is as of Q2 FY19. N = ~150,000 customers. Data excludes counts from recent acquisitions, including Demandware and MuleSoft. 22 
+
+
+
+ <img height="576" src="ex9912018investorday023.jpg" title="slide23" width="1024"/> Integration Advantage MuleSoft elevates our digital transformation capability Integration 23 
+
+
+
+ <img height="576" src="ex9912018investorday024.jpg" title="slide24" width="1024"/> Customer Success Advantage Land and expand drives durable growth Incremental Revenue FY17 FY18 FY19 New Logos 26% 27% 27% Installed Base 74% 73% 73% New products into installed base Additional seats, upgrades, and SELAs into installed base 43% 57% 52% 48% 49% 51% Note: Proportions based on sales during the trailing twelve months ended July 31 (fiscal Q2) as of the fiscal years noted. Data excludes amounts from recent acquisitions, including 24 Demandware and MuleSoft. 
+
+
+
+ <img height="576" src="ex9912018investorday025.jpg" title="slide25" width="1024"/> Salesforce #1 in CRM Worldwide CRM applications 2017 market share by IDC 19.6% 7.1% 6.5% 4.0% 3.2% 2013 2014 2015 2016 2017 Source: IDC Worldwide Semiannual Software Tracker, April 2018. CRM Applications market includes the following IDC-defined functional markets: Sales, Customer Service, Contact Center, and Marketing Applications. 25 
+
+
+
+ <img height="576" src="ex9912018investorday026.jpg" title="slide26" width="1024"/> Our Strategic Value Continues to Grow Rapidly expanding footprint in large customers Customer Count by Annual Revenue FY18 FY19 17% ~1,870 ~1,600 31% ~340 40% ~260 67% ~140 ~100 40 24 $1M+ $5M+ $10M+ $20M+ Note: Customer count as of Q2 for the fiscal years noted. Data excludes counts from recent acquisitions, including Demandware and MuleSoft. 26 
+
+
+
+ <img height="576" src="ex9912018investorday027.jpg" title="slide27" width="1024"/> A View from the Top Growing relationships with top customers across diverse industries TOP 10 Q2 FY15 TOP 10 Q2 FY19 Customer A $54M Technology Customer C $79M Technology B FinServe B FinServe C Technology K Retail D Technology H Telco E Conglomerate D Technology F Conglomerate L Internet G FinServe entry bar into G FinServe H Telco top 10 M Technology customers I Logistics N Retail J $17M Distribution 2X O $34M Telco Note: Represents annualized revenue as of Q2 for the fiscal years noted. 27 
+
+
+
+ <img height="576" src="ex9912018investorday028.jpg" title="slide28" width="1024"/> Accelerating Traction in Verticals Speaking the language of the customer Customer Count: Customer Count: Fortune 1000 $10M+ Annual Spend Growth Industry FY15 FY19 FY15 - FY19 Average Customer Spend Financial Services 3 21 7x Media & Comms 6 10 1.7x High Tech 5 10 2x 3X F1000 Retail & CG 2 8 4x companies $10M+ band1 Healthcare & Life Sciences 4 8 2x Manufacturing 2 7 3.5x Others 2 5 2.5x Total 24 69 3x 30% annual CAGR Note: customer counts as of Q2 for the fiscal years noted. Data excludes counts from recent acquisitions, including Demandware and MuleSoft. 28 1Compared to average customer spend for $1M+ Fortune 1000 customers. 
+
+
+
+ <img height="576" src="ex9912018investorday029.jpg" title="slide29" width="1024"/>  Digital Transformation Need is Global The language of the customer is universal Americas EMEA APAC Americas 71% Headcount CAGR1 18% 28% 31% FY15 - FY19 Q219 geographic Revenue Growth2 25% 32% 28% revenue Y/Y (% of total) Global Datacenter Footprint APAC EMEA 10% 19% 1Headcount as of Q2 for the fiscal years noted. 2Non-GAAP revenue CC growth rates as compared to the comparable prior period. We present CC information for revenue to provide a framework for assessing how our underlying business performed excluding the effects of foreign currency rate fluctuations. To present CC revenue, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into United States dollars at the weighted average exchange rate for the quarter being compared to for growth rate calculations presented, rather than the actual exchange rates in effect during that period. Refer to the appendix for additional discussion on constant currency information. 29 
+
+
+
+ <img height="576" src="ex9912018investorday030.jpg" title="slide30" width="1024"/> Culture is a Competitive Advantage Creates customer and employee advocacy #1 BEST WORKPLACES FOR BEST WORKPLACES FOR BEST PLACES TO WORK FOR “CHANGE THE WORLD”LIST GIVING BACK WOMEN LGBTQ EQUALITY - FORTUNE MAGAZINE - FORTUNE MAGAZINE - FAIRYGODBOSS - HUMAN RIGHTS CAMPAIGN #1 ON THE FORTUNE “THE BEST WORKPLACES FOR FUTURE 50” LIST DIVERSITY - FORTUNE MAGAZINE - FORTUNE MAGAZINE 1% Time 1% Equity 1% Product Volunteer Grants1 Nonprofits WORLD’S MOST ETHICAL 3.2M+ hours1 $230M+ 37k+ and Education1 #2 ON THE MOST SUSTAINABLE COMPANIES HONOREE COMPANIES LIST ETHISPHERE 2018 - BARRON’S 2018 1 Volunteer Hours and Grants are cumulative through Q2 FY19. 30 Grants are made from Salesforce Foundation. 
+
+
+
+ <img height="576" src="ex9912018investorday031.jpg" title="slide31" width="1024"/> Scale Advantage Unmatched team of focused CRM professionals 33,000 Hiring Growth 21% total headcount five year CAGR FY14-FY191 800 FY05 FY06 FY07 FY08 FY09 FY10 FY11 FY12 FY13 FY14 FY15 FY16 FY17 FY18 Q219 Total Company Headcount 1 Headcount growth as of Q2 for the fiscal years noted. 31 
+
+
+
+ <img height="576" src="ex9912018investorday032.jpg" title="slide32" width="1024"/> The Trailblazer Advantage Customers and our ecosystem as evangelists Trailblazers CUSTOMER TECHNOLOGY COMMUNITY INNOVATORS DISRUPTORS SHAPERS 32 
+
+
+
+ <img height="576" src="ex9912018investorday033.jpg" title="slide33" width="1024"/> Autodesk is a Trailblazer “Trailhead helps us reach more people, Autodesk depends on Trailhead faster, and gives us a deeper understanding of Salesforce to deliver sales onboarding and capabilities.” enablement. Damian O’Farrill, Product Manager AI, Sales Automation and Analytics, Autodesk. Challenge Solution Sales Cloud • Distributed workforce made group training • Trailhead made learning flexible and on-demand difficult to deliver. for employees to consume on their own time. Service Cloud • Adoption was slow as many team members • “Salesforce User Basics” Trailhead content ramped Salesforce Platform were new to Salesforce. users quickly. • The global team needed to migrate to • Custom Lightning learning journeys were created Analytics Lightning in less than 60 days. with trailmixes. • The Automation and Analytics team was • Trailhead reporting content taught users how to Trailhead bogged down with requests for reports. create their own custom reports. 700+ badges earned • Keeping users up-to-date on Salesforce • Trailhead’s seasonal release content helps users 350+ hours of learning enhancements was time consuming and understand the latest functionality untimely. 33 
+
+
+
+ <img height="576" src="ex9912018investorday034.jpg" title="slide34" width="1024"/> Ecosystem Advantage Extends our reach and value Consulting Partners Independent Software Vendors +29% +150% Partner Certified Partner-earned Individuals1 Trailhead Badges1 5,000 +40% AppExchange FY19 Installs1 Solutions2 1 Growth rates based on FY19 H1 compared to FY18 H1. 2 AppExchange Solutions as of 9/13/2018. 34 
+
+
+
+ <img height="576" src="ex9912018investorday035.jpg" title="slide35" width="1024"/> Partnerships Enhance Value Proposition Strategic relationships complement technology and product breadth and depth Redefining the mobile experience with new Empower CIOs to simplify how data and events iOS apps including Salesforce Mobile, are shared across AWS and Salesforce services Mytrailhead app, Industry Apps and more And Preferred Public Cloud Provider Y Tr IT ail UN Google Ads, Marketing & Web Analytics, blazer COMM Global System Integrator & G-Suite Productivity integrations AI partner for non-CRM data And Preferred Public Cloud Provider 35 
+
+
+
+ <img height="576" src="ex9912018investorday036.jpg" title="slide36" width="1024"/> Increasing Competitive Advantage Drives durable growth Values Ecosystem Customer Trailblazers Technology Scale Product Cloud Culture Leadership Land & Expand 10x Customer Multi-Cloud Success Integration 36 
+
+
+
+ <img height="576" src="ex9912018investorday037.jpg" title="slide37" width="1024"/> Continue to Make History $ $ On track to be the fastest growing to $20B 21B - 23B FY22 target $14B Fastest to $10B $10B Fastest to $5B $1.6B 10 11 12 13 14 15 16 17 18 19 20 21 22 23 Years Since Company Founded Note: Salesforce revenue of $5.4B in FY15 and $10.5B in FY19. Source for Microsoft, Oracle, and SAP revenues: FactSet. 37 
+
+
+
+ <img height="576" src="ex9912018investorday038.jpg" title="slide38" width="1024"/> David Havlek EVP, Deputy CFO 38 
+
+
+
+ <img height="576" src="ex9912018investorday039.jpg" title="slide39" width="1024"/> Measuring Our Success 39 
+
+
+
+ <img height="576" src="ex9912018investorday040.jpg" title="slide40" width="1024"/> New Accounting Standards ASC 606 ASC 340-40 Unearned Revenue (UR) Capitalized Commissions Remaining Performance Obligation (RPO) ASU 2016-01 Current Remaining Performance Obligation (cRPO) Marked-to-Market Accounting Contract Asset of Strategic Investments The Year of Accounting! 40 
+
+
+
+ <img height="576" src="ex9912018investorday041.jpg" title="slide41" width="1024"/> ASC 606 Unearned Revenue is the new Deferred Revenue 605 Value 606 Value Diﬀerence between UR and DR is cumulative pull- forward of revenue to prior years Deferred Revenue Unearned Revenue PY1 PY2 PY3 PY4 Revenue 41 
+
+
+
+ <img height="576" src="ex9912018investorday042.jpg" title="slide42" width="1024"/> ASC 606 Revenue pull-forward results in an immaterial diﬀerence between UR and DR $-100M $7,095 $6,995 $6,201 $-74M $5,883 $-70M 24% $5,043 $4,969 $-80M $4,819 $4,749 Q219 growth $4,392 $4,312 Y/Y Q118 Q218 Q318 Q418 Q119 Q219 Deferred Revenue (ASC 605) DR Adjustment ($-xxM) Unearned Revenue (ASC 606) 42 
+
+
+
+ <img height="576" src="ex9912018investorday043.jpg" title="slide43" width="1024"/> DR/UR Seasonality Continues to Deepen Seasonal invoicing, more linear amortization Q1 Sequential Change 9% 8% 5% 4% (2%) (2%) (3%) Sequential growth Sequential (6%) (7%) (7%) (8%) (8%) (8%) (9%) (11%) Q105 Q106 Q107 Q108 Q109 Q110 Q111 Q112 Q113 Q114 Q115 Q116 Q117 Q118 Q119 Deferred Revenue (605) Unearned Revenue (606) 1Based on the mid-point of the guidance provided on February 28, 2017. 43 
+
+
+
+ <img height="576" src="ex9912018investorday044.jpg" title="slide44" width="1024"/> DR/UR Seasonality Continues to Deepen Seasonal invoicing, more linear amortization 18% Q2 Sequential Change 12% 11% 9% 3% 3% 2% 2% 1% 0% 0% (1%) (4%) Sequential growth Sequential (5%) (5%) Q205 Q206 Q207 Q208 Q209 Q210 Q211 Q212 Q213 Q214 Q215 Q216 Q217 Q218 Q219 Deferred Revenue (605) Unearned Revenue (606) 44 
+
+
+
+ <img height="576" src="ex9912018investorday045.jpg" title="slide45" width="1024"/> DR/UR Seasonality Continues to Deepen Seasonal invoicing, more linear amortization 21% Q3 Sequential Change 8% 8% 6% 2% (1%) (2%) (2%) (3%) (3%) Sequential growth Sequential (5%) (6%) (9%) (9%) (12%) Q305 Q306 Q307 Q308 Q309 Q310 Q311 Q312 Q313 Q314 Q315 Q316 Q317 Q318 Q319E1 Deferred Revenue (605) Unearned Revenue (606) 1 Based on Q3 Unearned Revenue guidance provided August 29, 2018. 45 
+
+
+
+ <img height="576" src="ex9912018investorday046.jpg" title="slide46" width="1024"/> DR/UR Seasonality Continues to Deepen Seasonal invoicing, more linear amortization Q4 Sequential Change 62% 59% 50% 49% 51% 44% 45% 41% 33% 35% 29% 29% 29% 27% Sequential growth Sequential Q405 Q406 Q407 Q408 Q409 Q410 Q411 Q412 Q413 Q414 Q415 Q416 Q417 Q418 Deferred Revenue (605) Unearned Revenue (606) 46 
+
+
+
+ <img height="576" src="ex9912018investorday047.jpg" title="slide47" width="1024"/>  Remaining Performance Obligation Current RPO provides incremental insight to future revenue Financial Disclosure Example Remaining Performance Obligation $20.6B $20.4B $21.0B $15.8B $15.0B$15.4B $11.0B $10.8B $11.2B Backlog Unbilled Unbilled Noncurrent RPO $7.9B $7.4B $7.7B Unbilled Current RPO $9.6B $9.6B $9.8B $7.6B $7.7B $7.9B Def. Revenue (contract based) Billed Billed UR (invoice based) Q118 Q218 Q318 Q418 Q119 Q219 ASC 605 ASC 606 47 
+
+
+
+ <img height="576" src="ex9912018investorday048.jpg" title="slide48" width="1024"/> UR, RPO and cRPO in Action A deal example $ millions Year 1 Year 2 Year 3 Year 4 H1 H2 H1 H2 H1 H2 H1 UR 20 10 20 10 20 10 0 RPO 60 50 40 30 20 10 0 cRPO 20 20 20 20 20 10 0 Revenue 0 10 10 10 10 10 10 Deal Terms Value: $60 million Term: 3 years Inv. Frequency: Annual Timing: Signed last day of Q2 48 
+
+
+
+ <img height="576" src="ex9912018investorday049.jpg" title="slide49" width="1024"/> UR, RPO and cRPO in Action cRPO is more consistent than UR and RPO $ millions Year 1 Year 2 Year 3 Year 4 H1 H2 H1 H2 H1 H2 H1 UR 20 10 20 10 20 10 0 RPO 60 50 40 30 20 10 0 cRPO 20 20 20 20 20 10 0 Revenue 0 10 10 10 10 10 10 H1 H2 Early Renewal Terms UR Value: $80 million 20 10 … Term: 4 years RPO 80 70 … Inv. Frequency: Annual Timing: Signed last day of Q2 cRPO 20 20 … FY Revenue 10 10 … 49 
+
+
+
+ <img height="576" src="ex9912018investorday050.jpg" title="slide50" width="1024"/> UR, RPO and cRPO in Action cRPO is more consistent than UR and RPO $ millions Year 1 Year 2 Year 3 Year 4 H1 H2 H1 H2 H1 H2 H1 UR 20 10 20 10 20 10 0 RPO 60 50 40 30 20 10 0 cRPO 20 20 20 20 20 10 0 Revenue 0 10 10 10 10 10 10 H2 H1 H2 Early Renewal Terms Value: $80 million UR 20 10 20 … Term: 4 years RPO 80 70 60 … Inv. Frequency: Annual Timing: Signed last day of Q2 cRPO 20 20 20 … FY Revenue 10 10 10 … 50 
+
+
+
+ <img height="576" src="ex9912018investorday051.jpg" title="slide51" width="1024"/> UR, RPO and cRPO in Action cRPO is more consistent than UR and RPO $ millions Year 1 Year 2 Year 3 Year 4 H1 H2 H1 H2 H1 H2 H1 UR 20 10 20 10 20 10 0 RPO 60 50 40 30 20 10 0 cRPO 20 20 20 20 20 10 0 Revenue 0 10 10 10 10 10 10 H2 H1 H2 Early Renewal Terms Value: $80 million UR 20 10 20 … Term: 4 years RPO 80 70 60 … Inv. Frequency: Annual Timing: Signed last day of Q2 cRPO 20 20 20 … FY Revenue 10 10 10 … 51 
+
+
+
+ <img height="576" src="ex9912018investorday052.jpg" title="slide52" width="1024"/> UR, RPO and cRPO in Action cRPO is more consistent than UR and RPO $ millions Year 1 Year 2 Year 3 Year 4 H1 H2 H1 H2 H1 H2 H1 UR 20 10 20 10 20 10 0 RPO 60 50 40 30 20 10 0 cRPO 20 20 20 20 20 10 0 Revenue 0 10 10 10 10 10 10 H2 H1 H2 Early Renewal Terms Value: $80 million UR 20 10 20 … Term: 4 years RPO 80 70 60 … Inv. Frequency: Annual Timing: Signed last day of Q2 cRPO 20 20 20 … FY Revenue 10 10 10 … 52 
+
+
+
+ <img height="576" src="ex9912018investorday053.jpg" title="slide53" width="1024"/> UR, RPO and cRPO in Action cRPO is more consistent than UR and RPO $ millions Year 1 Year 2 Year 3 Year 4 H1 H2 H1 H2 H1 H2 H1 UR 20 10 20 10 20 10 0 RPO 60 50 40 30 20 10 0 cRPO 20 20 20 20 20 10 0 Revenue 0 10 10 10 10 10 10 H2 H1 H2 Early Renewal Terms Value: $80 million UR 20 10 20 … Term: 4 years RPO 80 70 60 … Inv. Frequency: Annual Timing: Signed last day of Q2 cRPO 20 20 20 … FY Revenue 10 10 10 … 53 
+
+
+
+ <img height="576" src="ex9912018investorday054.jpg" title="slide54" width="1024"/> UR, RPO and cRPO in Action cRPO is more consistent than UR and RPO $ millions Year 1 Year 2 Year 3 Year 4 H1 H2 H1 H2 H1 H2 H1 UR 20 10 20 10 20 10 0 RPO 60 50 40 30 20 10 0 cRPO 20 20 20 20 20 10 0 Revenue 0 10 10 10 10 10 10 H2 H1 H2 Early Renewal Terms Value: $80 million UR 20 10 20 … Term: 4 years RPO 80 70 60 … Inv. Frequency: Annual Timing: Signed last day of Q2 cRPO 20 20 20 … FY Revenue 1010 10 10 … 54 
+
+
+
+ <img height="576" src="ex9912018investorday055.jpg" title="slide55" width="1024"/> Components of Growth Contract timing, duration and terms impact growth component measures SaaS Model Past Today A Simple Formula Revenue Known Known A - B + C = D Contracted DR UR & Billed cRPO Contracted ST & Unbilled LT RPO Timing Renewals ? ? Duration New Business ? ? Terms ASC 605 ASC 606 Beginning Attrition New Ending Revenue Business Revenue 55 
+
+
+
+ <img height="576" src="ex9912018investorday056.jpg" title="slide56" width="1024"/> Contract Asset: Revenue Ahead of Invoicing Provides insights to cash ﬂow results Illustrative Example Deal Terms: Value: $600 $300 Term: 3 years Inv. Terms: Annually on day 1 of Q1 $200 Invoice Invoice Invoice Revenue recognition $100 $200 $300 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 $100 Revenue 50 50 50 50 50 50 50 50 50 50 50 50 Unearned 50 0 0 0 50 0 0 0 150 100 50 0 Revenue Contract 0 0 50 100 0 0 50 100 0 0 0 0 Asset Year 1 Year 2 Year 3 Invoices 56 
+
+
+
+ <img height="576" src="ex9912018investorday057.jpg" title="slide57" width="1024"/> Contract Asset: MuleSoft Term License Provides insights to cash ﬂow results Illustrative Example Deal Terms: Value: $600, 50% license, 50% maintenance Term: 3 years Inv. Terms: Annually on day 1 of Q1 $200 $200 $200 Invoice Invoice Invoice $200 $200 $200 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Revenue recognition Revenue 325 25 25 25 25 25 25 25 25 25 25 25 Unearned 0 0 0 0 0 0 0 0 75 50 25 0 Revenue Contract 125 150 175 200 25 50 75 100 0 0 0 0 Asset Year 1 Year 2 Year 3 Invoices 57 
+
+
+
+ <img height="576" src="ex9912018investorday058.jpg" title="slide58" width="1024"/> Implications of Other New Standards ASC 340-40 ASU 2016-01 Capitalized Commissions Marked-to-Market Accounting of Strategic Investments 4 years 2 years new business renewals $0.43 commissions commissions benefit to GAAP amortization period amortization period EPS in 1H19 New capitalized items: Non-quota employees tied to new contracts $0.36 Commissions paid on renewals benefit to non-GAAP EPS in 1H19 Payroll taxes and fringe benefits Partner success fees in emerging markets 58 
+
+
+
+ <img height="576" src="ex9912018investorday059.jpg" title="slide59" width="1024"/> Strong Operating Cash Flow New accounting standards have no impact on cash ﬂow $2.7B $2.2B 28% 26% $1.7B 26% 26% 24% 25% 21% 21% 22% 22% $1.2B $0.9B $0.8B $0.6B $0.5B $0.3B $0.2B FY09 FY10 FY11 FY12 FY13 FY14 FY15 FY16 FY17 FY18 OCF Yield OCF Note: OCF Yield is defined as operating cash flow over revenue for the fiscal years noted. 59 
+
+
+
+ <img height="576" src="ex9912018investorday060.jpg" title="slide60" width="1024"/> Cash Flow Seasonality Continues to Deepen Seasonal invoicing, more linear cash expenses 736% Q1 Q2 Q3 Q4 358% 189% 172% Sequential growth Sequential 118% 124% 99% 74% 74% 6% (36%) (23%) (38%) (50%) (59%) (48%) (47%) (76%) (73%) (62%) Q114 Q115 Q116 Q117 Q118 Q214 Q215 Q216 Q217 Q218 Q314 Q315 Q316 Q317 Q318 Q414 Q415 Q416 Q417 Q418 60 
+
+
+
+ <img height="576" src="ex9912018investorday061.jpg" title="slide61" width="1024"/> Managing Our Success 61 
+
+
+
+ <img height="576" src="ex9912018investorday062.jpg" title="slide62" width="1024"/> Back to School Subscription Long-Range Economics Planning Where Who What Beginning Ending Ending Ending Ending ARR ARR ARR ARR ARR 62 
+
+
+
+ <img height="576" src="ex9912018investorday063.jpg" title="slide63" width="1024"/> Camper: Constant New ARR Dollars Rapid revenue deceleration drives high model leverage Assumptions $15 $16 Attrition: 10% $18 CTB: $2.00 $20 $30 CTS: 40% $30 $30 $30 $100 $120 $138 $154 $169 +20% +15% +12% +10% Beginning ARR New Ending Ending Ending Ending ARR Attrition ARR ARR ARR ARR ARR Revenue $110 $129 $146 $161 CTB $60 $60 $60 $60 CTS $44 $52 $58 $65 Op Profit $6 $17 $28 $37 Op Margin 5.5% 13.5% 18.9% 22.9% Y/Y Change 8.0% 5.4% 3.9% 63 
+
+
+
+ <img height="576" src="ex9912018investorday064.jpg" title="slide64" width="1024"/> Explorer: Constant Net-New ARR Dollars Moderate revenue deceleration drives moderate model leverage Assumptions $20 $20 Attrition: 10% $20 CTB: $2.00 $20 $36 CTS: 40% $34 $32 $30 $100 $120 $140 $160 $180 +20% +17% +14% +13% Beginning ARR New Ending Ending Ending Ending ARR Attrition ARR ARR ARR ARR ARR Revenue $110 $130 $150 $170 CTB $60 $64 $68 $72 CTS $44 $52 $60 $68 Op Profit $6 $14 $22 $30 Op Margin 5.5% 10.8% 14.7% 17.7% Y/Y Change 5.3% 3.9% 3.0% 64 
+
+
+
+ <img height="576" src="ex9912018investorday065.jpg" title="slide65" width="1024"/> Pioneer: Constant Net-New ARR Growth Rate Durable growth drives no model leverage $35 Assumptions $29 Attrition: 10% $24 $52 CTB: $2.00 $20 $43 CTS: 40% $36 $30 $100 $120 $144 $173 $208 +20% +20% +20% +20% Beginning ARR New Ending Ending Ending Ending ARR Attrition ARR ARR ARR ARR ARR Revenue $110 $132 $158 $190 CTB $60 $72 $86 $104 CTS $44 $53 $63 $76 Op Profit $6 $7 $9 $10 Op Margin 5.5% 5.5% 5.5% 5.5% Y/Y Change 0.0% 0.0% 0.0% 65 
+
+
+
+ <img height="576" src="ex9912018investorday066.jpg" title="slide66" width="1024"/> Long-Range Plan Predictable subscription model creates long-term visibility $21.0B - $23.0B ~80% of revenue under contract at start of year $13.175B1 $5.4B ~60% of revenue under contract two years out FY15 FY16 FY17 FY18 FY19E FY20E FY21E FY22E 1 Represents high end of Salesforce’s FY19 revenue guidance provided August 29, 2018. Salesforce full-year revenue is expected to be $13.125-$13.175 billion. 66 Note: Revenue under contract represents subscription and support revenue only. 
+
+
+
+ <img height="576" src="ex9912018investorday067.jpg" title="slide67" width="1024"/> Long-Range Plan Subscription economics underly proﬁt and growth investment planning $21.0B - $23.0B Durable Top Line Growth Flat Margins (Equals Top Line Growth Rate) $13.175B1 Core Profit Flat CTB/CTS Model leverage External Commitment Operating leverage $5.4B Incremental Investment Operating Plan (CTB/CTS efficiency) FY15 FY16 FY17 FY18 FY19E FY20E FY21E FY22E 67 1 Represents high end of Salesforce’s FY19 revenue guidance provided August 29, 2018. Salesforce full-year revenue is expected to be $13.125-$13.175 billion. 
+
+
+
+ <img height="576" src="ex9912018investorday068.jpg" title="slide68" width="1024"/> Durable Sales Capacity Growth Translates to durable new business and revenue growth Total 33K 21% Headcount Total headcount five year CAGR FY14-FY191 Sales Capacity x Productivity = New Business 23% Sales headcount Total five year CAGR 13K FY14-FY191 16% G&A headcount five year CAGR FY14-FY191 FY14 FY15 FY16 FY17 FY18 FY19 Sales Headcount Other Headcount 1 Headcount growth as of Q2 for the fiscal years noted. 68 
+
+
+
+ <img height="576" src="ex9912018investorday069.jpg" title="slide69" width="1024"/> Top and Bottom Line Growth Planning and delivering consistent organic revenue and operating margin growth $13.175B1 175bps 177bps 33% 32% 152bps $10.5B 27% 78bps 25% 25% 25-50bps3 24% $8.4B $6.7B $5.4B $4.1B Non-GAAP Operating Margin Change Y/Y2 -276bps FY14 FY15 FY16 FY17 FY18 FY19E FY14 FY15 FY16 FY17 FY18 FY19E Revenue Non-GAAP O.M. Under ASC 605 Revenue Growth Non-GAAP O.M. Under ASC 606 1 High end of Salesforce FY2019 revenue guidance provided on August 29, 2018. Revenue for Salesforce's full ﬁscal year 2019 is projected to be in the range of $13.125 billion to $13.175 billion. 2 Refer to the appendix for a reconciliation of GAAP to Non-GAAP measures. 69 3 Represents Salesforce FY2019 non-GAAP operating margin guidance provided on August 29, 2018. Salesforce expects non-GAAP operating margin improvement of 25-50 basis points year-over-year. 
+
+
+
+ <img height="576" src="ex9912018investorday070.jpg" title="slide70" width="1024"/> Durable Growth $21B - $23B FY22 target FY21 Revenue Growth FY20 $13.175B FY19 guidance2 20% FY19 Projected CAGR FY19-FY221 1 Compound annual growth rate based on high end of guide in footnote 2 and high end of projected target of $21 billion to $23 billion in FY22. 2 High end of Salesforce FY2019 revenue guidance provided on August 29, 2018. Revenue for Salesforce's full ﬁscal year 2019 is projected to be in the 70 range of $13.125 billion to $13.175 billion. 
+
+
+
+ <img height="576" src="ex9912018investorday071.jpg" title="slide71" width="1024"/> 71 
+
+
+
+ <img height="576" src="ex9912018investorday072.jpg" title="slide72" width="1024"/> Non-GAAP Financial Measures This presentation includes information about non-GAAP income from operations and constant currency revenue (collectively the “non-GAAP financial measures”). These non-GAAP financial measures are measurements of financial performance that are not prepared in accordance with U.S. generally accepted accounting principles and computational methods may differ from those used by other companies. Non-GAAP financial measures are not meant to be considered in isolation or as a substitute for comparable GAAP measures and should be read only in conjunction with the company’s consolidated financial statements prepared in accordance with GAAP. Management uses both GAAP and non-GAAP measures when planning, monitoring, and evaluating the company’s performance. The primary purpose of using non-GAAP measures is to provide supplemental information that may prove useful to investors and to enable investors to evaluate the company’s results in the same way management does. Management believes that supplementing GAAP disclosure with non-GAAP disclosure provides investors with a more complete view of the company’s operational performance and allows for meaningful period-to-period comparisons and analysis of trends in the company’s business. Further, to the extent that other companies use similar methods in calculating non-GAAP measures, the provision of supplemental non-GAAP information can allow for a comparison of the company’s relative performance against other companies that also report non-GAAP operating results. Non-GAAP income from operations excludes the impact of the following items: stock-based compensation, amortization of acquisition-related intangibles, and termination of office leases. Constant currency information is provided as a framework for assessing how our underlying business performed excluding the effect of foreign currency rate fluctuations. To present constant currency revenue, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into United States dollars at the weighted average exchange rate for the quarter being compared to for growth rate calculations presented, rather than the actual exchange rates in effect during that period. 72 
+
+
+
+ <img height="576" src="ex9912018investorday073.jpg" title="slide73" width="1024"/> GAAP to Non-GAAP Reconciliation (in millions) ASC 606 ASC605 Non-GAAP income from operations FY18 FY17 FY16 FY15 FY14 FY13 FY12 FY11 FY10 FY09 GAAP income (loss) from operations $ 454 $ 64 $ 115 $ (146) $ (286) $ (111) $ (35) $ 97 $ 115 $ 64 Plus: Amortization of purchased intangibles $ 287 $ 225 $ 158 $ 155 $ 147 $ 88 $ 67 $ 20 $ 11 $ 5 Stock-based expenses $ 997 $ 820 $ 594 $ 565 $ 503 $ 379 $ 229 $ 120 $ 89 $ 77 Less: Operating lease termination resulting from purchase of 50 Fremont $ 0 $ 0 $ (37) $ 0 $ 0 $ 0 $ 0 $ 0 $ 0 $ 0 Non-GAAP income from operations $ 1,738 $ 1,110 $ 830 $ 574 $ 364 $ 357 $ 261 $ 238 $ 215 $ 146 As Margin % Total revenues $10,540 $8,392 $6,667 $5,374 $4,071 $3,050 $2,267 $1,657 $1,306 $1,077 GAAP operating margin 4.3% 0.8% 1.7% -2.7% -7.0% -3.6% -1.5% 5.9% 8.8% 5.9% Non-GAAP operating margin 16.5% 13.2% 12.4% 10.7% 8.9% 11.7% 11.5% 14.3% 16.5% 13.6% Year-over-Year improvement 326 bps 78 bps 177 bps 175 bps -276 bps 73 
+
+
+
