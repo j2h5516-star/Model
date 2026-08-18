@@ -1189,6 +1189,60 @@ def test_number_starting_inside_the_tail_is_still_refused():
     assert 읽은값 is not None and 읽은값[0] == 1.59, 읽은값
 
 
+def test_값_없는_제목줄은_건너뛴다():
+    """논갭 조정표의 **제목 줄**이 다음 줄 GAAP 값을 물면 안 됩니다 (103차).
+
+    실물 CRM 2025-05-28 — 조정 EPS 를 **1.59** 로 읽었는데 참값은 **2.58**:
+
+        Non-GAAP diluted net income per share            ← 값이 없다 (제목)
+        GAAP diluted net income per share      $1.59     ← 이걸 물었다
+        Plus: ...
+        Non-GAAP diluted net income per share  $2.58     ← 진짜 값
+
+    논갭 조정표는 맨 위에 결과 항목 **이름만** 적고 조정 내역을 늘어놓은 뒤
+    마지막에 합계를 적습니다. 이름과 숫자의 거리로 고르는 규칙이 바로 아래
+    GAAP 줄의 숫자를 물어 버립니다.
+    """
+    text = (
+        "Non-GAAP diluted net income per share\n"
+        "GAAP diluted net income per share      $1.59      $1.56\n"
+        "Plus: Amortization of purchased intangibles   0.35   0.33\n"
+        "Non-GAAP diluted net income per share  $2.58      $2.44\n"
+    )
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 2.58
+    # GAAP 은 그대로여야 합니다 — 이 가드가 GAAP 을 건드리면 안 됩니다
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS) == 1.59
+
+
+def test_제목줄_가드는_GAAP_이름을_건드리지_않는다():
+    """가드를 모든 주당 이름에 걸었더니 원문 982건 중 **3건이 회귀**했습니다.
+
+    조정표 머리글 "Reconciliation of GAAP net loss per share, diluted, to
+    non-GAAP net income per share, fully diluted:" 안의 GAAP 이름이
+    **우연히 바로 뒤의 올바른 GAAP 값과 가장 가까워서** 정답을 내고
+    있었는데, 그 머리글을 막자 더 나쁜 후보가 이겼습니다
+    (실물 MDB 2025-12-02: GAAP −0.02 → 1.44).
+
+    그래서 가드는 **논갭 이름일 때만** 걸립니다. 이 시험이 그 경계를
+    지킵니다 — 넓히면 하나 고치고 셋을 잃습니다.
+
+    ⚠️ 이 시험은 실물 원문을 씁니다. 처음에 손으로 지어낸 짧은 예문으로
+    썼더니 **가드를 넓혀도 빨간 불이 안 켜졌습니다** — 회귀를 못 잡는
+    시험이었습니다. 실물이 규칙을 이깁니다.
+    """
+    import os
+    경로 = os.path.join(os.path.dirname(__file__), "..",
+                       "data", "measure", "raw", "MDB_2025-12-02.txt")
+    if not os.path.exists(경로):
+        return          # 원문이 없는 환경에서는 건너뜁니다 (없음은 없음으로)
+    text = open(경로, encoding="utf-8", errors="ignore").read()
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS) == -0.02, (
+        "GAAP 이 조정값으로 무너졌습니다 — 가드가 너무 넓습니다"
+    )
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.44
+
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

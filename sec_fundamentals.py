@@ -367,6 +367,7 @@ def _scan_labeled_value(
                     continue
 
             search_from = label_match.end()
+
             if same_line_only:
                 line_end = text.find("\n", search_from)
                 limit = (line_end if line_end != -1 else len(text)) - search_from
@@ -545,6 +546,30 @@ _SEGMENT_REVENUE_RE = re.compile(
     r"revenues?\s*$",
     re.I,
 )
+# 값 없는 **제목 줄** 건너뛰기 (103차 — 87차 ⑤ 로 밀려 있던 마지막 결함).
+#
+# 실물 CRM 2025-05-28 (조정 EPS 를 1.59 로 읽었는데 참값은 2.58):
+#
+#     Non-GAAP diluted net income per share            ← 값이 없다 (제목 줄)
+#     GAAP diluted net income per share      $1.59     ← 다음 줄의 GAAP 값
+#     Plus: ...
+#     Non-GAAP diluted net income per share  $2.58     ← 진짜 값 (같은 줄)
+#
+# 논갭 조정표는 맨 위에 **결과 항목 이름만** 적고 그 아래로 조정 내역을
+# 늘어놓은 뒤 마지막에 합계를 적습니다. 그래서 첫 번째 "Non-GAAP …
+# per share" 는 값이 없는 **제목**인데, 이름과 숫자의 거리로 고르는
+# 규칙이 바로 아래 GAAP 줄의 숫자를 물어 버립니다.
+#
+# 판별법: 이름과 숫자 **사이에 또 다른 주당 항목 이름이 끼어 있으면**
+# 그 이름은 자기 값을 가진 것이 아닙니다. 값은 언제나 자기 이름 바로
+# 뒤에 옵니다 (_scan_labeled_value 의 대전제).
+#
+# ⚠️ **주당 항목 이름일 때만** 봅니다. 매출·영업이익 이름에까지 적용하면
+#    "Net income per share of $1.59" 같은 정상 문장을 잃습니다.
+_PER_SHARE_LABEL_RE = re.compile(r"per\s+(?:diluted\s+)?share", re.I)
+_TITLE_LINE_AHEAD = 200      # 이름 뒤 몇 글자까지 훑어볼 것인가
+_FIRST_DIGIT_RE = re.compile(r"\d")
+
 _SEGMENT_LOOKBACK = 30
 
 # "전체 매출"을 뜻하는 이름이 이 문서에 하나라도 있는가 (89차).
@@ -956,6 +981,33 @@ def find_eps_value(
             if _PER_SHARE_BY_RE.match(text[label_match.end():
                                            label_match.end() + 48]):
                 continue
+
+            # 값 없는 **제목 줄**이면 이름 자리를 포기합니다 (103차).
+            # 이름과 숫자 사이에 **또 다른 주당 항목 이름**이 끼어 있으면
+            # 그 이름은 자기 값을 가진 것이 아닙니다 — 자세한 내력은
+            # _PER_SHARE_LABEL_RE 주석에 적어 두었습니다 (실물 CRM).
+            #
+            # ⚠️ **논갭 이름일 때만** 봅니다. 처음에는 모든 주당 이름에
+            #    걸었더니 원문 982건 중 4건이 바뀌었는데 그중 **3건이
+            #    회귀**였습니다 (MDB GAAP −0.02 → 1.44 · SNDK 43.97 → 39.25,
+            #    둘 다 GAAP 이 조정값으로 무너짐). 원인은 이렇습니다 —
+            #    조정표 머리글 "Reconciliation of GAAP net loss per share …
+            #    to non-GAAP net income per share:" 안의 GAAP 이름이
+            #    **우연히 바로 뒤의 올바른 GAAP 값과 가장 가까워서** 정답을
+            #    내고 있었습니다. 그 머리글을 막자 더 나쁜 후보가 이겼습니다.
+            #    실측된 결함(87차 ⑤)은 **조정 EPS** 제목 줄이므로 거기에만
+            #    겁니다 — 넓게 걸면 하나 고치고 셋을 잃습니다.
+            _논갭 = _NONGAAP_NEAR_RE.search(label_match.group(0)) or (
+                _NONGAAP_NEAR_RE.search(
+                    text[max(0, label_match.start() - _NONGAAP_LOOKBACK)
+                         : label_match.start()]
+                )
+            )
+            if _논갭:
+                _앞 = text[label_match.end() : label_match.end() + _TITLE_LINE_AHEAD]
+                _숫자 = _FIRST_DIGIT_RE.search(_앞)
+                if _숫자 and _PER_SHARE_LABEL_RE.search(_앞[: _숫자.start()]):
+                    continue
 
             # 이름이 "적자"라고 말하면 양수를 음수로 뒤집습니다 (아래 두 곳 공용).
             # "net income (loss) per share" 같은 겸용 표기는 선언이 아니므로 제외.

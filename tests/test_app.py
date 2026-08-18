@@ -482,17 +482,31 @@ def test_가설_설명문에는_숫자를_박지_않는다():
 def test_캐시는_값을_바꾸지_않는다():
     """캐시는 **속도만** 바꿔야 합니다 (102차).
 
-    10년 확장 뒤 화면이 57초 걸려 무거운 계산을 캐시에 담았습니다.
-    캐시가 값을 바꾸면 그건 속도 개선이 아니라 **결함**입니다.
-    측정 코드를 한 줄도 안 건드렸음을 여기서 못박습니다.
+    ⚠️ 처음에는 실데이터로 원본 함수와 캐시를 둘 다 돌려 비교했는데,
+    `confirmation_rows` 하나가 22.7초라 **시험 전체가 시간 초과**로
+    죽었습니다 (103차에 발견). 시험이 느려 못 돌면 안 돌린 것과 같습니다.
+
+    그래서 **가짜 함수를 끼워 "캐시가 원본을 그대로 불러 돌려주는가"**만
+    봅니다 — 값이 같은지는 이 방식이 더 확실하게 못박습니다 (원본이
+    무엇을 돌려주든 그대로 나와야 하므로).
     """
     import sector_model as sm
-    import dataset
-    snap = dataset.load()
-    키 = app.snapshot_key(snap)
-    ds = app.cached_dataset(snap, 키)
-    assert app.cached_confirmation_rows(ds, 키) == sm.confirmation_rows(ds)
-    assert app.cached_current_breadth(ds, 키) == sm.current_breadth(ds)
+
+    표식 = [{"섹터": "시험용", "값": 42}]
+    원래 = sm.confirmation_rows
+    sm.confirmation_rows = lambda ds: 표식
+    try:
+        assert app.cached_confirmation_rows({"a": 1}, "열쇠-A") == 표식
+    finally:
+        sm.confirmation_rows = 원래
+
+    원래2 = sm.current_breadth
+    sm.current_breadth = lambda ds: 표식
+    try:
+        assert app.cached_current_breadth({"a": 1}, "열쇠-B") == 표식
+    finally:
+        sm.current_breadth = 원래2
+
 
 
 def test_스냅샷_이름표는_새_수집이면_달라진다():
