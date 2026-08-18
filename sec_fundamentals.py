@@ -2489,12 +2489,23 @@ def _period_series(
     candidates: dict[str, list[float]] = {}
     rejected = 0
 
+    # 93차 — 어느 검사가 버리는지 따로 셉니다.
+    #   92차 계기가 "받음 N · 버림 N · 남음 0" 을 보여 줬지만, ①이름과
+    #   ②단위 중 어느 쪽인지는 알려 주지 못했습니다. 본 값의 예시도
+    #   함께 남겨야 다음 실행에서 짐작 없이 확정할 수 있습니다.
+    이름버림 = 단위버림 = 0
+    본이름: list[str] = []
+    본단위: list[str] = []
+
     for _, row in df.iterrows():
         # ① 개념 이름 완전일치 ("us-gaap:Revenues" → "Revenues")
         if concept_col is not None:
             name = str(row[concept_col]).split(":")[-1].strip().lower()
+            if len(본이름) < 3 and name not in 본이름:
+                본이름.append(name)
             if name != wanted:
                 rejected += 1
+                이름버림 += 1
                 continue
 
         # ② 항목에 맞는 단위만 — 달러 항목은 USD, 주당 항목은 주당 단위.
@@ -2507,8 +2518,11 @@ def _period_series(
         #   않으므로, **낱말로** 가릅니다.
         if unit_col is not None:
             row_unit = str(row[unit_col]).strip().upper()
+            if len(본단위) < 3 and row_unit not in 본단위:
+                본단위.append(row_unit)
             if row_unit and not _unit_matches(row_unit, unit):
                 rejected += 1
+                단위버림 += 1
                 continue
 
         try:
@@ -2543,8 +2557,10 @@ def _period_series(
         #   그래서 개념별로 **받은 줄 · 버린 줄 · 남은 분기**를 적어 둡니다.
         #   다음 실행이 숫자로 말해 주면 그때 고칩니다.
         report.setdefault("xbrl_calls", []).append(
-            f"{concept}({months}개월): 받음 {len(df)} · 버림 {rejected} · "
-            f"모호 {len(ambiguous)} · 남음 {len(out)}"
+            f"{concept}({months}개월): 받음 {len(df)} · "
+            f"이름버림 {이름버림} · 단위버림 {단위버림} · "
+            f"모호 {len(ambiguous)} · 남음 {len(out)} · "
+            f"본이름 {본이름} · 본단위 {본단위}"
         )
 
     return out
