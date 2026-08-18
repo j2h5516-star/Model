@@ -1,17 +1,17 @@
 {
- "ran_at": "2026-08-17T23:09:33.438448+00:00",
+ "ran_at": "2026-08-18T01:16:24.562393+00:00",
  "tickers": 160,
  "summary": "조정 EPS 시계열 160종목 · 일봉 161종목(기준지수 포함) · 파싱 실패 원문 385건",
  "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 채택 · H6_결합_H5bxH2b: 미채택 · H7_EBITDA_첫돌파: 판정 불가 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 채택 · H10_논갭영업이익_저평가_첫신기록: 채택 · H11_섹터정배열폭_60: 미채택 · H11b_섹터정배열폭_80: 판정 불가 · H18_완성시_52주선이격도: 판정 불가 · H19_주도섹터_판정: 판정 불가 · H20_주도섹터_전환: 미채택 · H21_주도섹터_분기점: 판정 불가 · H19b_주도섹터_완성후확인: 판정 불가",
- "consensus": "컨센서스: 확보 160종목 · 원장 추가 1건 · 실패 0종목",
- "surprise": "서프라이즈: 확보 160종목 · 신규 1분기 · 실패 0종목",
- "vendor": "두 번째 자(야후) — 160종목 성공 · 0종목 실패 · 분기 962개 · 발표기록 639개 · 과거 소급 변경 23칸",
+ "consensus": "컨센서스: 확보 160종목 · 원장 추가 4건 · 실패 0종목",
+ "surprise": "서프라이즈: 확보 160종목 · 신규 0분기 · 실패 0종목",
+ "vendor": "두 번째 자(야후) — 160종목 성공 · 0종목 실패 · 분기 962개 · 발표기록 639개 · 과거 소급 변경 0칸",
  "per_ticker": [
   {
    "ticker": "CRDO",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 9.6,
+   "seconds": 7.4,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": ""
@@ -20,7 +20,7 @@
    "ticker": "CLS",
    "adj_eps_ok": 9,
    "merged_direct": 1,
-   "seconds": 4.0,
+   "seconds": 5.1,
    "cache_hits": 24,
    "cache_downloads": 0,
    "first_error": ""
@@ -29,7 +29,7 @@
    "ticker": "MU",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 10.5,
+   "seconds": 8.2,
    "cache_hits": 61,
    "cache_downloads": 0,
    "first_error": ""
@@ -38,7 +38,7 @@
    "ticker": "SNDK",
    "adj_eps_ok": 7,
    "merged_direct": 6,
-   "seconds": 4.9,
+   "seconds": 6.3,
    "cache_hits": 14,
    "cache_downloads": 0,
    "first_error": ""
@@ -47,7 +47,7 @@
    "ticker": "LITE",
    "adj_eps_ok": 18,
    "merged_direct": 0,
-   "seconds": 15.5,
+   "seconds": 23.4,
    "cache_hits": 40,
    "cache_downloads": 0,
    "first_error": ""
@@ -56,7 +56,7 @@
    "ticker": "STRL",
    "adj_eps_ok": 12,
    "merged_direct": 8,
-   "seconds": 37.7,
+   "seconds": 34.4,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": ""
@@ -65,7 +65,7 @@
    "ticker": "MXL",
    "adj_eps_ok": 20,
    "merged_direct": 19,
-   "seconds": 14.6,
+   "seconds": 18.4,
    "cache_hits": 41,
    "cache_downloads": 0,
    "first_error": ""
@@ -74,7 +74,7 @@
    "ticker": "COHR",
    "adj_eps_ok": 15,
    "merged_direct": 10,
-   "seconds": 29.3,
+   "seconds": 21.3,
    "cache_hits": 73,
    "cache_downloads": 0,
    "first_error": ""
@@ -83,7 +83,7 @@
    "ticker": "TTMI",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 13.7,
+   "seconds": 10.1,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": ""
@@ -92,7 +92,7 @@
    "ticker": "ICHR",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 5.3,
+   "seconds": 6.8,
    "cache_hits": 43,
    "cache_downloads": 0,
    "first_error": ""
@@ -101,16 +101,16 @@
    "ticker": "AMD",
    "adj_eps_ok": 19,
    "merged_direct": 20,
-   "seconds": 14.0,
-   "cache_hits": 63,
-   "cache_downloads": 1,
+   "seconds": 14.1,
+   "cache_hits": 64,
+   "cache_downloads": 0,
    "first_error": ""
   },
   {
    "ticker": "PLTR",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 4.9,
+   "seconds": 5.4,
    "cache_hits": 32,
    "cache_downloads": 0,
    "first_error": ""
@@ -119,7 +119,7 @@
    "ticker": "ZETA",
    "adj_eps_ok": 0,
    "merged_direct": 7,
-   "seconds": 12.3,
+   "seconds": 10.7,
    "cache_hits": 35,
    "cache_downloads": 0,
    "first_error": ""
@@ -128,7 +128,7 @@
    "ticker": "INTC",
    "adj_eps_ok": 18,
    "merged_direct": 16,
-   "seconds": 7.4,
+   "seconds": 10.2,
    "cache_hits": 71,
    "cache_downloads": 0,
    "first_error": ""
@@ -137,7 +137,7 @@
    "ticker": "ENPH",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 12.0,
+   "seconds": 11.4,
    "cache_hits": 40,
    "cache_downloads": 0,
    "first_error": ""
@@ -146,7 +146,7 @@
    "ticker": "SWKS",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 7.4,
+   "seconds": 9.0,
    "cache_hits": 53,
    "cache_downloads": 0,
    "first_error": ""
@@ -155,7 +155,7 @@
    "ticker": "PYPL",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 14.4,
+   "seconds": 14.0,
    "cache_hits": 71,
    "cache_downloads": 0,
    "first_error": ""
@@ -164,7 +164,7 @@
    "ticker": "QRVO",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 8.6,
+   "seconds": 7.8,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": ""
@@ -182,7 +182,7 @@
    "ticker": "NVDA",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 6.0,
+   "seconds": 9.0,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": ""
@@ -191,7 +191,7 @@
    "ticker": "ANET",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 7.9,
+   "seconds": 7.2,
    "cache_hits": 38,
    "cache_downloads": 0,
    "first_error": ""
@@ -200,16 +200,16 @@
    "ticker": "FN",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 12.6,
-   "cache_hits": 32,
-   "cache_downloads": 1,
+   "seconds": 14.0,
+   "cache_hits": 33,
+   "cache_downloads": 0,
    "first_error": ""
   },
   {
    "ticker": "SMCI",
    "adj_eps_ok": 15,
    "merged_direct": 13,
-   "seconds": 9.5,
+   "seconds": 8.6,
    "cache_hits": 75,
    "cache_downloads": 0,
    "first_error": ""
@@ -218,7 +218,7 @@
    "ticker": "LSCC",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 9.4,
+   "seconds": 10.5,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": ""
@@ -227,7 +227,7 @@
    "ticker": "SYNA",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 10.7,
+   "seconds": 9.6,
    "cache_hits": 48,
    "cache_downloads": 0,
    "first_error": ""
@@ -236,7 +236,7 @@
    "ticker": "UCTT",
    "adj_eps_ok": 7,
    "merged_direct": 19,
-   "seconds": 14.4,
+   "seconds": 10.1,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": ""
@@ -245,7 +245,7 @@
    "ticker": "ONTO",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 8.1,
+   "seconds": 9.4,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": ""
@@ -254,7 +254,7 @@
    "ticker": "IPGP",
    "adj_eps_ok": 9,
    "merged_direct": 6,
-   "seconds": 10.8,
+   "seconds": 9.7,
    "cache_hits": 51,
    "cache_downloads": 0,
    "first_error": ""
@@ -263,7 +263,7 @@
    "ticker": "CGNX",
    "adj_eps_ok": 16,
    "merged_direct": 17,
-   "seconds": 11.6,
+   "seconds": 14.6,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": ""
@@ -272,7 +272,7 @@
    "ticker": "AVGO",
    "adj_eps_ok": 19,
    "merged_direct": 1,
-   "seconds": 15.4,
+   "seconds": 14.1,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": ""
@@ -281,7 +281,7 @@
    "ticker": "QCOM",
    "adj_eps_ok": 17,
    "merged_direct": 0,
-   "seconds": 9.2,
+   "seconds": 12.0,
    "cache_hits": 45,
    "cache_downloads": 0,
    "first_error": ""
@@ -290,7 +290,7 @@
    "ticker": "TXN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 9.1,
+   "seconds": 8.9,
    "cache_hits": 48,
    "cache_downloads": 0,
    "first_error": ""
@@ -299,7 +299,7 @@
    "ticker": "ADI",
    "adj_eps_ok": 15,
    "merged_direct": 13,
-   "seconds": 9.1,
+   "seconds": 13.7,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": ""
@@ -308,7 +308,7 @@
    "ticker": "MCHP",
    "adj_eps_ok": 5,
    "merged_direct": 20,
-   "seconds": 9.6,
+   "seconds": 10.8,
    "cache_hits": 59,
    "cache_downloads": 0,
    "first_error": ""
@@ -317,7 +317,7 @@
    "ticker": "NXPI",
    "adj_eps_ok": 11,
    "merged_direct": 11,
-   "seconds": 12.7,
+   "seconds": 8.5,
    "cache_hits": 31,
    "cache_downloads": 0,
    "first_error": ""
@@ -326,7 +326,7 @@
    "ticker": "MRVL",
    "adj_eps_ok": 18,
    "merged_direct": 16,
-   "seconds": 12.7,
+   "seconds": 10.7,
    "cache_hits": 68,
    "cache_downloads": 0,
    "first_error": ""
@@ -335,7 +335,7 @@
    "ticker": "KLAC",
    "adj_eps_ok": 21,
    "merged_direct": 21,
-   "seconds": 8.2,
+   "seconds": 9.9,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": ""
@@ -344,7 +344,7 @@
    "ticker": "LRCX",
    "adj_eps_ok": 17,
    "merged_direct": 17,
-   "seconds": 9.2,
+   "seconds": 9.1,
    "cache_hits": 35,
    "cache_downloads": 0,
    "first_error": ""
@@ -353,7 +353,7 @@
    "ticker": "AMAT",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 8.3,
+   "seconds": 9.7,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": ""
@@ -362,7 +362,7 @@
    "ticker": "TER",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 9.9,
+   "seconds": 8.3,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": ""
@@ -371,7 +371,7 @@
    "ticker": "ENTG",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 18.4,
+   "seconds": 17.9,
    "cache_hits": 78,
    "cache_downloads": 0,
    "first_error": ""
@@ -380,7 +380,7 @@
    "ticker": "MKSI",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 9.1,
+   "seconds": 11.0,
    "cache_hits": 59,
    "cache_downloads": 0,
    "first_error": ""
@@ -389,7 +389,7 @@
    "ticker": "FORM",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 7.4,
+   "seconds": 9.0,
    "cache_hits": 35,
    "cache_downloads": 0,
    "first_error": ""
@@ -398,7 +398,7 @@
    "ticker": "ACLS",
    "adj_eps_ok": 7,
    "merged_direct": 6,
-   "seconds": 8.4,
+   "seconds": 8.8,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": ""
@@ -407,7 +407,7 @@
    "ticker": "AMBA",
    "adj_eps_ok": 6,
    "merged_direct": 7,
-   "seconds": 11.2,
+   "seconds": 8.5,
    "cache_hits": 42,
    "cache_downloads": 0,
    "first_error": ""
@@ -416,7 +416,7 @@
    "ticker": "POWI",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 7.3,
+   "seconds": 8.4,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": ""
@@ -425,7 +425,7 @@
    "ticker": "DIOD",
    "adj_eps_ok": 12,
    "merged_direct": 2,
-   "seconds": 19.5,
+   "seconds": 105.7,
    "cache_hits": 40,
    "cache_downloads": 0,
    "first_error": ""
@@ -434,7 +434,7 @@
    "ticker": "SLAB",
    "adj_eps_ok": 19,
    "merged_direct": 17,
-   "seconds": 9.4,
+   "seconds": 8.0,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": ""
@@ -443,7 +443,7 @@
    "ticker": "MPWR",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 10.8,
+   "seconds": 13.8,
    "cache_hits": 42,
    "cache_downloads": 0,
    "first_error": ""
@@ -452,7 +452,7 @@
    "ticker": "CIEN",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 99.6,
+   "seconds": 10.3,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": ""
@@ -461,7 +461,7 @@
    "ticker": "EXTR",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 7.0,
+   "seconds": 7.1,
    "cache_hits": 37,
    "cache_downloads": 0,
    "first_error": ""
@@ -470,7 +470,7 @@
    "ticker": "NTAP",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 86.1,
+   "seconds": 83.8,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": ""
@@ -479,7 +479,7 @@
    "ticker": "P",
    "adj_eps_ok": 0,
    "merged_direct": 19,
-   "seconds": 84.3,
+   "seconds": 82.8,
    "cache_hits": 31,
    "cache_downloads": 0,
    "first_error": ""
@@ -488,7 +488,7 @@
    "ticker": "WDC",
    "adj_eps_ok": 21,
    "merged_direct": 14,
-   "seconds": 16.1,
+   "seconds": 25.6,
    "cache_hits": 69,
    "cache_downloads": 0,
    "first_error": ""
@@ -497,7 +497,7 @@
    "ticker": "STX",
    "adj_eps_ok": 21,
    "merged_direct": 19,
-   "seconds": 18.6,
+   "seconds": 17.8,
    "cache_hits": 72,
    "cache_downloads": 0,
    "first_error": ""
@@ -506,7 +506,7 @@
    "ticker": "DELL",
    "adj_eps_ok": 18,
    "merged_direct": 17,
-   "seconds": 20.7,
+   "seconds": 22.9,
    "cache_hits": 74,
    "cache_downloads": 0,
    "first_error": ""
@@ -515,7 +515,7 @@
    "ticker": "VIAV",
    "adj_eps_ok": 18,
    "merged_direct": 7,
-   "seconds": 21.4,
+   "seconds": 18.0,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": ""
@@ -524,7 +524,7 @@
    "ticker": "AAOI",
    "adj_eps_ok": 19,
    "merged_direct": 2,
-   "seconds": 16.4,
+   "seconds": 13.7,
    "cache_hits": 81,
    "cache_downloads": 0,
    "first_error": ""
@@ -533,7 +533,7 @@
    "ticker": "TWLO",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 13.1,
+   "seconds": 11.9,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": ""
@@ -542,7 +542,7 @@
    "ticker": "DDOG",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 8.3,
+   "seconds": 7.4,
    "cache_hits": 30,
    "cache_downloads": 0,
    "first_error": ""
@@ -551,7 +551,7 @@
    "ticker": "NET",
    "adj_eps_ok": 21,
    "merged_direct": 20,
-   "seconds": 8.4,
+   "seconds": 203.7,
    "cache_hits": 41,
    "cache_downloads": 0,
    "first_error": ""
@@ -560,7 +560,7 @@
    "ticker": "MDB",
    "adj_eps_ok": 20,
    "merged_direct": 17,
-   "seconds": 264.5,
+   "seconds": 256.1,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": ""
@@ -569,7 +569,7 @@
    "ticker": "SNOW",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 423.0,
+   "seconds": 429.1,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": ""
@@ -578,7 +578,7 @@
    "ticker": "OKTA",
    "adj_eps_ok": 19,
    "merged_direct": 14,
-   "seconds": 397.7,
+   "seconds": 235.0,
    "cache_hits": 41,
    "cache_downloads": 0,
    "first_error": ""
@@ -587,7 +587,7 @@
    "ticker": "ZS",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 165.1,
+   "seconds": 181.4,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": ""
@@ -596,7 +596,7 @@
    "ticker": "CRWD",
    "adj_eps_ok": 19,
    "merged_direct": 15,
-   "seconds": 33.8,
+   "seconds": 12.5,
    "cache_hits": 40,
    "cache_downloads": 0,
    "first_error": ""
@@ -605,7 +605,7 @@
    "ticker": "S",
    "adj_eps_ok": 19,
    "merged_direct": 5,
-   "seconds": 33.3,
+   "seconds": 29.5,
    "cache_hits": 42,
    "cache_downloads": 0,
    "first_error": ""
@@ -614,7 +614,7 @@
    "ticker": "HUBS",
    "adj_eps_ok": 21,
    "merged_direct": 15,
-   "seconds": 20.6,
+   "seconds": 21.6,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": ""
@@ -623,7 +623,7 @@
    "ticker": "BILL",
    "adj_eps_ok": 19,
    "merged_direct": 16,
-   "seconds": 15.9,
+   "seconds": 14.1,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": ""
@@ -632,7 +632,7 @@
    "ticker": "U",
    "adj_eps_ok": 11,
    "merged_direct": 2,
-   "seconds": 6.6,
+   "seconds": 9.9,
    "cache_hits": 65,
    "cache_downloads": 0,
    "first_error": ""
@@ -641,7 +641,7 @@
    "ticker": "ROKU",
    "adj_eps_ok": 0,
    "merged_direct": 13,
-   "seconds": 11.0,
+   "seconds": 10.1,
    "cache_hits": 45,
    "cache_downloads": 0,
    "first_error": ""
@@ -650,7 +650,7 @@
    "ticker": "SNAP",
    "adj_eps_ok": 12,
    "merged_direct": 9,
-   "seconds": 15.5,
+   "seconds": 15.3,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": ""
@@ -668,7 +668,7 @@
    "ticker": "DOCU",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 8.2,
+   "seconds": 7.7,
    "cache_hits": 49,
    "cache_downloads": 0,
    "first_error": ""
@@ -677,7 +677,7 @@
    "ticker": "TSLA",
    "adj_eps_ok": 13,
    "merged_direct": 0,
-   "seconds": 15.2,
+   "seconds": 13.4,
    "cache_hits": 59,
    "cache_downloads": 0,
    "first_error": ""
@@ -695,7 +695,7 @@
    "ticker": "FSLR",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 8.6,
+   "seconds": 9.3,
    "cache_hits": 42,
    "cache_downloads": 0,
    "first_error": ""
@@ -704,7 +704,7 @@
    "ticker": "SEDG",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 9.6,
+   "seconds": 9.4,
    "cache_hits": 53,
    "cache_downloads": 0,
    "first_error": ""
@@ -713,7 +713,7 @@
    "ticker": "GNRC",
    "adj_eps_ok": 5,
    "merged_direct": 18,
-   "seconds": 11.4,
+   "seconds": 11.9,
    "cache_hits": 37,
    "cache_downloads": 0,
    "first_error": ""
@@ -722,7 +722,7 @@
    "ticker": "GOOGL",
    "adj_eps_ok": 0,
    "merged_direct": 1,
-   "seconds": 8.3,
+   "seconds": 9.0,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": ""
@@ -731,7 +731,7 @@
    "ticker": "META",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 8.6,
+   "seconds": 10.4,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": ""
@@ -740,7 +740,7 @@
    "ticker": "AMZN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 18.3,
+   "seconds": 17.5,
    "cache_hits": 48,
    "cache_downloads": 0,
    "first_error": ""
@@ -749,7 +749,7 @@
    "ticker": "NFLX",
    "adj_eps_ok": 0,
    "merged_direct": 5,
-   "seconds": 17.4,
+   "seconds": 16.0,
    "cache_hits": 48,
    "cache_downloads": 0,
    "first_error": ""
@@ -758,7 +758,7 @@
    "ticker": "PINS",
    "adj_eps_ok": 20,
    "merged_direct": 4,
-   "seconds": 17.4,
+   "seconds": 17.3,
    "cache_hits": 49,
    "cache_downloads": 0,
    "first_error": ""
@@ -767,7 +767,7 @@
    "ticker": "EBAY",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 9.4,
+   "seconds": 10.0,
    "cache_hits": 54,
    "cache_downloads": 0,
    "first_error": ""
@@ -776,7 +776,7 @@
    "ticker": "ETSY",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 26.9,
+   "seconds": 28.9,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": ""
@@ -785,7 +785,7 @@
    "ticker": "ABNB",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 26.6,
+   "seconds": 24.8,
    "cache_hits": 34,
    "cache_downloads": 0,
    "first_error": ""
@@ -794,7 +794,7 @@
    "ticker": "DASH",
    "adj_eps_ok": 0,
    "merged_direct": 6,
-   "seconds": 5.5,
+   "seconds": 5.2,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": ""
@@ -803,7 +803,7 @@
    "ticker": "VRT",
    "adj_eps_ok": 8,
    "merged_direct": 20,
-   "seconds": 14.1,
+   "seconds": 14.7,
    "cache_hits": 76,
    "cache_downloads": 0,
    "first_error": ""
@@ -812,7 +812,7 @@
    "ticker": "ETN",
    "adj_eps_ok": 14,
    "merged_direct": 24,
-   "seconds": 10.5,
+   "seconds": 11.4,
    "cache_hits": 37,
    "cache_downloads": 0,
    "first_error": ""
@@ -821,7 +821,7 @@
    "ticker": "PWR",
    "adj_eps_ok": 21,
    "merged_direct": 0,
-   "seconds": 16.9,
+   "seconds": 14.9,
    "cache_hits": 51,
    "cache_downloads": 0,
    "first_error": ""
@@ -830,7 +830,7 @@
    "ticker": "VST",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 15.5,
+   "seconds": 15.6,
    "cache_hits": 86,
    "cache_downloads": 0,
    "first_error": ""
@@ -839,7 +839,7 @@
    "ticker": "NRG",
    "adj_eps_ok": 9,
    "merged_direct": 13,
-   "seconds": 17.4,
+   "seconds": 16.3,
    "cache_hits": 64,
    "cache_downloads": 0,
    "first_error": ""
@@ -848,7 +848,7 @@
    "ticker": "NEE",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 24.7,
+   "seconds": 23.8,
    "cache_hits": 94,
    "cache_downloads": 0,
    "first_error": ""
@@ -857,7 +857,7 @@
    "ticker": "SO",
    "adj_eps_ok": 1,
    "merged_direct": 0,
-   "seconds": 12.3,
+   "seconds": 12.8,
    "cache_hits": 97,
    "cache_downloads": 0,
    "first_error": ""
@@ -866,7 +866,7 @@
    "ticker": "RUN",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 9.6,
+   "seconds": 10.7,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": ""
@@ -875,7 +875,7 @@
    "ticker": "BE",
    "adj_eps_ok": 16,
    "merged_direct": 15,
-   "seconds": 16.4,
+   "seconds": 21.0,
    "cache_hits": 63,
    "cache_downloads": 0,
    "first_error": ""
@@ -884,7 +884,7 @@
    "ticker": "ADBE",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 10.5,
+   "seconds": 9.0,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": ""
@@ -893,7 +893,7 @@
    "ticker": "CRM",
    "adj_eps_ok": 19,
    "merged_direct": 19,
-   "seconds": 14.7,
+   "seconds": 12.7,
    "cache_hits": 51,
    "cache_downloads": 0,
    "first_error": ""
@@ -902,7 +902,7 @@
    "ticker": "NOW",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 19.1,
+   "seconds": 17.7,
    "cache_hits": 42,
    "cache_downloads": 0,
    "first_error": ""
@@ -911,7 +911,7 @@
    "ticker": "ORCL",
    "adj_eps_ok": 18,
    "merged_direct": 19,
-   "seconds": 11.2,
+   "seconds": 10.0,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": ""
@@ -920,7 +920,7 @@
    "ticker": "TEAM",
    "adj_eps_ok": 17,
    "merged_direct": 16,
-   "seconds": 62.1,
+   "seconds": 61.0,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": ""
@@ -929,7 +929,7 @@
    "ticker": "WDAY",
    "adj_eps_ok": 9,
    "merged_direct": 15,
-   "seconds": 9.4,
+   "seconds": 8.6,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": ""
@@ -938,7 +938,7 @@
    "ticker": "CSCO",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 19.3,
+   "seconds": 19.9,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": ""
@@ -947,7 +947,7 @@
    "ticker": "HPQ",
    "adj_eps_ok": 19,
    "merged_direct": 1,
-   "seconds": 30.5,
+   "seconds": 32.6,
    "cache_hits": 63,
    "cache_downloads": 0,
    "first_error": ""
@@ -956,7 +956,7 @@
    "ticker": "HPE",
    "adj_eps_ok": 1,
    "merged_direct": 13,
-   "seconds": 33.2,
+   "seconds": 33.3,
    "cache_hits": 68,
    "cache_downloads": 0,
    "first_error": ""
@@ -965,7 +965,7 @@
    "ticker": "JPM",
    "adj_eps_ok": 0,
    "merged_direct": 24,
-   "seconds": 77.0,
+   "seconds": 76.0,
    "cache_hits": 66,
    "cache_downloads": 0,
    "first_error": ""
@@ -974,7 +974,7 @@
    "ticker": "BAC",
    "adj_eps_ok": 2,
    "merged_direct": 24,
-   "seconds": 62.2,
+   "seconds": 65.3,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": ""
@@ -983,7 +983,7 @@
    "ticker": "WFC",
    "adj_eps_ok": 0,
    "merged_direct": 21,
-   "seconds": 42.2,
+   "seconds": 14.2,
    "cache_hits": 88,
    "cache_downloads": 0,
    "first_error": ""
@@ -992,7 +992,7 @@
    "ticker": "C",
    "adj_eps_ok": 0,
    "merged_direct": 22,
-   "seconds": 256.4,
+   "seconds": 280.5,
    "cache_hits": 100,
    "cache_downloads": 0,
    "first_error": ""
@@ -1001,7 +1001,7 @@
    "ticker": "GS",
    "adj_eps_ok": 0,
    "merged_direct": 22,
-   "seconds": 1085.2,
+   "seconds": 1056.6,
    "cache_hits": 97,
    "cache_downloads": 0,
    "first_error": ""
@@ -1010,7 +1010,7 @@
    "ticker": "MS",
    "adj_eps_ok": 6,
    "merged_direct": 20,
-   "seconds": 272.7,
+   "seconds": 360.7,
    "cache_hits": 52,
    "cache_downloads": 0,
    "first_error": ""
@@ -1019,7 +1019,7 @@
    "ticker": "SCHW",
    "adj_eps_ok": 0,
    "merged_direct": 20,
-   "seconds": 24.3,
+   "seconds": 18.8,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": ""
@@ -1028,7 +1028,7 @@
    "ticker": "BLK",
    "adj_eps_ok": 1,
    "merged_direct": 5,
-   "seconds": 544.9,
+   "seconds": 28.6,
    "cache_hits": 24,
    "cache_downloads": 0,
    "first_error": ""
@@ -1037,7 +1037,7 @@
    "ticker": "V",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 783.8,
+   "seconds": 773.1,
    "cache_hits": 78,
    "cache_downloads": 0,
    "first_error": ""
@@ -1046,7 +1046,7 @@
    "ticker": "MA",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 254.4,
+   "seconds": 537.4,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": ""
@@ -1055,7 +1055,7 @@
    "ticker": "AXP",
    "adj_eps_ok": 6,
    "merged_direct": 15,
-   "seconds": 7.7,
+   "seconds": 171.0,
    "cache_hits": 100,
    "cache_downloads": 0,
    "first_error": ""
@@ -1064,7 +1064,7 @@
    "ticker": "COF",
    "adj_eps_ok": 0,
    "merged_direct": 24,
-   "seconds": 21.8,
+   "seconds": 20.9,
    "cache_hits": 72,
    "cache_downloads": 0,
    "first_error": ""
@@ -1073,7 +1073,7 @@
    "ticker": "LLY",
    "adj_eps_ok": 22,
    "merged_direct": 24,
-   "seconds": 21.6,
+   "seconds": 20.5,
    "cache_hits": 46,
    "cache_downloads": 0,
    "first_error": ""
@@ -1082,7 +1082,7 @@
    "ticker": "UNH",
    "adj_eps_ok": 19,
    "merged_direct": 0,
-   "seconds": 19.3,
+   "seconds": 11.9,
    "cache_hits": 79,
    "cache_downloads": 0,
    "first_error": ""
@@ -1091,7 +1091,7 @@
    "ticker": "JNJ",
    "adj_eps_ok": 23,
    "merged_direct": 24,
-   "seconds": 19.9,
+   "seconds": 19.3,
    "cache_hits": 55,
    "cache_downloads": 0,
    "first_error": ""
@@ -1100,7 +1100,7 @@
    "ticker": "ABBV",
    "adj_eps_ok": 21,
    "merged_direct": 0,
-   "seconds": 15.9,
+   "seconds": 17.1,
    "cache_hits": 74,
    "cache_downloads": 0,
    "first_error": ""
@@ -1109,7 +1109,7 @@
    "ticker": "MRK",
    "adj_eps_ok": 20,
    "merged_direct": 20,
-   "seconds": 152.7,
+   "seconds": 13.4,
    "cache_hits": 35,
    "cache_downloads": 0,
    "first_error": ""
@@ -1118,7 +1118,7 @@
    "ticker": "PFE",
    "adj_eps_ok": 5,
    "merged_direct": 24,
-   "seconds": 395.5,
+   "seconds": 402.6,
    "cache_hits": 45,
    "cache_downloads": 0,
    "first_error": ""
@@ -1127,7 +1127,7 @@
    "ticker": "AMGN",
    "adj_eps_ok": 16,
    "merged_direct": 16,
-   "seconds": 204.5,
+   "seconds": 180.5,
    "cache_hits": 42,
    "cache_downloads": 0,
    "first_error": ""
@@ -1136,7 +1136,7 @@
    "ticker": "GILD",
    "adj_eps_ok": 20,
    "merged_direct": 18,
-   "seconds": 326.1,
+   "seconds": 401.0,
    "cache_hits": 49,
    "cache_downloads": 0,
    "first_error": ""
@@ -1145,7 +1145,7 @@
    "ticker": "BMY",
    "adj_eps_ok": 22,
    "merged_direct": 24,
-   "seconds": 379.6,
+   "seconds": 406.2,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": ""
@@ -1154,7 +1154,7 @@
    "ticker": "REGN",
    "adj_eps_ok": 22,
    "merged_direct": 0,
-   "seconds": 157.3,
+   "seconds": 164.4,
    "cache_hits": 34,
    "cache_downloads": 0,
    "first_error": ""
@@ -1163,7 +1163,7 @@
    "ticker": "VRTX",
    "adj_eps_ok": 5,
    "merged_direct": 18,
-   "seconds": 95.4,
+   "seconds": 83.3,
    "cache_hits": 41,
    "cache_downloads": 0,
    "first_error": ""
@@ -1172,7 +1172,7 @@
    "ticker": "ISRG",
    "adj_eps_ok": 0,
    "merged_direct": 18,
-   "seconds": 29.2,
+   "seconds": 100.8,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": ""
@@ -1181,7 +1181,7 @@
    "ticker": "WMT",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 566.4,
+   "seconds": 575.9,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": ""
@@ -1190,7 +1190,7 @@
    "ticker": "COST",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 9.2,
+   "seconds": 26.9,
    "cache_hits": 33,
    "cache_downloads": 0,
    "first_error": ""
@@ -1199,7 +1199,7 @@
    "ticker": "PG",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 51.4,
+   "seconds": 62.6,
    "cache_hits": 61,
    "cache_downloads": 0,
    "first_error": ""
@@ -1208,7 +1208,7 @@
    "ticker": "KO",
    "adj_eps_ok": 0,
    "merged_direct": 20,
-   "seconds": 47.1,
+   "seconds": 41.7,
    "cache_hits": 53,
    "cache_downloads": 0,
    "first_error": ""
@@ -1217,7 +1217,7 @@
    "ticker": "PEP",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 35.2,
+   "seconds": 47.9,
    "cache_hits": 47,
    "cache_downloads": 0,
    "first_error": ""
@@ -1226,7 +1226,7 @@
    "ticker": "MCD",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 64.2,
+   "seconds": 64.7,
    "cache_hits": 56,
    "cache_downloads": 0,
    "first_error": ""
@@ -1235,7 +1235,7 @@
    "ticker": "SBUX",
    "adj_eps_ok": 20,
    "merged_direct": 17,
-   "seconds": 432.0,
+   "seconds": 437.4,
    "cache_hits": 69,
    "cache_downloads": 0,
    "first_error": ""
@@ -1244,7 +1244,7 @@
    "ticker": "NKE",
    "adj_eps_ok": 0,
    "merged_direct": 20,
-   "seconds": 393.9,
+   "seconds": 409.7,
    "cache_hits": 48,
    "cache_downloads": 0,
    "first_error": ""
@@ -1253,7 +1253,7 @@
    "ticker": "HD",
    "adj_eps_ok": 8,
    "merged_direct": 7,
-   "seconds": 33.2,
+   "seconds": 14.7,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": ""
@@ -1262,7 +1262,7 @@
    "ticker": "LOW",
    "adj_eps_ok": 18,
    "merged_direct": 8,
-   "seconds": 35.0,
+   "seconds": 51.2,
    "cache_hits": 44,
    "cache_downloads": 0,
    "first_error": ""
@@ -1271,7 +1271,7 @@
    "ticker": "TGT",
    "adj_eps_ok": 19,
    "merged_direct": 2,
-   "seconds": 12.7,
+   "seconds": 48.9,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": ""
@@ -1280,7 +1280,7 @@
    "ticker": "EL",
    "adj_eps_ok": 13,
    "merged_direct": 19,
-   "seconds": 64.2,
+   "seconds": 57.6,
    "cache_hits": 61,
    "cache_downloads": 0,
    "first_error": ""
@@ -1289,7 +1289,7 @@
    "ticker": "CAT",
    "adj_eps_ok": 0,
    "merged_direct": 13,
-   "seconds": 77.2,
+   "seconds": 37.5,
    "cache_hits": 33,
    "cache_downloads": 0,
    "first_error": ""
@@ -1298,7 +1298,7 @@
    "ticker": "DE",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 96.9,
+   "seconds": 51.6,
    "cache_hits": 55,
    "cache_downloads": 0,
    "first_error": ""
@@ -1307,7 +1307,7 @@
    "ticker": "HON",
    "adj_eps_ok": 17,
    "merged_direct": 0,
-   "seconds": 42.8,
+   "seconds": 51.4,
    "cache_hits": 65,
    "cache_downloads": 0,
    "first_error": ""
@@ -1316,7 +1316,7 @@
    "ticker": "GE",
    "adj_eps_ok": 18,
    "merged_direct": 24,
-   "seconds": 23.3,
+   "seconds": 23.8,
    "cache_hits": 53,
    "cache_downloads": 0,
    "first_error": ""
@@ -1325,7 +1325,7 @@
    "ticker": "UNP",
    "adj_eps_ok": 6,
    "merged_direct": 6,
-   "seconds": 13.3,
+   "seconds": 10.8,
    "cache_hits": 57,
    "cache_downloads": 0,
    "first_error": ""
@@ -1343,7 +1343,7 @@
    "ticker": "FDX",
    "adj_eps_ok": 13,
    "merged_direct": 1,
-   "seconds": 19.3,
+   "seconds": 19.4,
    "cache_hits": 61,
    "cache_downloads": 0,
    "first_error": ""
@@ -1352,7 +1352,7 @@
    "ticker": "BA",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 16.9,
+   "seconds": 15.9,
    "cache_hits": 60,
    "cache_downloads": 0,
    "first_error": ""
@@ -1361,7 +1361,7 @@
    "ticker": "T",
    "adj_eps_ok": 15,
    "merged_direct": 14,
-   "seconds": 20.8,
+   "seconds": 21.7,
    "cache_hits": 50,
    "cache_downloads": 0,
    "first_error": ""
@@ -1370,7 +1370,7 @@
    "ticker": "VZ",
    "adj_eps_ok": 17,
    "merged_direct": 0,
-   "seconds": 34.3,
+   "seconds": 34.1,
    "cache_hits": 67,
    "cache_downloads": 0,
    "first_error": ""
@@ -1379,7 +1379,7 @@
    "ticker": "TMUS",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 45.2,
+   "seconds": 42.1,
    "cache_hits": 92,
    "cache_downloads": 0,
    "first_error": ""
@@ -1388,7 +1388,7 @@
    "ticker": "CMCSA",
    "adj_eps_ok": 21,
    "merged_direct": 10,
-   "seconds": 24.9,
+   "seconds": 23.0,
    "cache_hits": 71,
    "cache_downloads": 0,
    "first_error": ""
@@ -1397,7 +1397,7 @@
    "ticker": "DIS",
    "adj_eps_ok": 7,
    "merged_direct": 0,
-   "seconds": 12.3,
+   "seconds": 17.3,
    "cache_hits": 54,
    "cache_downloads": 0,
    "first_error": ""
@@ -1406,7 +1406,7 @@
    "ticker": "XOM",
    "adj_eps_ok": 1,
    "merged_direct": 23,
-   "seconds": 13.8,
+   "seconds": 9.7,
    "cache_hits": 83,
    "cache_downloads": 0,
    "first_error": ""
@@ -1415,7 +1415,7 @@
    "ticker": "CVX",
    "adj_eps_ok": 15,
    "merged_direct": 21,
-   "seconds": 11.1,
+   "seconds": 23.4,
    "cache_hits": 68,
    "cache_downloads": 0,
    "first_error": ""
@@ -1424,7 +1424,7 @@
    "ticker": "COP",
    "adj_eps_ok": 10,
    "merged_direct": 11,
-   "seconds": 16.5,
+   "seconds": 8.9,
    "cache_hits": 51,
    "cache_downloads": 0,
    "first_error": ""
@@ -1433,7 +1433,7 @@
    "ticker": "SLB",
    "adj_eps_ok": 0,
    "merged_direct": 3,
-   "seconds": 24.7,
+   "seconds": 27.4,
    "cache_hits": 58,
    "cache_downloads": 0,
    "first_error": ""
@@ -1442,7 +1442,7 @@
    "ticker": "OXY",
    "adj_eps_ok": 20,
    "merged_direct": 23,
-   "seconds": 22.7,
+   "seconds": 25.5,
    "cache_hits": 72,
    "cache_downloads": 0,
    "first_error": ""
