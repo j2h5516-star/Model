@@ -583,6 +583,12 @@
     "est": 3.56263,
     "act": 3.72,
     "surprise_pct": 4.4
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": 3.81462,
+    "act": 4.1,
+    "surprise_pct": 7.5
    }
   ],
   "SMCI": [
@@ -3631,6 +3637,12 @@
     "est": 3.40647,
     "act": 3.43,
     "surprise_pct": 0.7
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 4.73227,
+    "act": 4.92,
+    "surprise_pct": 4.0
    }
   ],
   "LOW": [
