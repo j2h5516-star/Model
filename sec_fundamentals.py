@@ -1621,7 +1621,53 @@ def new_report(ticker: str) -> dict:
         # 개발 환경은 SEC 가 차단되어 실물을 볼 수 없으므로, 실패한 원문을
         # 배포된 앱이 저장소로 커밋해 주면 다음 세션이 그 실물로 파서를 고칩니다.
         "raw_texts": [],
+        # 시간 예산에 걸려 옛 분기를 못 훑고 멈췄나 (94차 — 10년 확장 안전장치)
+        "시간초과": False,
     }
+
+
+# ---------------------------------------------------------------------------
+# 수집 시간 예산 (94차 — 10년 확장 안전장치)
+# ---------------------------------------------------------------------------
+# 깃허브 액션은 180분에 작업을 강제로 끊습니다. 끊기면 그날 수집물도,
+# 애써 내려받은 공시 원문 캐시도 **둘 다** 사라집니다. 10년치를 한 번에
+# 받으려다 매번 이 덫에 걸리면 영영 못 받습니다.
+#
+# 그래서 로봇이 시작할 때 "이 시각까지만 8-K 를 훑는다"는 마감 시각을
+# 정해 두고, 넘으면 지금까지 받은 만큼으로 멈춥니다. 8-K 는 최신 것부터
+# 훑으므로 잘리는 쪽은 항상 **가장 오래된 분기**이고 최근 분기는 온전합니다.
+# 받은 원문은 캐시에 남으니 다음 런이 그만큼 공짜로 앞서 나갑니다.
+#
+# 예산을 안 걸면(기본) 마감이 없어 예전과 똑같이 동작합니다 — 테스트와
+# 개발 환경은 이 길로 갑니다.
+_DEADLINE_LOCK = threading.Lock()
+_DEADLINE: float | None = None
+
+
+def set_collect_budget(minutes: float | None, clock=None) -> None:
+    """지금부터 minutes 분 뒤를 8-K 훑기의 마감으로 정합니다.
+
+    minutes 가 None 이거나 0 이하면 마감을 없앱니다(무제한).
+    clock 은 시험에서 가짜 시계를 끼우기 위한 자리입니다.
+    """
+    global _DEADLINE
+    if clock is None:
+        import time as _time
+        clock = _time.monotonic
+    with _DEADLINE_LOCK:
+        _DEADLINE = None if not minutes or minutes <= 0 else clock() + minutes * 60.0
+
+
+def _budget_over(clock=None) -> bool:
+    """마감을 넘겼는가. 마감이 없으면 항상 False."""
+    with _DEADLINE_LOCK:
+        deadline = _DEADLINE
+    if deadline is None:
+        return False
+    if clock is None:
+        import time as _time
+        clock = _time.monotonic
+    return clock() >= deadline
 
 
 # 원문 부탁 목록 (73차) — 조사(audit_data.py)가 "이 공시는 값을 읽었더라도
@@ -1750,6 +1796,15 @@ def fetch_earnings_8k(
         # 8-K는 실적 외 사유로도 자주 올라오므로 살펴볼 건수를 제한합니다
         if scanned >= cfg.MAX_8K_SCAN:
             report["note"] = f"8-K {cfg.MAX_8K_SCAN}건까지만 확인했습니다"
+            break
+        # 시간 예산 초과 — 옛 분기를 포기하고 지금까지 받은 만큼으로 멈춥니다
+        # (94차. 최신 것부터 훑으므로 잘리는 쪽은 항상 가장 오래된 분기입니다)
+        if _budget_over():
+            report["시간초과"] = True
+            report["note"] = (
+                f"수집 시간 예산 초과 — 실적 {report['parsed_ok']}건까지만 받았습니다"
+                " (다음 런이 캐시로 이어받습니다)"
+            )
             break
         scanned += 1
         report["filings_found"] += 1

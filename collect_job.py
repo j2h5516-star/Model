@@ -118,7 +118,22 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         tickers = list(cfg.TICKERS)
     progress(f"수집 로봇 시작 — {len(tickers)}종목 · {datetime.now(timezone.utc).isoformat()}")
 
+    # 8-K 훑기에 시간 예산을 겁니다 (94차 — 10년 확장 안전장치).
+    # 넘기면 옛 분기를 포기하고 멈춰, 그날 수집물과 원문 캐시를 꼭 남깁니다.
+    # 자세한 이유는 config.COLLECT_BUDGET_MINUTES 주석에 적어 두었습니다.
+    budget = getattr(cfg, "COLLECT_BUDGET_MINUTES", None)
+    sf.set_collect_budget(budget)
+    progress(f"8-K 훑기 시간 예산: {budget}분" if budget else "8-K 훑기 시간 예산: 없음")
+
     reports = collect_fundamentals(tickers, progress)
+    시간초과 = [r["ticker"] for r in reports if r.get("시간초과")]
+    if 시간초과:
+        progress(
+            f"⏱ 시간 예산에 걸려 옛 분기를 못 받은 종목 {len(시간초과)}개: "
+            + ", ".join(시간초과[:12])
+            + (" …" if len(시간초과) > 12 else "")
+            + " — 다음 런이 캐시로 이어받습니다"
+        )
     daily_map = collect_prices(tickers, progress)
 
     if not success_enough(reports, daily_map, tickers):
@@ -254,6 +269,10 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
                 # 개념별 "받음·버림·모호·남음" 을 그대로 남깁니다.
                 "xbrl_calls": r.get("xbrl_calls", []),
                 "xbrl_rejected": r.get("xbrl_rejected", 0),
+                # 94차 — 시간 예산에 걸려 옛 분기를 못 받았나. "10년치를
+                # 받았다"고 짐작하지 말고 이 표시와 note 를 보세요.
+                "시간초과": bool(r.get("시간초과")),
+                "note": r.get("note", ""),
             }
             for r in reports
         ],

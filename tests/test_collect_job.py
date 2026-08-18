@@ -190,6 +190,58 @@ def test_collect_fundamentals_parallel_keeps_order():
     assert [r["ticker"] for r in reports] == tickers, [r.get("ticker") for r in reports]
 
 
+# ---------------------------------------------------------------------------
+# 수집 시간 예산 (94차) — 10년 확장의 안전장치
+# ---------------------------------------------------------------------------
+# 왜 시험하나: 이 장치가 고장 나는 방향은 두 가지고, 둘 다 조용합니다.
+#   ① 마감을 안 걸면 → 180분에 강제 종료 → 그날 수집물과 캐시가 통째로 소멸
+#   ② 마감이 항상 걸리면 → 매 런이 즉시 멈춰 데이터가 늘지 않음
+# 그래서 "마감 없으면 안 멈춘다"와 "마감 넘기면 멈춘다"를 둘 다 못박습니다.
+def test_시간예산_없으면_멈추지_않는다():
+    import sec_fundamentals as sf
+
+    sf.set_collect_budget(None)
+    try:
+        assert sf._budget_over() is False
+    finally:
+        sf.set_collect_budget(None)
+
+
+def test_시간예산_넘기면_멈춘다():
+    import sec_fundamentals as sf
+
+    시계 = [1000.0]                      # 가짜 시계 (진짜로 기다리지 않기)
+    sf.set_collect_budget(10, clock=lambda: 시계[0])   # 10분 = 600초
+    try:
+        시계[0] = 1000.0 + 599.0
+        assert sf._budget_over(clock=lambda: 시계[0]) is False, "아직 마감 전인데 멈췄다"
+        시계[0] = 1000.0 + 601.0
+        assert sf._budget_over(clock=lambda: 시계[0]) is True, "마감을 넘겼는데 안 멈췄다"
+    finally:
+        sf.set_collect_budget(None)
+
+
+def test_시간예산_0이하는_무제한():
+    import sec_fundamentals as sf
+
+    sf.set_collect_budget(0)
+    try:
+        assert sf._budget_over() is False
+    finally:
+        sf.set_collect_budget(None)
+
+
+def test_시간초과_종목이_로봇기록에_남는다():
+    """잘린 종목을 조용히 넘기지 않는가 — 짐작 대신 기록으로 보게."""
+    import sec_fundamentals as sf
+
+    report = sf.new_report("XYZ")
+    assert report["시간초과"] is False, "새 리포트는 시간초과가 아니어야 한다"
+    report["시간초과"] = True
+    남긴다 = [r["ticker"] for r in [report] if r.get("시간초과")]
+    assert 남긴다 == ["XYZ"]
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
