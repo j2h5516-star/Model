@@ -416,6 +416,69 @@ def test_current_revision_defaults_to_running_code():
     assert app.verdict_code_warning({"code_rev": "0" * 7}) is not None
 
 
+def test_정배열폭_판정줄은_판정파일을_읽는다():
+    """화면 숫자가 **글자로 박히면** 데이터가 바뀌어도 아무도 모릅니다 (101차).
+
+    ⚠️ 실제 사고: 이 칸에 "H11 실측 9.4% vs 기준선 26.8%. 정배열이 다 찬
+    뒤 사는 것은 **오히려 불리**했습니다" 가 박혀 있었습니다. 10년 표본으로
+    다시 재니 **31.6% vs 31.6% (n=187)** 이라 그 문장은 거짓말이 돼
+    있었는데, 박힌 글자라 아무 경고도 없었습니다.
+
+    그래서 **다른 숫자를 넣으면 화면도 따라 달라지는지**를 못박습니다.
+    """
+    가짜 = {"가설": {
+        "H11_섹터정배열폭_60": {
+            "판정": "채택",
+            "신규(판정)": {"신호": {"n": 42, "rate": 77.7},
+                          "기준선": {"n": 900, "rate": 11.1}},
+        },
+        "H11b_섹터정배열폭_80": {
+            "판정": "판정 불가",
+            "신규(판정)": {"신호": {"n": 0}, "기준선": {}},
+        },
+    }}
+    본문 = "\n".join(app.breadth_verdict_lines(가짜))
+    assert "77.7" in 본문 and "n=42" in 본문 and "11.1" in 본문, 본문
+    assert "채택" in 본문 and "판정 불가" in 본문, 본문
+    # 옛날에 박혀 있던 숫자가 되살아나면 안 됩니다
+    assert "9.4%" not in 본문 and "26.8%" not in 본문, 본문
+
+
+def test_채택이_없으면_매수근거가_아니라고_말한다():
+    """지금 채택된 가설이 0개입니다 (96차). 화면이 그 상태를 정직하게
+    말하는지 — 실제 판정 파일로 확인합니다."""
+    import json
+    v = json.load(open("data/measure/verdict.json", encoding="utf-8"))
+    이름 = app.adopted_names(v)
+    assert 이름 == [], f"채택된 가설이 생겼습니다: {이름} — 화면 문구를 다시 보세요"
+
+
+def test_기준선은_판정파일을_읽고_없으면_예비값을_쓴다():
+    """기준선도 **글자로 박혀** 있었습니다 (101차).
+
+    화면이 "기준선 26.8%" 라고 말하는 동안 10년 표본의 실제 기준선은
+    31.6%(n=5,004) 였습니다. 판정 파일을 읽게 하고, 파일이 없을 때만
+    문서화된 예비값을 쓰도록 못박습니다 — 지어내지 않습니다.
+    """
+    가짜 = {"가설": {"H11_섹터정배열폭_60": {
+        "신규(판정)": {"기준선": {"n": 5004, "rate": 44.4}}}}}
+    assert app.breadth_baseline(가짜) == 44.4
+    # 판정 파일이 없거나 모양이 다르면 예비값
+    assert app.breadth_baseline(None) == app.BREADTH_BASELINE
+    assert app.breadth_baseline({"가설": {}}) == app.BREADTH_BASELINE
+
+
+def test_가설_설명문에는_숫자를_박지_않는다():
+    """설명문에 실측 숫자를 적으면 데이터가 바뀌어도 아무도 모릅니다 (101차).
+
+    실제 사고: H11 설명에 "오히려 나빴습니다(9.4% vs 기준선 26.8%)" 가
+    박혀 있었는데, 10년 표본에서는 31.6% vs 31.6% 이라 거짓말이었습니다.
+    """
+    for 이름, 글 in app.HYPOTHESIS_DETAILS.items():
+        for 박힌숫자 in ("9.4%", "26.8%"):
+            assert 박힌숫자 not in 글, f"{이름} 설명에 옛 실측치 {박힌숫자} 가 박혀 있습니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

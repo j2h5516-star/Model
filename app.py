@@ -82,11 +82,16 @@ HYPOTHESIS_DETAILS = {
         "해당 회사가 적어 표본이 아직 부족합니다."),
     "H8_GAAPEPS_첫돌파": (
         "EBITDA 도 없으면 GAAP EPS 로 봅니다 — 기준선과 갈라지지 않았습니다."),
+    # ⚠️ 이 설명들에는 숫자를 적지 않습니다 (101차). 예전에는
+    #    "오히려 나빴습니다(9.4% vs 기준선 26.8%)" 처럼 **글자로 박혀**
+    #    있었는데, 10년 표본으로 다시 재니 31.6% vs 31.6% 이라 그 문장이
+    #    거짓말이 돼 있었습니다. 실제 숫자는 바로 옆의 판정 줄이
+    #    판정 파일에서 읽어 보여 줍니다.
     "H11_섹터정배열폭_60": (
         "섹터의 주가가 무리로 정배열되면(60% 돌파) 그 뒤 1년이 좋은가? — "
-        "**오히려 나빴습니다**(9.4% vs 기준선 26.8%). 다 오른 뒤라 늦습니다."),
+        "다 오른 뒤에 사는 셈이라 늦을 수 있다는 물음입니다."),
     "H11b_섹터정배열폭_80": (
-        "더 강한 합의(80%)면 다른가? — 그런 경우가 7건뿐이라 판정 불가입니다."),
+        "더 강한 합의(80%)면 다른가?"),
     "H18_완성시_52주선이격도": (
         "주봉 정배열이 **차트에서 막 완성된** 그 주에, 주가가 52주선 위로 "
         "30% 이상 떠 있으면 다른가? — 지난 자료를 뒤져 찾아낸 후보라 "
@@ -460,7 +465,23 @@ BREADTH_ZONES = [
     (25.0, 40.0, "초기", 25.8, "이제 모이기 시작하는 단계"),
     (0.0, 25.0, "약함", 27.0, "정배열 종목이 드문 상태"),
 ]
-BREADTH_BASELINE = 26.8      # 34차 기준선 (모든 섹터·주, n=1,872)
+# 34차에 실측한 기준선 (모든 섹터·주, n=1,872). **예비값입니다.**
+# ⚠️ 이 숫자를 화면에 그대로 쓰면 안 됩니다 (101차). 10년 표본에서 다시
+#    재니 31.6%(n=5,004) 였는데 화면은 계속 26.8% 이라고 말하고 있었습니다.
+#    breadth_baseline() 으로 판정 파일에서 읽고, 없을 때만 이 값을 씁니다.
+BREADTH_BASELINE = 26.8
+
+
+def breadth_baseline(verdict: dict | None) -> float:
+    """정배열 폭 모델의 기준선(%) — 판정 파일에서 그때그때 읽습니다 (101차).
+
+    H11 의 기준선은 "모든 섹터·주"라 H11·H11b 가 같은 값을 씁니다.
+    판정 파일에 없으면 문서화된 예비값(BREADTH_BASELINE)을 돌려줍니다 —
+    지어내지 않고, 어디서 온 값인지 주석에 남깁니다.
+    """
+    entry = ((verdict or {}).get("가설") or {}).get("H11_섹터정배열폭_60") or {}
+    rate = ((entry.get("신규(판정)") or {}).get("기준선") or {}).get("rate")
+    return float(rate) if rate is not None else BREADTH_BASELINE
 
 
 def surprise_sector_rows(surprise: dict | None, quarters: int = 2) -> list[dict]:
@@ -537,6 +558,35 @@ def breadth_zone(breadth: float | None) -> dict:
     return {"zone": "판단 불가", "rate": None, "note": ""}
 
 
+def breadth_verdict_lines(verdict: dict) -> list[str]:
+    """정배열 폭 모델의 판정 상태 줄 — **판정 파일에서 그때그때 읽습니다** (101차).
+
+    ⚠️ 왜 함수로 뺐나: 예전에는 이 문장이 화면 코드 안에 **글자로 박혀**
+    있었습니다 — "H11 실측 9.4% vs 기준선 26.8%. 정배열이 다 찬 뒤 사는
+    것은 **오히려 불리**했습니다." 10년 표본으로 다시 재니 **31.6% vs
+    31.6% (n=187)** 이라 그 문장은 거짓말이 돼 있었습니다.
+
+    화면이 옛 숫자를 사실처럼 말하는 것은 정직화 원칙 위반이고, 박힌
+    글자는 데이터가 바뀌어도 아무도 모르게 남습니다. 그래서 판정 파일을
+    읽게 하고, 시험으로 못박습니다.
+    """
+    lines = ["**이 모델의 판정 상태 (정직화)**  "]
+    for name, label in (
+        ("H11_섹터정배열폭_60", "H11(폭 60% 첫 돌파)"),
+        ("H11b_섹터정배열폭_80", "H11b(폭 80% 첫 돌파)"),
+    ):
+        entry = (verdict.get("가설") or {}).get(name) or {}
+        judged = entry.get("신규(판정)") or {}
+        line = signal_summary(entry, judged.get("신호") or {},
+                              judged.get("기준선") or {})
+        lines.append(f"· **{label} — {entry.get('판정', '판정 없음')}**: {line}  ")
+    lines.append(
+        "· **H12(폭 40~59% 진입) — 판정 대기**: 탐색에서 가장 좋았으나 "
+        "탐색값은 근거가 못 되어, 2026-08-14 이후 새 신호로만 판정합니다 (34차).  "
+    )
+    lines.append("· 따라서 위 순위는 **아직 매수 근거가 아닌 관찰**입니다.")
+    return lines
+
 def live_signal_rows(ds: dict, days: int = 90) -> list[dict]:
     """지금 채택 신호(H9·H10)가 켜진 종목 — 최근 days 일 발표 중.
 
@@ -604,8 +654,13 @@ def main():
         st.warning(code_warning)
 
     price_dates = ds["prices"][ds["benchmark"]]["dates"]
+    # ⚠️ "약 5년"이 **글자로 박혀** 있었습니다 (101차). 수집을 10년으로
+    #    늘린 뒤에도 그대로 5년이라 적혀, 날짜(2016~2026)와 대놓고
+    #    어긋났습니다. 날짜에서 계산합니다.
+    _years = (date.fromisoformat(price_dates[-1])
+              - date.fromisoformat(price_dates[0])).days / 365.25
     st.caption(f"측정 기간: {price_dates[0]} ~ {price_dates[-1]} "
-               f"(주가 {len(price_dates):,}거래일 · 약 5년) · "
+               f"(주가 {len(price_dates):,}거래일 · 약 {_years:.0f}년) · "
                "전망: 다음 1분기 (가이던스·컨센서스)")
 
     # 재료가 얼마나 더러운지 감추지 않습니다 (73차 — 65차 §④ 등록 방침).
@@ -712,19 +767,12 @@ def main():
         st.markdown(
             f"**{row['섹터']}** {row['폭']:.0f}% ({row['종목수']}종목){moved}  \n"
             f"{row['상태']} — {zone['zone']} · 이 구간의 과거 1년 폭등률 "
-            f"**{zone['rate']}%** (기준선 {BREADTH_BASELINE}%)  \n"
+            f"**{zone['rate']}%** (기준선 {breadth_baseline(verdict)}%)  \n"
             f"<span style='color:gray;font-size:0.85em'>{zone['note']}</span>",
             unsafe_allow_html=True,
         )
 
-    st.warning(
-        "**이 모델의 판정 상태 (정직화)**  \n"
-        "· **H11(폭 60% 첫 돌파) — 미채택**: 실측 9.4% vs 기준선 26.8%. "
-        "정배열이 다 찬 뒤 사는 것은 **오히려 불리**했습니다 (33차).  \n"
-        "· **H12(폭 40~59% 진입) — 판정 대기**: 탐색에서 33.3%로 가장 좋았으나 "
-        "탐색값은 근거가 못 되어, 2026-08-14 이후 새 신호로만 판정합니다 (34차).  \n"
-        "· 따라서 위 순위는 **아직 매수 근거가 아닌 관찰**입니다."
-    )
+    st.warning("\n".join(breadth_verdict_lines(verdict)))
 
     # =====================================================================
     # 1-2. AI 사이클 추적 (37차) — 저장소 주인 관찰 국면의 실제 순서
