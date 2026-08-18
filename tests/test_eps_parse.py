@@ -252,7 +252,13 @@ def test_xbrl_value_is_kept_beside_the_press_value():
     #  있었습니다. 91차 승부 결과 98:0 을 보고 매출만 바꿨으므로
     #  시험도 함께 고칩니다 — 실물이 규칙을 이깁니다.)
     assert row["revenue"] == 10_236_000_000.0, "매출은 XBRL 이 이겨야 합니다"
-    assert row["gaap_eps"] == 1.56, "GAAP EPS 는 아직 승부가 안 났습니다"
+    # 99차 — GAAP EPS 도 승부가 났습니다 (야후 심판, 갈린 칸 XBRL 61 : 보도자료 2.
+    # 전체 정확도 77.7% → 91.1%). 이 시험이 "아직 승부가 안 났다"를 못박고
+    # 있어 빨간 불이 났고, 실측이 나온 뒤라 시험 쪽이 낡은 것이므로 고칩니다.
+    assert row["gaap_eps"] == 1.96, "GAAP EPS 도 XBRL 이 이겨야 합니다 (99차)"
+    # 매출총이익률은 **여전히 보도자료**입니다 — 승부가 아니라 정의 차이라
+    # 뒤집지 않았습니다 (회사 논갭 vs 야후·XBRL 갭. 92차 ③)
+    assert row["gross_margin_pct"] == 80.0, "매출총이익률은 뒤집지 않습니다"
     assert row["gross_margin_pct"] == 80.0, "이익률은 정의 차이라 안 뒤집습니다"
 
 
