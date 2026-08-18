@@ -153,6 +153,46 @@ def test_h18_drops_unmeasurable_events():
     assert entry["신규(판정)"]["기준선"]["n"] == 1, entry
 
 
+def test_담아쓰기는_값을_바꾸지_않는다():
+    """같은 종목을 네 번 계산하던 것을 한 번으로 줄였습니다 (104차).
+
+    실측: 종목 160개인데 `aligned_flags`·`_delta_series` 호출이 **640회**
+    (섹터·테마 × 지금·직전 = 정확히 4배), 전체 **27.9초**. 담아 쓰게 하니
+    **7.0초** 가 됐습니다.
+
+    ⚠️ 담아쓰기는 **속도만** 바꿔야 합니다. 종목마다 그릇에서 꺼내 쓰는데
+    그릇이 잘못 채워지면 **다른 종목의 값을 쓰게 되고**, 그건 조용히
+    틀립니다. 그래서 그릇을 준 경우와 안 준 경우의 결과가 같은지 봅니다.
+    """
+    ds = _mini_ds() if "_mini_ds" in globals() else None
+    if ds is None:
+        import json
+        import os
+        import dataset
+        경로 = os.path.join(os.path.dirname(__file__), "..",
+                           "data", "measure", "snapshot.json")
+        if not os.path.exists(경로):
+            return           # 실데이터가 없는 환경에서는 건너뜁니다
+        ds = dataset.build(json.load(open(경로, encoding="utf-8")))
+
+    spy = ds["prices"][ds["benchmark"]]["dates"]
+    day = spy[-1]
+    묶음 = sm.sector_members(ds, "섹터")
+    이름, 종목들 = next(iter(묶음.items()))
+
+    # 그릇 없이 (매번 다시 계산) vs 그릇을 주고 (담아 쓰기) — 같아야 합니다
+    없이 = sm._breadths_at(ds, 종목들, day)
+    그릇: dict = {}
+    주고 = sm._breadths_at(ds, 종목들, day, 그릇)
+    assert 없이 == 주고, f"{이름}: 담아 쓰니 값이 달라졌습니다 {없이} vs {주고}"
+
+    # 같은 그릇을 다른 묶음에 다시 써도 그 묶음의 값이 나와야 합니다
+    # (그릇이 종목 단위로 채워지므로 묶음이 섞이면 안 됩니다)
+    for 이름2, 종목들2 in list(묶음.items())[1:3]:
+        assert sm._breadths_at(ds, 종목들2, day) == \
+            sm._breadths_at(ds, 종목들2, day, 그릇), f"{이름2}: 묶음이 섞였습니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

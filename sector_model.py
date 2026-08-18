@@ -524,9 +524,12 @@ def confirmation_rows(ds: dict) -> list[dict]:
                for name, members in sector_members(ds, "테마").items()]
 
     rows = []
+    # 종목별 중간 계산을 한 번만 하고 나눠 씁니다 (104차 — 값은 그대로).
+    # 섹터·테마 × 지금·직전 으로 같은 종목을 네 번 계산하고 있었습니다.
+    memo: dict = {}
     for name, members, kind in groups:
-        now = _breadths_at(ds, members, today)
-        before = _breadths_at(ds, members, previous_month)
+        now = _breadths_at(ds, members, today, memo)
+        before = _breadths_at(ds, members, previous_month, memo)
         if now is None or before is None:
             continue
         past = _group_excess(ds, members, today, CONFIRM_PAST_DAYS, forward=False)
@@ -548,23 +551,41 @@ def confirmation_rows(ds: dict) -> list[dict]:
     return rows
 
 
-def _breadths_at(ds: dict, members: list[str], day: str):
-    """(정배열 폭, 델타 폭) — 판단 가능 종목 3개 미만이면 None."""
+def _breadths_at(ds: dict, members: list[str], day: str, memo: dict | None = None):
+    """(정배열 폭, 델타 폭) — 판단 가능 종목 3개 미만이면 None.
+
+    memo: 종목별 중간 계산을 담아 두는 그릇 (104차 — 속도만 바꿉니다).
+
+    ⚠️ 왜 필요한가: 이 함수는 종목마다 `aligned_flags`(이동평균)와
+    `_delta_series`(분기 델타)를 다시 계산하는데, `confirmation_rows` 가
+    **섹터·테마 × 지금·직전** 으로 네 번 부릅니다. 실측: 종목 160개인데
+    호출이 **640회** (정확히 4배), 전체 27.9초.
+
+    같은 종목의 같은 계산은 결과가 같으므로 한 번만 하고 담아 둡니다.
+    **값은 하나도 안 바뀝니다** — 시험으로 못박습니다.
+    """
     import measure_engine as me
+
+    if memo is None:
+        memo = {}
 
     decidable = aligned = delta_up = 0
     for ticker in members:
         prices = ds["prices"].get(ticker)
         if not prices:
             continue
-        flags = aligned_flags(prices)
+        담김 = memo.get(ticker)
+        if 담김 is None:
+            _flags = aligned_flags(prices)
+            담김 = (_flags, sorted(_flags) if _flags else [],
+                   _delta_series(ds, ticker))
+            memo[ticker] = 담김
+        flags, keys, series = 담김
         if not flags:
             continue
-        keys = sorted(flags)
         index = bisect.bisect_right(keys, day) - 1
         if index < 0:
             continue
-        series = _delta_series(ds, ticker)
         if not series:
             continue
         days = [s[0] for s in series]
