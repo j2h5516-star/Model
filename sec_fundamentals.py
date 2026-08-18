@@ -1799,7 +1799,12 @@ def fetch_earnings_8k(
             break
         # 시간 예산 초과 — 옛 분기를 포기하고 지금까지 받은 만큼으로 멈춥니다
         # (94차. 최신 것부터 훑으므로 잘리는 쪽은 항상 가장 오래된 분기입니다)
-        if _budget_over():
+        #
+        # ⚠️ 단, 바닥(COLLECT_BUDGET_FLOOR)을 채우기 전에는 멈추지 않습니다.
+        #    예산은 전체 시계로 재는데 종목은 순서대로 처리되므로, 바닥이
+        #    없으면 뒷쪽 종목이 8-K 를 **한 건도** 못 훑어 최신 분기까지
+        #    잃습니다 — 표본을 늘리려다 있던 표본을 깎는 최악입니다.
+        if report["parsed_ok"] >= cfg.COLLECT_BUDGET_FLOOR and _budget_over():
             report["시간초과"] = True
             report["note"] = (
                 f"수집 시간 예산 초과 — 실적 {report['parsed_ok']}건까지만 받았습니다"
