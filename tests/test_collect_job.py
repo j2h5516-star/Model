@@ -242,6 +242,80 @@ def test_시간초과_종목이_로봇기록에_남는다():
     assert 남긴다 == ["XYZ"]
 
 
+def test_시간예산이_8K_훑기를_실제로_멈춘다():
+    """장치가 **실제로 그 자리에서 실행되는지** 증명한다 (헌법 검증 규칙).
+
+    앞의 세 시험은 `_budget_over()` 자체가 옳게 답하는지만 봤다. 그것이
+    참이어도 **훑기 반복문이 그 함수를 부르지 않으면** 아무 일도 안 일어난다.
+    이 저장소는 "고친 코드가 실행 불가능한 자리에 있던" 사고를 이미 겪었다.
+    그래서 가짜 공시 100건을 물려 fetch_earnings_8k 를 직접 돌리고,
+    마감을 넘긴 뒤 **몇 건에서 멈췄는지**를 센다.
+    """
+    import sys
+    import types
+    sf = cj.sf
+
+    본_공시 = {"n": 0}
+
+    class _가짜공시:
+        def __init__(self, 번호):
+            self.accession_no = f"0001-23-{번호:06d}"
+            self.filing_date = "2020-01-01"
+
+    class _가짜회사:
+        def __init__(self, ticker):
+            pass
+
+        def get_filings(self, **_kw):
+            return [_가짜공시(i) for i in range(100)]
+
+    def 가짜텍스트(ticker, filing, report=None):
+        본_공시["n"] += 1
+        return "", "", False      # 본문 없음 — 파싱까지 가지 않게
+
+    가짜edgar = types.ModuleType("edgar")
+    가짜edgar.Company = _가짜회사
+    옛edgar = sys.modules.get("edgar")
+    옛텍스트 = sf._earnings_text_cached
+    옛신원 = sf._ensure_identity
+
+    sys.modules["edgar"] = 가짜edgar
+    sf._earnings_text_cached = 가짜텍스트
+    sf._ensure_identity = lambda: None
+    try:
+        # ① 마감 없음 — 100건을 끝까지 훑어야 한다
+        sf.set_collect_budget(None)
+        본_공시["n"] = 0
+        보고 = sf.new_report("TT")
+        sf.fetch_earnings_8k("TT", start_date="2016-09-15", report=보고)
+        assert 본_공시["n"] == 100, f"마감이 없는데 {본_공시['n']}건에서 멈췄다"
+        assert 보고["시간초과"] is False
+
+        # ② 5건을 본 뒤 마감이 오게 하는 가짜 시계
+        눈금 = {"n": 0}
+
+        def 시계():
+            눈금["n"] += 1
+            return 눈금["n"]
+
+        # 시작 시점 1, 예산 4초 → 마감 5. 여섯 번째 확인부터 넘긴다.
+        sf.set_collect_budget(4 / 60.0, clock=시계)
+        본_공시["n"] = 0
+        보고2 = sf.new_report("TT")
+        sf.fetch_earnings_8k("TT", start_date="2016-09-15", report=보고2)
+        assert 본_공시["n"] < 100, "마감을 넘겼는데 100건을 다 훑었다 — 반복문이 예산을 안 본다"
+        assert 보고2["시간초과"] is True, "잘렸는데 기록에 안 남았다"
+        assert "시간 예산" in 보고2["note"], 보고2["note"]
+    finally:
+        sf.set_collect_budget(None)
+        sf._earnings_text_cached = 옛텍스트
+        sf._ensure_identity = 옛신원
+        if 옛edgar is None:
+            sys.modules.pop("edgar", None)
+        else:
+            sys.modules["edgar"] = 옛edgar
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
