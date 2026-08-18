@@ -95,12 +95,26 @@ def quarters_from_frame(frame) -> list[dict]:
     return out
 
 
-def announcements_from_frame(frame) -> list[dict]:
-    """발표 기록(earnings_history)에서 발표일·발표 EPS 를 옮겨 적습니다.
+def announcements_from_frame(frame, 날짜뜻: str = "분기끝") -> list[dict]:
+    """발표 기록에서 날짜와 EPS 를 옮겨 적습니다.
 
     이 표의 EPS 는 **월가 기준(데이터 회사가 통일시킨 값)** 입니다.
     회사가 발표한 조정 EPS 와 다를 수 있으므로 이름을 `street_eps` 로
     구분해 둡니다 — 나중에 헷갈리지 않게.
+
+    ⚠️ **날짜의 뜻이 창구마다 다릅니다 (105차 ⑥ — 실측으로 찾은 결함).**
+
+        earnings_history      줄 이름 = **분기 종료일**
+        get_earnings_dates    줄 이름 = **실제 발표일시**
+
+    예전에는 둘을 가리지 않고 전부 `announced_date` 라고 이름 붙였습니다.
+    실물 NVDA 로 맞대어 보니 우리 발표일은 05-28 · 08-27 · 11-19 · 02-25
+    인데 야후 쪽은 07-31 · 10-31 · 01-31 · 04-30 — **분기 종료일**이라
+    한 칸도 안 맞았습니다 (전 종목 **0건**). 심판이 있는 줄 알았는데
+    쓸 수가 없는 상태였고, 아무도 이 칸을 안 써서 **조용히** 그랬습니다.
+
+    그래서 부르는 쪽이 날짜의 뜻을 알려 주고, 그 뜻대로 이름을 붙입니다.
+    모르면 지어내지 않고 "분기끝"(예전 창구의 뜻)으로 둡니다.
     """
     if frame is None or getattr(frame, "empty", True):
         return []
@@ -124,12 +138,14 @@ def announcements_from_frame(frame) -> list[dict]:
         # 않습니다 — 값을 지어내는 것이 아니라 빈 줄을 안 싣는 것입니다.
         if 값 is None and 추정값 is None:
             continue
+        키 = "announced_date" if 날짜뜻 == "발표일" else "period_end"
         out.append({
-            "announced_date": 날짜,
+            키: 날짜,
+            "날짜뜻": 날짜뜻,
             "street_eps": 값,
             "street_estimate": 추정값,
         })
-    out.sort(key=lambda r: r["announced_date"])
+    out.sort(key=lambda r: r.get("announced_date") or r.get("period_end") or "")
     return out
 
 
@@ -144,12 +160,13 @@ def fetch(ticker: str) -> dict:
     # config.VENDOR_EARNINGS_LIMIT 주석에). 옛 판(또는 야후 변경)으로
     # 그 창구가 없으면 예전 창구로 돌아갑니다 — 없는 것보다 낫습니다.
     try:
-        frame = handle.get_earnings_dates(limit=cfg.VENDOR_EARNINGS_LIMIT)
+        frame, 날짜뜻 = handle.get_earnings_dates(
+            limit=cfg.VENDOR_EARNINGS_LIMIT), "발표일"
     except Exception:
-        frame = handle.earnings_history
+        frame, 날짜뜻 = handle.earnings_history, "분기끝"
     return {
         "quarters": quarters_from_frame(handle.quarterly_income_stmt),
-        "announcements": announcements_from_frame(frame),
+        "announcements": announcements_from_frame(frame, 날짜뜻),
     }
 
 

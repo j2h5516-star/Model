@@ -81,8 +81,9 @@ def test_street_eps_is_named_apart_from_company_adjusted_eps():
         {"epsEstimate": [1.10, 0.95], "epsActual": [1.19, 1.02]},
         index=pd.to_datetime(["2023-01-24", "2022-10-21"]),
     )
+    # 이 표(epsActual 꼴)는 옛 창구이고 줄 이름이 **분기 종료일**입니다
     got = vf.announcements_from_frame(표)
-    assert [r["announced_date"] for r in got] == ["2022-10-21", "2023-01-24"]
+    assert [r["period_end"] for r in got] == ["2022-10-21", "2023-01-24"]
     assert got[-1]["street_eps"] == 1.19
     assert "adj_eps" not in got[-1], "회사 조정 EPS 와 이름이 겹치면 안 됩니다"
 
@@ -172,7 +173,7 @@ def test_깊은_창구의_열이름도_읽는다():
          "Surprise(%)": [5.0, 9.1]},
         index=pd.to_datetime(["2017-02-01", "2017-05-02"]),
     )
-    행 = vf.announcements_from_frame(깊은창구)
+    행 = vf.announcements_from_frame(깊은창구, "발표일")
     assert [r["announced_date"] for r in 행] == ["2017-02-01", "2017-05-02"]
     assert [r["street_eps"] for r in 행] == [1.05, 1.20]
     assert [r["street_estimate"] for r in 행] == [1.00, 1.10]
@@ -182,9 +183,14 @@ def test_깊은_창구의_열이름도_읽는다():
         {"epsEstimate": [2.00], "epsActual": [2.10]},
         index=pd.to_datetime(["2026-05-01"]),
     )
+    # 옛 창구의 줄 이름은 **분기 종료일**이므로 이름도 그렇게 붙습니다
     행2 = vf.announcements_from_frame(옛창구)
-    assert 행2 == [{"announced_date": "2026-05-01",
+    assert 행2 == [{"period_end": "2026-05-01", "날짜뜻": "분기끝",
                    "street_eps": 2.10, "street_estimate": 2.00}]
+    assert "announced_date" not in 행2[0], (
+        "분기 종료일을 발표일이라고 이름 붙이면 우리 발표일과 한 칸도 "
+        "안 맞습니다 (실물 NVDA 로 확인한 결함)"
+    )
 
 
 def test_아직_안_나온_발표는_담지_않는다():
@@ -200,7 +206,7 @@ def test_아직_안_나온_발표는_담지_않는다():
         {"EPS Estimate": [1.00, 1.30, None], "Reported EPS": [1.05, None, None]},
         index=pd.to_datetime(["2026-05-01", "2026-08-01", "2026-11-01"]),
     )
-    행 = vf.announcements_from_frame(frame)
+    행 = vf.announcements_from_frame(frame, "발표일")
     assert [r["announced_date"] for r in 행] == ["2026-05-01", "2026-08-01"], 행
     assert 행[1]["street_eps"] is None and 행[1]["street_estimate"] == 1.30
 
