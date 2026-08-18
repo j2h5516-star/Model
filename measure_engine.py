@@ -35,6 +35,34 @@ SPACING_MAX_DAYS = 150       # 연속 분기로 인정할 최대 간격
 FRESH_DAYS = 140             # 게이지: 발표가 이보다 오래되면 김빠진 것
 GAUGE_FIXED_ON_PCT = 20.0    # H5 (기존 등록) — 고정 문턱
 GAUGE_WARMUP_WEEKS = 52      # H5b — 이력이 이보다 짧으면 판단 불가
+
+# 게이지를 계산할 **최소 종목 수** (100차 — 10년 확장이 드러낸 장치 결함).
+#
+# 무엇이 잘못됐었나: 게이지는 "실적 신기록을 낸 종목의 **비율**"인데,
+# 분모가 몇 개든 상관없이 값을 냈습니다. 10년으로 늘리자 표본 앞머리가
+# 드러났고, 실측이 이랬습니다.
+#
+#   연도   분모(종목 수) 평균   게이지 중앙값
+#   2017        2.4              85.7%
+#   2018       21.0              85.7%
+#   2026       88.1              40.0%
+#
+# **2017년의 "시장 전체 실적 신기록 폭 85.7%"는 평균 2.4개 종목으로 잰
+# 값입니다.** 시장의 폭이 아니라 두세 종목의 형편입니다.
+#
+# 이 허상이 한 번 들어가면 **영원히 남습니다.** H5b 의 문턱은 "그 시점
+# 직전까지 이력의 중앙값"(확장 중앙값)이라, 앞머리의 85.7% 가 문턱을
+# 끌어올려 2023~2026 내내 48~58% 에 머물게 합니다. 실제 게이지는 35~40%
+# 이므로 **한 번도 못 넘습니다** — 96차에서 본 "2022-10 이후 신호 0건"의
+# 정체가 이것입니다.
+#
+# 왜 하필 10인가: 새 숫자를 지어내지 않고 **이 저장소가 이미 사전 등록한
+# 최소 표본(n≥10)** 을 그대로 씁니다. 결과를 보고 고른 문턱이 아닙니다
+# (결과를 보고 고르면 그것이 바로 헌법 2조가 막는 사후 맞추기입니다).
+#
+# 분모가 이보다 작으면 값을 내지 않고 **없음**으로 둡니다 —
+# "신선한 발표가 하나도 없으면 그 주는 None" 과 같은 규칙의 연장입니다.
+GAUGE_MIN_TICKERS = 10
 ENTRY_MAX_GAP_DAYS = 10      # 발표 후 이 일수 안에 거래일이 없으면 못 잰다
 LADDER_MIN_QUARTERS = 8      # 12차 등록 — 잣대로 인정할 최소 보유 분기
 LADDER = ("adj_eps", "adjusted_ebitda", "gaap_eps")   # 사다리 순서 (12차 등록)
@@ -195,7 +223,11 @@ def weekly_grid(daily_dates: list[str]) -> list[str]:
     return weeks
 
 
-def gauge_series(ds: dict, tickers: list[str] | None = None) -> dict:
+def gauge_series(
+    ds: dict,
+    tickers: list[str] | None = None,
+    min_tickers: int = GAUGE_MIN_TICKERS,
+) -> dict:
     """실적 폭 게이지 시계열: {"weeks": [...], "values": [...]}.
 
     각 주 마지막 거래일에, 최근 발표가 140일 이내로 신선한 종목 중
@@ -205,6 +237,12 @@ def gauge_series(ds: dict, tickers: list[str] | None = None) -> dict:
     tickers 로 부분집합(예: 한 섹터)을 주면 그 무리만의 폭을 잽니다.
     ⚠️ 섹터별 게이지는 **관찰용**입니다 — 사전 등록된 가설이 아니므로
     판정(judge)에는 쓰지 않고 계기판에 사실로만 표시합니다.
+
+    min_tickers: 이 수보다 분모가 작은 주는 **없음**으로 둡니다 (100차).
+      기본값은 시장 전체 게이지용(GAUGE_MIN_TICKERS=10)입니다.
+      섹터 게이지는 원래 종목이 적고(1~3개도 있음) 화면에 **종목수를 함께
+      보여 주므로** 부르는 쪽에서 1 로 낮춥니다 — 판정에 안 쓰이는 값을
+      최소치로 죽이면 관찰 자체가 사라지기 때문입니다.
     """
     per_ticker: dict[str, list[dict]] = {
         t: earnings_states(ds["quarters"].get(t) or [])
@@ -225,8 +263,13 @@ def gauge_series(ds: dict, tickers: list[str] | None = None) -> dict:
                 continue          # 김빠졌거나 판단 불가면 분모에서 뺀다
             fresh_total += 1
             fresh_newhigh += bool(state["new_high"])
+        # 분모가 최소치에 못 미치면 **없음** (100차). 비율은 분모가 작을수록
+        # 시장이 아니라 몇 종목의 형편을 말합니다 — 자세한 실측은
+        # GAUGE_MIN_TICKERS 주석에 적어 두었습니다.
         values.append(
-            round(fresh_newhigh / fresh_total * 100.0, 1) if fresh_total else None
+            round(fresh_newhigh / fresh_total * 100.0, 1)
+            if fresh_total >= min_tickers
+            else None
         )
     return {"weeks": weeks, "values": values}
 

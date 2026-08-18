@@ -1,0 +1,3239 @@
+{
+ "audits": [
+  {
+   "axis": "값의 정합성 (산술 검산)",
+   "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md",
+   "checks_run": "dataset.build() 통과 후 3068행 대상. (1)raw/ 원문 전수 대조 257건(revenue 128·gaap 113·adj 16). (2)주당값 자릿수 튐(회사 중앙값 대비). (3)영구 단차 탐지 후 내재PER 검산으로 분할 미조정 증명. (4)내재 주식수=영업이익/EPS 검산. (5)dataset.py 마진 가드 재현해 통과분/미작동분 분리. (6)매출·op_income·EBITDA 칸별 log10 단위 일관성. (7)adj vs gaap 비율 144건. (8)measure_engine.earnings_states 실제 실행해 신고점·첫돌파 영향 계수.",
+   "clean": "원문 파싱 자체는 건강함: 실적 보도자료 대조 257건 중 확실한 오류 1건뿐(revenue 128/128 일치). dataset.py 마진 가드는 매출 1천만 이상 구간에서 이상치 0건으로 정상 작동. EBITDA 단위 가드도 통과 후 0건. 매출 1만달러 하한 가드 정상 작동. adj_eps가 gaap_eps의 10배 넘는 144건은 대부분 SaaS 정상 특성(DDOG·CRM·CRWD·ZS)이라 오류 아님 — 여기선 새 문제 못 찾음. DOCU 25Q2 gaap 4.26, META 25Q3 1.05, RUN 24Q4 -12.51 도 조사했으나 실제 일회성 사건으로 판단해 오류로 안 셈. notes 1106건에 버린 값 전부 기록돼 조용한 삭제 없음.",
+   "findings": [
+    {
+     "title": "주식분할이 가격에만 반영되고 EPS에는 미반영 — 7종목이 신고점을 낼 수 없음",
+     "severity": "치명",
+     "evidence": "NVDA adj_eps 6.12→0.68, GOOGL gaap 26.29→1.36, AVGO 10.96→1.24, LRCX 8.60→0.91. 가격은 분할조정됨(NVDA 2024-06-10 종가 121.58). 내재PER 검산: AVGO 2.1→59.3(x28), SMCI 1.4→31.5(x22), GOOGL 3.5→34.4. 분할 후 판단가능 발표 55건 전부 신고점 0건. NVDA TTM 18.00→3.14",
+     "count": 55,
+     "affected": [
+      "NVDA",
+      "GOOGL",
+      "AVGO",
+      "LRCX",
+      "SMCI",
+      "ANET",
+      "WMT"
+     ],
+     "impact": "핵심 신호 'TTM 신고점 첫 돌파'가 이 7종목에서 물리적으로 불가능. 표본 55건이 조용히 소실되고, NVDA는 83% 이익급감으로 읽혀 이익델타·주도섹터 판정을 반대로 뒤집음"
+    },
+    {
+     "title": "주당값 상한 100을 간발로 통과한 조작값이 가짜 첫돌파(H2b)를 실제로 만듦",
+     "severity": "치명",
+     "evidence": "IPGP 24Q4 adj_eps=99.1(앞뒤 0.29/0.31, 319배). 검산: 영업익 15.7백만÷99.1=내재주식수 15.8만주 — 분기매출 2.3억달러 회사에 불가능. 결과 2025-11-04 TTM 100.06 신고점 streak=1 생성. XOM 89.45→2023-07-13 TTM 115.67 streak=4. 그 외 SCHW 95.3·VRTX 85.0·NRG 50.43·BAC 13.6",
+     "count": 12,
+     "affected": [
+      "IPGP",
+      "XOM",
+      "SCHW",
+      "VRTX",
+      "NRG",
+      "BAC",
+      "APP",
+      "MU",
+      "SMCI",
+      "MKSI"
+     ],
+     "impact": "전체 첫돌파 174건 중 최소 1건이 100% 조작값. 채택 기준(n≥10, 윌슨 하한)을 다투는 상황에서 가짜 신호가 표본에 섞임"
+    },
+    {
+     "title": "연간 실적이 분기 행에 혼입 / 잣대 칸이 두 무리로 갈림",
+     "severity": "중대",
+     "evidence": "GILD: 매출 9분기 내내 ~7,000백만으로 평평한데 adj_eps만 7.90·6.20·6.35→1.37→6.45→1.72→2.01 로 5배 널뜀(같은 매출에서 불가능). 24Q1부터가 진짜 분기값. REGN: 20분기 중 7개가 0.18~0.81로 나머지(9~13)의 1/15. 이 상태로 신고점 3건 잡힘",
+     "count": 16,
+     "affected": [
+      "GILD",
+      "REGN",
+      "WMT",
+      "SMCI"
+     ],
+     "impact": "GILD는 이익 3분의1 토막 회사로 읽혀 신고점 0건. REGN 신고점 3건(2024-05-02 등)은 판정 자체를 믿을 수 없음"
+    },
+    {
+     "title": "매출 단위가 섞여 dataset.py 마진 가드가 아예 작동하지 않는 구멍",
+     "severity": "중대",
+     "evidence": "가드는 revenue>=10,000,000 일 때만 돎. 매출이 천/백만 단위 저장이면 조건이 거짓→가드 통째 건너뜀. 실측: 가드 통과 후 이상치 0건 vs 가드 미작동 이상 영업이익 85건. META 21Q3 매출 29,010·영업익 12.8B=마진 4,412,961%. 매출 단위 섞인 종목 21개",
+     "count": 85,
+     "affected": [
+      "FSLR",
+      "TER",
+      "TGT",
+      "HD",
+      "U",
+      "META",
+      "GNRC",
+      "VST",
+      "AMZN",
+      "ZETA",
+      "NFLX",
+      "NRG"
+     ],
+     "impact": "op_income은 사다리 밖이라 신고점 판정엔 직접 영향 없으나 화면 숫자가 틀림. 같은 구멍이 EBITDA 잣대 7종목에 언제든 CIEN형 사고를 재발시킴"
+    },
+    {
+     "title": "gaap_eps 자리에 희석 주식수가 들어감 (원문 대조로 확정)",
+     "severity": "중대",
+     "evidence": "UCTT_2026-04-28.txt 13행 'net loss ... $(0.40) per diluted share', 66행 'Diluted 45.3'. 저장값 gaap_eps=-45.3. 동일 오류 24Q1 -44.6, 25Q1 -45.1, 26Q1 -45.3 — 전부 그 분기 주식수와 정확히 일치. 원문 대조 257건 중 유일한 확정 오류",
+     "count": 3,
+     "affected": [
+      "UCTT"
+     ],
+     "impact": "UCTT 잣대는 adj_eps라 신고점엔 미반영이나 화면·비교에 노출. 'Shares used in computing' 다음 숫자를 EPS로 읽는 파서 경로가 살아 있음"
+    },
+    {
+     "title": "op_income 칸에 반복되는 자리표시자 상수 (파싱 잔해)",
+     "severity": "보통",
+     "evidence": "LOW=202.0 3회(dataset.py 주석의 그 202), UNP=10.0 4회, BE=75.0 4회, ENTG=1,000,000 3회, SNOW -1.0, TGT 3.0, UPS -2.0, HPE -1.0, S 4.0. 같은 값 반복은 실적이 아니라 파싱 잔해의 신호. 중앙값에서 100배 이상 이탈 65행/19종목",
+     "count": 65,
+     "affected": [
+      "LOW",
+      "UNP",
+      "BE",
+      "ENTG",
+      "SNOW",
+      "TGT",
+      "UPS",
+      "HPE",
+      "S",
+      "COHR",
+      "NXPI",
+      "ISRG"
+     ],
+     "impact": "측정 사다리 밖 칸이라 판정엔 미반영. 다만 매출 칸이 무너진 것과 동일한 병합 사고이며 계기판 표시가 틀림"
+    },
+    {
+     "title": "period_label이 신고일과 어긋남 (표기만의 문제)",
+     "severity": "경미",
+     "evidence": "SCHW: 2025-01-21·04-17·07-18·10-16 네 발표가 전부 '24 Q4'(값 1.01·1.04·1.08·1.26은 각 분기 실제값과 일치 — 라벨만 고정). XOM: 2022-07-29가 '23 Q1', '24 Q1'이 3번 등장. BAC: '25 Q1'이 5개 날짜에 등장",
+     "count": 3,
+     "affected": [
+      "SCHW",
+      "XOM",
+      "BAC"
+     ],
+     "impact": "측정은 announced_date 기준(55~150일)이라 판정엔 영향 없음. 계기판에서 사용자가 읽는 분기 이름이 틀림"
+    }
+   ]
+  },
+  {
+   "axis": "announced_date (측정의 기준 시점)",
+   "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/발표일.md",
+   "checks_run": "3068행 전수: 주말발표일 / filing보다 앞선 발표일 / 형식이상 / 미래·과거 범위 / filing정렬 역행 / 티커내 중복발표일 / announced==filing 건수와 성격 / 발표일 간격 분포(2725쌍) / filing간격 vs announced간격 불일치 / 발표지연(announced-filing) 분포 / 연도별 발표일 개수 vs 4회 / SPY 거래일 여부 / excess_return 계산 실패사유 / eps_runs 구간분해와 TTM 손실량 / earnings_states 판단가능 수 / raw 316건 원문과 발표일 교차대조. 전부 repo에서 python3 실행 출력.",
+   "clean": "주말 발표일 0건. filing_date보다 앞선 발표일 0건(지연 음수 없음). 날짜 형식이상 0건. 미래날짜·2021이전 0건(범위 2021-09-23~2026-08-13). filing 정렬순서 역행 0건. 발표일 없는 165행은 전부 source=근사치이고 세 잣대칸이 모두 비어 있어 측정 영향 0(잣대칸 보유 0건 직접 확인). 발표 상태 2500건 전부 SPY 거래일 — 진입일 계산 실패 0, 실패사유는 우측검열 112뿐(정상). TTMI 2026-08-06 중복은 구간 분리로 TTM 이중계상 없음. dataset.build가 발표일 때문에 버린 행 0건.",
+   "findings": [
+    {
+     "title": "실적이 아닌 8-K(합병·CEO선임·투자자설명회)가 발표일로 쓰여 측정에 들어감 — 원문 확인",
+     "severity": "치명",
+     "evidence": "raw 원문 중 발표일로 쓰인 151건 검사 → 실적문구 없는 문서 6건. QRVO 2025-10-28=Skyworks 합병발표(첫돌파, SPY대비 -14.7%p), STRL 2024-09-18=투자자설명회 슬라이드(첫돌파, +16.0%p), ICHR 2025-11-03=CEO선임(+94.7%p). 핵심신호 첫돌파 표본 166건 중 2건 오염 = 1.2%",
+     "count": 6,
+     "affected": [
+      "QRVO",
+      "STRL",
+      "ICHR",
+      "WDAY",
+      "T"
+     ],
+     "impact": "합병·인사 공시일은 실적과 무관하게 주가가 크게 움직인다. 그날을 신고점 돌파일로 세면 신호 폭등률이 실적 아닌 사건으로 오염된다. 채택기준이 윌슨구간 완전분리라 n=166에서 1~2건이 하한을 흔든다. 원문 없는 2752건은 검사 못함 — 6건은 확인된 최소치."
+    },
+    {
+     "title": "8-K 단독 승격 행 497건: filing_date가 기간종료일이 아니라 발표일 — 구간 판정이 무너짐",
+     "severity": "치명",
+     "evidence": "announced==filing 497행(역산459/직접38), 41종목, 그중 418행이 종목 확정잣대 값 보유. 승격형 22종목: 잣대행401→구간65, 55일미만 간격 22.1%(97/438). 정상형 129종목: 2113행→구간238, 0.6%(13/2287). 36배 차이. JPM은 20행→11구간→판단가능 0건",
+     "count": 497,
+     "affected": [
+      "JPM",
+      "COF",
+      "GE",
+      "JNJ",
+      "PFE",
+      "ETN",
+      "BAC",
+      "LLY",
+      "BMY",
+      "GS",
+      "XOM",
+      "OXY"
+     ],
+     "impact": "eps_runs가 filing_date 간격으로 연속분기를 판정하는데 승격행은 filing이 8-K날짜라 실적 무관 8-K가 끼면 구간이 끊긴다. JPM·AMZN·CIEN·UCTT는 판단가능 발표 0건 — 대형주 4종목이 측정에서 통째로 빠진다."
+    },
+    {
+     "title": "한 해 발표일이 5개 이상인 (종목,연도) 33건 — 초과 발표일 64개",
+     "severity": "중대",
+     "evidence": "분기실적은 연 4회인데 ETN2024·COF2024·COF2025 각 9개, PFE2023·GE2023 각 8개, BAC2025·BMY2023·GE2024 각 7개. 전부 승격형 16종목. COF 2025-04-18은 성금요일(휴장)로 실적발표 불가능한 날",
+     "count": 33,
+     "affected": [
+      "ETN",
+      "COF",
+      "PFE",
+      "GE",
+      "BAC",
+      "BMY",
+      "JPM",
+      "C",
+      "GS",
+      "JNJ",
+      "XOM",
+      "OXY"
+     ],
+     "impact": "실적과 무관한 8-K 64개가 분기 발표로 승격돼 있다. 각각이 가짜 발표 상태를 하나씩 만들고, 짧은 간격으로 앞뒤 구간을 끊어 정상 분기의 TTM까지 못 만들게 한다."
+    },
+    {
+     "title": "발표일 간격 6.2%가 55~150일 밖 — 잣대행 8.7%가 TTM을 못 만듦",
+     "severity": "보통",
+     "evidence": "인접 2725쌍: 55~150일 2556(93.8%), 55일미만 110(4.0%), 150일초과 59(2.2%). 중앙값 91일. 잣대칸 보유 2514행 중 4분기 미만 구간에 갇힌 행 218건(8.7%), 구간 끊김 152회. 발표상태 2500건 중 판단가능 1605건(64.2%)",
+     "count": 218,
+     "affected": [
+      "JPM",
+      "JNJ",
+      "BAC",
+      "AMZN",
+      "CIEN",
+      "AVGO",
+      "LLY",
+      "ADI",
+      "ABNB",
+      "WDC",
+      "CRWD",
+      "LOW"
+     ],
+     "impact": "델타(신고점 판정)를 아예 못 재는 분기가 218건. NVDA는 2022-02-16 다음이 2022-08-08로 23Q1 발표가 통째로 결측(간격 173일)."
+    },
+    {
+     "title": "같은 티커 내 중복 발표일 18개(36행) — 상태 14건이 로그 없이 사라짐",
+     "severity": "보통",
+     "evidence": "JPM 10개(매 분기), COF 3, JNJ 2, GE·PFE·TTMI 각 1. earnings_states의 seen 집합이 뒤 행을 버려 상태 14건 소실(JPM10·JNJ2·TTMI1·GE1). JPM 2024-04-12에 '23 Q3' gaap1.15 와 '24 Q1' gaap4.45 두 행 — 코드는 앞의 1.15 채택",
+     "count": 18,
+     "affected": [
+      "JPM",
+      "COF",
+      "JNJ",
+      "GE",
+      "PFE",
+      "TTMI"
+     ],
+     "impact": "어느 행이 진짜인지 데이터만으로 알 수 없는데 조용히 앞 행이 채택된다. notes에도 로그에도 남지 않아 사람이 알아챌 방법이 없다."
+    },
+    {
+     "title": "발표지연(announced-filing) 71일 초과 9건 — 잘못 붙은 8-K 의심",
+     "severity": "경미",
+     "evidence": "지연 중앙값 29일·평균 25.6·최대 83. 71일 초과 9건: COHR 83·SLAB 82·COHR 81·CAT 81·STRL 80·TMUS 80·VST 74·FDX 74·TMUS 71. STRL 2024-09-18(80일)은 원문에서 투자자설명회로 확인됨",
+     "count": 9,
+     "affected": [
+      "COHR",
+      "SLAB",
+      "CAT",
+      "STRL",
+      "TMUS",
+      "VST",
+      "FDX"
+     ],
+     "impact": "미국 상장사는 분기말+20~45일에 발표한다. 71일 초과는 무관한 8-K가 붙은 신호이며, STRL 사례가 이 규칙의 유효성을 입증한다 — 자동 탐지 규칙으로 쓸 만하다."
+    },
+    {
+     "title": "과제 설명서와 코드 불일치 — 구간 판정은 announced_date가 아니라 filing_date로 한다",
+     "severity": "경미",
+     "evidence": "measure_engine.py 60행이 filing_date 간격을 잰다. 두 기준 비교: filing 끊김152/손실218 vs announced 끊김153/손실218, 결과 갈리는 종목 3개(STRL·FDX·TMUS), 인접 2743쌍 중 판정 엇갈림 11쌍(0.4%)",
+     "count": 11,
+     "affected": [
+      "STRL",
+      "FDX",
+      "TMUS"
+     ],
+     "impact": "지금 데이터에서 실질 차이는 없다. 다만 승격행 497건은 filing_date 자체가 8-K 날짜라 '기간 간격을 잰다'는 코드 전제가 성립하지 않는다."
+    }
+   ]
+  },
+  {
+   "axis": "축3 일봉 가격",
+   "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/가격.md",
+   "checks_run": "1) 지시받은 분할 12건 중 우주에 있는 9건 전일→당일 종가 대조 2) 전 종목 전 거래일 하루변동 스캔(분할 의심 대역 -45~-96%, 역분할 +90~+220%) 3) 무결성: 길이불일치·중복날짜·정렬·0이하종가·SPY달력 밖 날짜·전진채움(연속동일)·동일 시계열 복붙·수익률상관 0.95 초과쌍 4) 거래일 수/커버리지/첫·마지막 날짜 분포 5) 자기 구간 내 결측 전수 6) 실제 발표 2,903건으로 60거래일 창 길이가 SPY 기준 60인지 전수 검증 7) 종목별 주 격자가 SPY 주 격자와 일치하는지, 정배열 플래그 커버리지 8) 날짜 하루밀림 탐지 = 종목수익률 vs SPY수익률 상관을 같은날/전날/다음날로 비교 9) 배당·분할 조정 지문(소수 자릿수)을 배당주/무배당주와 대조 10) prices_summary.json 재현 검증",
+   "clean": "분할 미반영 0건 (9건 전부 반영, 실제 변동 -2.62%~+2.03%). 하루 -50% 이하 0건, +100% 이상 0건. 중복날짜·정렬어긋남·0이하종가·길이불일치·SPY달력밖 날짜 전부 0. 4일이상 종가정지 0건, 동일 시계열 복붙 0건, 수익률상관 0.95 초과쌍 0건. 52주 미만 종목 0개, 마지막날 2026-08-14 로 161종목 전부 일치. 날짜 하루밀림 0종목(같은날 상관 중앙값 0.514, 하위는 VZ/JNJ/T 등 저베타 방어주로 이론과 일치). SPY 최저점 2022-10-12 로 실제 약세장 바닥 날짜와 일치. 조정 지문도 일관(무배당·무분할 39종목만 조정흔적 0%, INTC 58.65%는 배당폐지로 설명됨). P는 구 PSTG로 문서화된 의도된 교체 — 오염 아님.",
+   "findings": [
+    {
+     "title": "8종목이 2026-08-11 하루 결측 (측정 영향은 실측 0건)",
+     "severity": "경미",
+     "evidence": "자기 구간 내 결측 종목 8개, 각 1일, 전부 2026-08-11 (1254/1255). 발표 2,903건 전수 검증에서 SPY 기준 창 길이 != 60 인 사건 0건. 종목 주격자가 SPY 주격자와 어긋난 종목 0개.",
+     "count": 8,
+     "affected": [
+      "ABBV",
+      "BILL",
+      "ETSY",
+      "HUBS",
+      "OKTA",
+      "PINS",
+      "QRVO",
+      "ZM"
+     ],
+     "impact": "60거래일 창과 주봉 정배열 격자 모두 실측으로 영향 0건 확인. 다만 향후 데이터가 늘어 이 날을 지나는 창이 검열 해제되면 창 길이가 61이 될 수 있어 수집 로봇의 결측 보정이 필요."
+    },
+    {
+     "title": "보조 파일 prices_summary.json 의 반올림·경계 누락 (원본은 정상)",
+     "severity": "경미",
+     "evidence": "161종목 중 반올림 차이 262칸 (예: MU first_close 69.17 vs 원본 69.1665, max 1213.37 vs 1213.3734). big_moves 는 P 2024-02-29 정확히 +25.00% 건이 누락(내계산 3건 vs summary 2건), 나머지 160종목 일치, 전체 145건.",
+     "count": 1,
+     "affected": [
+      "P",
+      "MU",
+      "SWKS",
+      "PYPL"
+     ],
+     "impact": "snapshot.json 원본 가격은 정상. 이 요약 파일을 근거로 숫자를 인용하면 소수점과 경계 건수가 틀린다."
+    }
+   ]
+  },
+  {
+   "axis": "축 4 — 분기 시계열의 구조",
+   "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md",
+   "checks_run": "1) period_label·filing_date·announced_date 중복 전수 2) 중복 묶음의 값 모순 여부 3) 라벨↔제출일 어긋남(회계연도 오프셋에 무관한 '라벨 순번 단조증가' 검사) 4) measure_engine.eps_runs 이음매 152건 전수 원인분류 5) 종목별 판단가능(decidable) 발표 수 6) 제출일 범위 대비 기대분기 수 부족 7) source 분포·칸 채움률·종목별 비율 8) 영업이익률 인접점프를 source 같을때/바뀔때로 나눠 비교(원본·정제후 둘 다) 9) source별 적자/흑자 갈림 전수 10) JPM 원문(raw/JPM_2026-07-14.txt) 대조 검증",
+   "clean": "filing_date 형식오류·결측 0행(3,068행 전부 유효). dataset가 filing_date 정렬 보장 확인. 라벨 형식은 Q형2,787+슬래시형281 두 종류뿐, 미지 형식 0건. eps_runs의 55~150일 규칙 자체는 의도대로 동작 — 구간 끊김은 규칙 결함이 아니라 입력 결함(장치를 먼저 의심하는 원칙대로 규칙부터 읽었으나 결함 못 찾음). dataset.py 단위 가드는 실제 작동(CAT 1166%·ACLS 179%·GILD -133% 가 정제 후 사라짐). announced_date 없는 행이 정점기억엔 참여하되 사건은 안 되는 것은 설계대로. / 확인 못한 것: 값 정확성은 JPM 1건만 원문검증, 나머지 159종목은 확인 못함. 근사치100% 종목(META·AMZN·TSLA 등)의 XBRL 근사식 오차는 원문이 없어 확인 못함.",
+   "findings": [
+    {
+     "title": "연속 구간이 끊겨 발표의 35.8%가 신고점 판단 불가 — 4종목은 20분기 넘게 모으고도 판단가능 0",
+     "severity": "치명",
+     "evidence": "발표상태 2,500건 중 판단가능 1,605건(64.2%). 이음매 끊김 152건 원인: 잣대값없음67·분기없음42·끼어든행30·같은날중복13. JPM 24분기→최장구간2, AMZN 20→3, CIEN 17→3, UCTT 20→4 모두 판단가능 0",
+     "count": 895,
+     "affected": [
+      "JPM",
+      "AMZN",
+      "CIEN",
+      "UCTT",
+      "COHR",
+      "ADI",
+      "AVGO",
+      "ZETA",
+      "APP",
+      "WDC",
+      "GNRC",
+      "COF"
+     ],
+     "impact": "H2 신고점·H2b 첫돌파를 물을 수조차 없는 발표가 3분의 1. 표본이 조용히 줄어 윌슨 구간 하한 판정이 왜곡됨"
+    },
+    {
+     "title": "JPM 시계열 절반이 배당 공시 — 주당배당금이 gaap_eps 칸에, 부문매출이 revenue 칸에 (원문 대조 확증)",
+     "severity": "치명",
+     "evidence": "raw/JPM_2026-07-14.txt 원문 확인: 저장 gaap_eps=1.5 → 266행 'd per share 1.50 1.50'(주당배당금). revenue=32.4 → 81행 'Noninterest revenue $32.4 billion'. revenue=20272 → 323행 'Consumer & Community Banking $20,272'(한 부문). 전사매출은 $57.3B. JPM gaap_eps 열이 1.15,1.15,1.25,1.25,1.40,1.40,1.50,1.50,1.50 = 배당 인상 이력 그대로",
+     "count": 10,
+     "affected": [
+      "JPM",
+      "BAC",
+      "COF",
+      "SCHW",
+      "JNJ",
+      "GE",
+      "PFE"
+     ],
+     "impact": "같은 날 두 행이 생겨 eps_runs가 간격0일로 무조건 끊김. earnings_states의 seen 집합은 filing_date 순 앞 행만 채택 — 배당 행이 실적 행을 이길 수 있음"
+    },
+    {
+     "title": "같은 period_label 묶음 109개 중 106개가 값이 서로 모순 — 정정공시가 아니라 다른 분기의 이름표 충돌",
+     "severity": "치명",
+     "evidence": "값 완전일치(정정으로 볼 수 있는) 묶음은 3개뿐. INTC '23 Q1' 4행 revenue[11.7B/12.9B/14.2B] adj_eps[-0.04/0.13/0.41]. COHR '22 Q2' gaap_eps[-0.58/220.0]. KLAC '22 Q4' op_income[-524,997,000/202.0]. ICHR '21 Q4' revenue[0.32/287,188,000]",
+     "count": 106,
+     "affected": [
+      "JPM",
+      "GE",
+      "XOM",
+      "SLB",
+      "INTC",
+      "U",
+      "ROKU",
+      "VRT",
+      "CSCO",
+      "C",
+      "SCHW",
+      "MRK"
+     ],
+     "impact": "period_label 중복 51종목·초과 145행. 분기 식별자를 신뢰할 수 없어 전년동기 짝짓기와 차트 축이 모두 흔들림"
+    },
+    {
+     "title": "source가 이익의 부호를 정한다 — CMCSA는 역산 10건 전부 적자·근사치 10건 전부 흑자로 매년 톱니",
+     "severity": "치명",
+     "evidence": "CMCSA 20분기 전수: 역산 op_income -3,331M~-3,862M(마진 -11.2~-22.3%), 근사치 +5,533M~+8,304M(+31.4~+46.5%). 3월 제출분은 항상 역산(음수). 같은 형태 전수검사 3종목: CMCSA·ZETA(근사치4 전부적자/역산7 전부흑자)·BE(근사치5 적자/직접공시7 흑자)",
+     "count": 3,
+     "affected": [
+      "CMCSA",
+      "ZETA",
+      "BE"
+     ],
+     "impact": "이익 델타(연속분기 증감)의 부호가 매년 네 번 뒤집힘. 주도섹터 판정의 '델타 동반 비율'이 실적이 아닌 파싱 경로를 재는 중"
+    },
+    {
+     "title": "source 경계에서 영업이익률이 같은 source 대비 5.5배 튐",
+     "severity": "중대",
+     "evidence": "정제 후: 같은 source 이음매 n=1,355 중앙 2.17%p, >10%p 15%. source 경계 n=137 중앙 12.06%p, >10%p 56%, >30%p 34건. 원본 기준은 1.56%p vs 13.27%p(8.5배). 역산이 낀 경계 103건 중앙 13.90%p. 최악: T 87.2%p, MXL 80.2%p, MDB 77.6%p, DIOD 71.2%p",
+     "count": 137,
+     "affected": [
+      "T",
+      "MXL",
+      "MDB",
+      "DIOD",
+      "CMCSA",
+      "AMBA",
+      "ZETA",
+      "GILD",
+      "TMUS",
+      "CAT",
+      "ACLS",
+      "BE"
+     ],
+     "impact": "델타가 실적 변화가 아니라 파싱 경로 변화를 잰다. 경계가 낀 종목의 증감 판정은 신뢰 불가"
+    },
+    {
+     "title": "period_label이 filing_date와 어긋난 행 177개 — 직접공시 행에서도 40건",
+     "severity": "중대",
+     "evidence": "오프셋 무관 검사(종목 내 라벨 순번 단조증가): Q형 2,787행 중 역행 84건/37종목, 정체 93건/39종목. 예: NFLX '20 Q4'가 6개 제출일에, VZ '23 Q1'이 6개 제출일에 그대로. JPM 2024-05-15 '24 Q2'→2024-07-12 '23 Q3'. source별 역행=역산38·직접30·근사16",
+     "count": 177,
+     "affected": [
+      "NFLX",
+      "VZ",
+      "CMCSA",
+      "JPM",
+      "WMT",
+      "GE",
+      "INTC",
+      "ROKU",
+      "SLB",
+      "XOM",
+      "SCHW",
+      "U"
+     ],
+     "impact": "measure_engine은 라벨을 안 쓰므로 신고점 측정은 직접 오염 안 됨. 오염되는 곳은 data_quality.fiscal_quarter(340행) 전년동기 짝짓기와 화면 차트 축 — ZETA 사고를 막으려 만든 장치가 같은 방식으로 틀림"
+    },
+    {
+     "title": "직접공시가 한 번도 없는 종목 68/160 — 회사 공식 숫자를 전혀 못 쓴 상태",
+     "severity": "중대",
+     "evidence": "3,068행 source: 직접공시1,343(43.8%)·역산625(20.4%)·근사치1,100(35.9%). 근사치100% 종목 29개, 역산100% 종목 12개 이상(금융 전부). 게다가 '역산' 행의 71%는 op_income이 아예 없음 — 역산 정의(매출×GM%−opex)의 결과물이 없는 행에 역산 배지가 붙어 있어 배지가 유래를 말하지 않음",
+     "count": 68,
+     "affected": [
+      "LITE",
+      "FN",
+      "QCOM",
+      "TXN",
+      "TER",
+      "CIEN",
+      "TSLA",
+      "META",
+      "AMZN",
+      "JPM",
+      "BAC",
+      "LLY"
+     ],
+     "impact": "전략.md의 '전망 입력은 회사 발표 가이던스뿐' 정신과 어긋나는 대리값이 유니버스의 42%를 차지"
+    },
+    {
+     "title": "제출일 범위 대비 분기 75개 결측 (23종목), announced_date 없는 행 165개",
+     "severity": "보통",
+     "evidence": "기대 대비 2개 이상 부족한 종목 23개: COP 실제11/기대20(-9), WDC 14/20(-6), OKTA 14/19(-5), HUBS 15/20(-5), COHR 14/18(-4), AVGO·CRWD·WDAY·BA 각 -4. 부족분 합 75분기. announced_date 없는 행 165개/45종목(5.4%): NXPI9·DIOD9·APP8·PG8·TSLA7",
+     "count": 75,
+     "affected": [
+      "COP",
+      "WDC",
+      "OKTA",
+      "HUBS",
+      "COHR",
+      "AVGO",
+      "CRWD",
+      "WDAY",
+      "BA",
+      "SLAB",
+      "HD",
+      "NXPI"
+     ],
+     "impact": "결측이 곧 구간 끊김(>150일 이음매 109건)이 되어 위 1번 손실의 주 원인. 발표일 없는 행은 정점 기억에는 남되 측정 사건은 못 됨"
+    }
+   ]
+  },
+  {
+   "axis": "축5 잣대 사다리·델타 계산",
+   "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md",
+   "checks_run": "1) yardstick_of 배정 전수(160종목) 2) collect_events 2366사건의 종목별 잣대 유일성 3) _delta_series 2210쌍 중 55~150일인데 사이에 다른 행이 있는 쌍 전수 + 사이 행 실체 분류(매출 중앙값 대비 배율) 4) eps_runs(filing_date) vs _delta_series(announced_date) 판정 갈림 전수 5) 단위/스케일 이상 스캔(인접쌍 배율 100배 초과) 6) 같은 발표일·같은 period_label 잣대값 중복 전수 7) eps_runs 구간 파편화·TTM 생성 가능 여부 8) 잣대없음 9종목 필드별 보유분기 9) app.py 폴백(or \"adj_eps\") 영향",
+   "clean": "한 종목 안에서 잣대(필드)가 섞이는 사례 0건 — collect_events 2366사건 전수 확인, 종목당 잣대 항상 1개. adj_eps(주당)와 adjusted_ebitda(달러)가 한 시계열에 섞인 종목도 0건. 사다리 우선순위·8분기 문턱은 코드대로 동작(adj_eps 107 / gaap_eps 37 / ebitda 7 / 없음 9). period_label 은 계산에 쓰이지 않음(grep 확인) — 라벨 오류가 숫자를 직접 오염시키지는 않음.",
+   "findings": [
+    {
+     "title": "JPM gaap_eps 칸에 배당금(DPS)이 섞여 델타 9쌍 전부 오답",
+     "severity": "치명",
+     "evidence": "발표일 10개가 gaap_eps 2개씩 보유. 여분 값 1.15/1.25/1.40/1.50 = JPM 분기 배당금 경로. _delta_series(JPM)=9쌍, 상승 0/9(전부 False). eps_runs 11구간·최장 2분기 → TTM 0개, decidable=0, new_high 전부 False. 그런데 collect_events 에 9사건 기여.",
+     "count": 9,
+     "affected": [
+      "JPM"
+     ],
+     "impact": "JPM 섹터 델타 기여 100% 오답. 실제 EPS→배당금 비교라 항상 '하락'."
+    },
+    {
+     "title": "GNRC adjusted_ebitda 단위 혼재(달러 vs 천달러) — 델타 3/9쌍 오염",
+     "severity": "치명",
+     "evidence": "13행 중 3행이 천 단위: 24Q2 164,689 / 25Q3 193,215 / 25Q4 185,152 (나머지는 ~1.9e8). 같은 행 매출도 176,020 vs 1.06e9. 단위 경계 넘는 델타쌍 3쌍, 배율 0.0013 / 0.0010 / 1044.98. source 전부 역산.",
+     "count": 3,
+     "affected": [
+      "GNRC"
+     ],
+     "impact": "GNRC 델타 9쌍 중 3쌍이 단위 때문에 뒤집힘."
+    },
+    {
+     "title": "스케일 이상값이 만든 100배 초과 가짜 델타 6쌍",
+     "severity": "중대",
+     "evidence": "IPGP 24Q4 adj_eps=99.1 (앞뒤 0.29·0.31, 매출은 233M→234M→228M 정상, source=근사치) → 341.7배·0.0031배 두 쌍. LLY 23Q4 adj_eps=12.2 (앞뒤 1.22·0.10) → 0.0082배. GNRC 3쌍 포함해 전 종목 스캔 총 6쌍.",
+     "count": 6,
+     "affected": [
+      "IPGP",
+      "LLY",
+      "GNRC"
+     ],
+     "impact": "신고점·델타 판정이 한 분기에서 통째로 뒤집힘."
+    },
+    {
+     "title": "BAC gaap_eps 에 EPS 아닌 값 혼입",
+     "severity": "중대",
+     "evidence": "period_label '25 Q1' 이 6행: gaap 0.9 / 0.89 / 12.76 / 3.19 / 13.02 / 13.97. BAC 분기 EPS 는 ~0.9 수준. 매출은 6행 중 5행이 상수 2,000,000. 이 위에 델타 16쌍이 얹혀 있음.",
+     "count": 6,
+     "affected": [
+      "BAC"
+     ],
+     "impact": "BAC 델타·신고점(decidable 7, newhigh 2) 전부 신뢰 불가."
+    },
+    {
+     "title": "사고7 부분 재발 — 간격 55~150일인데 사이에 행이 존재하는 델타쌍 42쌍",
+     "severity": "보통",
+     "evidence": "2210쌍 중 42쌍(1.9%), 42쌍 전부 사이 행의 잣대값이 빈 탓. 사이 행 분류: 값전무 21 · 연간(TTM)행 14(예 ETN 23.2B vs 분기 6.0B) · 스케일이상 6 · 진짜분기 가능 1(GE 24Q2 16.1B). 종목: ETN8 PFE5 BMY4 GE4 JPM3 COF3 OXY3 등 16종목.",
+     "count": 42,
+     "affected": [
+      "ETN",
+      "PFE",
+      "BMY",
+      "GE",
+      "JPM",
+      "COF",
+      "OXY",
+      "C",
+      "GS",
+      "LLY",
+      "KLAC",
+      "BAC"
+     ],
+     "impact": "형식상 42쌍이나 실질 건너뛴 분기는 1~7쌍. 41차 실측 37쌍에서 악화되지 않음."
+    },
+    {
+     "title": "eps_runs 는 filing_date, _delta_series 는 announced_date — 기준 칸 불일치",
+     "severity": "보통",
+     "evidence": "간격 숫자(55~150)는 같으나 적용 칸이 다름. 판정 갈리는 인접쌍 3쌍: STRL 24Q2→24Q3 (filing 92 통과 / ann 49 탈락), FDX 26Q3→26Q4 (92 / 41), TMUS 23Q1→24Q4 (184 탈락 / 133 통과).",
+     "count": 3,
+     "affected": [
+      "STRL",
+      "FDX",
+      "TMUS"
+     ],
+     "impact": "sector_model.py:291 주석의 '측정 장치와 같은 간격' 규칙이 칸 수준에서는 안 지켜짐."
+    },
+    {
+     "title": "TTM 을 못 만드는 종목이 사건 40건으로 기준선 분모만 부풀림",
+     "severity": "보통",
+     "evidence": "잣대 구간이 1개인 종목 80/151, 3개 이상 파편화 42종목. 4분기 구간이 하나도 없어 TTM 불가: JPM·AMZN·CIEN. decidable=0 종목 4개(UCTT·CIEN·AMZN·JPM)가 collect_events 에 40건 기여, 40건 전부 new_high=False. 전체 2366사건 중 new_high=True 678건.",
+     "count": 40,
+     "affected": [
+      "JPM",
+      "AMZN",
+      "CIEN",
+      "UCTT"
+     ],
+     "impact": "신고점 판단 불가 발표가 기준선 분모에 섞여 기준선을 낮춤(1.7%)."
+    },
+    {
+     "title": "화면 폴백이 잣대 미달 종목에 adj_eps 를 강제해 '신고점'을 표시",
+     "severity": "보통",
+     "evidence": "app.py:212 `yardstick_of(quarters) or \"adj_eps\"`. 잣대없음 9종목 중 CLS(adj_eps 6행)→화면 states 6개·신고점 2건, SNDK(6행)→6개·0건, VRTX(4행)→4개·0건. 나머지 6종목은 adj_eps 0행이라 무해. 제외 사유는 op_income 부재가 아님 — PG·VST 는 op_income 20분기 보유.",
+     "count": 3,
+     "affected": [
+      "CLS",
+      "SNDK",
+      "VRTX",
+      "PG",
+      "VST",
+      "CAT",
+      "NFLX",
+      "SNOW",
+      "DE"
+     ],
+     "impact": "8분기 문턱을 못 넘어 측정에서 뺀 종목의 신고점이 계기판에는 뜸(CLS 2건)."
+    }
+   ]
+  },
+  {
+   "axis": "축 6 — 미래 엿보기 (look-ahead)",
+   "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/미래엿보기.md",
+   "checks_run": "① 잣대 사다리를 시점별(PIT)로 다시 고른 뒤 judge.run 재실행해 판정 비교 ② 진입일>발표일 전수 확인(2366건) ③ 가격 시계열을 절반에서 잘라 aligned_flags·aligned_flags_chart·gap_over_52w·below_52wk_ma 재계산 비교(25종목 4150건) ④ confirmation_events 47건이 현재 주보다 미래 발표를 쓰는지 전수 ⑤ dataset.py 값검사가 행 밖을 참조하는지 코드 정독 ⑥ filing_date순서 vs announced_date순서 역전 전수 ⑦ 종목별 발표지연 중앙값 대비 이상치 ⑧ 08-13 커밋 스냅샷 vs 오늘 스냅샷 과거값 diff(가격·분기값) ⑨ market_data auto_adjust 확인 ⑩ 유지주(사후정보) 사용처 grep ⑪ source(직접공시/역산/근사치) 출처와 발표일 정합",
+   "clean": "진입일 인과성 완전: 2366사건 중 진입일<=발표일 0건. 이동평균·52주선·이격도 인과적: 절단 재계산 4150건 비교 불일치 0건(미래 가격 안 씀). leadership.confirmation_events 47건 전부 s[0]<=day 로 상한이 걸려 미래 발표 사용 0건. dataset.py 값검사는 전부 한 행 안에서만 끝남(매출하한·마진가드·EBITDA비율·주당상한·날짜형식) — 시계열 전체를 보는 판단 없음. filing_date 순서와 announced_date 순서 역전 0쌍(과거정점 누적 안전). 사후정보 '유지주'는 사건에 담기지만 판정·화면 어디에도 안 쓰임. gauge_h5b_on 중앙값은 values[:idx]로 현재 주 제외. H18·H19b 등록일 컷(2026-08-15)으로 탐색표본 분리가 코드로 집행됨.",
+   "findings": [
+    {
+     "title": "잣대 사다리가 종목 전체 이력을 봐서 고른다 — H9 채택이 뒤집힌다",
+     "severity": "치명",
+     "evidence": "yardstick_of(rows)가 사건 이후 분기까지 세어 잣대 고정. 2500사건 중 1052건(42.1%)이 그 시점엔 잴 수 없던 사건, 63건은 다른 잣대. 시점별 잣대로 judge.run 재실행: 사건 2366→1392, H9 신호n 62→23, 하한 16.6→12.5(기준선 상한 14.8) → 채택→미채택. H5b는 채택 유지(203→193, 하한 19.2→20.2)",
+     "count": 1052,
+     "affected": [
+      "ROKU",
+      "IPGP",
+      "NRG",
+      "WDAY",
+      "DIS",
+      "CVX",
+      "UCTT",
+      "CGNX",
+      "CIEN",
+      "BE",
+      "SNAP",
+      "LOW"
+     ],
+     "impact": "현재 '채택' 2건 중 H9가 무효. sector_model.yardstick_of_safe→_delta_series도 같은 함수라 이익 델타·주도섹터 판정까지 오염. H2·H2b·H7·H8·H10 표본도 전부 영향."
+    },
+    {
+     "title": "유니버스·묶음 분류가 2026년 기준으로 과거에 소급 적용",
+     "severity": "중대",
+     "evidence": "gauge_series·breadth_series·group_members가 오늘의 ds['tickers'] 160종목과 cfg.SECTORS를 2021년 구간에 그대로 적용. 첫 발표 연도: 2021년 102 · 2022년 38 · 2023년 13 · 2024년 5 · 2025년 2. judge.run의 발견종목 29개 제외는 종목 신호만 보호하고 gauge_series(ds)는 필터 없이 전체를 씀",
+     "count": 160,
+     "affected": [
+      "ALL"
+     ],
+     "impact": "실적 폭 게이지의 과거 값이 실제보다 높게 나온다. 현재 채택된 H5b가 이 게이지 하나에 전부 얹혀 있음."
+    },
+    {
+     "title": "주가가 배당 반영 수정주가 — 과거 가격이 미래 배당으로 되쓰인다",
+     "severity": "중대",
+     "evidence": "market_data.py:60 auto_adjust=True (배당·분할 반영), :90 Adj Close→Close. 배당 조정은 배당락일 이전 모든 과거 가격을 깎으므로 52주 창 앞부분만 추가로 낮아져 시계열이 위로 기울고 정배열 방향으로 편향. 되쓰기 자체는 확인(08-13→08-15 80종목 중 25종목 과거 종가 변동) 그러나 최대 변동 0.001%로 배당 효과 크기는 못 쟀음(스냅샷 이력 3일뿐)",
+     "count": 161,
+     "affected": [
+      "ALL"
+     ],
+     "impact": "aligned_flags·aligned_flags_chart·gap_over_52w·below_52wk_ma 등 가격 신호 전부가 실시간에 볼 수 없던 가격 위에서 계산됨. 크기는 확인 못함."
+    },
+    {
+     "title": "실적 발표가 아닌 8-K에 분기 숫자가 붙어 신호일이 앞당겨진 행",
+     "severity": "보통",
+     "evidence": "a!=f 2406행 중, 종목별 '기간종료→발표' 지연 중앙값보다 20일 이상 이른 행 25건. 최소 ACLS 2025-10-01(기간종료 2025-09-30, 중앙 34일), ENTG 2022-04-04(기간종료 04-02), REGN 6건 전부 기간종료+5~8일(중앙 29일). 기간종료 다음날 분기 실적 전체 발표는 불가능",
+     "count": 25,
+     "affected": [
+      "REGN",
+      "ACLS",
+      "STRL",
+      "COHR",
+      "AMD",
+      "ZETA",
+      "ENTG",
+      "MKSI",
+      "TWLO",
+      "MDB",
+      "ZS",
+      "AMZN"
+     ],
+     "impact": "그 사건의 60거래일 수익 창이 실제 발표 이전 구간을 최대 약 4주 포함. 분량은 1.0%로 작음."
+    },
+    {
+     "title": "스냅샷이 되쓰기되어 과거 측정이 재현되지 않는다",
+     "severity": "보통",
+     "evidence": "08-13 커밋(4d03436) vs 오늘: 같은 키로 맞춘 과거 분기값 5617개 중 241개(4.3%) 변동, 13행 소멸. 값→값: LITE 25Q2 revenue 380,000,000→402,200,000 · adj_eps 0.40→0.42. 값→None: CLS 24Q4 adj_eps 0.45→None. 이틀 사이 발생",
+     "count": 241,
+     "affected": [
+      "LITE",
+      "CLS",
+      "SNDK",
+      "STRL"
+     ],
+     "impact": "어제 판정을 오늘 재현할 수 없다. 수집 지연인지 회사 정정인지 이 데이터로는 구분 불가 — 수집 시점 버전을 남기지 않으면 이 축은 영영 감사 불가."
+    },
+    {
+     "title": "근사치 영업이익은 10-Q(XBRL) 출처인데 신호일은 8-K 날짜 (확정 못함)",
+     "severity": "경미",
+     "evidence": "source 분포 직접공시 1343·근사치 1100·역산 625. 근사치=XBRL GAAP 영업이익+주식보상비+무형자산상각(sec_fundamentals.py:12-14). 발표일 있는 근사치 935행의 announced−기간종료 중앙값 30일. 10-Q는 보통 8-K보다 뒤에 제출되나, sec_fundamentals.py:1631 '실제 제출일 대신 기간종료일 사용'이라 제출일이 저장돼 있지 않아 검증 불가",
+     "count": 935,
+     "affected": [
+      "H10"
+     ],
+     "impact": "H10(논갭 영업이익 단독)의 신호일에 그 값을 몰랐을 수 있음. 다만 재료가 보도자료에도 흔히 실려 확정 못함 — 제출일을 저장하기 전에는 판정 불가."
+    }
+   ]
+  },
+  {
+   "axis": "축7 컨센서스·서프라이즈 원장",
+   "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md",
+   "checks_run": "consensus 320항목/640행: (티커,as_of) 중복·시간역행·연속중복·자릿수(|avg|≤100, low≤avg≤high, rev≥1e6) 전수. surprise 642행: (종목,분기) 중복·정렬·상한·surprise_pct 산술 재검산 전수. 0q가 가리키는 분기를 year_ago↔4분기전 act 로 역추정(160종목×2일). 원장 추정치 vs 야후 보관 est 완전일치 탐색(640행). surprise act ↔ 스냅샷 adj_eps 분기 짝짓기 대조(425분기). git 커밋별 robot_log ↔ 원장 항목수 정합. grep 으로 판정 파이프라인 7개 파일 사용 여부. app.forward_spread_rows/surprise_sector_rows 실제 실행. run_tests.py 전체 실행(exit=0).",
+   "clean": "원장 자체 위생은 깨끗함: (티커,as_of) 중복 0 · 시간역행 0 · 연속 동일값 중복 0 · consensus 640행 자릿수/범위 위반 0 · surprise (종목,분기) 중복 0 · 정렬 깨짐 0 · surprise_pct 산술 재검산 642/642 일치. 컨센서스가 \"발표 이후 갱신된 값\"이라는 증거는 못 찾음 — 오히려 반증을 찾음: CSCO 2026-07-31 야후 보관 est 1.16883 == 우리가 2026-08-14 직접 박제한 0q avg 1.16883 (소수 5자리 일치) → 보관 est 소급수정 없음. 0q 정렬도 156/160 정상. 로봇 로그(160+0+160+0=320건)와 파일 실제 항목수 320 일치 — 하루 두 번 돌아도 안 불어남. 컨센서스 테스트 7개 실제 실행 확인.",
+   "findings": [
+    {
+     "title": "원장으로 스냅샷 adj_eps 를 교차검산하면 78분기 오염이 즉시 드러나는데 아무도 안 쓴다",
+     "severity": "치명",
+     "evidence": "surprise act ↔ 스냅샷 adj_eps 짝지음 425분기 중 일치(2%내) 325, 10%이상 어긋남 78(39종목). 그중 우리 시계열 안에서도 튀는(=우리쪽 오염 유력) 16건/15종목. NTAP 1.55vs0.05(3000%), REGN 11.83vs0.68(1640%), OXY 1.06vs0.14(657%), QCOM 3.00vs12.03, ETN 3.07vs11.97, VZ 1.09vs4.71 (배율 ≈1/4 = 연간값 혼입 모양), KLAC 3분기 배율 정확히 0.100",
+     "count": 78,
+     "affected": [
+      "NTAP",
+      "REGN",
+      "OXY",
+      "AAOI",
+      "NRG",
+      "TSLA",
+      "VZ",
+      "WMT",
+      "QCOM",
+      "ETN",
+      "HON",
+      "KLAC"
+     ],
+     "impact": "adj_eps 는 이익 델타 사다리 1순위 잣대 — 연속 분기 증감 판정이 그대로 오염된다. 원장은 이미 저장소에 있고 이 78건을 잡을 수 있었는데 검증에 연결돼 있지 않다. (정직: 야후가 튀는 건도 29건 있어 어느 쪽이 옳은지는 raw 원문으로 확정 필요)"
+    },
+    {
+     "title": "두 원장이 판정 파이프라인에 전혀 연결돼 있지 않다 (화면 2곳뿐)",
+     "severity": "중대",
+     "evidence": "grep -c 'consensus|surprise': measure_engine 0 · judge 0 · sector_model 0 · leadership 0 · measure_store 0 · data_quality 0 · market_data 0. verdict.json 가설 16개(H2~H19b) 어디에도 컨센서스 없음. 쓰이는 곳은 app.py:739 surprise_sector_rows(섹터 12행), app.py:752 sector_spread_rows(종목 14행)뿐",
+     "count": 2,
+     "affected": [
+      "전체"
+     ],
+     "impact": "헌법상 '관찰 전용'이라 규정 위반은 아니다. 다만 그 대가로 스냅샷 오염을 잡을 수 있는 유일한 독립 원장이 놀고 있다(F2 참조)."
+    },
+    {
+     "title": "원장 행에 대상 분기 라벨이 없다 + 발표 직후 0q 가 옛 분기를 가리킨 실증 2건",
+     "severity": "보통",
+     "evidence": "행 키에 분기 칸 없음(avg,low,high,analysts,year_ago,rev_*). CSCO 2026-08-12 발표 완료인데 08-14 0q avg=1.16883 = 그 분기 보관 est 와 완전일치(다음날 1.32365 로 굴러감). LITE 08-14 0q 2.96892 = 2026-06-30 분기 est. forward_estimates.py:1048 에는 '한 분기 당김' 보정이 있으나 원장 경로엔 없음",
+     "count": 2,
+     "affected": [
+      "CSCO",
+      "LITE"
+     ],
+     "impact": "발표 후 1~2일 야후 0q 는 아직 안 굴러간다. 스프레드가 '다음 분기 가이던스 vs 이미 발표된 분기 컨센서스'를 비교하게 되지만 막는 장치가 없다."
+    },
+    {
+     "title": "forward_spread_rows 가 today 를 받으면서 컨센서스는 무조건 원장 맨 끝(entries[-1])을 쓴다",
+     "severity": "보통",
+     "evidence": "app.py:319 에 as_of ≤ today 필터 없음. 실행 결과 today=2026-08-14 인데 스프레드 14행 중 13행이 2026-08-15 스냅샷 사용. 추가로 가이던스 이후 새 발표가 있는데 옛 가이던스를 쓴 행 1건(DIOD 2026-08-05 가이던스, 이후 08-12 발표)",
+     "count": 13,
+     "affected": [
+      "SNDK",
+      "UCTT",
+      "KLAC",
+      "TWLO",
+      "WDC",
+      "ZM",
+      "STX",
+      "VIAV",
+      "DIOD"
+     ],
+     "impact": "지금은 화면 관측 전용이라 해악이 작지만 today 인자가 공개돼 있어 과거 시점 재현에 쓰는 순간 곧바로 미래 참조가 된다."
+    },
+    {
+     "title": "surprise 원장이 스냅샷 누락 분기 15건을 짚어낸다 (DE·SLB 는 2년 넘게 멈춤)",
+     "severity": "중대",
+     "evidence": "surprise 에 있으나 스냅샷 대응 분기 없음(±45일)이고 스냅샷 최신보다 뒤인 것 15건. DE 4분기(스냅샷 최신 2023-10-29), SLB 4분기(최신 2024-03-31), LITE 2026-06-30(최신 2026-03-28), COHR·NEE·SO·V·LOW·XOM 각 1건. 그 밖 '중간 구멍' 12건",
+     "count": 15,
+     "affected": [
+      "DE",
+      "SLB",
+      "LITE",
+      "COHR",
+      "NEE",
+      "SO",
+      "V",
+      "LOW",
+      "XOM"
+     ],
+     "impact": "DE·SLB 는 분기 시계열이 2년 넘게 멈춰 있다 — 신고점 첫 돌파 판정에서 사실상 제외되거나 옛 값으로 잘못 판정된다."
+    },
+    {
+     "title": "metric='rev' 경로의 단위 어긋남 (현재 호출되지 않음) + 스냅샷 revenue 단위 혼재",
+     "severity": "경미",
+     "evidence": "rev 스프레드 47행 중 정상 41, 가이던스가 컨센서스의 1/50 미만 4건: SMCI 935,000 vs 1.50e10 · TXN 2.4e6 vs 5.91e9 · WMT 7.3e5 vs 1.87e11 · UCTT 7.7e5 vs 7.28e8. 컨센서스 rev_avg 대비 5배 이상 차이 종목 36개(AMD 1.13e6배, MCHP 1.08e6배, SO 2.9e9배)",
+     "count": 36,
+     "affected": [
+      "SMCI",
+      "TXN",
+      "WMT",
+      "UCTT",
+      "AMD",
+      "MCHP",
+      "NXPI",
+      "SO",
+      "AMZN",
+      "VST",
+      "NEE",
+      "NOW"
+     ],
+     "impact": "컨센서스 rev_avg 는 달러로 일관됨 — 어긋나는 쪽은 스냅샷의 revenue/guid_rev_mid 단위. 지금 화면은 metric='rev' 를 부르지 않아 노출은 없으나 부르는 순간 오염."
+    },
+    {
+     "title": "원장이 아직 단 한 건의 발표도 커버하지 못한다",
+     "severity": "경미",
+     "evidence": "원장 커버 기간 2026-08-14 ~ 2026-08-15(이틀). 스냅샷에서 2026-08-14 이후 발표 0건(08-13 까지 넓혀도 AMAT 1건, 원장 시작 전날). 즉 '발표일 이전 마지막 스냅샷' 규칙으로 재현 가능한 사건 0건",
+     "count": 0,
+     "affected": [
+      "전체"
+     ],
+     "impact": "설계상 정상이나 화면·문서에 '원장 커버리지 0건'이 정직하게 드러나야 한다."
+    }
+   ]
+  },
+  {
+   "axis": "축 8 — 묶음 분류와 측정 표본 정합성",
+   "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/분류·묶음.md",
+   "checks_run": "① config.TICKERS·GROUPS·groups.json·snapshot(tickers/eps/prices) 6집합 양방향 차집합 ② groups.json↔cfg.GROUPS/SECTORS 160종목 전수 대조 ③ GROUP_LAYERS 대응 ④ 묶음별 측정가능 종목수(yardstick_of ∧ 52주 워밍업) ⑤ 가격 이력 시작일·종료일·거래일수 분포와 묶음내 격차 ⑥ leadership.weekly_group_state 3388행 재계산 — 주별 판단가능/델타분모/결정가능 ⑦ 연도별 분모 변동표 ⑧ leadership_timeline·switch_events·inflection_events 재계산 후 verdict.json 대조 ⑨ git show 6fcd2d7:leadership.py 로 옛 코드 재현 실험",
+   "clean": "티커 집합은 완전히 깨끗하다. config.TICKERS(160)=config.GROUPS(160)=groups.json(160)=snapshot.tickers(160)=snapshot.eps(160), 양방향 차집합 전부 공집합. snapshot.prices만 161개인데 여분은 기준지수 SPY 하나로 정상. groups.json의 묶음명·섹터명은 config.GROUPS/SECTORS와 160종목 전부 일치(불일치 0건). GROUP_LAYERS(17)와 실제 묶음 집합(17) 완전 대응, 누락·잉여 0. 묶음 크기 4~20으로 config.py 259행 등록문(\"4~20종목\")과 일치. 52주 가격이 없는 종목 0개. 종료일은 160/160이 2026-08-14로 동일. 옛 축 config.SECTORS(12섹터)는 최소 5종목이라 MIN_MEMBERS=3에 걸리는 섹터 없음.",
+   "findings": [
+    {
+     "title": "verdict.json의 주도섹터 판정이 낡은 코드 산물 — 화면이 현재 코드가 부정하는 주도를 표시 중",
+     "severity": "치명",
+     "evidence": "verdict computed_at 13:33:32(커밋 47e7141 13:34:01), leadership.py 51차 수리는 0713820 14:20:34. snapshot은 그 뒤 불변. 같은 snapshot 재계산: 현재주도 데이터센터→기기 OEM 반도체, 델타폭 100.0→80.0, 완성수 0→4, 국면수 2→11, H20 전환 1건→18건. 옛 코드(6fcd2d7) 재현시 verdict와 완전 일치→원인 확정. H21도 verdict 2건 중 2024-02-16 에너지원자재 건이 현재 재계산에 부존재(현재는 3건).",
+     "count": 5,
+     "affected": [
+      "H19",
+      "H20",
+      "H21",
+      "app.py"
+     ],
+     "impact": "app.py 522행이 verdict.json을 그대로 읽어 뿌린다. 51차가 고친 결함(데이터센터가 판단불가인데 옛 점수로 도전자를 막음)이 만든 잘못된 주도섹터가 계기판에 사실처럼 남아 있다. 데이터 재수집 없이 판정만 재실행하면 해소."
+    },
+    {
+     "title": "묶음 크기 4~20 (5배 차) × 비율 기반 주도점수 = 작은 묶음 구조적 우위",
+     "severity": "중대",
+     "evidence": "MIN_COMPLETIONS=3이 절대개수라 4종목 묶음은 최소조건 충족 순간 밀도 75%, 20종목 묶음은 같은 3개로 15%(문턱 30% 미달). 실측 최고점수: 4~5종목 묶음 75.0·100.0 vs 20종목 묶음 53.8·58.5. 5종목 이하 묶음 5개(종목 22개=13.8%)가 주도 199주 중 97주(48.7%) 차지. 통신·미디어 회선 1개(4종목=2.5%)만으로 50주(25.1%).",
+     "count": 5,
+     "affected": [
+      "통신·미디어",
+      "발전전력",
+      "현물가메모리",
+      "데이터센터",
+      "에너지원자재"
+     ],
+     "impact": "주도섹터가 '진짜 강한 묶음'이 아니라 '분모가 작은 묶음'을 반복해 뽑는다. 통신·미디어 회선은 전환 3건 모두 완성3·판단가능4·결정3·밀도75.0의 동일 최소 구성으로 주도를 가져갔다."
+    },
+    {
+     "title": "'분모 3개' 문제는 금융만이 아니라 13개 묶음 전부에 퍼져 있다",
+     "severity": "중대",
+     "evidence": "조건충족 772주의 결정가능(델타분모) 분포 = 3:251, 4:165, 5:87, 6:123, 7:45, 8:40, 9:24, 10:13, 11:8, 12:5, 13:5, 14:6 → 251주(32.5%)가 분모 정확히 3개. 주도 전환 18건 중 11건(61%)이 결정가능=3. 완성 3개 이상이 델타 판단불가로 분모에서 빠진 조건충족 주 79건(예: 의약·의료 2022-11-04 완성7→결정4, 금융 2023-02-24 완성6→결정3).",
+     "count": 251,
+     "affected": [
+      "광고",
+      "교체주기IT",
+      "소비결제",
+      "금융",
+      "통신",
+      "분산에너지",
+      "의약",
+      "산업설비",
+      "에너지",
+      "반도체장비",
+      "데이터센터",
+      "광통신"
+     ],
+     "impact": "46차 수리는 '3개 미만'만 막아 정확히 3개는 통과한다. 주도 전환의 61%가 종목 3개의 이익 방향에 얹혀 있어, 한 종목만 뒤집혀도 주도가 바뀐다."
+    },
+    {
+     "title": "델타 잣대 없는 종목 9개 → 두 묶음은 델타폭이 영구 판단 불가",
+     "severity": "보통",
+     "evidence": "yardstick_of=None 종목: CAT·CLS·DE·NFLX·PG·SNDK·SNOW·VRTX·VST (9개, _delta_series 0건과 완전 일치). 측정가능(잣대∧52주가격) 4 미만 묶음 2개: 현물가 연동 메모리·저장장치 3/4, 발전·전력 판매 3/4. leadership.MIN_MEMBERS=4 → 발전·전력 판매는 델타분모 4 이상인 주 0주/210주, 조건충족 0주.",
+     "count": 9,
+     "affected": [
+      "CAT",
+      "DE",
+      "PG",
+      "NFLX",
+      "SNOW",
+      "VRTX",
+      "VST",
+      "CLS",
+      "SNDK"
+     ],
+     "impact": "두 묶음은 구조적으로 주도 후보가 될 수 없다. 데이터센터 묶음도 5명 중 4명만 잣대가 있어(CLS 결측) 델타분모가 2~4로 얇다."
+    },
+    {
+     "title": "현물가 메모리 묶음이 210주 중 182주(87%) 동안 표에서 통째로 사라져 있었다",
+     "severity": "보통",
+     "evidence": "가격 시작일은 158/160이 2021-08-16으로 균일. 예외는 CRDO 2022-01-27, SNDK 2025-02-13(거래일 377일). 판단가능(52주 워밍업) 첫날: 158종목 2022-08-12, CRDO 2023-01-20, SNDK 2026-02-06. 현물가 묶음(MU·SNDK·STX·WDC)은 SNDK 전까지 회원 3명 → MIN_MEMBERS=4 미달로 주간 행이 아예 생성 안 됨. 이 묶음 주간행 28주, 다른 16개 묶음은 전부 210주.",
+     "count": 28,
+     "affected": [
+      "MU",
+      "SNDK",
+      "STX",
+      "WDC",
+      "CRDO"
+     ],
+     "impact": "묶음내 시작일 격차는 15개 묶음이 0일, 예외는 기기OEM 164일·현물가 1277일뿐이라 전반적 편향은 작다. 다만 현물가 묶음은 최근 28주만 존재하고 그마저 델타분모 1~3이라 실질 판단 불가."
+    },
+    {
+     "title": "델타 판단가능 종목수가 시기마다 달라 '델타폭 %'의 뜻이 연도별로 다르다",
+     "severity": "보통",
+     "evidence": "회원수는 고정인데 델타분모가 이동: 산업 설비·자동화·수송 13명 고정, 델타분모 2022년 최저 3 → 2023년 3~9 → 2025년 8~11. 소비 최종재·유통 15명 고정, 델타 8~13. 광고 플랫폼 8명 고정, 델타 5~7. 기기 OEM 반도체 20명, 델타 13~20.",
+     "count": 17,
+     "affected": [
+      "산업설비",
+      "소비최종재",
+      "광고",
+      "기기OEM",
+      "좌석구독SW"
+     ],
+     "impact": "같은 '델타폭 50%'가 2022년엔 3명 중 1.5명, 2025년엔 10명 중 5명이다. H21 분기점(국면 최고 대비 20%p 하락)이 실제 이익 변화가 아니라 분모 변화로 발화할 수 있다."
+    }
+   ]
+  }
+ ],
+ "verified": [
+  {
+   "finding": {
+    "title": "주식분할이 가격에만 반영되고 EPS에는 미반영 — 7종목이 신고점을 낼 수 없음",
+    "severity": "치명",
+    "evidence": "NVDA adj_eps 6.12→0.68, GOOGL gaap 26.29→1.36, AVGO 10.96→1.24, LRCX 8.60→0.91. 가격은 분할조정됨(NVDA 2024-06-10 종가 121.58). 내재PER 검산: AVGO 2.1→59.3(x28), SMCI 1.4→31.5(x22), GOOGL 3.5→34.4. 분할 후 판단가능 발표 55건 전부 신고점 0건. NVDA TTM 18.00→3.14",
+    "count": 55,
+    "affected": [
+     "NVDA",
+     "GOOGL",
+     "AVGO",
+     "LRCX",
+     "SMCI",
+     "ANET",
+     "WMT"
+    ],
+    "impact": "핵심 신호 'TTM 신고점 첫 돌파'가 이 7종목에서 물리적으로 불가능. 표본 55건이 조용히 소실되고, NVDA는 83% 이익급감으로 읽혀 이익델타·주도섹터 판정을 반대로 뒤집음",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "반박 실패 — 사실입니다. dataset.build 후 데이터로 재실행: 분할효력일 이후 판단가능 55건(NVDA8·GOOGL12·AVGO3·LRCX8·SMCI8·ANET7·WMT9) 신고점 0건 — 원 보고서와 정확히 일치. 유니버스 전수 단차탐지 30종목 32건 중 실제 분할 7종목은 명단과 동일(AMZN은 판단가능 0건이라 무해). 가격은 조정됨(NVDA 2024-06-10 종가 121.5796, 전일 120.6792/익일 120.711 — 점프 없음). TTM이 분할선을 끊지 않고 합산됨(NVDA 6.12→0.68 같은 구간) → 서로 다른 단위의 합, 정상 회계 아님. 반사실(단차비율 환산 후 재실행): 신고점 0→33, 첫돌파 0→4. 다만 과장 2곳: (1)\"55건 소실\"은 틀림 — 분모 1605에 남아 있고 오분류일 뿐 (2)\"델타·주도섹터 반대로 뒤집음\"은 연속분기 비교라 분할선 1건씩 총 7건뿐.",
+    "corrected_count": 55,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "dataset.py 가드는 매출하한·마진·주당상한 3개뿐이고 measure_engine에 split 코드 0건이라 한 건도 안 걸러짐. 두 갈래: (1)로봇이 분할 효력일·계수를 함께 수집해 EPS계열에 적용, (2)그게 안 되면 영구단차가 감지된 종목은 eps_runs를 단차에서 끊어 past_peak를 리셋(값을 만들지 않으므로 창작금지에 안 걸림). 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박1.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "주당값 상한 100을 간발로 통과한 조작값이 가짜 첫돌파(H2b)를 실제로 만듦",
+    "severity": "치명",
+    "evidence": "IPGP 24Q4 adj_eps=99.1(앞뒤 0.29/0.31, 319배). 검산: 영업익 15.7백만÷99.1=내재주식수 15.8만주 — 분기매출 2.3억달러 회사에 불가능. 결과 2025-11-04 TTM 100.06 신고점 streak=1 생성. XOM 89.45→2023-07-13 TTM 115.67 streak=4. 그 외 SCHW 95.3·VRTX 85.0·NRG 50.43·BAC 13.6",
+    "count": 12,
+    "affected": [
+     "IPGP",
+     "XOM",
+     "SCHW",
+     "VRTX",
+     "NRG",
+     "BAC",
+     "APP",
+     "MU",
+     "SMCI",
+     "MKSI"
+    ],
+    "impact": "전체 첫돌파 174건 중 최소 1건이 100% 조작값. 채택 기준(n≥10, 윌슨 하한)을 다투는 상황에서 가짜 신호가 표본에 섞임",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "값 오류는 재현됨: IPGP 24Q4 adj_eps=99.1, 같은 행 gaap_eps=0.18, 영업익 15.706M/99.1=158,486주 → 불가능. build 후에도 남아 TTM 100.06 생성. 그러나 핵심 주장은 반박됨. (가) 99.1→0.30(앞뒤 자리)로 바꿔도 2025-11-04 은 TTM 1.26, new_high True, streak 1 — 첫돌파는 그대로 존재. 오염된 건 TTM 크기이지 신호 분류가 아님. (나) IPGP∈MEASURE_DISCOVERY_TICKERS(29개) → judge.run 신규(판정) 표본에서 제외. H2b 신규 n=96 중 IPGP 0건. 채택 판정 표본에 안 섞임. (다) 99.1→0.30 후 8개 가설 판정 전부 동일(H5b 203/24.6 채택, H6 n=11, H2b 96/19.8 미채택). XOM 89.45 제거도 H8 n 42→43뿐. 재집계: 10배-중앙값 스캔 16건/11종목, 그중 잣대 칸의 EPS 조작값은 IPGP 1건(MU·SMCI·BA는 연간값 혼입, GOOGL은 분할 전 값 — 다른 축). 별건 경고: 아무 칸이나 지우면 H5b가 뒤집힘(대조군 12건 중 2건) — 게이지 중앙값 문턱의 구조적 취약성, 별도 등록 권고.",
+    "corrected_count": 1,
+    "corrected_severity": "보통",
+    "fix": "IPGP 2025-02-11 adj_eps=99.1 을 없음 처리(고치지 말고 버림). 상한 100 대신 같은 행 대비 검사 추가: gaap_eps>0 인데 |adj_eps| > 20×gaap_eps 이면 없음 처리. 화면 TTM 100.06 표시도 함께 사라짐.",
+    "survives_dataset_clean": true
+   }
+  },
+  {
+   "finding": {
+    "title": "연간 실적이 분기 행에 혼입 / 잣대 칸이 두 무리로 갈림",
+    "severity": "중대",
+    "evidence": "GILD: 매출 9분기 내내 ~7,000백만으로 평평한데 adj_eps만 7.90·6.20·6.35→1.37→6.45→1.72→2.01 로 5배 널뜀(같은 매출에서 불가능). 24Q1부터가 진짜 분기값. REGN: 20분기 중 7개가 0.18~0.81로 나머지(9~13)의 1/15. 이 상태로 신고점 3건 잡힘",
+    "count": 16,
+    "affected": [
+     "GILD",
+     "REGN",
+     "WMT",
+     "SMCI"
+    ],
+    "impact": "GILD는 이익 3분의1 토막 회사로 읽혀 신고점 0건. REGN 신고점 3건(2024-05-02 등)은 판정 자체를 믿을 수 없음",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "dataset.build 출력으로 재실행 — 값 그대로 남음(_clean_quarters 에 연간/분기 판별 가드 없음; 상한 100 은 22.09·6.29·7.90 을 못 잡음). 자립 스캔(이웃 2.5~6배 & 매출 ±25%) 24건/19종목. 결정 검산 '값−앞3분기합=내재Q4'가 이웃권에 떨어진 것 18건(SMCI 22.09−17.22=4.87 이웃4.09 / QCOM 10.22−7.52=2.70 이웃2.87 / FDX 17.80−12.40=5.40 이웃3.73) — 계절성 배제. 계절성 성립 VZ 1건·검산불성립 5건은 제외. 컨센서스 교차: REGN 분기 16.05(year_ago 11.44 = 저장 25Q4 11.44 정확일치) vs 저장 0.18~1.00. GILD 컨센 2.16 vs 저장 6.20~7.90. TTM: WMT 2023-08-17 15.33=1.50+1.25+6.29+6.29. 영향: H2b 166건 중 12건(7.2%) 오염, 신고점 678중 42. GILD 판단가능 16·신고점 0.",
+    "corrected_count": 35,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "dataset.py 에 상대 기준 가드 추가 — 절대 상한(100)이 아니라 '값 ≈ 직전 3분기 합 + 나머지가 이웃 수준'이면 연간값 혼입으로 보고 없음 처리. REGN형(회사 중앙값의 1/5 미만 + source=근사치)은 원인이 달라 별도 가드. affected 4종목은 과소 — 실제 16종목(ACLS DELL ETN FDX FSLR GILD NRG NTAP ONTO QCOM REGN RUN SMCI SYNA T WMT). 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박3.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "매출 단위가 섞여 dataset.py 마진 가드가 아예 작동하지 않는 구멍",
+    "severity": "중대",
+    "evidence": "가드는 revenue>=10,000,000 일 때만 돎. 매출이 천/백만 단위 저장이면 조건이 거짓→가드 통째 건너뜀. 실측: 가드 통과 후 이상치 0건 vs 가드 미작동 이상 영업이익 85건. META 21Q3 매출 29,010·영업익 12.8B=마진 4,412,961%. 매출 단위 섞인 종목 21개",
+    "count": 85,
+    "affected": [
+     "FSLR",
+     "TER",
+     "TGT",
+     "HD",
+     "U",
+     "META",
+     "GNRC",
+     "VST",
+     "AMZN",
+     "ZETA",
+     "NFLX",
+     "NRG"
+    ],
+    "impact": "op_income은 사다리 밖이라 신고점 판정엔 직접 영향 없으나 화면 숫자가 틀림. 같은 구멍이 EBITDA 잣대 7종목에 언제든 CIEN형 사고를 재발시킴",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현 완료: 가드 켜진 구간 이상 op 0건 / 꺼진 구간 85건 / 15종목 — 발견자와 정확히 일치, build() 뒤 데이터라 잔존. 그러나 영향 설명이 양쪽 다 틀림. (1) \"op_income은 측정 밖\" 거짓 — collect_job.py:138 이 collect_metric_events(ds,\"op_income\") 로 H10(현재 '채택' 가설)에 넣음. (2) 규모는 부풀림 — 종목별 op_income log10 폭 재보니 op 자체가 깨진 건 27건/4종목(TGT 8.83·HD 6.25·HPE 9.00·UPS 9.66)뿐, 58건은 op 일관(FSLR 1.35·TER 0.76·META 0.54)이고 매출 칸 단위만 다름. (3) 처방대로 85건 드롭 시 H10 1709→1619, 신고점 513→485, FSLR 19·TER 19 정상 표본까지 소멸. 판정은 채택→채택 불변(n 54→48, 27.8%→29.2%). EBITDA 재발 위험 실측 0건.",
+    "corrected_count": 27,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "가드를 '매출 대비 비율'이 아니라 '같은 종목 op_income 계열의 자릿수 일관성'으로 교체(종목 중앙값 log10 ±2 밖만 없음 처리). TGT·HD·HPE·UPS 27건이 잡히고 FSLR·TER 정상 38건은 살아남음. 이 검사는 op_income 이 100배 이상 벌어지는 23종목(LOW·VRT·COHR·UNP·SEDG·S·SNOW·WDC·BE·AMD·NXPI·ISRG·AMGN 등)까지 함께 잡음 — revenue>=10,000,000 문턱만 없애면 이들은 그대로 남음. 아울러 감사보고서 5절의 \"op_income 은 측정에 안 쓰인다\" 문장을 정정할 것(collect_job.py:138)."
+   }
+  },
+  {
+   "finding": {
+    "title": "gaap_eps 자리에 희석 주식수가 들어감 (원문 대조로 확정)",
+    "severity": "중대",
+    "evidence": "UCTT_2026-04-28.txt 13행 'net loss ... $(0.40) per diluted share', 66행 'Diluted 45.3'. 저장값 gaap_eps=-45.3. 동일 오류 24Q1 -44.6, 25Q1 -45.1, 26Q1 -45.3 — 전부 그 분기 주식수와 정확히 일치. 원문 대조 257건 중 유일한 확정 오류",
+    "count": 3,
+    "affected": [
+     "UCTT"
+    ],
+    "impact": "UCTT 잣대는 adj_eps라 신고점엔 미반영이나 화면·비교에 노출. 'Shares used in computing' 다음 숫자를 EPS로 읽는 파서 경로가 살아 있음",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "반박 실패. 내가 다시 센 결과 build 후 UCTT |gaap_eps|>20 = ['24 Q1','25 Q1','26 Q1'] 3건, notes 0건(가드 미작동). 원문 UCTT_2026-04-28.txt 열2 매출 518.6=저장 25Q1 매출 → 참값 26Q1 -0.40, 25Q1 -0.11, 주식수는 45.3/45.1로 저장값과 소수점까지 일치. 24Q1은 raw 없으나 -44.6×44.6M=순손실 -19.9억달러 vs 매출 477.7백만·영업익 +25.0백만 → 산술상 불가. 현재 파서 재실행 gaap_eps=-45.3 재현(경로: find_eps_value가 64행 'Shares used in computing net loss per share:'에 매칭). raw 316건 전수 재스캔 결과 같은 기전은 UCTT뿐. 전문 /tmp/.../audit/out/반박5.md",
+    "corrected_count": 3,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "① sec_fundamentals.LABELS_GAAP_EPS 매칭 시 매치 앞에 'Shares used|Weighted-average ... shares'가 오면 버린다(현재 find_eps_before_per_share는 -0.40을 맞게 뽑지만 gaap_eps가 None일 때만 호출돼 못 쓰임). ② dataset에 행 내부 검산 가드 추가: 주당값×추정주식수로 나온 함의 순손익이 그 행 매출의 수 배를 넘으면 버린다(UCTT 3건 전부 여기 걸림). PER_SHARE_ABS_LIMIT=100은 45~100 구간을 못 막는다."
+   }
+  },
+  {
+   "finding": {
+    "title": "op_income 칸에 반복되는 자리표시자 상수 (파싱 잔해)",
+    "severity": "보통",
+    "evidence": "LOW=202.0 3회(dataset.py 주석의 그 202), UNP=10.0 4회, BE=75.0 4회, ENTG=1,000,000 3회, SNOW -1.0, TGT 3.0, UPS -2.0, HPE -1.0, S 4.0. 같은 값 반복은 실적이 아니라 파싱 잔해의 신호. 중앙값에서 100배 이상 이탈 65행/19종목",
+    "count": 65,
+    "affected": [
+     "LOW",
+     "UNP",
+     "BE",
+     "ENTG",
+     "SNOW",
+     "TGT",
+     "UPS",
+     "HPE",
+     "S",
+     "COHR",
+     "NXPI",
+     "ISRG"
+    ],
+    "impact": "측정 사다리 밖 칸이라 판정엔 미반영. 다만 매출 칸이 무너진 것과 동일한 병합 사고이며 계기판 표시가 틀림",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현: dataset.build 후 op_income 중앙값 100배 이탈 = 63건/19종목(65 아님). 반복상수 VRT -1.0 x14(원보고 누락), HPE -1.0 x9, UNP 10.0 x5, BE 75.0 x4, LOW 202.0 x3, ENTG 1e6 x3 — 이웃 분기가 2.4B/178M 이라 어떤 단위로도 설명 불가. 단 CSCO 4.3e9 x3, ORCL 6.2e9 x3 처럼 반올림 반복은 정상이라 '반복=잔해' 논리는 절반만 맞음. 원보고의 '판정엔 미반영'은 거짓: collect_job.py:138 이 op_income 을 등록가설 H10 잣대로 쓰고 H10 은 verdict.json 유일 '채택'. BE 는 상수 75 로 ttm 300.0/135,000,225 4연속 신기록, AMD ttm 1,850,005,147→4,704. 다만 63건 없음처리 후 재판정: n 54→52, rate 27.8→28.8, 여전히 채택 — 결론 불변.",
+    "corrected_count": 63,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "dataset.py 마진 가드가 rev>=10,000,000 일 때만 돌아 63건 중 47건은 가드가 아예 미작동(매출 None 38 + 1천만 미만 9). data_quality.py:108 은 상한만 검사, 하한(자리표시자) 검사 없음. 조치: op_income 에 '같은 회사 중앙값 대비 1/100 미만이면 없음 처리' 상대 하한 가드 추가 + 동일 값 3회 이상 연속 반복 시 없음 처리(반올림 정상값과 구분 위해 |값| 이 중앙값의 1/100 미만일 때만). 매출 None 이어도 돌게 할 것."
+   }
+  },
+  {
+   "finding": {
+    "title": "period_label이 신고일과 어긋남 (표기만의 문제)",
+    "severity": "경미",
+    "evidence": "SCHW: 2025-01-21·04-17·07-18·10-16 네 발표가 전부 '24 Q4'(값 1.01·1.04·1.08·1.26은 각 분기 실제값과 일치 — 라벨만 고정). XOM: 2022-07-29가 '23 Q1', '24 Q1'이 3번 등장. BAC: '25 Q1'이 5개 날짜에 등장",
+    "count": 3,
+    "affected": [
+     "SCHW",
+     "XOM",
+     "BAC"
+    ],
+    "impact": "측정은 announced_date 기준(55~150일)이라 판정엔 영향 없음. 계기판에서 사용자가 읽는 분기 이름이 틀림",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현됨, 오히려 축소보고. dataset.build 후 같은 티커 내 중복 period_label = 51종목/254행(잣대값 있는 행 189). 3종목 아님. SCHW '24 Q4' x4·XOM '24 Q1' x3·BAC '25 Q1' x6(발견은 5라 함) 재현. 단 발견의 '피해'는 거짓: grep -rn period_label app.py pages/ = 0건. 화면은 announced_date만 표시(pages/1_원자료.py:87 \"마지막 발표\": last[\"announced\"]). measure_engine/sector_model/leadership/judge에도 period_label 없음. 유일한 계산 사용처 data_quality.fiscal_quarter_of는 detect_seasonality/detect_anomalies/prepare_quarters 경유인데 이 셋의 호출자는 tests뿐(실파이프라인 0). 참고: '라벨-발표일 불일치'를 그냥 세면 776건이 나오는데 CRDO(4월 결산) 같은 비달력 회계연도의 정상 표기 → 오탐. 중복라벨만이 유효 지표.",
+    "corrected_count": 51,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "보고서에서 \"계기판에서 분기 이름이 틀리게 보인다\"는 문장은 삭제(코드로 반증). 건수는 3종목→51종목/254행으로 정정. 조치는 sec_fundamentals.extract_period_label이 라벨을 못 확정하면 None으로 두기(창작 금지 원칙) — 값 수정 아님. 측정·화면 영향 0이므로 우선순위는 최하위."
+   }
+  },
+  {
+   "finding": {
+    "title": "실적이 아닌 8-K(합병·CEO선임·투자자설명회)가 발표일로 쓰여 측정에 들어감 — 원문 확인",
+    "severity": "치명",
+    "evidence": "raw 원문 중 발표일로 쓰인 151건 검사 → 실적문구 없는 문서 6건. QRVO 2025-10-28=Skyworks 합병발표(첫돌파, SPY대비 -14.7%p), STRL 2024-09-18=투자자설명회 슬라이드(첫돌파, +16.0%p), ICHR 2025-11-03=CEO선임(+94.7%p). 핵심신호 첫돌파 표본 166건 중 2건 오염 = 1.2%",
+    "count": 6,
+    "affected": [
+     "QRVO",
+     "STRL",
+     "ICHR",
+     "WDAY",
+     "T"
+    ],
+    "impact": "합병·인사 공시일은 실적과 무관하게 주가가 크게 움직인다. 그날을 신고점 돌파일로 세면 신호 폭등률이 실적 아닌 사건으로 오염된다. 채택기준이 윌슨구간 완전분리라 n=166에서 1~2건이 하한을 흔든다. 원문 없는 2752건은 검사 못함 — 6건은 확인된 최소치.",
+    "axis": "announced_date (측정의 기준 시점)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/발표일.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "raw/는 \"파싱 실패 원문\" 보관소 — 같은 날 실적 8-K는 정상 파싱되고 실패한 문서만 남는다. 발표일로 쓰인 raw 150건 중 125건이 잣대값 보유. 발표 리듬 검산(내 실행): QRVO 앞91/뒤91·전년동기 2024-10-29(차1일), ICHR 91/98·차1일, WDAY 96/91·차1일, T 98/84·차1일 — 넷 다 정상 실적일. T 원문 80줄에 \"fourth-quarter 2025 ... $0.53 per diluted share\", 데이터 gaap_eps 0.53 일치. QRVO 원문 133줄 \"Qorvo announced preliminary results for its fiscal 2026 second quarter\"(같은 날). STRL 2026-04-08은 사건으로 안 잡힘. 진짜는 STRL 2024-09-18(앞106/뒤49, 전년차43일) 1건뿐. 재현: 사건 2366·new_high 678·첫돌파 166 (감사관과 일치).",
+    "corrected_count": 1,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "문서 종류 분류 대신 발표 리듬 검사를 data_quality.py에 추가: 인접 발표일 간격 45일 미만이거나 전년 동기 발표일과 30일 초과 차이면 announced_date를 없음 처리(창작 금지의 버림 쪽). 이 검사로 raw 150건 중 이탈은 12건뿐 — BAC/BMY/C/FDX/GE(2)/JPM/KLAC/LLY/OXY/STRL/VRTX. 전문은 /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박8.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "8-K 단독 승격 행 497건: filing_date가 기간종료일이 아니라 발표일 — 구간 판정이 무너짐",
+    "severity": "치명",
+    "evidence": "announced==filing 497행(역산459/직접38), 41종목, 그중 418행이 종목 확정잣대 값 보유. 승격형 22종목: 잣대행401→구간65, 55일미만 간격 22.1%(97/438). 정상형 129종목: 2113행→구간238, 0.6%(13/2287). 36배 차이. JPM은 20행→11구간→판단가능 0건",
+    "count": 497,
+    "affected": [
+     "JPM",
+     "COF",
+     "GE",
+     "JNJ",
+     "PFE",
+     "ETN",
+     "BAC",
+     "LLY",
+     "BMY",
+     "GS",
+     "XOM",
+     "OXY"
+    ],
+    "impact": "eps_runs가 filing_date 간격으로 연속분기를 판정하는데 승격행은 filing이 8-K날짜라 실적 무관 8-K가 끼면 구간이 끊긴다. JPM·AMZN·CIEN·UCTT는 판단가능 발표 0건 — 대형주 4종목이 측정에서 통째로 빠진다.",
+    "axis": "announced_date (측정의 기준 시점)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/발표일.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "건수는 완전 일치(497행/41종목/역산459·직접38/잣대보유418, 승격형 잣대행401→구간65, 정상형2113→238). 그러나 원인 지목이 틀렸다. 잣대행이 100% 승격인 종목이 바로 그 22종목이라 종목 내부 축은 일관 — 축을 announced로 바꿔도 간격이 안 변한다. 22종목 구간끊김 43건 원인: 중복행(0일)13 · 여분 비실적8-K(1~54일)28 · 결측(>150일)2, 축불일치 0. JPM 끊김 10건 전부 간격0일이고 중복만 제거하니 11구간→1구간, 판단가능 0→6. AMZN·CIEN·UCTT는 승격행 0개(끊김이 181~364일 결측). 또 \"측정에서 빠진다\"도 오류 — collect_events는 decidable로 안 걸러 이 4종목이 new_high=False로 기준선에 43건 들어간다. 축 불일치로 실제 끊긴 구간은 TTMI·DIOD 2건뿐. measure_store.py:30에 이미 문서화된 규약.",
+    "corrected_count": 2,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "이 발견 자체의 수정은 불필요(축 불일치 실피해 2건: TTMI·DIOD 최신분기 손실). 대신 재귀속해야 할 진짜 원인 두 가지를 별도로 고칠 것: ⑴ 같은 filing_date 중복 행 제거(eps_runs 진입 전 dedupe) — JPM만으로 판단가능 6건 복구, ⑵ 판단가능 0 종목이 new_high=False로 기준선을 희석하는 문제(H7 기준선의 11.8%, H8 3.8%) — collect_events에 decidable 필터 검토. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박9.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "한 해 발표일이 5개 이상인 (종목,연도) 33건 — 초과 발표일 64개",
+    "severity": "중대",
+    "evidence": "분기실적은 연 4회인데 ETN2024·COF2024·COF2025 각 9개, PFE2023·GE2023 각 8개, BAC2025·BMY2023·GE2024 각 7개. 전부 승격형 16종목. COF 2025-04-18은 성금요일(휴장)로 실적발표 불가능한 날",
+    "count": 33,
+    "affected": [
+     "ETN",
+     "COF",
+     "PFE",
+     "GE",
+     "BAC",
+     "BMY",
+     "JPM",
+     "C",
+     "GS",
+     "JNJ",
+     "XOM",
+     "OXY"
+    ],
+    "impact": "실적과 무관한 8-K 64개가 분기 발표로 승격돼 있다. 각각이 가짜 발표 상태를 하나씩 만들고, 짧은 간격으로 앞뒤 구간을 끊어 정상 분기의 TTM까지 못 만들게 한다.",
+    "axis": "announced_date (측정의 기준 시점)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/발표일.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재계수: snapshot·build 모두 조합 35 / 초과 67 (발견은 33/64 — 틀림). 현상 자체는 사실(ETN 2024 초과 5행 전부 매출 23.2B 반복·EPS 전무, COF 2025-04-18 rev -2.0). 그러나 eps_runs 가 잣대값 없는 행을 제외하므로 측정 도달은 13조합/16발표일뿐(ETN2024 9→4, COF2024 9→3, PFE2023 8→4). \"구간을 끊는다\"는 설명은 틀림 — 잣대값 없는 행은 usable 목록에 없어 절단 불가. 신호 영향: 간격55일미만 사건쌍 28개 중 첫돌파 0건, 기준선 희석 15/2366=0.6%, 반사실 상한 첫돌파 166→163.",
+    "corrected_count": 35,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "dataset.build 는 하나도 못 거르므로 남지만, 측정 장치가 51/67 을 자동 배제한다. 고칠 지점은 발표일 개수가 아니라 잣대값을 가진 승격행이다: period_label 이 'YY/MM' 형식이거나 revenue 가 음수인 행의 adj_eps·adjusted_ebitda·gaap_eps 를 dataset 단계에서 None 처리(창작 금지 원칙에 부합). 실제 쓰레기 값 예: XOM 2023-07-13 gaap 89.45, COF 2025-05-22 gaap 17.72, JNJ 2023-08-30 adj 10.0, BAC 2026-01-14 gaap 13.02."
+   }
+  },
+  {
+   "finding": {
+    "title": "발표일 간격 6.2%가 55~150일 밖 — 잣대행 8.7%가 TTM을 못 만듦",
+    "severity": "보통",
+    "evidence": "인접 2725쌍: 55~150일 2556(93.8%), 55일미만 110(4.0%), 150일초과 59(2.2%). 중앙값 91일. 잣대칸 보유 2514행 중 4분기 미만 구간에 갇힌 행 218건(8.7%), 구간 끊김 152회. 발표상태 2500건 중 판단가능 1605건(64.2%)",
+    "count": 218,
+    "affected": [
+     "JPM",
+     "JNJ",
+     "BAC",
+     "AMZN",
+     "CIEN",
+     "AVGO",
+     "LLY",
+     "ADI",
+     "ABNB",
+     "WDC",
+     "CRWD",
+     "LOW"
+    ],
+    "impact": "델타(신고점 판정)를 아예 못 재는 분기가 218건. NVDA는 2022-02-16 다음이 2022-08-08로 23Q1 발표가 통째로 결측(간격 173일).",
+    "axis": "announced_date (측정의 기준 시점)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/발표일.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "반박 실패. r11a.py 재실행이 발견 숫자와 완전 일치: 2725쌍 중 55~150일 2556(93.8%)·55일미만 110(4.0%)·150일초과 59(2.2%)·중앙값 91, 잣대행 2514 중 갇힌행 218(8.7%), 끊김 152회, 상태 2500/판단가능 1605(64.2%). NVDA 2022-02-16→2022-08-08(173일) 결측도 확인. 다만 성격은 '오염'이 아니라 백필 결측 + eps_runs가 사고7 방지로 구간을 끊는 설계대로의 동작. 과장 1건: 판단불가 895건 중 602건(67%)은 워밍업(4분기 채우는 중) 탓이라 간격과 무관 — 간격 탓 실제 몫은 293건(15.4%). 중복계상 아님: 218 중 승격형22종목은 55건뿐, 163건은 독립 결측. 연도별 손실 14~17%로 시간 편향 없음.",
+    "corrected_count": 218,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "1) earnings_states의 streak 초기화가 핵심 결함 — 구간 첫 4개 발표의 streak==1은 첫돌파 표본에서 제외하고 판단불가로 버릴 것(가짜 26건·누락 33건, 첫돌파 174건 대비 약 1/3). 2) dataset.build의 notes에 간격이탈·구간끊김을 기록(현재 293건이 로그 없이 사라짐 — 정직화 위반). 3) 218/293/166 표본수를 측정결과.md 각주로 상시 표기. 이 항목은 데이터축이 아니라 장치(코드) 감사로 옮겨 적을 것."
+   }
+  },
+  {
+   "finding": {
+    "title": "같은 티커 내 중복 발표일 18개(36행) — 상태 14건이 로그 없이 사라짐",
+    "severity": "보통",
+    "evidence": "JPM 10개(매 분기), COF 3, JNJ 2, GE·PFE·TTMI 각 1. earnings_states의 seen 집합이 뒤 행을 버려 상태 14건 소실(JPM10·JNJ2·TTMI1·GE1). JPM 2024-04-12에 '23 Q3' gaap1.15 와 '24 Q1' gaap4.45 두 행 — 코드는 앞의 1.15 채택",
+    "count": 18,
+    "affected": [
+     "JPM",
+     "COF",
+     "JNJ",
+     "GE",
+     "PFE",
+     "TTMI"
+    ],
+    "impact": "어느 행이 진짜인지 데이터만으로 알 수 없는데 조용히 앞 행이 채택된다. notes에도 로그에도 남지 않아 사람이 알아챌 방법이 없다.",
+    "axis": "announced_date (측정의 기준 시점)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/발표일.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "건수는 재계산 일치(RAW/BUILD 모두 6종목·18날짜·36행). 그러나 성격 규정이 틀렸다. r4.py: 기각된 상태 14건이 전부 decidable=False, ttm=None → 게이지 분모에서 애초 제외. 판단가능 상태 목록은 6종목 전부 동일. r5.py: 중복제거를 빼고 돌리니 사건 2366→2378(+12), 12건 전부 같은 (티커,날짜)의 excess 가 소수점까지 동일(JPM 3.39/3.39, JNJ 23.34/23.34 등) — 즉 순수 이중계상. 첫돌파 표본은 166건·폭등 33건으로 양쪽 완전 동일. 중복제거는 오염이 아니라 방어다. 또 \"코드가 1.15 를 채택\"도 오류: values.append 가 seen 검사보다 앞(오프셋 895<1460)이라 4.45 도 TTM 에 들어간다. JPM 은 11구간 분절로 ttm 있는 상태 0.",
+    "corrected_count": 18,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "남는 진짜 지적은 기록 부재뿐. dataset._clean_quarters 에 발표일 중복 note 추가(가격 쪽은 \"중복 날짜 N개\" note 를 남기는데 발표일 쪽은 notes 1106건 중 0건). 값은 손대지 말 것 — 중복 제거 로직 자체는 옳고, 없애면 기준선이 같은 날 수익률로 부풀어 나빠진다. earnings_states 독스트링 92행에 동작이 이미 명시돼 있음. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박12.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "발표지연(announced-filing) 71일 초과 9건 — 잘못 붙은 8-K 의심",
+    "severity": "경미",
+    "evidence": "지연 중앙값 29일·평균 25.6·최대 83. 71일 초과 9건: COHR 83·SLAB 82·COHR 81·CAT 81·STRL 80·TMUS 80·VST 74·FDX 74·TMUS 71. STRL 2024-09-18(80일)은 원문에서 투자자설명회로 확인됨",
+    "count": 9,
+    "affected": [
+     "COHR",
+     "SLAB",
+     "CAT",
+     "STRL",
+     "TMUS",
+     "VST",
+     "FDX"
+    ],
+    "impact": "미국 상장사는 분기말+20~45일에 발표한다. 71일 초과는 무관한 8-K가 붙은 신호이며, STRL 사례가 이 규칙의 유효성을 입증한다 — 자동 탐지 규칙으로 쓸 만하다.",
+    "axis": "announced_date (측정의 기준 시점)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/발표일.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "재현: 지연>71 은 9건이 아니라 8건(TMUS 2024-12-10 은 정확히 71일 — \"초과\" 아님). 중앙값 29·평균 25.6·최대 83 은 일치. 문턱 71 은 임의값(>55:39 >60:12 >65:10 >70:9 >71:8 — 연속 꼬리). 영향 실측: 9건 중 수익률까지 잰 이벤트 3건(STRL +16.0%p, TMUS +10.5, FDX +2.4) — 셋 다 폭등(+20%p) 미달. 핵심신호 33/166=19.88%(윌슨하한 14.52) → STRL 제거 33/165=20.00%(하한 14.61). 기준선 316/2366=13.36% → 316/2363=13.37%. 영향 0. 탐지규칙 주장도 반증: 원문 확인된 오염 6건의 지연은 31·80·38·26·28·8일 → 재현율 1/6, 정밀도 표본 n=1(윌슨하한 20.7%, 채택기준 n≥10 미달)이며 규칙을 만든 관측으로 검증한 순환 논증.",
+    "corrected_count": 8,
+    "corrected_severity": "문제아님",
+    "survives_dataset_clean": true,
+    "fix": "지연일수 문턱 규칙은 채택하지 말 것(재현율 1/6, n=1). STRL 2024-09-18 은 발견 1(원문 확인 오염)에서만 다루면 충분하며 발견 6이 더하는 오염은 0건. 대신 인터넷 없이 검산 가능한 축을 쓸 것: period_label 과 filing_date 의 모순(TMUS filing 2024-06-30 / 라벨 \"23 Q1\"), adjusted_ebitda > revenue 같은 불가능값(이미 build 가 TMUS 2024-12-10 의 29.4B 를 None 처리). 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박13.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "과제 설명서와 코드 불일치 — 구간 판정은 announced_date가 아니라 filing_date로 한다",
+    "severity": "경미",
+    "evidence": "measure_engine.py 60행이 filing_date 간격을 잰다. 두 기준 비교: filing 끊김152/손실218 vs announced 끊김153/손실218, 결과 갈리는 종목 3개(STRL·FDX·TMUS), 인접 2743쌍 중 판정 엇갈림 11쌍(0.4%)",
+    "count": 11,
+    "affected": [
+     "STRL",
+     "FDX",
+     "TMUS"
+    ],
+    "impact": "지금 데이터에서 실질 차이는 없다. 다만 승격행 497건은 filing_date 자체가 8-K 날짜라 '기간 간격을 잰다'는 코드 전제가 성립하지 않는다.",
+    "axis": "announced_date (측정의 기준 시점)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/발표일.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "rb14e.py: 11/2743은 재현되나 잣대를 무시한 계수. 코드가 실제로 보는 잣대별 단위로는 4441쌍 중 6쌍. rb14c.py: filing_date는 3068행 중 1905행이 월말이고 인접간격이 89~93일에 2505/2725쌍 집중 — 이름과 달리 실제로는 분기말 축이다. 사전등록(측정결과.md 690행)은 \"인접 분기 간격\"이라고만 적고 칸을 지정하지 않았다. rb14d.py: announced 기준으로 갈아끼워 collect_events 재실행 시 2366사건 중 8건만 달라지고 8건 모두 announced 쪽이 틀림 — STRL은 가짜 발표일(2024-09-18 투자자설명회)로 멀쩡한 92일 연속분기를 끊어 신고점 3건 상실, TMUS는 184일 공백을 133일로 이어붙여 사고 7(가짜 TTM) 재발, 가짜 신고점 2건 생성.",
+    "corrected_count": 0,
+    "corrected_severity": "문제아님",
+    "survives_dataset_clean": true,
+    "fix": "고치지 말 것 — announced 기준으로 바꾸면 사고 7이 재발한다(TMUS 가짜 신고점 2건, STRL 정당 신고점 3건 상실). 또 지적된 승격행 497건은 filing==announced라 이 수정으로 한 건도 안 고쳐진다. 유일하게 할 일은 이름·주석 정리: filing_date 칸에 실제로 담긴 값은 대부분 분기말이며 eps_runs는 '분기말 간격'을 잰다고 명시. 승격행 497건(분기말 미확보)은 별도 수집단 한계로 기록."
+   }
+  },
+  {
+   "finding": {
+    "title": "8종목이 2026-08-11 하루 결측 (측정 영향은 실측 0건)",
+    "severity": "경미",
+    "evidence": "자기 구간 내 결측 종목 8개, 각 1일, 전부 2026-08-11 (1254/1255). 발표 2,903건 전수 검증에서 SPY 기준 창 길이 != 60 인 사건 0건. 종목 주격자가 SPY 주격자와 어긋난 종목 0개.",
+    "count": 8,
+    "affected": [
+     "ABBV",
+     "BILL",
+     "ETSY",
+     "HUBS",
+     "OKTA",
+     "PINS",
+     "QRVO",
+     "ZM"
+    ],
+    "impact": "60거래일 창과 주봉 정배열 격자 모두 실측으로 영향 0건 확인. 다만 향후 데이터가 늘어 이 날을 지나는 창이 검열 해제되면 창 길이가 61이 될 수 있어 수집 로봇의 결측 보정이 필요.",
+    "axis": "축3 일봉 가격",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/가격.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "corrected_count": 8,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "reason": "내가 재실행: SPY 1255일, 결측 종목 8개 각 1일 전부 2026-08-11(SPY 인덱스 1251/1255), SPY 달력 밖 날짜 0개 — 원 발견과 일치. dataset.build 후에도 8종목 그대로 남고 가격 notes []. 현재 오염은 실측 0: 발표 2903·성공 2747·실패 156(전부 우측검열)·SPY 창≠60 0건, 08-11을 지나는 성공 창 3건은 AMAT/CSCO/FDX(결측 종목 아님). 주격자는 8종목 전부 261주·마지막 3주가 SPY와 동일(08-11은 화요일). 미래 80거래일을 가짜로 붙여 검열을 풀자 창 길이 61이 정확히 7건(QRVO·OKTA·HUBS·ZM·PINS·ETSY·ABBV) 발생 = 7/2903 = 0.24%. 다만 excess_return은 SPY를 날짜로 맞추므로 종목·SPY가 같은 달력 구간을 재는 정합성은 유지되고, 어긋나는 건 보유기간이 60→61거래일(+1.7%)인 점뿐. 해당 종목 하루 초과수익 중앙절대값 0.84~1.86%p로 표적 +20%p를 뒤집을 크기가 아님.",
+    "fix": "수집 로봇에 \"SPY 달력 대비 자기 구간 내 결측일\" 점검을 추가해 다음 실행 때 8종목의 2026-08-11 종가를 재수집(백필)하게 한다. 재수집이 불가하면 measure_engine에서 창 양끝을 종목 인덱스가 아니라 SPY 날짜 기준으로 검증해 창 길이가 60이 아니면 그 사건을 '측정 불가'로 버린다(값을 만들지 않는 원칙과 일치). 지금 당장 고칠 필요는 없다 — 현재 측정 오염 0건."
+   }
+  },
+  {
+   "finding": {
+    "title": "보조 파일 prices_summary.json 의 반올림·경계 누락 (원본은 정상)",
+    "severity": "경미",
+    "evidence": "161종목 중 반올림 차이 262칸 (예: MU first_close 69.17 vs 원본 69.1665, max 1213.37 vs 1213.3734). big_moves 는 P 2024-02-29 정확히 +25.00% 건이 누락(내계산 3건 vs summary 2건), 나머지 160종목 일치, 전체 145건.",
+    "count": 1,
+    "affected": [
+     "P",
+     "MU",
+     "SWKS",
+     "PYPL"
+    ],
+    "impact": "snapshot.json 원본 가격은 정상. 이 요약 파일을 근거로 숫자를 인용하면 소수점과 경계 건수가 틀린다.",
+    "axis": "축3 일봉 가격",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/가격.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "재현: 반올림 차이 262칸 일치, 단 262칸 전부 round(원본,2)와 정확히 같음(값 오류 아님, 의도적 요약). 경계 누락 지적은 틀림 — 문턱을 >0.25(=파일 정의 \"25% 넘는\")로 재계산하니 내 계산 145건 vs summary 145건, 종목별 불일치 0개. P 2024-02-29은 42.12→52.65 = 정확히 +25.000000%라 초과 기준에서 빠지는 게 맞음(>=0.25로 세면 146건, 늘어나는 1건이 이것). 결정적: grep 결과 prices_summary는 /home/user/Model 어디에도 참조 없음(감사 scratchpad 전용 보조파일). dataset.build(dataset.load()) 후 MU first_close 69.1665 / max 1213.3734 로 원본 정밀도 유지.",
+    "corrected_count": 0,
+    "corrected_severity": "문제아님",
+    "survives_dataset_clean": false,
+    "fix": "코드 수정 불필요. 감사 문서에서 이 항목을 \"결함\"이 아니라 \"보조 요약본은 2자리 반올림 + 문턱 초과(>) 기준이므로 원본 인용 금지\"라는 사용 주의로 격하. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박16.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "연속 구간이 끊겨 발표의 35.8%가 신고점 판단 불가 — 4종목은 20분기 넘게 모으고도 판단가능 0",
+    "severity": "치명",
+    "evidence": "발표상태 2,500건 중 판단가능 1,605건(64.2%). 이음매 끊김 152건 원인: 잣대값없음67·분기없음42·끼어든행30·같은날중복13. JPM 24분기→최장구간2, AMZN 20→3, CIEN 17→3, UCTT 20→4 모두 판단가능 0",
+    "count": 895,
+    "affected": [
+     "JPM",
+     "AMZN",
+     "CIEN",
+     "UCTT",
+     "COHR",
+     "ADI",
+     "AVGO",
+     "ZETA",
+     "APP",
+     "WDC",
+     "GNRC",
+     "COF"
+    ],
+    "impact": "H2 신고점·H2b 첫돌파를 물을 수조차 없는 발표가 3분의 1. 표본이 조용히 줄어 윌슨 구간 하한 판정이 왜곡됨",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "건수는 재현됨(2500/1605/895, 판단가능0 4종목, 끊김152). 그러나 성격규정이 틀림. ①간격규칙 OFF 반사실: 판단가능 1605→1898. 즉 895 중 602는 TTM 4분기+과거정점이 필요한 구조적 워밍업(종목당4×160=604), 천장은 100%가 아니라 75.9%. 실제 결함 몫 293(11.7%). ②끊김 152 중 109(72%)는 잣대값없음67+분기없음42 = 창작금지 원칙/사고7 안전장치가 작동한 것. 나머지 43은 JPM10·JNJ7·BAC6 등 발견#1(같은날 중복행) 하류 증상 → 이중계상. ③collect_events는 decidable로 거르지 않음 — 판단불가 발표도 비적중으로 기준선에 남음. judge.run ON/OFF 비교: 기준선 n 1327/565/1664/1175/77 전부 동일, 판정 6개 전부 불변(H9·H10 채택 유지). \"표본이 줄어 윌슨 하한 왜곡\"은 거짓. ④4종목 기여 40/2366=1.7%, adj_eps 풀에선 8/1696=0.47%.",
+    "corrected_count": 293,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "별도 조치 불필요. 발견 #1(같은 날 중복행·JPM 배당 8-K)을 고치면 끊김 43건이 자동 회수됨. 나머지 109건은 수집 미완이라 로봇이 분기를 더 쌓으면 줄어듦. 다만 화면·보고에서 \"판단가능률\"을 쓸 때 종목당 4건의 구조적 워밍업(총 602건)을 분모에서 빼거나 함께 표기해 오해를 막을 것. 간격규칙 완화는 사고7 재현 위험이라 금지."
+   }
+  },
+  {
+   "finding": {
+    "title": "JPM 시계열 절반이 배당 공시 — 주당배당금이 gaap_eps 칸에, 부문매출이 revenue 칸에 (원문 대조 확증)",
+    "severity": "치명",
+    "evidence": "raw/JPM_2026-07-14.txt 원문 확인: 저장 gaap_eps=1.5 → 266행 'd per share 1.50 1.50'(주당배당금). revenue=32.4 → 81행 'Noninterest revenue $32.4 billion'. revenue=20272 → 323행 'Consumer & Community Banking $20,272'(한 부문). 전사매출은 $57.3B. JPM gaap_eps 열이 1.15,1.15,1.25,1.25,1.40,1.40,1.50,1.50,1.50 = 배당 인상 이력 그대로",
+    "count": 10,
+    "affected": [
+     "JPM",
+     "BAC",
+     "COF",
+     "SCHW",
+     "JNJ",
+     "GE",
+     "PFE"
+    ],
+    "impact": "같은 날 두 행이 생겨 eps_runs가 간격0일로 무조건 끊김. earnings_states의 seen 집합은 filing_date 순 앞 행만 채택 — 배당 행이 실적 행을 이길 수 있음",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "사실은 재확인됨. raw/JPM_2026-07-14.txt 직접 열어 266행 'Cash dividends declared per share 1.50', 81행 'Noninterest revenue $32.4 billion', 323행 'CCB $20,272', 전사 'TOTAL NET REVENUE $58,022' 확인. 재계수: JPM 배당후보행 10건(count 일치), 같은날 중복 초과행 총 17 {JPM 10, COF 3, JNJ 2, PFE 1, GE 1} — BAC·SCHW 는 0건이라 affected 7종목은 과장. 그러나 핵심 반박은 영향이다: dataset.build 후 JPM runs=11 maxrun=2 decidable=0 → TTM 불가 → JPM 9사건 전부 new_high False. 배당행은 신호 그룹에 0건 기여, 기준선 분모만 오염. 배당의심 15행 제거 재측정: 기준선 47.25%→47.25%(무변), 신고점 48.38→48.53, 첫돌파 52.41%(n166)→53.25%(n169). 윌슨 채택판정 미채택→미채택 동일. 제거하면 신호가 좋아지는 방향 = 현재 데이터는 보수적. 실제 피해는 JPM 6 + BAC 4 사건 소실(1605 decidable 의 0.6%) — 틀린 답이 아니라 잃어버린 답.",
+    "corrected_count": 10,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "JPM 10행은 원문 확증이므로 수집 단계에서 배제 규칙 추가: 같은 filing_date 에 두 행이 있고 한쪽 revenue 가 자릿수 붕괴(<10000)이며 gaap_eps 가 직전 행과 동일값 반복이면 배당공시 8-K 로 보고 버린다(고치지 말고 버림 — 창작 금지). 또는 earnings_states 의 seen 승자 선택을 filing_date 순 앞행이 아니라 revenue 가 정상인 행 우선으로 바꾼다. BAC 5행(0.26/0.28/0.32)은 raw 원문이 없어 패턴 일치일 뿐이므로 확증 전까지 손대지 말 것."
+   }
+  },
+  {
+   "finding": {
+    "title": "같은 period_label 묶음 109개 중 106개가 값이 서로 모순 — 정정공시가 아니라 다른 분기의 이름표 충돌",
+    "severity": "치명",
+    "evidence": "값 완전일치(정정으로 볼 수 있는) 묶음은 3개뿐. INTC '23 Q1' 4행 revenue[11.7B/12.9B/14.2B] adj_eps[-0.04/0.13/0.41]. COHR '22 Q2' gaap_eps[-0.58/220.0]. KLAC '22 Q4' op_income[-524,997,000/202.0]. ICHR '21 Q4' revenue[0.32/287,188,000]",
+    "count": 106,
+    "affected": [
+     "JPM",
+     "GE",
+     "XOM",
+     "SLB",
+     "INTC",
+     "U",
+     "ROKU",
+     "VRT",
+     "CSCO",
+     "C",
+     "SCHW",
+     "MRK"
+    ],
+    "impact": "period_label 중복 51종목·초과 145행. 분기 식별자를 신뢰할 수 없어 전년동기 짝짓기와 차트 축이 모두 흔들림",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "건수는 재현됨: dataset.build 후 중복묶음 109·값모순 106·값일치 3·초과행 145 (원본 스냅샷은 107/2). 그러나 오염이 아니라 라벨만 굳은 것. 모순 106묶음 중 103묶음은 제출일이 전부 다르고 인접 간격 중앙값 91일 = 순차 분기. INTC '23 Q1' 4행은 2023-04-01/07-01/09-30/12-30 의 매출 11.7B→12.9B→14.2B, 조정EPS -0.04→0.13→0.41 — 값은 정상. 결정타: 3,068행 period_label 을 전부 무작위로 교체해도 collect_events 사건 2,366건이 완전동일하고 judge.run 판정 JSON 이 computed_at 한 곳 빼고 완전동일. 소비자 추적: measure_engine·judge·app.py·pages 참조 0건, 유일한 기능적 소비자 fiscal_quarter_of 의 호출사슬(validate_quarters)은 운영 호출 0곳(테스트만). '차트 축이 흔들림'은 사실 아님.",
+    "corrected_count": 106,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "extract_period_label(sec_fundamentals.py:967) 이 앞 분기 라벨을 그대로 물고 오는 것을 고치고, 라벨이 앞 행과 같으면 채택하지 말고 '없음'으로 두기. 전년동기 로직(fiscal_quarter_of)을 되살릴 때는 라벨 대신 announced_date 를 1순위로 쓸 것. 지금 측정에는 영향 없으므로 급하지 않음. 별개로 제출일이 겹치는 3묶음(JPM·GE 등)은 축 1-2 항목으로 따로 처리."
+   }
+  },
+  {
+   "finding": {
+    "title": "source가 이익의 부호를 정한다 — CMCSA는 역산 10건 전부 적자·근사치 10건 전부 흑자로 매년 톱니",
+    "severity": "치명",
+    "evidence": "CMCSA 20분기 전수: 역산 op_income -3,331M~-3,862M(마진 -11.2~-22.3%), 근사치 +5,533M~+8,304M(+31.4~+46.5%). 3월 제출분은 항상 역산(음수). 같은 형태 전수검사 3종목: CMCSA·ZETA(근사치4 전부적자/역산7 전부흑자)·BE(근사치5 적자/직접공시7 흑자)",
+    "count": 3,
+    "affected": [
+     "CMCSA",
+     "ZETA",
+     "BE"
+    ],
+    "impact": "이익 델타(연속분기 증감)의 부호가 매년 네 번 뒤집힘. 주도섹터 판정의 '델타 동반 비율'이 실적이 아닌 파싱 경로를 재는 중",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "CMCSA는 재현됨(역산10 전부 -3,331~-3,862M / 근사치10 전부 +5,533~+8,304M). 그러나 내가 다시 세니 3종목 집합이 다름: 정제후 S·BE·CMCSA (ZETA 없음 — ZETA 근사치는 음12/양1 혼합). S·ZETA는 적자 단조축소 후 흑자전환한 실제 회계현실이라 판정식이 교란됨. 결정적: measure_engine.py:40 LADDER=(adj_eps,adjusted_ebitda,gaap_eps) — op_income은 사다리 밖. leadership 델타동반→sector_model._delta_series→yardstick_of→LADDER. 네 종목 잣대 전부 adj_eps/gaap_eps. CMCSA adj_eps 델타×source 교차표 역산 상승5/하락4, 근사치 상승4/하락6 = 무관. 즉 \"이익 델타 부호 뒤집힘·델타동반이 파싱경로를 잼\"은 거짓.",
+    "corrected_count": 1,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "CMCSA 역산 op_income은 실제 결함이므로 고치지 말고 None으로 버려라(창작 금지). sec_fundamentals.py:951-952 마진 검사(too_deep)를 종목 내부 일관성 검사로 확장: 같은 종목의 다른 source 행이 양수 마진인데 이 행만 음수 마진이면 op_income 탈락. 단 우선순위는 낮다 — op_income은 잣대 사다리 밖이라 신고점·첫돌파·주도섹터에 안 들어가고, 유일한 소비처 H10도 오염 사건 242건을 전부 빼도 채택 유지(27.8%→28.9%). 보고서 impact 문장은 삭제/수정 필요."
+   }
+  },
+  {
+   "finding": {
+    "title": "source 경계에서 영업이익률이 같은 source 대비 5.5배 튐",
+    "severity": "중대",
+    "evidence": "정제 후: 같은 source 이음매 n=1,355 중앙 2.17%p, >10%p 15%. source 경계 n=137 중앙 12.06%p, >10%p 56%, >30%p 34건. 원본 기준은 1.56%p vs 13.27%p(8.5배). 역산이 낀 경계 103건 중앙 13.90%p. 최악: T 87.2%p, MXL 80.2%p, MDB 77.6%p, DIOD 71.2%p",
+    "count": 137,
+    "affected": [
+     "T",
+     "MXL",
+     "MDB",
+     "DIOD",
+     "CMCSA",
+     "AMBA",
+     "ZETA",
+     "GILD",
+     "TMUS",
+     "CAT",
+     "ACLS",
+     "BE"
+    ],
+    "impact": "델타가 실적 변화가 아니라 파싱 경로 변화를 잰다. 경계가 낀 종목의 증감 판정은 신뢰 불가",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "숫자는 소수점까지 재현(same n=1355 med 2.17 / cross n=137 med 12.06, >10p 56%, >30p 34). 그러나 impact가 틀렸다: 델타는 LADDER(adj_eps·adjusted_ebitda·gaap_eps)를 쓰고 op_income은 사다리에 없다. 실제 델타 쌍 2210 중 경계는 119(5.4%), 상승률 56.3% 윌슨[47.3,64.9] vs 비경계 60.0% [57.9,62.1] — 구간 겹침, 왜곡 검출 안 됨. 5.5배도 경계·비경계 둘 다 가진 53종목 안에서 재면 2.10배, 15/53은 경계가 더 작다. 최악 T 87.2%p는 착시: T 22Q3 +20.01%→22Q4 -67.29%가 같은 근사치끼리 87.3%p 점프(일회성 손상 분기)이고 지목된 경계는 정상 복귀 구간. 다만 진짜 오염 있음: op_income 부호가 source로 갈리는 종목 S·BE·CMCSA, 그리고 op_income은 H10(채택 상태, 사건 1709건 중 45.5%가 source 섞인 종목)에 들어간다. 전문·권고는 반박21.md.",
+    "corrected_count": 137,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "① impact 문장을 \"델타\" → \"H10 논갭 영업이익\"으로 정정. ② dataset.py에 종목 내 source별 op_income 부호 일관성 검사 추가(한 source 3건 이상 전부 음수 & 다른 source 3건 이상 전부 양수면 그 종목 op_income 통째로 없음 처리) — 대상 S·BE·CMCSA. ③ revenue=None 행은 현재 어떤 단위 가드도 못 타서 BE의 op_income=75.0 4회 반복이 살아 있다. 매출 없이도 걸리는 가드(같은 값 3회 이상 반복) 필요."
+   }
+  },
+  {
+   "finding": {
+    "title": "period_label이 filing_date와 어긋난 행 177개 — 직접공시 행에서도 40건",
+    "severity": "중대",
+    "evidence": "오프셋 무관 검사(종목 내 라벨 순번 단조증가): Q형 2,787행 중 역행 84건/37종목, 정체 93건/39종목. 예: NFLX '20 Q4'가 6개 제출일에, VZ '23 Q1'이 6개 제출일에 그대로. JPM 2024-05-15 '24 Q2'→2024-07-12 '23 Q3'. source별 역행=역산38·직접30·근사16",
+    "count": 177,
+    "affected": [
+     "NFLX",
+     "VZ",
+     "CMCSA",
+     "JPM",
+     "WMT",
+     "GE",
+     "INTC",
+     "ROKU",
+     "SLB",
+     "XOM",
+     "SCHW",
+     "U"
+    ],
+    "impact": "measure_engine은 라벨을 안 쓰므로 신고점 측정은 직접 오염 안 됨. 오염되는 곳은 data_quality.fiscal_quarter(340행) 전년동기 짝짓기와 화면 차트 축 — ZETA 사고를 막으려 만든 장치가 같은 방식으로 틀림",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재계수: 역행 84/37종목, 정체 90/39종목, 합 174/56종목 (원 감사 177 → 174, 역행·source분해는 완전 일치). 오프셋 무관 증명 추가: 라벨연도-제출연도 2년 이상 13행, 같은 Q라벨이 서로 다른 제출일 3개 이상 19쌍(NFLX '20 Q4' 6개, INTC '23 Q1' 4개). 정상 회계 아님. 그러나 impact는 틀림: grep period_label = measure_engine 0건, app.py/pages 0건(화면 축 주장 거짓). 계측 실행 결과 earnings_states 2500건 생성 중 data_quality 호출 {'fq':0,'seas':0,'anom':0,'val':0} — fiscal_quarter_of/detect_seasonality/validate_quarters는 tests에서만 호출되는 죽은 코드. 오늘 실제 피해 0.",
+    "corrected_count": 174,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "sec_fundamentals.py:1899 — 보도자료 정규식 라벨을 무조건 채택하지 말고 기간종료일과 어긋나면(연도차 2년 이상, 또는 직전 행과 같은 라벨) 버리고 period_end_label(period_end) 유지. 또 data_quality.fiscal_quarter_of(340행)가 라벨보다 기간종료일을 먼저 보도록 순서를 뒤집는다. validate_quarters를 파이프라인에 배선하기 전에 반드시 선행."
+   }
+  },
+  {
+   "finding": {
+    "title": "직접공시가 한 번도 없는 종목 68/160 — 회사 공식 숫자를 전혀 못 쓴 상태",
+    "severity": "중대",
+    "evidence": "3,068행 source: 직접공시1,343(43.8%)·역산625(20.4%)·근사치1,100(35.9%). 근사치100% 종목 29개, 역산100% 종목 12개 이상(금융 전부). 게다가 '역산' 행의 71%는 op_income이 아예 없음 — 역산 정의(매출×GM%−opex)의 결과물이 없는 행에 역산 배지가 붙어 있어 배지가 유래를 말하지 않음",
+    "count": 68,
+    "affected": [
+     "LITE",
+     "FN",
+     "QCOM",
+     "TXN",
+     "TER",
+     "CIEN",
+     "TSLA",
+     "META",
+     "AMZN",
+     "JPM",
+     "BAC",
+     "LLY"
+    ],
+    "impact": "전략.md의 '전망 입력은 회사 발표 가이던스뿐' 정신과 어긋나는 대리값이 유니버스의 42%를 차지",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "건수는 재현됨(1343/1100/625, no-direct 68, 근사치100% 29, 역산100% 20). 그러나 해석이 틀림. ①source 배지는 op_income 한 칸의 유래일 뿐이고, 측정 잣대는 LADDER=(adj_eps,adjusted_ebitda,gaap_eps). ②adj_eps·adjusted_ebitda 는 보도자료 파서에서만 생성됨(grep 전수) — 근사치 배지 행의 adj_eps도 회사 원문. 검산: 근사치 행 437개 중 adj_eps≠gaap_eps 405행(92.7%), XBRL 산물이면 같아야 함. 근사치 배지 행 290개가 가이던스를 담음=보도자료를 읽은 행. ③68종목 잣대값 보유행: adj_eps 497 + ebitda 89 = 586행이 보도자료 원문, gaap_eps 447행은 SEC XBRL 제출값. 컨센서스·추정(SRC_ESTIMATE/EPS_GROWTH) 행은 0건. ④grep 결과 measure_engine·sector_model·leadership·judge·app.py·pages 어디에서도 source 를 읽지 않음(0건). 유일 사용처 data_quality.py:163은 보수적 가드. ⑤폭등률 9.9% vs 15.7% 차이는 68종목이 금융11·전력10·헬스8·석유5·소비재5 등 초대형 저변동주라는 표본 구성 탓.",
+    "corrected_count": 440,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "남는 진짜 결함은 하나뿐: '역산' 배지 625행 중 440행(70.4%)이 op_income 이 없어 배지가 유래를 말하지 않음. 원인 특정 = sec_fundamentals.py:1270 `\"source\": parsed[\"source\"] or cfg.SRC_DERIVED` (기본값 폴백) + merge_quarters 의 XBRL-빈-경로(1946~1958행). 조치: 기본값을 SRC_DERIVED 대신 새 값 '미상'으로 바꾸고, op_income 이 있을 때만 역산 배지를 붙인다고 주석에 명시. 값은 손대지 않음(창작 금지). 1줄 수정, 측정 결과 불변. 68종목 자체는 조치 불필요."
+   }
+  },
+  {
+   "finding": {
+    "title": "제출일 범위 대비 분기 75개 결측 (23종목), announced_date 없는 행 165개",
+    "severity": "보통",
+    "evidence": "기대 대비 2개 이상 부족한 종목 23개: COP 실제11/기대20(-9), WDC 14/20(-6), OKTA 14/19(-5), HUBS 15/20(-5), COHR 14/18(-4), AVGO·CRWD·WDAY·BA 각 -4. 부족분 합 75분기. announced_date 없는 행 165개/45종목(5.4%): NXPI9·DIOD9·APP8·PG8·TSLA7",
+    "count": 75,
+    "affected": [
+     "COP",
+     "WDC",
+     "OKTA",
+     "HUBS",
+     "COHR",
+     "AVGO",
+     "CRWD",
+     "WDAY",
+     "BA",
+     "SLAB",
+     "HD",
+     "NXPI"
+    ],
+    "impact": "결측이 곧 구간 끊김(>150일 이음매 109건)이 되어 위 1번 손실의 주 원인. 발표일 없는 행은 정점 기억에는 남되 측정 사건은 못 됨",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "건수는 정확히 재현(부족종목 23, 부족합 75 / announced_date 없음 165행·45종목). 독립 2차 방법(150일 초과 달력 구멍 직접 합산)도 75로 일치 → 기대치 모델 착시 아님. 그러나 영향은 과장: 165행은 전부 근사치·revenue+op_income만 있고 사다리 값 0개 → 165행을 통째로 삭제하고 재측정해도 달라진 종목 0, 사건수 2500→2500 동일(영향 정확히 0). 이음매 152건 분류 {진짜분기없음 42, 행있는데값없음 67, 짧음 30, 0일 13} → 150일초과 109건 중 결측 원인은 42건뿐. 판단불가 895건 중 23개 부족종목 몫 172(19.2%), 나머지 723은 다른 종목. 판단불가 내역도 TTM불가 747 / 정상 워밍업 148.",
+    "corrected_count": 75,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "발표일 없는 165행은 결함 목록에서 제외(측정 영향 0 실증). 결측 75분기만 남기되 \"주 원인\" 서술 삭제 — 판단불가 손실의 19.2%. 수집기 보강은 COP(9)·WDC(6)·OKTA(5)·HUBS(5)·COHR(4) 5종목 29분기부터. 판단불가의 더 큰 원인은 '행은 있는데 잣대 값이 빔'(이음매 67건)이므로 그쪽을 별도 발견으로 다뤄야 함."
+   }
+  },
+  {
+   "finding": {
+    "title": "JPM gaap_eps 칸에 배당금(DPS)이 섞여 델타 9쌍 전부 오답",
+    "severity": "치명",
+    "evidence": "발표일 10개가 gaap_eps 2개씩 보유. 여분 값 1.15/1.25/1.40/1.50 = JPM 분기 배당금 경로. _delta_series(JPM)=9쌍, 상승 0/9(전부 False). eps_runs 11구간·최장 2분기 → TTM 0개, decidable=0, new_high 전부 False. 그런데 collect_events 에 9사건 기여.",
+    "count": 9,
+    "affected": [
+     "JPM"
+    ],
+    "impact": "JPM 섹터 델타 기여 100% 오답. 실제 EPS→배당금 비교라 항상 '하락'.",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현 성공: dataset.build 후 JPM 24행·gaap_eps 20개, 발표일 10개가 각 2값. _delta_series=9쌍 up=0, eps_runs 11구간, decidable=0, collect_events JPM 9건 — 발견 숫자 전부 일치. 원문 raw/JPM_2026-07-14.txt 에 \"Common dividend of $4.0 billion or $1.50 per share\" 확인, 같은 문서 실제 EPS 는 $7.70 → 배당금 오파싱 확정(회계 현실 아님). 배당금 행 제거판 계산: clean 9쌍 up=6 → 부호가 실제 틀린 쌍은 9가 아니라 6. 하류: 기준선 신고점 28.656%→28.740%(+0.084%p), 완성사건 델타True 427→429, leadership 3388행 중 70행('금융 중개·자본시장' 210주의 33%) 델타폭 오류, 조건충족 뒤집힘 10주, confirmation_events 47→48.",
+    "corrected_count": 6,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "announced_date 가 같은데 잣대값이 2개 이상이면 배당금 혼입 의심 — data_quality.py 에 검사 추가(전 종목 해당 발표일 11개: JPM 10, GE 1). 임시 규칙으로는 revenue 가 None 이고 같은 발표일에 더 큰 값이 있는 행을 버리면 JPM 이 정상 복구된다(delta 6상승/3하락, decidable 회복, new_high 2건). 원인 수정은 sec_fundamentals 파서가 \"dividend ... per share\" 문장을 EPS 로 잡지 않게 하는 것."
+   }
+  },
+  {
+   "finding": {
+    "title": "GNRC adjusted_ebitda 단위 혼재(달러 vs 천달러) — 델타 3/9쌍 오염",
+    "severity": "치명",
+    "evidence": "13행 중 3행이 천 단위: 24Q2 164,689 / 25Q3 193,215 / 25Q4 185,152 (나머지는 ~1.9e8). 같은 행 매출도 176,020 vs 1.06e9. 단위 경계 넘는 델타쌍 3쌍, 배율 0.0013 / 0.0010 / 1044.98. source 전부 역산.",
+    "count": 3,
+    "affected": [
+     "GNRC"
+    ],
+    "impact": "GNRC 델타 9쌍 중 3쌍이 단위 때문에 뒤집힘.",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현 성공. build 후 GNRC 20행, yardstick=adjusted_ebitda, 잣대값 13행 중 천단위 3행, 델타 9쌍 중 단위경계 3쌍(배율 0.001294/0.00103/1045) — 발견과 일치. 원문 GNRC_2026-04-29.txt 에 \"(U.S. Dollars in Thousands)\" 4회 + 본문 \"$193 million\" → 파서 ×1000 변환 누락 확정(정상 회계 아님). 그러나 ①천단위 3행을 ×1000 한 사본과 비교하니 방향이 실제 바뀐 쌍은 2쌍(2026-04-29 는 경계쌍이나 True→True 로 우연히 정답). ②new_high 은 전후 모두 GNRC 0건, 전체 678건 불변 — 신고점·기준선에 0건 영향. 영향은 sector_model 델타뿐, 2/2210=0.09%. 묶음 동반비율 57.7%→60.3%.",
+    "corrected_count": 2,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "뿌리는 dataset.py:165 의 `rev >= 10_000_000` 문지기다. 원자료 천단위 ebitda 9행 중 6행은 비율검사로 걸러졌지만, 살아남은 3행은 같은 행의 매출까지 천단위로 오염돼(176,020/208,939/232,921) 검사가 통째로 건너뛰어졌다. 게이트를 매출 절대크기 대신 같은 종목 매출 중앙값 대비 배율(1/100 이하면 버림)로 바꾸고, ×1000 보정이 아니라 None 처리(창작 금지). 그러면 GNRC 델타 9쌍→6쌍 전부 정상."
+   }
+  },
+  {
+   "finding": {
+    "title": "스케일 이상값이 만든 100배 초과 가짜 델타 6쌍",
+    "severity": "중대",
+    "evidence": "IPGP 24Q4 adj_eps=99.1 (앞뒤 0.29·0.31, 매출은 233M→234M→228M 정상, source=근사치) → 341.7배·0.0031배 두 쌍. LLY 23Q4 adj_eps=12.2 (앞뒤 1.22·0.10) → 0.0082배. GNRC 3쌍 포함해 전 종목 스캔 총 6쌍.",
+    "count": 6,
+    "affected": [
+     "IPGP",
+     "LLY",
+     "GNRC"
+    ],
+    "impact": "신고점·델타 판정이 한 분기에서 통째로 뒤집힘.",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "직접 재실행: dataset.build 위에서 전 종목 델타쌍 2210 중 100배초과/0.01미만 = 6쌍, 원 발견과 정확히 일치(IPGP2·GNRC3·LLY1). 정상회계 아님을 산술로 반증 — IPGP 24Q4 내재주식수=op_income/adj_eps=1.585e5주(다른 분기 2.3e7~4.1e7), 같은 행 gaap_eps=0.18 vs adj_eps=99.1(550배). GNRC 3행은 EBITDA/매출=93.6/92.5/79.5%에 op_income만 달러단위(-4271만) — 단위환산으로도 복구 불가. 손질 후 생존: PER_SHARE_ABS_LIMIT=100을 99.1이 0.9 차로 통과, EBITDA는 상한 없음. 단위가드는 GNRC 6행을 실제로 없음처리했으나 매출까지 함께 깨진 3행은 통과. 심각도만 반박: 보정 전후 폭등 건수 106→106, 316→316 불변, 신고점 폭등률 15.6342%→15.7270%(+0.09%p), 신고점 678→674, 뒤집힌 델타 2/2210. 채택 판정은 하나도 안 움직임 → 중대 아닌 보통.",
+    "corrected_count": 6,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "값 몇 개 삭제로 끝내지 말 것. dataset.py에 (1) 종목별 잣대 중앙값 대비 20배 밖 값을 없음 처리하는 이상값 가드(현 절대상한 100은 IPGP 99.1·SCHW 95.3을 못 잡음), (2) 매출과 EBITDA가 함께 천단위로 깨진 상관오염 대응 — 같은 행 op_income/revenue 자릿수 정합성까지 보는 가드, (3) 같은 행 adj_eps/gaap_eps 10배 초과 시 경고 notes. 이 셋을 넣으면 6쌍이 아니라 이상행 21행이 걸러진다. 전문·재현코드: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박27.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "BAC gaap_eps 에 EPS 아닌 값 혼입",
+    "severity": "중대",
+    "evidence": "period_label '25 Q1' 이 6행: gaap 0.9 / 0.89 / 12.76 / 3.19 / 13.02 / 13.97. BAC 분기 EPS 는 ~0.9 수준. 매출은 6행 중 5행이 상수 2,000,000. 이 위에 델타 16쌍이 얹혀 있음.",
+    "count": 6,
+    "affected": [
+     "BAC"
+    ],
+    "impact": "BAC 델타·신고점(decidable 7, newhigh 2) 전부 신뢰 불가.",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "오염은 실재(원문 확정), 그러나 건수·영향 주장은 틀림. ①BAC 24행 재출력: 비-EPS 값은 12.76/13.02/13.97/13.61 4개. 원 \"6\"은 label '25 Q1' 중복 6회일 뿐(그중 0.90·0.89는 정상 EPS)이고 26 Q2 13.61은 빠뜨림. ②raw/BAC_2026-04-15.txt: \"Return on avg tangible common equity 16.00 13.97 13.97\" + 같은 줄 아래 \"Diluted earnings 1.11\" → ROTCE% 오채취 확정(정상 회계 아님). ③dataset.build: 24행→24행, notes는 매출 6건만 없음처리, gaap_eps 전부 통과 → 남음. ④eps_runs: 오염값은 run4(0.28,12.76,3.19)·run5(13.02,13.97,13.61)에만 있고 둘 다 3분기라 TTM 불가 → ttm=None,decidable=False. decidable 7·newhigh 2는 전부 run0·run2(0.26~0.94) 산출 = 오염 기여 0건. _delta_series 16쌍 중 오염 4쌍(25%). grep revenue in measure_engine/sector_model/leadership = 0건 → 매출 2,000,000은 미사용.",
+    "corrected_count": 4,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "dataset._clean_quarters 에 잣대값 스케일 검사 추가: 같은 종목 gaap_eps/adj_eps 중앙값 대비 5배 이상 벗어난 값은 '없음' 처리(창작 금지 원칙대로 고치지 말고 버림). 파서(sec_fundamentals)에서 'Return on average ... equity' 줄을 EPS 후보에서 제외하고, 'Diluted earnings/Earnings per common share' 줄만 채택. 별건으로 배당금 줄(Dividends paid) 혼입도 같이 차단 필요."
+   }
+  },
+  {
+   "finding": {
+    "title": "사고7 부분 재발 — 간격 55~150일인데 사이에 행이 존재하는 델타쌍 42쌍",
+    "severity": "보통",
+    "evidence": "2210쌍 중 42쌍(1.9%), 42쌍 전부 사이 행의 잣대값이 빈 탓. 사이 행 분류: 값전무 21 · 연간(TTM)행 14(예 ETN 23.2B vs 분기 6.0B) · 스케일이상 6 · 진짜분기 가능 1(GE 24Q2 16.1B). 종목: ETN8 PFE5 BMY4 GE4 JPM3 COF3 OXY3 등 16종목.",
+    "count": 42,
+    "affected": [
+     "ETN",
+     "PFE",
+     "BMY",
+     "GE",
+     "JPM",
+     "COF",
+     "OXY",
+     "C",
+     "GS",
+     "LLY",
+     "KLAC",
+     "BAC"
+    ],
+    "impact": "형식상 42쌍이나 실질 건너뛴 분기는 1~7쌍. 41차 실측 37쌍에서 악화되지 않음.",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "계수는 완전 재현(2210쌍 중 42쌍, 종목 분포까지 동일, build 후 기준). 그러나 '사고7 재발'이라는 성격 규정은 반박됨. 끝점 period_label을 직접 세니 29/42가 Qn→Qn+1 연속 분기 — 건너뛴 분기 없음. 나머지 13은 끝점 라벨 자체가 깨진 경우(JPM '24 Q1'→'23 Q3'). 사이 행 53개는 전부 잣대값 None(월형 라벨 31, 끝점 라벨 중복 12)이라 비교 대상이 될 수 없음. 원보고서의 유일한 '진짜분기' GE 24Q2(2024-06-21)는 매출이 앞 끝점과 부동소수 끝자리까지 동일(16100000000.000002) — 복제 행이지 새 분기 아님. 실증 건너뛴 분기 0쌍. 영향: 상승률 59.77%→60.06%, 0.282%p. _delta_series 소비처(sector_model 339/397/567, leadership 63)가 먹이는 H19·H19b·H20·H21은 verdict.json에서 전부 '판정 불가'이고, 채택된 H5b·H9·H10은 judge.py가 measure_engine만 써서 닿지 않음.",
+    "corrected_count": 0,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "델타 엔진은 고칠 것 없음. 42쌍은 오류가 아니라 유령·중복 행 탐지 신호이므로 축1(수집·파싱) 소관으로 이관. 굳이 손댄다면 잣대값 없는 사이 행을 건너뛴 것임을 로그로 남기는 정도. 라벨이 깨진 13쌍은 period_label 정정·중복 제거 후 재확인 필요(내가 연속성을 증명하지 못한 부분)."
+   }
+  },
+  {
+   "finding": {
+    "title": "eps_runs 는 filing_date, _delta_series 는 announced_date — 기준 칸 불일치",
+    "severity": "보통",
+    "evidence": "간격 숫자(55~150)는 같으나 적용 칸이 다름. 판정 갈리는 인접쌍 3쌍: STRL 24Q2→24Q3 (filing 92 통과 / ann 49 탈락), FDX 26Q3→26Q4 (92 / 41), TMUS 23Q1→24Q4 (184 탈락 / 133 통과).",
+    "count": 3,
+    "affected": [
+     "STRL",
+     "FDX",
+     "TMUS"
+    ],
+    "impact": "sector_model.py:291 주석의 '측정 장치와 같은 간격' 규칙이 칸 수준에서는 안 지켜짐.",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "corrected_count": 3,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "reason": "사실은 재현됨(3쌍, 티커·일수 일치). 그러나 원인 귀속이 틀렸다. (1) filing_date 는 제출일이 아니라 분기말이다: 3068건 중 1548건이 달력 분기말, announced-filing 중앙 +29일, 음수 0건 → eps_runs 가 분기 결손을 재는 데 맞는 축. _delta_series 는 출력이 leadership._delta_at 의 bisect 시점표라 발표일을 못 버린다(미래참조 방지). 목적이 달라 칸이 다른 것. (2) 결정적 실험: 문제 3행 제거 후 160종목 축불일치 = 0건. 깨끗한 2,207쌍은 두 축 판정 100% 일치. (3) 3행 모두 자기 종목 발표지연 최댓값(STRL 80/중앙37, FDX 74/중앙20, TMUS 80/중앙27)이고 TMUS '23 Q1' 은 중복 유령행. 즉 축 불일치는 병이 아니라 announced_date 오염 3건을 잡아낸 체온계.",
+    "fix": "축 규칙을 고칠 게 아니라 행을 고쳐야 한다(축1~4 이관): TMUS '23 Q1' 중복 유령행(2024-06-30/2024-09-18/역산), STRL '24 Q2' ann=2024-09-18, FDX '26 Q3' ann=2026-05-13(adj_eps 68.22). 방어선 추가로는 sector_model._delta_series 의 간격 검사만 filing_date(분기말)로 옮기고 출력 라벨은 announced_date 유지 — 실측 시 델타쌍 2210→2211, TMUS 가짜 델타 상승 1건(2025-01-29) 제거, 완성사건 894건 중 1건(2025-02-14 TMUS 델타 True→None) 변경, 주도섹터 타임라인 20/210주 변동."
+   }
+  },
+  {
+   "finding": {
+    "title": "TTM 을 못 만드는 종목이 사건 40건으로 기준선 분모만 부풀림",
+    "severity": "보통",
+    "evidence": "잣대 구간이 1개인 종목 80/151, 3개 이상 파편화 42종목. 4분기 구간이 하나도 없어 TTM 불가: JPM·AMZN·CIEN. decidable=0 종목 4개(UCTT·CIEN·AMZN·JPM)가 collect_events 에 40건 기여, 40건 전부 new_high=False. 전체 2366사건 중 new_high=True 678건.",
+    "count": 40,
+    "affected": [
+     "JPM",
+     "AMZN",
+     "CIEN",
+     "UCTT"
+    ],
+    "impact": "신고점 판단 불가 발표가 기준선 분모에 섞여 기준선을 낮춤(1.7%).",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "숫자는 재현됨(2366사건, new_high 678, decidable=0 4종목 40건 전부 False). 그러나 오염 아님. 측정결과.md 등록 정의가 \"기준선②=모든 발표\"라 신고점 판정 불가 발표도 분모에 들어가는 게 맞고, decidable을 빼야 하는 gauge_series(:224)·app.py는 이미 빼고 있음. 4종목 빼고 judge.run 재실행: H2/H2b/H5/H5b/H6 영향 0.000%p(UCTT는 발견종목이라 판정표본 제외), H7 기준선 14.286→11.940(빼면 낮아짐=포함이 보수적), H9 12.260→12.232, H8만 6.372→6.446(0.074%p). 판정 바뀐 가설 []. 신호 그룹 n·rate 전부 동일. 원 발견의 \"기준선을 낮춤\"은 3개 중 2개에서 방향이 반대.",
+    "corrected_count": 0,
+    "corrected_severity": "문제아님",
+    "survives_dataset_clean": true,
+    "fix": "고칠 것 없음. 원인은 종목마다 다름: UCTT는 adj_eps 8행뿐(TTM 1개, 비교 정점 없음), AMZN은 매년 Q1 gaap_eps 결측, CIEN은 Q4 EBITDA 결측 — 값이 틀린 게 아니라 없는 것(원칙 1 준수). JPM 9건만 실제 오염이나 이미 발견 #1(배당금 혼입, 치명)로 잡혀 이중 계상임. 굳이 남긴다면 judge.py에 \"기준선은 등록 정의상 모든 발표이며 decidable로 거르지 않는다\"는 주석 한 줄."
+   }
+  },
+  {
+   "finding": {
+    "title": "화면 폴백이 잣대 미달 종목에 adj_eps 를 강제해 '신고점'을 표시",
+    "severity": "보통",
+    "evidence": "app.py:212 `yardstick_of(quarters) or \"adj_eps\"`. 잣대없음 9종목 중 CLS(adj_eps 6행)→화면 states 6개·신고점 2건, SNDK(6행)→6개·0건, VRTX(4행)→4개·0건. 나머지 6종목은 adj_eps 0행이라 무해. 제외 사유는 op_income 부재가 아님 — PG·VST 는 op_income 20분기 보유.",
+    "count": 3,
+    "affected": [
+     "CLS",
+     "SNDK",
+     "VRTX",
+     "PG",
+     "VST",
+     "CAT",
+     "NFLX",
+     "SNOW",
+     "DE"
+    ],
+    "impact": "8분기 문턱을 못 넘어 측정에서 뺀 종목의 신고점이 계기판에는 뜸(CLS 2건).",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "기제 재현됨(app.py:212 폴백 실재·유일 위치). 그러나 규모 부풀림: recent_ticker_rows 는 종목당 마지막 state 1개만, RECENT_DAYS=45 창 안만 표시. 실행 출력 — 화면 105행 중 잣대없음 종목은 2행뿐: CLS('신고점 연속 2번째'), SNDK('판단 불가'). VRTX 는 마지막 발표 2023-02-07 이라 화면에 안 뜸. CLS 값도 참: 1.20/1.39/1.58/1.89/2.16/2.54, TTM=1.58+1.89+2.16+2.54=8.17, 직전 7.02, 그전 6.06 단조증가, 매출 2.65B→4.70B 동반. 조작값 없음. collect_events 2366건에 3종목 전부 미포함(skipped 잣대없음 9), sector_model 은 yardstick_of_safe 로 None 처리 → 측정·판정 영향 0. 남는 결함은 라벨 누락뿐(주석은 '측정 제외임이 드러나게'라 했으나 잣대 칸이 '조정 EPS' 로 동일).",
+    "corrected_count": 1,
+    "corrected_severity": "경미",
+    "fix": "app.py:212 에서 폴백 여부를 기억해 라벨에 표시: yardstick=me.yardstick_of(quarters); excluded = yardstick is None; yardstick = yardstick or 'adj_eps' 로 나눈 뒤 '잣대' 칸에 excluded 면 ' (측정 제외 · 이력 8분기 미만)' 을 덧붙인다. 근본 해결은 CLS 2024년 4개 분기(24/03·24/06·24/09·24 Q4) 파싱 복구 — 문턱을 넘으면 폴백 자체가 무의미해진다.",
+    "survives_dataset_clean": true
+   }
+  },
+  {
+   "finding": {
+    "title": "잣대 사다리가 종목 전체 이력을 봐서 고른다 — H9 채택이 뒤집힌다",
+    "severity": "치명",
+    "evidence": "yardstick_of(rows)가 사건 이후 분기까지 세어 잣대 고정. 2500사건 중 1052건(42.1%)이 그 시점엔 잴 수 없던 사건, 63건은 다른 잣대. 시점별 잣대로 judge.run 재실행: 사건 2366→1392, H9 신호n 62→23, 하한 16.6→12.5(기준선 상한 14.8) → 채택→미채택. H5b는 채택 유지(203→193, 하한 19.2→20.2)",
+    "count": 1052,
+    "affected": [
+     "ROKU",
+     "IPGP",
+     "NRG",
+     "WDAY",
+     "DIS",
+     "CVX",
+     "UCTT",
+     "CGNX",
+     "CIEN",
+     "BE",
+     "SNAP",
+     "LOW"
+    ],
+    "impact": "현재 '채택' 2건 중 H9가 무효. sector_model.yardstick_of_safe→_delta_series도 같은 함수라 이익 델타·주도섹터 판정까지 오염. H2·H2b·H7·H8·H10 표본도 전부 영향.",
+    "axis": "축 6 — 미래 엿보기 (look-ahead)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/미래엿보기.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "재현은 됨(2366→1392, H9 채택→미채택). 그러나 원인 귀속이 틀렸다. 시험B(표본 2366 유지, 잣대 오류 63건만 PIT로 교체): H9 채택 유지 n=63 rate25.4 하한16.3 > 기준선상한13.9. 시험A(오염 잣대 유지, 표본만 PIT 축소): H9 이미 미채택 n=22 하한13.2. → 뒤집힘은 100% 표본 축소 탓. 그 축소의 92.1%(1055/1145)는 각 종목 1~7번째 발표, 즉 HISTORY_START_DATE=2021-09-15 수집창 좌단 인공물(첫발표 2021년 종목 102개, AMD·DIS·CVX·KLAC은 실제로 2019~21년에 8분기 보유). 사라진 H9 신호 35건 중 31건이 2022~23 약세장 → 원칙4 위반인 국면 절단. 실제 잣대 발산은 79/2762=2.9%, 21종목. 공통사건 new_high 불일치 11건뿐.",
+    "corrected_count": 79,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "yardstick_of 의 미래 참조는 실재하므로 주석·문서에 한계로 적고, 시점별 잣대 판을 참고로 병기. 단 PIT 판을 만들 때는 (1) 수집창 좌단 워밍업 종목을 '측정 불가'로 지우지 말 것(2021년 시작 98종목은 실제로는 이력이 있었음), (2) announced_date 없는 165행을 과거정점 계산에서 빼지 말 것. 판정 변경은 불필요. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박33.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "유니버스·묶음 분류가 2026년 기준으로 과거에 소급 적용",
+    "severity": "중대",
+    "evidence": "gauge_series·breadth_series·group_members가 오늘의 ds['tickers'] 160종목과 cfg.SECTORS를 2021년 구간에 그대로 적용. 첫 발표 연도: 2021년 102 · 2022년 38 · 2023년 13 · 2024년 5 · 2025년 2. judge.run의 발견종목 29개 제외는 종목 신호만 보호하고 gauge_series(ds)는 필터 없이 전체를 씀",
+    "count": 160,
+    "affected": [
+     "ALL"
+    ],
+    "impact": "실적 폭 게이지의 과거 값이 실제보다 높게 나온다. 현재 채택된 H5b가 이 게이지 하나에 전부 얹혀 있음.",
+    "axis": "축 6 — 미래 엿보기 (look-ahead)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/미래엿보기.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "반박 실패 — 확정. 다만 메커니즘 서술은 틀렸다. ①게이지는 2021년에 값이 없다(첫 값 2022-10-14, 값있는주 201/261). 분모는 정적 160이 아니라 동적(2023 중앙58 → 2026 중앙93, 최대95). ②방향도 반대: 연도별 중앙값 전체160 = 2022:52.8 2023:51.7 2024:43.0 2025:44.8 2026:47.8 vs 2021첫발표102 = 52.8/54.3/50.0/50.9/50.9 — 후기가 오히려 낮다. 원인은 후발58종목 신고점비율(30.0/32.1/33.3/41.7)이 조기102(54.3/50.0/50.9/50.9)보다 구조적으로 낮아 중간구간을 누른 것. ③핵심은 맞고 영향은 과소평가: 게이지 유니버스만 바꿔 judge.run 재실행 결과 H5b가 6/6 전부 미채택 — 발견29제외131: n=166 rate16.3 [11.4,22.6], 2021첫발표102: n=213 15.0 [10.8,20.4], 무작위절반 8.3/14.7/14.9 (현재 채택은 n=203 24.6 [19.2,31.0] vs 기준 15.6 [13.3,18.2]). 주간판정 41.6% 뒤집힘. 추가로 verdict.json에서 H5b 앞시기 n=0 (ON은 2025년 134·2026년 171건뿐, 2023·2024 0건) — 원칙4 위반. H5(고정20%)는 n=1088 불변.",
+    "corrected_count": 203,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "1) gauge_series에 발견29종목 제외 옵션을 만들고 judge 경로는 그것을 쓴다(7차 등록 규율을 게이지 분모에도 일관 적용). 2) verdict.json에 유니버스 민감도 3판(전체/발견제외/조기102)을 병기하고, 갈리면 채택으로 승격하지 않는다. 3) H5b의 앞시기 n=0을 화면·문서에 명시. 4) 축 이름을 '미래 엿보기'가 아니라 '생존편향·표본 구성 표류'로 정정. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박34.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "주가가 배당 반영 수정주가 — 과거 가격이 미래 배당으로 되쓰인다",
+    "severity": "중대",
+    "evidence": "market_data.py:60 auto_adjust=True (배당·분할 반영), :90 Adj Close→Close. 배당 조정은 배당락일 이전 모든 과거 가격을 깎으므로 52주 창 앞부분만 추가로 낮아져 시계열이 위로 기울고 정배열 방향으로 편향. 되쓰기 자체는 확인(08-13→08-15 80종목 중 25종목 과거 종가 변동) 그러나 최대 변동 0.001%로 배당 효과 크기는 못 쟀음(스냅샷 이력 3일뿐)",
+    "count": 161,
+    "affected": [
+     "ALL"
+    ],
+    "impact": "aligned_flags·aligned_flags_chart·gap_over_52w·below_52wk_ma 등 가격 신호 전부가 실시간에 볼 수 없던 가격 위에서 계산됨. 크기는 확인 못함.",
+    "axis": "축 6 — 미래 엿보기 (look-ahead)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/미래엿보기.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "기전은 사실(코드 확인, 방향도 실측: y=2% 되쓰기 제거 시 정배열 True 19.78%→18.75%). 그러나 ①원 발견의 \"확인\" 근거가 틀림 — bcf64d8(08-13) vs 현재 재계산 시 미완성 마지막 봉(WDAY 175.20→206.45, 17.8%)을 뺀 순수 과거 종가 최대 변동은 0.00078%, 0.01% 초과 종목 0개. 즉 배당 되쓰기 미검출. ②크기를 직접 쟀음: 전 종목 일률 연 5%(이 유니버스엔 불가능, 160중 91이 반도체·SW·HW·인터넷) 되쓰기 제거해도 H2~H18 판정 12개 전부 불변. H9는 오히려 개선(n62 rate25.8→n65 rate27.7). ③채택된 H5b는 gauge_series가 날짜만 쓰고 종가를 안 읽어 무관. ④excess_return은 종목·SPY 둘 다 조정본이라 총수익 비교로 올바름. ⑤auto_adjust=True는 분할 조정도 겸해 끌 수 없음. count 161/ALL도 무배당주 영향 0이라 과장.",
+    "corrected_count": 0,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "코드 변경 불필요(분할 조정 손실이 더 큼). market_data.py:60 주석과 측정결과.md에 한계 한 줄만 남길 것: \"조정 종가는 배당분이 point-in-time 이 아님. 전 종목 연 5% 가정으로 되쓰기를 제거해도 판정 12개 전부 불변(46차 감사, full.py).\" 별건으로, 08-13 스냅샷의 장중 미완성 마지막 봉(WDAY 17.8% 오차)은 배당과 무관한 실제 사안이므로 수집 시각/미완성 봉 제외 규칙을 따로 점검할 것."
+   }
+  },
+  {
+   "finding": {
+    "title": "실적 발표가 아닌 8-K에 분기 숫자가 붙어 신호일이 앞당겨진 행",
+    "severity": "보통",
+    "evidence": "a!=f 2406행 중, 종목별 '기간종료→발표' 지연 중앙값보다 20일 이상 이른 행 25건. 최소 ACLS 2025-10-01(기간종료 2025-09-30, 중앙 34일), ENTG 2022-04-04(기간종료 04-02), REGN 6건 전부 기간종료+5~8일(중앙 29일). 기간종료 다음날 분기 실적 전체 발표는 불가능",
+    "count": 25,
+    "affected": [
+     "REGN",
+     "ACLS",
+     "STRL",
+     "COHR",
+     "AMD",
+     "ZETA",
+     "ENTG",
+     "MKSI",
+     "TWLO",
+     "MDB",
+     "ZS",
+     "AMZN"
+    ],
+    "impact": "그 사건의 60거래일 수익 창이 실제 발표 이전 구간을 최대 약 4주 포함. 분량은 1.0%로 작음.",
+    "axis": "축 6 — 미래 엿보기 (look-ahead)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/미래엿보기.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현: 손질 후에도 26행(원보고 25). 그러나 ① 원문 확인 결과 ZS 2023-05-08 은 진짜 '예비 실적 발표 8-K'(6/1 정식발표 예고)라 정당한 사건일 — 플래그가 정상 발표까지 잡음. ACLS 2025-10-01 은 원문이 Veeco 합병 발표라 진짜 오배치. ② collect_events 결과 26행 중 실제 사건이 된 것은 5건뿐(전부 REGN) = 2366건의 0.21%(원보고 1.0%는 행 기준). ③ 5건 제거 후 judge.run 재실행: H9 62건 25.8% 완전 동일, H5b 203→202 채택 유지, 뒤집힌 판정 0. 발표일을 중앙지연으로 되민 델타쌍도 2210→2210 무변화. 곁가지: 같은 행들의 adj_eps 가 쓰레기(REGN 0.18~1.00 vs 정상 10~13) — 날짜보다 값 오염이 본질.",
+    "corrected_count": 5,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "플래그 기준을 '이른 발표일'이 아니라 '값 정합성'으로 바꿔라: 8-K 짝짓기 때 예비/합병/기타 8-K 를 구분하고(제목 키워드 + 직전 4분기 값 대비 자릿수 검사), 잣대값이 종목 이력의 1/5 미만이면 없음 처리(창작 금지의 버림 쪽). 우선 REGN·AMD·DIS 의 오염 행부터. 날짜만 고치는 것은 실익 없음(판정 변화 0)."
+   }
+  },
+  {
+   "finding": {
+    "title": "스냅샷이 되쓰기되어 과거 측정이 재현되지 않는다",
+    "severity": "보통",
+    "evidence": "08-13 커밋(4d03436) vs 오늘: 같은 키로 맞춘 과거 분기값 5617개 중 241개(4.3%) 변동, 13행 소멸. 값→값: LITE 25Q2 revenue 380,000,000→402,200,000 · adj_eps 0.40→0.42. 값→None: CLS 24Q4 adj_eps 0.45→None. 이틀 사이 발생",
+    "count": 241,
+    "affected": [
+     "LITE",
+     "CLS",
+     "SNDK",
+     "STRL"
+    ],
+    "impact": "어제 판정을 오늘 재현할 수 없다. 수집 지연인지 회사 정정인지 이 데이터로는 구분 불가 — 수집 시점 버전을 남기지 않으면 이 축은 영영 감사 불가.",
+    "axis": "축 6 — 미래 엿보기 (look-ahead)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/미래엿보기.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "숫자만 재현됨: 4d03436 vs 현재, 공통 1468행 중 숫자칸 241/5617(4.29%) 변동. 그러나 방향은 None→값 98·값→값 86·값→None 57 — 즉 오염이 아니라 회수/정정. \"13행 소멸\"은 거짓: 전부 TSLA이고 period_label만 23/06→23 Q2로 정상화(매출 동일, adj_eps 회수), (티커,filing_date) 기준 진짜 사라진 행 0. 인용 예시 2건 모두 옛 값이 오답: LITE_2025-02-03.txt 원문은 \"preliminary...approximately $402 million...$0.40 to $0.42...prior guidance $380 million to $400 million\" — 380M/0.40은 옛 가이던스 하단이었고 announced_date는 02-03→02-06으로 오히려 뒤로 감(look-ahead 감소). CLS_2025-01-29.txt 71행 \"0.45$ 0.57$...1.11$\"(Q1'23~Q4'24) — 0.45는 Q1 2023 열, 실제 1.11, 폐기가 정답. 원인은 커밋 da4b3e5/6fcd2d7/80ec529/0713820 파서 수리. \"버전 안 남아 영영 감사 불가\"는 자기모순 — 감사관이 git show 4d03436:snapshot.json으로 비교했고 snapshot 13버전+원문 316건 커밋됨.",
+    "corrected_count": 0,
+    "corrected_severity": "문제아님",
+    "survives_dataset_clean": true,
+    "fix": "수리 불필요(변경분은 파서 수리 결과이고 손질 후 239/241 통과하나 전부 더 정확한 값). 남는 경미 개선 1건: verdict.json에 computed_at만 있고 snapshot saved_at/커밋 sha 도장이 없음 — snapshot_saved_at 한 줄 추가하면 재현 경로가 완전히 닫힘. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박37.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "근사치 영업이익은 10-Q(XBRL) 출처인데 신호일은 8-K 날짜 (확정 못함)",
+    "severity": "경미",
+    "evidence": "source 분포 직접공시 1343·근사치 1100·역산 625. 근사치=XBRL GAAP 영업이익+주식보상비+무형자산상각(sec_fundamentals.py:12-14). 발표일 있는 근사치 935행의 announced−기간종료 중앙값 30일. 10-Q는 보통 8-K보다 뒤에 제출되나, sec_fundamentals.py:1631 '실제 제출일 대신 기간종료일 사용'이라 제출일이 저장돼 있지 않아 검증 불가",
+    "count": 935,
+    "affected": [
+     "H10"
+    ],
+    "impact": "H10(논갭 영업이익 단독)의 신호일에 그 값을 몰랐을 수 있음. 다만 재료가 보도자료에도 흔히 실려 확정 못함 — 제출일을 저장하기 전에는 판정 불가.",
+    "axis": "축 6 — 미래 엿보기 (look-ahead)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/미래엿보기.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "건수는 그대로 재현(근사치 1100, announced 있는 935, 중앙값 30일). 그러나 핵심 주장은 반증됨. raw/ 원문 중 근사치 행 발표일과 정확히 일치하는 8-K 62건: GAAP영업이익 53·주식보상비 48·둘다 42건 인쇄돼 있음. 원문 숫자만으로 저장 op_income 재구성 성공 37/61(AMZN 오차0.00%, FSLR 0.00%, ACLS 0.04%). GOOGL 검산: 39,696+6,751=46,447 vs 저장46,896 → 차 449(0.96%, 상각분)=99%가 8-K 본문에 있었음. 영향도 무너짐: 근사치 사건 전부 제거해도 H10 신호 n=54→22, rate 27.8→50.0, ci 하한 17.6→30.7, 기준선 상한 16.0→21.0 → 여전히 채택. op_income은 잣대 사다리에 없어 H2~H9 무관.",
+    "corrected_count": 935,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "행 자체는 손질 후에도 935건 그대로 남지만(=오염이 아니라 감사 불가), 조치는 데이터 수정이 아니라 기록 보강임: sec_fundamentals.py:1631 의 XBRL 행에 실제 10-Q 제출일 칸(예: xbrl_filed_date)을 따로 저장해 앞으로 검증 가능하게 할 것. 판정 변경은 불필요 — H10은 근사치 사건을 전부 빼도 채택 유지. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박38.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "원장으로 스냅샷 adj_eps 를 교차검산하면 78분기 오염이 즉시 드러나는데 아무도 안 쓴다",
+    "severity": "치명",
+    "evidence": "surprise act ↔ 스냅샷 adj_eps 짝지음 425분기 중 일치(2%내) 325, 10%이상 어긋남 78(39종목). 그중 우리 시계열 안에서도 튀는(=우리쪽 오염 유력) 16건/15종목. NTAP 1.55vs0.05(3000%), REGN 11.83vs0.68(1640%), OXY 1.06vs0.14(657%), QCOM 3.00vs12.03, ETN 3.07vs11.97, VZ 1.09vs4.71 (배율 ≈1/4 = 연간값 혼입 모양), KLAC 3분기 배율 정확히 0.100",
+    "count": 78,
+    "affected": [
+     "NTAP",
+     "REGN",
+     "OXY",
+     "AAOI",
+     "NRG",
+     "TSLA",
+     "VZ",
+     "WMT",
+     "QCOM",
+     "ETN",
+     "HON",
+     "KLAC"
+    ],
+    "impact": "adj_eps 는 이익 델타 사다리 1순위 잣대 — 연속 분기 증감 판정이 그대로 오염된다. 원장은 이미 저장소에 있고 이 78건을 잡을 수 있었는데 검증에 연결돼 있지 않다. (정직: 야후가 튀는 건도 29건 있어 어느 쪽이 옳은지는 raw 원문으로 확정 필요)",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현: 420짝/일치322/어긋남77/39종목 (감사관 425·325·78·39와 동일). 야후 없이 우리 데이터만으로 산술검산: VZ 4.71=1.19+1.22+1.21+1.09 (센트까지 정확), QCOM 12.03=3.41+2.85+2.77+3.00 → 분기칸에 연간값 혼입 확정. 전 유니버스 산술검사로 19행/14종목 확증(VZ는 2024·2025·2026 1월 3년 연속 = 회계연도 마감 파싱 결함). NTAP adj 0.05 vs 같은 행 gaap 1.16 은 별개 오염. dataset.build 위에서 계산했고 PER_SHARE_ABS_LIMIT=100 은 못 잡음, data_quality.py 는 판정경로 미연결. 반사실: 19행 제거 시 신고점 판정 34건 변동/판정가능 1605. 전문: .../out/반박39.md",
+    "corrected_count": 19,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "dataset._clean_quarters 에 산술 가드 추가: adj_eps[i] ≈ 직전3분기합 + 정상범위 분기값 이면 고치지 말고 '없음' 처리(창작 금지). 원장(surprise.act) 교차검산은 2차 방어로. 감사 보고 정정 필요: affected 에서 KLAC(야후가 1/10 로 틀림, 우리 8.81~9.40 이 정합) · AAOI(적자기업 부호, 절대차 10센트대) 제외, 본문 '1/4 연간혼입' 목록에서 CRWD 제외(방향 반대 — 야후가 1/4)."
+   }
+  },
+  {
+   "finding": {
+    "title": "두 원장이 판정 파이프라인에 전혀 연결돼 있지 않다 (화면 2곳뿐)",
+    "severity": "중대",
+    "evidence": "grep -c 'consensus|surprise': measure_engine 0 · judge 0 · sector_model 0 · leadership 0 · measure_store 0 · data_quality 0 · market_data 0. verdict.json 가설 16개(H2~H19b) 어디에도 컨센서스 없음. 쓰이는 곳은 app.py:739 surprise_sector_rows(섹터 12행), app.py:752 sector_spread_rows(종목 14행)뿐",
+    "count": 2,
+    "affected": [
+     "전체"
+    ],
+    "impact": "헌법상 '관찰 전용'이라 규정 위반은 아니다. 다만 그 대가로 스냅샷 오염을 잡을 수 있는 유일한 독립 원장이 놀고 있다(F2 참조).",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "건수는 내가 다시 세어 전부 일치(measure_engine/judge/sector_model/leadership/measure_store/data_quality/market_data/dataset 모두 0, 원장을 읽는 곳은 app.py:524-525 하나, 사용 2곳, verdict.json에 '컨센서스/consensus/surprise' 전부 False). 그러나 결함이 아니다. ①전략.md 제1조: \"판정·신호 편입은 새 H번호 사전 등록 후 새 데이터로만 — 그 전까지 컨센서스는 관찰·기록 전용\", 측정결과.md 27차: \"원장 축적 전에는 아무것도 판정하지 않는다\". 지금 verdict에 있으면 제1조·제2조 위반이다. ②연결하고 싶어도 불가능: consensus.json as_of는 ['2026-08-14','2026-08-15'] 이틀뿐이고, \"발표일 이전 스냅샷만\" 조건을 만족하는 사건을 전수 조사하니 발표행 2903건 중 0건. n≥10+60거래일 창은 2026-11 이후에나 가능. ③dataset.py의 consensus/surprise 언급 0·0, build 결과 키에 원장 없음 → 측정 오염 경로 자체가 없음. 발견의 impact(\"F2를 잡을 수 있었다\")는 별개 발견 F2의 근거이지 F1의 피해가 아니다.",
+    "corrected_count": 0,
+    "corrected_severity": "문제아님",
+    "survives_dataset_clean": false,
+    "fix": "고칠 것 없음(지금 상태가 헌법 준수 상태). 남는 가치는 하나뿐: 원장을 '판정'이 아니라 '스냅샷 adj_eps 교차검산 도구'로 쓰자는 제안 — 이는 결함 보고가 아니라 개선 제안이며 F2에서 별도 평가할 일이다. 감사 용도라 제1조(판정 편입 금지)에도 걸리지 않는다. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박40.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "원장 행에 대상 분기 라벨이 없다 + 발표 직후 0q 가 옛 분기를 가리킨 실증 2건",
+    "severity": "보통",
+    "evidence": "행 키에 분기 칸 없음(avg,low,high,analysts,year_ago,rev_*). CSCO 2026-08-12 발표 완료인데 08-14 0q avg=1.16883 = 그 분기 보관 est 와 완전일치(다음날 1.32365 로 굴러감). LITE 08-14 0q 2.96892 = 2026-06-30 분기 est. forward_estimates.py:1048 에는 '한 분기 당김' 보정이 있으나 원장 경로엔 없음",
+    "count": 2,
+    "affected": [
+     "CSCO",
+     "LITE"
+    ],
+    "impact": "발표 후 1~2일 야후 0q 는 아직 안 굴러간다. 스프레드가 '다음 분기 가이던스 vs 이미 발표된 분기 컨센서스'를 비교하게 되지만 막는 장치가 없다.",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "사실은 재현됨. 638행 키에 분기 칸 없음 확인. 전수 재계산 결과 \"원장 avg == 이미 발표된 분기 보관 est\" = 2건(CSCO 1.16883/2026-07-31, LITE 2.96892/2026-06-30), year_ago 교차확인도 일치 → 건수 2 유지. 그러나 심각도는 과대. dataset.build 키에 consensus/surprise 없음, measure_engine·judge·dataset grep 0건 → 측정 오염 0. 08-14 시점 재현(원장 절단+today=08-14) 결과 14행 동일, CSCO/LITE 미포함(CSCO 가이던스 821일 낡음, LITE 가이던스 없음), 14/14 정렬 정상. 반례: AMAT는 발표 1일 뒤인 08-14에 이미 롤오버(0q ya 2.17→2026-10-31). 라벨 부재는 측정결과.md 27차에 이미 등록된 한계. 둘 다 08-15에 자가 치유.",
+    "corrected_count": 2,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": false,
+    "fix": "① app.forward_spread_rows에 정렬 검사: 원장 0q의 year_ago가 \"이미 발표된 마지막 분기의 4분기 전 act\"와 같으면 그 종목 제외(또는 +1q로 한 칸 당김). surprise.json에 act가 이미 있어 새 수집 불필요. 참고로 forward_estimates.py:1041의 매출 기반 보정은 그대로 못 옮긴다 — 08-14 원장 행엔 rev 칸이 아예 없음(159/159). ② append_snapshot이 앞으로 쌓는 행부터 분기말을 quarter 칸에 박제(추가 전용이라 과거는 못 고침). ③ app.py:751 캡션에 \"발표 직후 1~2일은 컨센서스가 직전 분기를 가리킬 수 있음\" 추가(정직화 3곳 규칙 중 화면만 빠져 있음). ④ 새 테스트는 일부러 깨뜨려 빨간 불 확인 후 신뢰."
+   }
+  },
+  {
+   "finding": {
+    "title": "forward_spread_rows 가 today 를 받으면서 컨센서스는 무조건 원장 맨 끝(entries[-1])을 쓴다",
+    "severity": "보통",
+    "evidence": "app.py:319 에 as_of ≤ today 필터 없음. 실행 결과 today=2026-08-14 인데 스프레드 14행 중 13행이 2026-08-15 스냅샷 사용. 추가로 가이던스 이후 새 발표가 있는데 옛 가이던스를 쓴 행 1건(DIOD 2026-08-05 가이던스, 이후 08-12 발표)",
+    "count": 13,
+    "affected": [
+     "SNDK",
+     "UCTT",
+     "KLAC",
+     "TWLO",
+     "WDC",
+     "ZM",
+     "STX",
+     "VIAV",
+     "DIOD"
+    ],
+    "impact": "지금은 화면 관측 전용이라 해악이 작지만 today 인자가 공개돼 있어 과거 시점 재현에 쓰는 순간 곧바로 미래 참조가 된다.",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "코드 사실 맞음: app.py:319 entries[-1] 에 필터 없음. 반면 314행 가이던스는 age<0 으로 today 를 지킴 → 비대칭 진짜. 그러나 ①재현 결과 as_of>today 는 13이 아니라 14/14 (항목수 Counter({2:160}) 라 13이 나올 구조 아님, affected 도 14개). ②'미래' 아님 — 08-15 는 토요일, today 는 마지막 거래일 금 08-14. 거래일시계 vs 달력시계 착시. ③영향 0: 08-14 이하로 자른 원장 재실행 \"행수 now/fix 14 14 | 값이 바뀌는 행 0\", 0q avg 14/14 소수점까지 동일. ④DIOD 거짓: 08-12 는 새 발표 아니라 같은 26 Q2 중복행(rev 445,529,000→109,000,000, guid_eps_mid=None). ⑤as_of 분포 {08-14:160, 08-15:160} — 이틀치뿐이라 과거 재현 불가. ⑥judge/measure_engine 등 grep 전부 0.",
+    "corrected_count": 14,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "app.py:319 를 usable=[e for e in entries if (e.get('as_of') or '')<=today] 로 바꾸고 usable[-1] 사용(컨센서스일 표기도 동일). 실측상 화면 14행·값 전부 그대로라 무해한 방어. 단 today 가 거래일 시계라 폴백 스냅샷이 없는 날엔 종목이 빠지므로 달력 today 를 받거나 완충을 둘 것. 별건으로 DIOD 26 Q2 중복·오파싱 행(rev 109M)은 따로 처리."
+   }
+  },
+  {
+   "finding": {
+    "title": "surprise 원장이 스냅샷 누락 분기 15건을 짚어낸다 (DE·SLB 는 2년 넘게 멈춤)",
+    "severity": "중대",
+    "evidence": "surprise 에 있으나 스냅샷 대응 분기 없음(±45일)이고 스냅샷 최신보다 뒤인 것 15건. DE 4분기(스냅샷 최신 2023-10-29), SLB 4분기(최신 2024-03-31), LITE 2026-06-30(최신 2026-03-28), COHR·NEE·SO·V·LOW·XOM 각 1건. 그 밖 '중간 구멍' 12건",
+    "count": 15,
+    "affected": [
+     "DE",
+     "SLB",
+     "LITE",
+     "COHR",
+     "NEE",
+     "SO",
+     "V",
+     "LOW",
+     "XOM"
+    ],
+    "impact": "DE·SLB 는 분기 시계열이 2년 넘게 멈춰 있다 — 신고점 첫 돌파 판정에서 사실상 제외되거나 옛 값으로 잘못 판정된다.",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "corrected_count": 15,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "reason": "건수 재현 성공: 내 스크립트도 '중간구멍 12 / 스냅샷보다 최신 15', 종목 Counter{DE:4,SLB:4,LITE·COHR·NEE·SO·V·LOW·XOM 각1} 로 동일. DE 마지막 announced 2023-11-22, SLB 2024-04-19 확인 — 정지 사실. dataset.build 후에도 DE 7행/SLB 11행 그대로(없는 값은 손질로 안 생김). 그러나 impact 반증: 오늘 ld._delta_at → DE None, SLB None (140일 신선도 규칙이 판단불가 처리) → '옛 값으로 잘못 판정'은 거짓. collect_events 총 2366건 중 DE 0건은 누락이 아니라 gaap 6분기 < LADDER_MIN_QUARTERS 8 때문, SLB는 이미 11건 측정 중. 누락 15건 중 6건은 우측검열(발표일>2026-05-19)로 어차피 제외 → 최대 손실 9/2366=0.38%. 성격도 오염 아님: raw/ 에 DE 2건·SLB 2건 등 파싱실패 원문 보존(SLB_2026-07-24 본문에 GAAP EPS $0.52 존재).",
+    "fix": "원장 대조 대신 더 넓은 자체 검사를 계기판에 상시 노출: 'yardstick_of=None'(9종목: CLS SNDK SNOW NFLX VST VRTX PG CAT DE) + '마지막 발표 경과일>140일'(9종목: SLB847 DASH743 SNAP556 UNH290 ETSY289 PEP192 COHR191 UCTT172 LOW170) = 18종목을 '측정 제외/김빠짐'으로 표시. 원장은 4분기만 보관해 DASH·SNAP 같은 더 심한 정지를 못 잡는다. 별도로 raw/ 의 DE·SLB 보도자료 4건을 파서 개선의 구체 표본으로 쓸 것."
+   }
+  },
+  {
+   "finding": {
+    "title": "metric='rev' 경로의 단위 어긋남 (현재 호출되지 않음) + 스냅샷 revenue 단위 혼재",
+    "severity": "경미",
+    "evidence": "rev 스프레드 47행 중 정상 41, 가이던스가 컨센서스의 1/50 미만 4건: SMCI 935,000 vs 1.50e10 · TXN 2.4e6 vs 5.91e9 · WMT 7.3e5 vs 1.87e11 · UCTT 7.7e5 vs 7.28e8. 컨센서스 rev_avg 대비 5배 이상 차이 종목 36개(AMD 1.13e6배, MCHP 1.08e6배, SO 2.9e9배)",
+    "count": 36,
+    "affected": [
+     "SMCI",
+     "TXN",
+     "WMT",
+     "UCTT",
+     "AMD",
+     "MCHP",
+     "NXPI",
+     "SO",
+     "AMZN",
+     "VST",
+     "NEE",
+     "NOW"
+    ],
+    "impact": "컨센서스 rev_avg 는 달러로 일관됨 — 어긋나는 쪽은 스냅샷의 revenue/guid_rev_mid 단위. 지금 화면은 metric='rev' 를 부르지 않아 노출은 없으나 부르는 순간 오염.",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "반박 실패 — 숫자가 전부 재현됨. dataset.build 후 ds로 forward_spread_rows(metric='rev') 실행: 47행, 정상 41, 1/50 미만 4 (WMT 3.9e-06 · SMCI 6.2e-05 · TXN 4.1e-04 · UCTT 1.1e-03), 기타 2(SEDG 0.0347, MXL 0.7848) — 발견과 티커·값까지 일치. revenue vs rev_avg 5배+ : RAW 36 → BUILD 후 22 (AMD 1126276.2배, MCHP 1081266.5, SO 2906575726.7 재현). 정상 회계 아님: AMD revenue 7685/9246/10270/10253/11536(백만) 인데 같은 종목 guid_rev_mid 1.3e10(달러); SO는 10/3/4/684000000/3 로 자기 시계열 안에서 단위가 섞임. metric='rev' 호출부는 실제로 없음(app.py:752 는 기본 'eps'), LADDER에 revenue 없음, measure_engine/judge/sector_model/leadership 의 revenue 등장 0회.",
+    "corrected_count": 22,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "dataset.py revenue 가드가 「1만 달러 미만」 절대 하한뿐이라 백만 단위 값(AMD 11536)이 통과함 → data_quality.py 에 이미 있는 이웃 배율 검사(_neighbor_revenue, 20배)를 dataset.build 경로에도 붙일 것. guid_rev_mid 는 가드가 아예 없으므로 같은 행/이웃 revenue 와 50배 이상 어긋나면 None 처리. 그 전까지 forward_spread_rows(metric='rev') 는 호출 금지로 주석에 명시."
+   }
+  },
+  {
+   "finding": {
+    "title": "원장이 아직 단 한 건의 발표도 커버하지 못한다",
+    "severity": "경미",
+    "evidence": "원장 커버 기간 2026-08-14 ~ 2026-08-15(이틀). 스냅샷에서 2026-08-14 이후 발표 0건(08-13 까지 넓혀도 AMAT 1건, 원장 시작 전날). 즉 '발표일 이전 마지막 스냅샷' 규칙으로 재현 가능한 사건 0건",
+    "count": 0,
+    "affected": [
+     "전체"
+    ],
+    "impact": "설계상 정상이나 화면·문서에 '원장 커버리지 0건'이 정직하게 드러나야 한다.",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "숫자는 재현됨: as_of {08-14:160, 08-15:160}, 스냅샷 announced_date 최댓값 2026-08-13, 08-14 이후 발표 0건(08-13 이후 AMAT 1건). 그러나 틀린 행은 0개 — 이틀 된 추가전용 원장의 설계상 상태다. 27차 사전등록에 \"원장 축적 전에는 아무것도 판정하지 않는다\"가 이미 명시됨. 같은 축의 surprise 원장은 642행(2024-11-30~2026-07-31)을 이미 커버하므로 \"원장이 한 건도 커버 못 한다\"는 제목은 과장. 작년 같은 창 기준 3개월 뒤 153종목이 자동 커버된다. dataset/measure/judge/sector_model/leadership 전부 consensus·surprise 참조 0회.",
+    "corrected_count": 0,
+    "corrected_severity": "문제아님",
+    "survives_dataset_clean": false,
+    "fix": "코드 수정 불필요. 결함이 아니라 관찰 항목으로 이관하고, 화면 캡션에 원장 커버 기간(min~max as_of) 한 줄만 덧붙이면 충분(이미 행별 '컨센서스일' 노출·빈 원장 폴백 있음). 같은 보고서의 F4(as_of ≤ today 필터 없음)가 실제 수정 대상."
+   }
+  },
+  {
+   "finding": {
+    "title": "verdict.json의 주도섹터 판정이 낡은 코드 산물 — 화면이 현재 코드가 부정하는 주도를 표시 중",
+    "severity": "치명",
+    "evidence": "verdict computed_at 13:33:32(커밋 47e7141 13:34:01), leadership.py 51차 수리는 0713820 14:20:34. snapshot은 그 뒤 불변. 같은 snapshot 재계산: 현재주도 데이터센터→기기 OEM 반도체, 델타폭 100.0→80.0, 완성수 0→4, 국면수 2→11, H20 전환 1건→18건. 옛 코드(6fcd2d7) 재현시 verdict와 완전 일치→원인 확정. H21도 verdict 2건 중 2024-02-16 에너지원자재 건이 현재 재계산에 부존재(현재는 3건).",
+    "count": 5,
+    "affected": [
+     "H19",
+     "H20",
+     "H21",
+     "app.py"
+    ],
+    "impact": "app.py 522행이 verdict.json을 그대로 읽어 뿌린다. 51차가 고친 결함(데이터센터가 판단불가인데 옛 점수로 도전자를 막음)이 만든 잘못된 주도섹터가 계기판에 사실처럼 남아 있다. 데이터 재수집 없이 판정만 재실행하면 해소.",
+    "axis": "축 8 — 묶음 분류와 측정 표본 정합성",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/분류·묶음.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "독립 재현 성공. dataset.build(dataset.load())로 collect_job 149~175행과 같은 순서로 재계산: H19 데이터센터/완성0/델타폭100/국면2 → 기기 OEM 반도체/완성4/델타폭80/국면11. H20 n=1→17(사건 1→18건). H21 사건 2건→3건, verdict의 2024-02-16 에너지원자재 건 부존재. git worktree로 47e7141(옛 코드)을 같은 snapshot에 돌리니 verdict.json과 완전 일치 → 데이터 오염 아님, 코드 버전 노후 확정. 0713820이 건드린 파일은 leadership.py·test·측정결과.md 3개뿐. 단 심각도는 과장: 전 가설 판정 비교에서 바뀐 건 H20 '판정 불가'→'미채택' 1개뿐이고 둘 다 비채택, 채택 3개(H5b·H9·H10)는 재계산 대상조차 아님. app.py 노출 지점은 781행 signal_summary 한 곳이며 768행 접힌 expander '⑥ 미채택·판정 대기 신호'(캡션: 판단·점수·추천에 쓰지 않되) 안. cron '30 9 * * *', 현재 Sun Aug 16 01:28:30 UTC 2026 → 약 8시간 뒤 자동 해소.",
+    "corrected_count": 3,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "근본 수리: judge.to_json에 code_rev(git 해시)를 기록하고, app.py가 현재 HEAD와 다르면 \"이 판정은 옛 코드로 계산됨\" 배너를 띄운다 — 지금은 verdict.json에 computed_at만 있어 코드와 어긋나도 화면에 경고가 없다. 즉시 조치는 불필요(로봇 다음 실행이 조건 없이 verdict를 덮어써 자동 해소). 급하면 판정 부분만 재실행."
+   }
+  },
+  {
+   "finding": {
+    "title": "묶음 크기 4~20 (5배 차) × 비율 기반 주도점수 = 작은 묶음 구조적 우위",
+    "severity": "중대",
+    "evidence": "MIN_COMPLETIONS=3이 절대개수라 4종목 묶음은 최소조건 충족 순간 밀도 75%, 20종목 묶음은 같은 3개로 15%(문턱 30% 미달). 실측 최고점수: 4~5종목 묶음 75.0·100.0 vs 20종목 묶음 53.8·58.5. 5종목 이하 묶음 5개(종목 22개=13.8%)가 주도 199주 중 97주(48.7%) 차지. 통신·미디어 회선 1개(4종목=2.5%)만으로 50주(25.1%).",
+    "count": 5,
+    "affected": [
+     "통신·미디어",
+     "발전전력",
+     "현물가메모리",
+     "데이터센터",
+     "에너지원자재"
+    ],
+    "impact": "주도섹터가 '진짜 강한 묶음'이 아니라 '분모가 작은 묶음'을 반복해 뽑는다. 통신·미디어 회선은 전환 3건 모두 완성3·판단가능4·결정3·밀도75.0의 동일 최소 구성으로 주도를 가져갔다.",
+    "axis": "축 8 — 묶음 분류와 측정 표본 정합성",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/분류·묶음.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "산수는 전부 재현됨(4~20묶음, 48.7%, 25.1%, 통신 전환 3건 모두 완성3·판단가능4·밀도75.0). 그러나 원인이 반대다. ⑴자격 문턱 max(3,ceil(0.3n)): 4종목은 회원 75%가 완성해야 하고 20종목은 30%면 된다 — 절대 3은 혜택이 아니라 비례 벌점. ⑵묶음 크기 고정·배정만 무작위로 200회 재계산(leadership.py와 assert 일치): 4종목 묶음 주도점유율 5.1/5.7/4.5% 로 중립 5.88%(=1/17) 아래, 20종목은 2.4/3.3%. 유리한 크기는 6~8종목(7.2~8.4%). ⑶13.8%는 비교대상 아님 — 주도는 묶음 단위로 뽑히므로 5묶음 중립몫 5/17=29.4%, 치환 실측 28.7%. 실제 48.7%는 200회 중 25회가 넘어섬(p≈0.13, 무의). ⑷최고점수 치환 기대치 n=4는 49.8로 전 크기 최저, n=20은 45.9 — 분모가 만드는 차이는 약 4점뿐. 통신 75.0·기기OEM 53.8 둘 다 각자 우연 기대치 위. ⑸verdict.json 실행: H19·H19b·H20·H21 전부 판정 불가 → 원칙3에 따라 점수·추천 미반영. ⑹측정결과.md 2530행이 옛 12섹터에 대해 같은 지적을 이미 적었고 그것이 45차 재분류 사유였다.",
+    "corrected_count": 3,
+    "corrected_severity": "경미",
+    "fix": "문턱은 고치지 말 것(사전 등록). 기록 방향을 '작은 묶음 유리'가 아니라 '20종목 묶음 불리'로 정정: 기기 OEM 반도체·좌석 구독 SW·소비 최종재·유통 3개가 중립 5.88% 대비 2.4~4.0%로 약 2배 열위. app.py 주도섹터 표시에 회원수·완성수를 병기하고 \"20종목 묶음은 같은 강도라도 최고점수가 약 4점 낮게 나온다(치환 200회 실측)\"를 한계로 적는다.",
+    "survives_dataset_clean": true
+   }
+  },
+  {
+   "finding": {
+    "title": "'분모 3개' 문제는 금융만이 아니라 13개 묶음 전부에 퍼져 있다",
+    "severity": "중대",
+    "evidence": "조건충족 772주의 결정가능(델타분모) 분포 = 3:251, 4:165, 5:87, 6:123, 7:45, 8:40, 9:24, 10:13, 11:8, 12:5, 13:5, 14:6 → 251주(32.5%)가 분모 정확히 3개. 주도 전환 18건 중 11건(61%)이 결정가능=3. 완성 3개 이상이 델타 판단불가로 분모에서 빠진 조건충족 주 79건(예: 의약·의료 2022-11-04 완성7→결정4, 금융 2023-02-24 완성6→결정3).",
+    "count": 251,
+    "affected": [
+     "광고",
+     "교체주기IT",
+     "소비결제",
+     "금융",
+     "통신",
+     "분산에너지",
+     "의약",
+     "산업설비",
+     "에너지",
+     "반도체장비",
+     "데이터센터",
+     "광통신"
+    ],
+    "impact": "46차 수리는 '3개 미만'만 막아 정확히 3개는 통과한다. 주도 전환의 61%가 종목 3개의 이익 방향에 얹혀 있어, 한 종목만 뒤집혀도 주도가 바뀐다.",
+    "axis": "축 8 — 묶음 분류와 측정 표본 정합성",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/분류·묶음.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "계수는 재현됨(조건충족772, 결정가능3=251주 32.5%, 손실>=3인 79주, 13묶음). 그러나 오염이 아니다. ①251주를 쪼개니 완성수==3이 113주(45%)로 델타 결손 0 — 순수 소규모다. 진짜 결손분은 138주. ②MIN_COMPLETIONS=3은 측정결과.md 2449행 \"C>=3종목\"으로 사전 등록된 문턱이라 \"3이 통과한다\"는 동어반복. ③46차가 이미 \"남은 결함(수리 못함) 24종목\"으로 공개했고 app.py 94-99행도 화면에 경고 중. ④H19/H20/H21 verdict 전부 \"판정 불가\" → 판단에 안 쓰임. ⑤1개 뒤집힘 취약성은 분모3만의 성질 아님(d=4 33.3%, d=5 43.7%, d=6 19.5%). ⑥min_dec를 4/5/6으로 올려도 최종 주도는 전부 기기 OEM 반도체로 동일. 전환 중 결정3은 11건이 아니라 12건(66.7%).",
+    "corrected_count": 138,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "문턱을 고치지 말 것(원칙2 위반). 대신 ①min_dec 민감도 표(4/5/6 올리면 과거 주도가 55.7~69.5% 주에서 달라짐)를 측정결과.md에 관찰 기록으로 추가해 H19 타임라인을 과거 사실처럼 인용하지 않게 한다. ②분모 강화를 원하면 새 H번호로 사전 등록 후 새 데이터로만 판정. ③진짜 수리는 46차가 지목한 24개 종목(AXP BAC BLK C GS WFC 등) EPS 회수. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박48.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "델타 잣대 없는 종목 9개 → 두 묶음은 델타폭이 영구 판단 불가",
+    "severity": "보통",
+    "evidence": "yardstick_of=None 종목: CAT·CLS·DE·NFLX·PG·SNDK·SNOW·VRTX·VST (9개, _delta_series 0건과 완전 일치). 측정가능(잣대∧52주가격) 4 미만 묶음 2개: 현물가 연동 메모리·저장장치 3/4, 발전·전력 판매 3/4. leadership.MIN_MEMBERS=4 → 발전·전력 판매는 델타분모 4 이상인 주 0주/210주, 조건충족 0주.",
+    "count": 9,
+    "affected": [
+     "CAT",
+     "DE",
+     "PG",
+     "NFLX",
+     "SNOW",
+     "VRTX",
+     "VST",
+     "CLS",
+     "SNDK"
+    ],
+    "impact": "두 묶음은 구조적으로 주도 후보가 될 수 없다. 데이터센터 묶음도 5명 중 4명만 잣대가 있어(CLS 결측) 델타분모가 2~4로 얇다.",
+    "axis": "축 8 — 묶음 분류와 측정 표본 정합성",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/분류·묶음.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현 일치: dataset.build 출력으로 yardstick None = 9, 명단 동일(CAT CLS DE NFLX PG SNDK SNOW VRTX VST). weekly_group_state 재계산 210주에서 발전·전력 210/210, 현물가 메모리 28/28 델타폭 None, 조건충족 0 — 전부 재현. 그러나 인과는 과장. (A) 델타폭은 H21만 읽고 H21은 주도 행만 본다. 타임라인 210주 주도 등장에 두 묶음 0주 → 읽는 자리가 없음. (B) 현물가 메모리 완성수 분포 {0:15, 1:13}, 무리 0주 — 잣대 4/4여도 조건충족 0. 원인은 정배열 완성. (C) 발전·전력 무리 21주 중 6주는 NRG(잣대 있음)도 None, 10주는 델타동반 33.3<50로 탈락. VST 잣대가 병목인 건 5주뿐, 그것도 가정부. 진짜 손실은 다른 축: collect_events 잣대없음 9 → 사건 있는 종목 151/160.",
+    "corrected_count": 9,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "건수·명단은 그대로 두되 \"델타폭 영구 결측 → 두 묶음 주도 후보 불가\"라는 인과 문장을 삭제하라(델타폭은 조건충족 식에 없고, 두 묶음은 210주 중 0주 주도라 H21에 실리지도 않는다). 이 항목은 축 8이 아니라 축 2(수집·파싱)로 옮겨야 한다 — CAT·DE·PG·NFLX·SNOW·VST·VRTX 7종목은 filing 19~20행이 있는데 이익 칸이 0~6개뿐인 파싱 결손이고, 그 결과 측정 본체에서 종목 9개가 통째 빠져 사건 있는 종목이 151/160이다. SNDK(가격 2025-02-13 시작)·CLS(filing 2024-03-31 시작)는 상장·수집창 문제로 정상이며 분기가 쌓이면 자동 해소된다. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박49.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "현물가 메모리 묶음이 210주 중 182주(87%) 동안 표에서 통째로 사라져 있었다",
+    "severity": "보통",
+    "evidence": "가격 시작일은 158/160이 2021-08-16으로 균일. 예외는 CRDO 2022-01-27, SNDK 2025-02-13(거래일 377일). 판단가능(52주 워밍업) 첫날: 158종목 2022-08-12, CRDO 2023-01-20, SNDK 2026-02-06. 현물가 묶음(MU·SNDK·STX·WDC)은 SNDK 전까지 회원 3명 → MIN_MEMBERS=4 미달로 주간 행이 아예 생성 안 됨. 이 묶음 주간행 28주, 다른 16개 묶음은 전부 210주.",
+    "count": 28,
+    "affected": [
+     "MU",
+     "SNDK",
+     "STX",
+     "WDC",
+     "CRDO"
+    ],
+    "impact": "묶음내 시작일 격차는 15개 묶음이 0일, 예외는 기기OEM 164일·현물가 1277일뿐이라 전반적 편향은 작다. 다만 현물가 묶음은 최근 28주만 존재하고 그마저 델타분모 1~3이라 실질 판단 불가.",
+    "axis": "축 8 — 묶음 분류와 측정 표본 정합성",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/분류·묶음.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "숫자는 100% 재현됨: 시작일 158=2021-08-16/CRDO 2022-01-27/SNDK 2025-02-13, ready 158=2022-08-12/CRDO 2023-01-20/SNDK 2026-02-06, 현물가 묶음 주간행 28 vs 나머지 16개 210, 델타분모 {1:12, 3:16}. 그러나 결정적 반사실: ld.MIN_MEMBERS=3 으로 182주를 되살려도 조건충족 0주, 주도였던 주 [], 주도 분포가 기준과 완전 동일(통신50 교체주기37 에너지31 금융16 데이터센터16 소비거래14 None11 좌석11 기기OEM9 산업8 광고4 팹3). 최선 20주도 델타동반 33.3 < 문턱 50. confirmation_events 47건 중 이 묶음 0건. 실제 손실 0주.",
+    "corrected_count": 0,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "코드 수정 불필요. SNDK 2025-02 분리상장은 실재 사실이고 leadership.py 132행 \"판단 불가 — 값을 만들지 않는다\"는 원칙대로 작동한 거부(분모 3 판단 회피 = 발견 #3이 비판한 바로 그것). config.py 묶음 등록문 옆에 \"회원 중 상장 5년 미만 종목이 있으면 그 기간 묶음 전체가 판단 불가\"를 한 줄 기록만 권함. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박50.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "델타 판단가능 종목수가 시기마다 달라 '델타폭 %'의 뜻이 연도별로 다르다",
+    "severity": "보통",
+    "evidence": "회원수는 고정인데 델타분모가 이동: 산업 설비·자동화·수송 13명 고정, 델타분모 2022년 최저 3 → 2023년 3~9 → 2025년 8~11. 소비 최종재·유통 15명 고정, 델타 8~13. 광고 플랫폼 8명 고정, 델타 5~7. 기기 OEM 반도체 20명, 델타 13~20.",
+    "count": 17,
+    "affected": [
+     "산업설비",
+     "소비최종재",
+     "광고",
+     "기기OEM",
+     "좌석구독SW"
+    ],
+    "impact": "같은 '델타폭 50%'가 2022년엔 3명 중 1.5명, 2025년엔 10명 중 5명이다. H21 분기점(국면 최고 대비 20%p 하락)이 실제 이익 변화가 아니라 분모 변화로 발화할 수 있다.",
+    "axis": "축 8 — 묶음 분류와 측정 표본 정합성",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/분류·묶음.md"
+   },
+   "verdict": {
+    "confirmed": false,
+    "reason": "재현: 3388행·210주(2022-08-12~2026-08-14), 연도별 분모표 원문과 일치. 그러나 leadership.py:161-165 는 len(known)>=MIN_MEMBERS(4) 일 때만 델타폭을 만든다 — 실측 \"델타분모<4 행 484 → 그중 델타폭이 숫자인 행 0\", \"계산된 행의 분모 min=4\". 최악 사례로 든 산업설비 2022(분모3)는 그 해 0/21행이 값 없음. 피해 검증: H21 사건 3건 전부 최고주/분기주 분모 동일(8·8, 4·4, 4·4), 공통분모 고정 낙폭 25.0/50.0/25.0 로 동일 — 원인은 HPQ,P / T,TMUS / ANET 의 실제 델타 하락. 국면 19개 중 분모 변한 국면 4개, 최대 폭 2. grep 결과 델타폭 연도간 비교 코드 없음.",
+    "corrected_count": 0,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "데이터 수정 불필요. 표기만 보완: app.py:556/569 및 H19 카드의 \"델타 폭 100%\"에 분모를 병기(예 \"100% (4/4)\"). 별개로 분모 4 묶음은 한 종목=25%p 라 H21 20%p 문턱이 사실상 1종목 발화임을 주석·화면에 명시. 감사 원문의 연도표는 '계산된 행'만으로 다시 작성할 것(17→15묶음, 영향 7묶음)."
+   }
+  }
+ ],
+ "survived": [
+  {
+   "finding": {
+    "title": "주식분할이 가격에만 반영되고 EPS에는 미반영 — 7종목이 신고점을 낼 수 없음",
+    "severity": "치명",
+    "evidence": "NVDA adj_eps 6.12→0.68, GOOGL gaap 26.29→1.36, AVGO 10.96→1.24, LRCX 8.60→0.91. 가격은 분할조정됨(NVDA 2024-06-10 종가 121.58). 내재PER 검산: AVGO 2.1→59.3(x28), SMCI 1.4→31.5(x22), GOOGL 3.5→34.4. 분할 후 판단가능 발표 55건 전부 신고점 0건. NVDA TTM 18.00→3.14",
+    "count": 55,
+    "affected": [
+     "NVDA",
+     "GOOGL",
+     "AVGO",
+     "LRCX",
+     "SMCI",
+     "ANET",
+     "WMT"
+    ],
+    "impact": "핵심 신호 'TTM 신고점 첫 돌파'가 이 7종목에서 물리적으로 불가능. 표본 55건이 조용히 소실되고, NVDA는 83% 이익급감으로 읽혀 이익델타·주도섹터 판정을 반대로 뒤집음",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "반박 실패 — 사실입니다. dataset.build 후 데이터로 재실행: 분할효력일 이후 판단가능 55건(NVDA8·GOOGL12·AVGO3·LRCX8·SMCI8·ANET7·WMT9) 신고점 0건 — 원 보고서와 정확히 일치. 유니버스 전수 단차탐지 30종목 32건 중 실제 분할 7종목은 명단과 동일(AMZN은 판단가능 0건이라 무해). 가격은 조정됨(NVDA 2024-06-10 종가 121.5796, 전일 120.6792/익일 120.711 — 점프 없음). TTM이 분할선을 끊지 않고 합산됨(NVDA 6.12→0.68 같은 구간) → 서로 다른 단위의 합, 정상 회계 아님. 반사실(단차비율 환산 후 재실행): 신고점 0→33, 첫돌파 0→4. 다만 과장 2곳: (1)\"55건 소실\"은 틀림 — 분모 1605에 남아 있고 오분류일 뿐 (2)\"델타·주도섹터 반대로 뒤집음\"은 연속분기 비교라 분할선 1건씩 총 7건뿐.",
+    "corrected_count": 55,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "dataset.py 가드는 매출하한·마진·주당상한 3개뿐이고 measure_engine에 split 코드 0건이라 한 건도 안 걸러짐. 두 갈래: (1)로봇이 분할 효력일·계수를 함께 수집해 EPS계열에 적용, (2)그게 안 되면 영구단차가 감지된 종목은 eps_runs를 단차에서 끊어 past_peak를 리셋(값을 만들지 않으므로 창작금지에 안 걸림). 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박1.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "주당값 상한 100을 간발로 통과한 조작값이 가짜 첫돌파(H2b)를 실제로 만듦",
+    "severity": "치명",
+    "evidence": "IPGP 24Q4 adj_eps=99.1(앞뒤 0.29/0.31, 319배). 검산: 영업익 15.7백만÷99.1=내재주식수 15.8만주 — 분기매출 2.3억달러 회사에 불가능. 결과 2025-11-04 TTM 100.06 신고점 streak=1 생성. XOM 89.45→2023-07-13 TTM 115.67 streak=4. 그 외 SCHW 95.3·VRTX 85.0·NRG 50.43·BAC 13.6",
+    "count": 12,
+    "affected": [
+     "IPGP",
+     "XOM",
+     "SCHW",
+     "VRTX",
+     "NRG",
+     "BAC",
+     "APP",
+     "MU",
+     "SMCI",
+     "MKSI"
+    ],
+    "impact": "전체 첫돌파 174건 중 최소 1건이 100% 조작값. 채택 기준(n≥10, 윌슨 하한)을 다투는 상황에서 가짜 신호가 표본에 섞임",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "값 오류는 재현됨: IPGP 24Q4 adj_eps=99.1, 같은 행 gaap_eps=0.18, 영업익 15.706M/99.1=158,486주 → 불가능. build 후에도 남아 TTM 100.06 생성. 그러나 핵심 주장은 반박됨. (가) 99.1→0.30(앞뒤 자리)로 바꿔도 2025-11-04 은 TTM 1.26, new_high True, streak 1 — 첫돌파는 그대로 존재. 오염된 건 TTM 크기이지 신호 분류가 아님. (나) IPGP∈MEASURE_DISCOVERY_TICKERS(29개) → judge.run 신규(판정) 표본에서 제외. H2b 신규 n=96 중 IPGP 0건. 채택 판정 표본에 안 섞임. (다) 99.1→0.30 후 8개 가설 판정 전부 동일(H5b 203/24.6 채택, H6 n=11, H2b 96/19.8 미채택). XOM 89.45 제거도 H8 n 42→43뿐. 재집계: 10배-중앙값 스캔 16건/11종목, 그중 잣대 칸의 EPS 조작값은 IPGP 1건(MU·SMCI·BA는 연간값 혼입, GOOGL은 분할 전 값 — 다른 축). 별건 경고: 아무 칸이나 지우면 H5b가 뒤집힘(대조군 12건 중 2건) — 게이지 중앙값 문턱의 구조적 취약성, 별도 등록 권고.",
+    "corrected_count": 1,
+    "corrected_severity": "보통",
+    "fix": "IPGP 2025-02-11 adj_eps=99.1 을 없음 처리(고치지 말고 버림). 상한 100 대신 같은 행 대비 검사 추가: gaap_eps>0 인데 |adj_eps| > 20×gaap_eps 이면 없음 처리. 화면 TTM 100.06 표시도 함께 사라짐.",
+    "survives_dataset_clean": true
+   }
+  },
+  {
+   "finding": {
+    "title": "연간 실적이 분기 행에 혼입 / 잣대 칸이 두 무리로 갈림",
+    "severity": "중대",
+    "evidence": "GILD: 매출 9분기 내내 ~7,000백만으로 평평한데 adj_eps만 7.90·6.20·6.35→1.37→6.45→1.72→2.01 로 5배 널뜀(같은 매출에서 불가능). 24Q1부터가 진짜 분기값. REGN: 20분기 중 7개가 0.18~0.81로 나머지(9~13)의 1/15. 이 상태로 신고점 3건 잡힘",
+    "count": 16,
+    "affected": [
+     "GILD",
+     "REGN",
+     "WMT",
+     "SMCI"
+    ],
+    "impact": "GILD는 이익 3분의1 토막 회사로 읽혀 신고점 0건. REGN 신고점 3건(2024-05-02 등)은 판정 자체를 믿을 수 없음",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "dataset.build 출력으로 재실행 — 값 그대로 남음(_clean_quarters 에 연간/분기 판별 가드 없음; 상한 100 은 22.09·6.29·7.90 을 못 잡음). 자립 스캔(이웃 2.5~6배 & 매출 ±25%) 24건/19종목. 결정 검산 '값−앞3분기합=내재Q4'가 이웃권에 떨어진 것 18건(SMCI 22.09−17.22=4.87 이웃4.09 / QCOM 10.22−7.52=2.70 이웃2.87 / FDX 17.80−12.40=5.40 이웃3.73) — 계절성 배제. 계절성 성립 VZ 1건·검산불성립 5건은 제외. 컨센서스 교차: REGN 분기 16.05(year_ago 11.44 = 저장 25Q4 11.44 정확일치) vs 저장 0.18~1.00. GILD 컨센 2.16 vs 저장 6.20~7.90. TTM: WMT 2023-08-17 15.33=1.50+1.25+6.29+6.29. 영향: H2b 166건 중 12건(7.2%) 오염, 신고점 678중 42. GILD 판단가능 16·신고점 0.",
+    "corrected_count": 35,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "dataset.py 에 상대 기준 가드 추가 — 절대 상한(100)이 아니라 '값 ≈ 직전 3분기 합 + 나머지가 이웃 수준'이면 연간값 혼입으로 보고 없음 처리. REGN형(회사 중앙값의 1/5 미만 + source=근사치)은 원인이 달라 별도 가드. affected 4종목은 과소 — 실제 16종목(ACLS DELL ETN FDX FSLR GILD NRG NTAP ONTO QCOM REGN RUN SMCI SYNA T WMT). 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박3.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "매출 단위가 섞여 dataset.py 마진 가드가 아예 작동하지 않는 구멍",
+    "severity": "중대",
+    "evidence": "가드는 revenue>=10,000,000 일 때만 돎. 매출이 천/백만 단위 저장이면 조건이 거짓→가드 통째 건너뜀. 실측: 가드 통과 후 이상치 0건 vs 가드 미작동 이상 영업이익 85건. META 21Q3 매출 29,010·영업익 12.8B=마진 4,412,961%. 매출 단위 섞인 종목 21개",
+    "count": 85,
+    "affected": [
+     "FSLR",
+     "TER",
+     "TGT",
+     "HD",
+     "U",
+     "META",
+     "GNRC",
+     "VST",
+     "AMZN",
+     "ZETA",
+     "NFLX",
+     "NRG"
+    ],
+    "impact": "op_income은 사다리 밖이라 신고점 판정엔 직접 영향 없으나 화면 숫자가 틀림. 같은 구멍이 EBITDA 잣대 7종목에 언제든 CIEN형 사고를 재발시킴",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현 완료: 가드 켜진 구간 이상 op 0건 / 꺼진 구간 85건 / 15종목 — 발견자와 정확히 일치, build() 뒤 데이터라 잔존. 그러나 영향 설명이 양쪽 다 틀림. (1) \"op_income은 측정 밖\" 거짓 — collect_job.py:138 이 collect_metric_events(ds,\"op_income\") 로 H10(현재 '채택' 가설)에 넣음. (2) 규모는 부풀림 — 종목별 op_income log10 폭 재보니 op 자체가 깨진 건 27건/4종목(TGT 8.83·HD 6.25·HPE 9.00·UPS 9.66)뿐, 58건은 op 일관(FSLR 1.35·TER 0.76·META 0.54)이고 매출 칸 단위만 다름. (3) 처방대로 85건 드롭 시 H10 1709→1619, 신고점 513→485, FSLR 19·TER 19 정상 표본까지 소멸. 판정은 채택→채택 불변(n 54→48, 27.8%→29.2%). EBITDA 재발 위험 실측 0건.",
+    "corrected_count": 27,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "가드를 '매출 대비 비율'이 아니라 '같은 종목 op_income 계열의 자릿수 일관성'으로 교체(종목 중앙값 log10 ±2 밖만 없음 처리). TGT·HD·HPE·UPS 27건이 잡히고 FSLR·TER 정상 38건은 살아남음. 이 검사는 op_income 이 100배 이상 벌어지는 23종목(LOW·VRT·COHR·UNP·SEDG·S·SNOW·WDC·BE·AMD·NXPI·ISRG·AMGN 등)까지 함께 잡음 — revenue>=10,000,000 문턱만 없애면 이들은 그대로 남음. 아울러 감사보고서 5절의 \"op_income 은 측정에 안 쓰인다\" 문장을 정정할 것(collect_job.py:138)."
+   }
+  },
+  {
+   "finding": {
+    "title": "gaap_eps 자리에 희석 주식수가 들어감 (원문 대조로 확정)",
+    "severity": "중대",
+    "evidence": "UCTT_2026-04-28.txt 13행 'net loss ... $(0.40) per diluted share', 66행 'Diluted 45.3'. 저장값 gaap_eps=-45.3. 동일 오류 24Q1 -44.6, 25Q1 -45.1, 26Q1 -45.3 — 전부 그 분기 주식수와 정확히 일치. 원문 대조 257건 중 유일한 확정 오류",
+    "count": 3,
+    "affected": [
+     "UCTT"
+    ],
+    "impact": "UCTT 잣대는 adj_eps라 신고점엔 미반영이나 화면·비교에 노출. 'Shares used in computing' 다음 숫자를 EPS로 읽는 파서 경로가 살아 있음",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "반박 실패. 내가 다시 센 결과 build 후 UCTT |gaap_eps|>20 = ['24 Q1','25 Q1','26 Q1'] 3건, notes 0건(가드 미작동). 원문 UCTT_2026-04-28.txt 열2 매출 518.6=저장 25Q1 매출 → 참값 26Q1 -0.40, 25Q1 -0.11, 주식수는 45.3/45.1로 저장값과 소수점까지 일치. 24Q1은 raw 없으나 -44.6×44.6M=순손실 -19.9억달러 vs 매출 477.7백만·영업익 +25.0백만 → 산술상 불가. 현재 파서 재실행 gaap_eps=-45.3 재현(경로: find_eps_value가 64행 'Shares used in computing net loss per share:'에 매칭). raw 316건 전수 재스캔 결과 같은 기전은 UCTT뿐. 전문 /tmp/.../audit/out/반박5.md",
+    "corrected_count": 3,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "① sec_fundamentals.LABELS_GAAP_EPS 매칭 시 매치 앞에 'Shares used|Weighted-average ... shares'가 오면 버린다(현재 find_eps_before_per_share는 -0.40을 맞게 뽑지만 gaap_eps가 None일 때만 호출돼 못 쓰임). ② dataset에 행 내부 검산 가드 추가: 주당값×추정주식수로 나온 함의 순손익이 그 행 매출의 수 배를 넘으면 버린다(UCTT 3건 전부 여기 걸림). PER_SHARE_ABS_LIMIT=100은 45~100 구간을 못 막는다."
+   }
+  },
+  {
+   "finding": {
+    "title": "op_income 칸에 반복되는 자리표시자 상수 (파싱 잔해)",
+    "severity": "보통",
+    "evidence": "LOW=202.0 3회(dataset.py 주석의 그 202), UNP=10.0 4회, BE=75.0 4회, ENTG=1,000,000 3회, SNOW -1.0, TGT 3.0, UPS -2.0, HPE -1.0, S 4.0. 같은 값 반복은 실적이 아니라 파싱 잔해의 신호. 중앙값에서 100배 이상 이탈 65행/19종목",
+    "count": 65,
+    "affected": [
+     "LOW",
+     "UNP",
+     "BE",
+     "ENTG",
+     "SNOW",
+     "TGT",
+     "UPS",
+     "HPE",
+     "S",
+     "COHR",
+     "NXPI",
+     "ISRG"
+    ],
+    "impact": "측정 사다리 밖 칸이라 판정엔 미반영. 다만 매출 칸이 무너진 것과 동일한 병합 사고이며 계기판 표시가 틀림",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현: dataset.build 후 op_income 중앙값 100배 이탈 = 63건/19종목(65 아님). 반복상수 VRT -1.0 x14(원보고 누락), HPE -1.0 x9, UNP 10.0 x5, BE 75.0 x4, LOW 202.0 x3, ENTG 1e6 x3 — 이웃 분기가 2.4B/178M 이라 어떤 단위로도 설명 불가. 단 CSCO 4.3e9 x3, ORCL 6.2e9 x3 처럼 반올림 반복은 정상이라 '반복=잔해' 논리는 절반만 맞음. 원보고의 '판정엔 미반영'은 거짓: collect_job.py:138 이 op_income 을 등록가설 H10 잣대로 쓰고 H10 은 verdict.json 유일 '채택'. BE 는 상수 75 로 ttm 300.0/135,000,225 4연속 신기록, AMD ttm 1,850,005,147→4,704. 다만 63건 없음처리 후 재판정: n 54→52, rate 27.8→28.8, 여전히 채택 — 결론 불변.",
+    "corrected_count": 63,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "dataset.py 마진 가드가 rev>=10,000,000 일 때만 돌아 63건 중 47건은 가드가 아예 미작동(매출 None 38 + 1천만 미만 9). data_quality.py:108 은 상한만 검사, 하한(자리표시자) 검사 없음. 조치: op_income 에 '같은 회사 중앙값 대비 1/100 미만이면 없음 처리' 상대 하한 가드 추가 + 동일 값 3회 이상 연속 반복 시 없음 처리(반올림 정상값과 구분 위해 |값| 이 중앙값의 1/100 미만일 때만). 매출 None 이어도 돌게 할 것."
+   }
+  },
+  {
+   "finding": {
+    "title": "period_label이 신고일과 어긋남 (표기만의 문제)",
+    "severity": "경미",
+    "evidence": "SCHW: 2025-01-21·04-17·07-18·10-16 네 발표가 전부 '24 Q4'(값 1.01·1.04·1.08·1.26은 각 분기 실제값과 일치 — 라벨만 고정). XOM: 2022-07-29가 '23 Q1', '24 Q1'이 3번 등장. BAC: '25 Q1'이 5개 날짜에 등장",
+    "count": 3,
+    "affected": [
+     "SCHW",
+     "XOM",
+     "BAC"
+    ],
+    "impact": "측정은 announced_date 기준(55~150일)이라 판정엔 영향 없음. 계기판에서 사용자가 읽는 분기 이름이 틀림",
+    "axis": "값의 정합성 (산술 검산)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/값의정합성.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현됨, 오히려 축소보고. dataset.build 후 같은 티커 내 중복 period_label = 51종목/254행(잣대값 있는 행 189). 3종목 아님. SCHW '24 Q4' x4·XOM '24 Q1' x3·BAC '25 Q1' x6(발견은 5라 함) 재현. 단 발견의 '피해'는 거짓: grep -rn period_label app.py pages/ = 0건. 화면은 announced_date만 표시(pages/1_원자료.py:87 \"마지막 발표\": last[\"announced\"]). measure_engine/sector_model/leadership/judge에도 period_label 없음. 유일한 계산 사용처 data_quality.fiscal_quarter_of는 detect_seasonality/detect_anomalies/prepare_quarters 경유인데 이 셋의 호출자는 tests뿐(실파이프라인 0). 참고: '라벨-발표일 불일치'를 그냥 세면 776건이 나오는데 CRDO(4월 결산) 같은 비달력 회계연도의 정상 표기 → 오탐. 중복라벨만이 유효 지표.",
+    "corrected_count": 51,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "보고서에서 \"계기판에서 분기 이름이 틀리게 보인다\"는 문장은 삭제(코드로 반증). 건수는 3종목→51종목/254행으로 정정. 조치는 sec_fundamentals.extract_period_label이 라벨을 못 확정하면 None으로 두기(창작 금지 원칙) — 값 수정 아님. 측정·화면 영향 0이므로 우선순위는 최하위."
+   }
+  },
+  {
+   "finding": {
+    "title": "한 해 발표일이 5개 이상인 (종목,연도) 33건 — 초과 발표일 64개",
+    "severity": "중대",
+    "evidence": "분기실적은 연 4회인데 ETN2024·COF2024·COF2025 각 9개, PFE2023·GE2023 각 8개, BAC2025·BMY2023·GE2024 각 7개. 전부 승격형 16종목. COF 2025-04-18은 성금요일(휴장)로 실적발표 불가능한 날",
+    "count": 33,
+    "affected": [
+     "ETN",
+     "COF",
+     "PFE",
+     "GE",
+     "BAC",
+     "BMY",
+     "JPM",
+     "C",
+     "GS",
+     "JNJ",
+     "XOM",
+     "OXY"
+    ],
+    "impact": "실적과 무관한 8-K 64개가 분기 발표로 승격돼 있다. 각각이 가짜 발표 상태를 하나씩 만들고, 짧은 간격으로 앞뒤 구간을 끊어 정상 분기의 TTM까지 못 만들게 한다.",
+    "axis": "announced_date (측정의 기준 시점)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/발표일.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재계수: snapshot·build 모두 조합 35 / 초과 67 (발견은 33/64 — 틀림). 현상 자체는 사실(ETN 2024 초과 5행 전부 매출 23.2B 반복·EPS 전무, COF 2025-04-18 rev -2.0). 그러나 eps_runs 가 잣대값 없는 행을 제외하므로 측정 도달은 13조합/16발표일뿐(ETN2024 9→4, COF2024 9→3, PFE2023 8→4). \"구간을 끊는다\"는 설명은 틀림 — 잣대값 없는 행은 usable 목록에 없어 절단 불가. 신호 영향: 간격55일미만 사건쌍 28개 중 첫돌파 0건, 기준선 희석 15/2366=0.6%, 반사실 상한 첫돌파 166→163.",
+    "corrected_count": 35,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "dataset.build 는 하나도 못 거르므로 남지만, 측정 장치가 51/67 을 자동 배제한다. 고칠 지점은 발표일 개수가 아니라 잣대값을 가진 승격행이다: period_label 이 'YY/MM' 형식이거나 revenue 가 음수인 행의 adj_eps·adjusted_ebitda·gaap_eps 를 dataset 단계에서 None 처리(창작 금지 원칙에 부합). 실제 쓰레기 값 예: XOM 2023-07-13 gaap 89.45, COF 2025-05-22 gaap 17.72, JNJ 2023-08-30 adj 10.0, BAC 2026-01-14 gaap 13.02."
+   }
+  },
+  {
+   "finding": {
+    "title": "발표일 간격 6.2%가 55~150일 밖 — 잣대행 8.7%가 TTM을 못 만듦",
+    "severity": "보통",
+    "evidence": "인접 2725쌍: 55~150일 2556(93.8%), 55일미만 110(4.0%), 150일초과 59(2.2%). 중앙값 91일. 잣대칸 보유 2514행 중 4분기 미만 구간에 갇힌 행 218건(8.7%), 구간 끊김 152회. 발표상태 2500건 중 판단가능 1605건(64.2%)",
+    "count": 218,
+    "affected": [
+     "JPM",
+     "JNJ",
+     "BAC",
+     "AMZN",
+     "CIEN",
+     "AVGO",
+     "LLY",
+     "ADI",
+     "ABNB",
+     "WDC",
+     "CRWD",
+     "LOW"
+    ],
+    "impact": "델타(신고점 판정)를 아예 못 재는 분기가 218건. NVDA는 2022-02-16 다음이 2022-08-08로 23Q1 발표가 통째로 결측(간격 173일).",
+    "axis": "announced_date (측정의 기준 시점)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/발표일.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "반박 실패. r11a.py 재실행이 발견 숫자와 완전 일치: 2725쌍 중 55~150일 2556(93.8%)·55일미만 110(4.0%)·150일초과 59(2.2%)·중앙값 91, 잣대행 2514 중 갇힌행 218(8.7%), 끊김 152회, 상태 2500/판단가능 1605(64.2%). NVDA 2022-02-16→2022-08-08(173일) 결측도 확인. 다만 성격은 '오염'이 아니라 백필 결측 + eps_runs가 사고7 방지로 구간을 끊는 설계대로의 동작. 과장 1건: 판단불가 895건 중 602건(67%)은 워밍업(4분기 채우는 중) 탓이라 간격과 무관 — 간격 탓 실제 몫은 293건(15.4%). 중복계상 아님: 218 중 승격형22종목은 55건뿐, 163건은 독립 결측. 연도별 손실 14~17%로 시간 편향 없음.",
+    "corrected_count": 218,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "1) earnings_states의 streak 초기화가 핵심 결함 — 구간 첫 4개 발표의 streak==1은 첫돌파 표본에서 제외하고 판단불가로 버릴 것(가짜 26건·누락 33건, 첫돌파 174건 대비 약 1/3). 2) dataset.build의 notes에 간격이탈·구간끊김을 기록(현재 293건이 로그 없이 사라짐 — 정직화 위반). 3) 218/293/166 표본수를 측정결과.md 각주로 상시 표기. 이 항목은 데이터축이 아니라 장치(코드) 감사로 옮겨 적을 것."
+   }
+  },
+  {
+   "finding": {
+    "title": "8종목이 2026-08-11 하루 결측 (측정 영향은 실측 0건)",
+    "severity": "경미",
+    "evidence": "자기 구간 내 결측 종목 8개, 각 1일, 전부 2026-08-11 (1254/1255). 발표 2,903건 전수 검증에서 SPY 기준 창 길이 != 60 인 사건 0건. 종목 주격자가 SPY 주격자와 어긋난 종목 0개.",
+    "count": 8,
+    "affected": [
+     "ABBV",
+     "BILL",
+     "ETSY",
+     "HUBS",
+     "OKTA",
+     "PINS",
+     "QRVO",
+     "ZM"
+    ],
+    "impact": "60거래일 창과 주봉 정배열 격자 모두 실측으로 영향 0건 확인. 다만 향후 데이터가 늘어 이 날을 지나는 창이 검열 해제되면 창 길이가 61이 될 수 있어 수집 로봇의 결측 보정이 필요.",
+    "axis": "축3 일봉 가격",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/가격.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "corrected_count": 8,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "reason": "내가 재실행: SPY 1255일, 결측 종목 8개 각 1일 전부 2026-08-11(SPY 인덱스 1251/1255), SPY 달력 밖 날짜 0개 — 원 발견과 일치. dataset.build 후에도 8종목 그대로 남고 가격 notes []. 현재 오염은 실측 0: 발표 2903·성공 2747·실패 156(전부 우측검열)·SPY 창≠60 0건, 08-11을 지나는 성공 창 3건은 AMAT/CSCO/FDX(결측 종목 아님). 주격자는 8종목 전부 261주·마지막 3주가 SPY와 동일(08-11은 화요일). 미래 80거래일을 가짜로 붙여 검열을 풀자 창 길이 61이 정확히 7건(QRVO·OKTA·HUBS·ZM·PINS·ETSY·ABBV) 발생 = 7/2903 = 0.24%. 다만 excess_return은 SPY를 날짜로 맞추므로 종목·SPY가 같은 달력 구간을 재는 정합성은 유지되고, 어긋나는 건 보유기간이 60→61거래일(+1.7%)인 점뿐. 해당 종목 하루 초과수익 중앙절대값 0.84~1.86%p로 표적 +20%p를 뒤집을 크기가 아님.",
+    "fix": "수집 로봇에 \"SPY 달력 대비 자기 구간 내 결측일\" 점검을 추가해 다음 실행 때 8종목의 2026-08-11 종가를 재수집(백필)하게 한다. 재수집이 불가하면 measure_engine에서 창 양끝을 종목 인덱스가 아니라 SPY 날짜 기준으로 검증해 창 길이가 60이 아니면 그 사건을 '측정 불가'로 버린다(값을 만들지 않는 원칙과 일치). 지금 당장 고칠 필요는 없다 — 현재 측정 오염 0건."
+   }
+  },
+  {
+   "finding": {
+    "title": "JPM 시계열 절반이 배당 공시 — 주당배당금이 gaap_eps 칸에, 부문매출이 revenue 칸에 (원문 대조 확증)",
+    "severity": "치명",
+    "evidence": "raw/JPM_2026-07-14.txt 원문 확인: 저장 gaap_eps=1.5 → 266행 'd per share 1.50 1.50'(주당배당금). revenue=32.4 → 81행 'Noninterest revenue $32.4 billion'. revenue=20272 → 323행 'Consumer & Community Banking $20,272'(한 부문). 전사매출은 $57.3B. JPM gaap_eps 열이 1.15,1.15,1.25,1.25,1.40,1.40,1.50,1.50,1.50 = 배당 인상 이력 그대로",
+    "count": 10,
+    "affected": [
+     "JPM",
+     "BAC",
+     "COF",
+     "SCHW",
+     "JNJ",
+     "GE",
+     "PFE"
+    ],
+    "impact": "같은 날 두 행이 생겨 eps_runs가 간격0일로 무조건 끊김. earnings_states의 seen 집합은 filing_date 순 앞 행만 채택 — 배당 행이 실적 행을 이길 수 있음",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "사실은 재확인됨. raw/JPM_2026-07-14.txt 직접 열어 266행 'Cash dividends declared per share 1.50', 81행 'Noninterest revenue $32.4 billion', 323행 'CCB $20,272', 전사 'TOTAL NET REVENUE $58,022' 확인. 재계수: JPM 배당후보행 10건(count 일치), 같은날 중복 초과행 총 17 {JPM 10, COF 3, JNJ 2, PFE 1, GE 1} — BAC·SCHW 는 0건이라 affected 7종목은 과장. 그러나 핵심 반박은 영향이다: dataset.build 후 JPM runs=11 maxrun=2 decidable=0 → TTM 불가 → JPM 9사건 전부 new_high False. 배당행은 신호 그룹에 0건 기여, 기준선 분모만 오염. 배당의심 15행 제거 재측정: 기준선 47.25%→47.25%(무변), 신고점 48.38→48.53, 첫돌파 52.41%(n166)→53.25%(n169). 윌슨 채택판정 미채택→미채택 동일. 제거하면 신호가 좋아지는 방향 = 현재 데이터는 보수적. 실제 피해는 JPM 6 + BAC 4 사건 소실(1605 decidable 의 0.6%) — 틀린 답이 아니라 잃어버린 답.",
+    "corrected_count": 10,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "JPM 10행은 원문 확증이므로 수집 단계에서 배제 규칙 추가: 같은 filing_date 에 두 행이 있고 한쪽 revenue 가 자릿수 붕괴(<10000)이며 gaap_eps 가 직전 행과 동일값 반복이면 배당공시 8-K 로 보고 버린다(고치지 말고 버림 — 창작 금지). 또는 earnings_states 의 seen 승자 선택을 filing_date 순 앞행이 아니라 revenue 가 정상인 행 우선으로 바꾼다. BAC 5행(0.26/0.28/0.32)은 raw 원문이 없어 패턴 일치일 뿐이므로 확증 전까지 손대지 말 것."
+   }
+  },
+  {
+   "finding": {
+    "title": "source 경계에서 영업이익률이 같은 source 대비 5.5배 튐",
+    "severity": "중대",
+    "evidence": "정제 후: 같은 source 이음매 n=1,355 중앙 2.17%p, >10%p 15%. source 경계 n=137 중앙 12.06%p, >10%p 56%, >30%p 34건. 원본 기준은 1.56%p vs 13.27%p(8.5배). 역산이 낀 경계 103건 중앙 13.90%p. 최악: T 87.2%p, MXL 80.2%p, MDB 77.6%p, DIOD 71.2%p",
+    "count": 137,
+    "affected": [
+     "T",
+     "MXL",
+     "MDB",
+     "DIOD",
+     "CMCSA",
+     "AMBA",
+     "ZETA",
+     "GILD",
+     "TMUS",
+     "CAT",
+     "ACLS",
+     "BE"
+    ],
+    "impact": "델타가 실적 변화가 아니라 파싱 경로 변화를 잰다. 경계가 낀 종목의 증감 판정은 신뢰 불가",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "숫자는 소수점까지 재현(same n=1355 med 2.17 / cross n=137 med 12.06, >10p 56%, >30p 34). 그러나 impact가 틀렸다: 델타는 LADDER(adj_eps·adjusted_ebitda·gaap_eps)를 쓰고 op_income은 사다리에 없다. 실제 델타 쌍 2210 중 경계는 119(5.4%), 상승률 56.3% 윌슨[47.3,64.9] vs 비경계 60.0% [57.9,62.1] — 구간 겹침, 왜곡 검출 안 됨. 5.5배도 경계·비경계 둘 다 가진 53종목 안에서 재면 2.10배, 15/53은 경계가 더 작다. 최악 T 87.2%p는 착시: T 22Q3 +20.01%→22Q4 -67.29%가 같은 근사치끼리 87.3%p 점프(일회성 손상 분기)이고 지목된 경계는 정상 복귀 구간. 다만 진짜 오염 있음: op_income 부호가 source로 갈리는 종목 S·BE·CMCSA, 그리고 op_income은 H10(채택 상태, 사건 1709건 중 45.5%가 source 섞인 종목)에 들어간다. 전문·권고는 반박21.md.",
+    "corrected_count": 137,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "① impact 문장을 \"델타\" → \"H10 논갭 영업이익\"으로 정정. ② dataset.py에 종목 내 source별 op_income 부호 일관성 검사 추가(한 source 3건 이상 전부 음수 & 다른 source 3건 이상 전부 양수면 그 종목 op_income 통째로 없음 처리) — 대상 S·BE·CMCSA. ③ revenue=None 행은 현재 어떤 단위 가드도 못 타서 BE의 op_income=75.0 4회 반복이 살아 있다. 매출 없이도 걸리는 가드(같은 값 3회 이상 반복) 필요."
+   }
+  },
+  {
+   "finding": {
+    "title": "period_label이 filing_date와 어긋난 행 177개 — 직접공시 행에서도 40건",
+    "severity": "중대",
+    "evidence": "오프셋 무관 검사(종목 내 라벨 순번 단조증가): Q형 2,787행 중 역행 84건/37종목, 정체 93건/39종목. 예: NFLX '20 Q4'가 6개 제출일에, VZ '23 Q1'이 6개 제출일에 그대로. JPM 2024-05-15 '24 Q2'→2024-07-12 '23 Q3'. source별 역행=역산38·직접30·근사16",
+    "count": 177,
+    "affected": [
+     "NFLX",
+     "VZ",
+     "CMCSA",
+     "JPM",
+     "WMT",
+     "GE",
+     "INTC",
+     "ROKU",
+     "SLB",
+     "XOM",
+     "SCHW",
+     "U"
+    ],
+    "impact": "measure_engine은 라벨을 안 쓰므로 신고점 측정은 직접 오염 안 됨. 오염되는 곳은 data_quality.fiscal_quarter(340행) 전년동기 짝짓기와 화면 차트 축 — ZETA 사고를 막으려 만든 장치가 같은 방식으로 틀림",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재계수: 역행 84/37종목, 정체 90/39종목, 합 174/56종목 (원 감사 177 → 174, 역행·source분해는 완전 일치). 오프셋 무관 증명 추가: 라벨연도-제출연도 2년 이상 13행, 같은 Q라벨이 서로 다른 제출일 3개 이상 19쌍(NFLX '20 Q4' 6개, INTC '23 Q1' 4개). 정상 회계 아님. 그러나 impact는 틀림: grep period_label = measure_engine 0건, app.py/pages 0건(화면 축 주장 거짓). 계측 실행 결과 earnings_states 2500건 생성 중 data_quality 호출 {'fq':0,'seas':0,'anom':0,'val':0} — fiscal_quarter_of/detect_seasonality/validate_quarters는 tests에서만 호출되는 죽은 코드. 오늘 실제 피해 0.",
+    "corrected_count": 174,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "sec_fundamentals.py:1899 — 보도자료 정규식 라벨을 무조건 채택하지 말고 기간종료일과 어긋나면(연도차 2년 이상, 또는 직전 행과 같은 라벨) 버리고 period_end_label(period_end) 유지. 또 data_quality.fiscal_quarter_of(340행)가 라벨보다 기간종료일을 먼저 보도록 순서를 뒤집는다. validate_quarters를 파이프라인에 배선하기 전에 반드시 선행."
+   }
+  },
+  {
+   "finding": {
+    "title": "제출일 범위 대비 분기 75개 결측 (23종목), announced_date 없는 행 165개",
+    "severity": "보통",
+    "evidence": "기대 대비 2개 이상 부족한 종목 23개: COP 실제11/기대20(-9), WDC 14/20(-6), OKTA 14/19(-5), HUBS 15/20(-5), COHR 14/18(-4), AVGO·CRWD·WDAY·BA 각 -4. 부족분 합 75분기. announced_date 없는 행 165개/45종목(5.4%): NXPI9·DIOD9·APP8·PG8·TSLA7",
+    "count": 75,
+    "affected": [
+     "COP",
+     "WDC",
+     "OKTA",
+     "HUBS",
+     "COHR",
+     "AVGO",
+     "CRWD",
+     "WDAY",
+     "BA",
+     "SLAB",
+     "HD",
+     "NXPI"
+    ],
+    "impact": "결측이 곧 구간 끊김(>150일 이음매 109건)이 되어 위 1번 손실의 주 원인. 발표일 없는 행은 정점 기억에는 남되 측정 사건은 못 됨",
+    "axis": "축 4 — 분기 시계열의 구조",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/시계열.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "건수는 정확히 재현(부족종목 23, 부족합 75 / announced_date 없음 165행·45종목). 독립 2차 방법(150일 초과 달력 구멍 직접 합산)도 75로 일치 → 기대치 모델 착시 아님. 그러나 영향은 과장: 165행은 전부 근사치·revenue+op_income만 있고 사다리 값 0개 → 165행을 통째로 삭제하고 재측정해도 달라진 종목 0, 사건수 2500→2500 동일(영향 정확히 0). 이음매 152건 분류 {진짜분기없음 42, 행있는데값없음 67, 짧음 30, 0일 13} → 150일초과 109건 중 결측 원인은 42건뿐. 판단불가 895건 중 23개 부족종목 몫 172(19.2%), 나머지 723은 다른 종목. 판단불가 내역도 TTM불가 747 / 정상 워밍업 148.",
+    "corrected_count": 75,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "발표일 없는 165행은 결함 목록에서 제외(측정 영향 0 실증). 결측 75분기만 남기되 \"주 원인\" 서술 삭제 — 판단불가 손실의 19.2%. 수집기 보강은 COP(9)·WDC(6)·OKTA(5)·HUBS(5)·COHR(4) 5종목 29분기부터. 판단불가의 더 큰 원인은 '행은 있는데 잣대 값이 빔'(이음매 67건)이므로 그쪽을 별도 발견으로 다뤄야 함."
+   }
+  },
+  {
+   "finding": {
+    "title": "JPM gaap_eps 칸에 배당금(DPS)이 섞여 델타 9쌍 전부 오답",
+    "severity": "치명",
+    "evidence": "발표일 10개가 gaap_eps 2개씩 보유. 여분 값 1.15/1.25/1.40/1.50 = JPM 분기 배당금 경로. _delta_series(JPM)=9쌍, 상승 0/9(전부 False). eps_runs 11구간·최장 2분기 → TTM 0개, decidable=0, new_high 전부 False. 그런데 collect_events 에 9사건 기여.",
+    "count": 9,
+    "affected": [
+     "JPM"
+    ],
+    "impact": "JPM 섹터 델타 기여 100% 오답. 실제 EPS→배당금 비교라 항상 '하락'.",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현 성공: dataset.build 후 JPM 24행·gaap_eps 20개, 발표일 10개가 각 2값. _delta_series=9쌍 up=0, eps_runs 11구간, decidable=0, collect_events JPM 9건 — 발견 숫자 전부 일치. 원문 raw/JPM_2026-07-14.txt 에 \"Common dividend of $4.0 billion or $1.50 per share\" 확인, 같은 문서 실제 EPS 는 $7.70 → 배당금 오파싱 확정(회계 현실 아님). 배당금 행 제거판 계산: clean 9쌍 up=6 → 부호가 실제 틀린 쌍은 9가 아니라 6. 하류: 기준선 신고점 28.656%→28.740%(+0.084%p), 완성사건 델타True 427→429, leadership 3388행 중 70행('금융 중개·자본시장' 210주의 33%) 델타폭 오류, 조건충족 뒤집힘 10주, confirmation_events 47→48.",
+    "corrected_count": 6,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "announced_date 가 같은데 잣대값이 2개 이상이면 배당금 혼입 의심 — data_quality.py 에 검사 추가(전 종목 해당 발표일 11개: JPM 10, GE 1). 임시 규칙으로는 revenue 가 None 이고 같은 발표일에 더 큰 값이 있는 행을 버리면 JPM 이 정상 복구된다(delta 6상승/3하락, decidable 회복, new_high 2건). 원인 수정은 sec_fundamentals 파서가 \"dividend ... per share\" 문장을 EPS 로 잡지 않게 하는 것."
+   }
+  },
+  {
+   "finding": {
+    "title": "GNRC adjusted_ebitda 단위 혼재(달러 vs 천달러) — 델타 3/9쌍 오염",
+    "severity": "치명",
+    "evidence": "13행 중 3행이 천 단위: 24Q2 164,689 / 25Q3 193,215 / 25Q4 185,152 (나머지는 ~1.9e8). 같은 행 매출도 176,020 vs 1.06e9. 단위 경계 넘는 델타쌍 3쌍, 배율 0.0013 / 0.0010 / 1044.98. source 전부 역산.",
+    "count": 3,
+    "affected": [
+     "GNRC"
+    ],
+    "impact": "GNRC 델타 9쌍 중 3쌍이 단위 때문에 뒤집힘.",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현 성공. build 후 GNRC 20행, yardstick=adjusted_ebitda, 잣대값 13행 중 천단위 3행, 델타 9쌍 중 단위경계 3쌍(배율 0.001294/0.00103/1045) — 발견과 일치. 원문 GNRC_2026-04-29.txt 에 \"(U.S. Dollars in Thousands)\" 4회 + 본문 \"$193 million\" → 파서 ×1000 변환 누락 확정(정상 회계 아님). 그러나 ①천단위 3행을 ×1000 한 사본과 비교하니 방향이 실제 바뀐 쌍은 2쌍(2026-04-29 는 경계쌍이나 True→True 로 우연히 정답). ②new_high 은 전후 모두 GNRC 0건, 전체 678건 불변 — 신고점·기준선에 0건 영향. 영향은 sector_model 델타뿐, 2/2210=0.09%. 묶음 동반비율 57.7%→60.3%.",
+    "corrected_count": 2,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "뿌리는 dataset.py:165 의 `rev >= 10_000_000` 문지기다. 원자료 천단위 ebitda 9행 중 6행은 비율검사로 걸러졌지만, 살아남은 3행은 같은 행의 매출까지 천단위로 오염돼(176,020/208,939/232,921) 검사가 통째로 건너뛰어졌다. 게이트를 매출 절대크기 대신 같은 종목 매출 중앙값 대비 배율(1/100 이하면 버림)로 바꾸고, ×1000 보정이 아니라 None 처리(창작 금지). 그러면 GNRC 델타 9쌍→6쌍 전부 정상."
+   }
+  },
+  {
+   "finding": {
+    "title": "스케일 이상값이 만든 100배 초과 가짜 델타 6쌍",
+    "severity": "중대",
+    "evidence": "IPGP 24Q4 adj_eps=99.1 (앞뒤 0.29·0.31, 매출은 233M→234M→228M 정상, source=근사치) → 341.7배·0.0031배 두 쌍. LLY 23Q4 adj_eps=12.2 (앞뒤 1.22·0.10) → 0.0082배. GNRC 3쌍 포함해 전 종목 스캔 총 6쌍.",
+    "count": 6,
+    "affected": [
+     "IPGP",
+     "LLY",
+     "GNRC"
+    ],
+    "impact": "신고점·델타 판정이 한 분기에서 통째로 뒤집힘.",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "직접 재실행: dataset.build 위에서 전 종목 델타쌍 2210 중 100배초과/0.01미만 = 6쌍, 원 발견과 정확히 일치(IPGP2·GNRC3·LLY1). 정상회계 아님을 산술로 반증 — IPGP 24Q4 내재주식수=op_income/adj_eps=1.585e5주(다른 분기 2.3e7~4.1e7), 같은 행 gaap_eps=0.18 vs adj_eps=99.1(550배). GNRC 3행은 EBITDA/매출=93.6/92.5/79.5%에 op_income만 달러단위(-4271만) — 단위환산으로도 복구 불가. 손질 후 생존: PER_SHARE_ABS_LIMIT=100을 99.1이 0.9 차로 통과, EBITDA는 상한 없음. 단위가드는 GNRC 6행을 실제로 없음처리했으나 매출까지 함께 깨진 3행은 통과. 심각도만 반박: 보정 전후 폭등 건수 106→106, 316→316 불변, 신고점 폭등률 15.6342%→15.7270%(+0.09%p), 신고점 678→674, 뒤집힌 델타 2/2210. 채택 판정은 하나도 안 움직임 → 중대 아닌 보통.",
+    "corrected_count": 6,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "값 몇 개 삭제로 끝내지 말 것. dataset.py에 (1) 종목별 잣대 중앙값 대비 20배 밖 값을 없음 처리하는 이상값 가드(현 절대상한 100은 IPGP 99.1·SCHW 95.3을 못 잡음), (2) 매출과 EBITDA가 함께 천단위로 깨진 상관오염 대응 — 같은 행 op_income/revenue 자릿수 정합성까지 보는 가드, (3) 같은 행 adj_eps/gaap_eps 10배 초과 시 경고 notes. 이 셋을 넣으면 6쌍이 아니라 이상행 21행이 걸러진다. 전문·재현코드: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박27.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "BAC gaap_eps 에 EPS 아닌 값 혼입",
+    "severity": "중대",
+    "evidence": "period_label '25 Q1' 이 6행: gaap 0.9 / 0.89 / 12.76 / 3.19 / 13.02 / 13.97. BAC 분기 EPS 는 ~0.9 수준. 매출은 6행 중 5행이 상수 2,000,000. 이 위에 델타 16쌍이 얹혀 있음.",
+    "count": 6,
+    "affected": [
+     "BAC"
+    ],
+    "impact": "BAC 델타·신고점(decidable 7, newhigh 2) 전부 신뢰 불가.",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "오염은 실재(원문 확정), 그러나 건수·영향 주장은 틀림. ①BAC 24행 재출력: 비-EPS 값은 12.76/13.02/13.97/13.61 4개. 원 \"6\"은 label '25 Q1' 중복 6회일 뿐(그중 0.90·0.89는 정상 EPS)이고 26 Q2 13.61은 빠뜨림. ②raw/BAC_2026-04-15.txt: \"Return on avg tangible common equity 16.00 13.97 13.97\" + 같은 줄 아래 \"Diluted earnings 1.11\" → ROTCE% 오채취 확정(정상 회계 아님). ③dataset.build: 24행→24행, notes는 매출 6건만 없음처리, gaap_eps 전부 통과 → 남음. ④eps_runs: 오염값은 run4(0.28,12.76,3.19)·run5(13.02,13.97,13.61)에만 있고 둘 다 3분기라 TTM 불가 → ttm=None,decidable=False. decidable 7·newhigh 2는 전부 run0·run2(0.26~0.94) 산출 = 오염 기여 0건. _delta_series 16쌍 중 오염 4쌍(25%). grep revenue in measure_engine/sector_model/leadership = 0건 → 매출 2,000,000은 미사용.",
+    "corrected_count": 4,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "dataset._clean_quarters 에 잣대값 스케일 검사 추가: 같은 종목 gaap_eps/adj_eps 중앙값 대비 5배 이상 벗어난 값은 '없음' 처리(창작 금지 원칙대로 고치지 말고 버림). 파서(sec_fundamentals)에서 'Return on average ... equity' 줄을 EPS 후보에서 제외하고, 'Diluted earnings/Earnings per common share' 줄만 채택. 별건으로 배당금 줄(Dividends paid) 혼입도 같이 차단 필요."
+   }
+  },
+  {
+   "finding": {
+    "title": "화면 폴백이 잣대 미달 종목에 adj_eps 를 강제해 '신고점'을 표시",
+    "severity": "보통",
+    "evidence": "app.py:212 `yardstick_of(quarters) or \"adj_eps\"`. 잣대없음 9종목 중 CLS(adj_eps 6행)→화면 states 6개·신고점 2건, SNDK(6행)→6개·0건, VRTX(4행)→4개·0건. 나머지 6종목은 adj_eps 0행이라 무해. 제외 사유는 op_income 부재가 아님 — PG·VST 는 op_income 20분기 보유.",
+    "count": 3,
+    "affected": [
+     "CLS",
+     "SNDK",
+     "VRTX",
+     "PG",
+     "VST",
+     "CAT",
+     "NFLX",
+     "SNOW",
+     "DE"
+    ],
+    "impact": "8분기 문턱을 못 넘어 측정에서 뺀 종목의 신고점이 계기판에는 뜸(CLS 2건).",
+    "axis": "축5 잣대 사다리·델타 계산",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/잣대사다리.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "기제 재현됨(app.py:212 폴백 실재·유일 위치). 그러나 규모 부풀림: recent_ticker_rows 는 종목당 마지막 state 1개만, RECENT_DAYS=45 창 안만 표시. 실행 출력 — 화면 105행 중 잣대없음 종목은 2행뿐: CLS('신고점 연속 2번째'), SNDK('판단 불가'). VRTX 는 마지막 발표 2023-02-07 이라 화면에 안 뜸. CLS 값도 참: 1.20/1.39/1.58/1.89/2.16/2.54, TTM=1.58+1.89+2.16+2.54=8.17, 직전 7.02, 그전 6.06 단조증가, 매출 2.65B→4.70B 동반. 조작값 없음. collect_events 2366건에 3종목 전부 미포함(skipped 잣대없음 9), sector_model 은 yardstick_of_safe 로 None 처리 → 측정·판정 영향 0. 남는 결함은 라벨 누락뿐(주석은 '측정 제외임이 드러나게'라 했으나 잣대 칸이 '조정 EPS' 로 동일).",
+    "corrected_count": 1,
+    "corrected_severity": "경미",
+    "fix": "app.py:212 에서 폴백 여부를 기억해 라벨에 표시: yardstick=me.yardstick_of(quarters); excluded = yardstick is None; yardstick = yardstick or 'adj_eps' 로 나눈 뒤 '잣대' 칸에 excluded 면 ' (측정 제외 · 이력 8분기 미만)' 을 덧붙인다. 근본 해결은 CLS 2024년 4개 분기(24/03·24/06·24/09·24 Q4) 파싱 복구 — 문턱을 넘으면 폴백 자체가 무의미해진다.",
+    "survives_dataset_clean": true
+   }
+  },
+  {
+   "finding": {
+    "title": "유니버스·묶음 분류가 2026년 기준으로 과거에 소급 적용",
+    "severity": "중대",
+    "evidence": "gauge_series·breadth_series·group_members가 오늘의 ds['tickers'] 160종목과 cfg.SECTORS를 2021년 구간에 그대로 적용. 첫 발표 연도: 2021년 102 · 2022년 38 · 2023년 13 · 2024년 5 · 2025년 2. judge.run의 발견종목 29개 제외는 종목 신호만 보호하고 gauge_series(ds)는 필터 없이 전체를 씀",
+    "count": 160,
+    "affected": [
+     "ALL"
+    ],
+    "impact": "실적 폭 게이지의 과거 값이 실제보다 높게 나온다. 현재 채택된 H5b가 이 게이지 하나에 전부 얹혀 있음.",
+    "axis": "축 6 — 미래 엿보기 (look-ahead)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/미래엿보기.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "반박 실패 — 확정. 다만 메커니즘 서술은 틀렸다. ①게이지는 2021년에 값이 없다(첫 값 2022-10-14, 값있는주 201/261). 분모는 정적 160이 아니라 동적(2023 중앙58 → 2026 중앙93, 최대95). ②방향도 반대: 연도별 중앙값 전체160 = 2022:52.8 2023:51.7 2024:43.0 2025:44.8 2026:47.8 vs 2021첫발표102 = 52.8/54.3/50.0/50.9/50.9 — 후기가 오히려 낮다. 원인은 후발58종목 신고점비율(30.0/32.1/33.3/41.7)이 조기102(54.3/50.0/50.9/50.9)보다 구조적으로 낮아 중간구간을 누른 것. ③핵심은 맞고 영향은 과소평가: 게이지 유니버스만 바꿔 judge.run 재실행 결과 H5b가 6/6 전부 미채택 — 발견29제외131: n=166 rate16.3 [11.4,22.6], 2021첫발표102: n=213 15.0 [10.8,20.4], 무작위절반 8.3/14.7/14.9 (현재 채택은 n=203 24.6 [19.2,31.0] vs 기준 15.6 [13.3,18.2]). 주간판정 41.6% 뒤집힘. 추가로 verdict.json에서 H5b 앞시기 n=0 (ON은 2025년 134·2026년 171건뿐, 2023·2024 0건) — 원칙4 위반. H5(고정20%)는 n=1088 불변.",
+    "corrected_count": 203,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "1) gauge_series에 발견29종목 제외 옵션을 만들고 judge 경로는 그것을 쓴다(7차 등록 규율을 게이지 분모에도 일관 적용). 2) verdict.json에 유니버스 민감도 3판(전체/발견제외/조기102)을 병기하고, 갈리면 채택으로 승격하지 않는다. 3) H5b의 앞시기 n=0을 화면·문서에 명시. 4) 축 이름을 '미래 엿보기'가 아니라 '생존편향·표본 구성 표류'로 정정. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박34.md"
+   }
+  },
+  {
+   "finding": {
+    "title": "실적 발표가 아닌 8-K에 분기 숫자가 붙어 신호일이 앞당겨진 행",
+    "severity": "보통",
+    "evidence": "a!=f 2406행 중, 종목별 '기간종료→발표' 지연 중앙값보다 20일 이상 이른 행 25건. 최소 ACLS 2025-10-01(기간종료 2025-09-30, 중앙 34일), ENTG 2022-04-04(기간종료 04-02), REGN 6건 전부 기간종료+5~8일(중앙 29일). 기간종료 다음날 분기 실적 전체 발표는 불가능",
+    "count": 25,
+    "affected": [
+     "REGN",
+     "ACLS",
+     "STRL",
+     "COHR",
+     "AMD",
+     "ZETA",
+     "ENTG",
+     "MKSI",
+     "TWLO",
+     "MDB",
+     "ZS",
+     "AMZN"
+    ],
+    "impact": "그 사건의 60거래일 수익 창이 실제 발표 이전 구간을 최대 약 4주 포함. 분량은 1.0%로 작음.",
+    "axis": "축 6 — 미래 엿보기 (look-ahead)",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/미래엿보기.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현: 손질 후에도 26행(원보고 25). 그러나 ① 원문 확인 결과 ZS 2023-05-08 은 진짜 '예비 실적 발표 8-K'(6/1 정식발표 예고)라 정당한 사건일 — 플래그가 정상 발표까지 잡음. ACLS 2025-10-01 은 원문이 Veeco 합병 발표라 진짜 오배치. ② collect_events 결과 26행 중 실제 사건이 된 것은 5건뿐(전부 REGN) = 2366건의 0.21%(원보고 1.0%는 행 기준). ③ 5건 제거 후 judge.run 재실행: H9 62건 25.8% 완전 동일, H5b 203→202 채택 유지, 뒤집힌 판정 0. 발표일을 중앙지연으로 되민 델타쌍도 2210→2210 무변화. 곁가지: 같은 행들의 adj_eps 가 쓰레기(REGN 0.18~1.00 vs 정상 10~13) — 날짜보다 값 오염이 본질.",
+    "corrected_count": 5,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "플래그 기준을 '이른 발표일'이 아니라 '값 정합성'으로 바꿔라: 8-K 짝짓기 때 예비/합병/기타 8-K 를 구분하고(제목 키워드 + 직전 4분기 값 대비 자릿수 검사), 잣대값이 종목 이력의 1/5 미만이면 없음 처리(창작 금지의 버림 쪽). 우선 REGN·AMD·DIS 의 오염 행부터. 날짜만 고치는 것은 실익 없음(판정 변화 0)."
+   }
+  },
+  {
+   "finding": {
+    "title": "원장으로 스냅샷 adj_eps 를 교차검산하면 78분기 오염이 즉시 드러나는데 아무도 안 쓴다",
+    "severity": "치명",
+    "evidence": "surprise act ↔ 스냅샷 adj_eps 짝지음 425분기 중 일치(2%내) 325, 10%이상 어긋남 78(39종목). 그중 우리 시계열 안에서도 튀는(=우리쪽 오염 유력) 16건/15종목. NTAP 1.55vs0.05(3000%), REGN 11.83vs0.68(1640%), OXY 1.06vs0.14(657%), QCOM 3.00vs12.03, ETN 3.07vs11.97, VZ 1.09vs4.71 (배율 ≈1/4 = 연간값 혼입 모양), KLAC 3분기 배율 정확히 0.100",
+    "count": 78,
+    "affected": [
+     "NTAP",
+     "REGN",
+     "OXY",
+     "AAOI",
+     "NRG",
+     "TSLA",
+     "VZ",
+     "WMT",
+     "QCOM",
+     "ETN",
+     "HON",
+     "KLAC"
+    ],
+    "impact": "adj_eps 는 이익 델타 사다리 1순위 잣대 — 연속 분기 증감 판정이 그대로 오염된다. 원장은 이미 저장소에 있고 이 78건을 잡을 수 있었는데 검증에 연결돼 있지 않다. (정직: 야후가 튀는 건도 29건 있어 어느 쪽이 옳은지는 raw 원문으로 확정 필요)",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현: 420짝/일치322/어긋남77/39종목 (감사관 425·325·78·39와 동일). 야후 없이 우리 데이터만으로 산술검산: VZ 4.71=1.19+1.22+1.21+1.09 (센트까지 정확), QCOM 12.03=3.41+2.85+2.77+3.00 → 분기칸에 연간값 혼입 확정. 전 유니버스 산술검사로 19행/14종목 확증(VZ는 2024·2025·2026 1월 3년 연속 = 회계연도 마감 파싱 결함). NTAP adj 0.05 vs 같은 행 gaap 1.16 은 별개 오염. dataset.build 위에서 계산했고 PER_SHARE_ABS_LIMIT=100 은 못 잡음, data_quality.py 는 판정경로 미연결. 반사실: 19행 제거 시 신고점 판정 34건 변동/판정가능 1605. 전문: .../out/반박39.md",
+    "corrected_count": 19,
+    "corrected_severity": "중대",
+    "survives_dataset_clean": true,
+    "fix": "dataset._clean_quarters 에 산술 가드 추가: adj_eps[i] ≈ 직전3분기합 + 정상범위 분기값 이면 고치지 말고 '없음' 처리(창작 금지). 원장(surprise.act) 교차검산은 2차 방어로. 감사 보고 정정 필요: affected 에서 KLAC(야후가 1/10 로 틀림, 우리 8.81~9.40 이 정합) · AAOI(적자기업 부호, 절대차 10센트대) 제외, 본문 '1/4 연간혼입' 목록에서 CRWD 제외(방향 반대 — 야후가 1/4)."
+   }
+  },
+  {
+   "finding": {
+    "title": "원장 행에 대상 분기 라벨이 없다 + 발표 직후 0q 가 옛 분기를 가리킨 실증 2건",
+    "severity": "보통",
+    "evidence": "행 키에 분기 칸 없음(avg,low,high,analysts,year_ago,rev_*). CSCO 2026-08-12 발표 완료인데 08-14 0q avg=1.16883 = 그 분기 보관 est 와 완전일치(다음날 1.32365 로 굴러감). LITE 08-14 0q 2.96892 = 2026-06-30 분기 est. forward_estimates.py:1048 에는 '한 분기 당김' 보정이 있으나 원장 경로엔 없음",
+    "count": 2,
+    "affected": [
+     "CSCO",
+     "LITE"
+    ],
+    "impact": "발표 후 1~2일 야후 0q 는 아직 안 굴러간다. 스프레드가 '다음 분기 가이던스 vs 이미 발표된 분기 컨센서스'를 비교하게 되지만 막는 장치가 없다.",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "사실은 재현됨. 638행 키에 분기 칸 없음 확인. 전수 재계산 결과 \"원장 avg == 이미 발표된 분기 보관 est\" = 2건(CSCO 1.16883/2026-07-31, LITE 2.96892/2026-06-30), year_ago 교차확인도 일치 → 건수 2 유지. 그러나 심각도는 과대. dataset.build 키에 consensus/surprise 없음, measure_engine·judge·dataset grep 0건 → 측정 오염 0. 08-14 시점 재현(원장 절단+today=08-14) 결과 14행 동일, CSCO/LITE 미포함(CSCO 가이던스 821일 낡음, LITE 가이던스 없음), 14/14 정렬 정상. 반례: AMAT는 발표 1일 뒤인 08-14에 이미 롤오버(0q ya 2.17→2026-10-31). 라벨 부재는 측정결과.md 27차에 이미 등록된 한계. 둘 다 08-15에 자가 치유.",
+    "corrected_count": 2,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": false,
+    "fix": "① app.forward_spread_rows에 정렬 검사: 원장 0q의 year_ago가 \"이미 발표된 마지막 분기의 4분기 전 act\"와 같으면 그 종목 제외(또는 +1q로 한 칸 당김). surprise.json에 act가 이미 있어 새 수집 불필요. 참고로 forward_estimates.py:1041의 매출 기반 보정은 그대로 못 옮긴다 — 08-14 원장 행엔 rev 칸이 아예 없음(159/159). ② append_snapshot이 앞으로 쌓는 행부터 분기말을 quarter 칸에 박제(추가 전용이라 과거는 못 고침). ③ app.py:751 캡션에 \"발표 직후 1~2일은 컨센서스가 직전 분기를 가리킬 수 있음\" 추가(정직화 3곳 규칙 중 화면만 빠져 있음). ④ 새 테스트는 일부러 깨뜨려 빨간 불 확인 후 신뢰."
+   }
+  },
+  {
+   "finding": {
+    "title": "forward_spread_rows 가 today 를 받으면서 컨센서스는 무조건 원장 맨 끝(entries[-1])을 쓴다",
+    "severity": "보통",
+    "evidence": "app.py:319 에 as_of ≤ today 필터 없음. 실행 결과 today=2026-08-14 인데 스프레드 14행 중 13행이 2026-08-15 스냅샷 사용. 추가로 가이던스 이후 새 발표가 있는데 옛 가이던스를 쓴 행 1건(DIOD 2026-08-05 가이던스, 이후 08-12 발표)",
+    "count": 13,
+    "affected": [
+     "SNDK",
+     "UCTT",
+     "KLAC",
+     "TWLO",
+     "WDC",
+     "ZM",
+     "STX",
+     "VIAV",
+     "DIOD"
+    ],
+    "impact": "지금은 화면 관측 전용이라 해악이 작지만 today 인자가 공개돼 있어 과거 시점 재현에 쓰는 순간 곧바로 미래 참조가 된다.",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "코드 사실 맞음: app.py:319 entries[-1] 에 필터 없음. 반면 314행 가이던스는 age<0 으로 today 를 지킴 → 비대칭 진짜. 그러나 ①재현 결과 as_of>today 는 13이 아니라 14/14 (항목수 Counter({2:160}) 라 13이 나올 구조 아님, affected 도 14개). ②'미래' 아님 — 08-15 는 토요일, today 는 마지막 거래일 금 08-14. 거래일시계 vs 달력시계 착시. ③영향 0: 08-14 이하로 자른 원장 재실행 \"행수 now/fix 14 14 | 값이 바뀌는 행 0\", 0q avg 14/14 소수점까지 동일. ④DIOD 거짓: 08-12 는 새 발표 아니라 같은 26 Q2 중복행(rev 445,529,000→109,000,000, guid_eps_mid=None). ⑤as_of 분포 {08-14:160, 08-15:160} — 이틀치뿐이라 과거 재현 불가. ⑥judge/measure_engine 등 grep 전부 0.",
+    "corrected_count": 14,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "app.py:319 를 usable=[e for e in entries if (e.get('as_of') or '')<=today] 로 바꾸고 usable[-1] 사용(컨센서스일 표기도 동일). 실측상 화면 14행·값 전부 그대로라 무해한 방어. 단 today 가 거래일 시계라 폴백 스냅샷이 없는 날엔 종목이 빠지므로 달력 today 를 받거나 완충을 둘 것. 별건으로 DIOD 26 Q2 중복·오파싱 행(rev 109M)은 따로 처리."
+   }
+  },
+  {
+   "finding": {
+    "title": "surprise 원장이 스냅샷 누락 분기 15건을 짚어낸다 (DE·SLB 는 2년 넘게 멈춤)",
+    "severity": "중대",
+    "evidence": "surprise 에 있으나 스냅샷 대응 분기 없음(±45일)이고 스냅샷 최신보다 뒤인 것 15건. DE 4분기(스냅샷 최신 2023-10-29), SLB 4분기(최신 2024-03-31), LITE 2026-06-30(최신 2026-03-28), COHR·NEE·SO·V·LOW·XOM 각 1건. 그 밖 '중간 구멍' 12건",
+    "count": 15,
+    "affected": [
+     "DE",
+     "SLB",
+     "LITE",
+     "COHR",
+     "NEE",
+     "SO",
+     "V",
+     "LOW",
+     "XOM"
+    ],
+    "impact": "DE·SLB 는 분기 시계열이 2년 넘게 멈춰 있다 — 신고점 첫 돌파 판정에서 사실상 제외되거나 옛 값으로 잘못 판정된다.",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "corrected_count": 15,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "reason": "건수 재현 성공: 내 스크립트도 '중간구멍 12 / 스냅샷보다 최신 15', 종목 Counter{DE:4,SLB:4,LITE·COHR·NEE·SO·V·LOW·XOM 각1} 로 동일. DE 마지막 announced 2023-11-22, SLB 2024-04-19 확인 — 정지 사실. dataset.build 후에도 DE 7행/SLB 11행 그대로(없는 값은 손질로 안 생김). 그러나 impact 반증: 오늘 ld._delta_at → DE None, SLB None (140일 신선도 규칙이 판단불가 처리) → '옛 값으로 잘못 판정'은 거짓. collect_events 총 2366건 중 DE 0건은 누락이 아니라 gaap 6분기 < LADDER_MIN_QUARTERS 8 때문, SLB는 이미 11건 측정 중. 누락 15건 중 6건은 우측검열(발표일>2026-05-19)로 어차피 제외 → 최대 손실 9/2366=0.38%. 성격도 오염 아님: raw/ 에 DE 2건·SLB 2건 등 파싱실패 원문 보존(SLB_2026-07-24 본문에 GAAP EPS $0.52 존재).",
+    "fix": "원장 대조 대신 더 넓은 자체 검사를 계기판에 상시 노출: 'yardstick_of=None'(9종목: CLS SNDK SNOW NFLX VST VRTX PG CAT DE) + '마지막 발표 경과일>140일'(9종목: SLB847 DASH743 SNAP556 UNH290 ETSY289 PEP192 COHR191 UCTT172 LOW170) = 18종목을 '측정 제외/김빠짐'으로 표시. 원장은 4분기만 보관해 DASH·SNAP 같은 더 심한 정지를 못 잡는다. 별도로 raw/ 의 DE·SLB 보도자료 4건을 파서 개선의 구체 표본으로 쓸 것."
+   }
+  },
+  {
+   "finding": {
+    "title": "metric='rev' 경로의 단위 어긋남 (현재 호출되지 않음) + 스냅샷 revenue 단위 혼재",
+    "severity": "경미",
+    "evidence": "rev 스프레드 47행 중 정상 41, 가이던스가 컨센서스의 1/50 미만 4건: SMCI 935,000 vs 1.50e10 · TXN 2.4e6 vs 5.91e9 · WMT 7.3e5 vs 1.87e11 · UCTT 7.7e5 vs 7.28e8. 컨센서스 rev_avg 대비 5배 이상 차이 종목 36개(AMD 1.13e6배, MCHP 1.08e6배, SO 2.9e9배)",
+    "count": 36,
+    "affected": [
+     "SMCI",
+     "TXN",
+     "WMT",
+     "UCTT",
+     "AMD",
+     "MCHP",
+     "NXPI",
+     "SO",
+     "AMZN",
+     "VST",
+     "NEE",
+     "NOW"
+    ],
+    "impact": "컨센서스 rev_avg 는 달러로 일관됨 — 어긋나는 쪽은 스냅샷의 revenue/guid_rev_mid 단위. 지금 화면은 metric='rev' 를 부르지 않아 노출은 없으나 부르는 순간 오염.",
+    "axis": "축7 컨센서스·서프라이즈 원장",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/원장.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "반박 실패 — 숫자가 전부 재현됨. dataset.build 후 ds로 forward_spread_rows(metric='rev') 실행: 47행, 정상 41, 1/50 미만 4 (WMT 3.9e-06 · SMCI 6.2e-05 · TXN 4.1e-04 · UCTT 1.1e-03), 기타 2(SEDG 0.0347, MXL 0.7848) — 발견과 티커·값까지 일치. revenue vs rev_avg 5배+ : RAW 36 → BUILD 후 22 (AMD 1126276.2배, MCHP 1081266.5, SO 2906575726.7 재현). 정상 회계 아님: AMD revenue 7685/9246/10270/10253/11536(백만) 인데 같은 종목 guid_rev_mid 1.3e10(달러); SO는 10/3/4/684000000/3 로 자기 시계열 안에서 단위가 섞임. metric='rev' 호출부는 실제로 없음(app.py:752 는 기본 'eps'), LADDER에 revenue 없음, measure_engine/judge/sector_model/leadership 의 revenue 등장 0회.",
+    "corrected_count": 22,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "dataset.py revenue 가드가 「1만 달러 미만」 절대 하한뿐이라 백만 단위 값(AMD 11536)이 통과함 → data_quality.py 에 이미 있는 이웃 배율 검사(_neighbor_revenue, 20배)를 dataset.build 경로에도 붙일 것. guid_rev_mid 는 가드가 아예 없으므로 같은 행/이웃 revenue 와 50배 이상 어긋나면 None 처리. 그 전까지 forward_spread_rows(metric='rev') 는 호출 금지로 주석에 명시."
+   }
+  },
+  {
+   "finding": {
+    "title": "verdict.json의 주도섹터 판정이 낡은 코드 산물 — 화면이 현재 코드가 부정하는 주도를 표시 중",
+    "severity": "치명",
+    "evidence": "verdict computed_at 13:33:32(커밋 47e7141 13:34:01), leadership.py 51차 수리는 0713820 14:20:34. snapshot은 그 뒤 불변. 같은 snapshot 재계산: 현재주도 데이터센터→기기 OEM 반도체, 델타폭 100.0→80.0, 완성수 0→4, 국면수 2→11, H20 전환 1건→18건. 옛 코드(6fcd2d7) 재현시 verdict와 완전 일치→원인 확정. H21도 verdict 2건 중 2024-02-16 에너지원자재 건이 현재 재계산에 부존재(현재는 3건).",
+    "count": 5,
+    "affected": [
+     "H19",
+     "H20",
+     "H21",
+     "app.py"
+    ],
+    "impact": "app.py 522행이 verdict.json을 그대로 읽어 뿌린다. 51차가 고친 결함(데이터센터가 판단불가인데 옛 점수로 도전자를 막음)이 만든 잘못된 주도섹터가 계기판에 사실처럼 남아 있다. 데이터 재수집 없이 판정만 재실행하면 해소.",
+    "axis": "축 8 — 묶음 분류와 측정 표본 정합성",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/분류·묶음.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "독립 재현 성공. dataset.build(dataset.load())로 collect_job 149~175행과 같은 순서로 재계산: H19 데이터센터/완성0/델타폭100/국면2 → 기기 OEM 반도체/완성4/델타폭80/국면11. H20 n=1→17(사건 1→18건). H21 사건 2건→3건, verdict의 2024-02-16 에너지원자재 건 부존재. git worktree로 47e7141(옛 코드)을 같은 snapshot에 돌리니 verdict.json과 완전 일치 → 데이터 오염 아님, 코드 버전 노후 확정. 0713820이 건드린 파일은 leadership.py·test·측정결과.md 3개뿐. 단 심각도는 과장: 전 가설 판정 비교에서 바뀐 건 H20 '판정 불가'→'미채택' 1개뿐이고 둘 다 비채택, 채택 3개(H5b·H9·H10)는 재계산 대상조차 아님. app.py 노출 지점은 781행 signal_summary 한 곳이며 768행 접힌 expander '⑥ 미채택·판정 대기 신호'(캡션: 판단·점수·추천에 쓰지 않되) 안. cron '30 9 * * *', 현재 Sun Aug 16 01:28:30 UTC 2026 → 약 8시간 뒤 자동 해소.",
+    "corrected_count": 3,
+    "corrected_severity": "보통",
+    "survives_dataset_clean": true,
+    "fix": "근본 수리: judge.to_json에 code_rev(git 해시)를 기록하고, app.py가 현재 HEAD와 다르면 \"이 판정은 옛 코드로 계산됨\" 배너를 띄운다 — 지금은 verdict.json에 computed_at만 있어 코드와 어긋나도 화면에 경고가 없다. 즉시 조치는 불필요(로봇 다음 실행이 조건 없이 verdict를 덮어써 자동 해소). 급하면 판정 부분만 재실행."
+   }
+  },
+  {
+   "finding": {
+    "title": "델타 잣대 없는 종목 9개 → 두 묶음은 델타폭이 영구 판단 불가",
+    "severity": "보통",
+    "evidence": "yardstick_of=None 종목: CAT·CLS·DE·NFLX·PG·SNDK·SNOW·VRTX·VST (9개, _delta_series 0건과 완전 일치). 측정가능(잣대∧52주가격) 4 미만 묶음 2개: 현물가 연동 메모리·저장장치 3/4, 발전·전력 판매 3/4. leadership.MIN_MEMBERS=4 → 발전·전력 판매는 델타분모 4 이상인 주 0주/210주, 조건충족 0주.",
+    "count": 9,
+    "affected": [
+     "CAT",
+     "DE",
+     "PG",
+     "NFLX",
+     "SNOW",
+     "VRTX",
+     "VST",
+     "CLS",
+     "SNDK"
+    ],
+    "impact": "두 묶음은 구조적으로 주도 후보가 될 수 없다. 데이터센터 묶음도 5명 중 4명만 잣대가 있어(CLS 결측) 델타분모가 2~4로 얇다.",
+    "axis": "축 8 — 묶음 분류와 측정 표본 정합성",
+    "report_file": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/분류·묶음.md"
+   },
+   "verdict": {
+    "confirmed": true,
+    "reason": "재현 일치: dataset.build 출력으로 yardstick None = 9, 명단 동일(CAT CLS DE NFLX PG SNDK SNOW VRTX VST). weekly_group_state 재계산 210주에서 발전·전력 210/210, 현물가 메모리 28/28 델타폭 None, 조건충족 0 — 전부 재현. 그러나 인과는 과장. (A) 델타폭은 H21만 읽고 H21은 주도 행만 본다. 타임라인 210주 주도 등장에 두 묶음 0주 → 읽는 자리가 없음. (B) 현물가 메모리 완성수 분포 {0:15, 1:13}, 무리 0주 — 잣대 4/4여도 조건충족 0. 원인은 정배열 완성. (C) 발전·전력 무리 21주 중 6주는 NRG(잣대 있음)도 None, 10주는 델타동반 33.3<50로 탈락. VST 잣대가 병목인 건 5주뿐, 그것도 가정부. 진짜 손실은 다른 축: collect_events 잣대없음 9 → 사건 있는 종목 151/160.",
+    "corrected_count": 9,
+    "corrected_severity": "경미",
+    "survives_dataset_clean": true,
+    "fix": "건수·명단은 그대로 두되 \"델타폭 영구 결측 → 두 묶음 주도 후보 불가\"라는 인과 문장을 삭제하라(델타폭은 조건충족 식에 없고, 두 묶음은 210주 중 0주 주도라 H21에 실리지도 않는다). 이 항목은 축 8이 아니라 축 2(수집·파싱)로 옮겨야 한다 — CAT·DE·PG·NFLX·SNOW·VST·VRTX 7종목은 filing 19~20행이 있는데 이익 칸이 0~6개뿐인 파싱 결손이고, 그 결과 측정 본체에서 종목 9개가 통째 빠져 사건 있는 종목이 151/160이다. SNDK(가격 2025-02-13 시작)·CLS(filing 2024-03-31 시작)는 상장·수집창 문제로 정상이며 분기가 쌓이면 자동 해소된다. 전문: /tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out/반박49.md"
+   }
+  }
+ ],
+ "summary": {
+  "trust_score": 30,
+  "trust_reason": "주도점수 = 완성밀도 × 델타동반. 실측으로 절반씩이다: 완성 사건의 델타를 전부 상승으로 강제하면 주도가 110/210주(52.4%) 달라지고, 가격조건 통과 1408 묶음-주 중 636(45.2%)이 델타 때문에 탈락·판단불가다. 가격 절반은 깨끗하다(분할·중복날짜·정렬·복붙·하루밀림 전부 0건, sector_model에 잣대칸 등장 0회 = 완성수는 순수 가격). 묶음 160종목 6집합 완전 일치, 진입일<=발표일 0/2366, 절단 재계산 4150건 불일치 0. 그러나 델타 절반이 체계적으로 오염됐고 하필 주도 경쟁 묶음에 몰렸다(주도 1위 통신·미디어 회선은 4명 중 3명 오염). 결정타는 대조 실험이다: 깨끗한 잣대칸 2514개 중 무작위 152개(6%)만 지워도 주도가 중앙값 54/210주(25.7%, 범위 6.2~37.6%) 바뀐다. 주도는 평균 후보 3개 중 완성수 3(문턱과 동일)·점수차 7.9로 뽑히고 동점 주가 15주다. 데이터를 완벽히 고쳐도 재현 가능한 주도가 안 나온다. 바닥은 튼튼해 수리로 가능하나, 지금 확정은 안 된다.",
+  "blocking": [
+   {
+    "title": "회계연도 마감 행에 연간값 혼입 — 매년 같은 자리에서 반복되는 파서 결함",
+    "count": 62,
+    "affected": [
+     "VZ",
+     "QCOM",
+     "GS",
+     "AXP",
+     "HON",
+     "FDX",
+     "NRG",
+     "DELL",
+     "NTAP",
+     "SYNA",
+     "IPGP",
+     "BE"
+    ],
+    "impact": "산술 확증: QCOM 10.22 vs 직전4분기합 9.77(+0.45), AXP 14.01 vs 13.59(+0.42), FDX 17.80 vs 17.34(+0.46). VZ 4년 연속 1월 4.71/4.59/4.71(정상중앙 1.21), GS 2년 연속 1월 40.54/51.32(정상 10.76). 결산분기에 가짜 델타상승, 다음분기에 가짜 하락을 매년 두 번 만든다. 신규: FDX 2026-05-13 = 68.22(연간값의 4배)",
+    "fix": "dataset._clean_quarters에 결산행 가드 추가 — 잣대값이 같은 회계 월에 2년 이상 반복하며 정상분기 중앙값의 3~5배면 없음 처리(고치지 말고 버림, 창작금지 원칙). 62칸 제거 시 주도 48/210주(22.9%) 변동, 전환 18→16. 상한 100(PER_SHARE_ABS_LIMIT)은 4.71·10.22를 전혀 못 잡는다. 재현: scratchpad/audit/out/z13.py z14.py z15.py"
+   },
+   {
+    "title": "장치 불안정 — 무작위 6% 결손만으로 주도가 25.7%주 바뀐다 (데이터를 고쳐도 남음)",
+    "count": 210,
+    "affected": [
+     "ALL"
+    ],
+    "impact": "잣대칸 2514개 중 무작위 152개 제거 8회 반복: 주도 변동 중앙값 54/210주(25.7%), 범위 13~79주(6.2~37.6%). 시행4·7은 마지막 주도까지 의약·의료로 바뀜. 원인은 표본 두께: 주당 자격 묶음 중앙값 3.0, 주도 완성수 중앙값 3(MIN_COMPLETIONS과 동일), 1-2위 점수차 중앙값 7.9, 완전 동점 15주, 델타동반 있는 주간행 1275/3388(37.6%)",
+    "fix": "판정 자체를 막는 결함이므로 데이터 수리와 별개로 다뤄야 한다. ① 주도 판정에 안정성 지표를 상시 병기 — 무작위 6% 결손 재실행으로 그 주 주도가 흔들리는지 함께 표시(지금 가장 없는 정보). ② 잣대 결손 복구로 표본 두께 확보(COP 9·WDC 6·OKTA 5·HUBS 5·COHR 4분기). ③ 그 다음에야 문턱(MIN_COMPLETIONS=3·MIN_MEMBERS=4) 재등록을 논의. 문턱을 먼저 만지면 사전등록 규율 위반. 재현: z6.py z8.py"
+   },
+   {
+    "title": "오염이 주도 경쟁 묶음에 집중 — 1위 묶음은 4명 중 3명이 오염 의심",
+    "count": 11,
+    "affected": [
+     "VZ",
+     "T",
+     "TMUS",
+     "NTAP",
+     "DELL",
+     "CSCO",
+     "HPQ",
+     "XOM",
+     "JPM",
+     "SCHW",
+     "SMCI",
+     "AMD"
+    ],
+    "impact": "주도 등장 묶음별 오염의심 비율: 통신·미디어 회선 75.0%(3/4, 주도 50주=1위), 반도체 팹 장비 72.7%(8/11), 산업설비 53.8%(7/13), 교체주기 IT HW 50.0%(4/8, 주도 37주=2위), 기기 OEM 반도체 45.0%(9/20, 현재 주도). 확증 62칸 제거 시 통신·미디어 회선이 주도 50주 중 32주(64%)를 잃고 그 자리를 금융(15)·IT HW(12)·팹장비(10)가 가져감",
+    "fix": "델타동반 분모가 MIN_COMPLETIONS=3이라 4명 묶음은 3명만 성립하면 100%가 찍힌다(46차 금융 사고와 같은 기전). 묶음 회원 수 대비 최소 델타 분모를 비례로 올리거나(예: max(3, ceil(0.5×판단가능))), 오염 종목이 절반을 넘는 묶음은 주도 후보에서 '판단 불가'로 두어라. 우선 통신 3종목(VZ 확증·T·TMUS)의 잣대값을 raw 원문으로 확정할 것. 재현: z11.py z14.py"
+   },
+   {
+    "title": "verdict.json이 낡은 코드 산물 — 화면 주도섹터가 현재 코드와 다른 섹터",
+    "count": 4,
+    "affected": [
+     "H19",
+     "H20",
+     "H21",
+     "app.py"
+    ],
+    "impact": "verdict.json(computed_at 08-15T13:33:32Z) H19 현재_주도 = 데이터센터 시스템·전력설비 납품, 완성수 0, 델타폭 100.0, 국면수 2. 같은 snapshot으로 현재 코드 재실행 = 기기 OEM 반도체, 완성수 4, 델타폭 80.0, 국면 19, 전환 18, 분기점 3. 완전히 다른 섹터. 원인은 데이터가 아니라 51차 수리(0713820)가 verdict 계산(47e7141)보다 뒤인 것",
+    "fix": "judge.to_json에 code_rev(git 해시)를 기록하고 app.py가 현재 HEAD와 다르면 '이 판정은 옛 코드로 계산됨' 배너를 띄운다. 지금은 computed_at만 있어 코드와 어긋나도 화면에 경고가 없다. cron '30 9 * * *'이라 로봇 다음 실행이 자동 덮어쓰므로 즉시 조치는 불필요하나 재발 방지 장치가 없는 것이 문제. 정직화: H19·H20·H21·H19b는 넷 다 '판정 불가'이므로 거짓 주장은 아니고 낡은 표시다."
+   },
+   {
+    "title": "원문으로 확증된 잣대 칸 국소 오염 (배당금·주식수·ROTCE·천단위)",
+    "count": 21,
+    "affected": [
+     "JPM",
+     "GNRC",
+     "UCTT",
+     "BAC",
+     "IPGP"
+    ],
+    "impact": "JPM 배당금 10행이 gaap_eps 칸에(raw 266행 'per share 1.50' 확증) → 델타 9쌍 전부 하락, decidable=0. GNRC 천단위 EBITDA 3행(원문 'U.S. Dollars in Thousands') → 델타 배율 0.001/1045. UCTT 희석주식수 3행(-45.3 = 그 분기 주식수). BAC ROTCE% 4행(12.76~13.97). IPGP 99.1(내재주식수 15.8만주 = 불가능)",
+    "fix": "산술 100% 확증분 21칸만 지우면 주도는 4/210주(1.9%)만 변동하고 마지막 주도는 불변 — 즉 이 항목 단독으로는 판정을 뒤집지 않는다. 그러나 전부 원문 확증이라 남길 이유가 없다. 규칙: 같은 발표일에 잣대값 2개 이상이고 한쪽 revenue가 붕괴(<10000)면 버림(JPM 10행). 파서에서 'Shares used', 'Return on average ... equity', 'dividends declared per share' 줄을 EPS 후보에서 제외. 재현: z5.py"
+   },
+   {
+    "title": "주식분할 미조정 7종목 — 5종목이 주도 경쟁 묶음에 있음",
+    "count": 55,
+    "affected": [
+     "NVDA",
+     "GOOGL",
+     "AVGO",
+     "LRCX",
+     "SMCI",
+     "ANET",
+     "WMT"
+    ],
+    "impact": "가격은 분할조정됐으나 EPS는 미조정(NVDA 6.12→0.68, GOOGL 26.29→1.36). 내재PER 검산 AVGO 2.1→59.3(x28). 분할 후 판단가능 55건 전부 신고점 0건. 델타는 분할선 1쌍씩(총 7쌍)만 다치나, 소속이 기기 OEM 반도체(NVDA·AVGO)·데이터센터(SMCI·ANET)·반도체 팹 장비(LRCX)·광고 플랫폼(GOOGL) — 전부 주도 경쟁 묶음",
+    "fix": "두 갈래. ① 수집 로봇이 분할 효력일·계수를 함께 수집해 EPS 계열에 적용(정공법). ② 그게 안 되면 영구 단차가 감지된 종목은 eps_runs를 단차에서 끊어 past_peak를 리셋 — 값을 만들지 않으므로 창작금지에 안 걸림. 현재 dataset.py 가드는 매출하한·마진·주당상한 3개뿐이고 measure_engine에 split 코드 0건이라 한 건도 안 걸러진다."
+   }
+  ],
+  "fixable": [
+   "op_income 자리표시자 상수 63행/19종목(VRT -1.0 x14, HPE -1.0 x9, LOW 202.0 x3) — H10이 쓰나 재판정해도 채택 유지(n 54→52)",
+   "매출 단위 혼재로 dataset.py 마진 가드 미작동 85건 — 실제 op 깨진 건 27건/4종목(TGT·HD·HPE·UPS), 나머지는 매출칸만",
+   "period_label 중복 51종목/254행 — grep 결과 measure_engine·app.py·pages 모두 0건, 계산·화면 어디에도 안 쓰임",
+   "라벨-제출일 어긋남 174건/56종목 — data_quality.fiscal_quarter_of는 tests에서만 호출되는 죽은 코드(실행 계측 호출 0회)",
+   "2026-08-11 8종목 하루 결측 — 현재 측정 오염 0건, 검열 풀리면 창 61일 7건(2903의 0.24%) 발생",
+   "발표일 간격 55~150일 밖 6.2% → 잣대행 218건(8.7%)이 TTM 불가 — 간격 탓 실제 몫은 293건, 나머지는 워밍업",
+   "한 해 발표일 5개 이상 35조합/초과 67행 — 측정 도달은 13조합뿐, eps_runs가 51/67을 자동 배제",
+   "컨센서스 원장 0q가 이미 발표된 분기를 가리킨 2건(CSCO·LITE) — 판정 파이프라인 미연결, 08-15 자가치유",
+   "app.py:319 forward_spread_rows가 today 무시하고 entries[-1] 사용 — 실측 값 변동 0행, 과거 재현 시에만 위험",
+   "원장 metric='rev' 단위 어긋남 22종목 — 호출부 실제로 없음(app.py 기본 'eps'), LADDER에 revenue 없음",
+   "app.py:212 폴백이 잣대 미달 종목에 adj_eps 강제 — 화면 실제 노출 2행(CLS·SNDK), 측정·판정 영향 0",
+   "surprise 원장이 짚는 스냅샷 누락 15건(DE 4·SLB 4) — 140일 신선도 규칙이 이미 판단불가 처리, 최대 손실 9/2366"
+  ],
+  "accepted_limits": [
+   "주가 데이터를 개발 환경에서 못 받는다 — 가격 검증은 내부 정합성 검사만 가능(외부 대조 불가)",
+   "raw/는 파싱 '실패' 원문 보관소라 성공분 원문 대조 불가 — 159종목 값 정확성은 확인 못함",
+   "근사치 100% 종목 29개(META·AMZN·TSLA 등)의 XBRL 근사식 오차는 원문이 없어 확인 못함",
+   "surprise 원장은 4분기만 보관 — DASH·SNAP 같은 장기 정지 종목을 못 잡는다",
+   "컨센서스 원장 as_of가 08-14·08-15 이틀치뿐 — 과거 시점 재현이 원리적으로 불가",
+   "H5b 앞시기 n=0(게이지 ON이 2025·2026에만 존재) — 원칙4 시간 분할 미충족, 화면에 명시 필요",
+   "주도 국면 19개·전환 18건·분기점 3건은 원래 작은 표본 — 오래 '판정 불가'로 남는 것은 사전 등록된 예상",
+   "announced_date 없는 165행은 잣대값 0개 — 삭제 후 재측정해도 사건수 2500→2500, 영향 정확히 0",
+   "델타 잣대 없는 9종목(CAT·DE·PG·NFLX·SNOW·VST·VRTX·CLS·SNDK) — 사건 있는 종목 151/160",
+   "우측검열 112~156건은 정상 — 60거래일 창이 아직 안 끝난 최근 발표",
+   "인터넷 차단으로 산술 검산이 유일한 검증 수단 — 외부 출처 교차확인 불가",
+   "판단불가 895건 중 602건(67%)은 TTM 4분기 워밍업 — 결함이 아니라 구조"
+  ],
+  "fix_order": [
+   "1. 결산행 연간값 가드 — 같은 회계 월 2년+ 반복 & 정상중앙 3~5배면 없음 처리(17종목 62행). 효과 최대",
+   "2. verdict.json에 code_rev(git 해시) 기록 + app.py가 HEAD와 다르면 경고 배너 — 낡은 판정 노출 차단",
+   "3. 원문 확증 오염 21칸 배제 — JPM 배당 10·GNRC 천단위 3·UCTT 주식수 3·BAC ROTCE 4·IPGP 1",
+   "4. 분할 계수 수집, 또는 영구 단차에서 eps_runs 절단(값 창작 없이) — 7종목",
+   "5. 주도 판정에 안정성 지표 상시 병기 — 무작위 6% 결손 재실행으로 흔들림 표시. 지금 가장 없는 정보",
+   "6. 델타동반 최소 분모를 묶음 크기 비례로 — 4명 묶음이 3명으로 100% 찍는 기전 차단",
+   "7. 잣대 결손 복구로 표본 두께 확보 — COP 9·WDC 6·OKTA 5·HUBS 5·COHR 4분기",
+   "8. dataset.py 가드를 절대 문턱에서 상대 기준으로 교체 — 종목별 중앙값 대비 자릿수 일관성",
+   "9. op_income 상대 하한 가드 + 동일값 3회 반복 검사(매출 None이어도 돌게)",
+   "10. 파서 수정 — 'Shares used'·'Return on average equity'·'dividends per share' 줄 EPS 후보 제외",
+   "11. 그 다음에야 문턱(MIN_COMPLETIONS·MIN_MEMBERS) 재등록 논의 — 먼저 만지면 사전등록 규율 위반",
+   "12. period_label·죽은 코드(data_quality) 정리는 최하위 — 측정·화면 영향 0으로 실증됨"
+  ]
+ },
+ "out_dir": "/tmp/claude-0/-home-user-Model/c725a96a-95ca-5e9d-8f5a-331a38a74da8/scratchpad/audit/out"
+}

@@ -24,6 +24,7 @@ from datetime import date
 from statistics import mean
 
 import config as cfg
+import measure_engine as me
 
 # --- 33차 사전 등록 상수 (옮겨 적음 — 여기서 고치지 않는다) ---
 MA_WEEKS = (4, 13, 26, 52)      # 주봉 이동평균
@@ -78,6 +79,57 @@ def aligned_flags(prices: dict) -> dict[str, bool]:
     return flags
 
 
+def aligned_flags_chart(prices: dict) -> dict[str, bool]:
+    """**39차 등록 정의**의 정배열 {주 마지막 거래일: True/False}.
+
+    위의 `aligned_flags` 와 일부러 **따로 둡니다.** 둘은 서로 다른 등록의
+    장치입니다 — 한쪽을 고쳐 다른 쪽까지 바꾸면 사전 등록이 무너집니다.
+
+      · `aligned_flags`       : 33차 등록(H11·H12·H14 정배열 **폭**)
+                                조건에 `주봉 종가 > 4주선` 이 들어 있습니다.
+      · `aligned_flags_chart` : 39차 등록(H15·H16·H18 정배열 **완성**)
+                                **이평선 배열만** 봅니다. 종가 조건 없음.
+
+    39차에서 확인한 대로, 종가 조건이 있으면 주가가 잠깐 눌릴 때마다
+    상태가 깨져 "완성"이 수십 번 반복됩니다(실측: COHR 8번 vs 1번).
+    사람이 차트에서 보는 정배열은 이동평균선의 배열이므로, 완성 시점을
+    묻는 등록에서는 이 함수를 씁니다.
+    """
+    dates, closes = prices.get("dates") or [], prices.get("close") or []
+    if not dates:
+        return {}
+    weeks = weekly_indices(dates)
+    week_closes = [closes[i] for i in weeks]
+    flags: dict[str, bool] = {}
+    for k in range(WARMUP_WEEKS - 1, len(weeks)):
+        averages = [mean(week_closes[k - n + 1: k + 1]) for n in MA_WEEKS]
+        flags[dates[weeks[k]]] = all(
+            averages[i] > averages[i + 1] for i in range(len(averages) - 1)
+        )
+    return flags
+
+
+def gap_over_52w(prices: dict, day: str) -> float | None:
+    """그 주 종가가 **52주선 위로 몇 % 떨어져 있나** (H18 의 신호 변수).
+
+    완성 시점에 **미리 알 수 있는** 값입니다 (사후 정보 아님).
+    52주 이력이 없으면 없음(None) — 만들지 않습니다.
+    """
+    dates, closes = prices.get("dates") or [], prices.get("close") or []
+    if not dates:
+        return None
+    weeks = weekly_indices(dates)
+    week_closes = [closes[i] for i in weeks]
+    for k in range(WARMUP_WEEKS - 1, len(weeks)):
+        if dates[weeks[k]] != day:
+            continue
+        ma52 = mean(week_closes[k - MA_WEEKS[-1] + 1: k + 1])
+        if ma52 <= 0:
+            return None
+        return (week_closes[k] / ma52 - 1.0) * 100.0
+    return None
+
+
 def breadth_series(ds: dict, members: list[str]) -> list[tuple[str, float]]:
     """섹터 정배열 폭 시계열 [(주 마지막 거래일, 폭%)] — 판단 가능 주만."""
     per_ticker = {}
@@ -101,13 +153,18 @@ def breadth_series(ds: dict, members: list[str]) -> list[tuple[str, float]]:
     return out
 
 
-def _forward_excess(prices: dict, spy: dict, day: str) -> float | None:
-    """day 다음 거래일 진입 → FORWARD_DAYS 뒤. SPY 대비 초과 %p."""
+def _forward_excess(prices: dict, spy: dict, day: str,
+                    days: int = FORWARD_DAYS) -> float | None:
+    """day 다음 거래일 진입 → days 거래일 뒤. SPY 대비 초과 %p.
+
+    기본값은 33차 등록의 250거래일이고, 완성 사건(39차 이후)은 측정
+    기본형인 60거래일도 함께 재려고 days 를 받습니다.
+    """
     dates, closes = prices["dates"], prices["close"]
     entry = bisect.bisect_right(dates, day)
-    if entry >= len(dates) or entry + FORWARD_DAYS >= len(dates):
+    if entry >= len(dates) or entry + days >= len(dates):
         return None                        # 진입 불가 또는 우측 검열
-    exit_index = entry + FORWARD_DAYS
+    exit_index = entry + days
     stock = (closes[exit_index] / closes[entry] - 1.0) * 100.0
     si = bisect.bisect_right(spy["dates"], dates[entry]) - 1
     sj = bisect.bisect_right(spy["dates"], dates[exit_index]) - 1
@@ -231,7 +288,11 @@ def _delta_series(ds: dict, ticker: str) -> list[tuple[str, bool]]:
     for i in range(1, len(values)):
         gap = (date.fromisoformat(values[i][0])
                - date.fromisoformat(values[i - 1][0])).days
-        if 55 <= gap <= 200:            # 연속 분기만 (사고 7 규칙)
+        # 사고 7 규칙: 측정 장치와 **같은** 간격을 써야 한다.
+        # 200일 창을 쓰면 반년(182일) 점프가 연속 분기로 통과해 사이 분기를
+        # 건너뛴 가짜 델타가 생긴다 (41차 검증단 실측: 72쌍, 그중 37쌍은
+        # 사이 분기가 존재하는데 잣대값이 비어서 생긴 것).
+        if me.SPACING_MIN_DAYS <= gap <= me.SPACING_MAX_DAYS:
             out.append((values[i][0], values[i][1] > values[i - 1][1]))
     return out
 
@@ -239,6 +300,78 @@ def _delta_series(ds: dict, ticker: str) -> list[tuple[str, bool]]:
 def yardstick_of_safe(ds: dict, ticker: str) -> str | None:
     import measure_engine as me
     return me.yardstick_of(ds["quarters"].get(ticker) or [])
+
+
+# ---------------------------------------------------------------------------
+# 정배열 **완성** 사건 전수 (39·40·43차 등록의 공통 장치)
+# ---------------------------------------------------------------------------
+# 이 목록 하나로 H15(델타 동반) · H16(바닥 30주) · H18(52주선 이격도)를
+# 모두 잽니다. 장치가 하나여야 셋을 같은 잣대로 비교할 수 있습니다.
+H18_GAP_MIN = 30.0          # H18 신호 문턱 — 완성 시점 52주선 이격도 30% 이상
+H18_START_DAY = "2026-08-15"   # 이 날 **뒤**의 완성만 H18 판정 표본 (원칙 5)
+SHORT_FORWARD_DAYS = 60     # 측정 기본형 창 (전략.md 고정값)
+
+
+def completion_events(ds: dict) -> list[dict]:
+    """정배열 **완성**(39차 정의) 사건 전수 목록.
+
+    각 사건에 담기는 것 — 전부 **완성 시점에 알 수 있는 값**입니다:
+      · 이격도   완성 주 종가가 52주선 위로 몇 %  (H18 신호 변수)
+      · 델타     그때까지 발표된 최신 분기 이익이 직전 연속 분기보다 늘었나
+      · 바닥주   완성 직전에 정배열이 아니었던 연속 주수 (H16 관찰용)
+    사후에만 알 수 있는 값은 이름에 그렇게 적습니다:
+      · 유지주   완성 후 정배열이 깨질 때까지의 주수 — **매매 규칙으로 쓸 수
+                 없습니다**(41차 검증: 결과를 완전히 가르지만 사후 정보).
+    표적은 두 가지를 함께 담습니다:
+      · 초과60   측정 기본형(60거래일) — 판정은 이쪽으로 합니다
+      · 초과250  1년 창 — 참고용(최근 국면은 아직 창이 안 끝나 비어 있음)
+    """
+    spy = ds["prices"][ds["benchmark"]]
+    events: list[dict] = []
+    for ticker in ds["tickers"]:
+        prices = ds["prices"].get(ticker)
+        if not prices or not prices.get("dates"):
+            continue
+        flags = aligned_flags_chart(prices)
+        if not flags:
+            continue
+        weeks = sorted(flags)
+        series = _delta_series(ds, ticker)
+        delta_days = [s[0] for s in series]
+        base = 0
+        for index, day in enumerate(weeks):
+            if not flags[day]:
+                base += 1
+                continue
+            if index > 0 and not flags[weeks[index - 1]]:
+                hold = 0
+                for j in range(index, len(weeks)):
+                    if not flags[weeks[j]]:
+                        break
+                    hold += 1
+                position = bisect.bisect_right(delta_days, day) - 1
+                delta = None
+                if position >= 0 and (
+                    date.fromisoformat(day)
+                    - date.fromisoformat(delta_days[position])
+                ).days <= DELTA_FRESH_DAYS:
+                    delta = series[position][1]
+                events.append({
+                    "ticker": ticker,
+                    "섹터": cfg.SECTORS.get(ticker, "미분류"),
+                    "테마": cfg.theme_of(ticker),
+                    "day": day,
+                    "이격도": gap_over_52w(prices, day),
+                    "델타": delta,
+                    "바닥주": base,
+                    "유지주": hold,
+                    "초과60": _forward_excess(prices, spy, day,
+                                              SHORT_FORWARD_DAYS),
+                    "초과250": _forward_excess(prices, spy, day, FORWARD_DAYS),
+                })
+            base = 0
+    events.sort(key=lambda e: (e["day"], e["ticker"]))
+    return events
 
 
 def month_end_days(dates: list[str]) -> list[str]:
@@ -391,9 +524,12 @@ def confirmation_rows(ds: dict) -> list[dict]:
                for name, members in sector_members(ds, "테마").items()]
 
     rows = []
+    # 종목별 중간 계산을 한 번만 하고 나눠 씁니다 (104차 — 값은 그대로).
+    # 섹터·테마 × 지금·직전 으로 같은 종목을 네 번 계산하고 있었습니다.
+    memo: dict = {}
     for name, members, kind in groups:
-        now = _breadths_at(ds, members, today)
-        before = _breadths_at(ds, members, previous_month)
+        now = _breadths_at(ds, members, today, memo)
+        before = _breadths_at(ds, members, previous_month, memo)
         if now is None or before is None:
             continue
         past = _group_excess(ds, members, today, CONFIRM_PAST_DAYS, forward=False)
@@ -415,23 +551,41 @@ def confirmation_rows(ds: dict) -> list[dict]:
     return rows
 
 
-def _breadths_at(ds: dict, members: list[str], day: str):
-    """(정배열 폭, 델타 폭) — 판단 가능 종목 3개 미만이면 None."""
+def _breadths_at(ds: dict, members: list[str], day: str, memo: dict | None = None):
+    """(정배열 폭, 델타 폭) — 판단 가능 종목 3개 미만이면 None.
+
+    memo: 종목별 중간 계산을 담아 두는 그릇 (104차 — 속도만 바꿉니다).
+
+    ⚠️ 왜 필요한가: 이 함수는 종목마다 `aligned_flags`(이동평균)와
+    `_delta_series`(분기 델타)를 다시 계산하는데, `confirmation_rows` 가
+    **섹터·테마 × 지금·직전** 으로 네 번 부릅니다. 실측: 종목 160개인데
+    호출이 **640회** (정확히 4배), 전체 27.9초.
+
+    같은 종목의 같은 계산은 결과가 같으므로 한 번만 하고 담아 둡니다.
+    **값은 하나도 안 바뀝니다** — 시험으로 못박습니다.
+    """
     import measure_engine as me
+
+    if memo is None:
+        memo = {}
 
     decidable = aligned = delta_up = 0
     for ticker in members:
         prices = ds["prices"].get(ticker)
         if not prices:
             continue
-        flags = aligned_flags(prices)
+        담김 = memo.get(ticker)
+        if 담김 is None:
+            _flags = aligned_flags(prices)
+            담김 = (_flags, sorted(_flags) if _flags else [],
+                   _delta_series(ds, ticker))
+            memo[ticker] = 담김
+        flags, keys, series = 담김
         if not flags:
             continue
-        keys = sorted(flags)
         index = bisect.bisect_right(keys, day) - 1
         if index < 0:
             continue
-        series = _delta_series(ds, ticker)
         if not series:
             continue
         days = [s[0] for s in series]

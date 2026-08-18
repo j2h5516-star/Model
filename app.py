@@ -24,8 +24,11 @@ import json
 import os
 from datetime import date, timedelta
 
+import audit_data
 import config as cfg
 import dataset
+import sector_model as sm
+import judge
 import measure_engine as me
 
 # 화면에 "최근 발표"로 보여 줄 기간 (표시용 — 측정 규칙 아님)
@@ -50,6 +53,11 @@ HYPOTHESIS_LABELS = {
     "H10_논갭영업이익_저평가_첫신기록": "영업이익 첫 신기록 × 52주선 아래 (H10)",
     "H11_섹터정배열폭_60": "섹터 정배열 폭 60% 첫 돌파 (H11)",
     "H11b_섹터정배열폭_80": "섹터 정배열 폭 80% 첫 돌파 (H11b)",
+    "H18_완성시_52주선이격도": "정배열 완성 × 52주선 이격도 30%+ (H18)",
+    "H19_주도섹터_판정": "주도섹터 판정 — 완성 무리 × 델타 (H19)",
+    "H19b_주도섹터_완성후확인": "주도섹터 — 완성 후 확인형 (H19b)",
+    "H20_주도섹터_전환": "주도섹터 전환 (H20)",
+    "H21_주도섹터_분기점": "주도섹터 분기점 — 델타 꺾임 (H21)",
 }
 
 # 미채택·대기 신호를 화면에서 쉬운 말로 풀어 주는 설명 (지시 1의 이행).
@@ -75,11 +83,42 @@ HYPOTHESIS_DETAILS = {
         "해당 회사가 적어 표본이 아직 부족합니다."),
     "H8_GAAPEPS_첫돌파": (
         "EBITDA 도 없으면 GAAP EPS 로 봅니다 — 기준선과 갈라지지 않았습니다."),
+    # ⚠️ 이 설명들에는 숫자를 적지 않습니다 (101차). 예전에는
+    #    "오히려 나빴습니다(9.4% vs 기준선 26.8%)" 처럼 **글자로 박혀**
+    #    있었는데, 10년 표본으로 다시 재니 31.6% vs 31.6% 이라 그 문장이
+    #    거짓말이 돼 있었습니다. 실제 숫자는 바로 옆의 판정 줄이
+    #    판정 파일에서 읽어 보여 줍니다.
     "H11_섹터정배열폭_60": (
         "섹터의 주가가 무리로 정배열되면(60% 돌파) 그 뒤 1년이 좋은가? — "
-        "**오히려 나빴습니다**(9.4% vs 기준선 26.8%). 다 오른 뒤라 늦습니다."),
+        "다 오른 뒤에 사는 셈이라 늦을 수 있다는 물음입니다."),
     "H11b_섹터정배열폭_80": (
-        "더 강한 합의(80%)면 다른가? — 그런 경우가 7건뿐이라 판정 불가입니다."),
+        "더 강한 합의(80%)면 다른가?"),
+    "H18_완성시_52주선이격도": (
+        "주봉 정배열이 **차트에서 막 완성된** 그 주에, 주가가 52주선 위로 "
+        "30% 이상 떠 있으면 다른가? — 지난 자료를 뒤져 찾아낸 후보라 "
+        "**그 자료로는 판정하지 않습니다**(2026-08-15 등록, 그 뒤에 새로 "
+        "생기는 완성만 셉니다). 첫 판정은 빨라야 2026년 11월입니다. "
+        "참고로 지난 자료에서는 30%+ 가 28.6%, 전체가 13.1% 였습니다."),
+    "H19_주도섹터_판정": (
+        "같은 묶음에서 최근 한 분기 안에 정배열을 완성한 종목이 3개 이상이고, "
+        "그 종목들의 30% 이상이 완성했고, 완성 종목의 과반이 이익 델타 상승을 "
+        "동반했는가? — 셋을 다 넘는 묶음 중 점수가 가장 높은 것을 주도로 봅니다. "
+        "**국면 단위라 표본이 4개뿐이라 채택할 수 없습니다.** 지금 지목된 묶음도 "
+        "델타를 못 재는 종목이 섞여 있어 그대로 믿으면 안 됩니다."),
+    "H19b_주도섹터_완성후확인": (
+        "정배열 완성과 이익 델타가 **동시에** 오는 게 아니라, 완성이 먼저이고 "
+        "델타는 다음 실적에서 확인되는 것 아닌가? — 실제로 광통신은 완성 뒤 "
+        "5~61일에 델타가 돌아섰습니다. 그래서 '확인이 선 주'를 신호로 삼는 판을 "
+        "따로 잽니다. **지난 자료에서는 신호 14.0%로 기준선 24.2%보다 나빴습니다.** "
+        "그 자료로는 판정하지 않으며(2026-08-15 등록), 앞으로 생기는 확인만 셉니다."),
+    "H20_주도섹터_전환": (
+        "주도섹터는 **스스로 내려오지 않습니다**. 정배열이 깨져도, 다른 묶음이 "
+        "위 세 조건을 다 넘고 현 주도의 최근 최고점을 넘을 때만 바뀝니다. "
+        "그렇지 않으면 '기존 추세 유지'입니다. — 전환이 3건뿐이라 판정 불가입니다."),
+    "H21_주도섹터_분기점": (
+        "주도섹터 안에서 이익 델타가 오른 종목 비율이 그 국면 최고 대비 20%p "
+        "이상 꺾인 첫 주를 '분기점'으로 봅니다. 그 뒤 상승 힘이 빠지는가? — "
+        "3건 중 1건만 맞았고, 표본이 3건이라 판정 불가입니다."),
 }
 
 
@@ -99,6 +138,52 @@ def verdict_is_v3(verdict: dict | None) -> bool:
     if not verdict or "가설" not in verdict:
         return False
     return all(name in verdict["가설"] for name in V3_HYPOTHESES)
+
+
+def verdict_code_warning(verdict: dict | None,
+                         current: str | None = None) -> str | None:
+    """판정이 **지금 코드와 다른 판**으로 계산됐으면 경고 문장, 아니면 None.
+
+    52차 감사가 찾아낸 사고: verdict.json 은 주도 섹터를 "데이터센터"로
+    적고 있었지만, 같은 원자료(snapshot)로 현재 코드를 돌리면
+    "기기 OEM 반도체"가 나왔습니다. 데이터가 아니라 **코드가 달랐던**
+    것입니다 — 51차 수리가 그 판정 계산보다 뒤였습니다. 그런데 화면에는
+    계산 시각만 있고 코드 판번호가 없어 사람이 알아챌 방법이 없었습니다.
+
+    그래서 judge 가 판정 파일에 code_rev(git 짧은 해시)를 적고,
+    화면은 그것이 지금 코드와 다르면 여기서 배너를 띄웁니다.
+
+    아무 말도 하지 않는 경우(=None):
+      - 두 판번호가 같다 (정상)
+      - 판번호를 못 알아낸 채로 적혀 있다("알수없음") → 비교할 수가
+        없으니 근거 없이 겁주지 않습니다
+
+    판번호가 **아예 없는** 판정 파일은 다릅니다. 이 수리(52차) 이전에
+    계산됐다는 뜻이므로 옛 코드인 것이 확실합니다 — 그때는 알립니다.
+    """
+    if not verdict:
+        return None
+    if current is None:
+        current = judge.code_revision()
+    tail = ("그 사이 고친 것이 판정 결과를 바꿨을 수 있습니다 — "
+            "다음 로봇 수집 때 다시 계산됩니다.")
+
+    if "code_rev" not in verdict:
+        return (
+            "⚠️ 이 판정에는 **코드 판번호가 없습니다** — 판번호를 적기 "
+            "시작한 수리(52차)보다 먼저 계산됐다는 뜻입니다. " + tail
+        )
+
+    recorded = verdict.get("code_rev")
+    unknown = (None, "", "알수없음")
+    if recorded in unknown or current in unknown:
+        return None
+    if recorded == current:
+        return None
+    return (
+        f"⚠️ 이 판정은 **옛 코드**로 계산됐습니다 "
+        f"(판정 {recorded} · 지금 코드 {current}). " + tail
+    )
 
 
 def verdict_rows(verdict: dict | None) -> list[dict]:
@@ -124,6 +209,54 @@ def verdict_rows(verdict: dict | None) -> list[dict]:
             }
         )
     return rows
+
+
+
+def signal_summary(entry: dict, signal: dict, base: dict) -> str:
+    """미채택 칸에 적을 한 줄 — 그 가설이 실제로 몇 번 맞았는지.
+
+    가설마다 결과의 모양이 다릅니다:
+      · H2~H18  : 신규(판정) 안에 {신호, 기준선}
+      · H19     : 국면 상태(현재 주도·국면 수) — 성공률이라는 게 없습니다
+      · H20·H21 : 사건 목록의 성공/전체 (국면 단위)
+    모양을 못 알아보면 **"표본이 아직 없습니다"로 뭉개지 않고** 그 사실을
+    그대로 적습니다.
+    """
+    if signal.get("n"):
+        return (f"실측 {signal.get('rate')}% (n={signal.get('n')}) "
+                f"vs 기준선 {base.get('rate')}%")
+    if entry.get("현재_주도") is not None or "국면수" in entry:
+        leader = entry.get("현재_주도") or "없음"
+        line = f"현재 지목: {leader} · 국면 {entry.get('국면수', 0)}개 (성공률 아님)"
+        # 52차 감사의 요구 — 지목만 적고 흔들림을 안 적으면 사람이 그것을
+        # 확정된 사실로 읽습니다. 반드시 함께 적습니다.
+        shake = entry.get("안정성") or {}
+        if shake.get("바뀐비율_중앙값") is not None:
+            # 58차 — 중앙값만 적으면 정밀도를 과장합니다. 실측: 같은 6%를
+            # 4번 지웠더니 49·60·82·113주로 나왔습니다. **흔들림을 재는 자
+            # 자체가 흔들립니다.** 그래서 범위를 함께 적습니다.
+            low, high = shake.get("바뀐주_최소"), shake.get("바뀐주_최대")
+            span = (f" (뽑기마다 {low}~{high}주로 갈림)"
+                    if low is not None and high is not None and low != high
+                    else "")
+            line += (
+                f"  ⚠️ 흔들림: 잣대값을 {shake.get('지운비율', 0) * 100:.0f}% 만 "
+                f"지워도 주도가 {shake['바뀐주_중앙값']}/{shake['판정주수']}주"
+                f"({shake['바뀐비율_중앙값']}%) 바뀝니다{span} · 지금 지목도 "
+                f"{shake.get('반복', 0)}번 중 {shake.get('마지막주_불일치', 0)}번 달라짐"
+            )
+        return line
+    if entry.get("n"):
+        line = f"실측 {entry.get('성공')}/{entry.get('n')}건 = {entry.get('rate')}%"
+        ref = entry.get("기준선(참고)") or {}
+        if ref.get("n"):
+            line += f" vs 기준선 {ref.get('rate')}% (n={ref.get('n')})"
+        return line
+    explore = entry.get("탐색표본(참고)") or {}
+    if explore.get("n"):
+        return (f"판정 표본 0건 — 탐색 표본에서는 "
+                f"{explore.get('rate')}% (n={explore.get('n')})")
+    return "표본이 아직 없습니다"
 
 
 def adopted_names(verdict: dict | None) -> list[str]:
@@ -203,7 +336,9 @@ def sector_gauge_rows(ds: dict) -> list[dict]:
 
     rows = []
     for sector, members in by_sector.items():
-        series = me.gauge_series(ds, tickers=members)
+        # 섹터 게이지는 관찰용 — 종목수를 함께 보여 주므로 최소치를
+        # 걸지 않습니다 (100차. 시장 전체 게이지에만 걸립니다)
+        series = me.gauge_series(ds, tickers=members, min_tickers=1)
         value = me.gauge_at(series, today)
         above = me.gauge_h5b_on(series, today)
         rows.append(
@@ -331,7 +466,23 @@ BREADTH_ZONES = [
     (25.0, 40.0, "초기", 25.8, "이제 모이기 시작하는 단계"),
     (0.0, 25.0, "약함", 27.0, "정배열 종목이 드문 상태"),
 ]
-BREADTH_BASELINE = 26.8      # 34차 기준선 (모든 섹터·주, n=1,872)
+# 34차에 실측한 기준선 (모든 섹터·주, n=1,872). **예비값입니다.**
+# ⚠️ 이 숫자를 화면에 그대로 쓰면 안 됩니다 (101차). 10년 표본에서 다시
+#    재니 31.6%(n=5,004) 였는데 화면은 계속 26.8% 이라고 말하고 있었습니다.
+#    breadth_baseline() 으로 판정 파일에서 읽고, 없을 때만 이 값을 씁니다.
+BREADTH_BASELINE = 26.8
+
+
+def breadth_baseline(verdict: dict | None) -> float:
+    """정배열 폭 모델의 기준선(%) — 판정 파일에서 그때그때 읽습니다 (101차).
+
+    H11 의 기준선은 "모든 섹터·주"라 H11·H11b 가 같은 값을 씁니다.
+    판정 파일에 없으면 문서화된 예비값(BREADTH_BASELINE)을 돌려줍니다 —
+    지어내지 않고, 어디서 온 값인지 주석에 남깁니다.
+    """
+    entry = ((verdict or {}).get("가설") or {}).get("H11_섹터정배열폭_60") or {}
+    rate = ((entry.get("신규(판정)") or {}).get("기준선") or {}).get("rate")
+    return float(rate) if rate is not None else BREADTH_BASELINE
 
 
 def surprise_sector_rows(surprise: dict | None, quarters: int = 2) -> list[dict]:
@@ -408,6 +559,103 @@ def breadth_zone(breadth: float | None) -> dict:
     return {"zone": "판단 불가", "rate": None, "note": ""}
 
 
+# ---------------------------------------------------------------------------
+# 무거운 계산 캐시 (102차) — 화면이 57초 걸리던 문제
+# ---------------------------------------------------------------------------
+# 10년 확장 뒤 마지막 구역까지 그려지는 데 57~59초가 걸렸습니다. 짐작하지
+# 않고 하나씩 재 봤습니다 (412px 실측):
+#
+#   sm.confirmation_rows   22.7초   ← 1위 (전체의 40%)
+#   sm.current_breadth      5.1초
+#   sm.cycle_series ×2      5.6초
+#   dataset.build           1.4초
+#                          ------
+#                          약 35초 + 스트림릿 그리기
+#
+# 이 값들은 **로봇이 새 데이터를 커밋할 때만** 바뀝니다. 같은 스냅샷을
+# 화면 새로 고칠 때마다 다시 계산할 이유가 없습니다.
+#
+# ⚠️ 캐시는 **속도만** 바꿉니다. 같은 입력이면 값이 똑같아야 하고, 그것을
+#    시험으로 못박습니다 — 캐시가 값을 바꾸면 그건 고쳐야 할 결함입니다.
+#    (측정 코드는 한 줄도 안 건드렸습니다. 계산 결과를 다시 쓰기만 합니다.)
+def _cached(fn):
+    """스트림릿이 있으면 결과를 담아 두고, 없으면 그냥 돌립니다.
+
+    시험은 스트림릿 없이 app 을 불러오므로 그대로 통과해야 합니다.
+    """
+    try:
+        import streamlit as st
+    except Exception:
+        return fn
+    try:
+        return st.cache_data(show_spinner=False)(fn)
+    except Exception:
+        return fn
+
+
+def snapshot_key(snapshot: dict | None) -> str:
+    """이 스냅샷을 가리키는 짧은 이름표 — 캐시를 언제 버릴지 정합니다.
+
+    로봇이 새로 커밋하면 saved_at 이 바뀌므로 캐시가 저절로 갈립니다.
+    saved_at 이 없으면 종목 수라도 씁니다 (없는 값을 지어내지 않습니다).
+    """
+    if not snapshot:
+        return "없음"
+    return str(snapshot.get("saved_at") or f"종목{len(snapshot.get('tickers') or [])}")
+
+
+# 아래 함수들의 앞머리 `_ds` 는 **밑줄로 시작**합니다 — 스트림릿은 밑줄로
+# 시작하는 인자를 캐시 열쇠에서 뺍니다. 큰 표를 통째로 해시하면 그 자체가
+# 몇 초씩 걸리기 때문입니다. 대신 `키`(스냅샷 이름표)로 갈아 끼웁니다.
+@_cached
+def cached_dataset(_snapshot: dict, 키: str) -> dict:
+    return dataset.build(_snapshot)
+
+
+@_cached
+def cached_confirmation_rows(_ds: dict, 키: str) -> list[dict]:
+    return sm.confirmation_rows(_ds)
+
+
+@_cached
+def cached_current_breadth(_ds: dict, 키: str) -> list[dict]:
+    return sm.current_breadth(_ds)
+
+
+@_cached
+def cached_cycle_series(_ds: dict, members: tuple, base_day: str,
+                        since: str, 키: str) -> list[dict]:
+    return sm.cycle_series(_ds, list(members), base_day, since=since)
+
+def breadth_verdict_lines(verdict: dict) -> list[str]:
+    """정배열 폭 모델의 판정 상태 줄 — **판정 파일에서 그때그때 읽습니다** (101차).
+
+    ⚠️ 왜 함수로 뺐나: 예전에는 이 문장이 화면 코드 안에 **글자로 박혀**
+    있었습니다 — "H11 실측 9.4% vs 기준선 26.8%. 정배열이 다 찬 뒤 사는
+    것은 **오히려 불리**했습니다." 10년 표본으로 다시 재니 **31.6% vs
+    31.6% (n=187)** 이라 그 문장은 거짓말이 돼 있었습니다.
+
+    화면이 옛 숫자를 사실처럼 말하는 것은 정직화 원칙 위반이고, 박힌
+    글자는 데이터가 바뀌어도 아무도 모르게 남습니다. 그래서 판정 파일을
+    읽게 하고, 시험으로 못박습니다.
+    """
+    lines = ["**이 모델의 판정 상태 (정직화)**  "]
+    for name, label in (
+        ("H11_섹터정배열폭_60", "H11(폭 60% 첫 돌파)"),
+        ("H11b_섹터정배열폭_80", "H11b(폭 80% 첫 돌파)"),
+    ):
+        entry = (verdict.get("가설") or {}).get(name) or {}
+        judged = entry.get("신규(판정)") or {}
+        line = signal_summary(entry, judged.get("신호") or {},
+                              judged.get("기준선") or {})
+        lines.append(f"· **{label} — {entry.get('판정', '판정 없음')}**: {line}  ")
+    lines.append(
+        "· **H12(폭 40~59% 진입) — 판정 대기**: 탐색에서 가장 좋았으나 "
+        "탐색값은 근거가 못 되어, 2026-08-14 이후 새 신호로만 판정합니다 (34차).  "
+    )
+    lines.append("· 따라서 위 순위는 **아직 매수 근거가 아닌 관찰**입니다.")
+    return lines
+
 def live_signal_rows(ds: dict, days: int = 90) -> list[dict]:
     """지금 채택 신호(H9·H10)가 켜진 종목 — 최근 days 일 발표 중.
 
@@ -464,15 +712,45 @@ def main():
     surprise = load_json("surprise.json")
     is_v3 = verdict_is_v3(verdict)
     snapshot = dataset.load()
-    ds = dataset.build(snapshot)
+    키 = snapshot_key(snapshot)
+    ds = cached_dataset(snapshot, 키)
 
     if log:
         st.caption(f"로봇 마지막 수집: {str(log.get('ran_at', '?'))[:16]} UTC · "
                    f"{log.get('summary', '')}")
+    # 판정이 옛 코드로 계산됐으면 맨 위에서 알립니다 (52차 감사 수리 ⑤)
+    code_warning = verdict_code_warning(verdict)
+    if code_warning:
+        st.warning(code_warning)
+
     price_dates = ds["prices"][ds["benchmark"]]["dates"]
+    # ⚠️ "약 5년"이 **글자로 박혀** 있었습니다 (101차). 수집을 10년으로
+    #    늘린 뒤에도 그대로 5년이라 적혀, 날짜(2016~2026)와 대놓고
+    #    어긋났습니다. 날짜에서 계산합니다.
+    _years = (date.fromisoformat(price_dates[-1])
+              - date.fromisoformat(price_dates[0])).days / 365.25
     st.caption(f"측정 기간: {price_dates[0]} ~ {price_dates[-1]} "
-               f"(주가 {len(price_dates):,}거래일 · 약 5년) · "
+               f"(주가 {len(price_dates):,}거래일 · 약 {_years:.0f}년) · "
                "전망: 다음 1분기 (가이던스·컨센서스)")
+
+    # 재료가 얼마나 더러운지 감추지 않습니다 (73차 — 65차 §④ 등록 방침).
+    # 자동으로 지우지 않고 **세어서 보여 주기만** 합니다: 지울 규칙을
+    # 만들면 진짜 실적까지 지운다는 것을 66차·73차에 실측했습니다.
+    with st.expander("재료 상태 (수집 데이터 오염 조사)"):
+        st.caption(audit_data.one_line(ds["quarters"]))
+        튄칸 = audit_data.spike_cells(ds["quarters"])[:15]
+        if 튄칸:
+            st.caption("이웃 분기보다 크게 튄 칸 (큰 것부터 15개) — 참고용:")
+            # 휴대폰 폭(412px)에서 열이 가려지지 않도록 4열로 줄이고,
+            # 앞·뒤 이웃은 한 칸에 모아 적습니다.
+            짧은칸 = {"adj_eps": "조정EPS", "adjusted_ebitda": "EBITDA",
+                    "gaap_eps": "GAAP"}
+            st.dataframe(pd.DataFrame([
+                {"종목": r["종목"], "칸": 짧은칸.get(r["칸"], r["칸"]),
+                 "값": f"{r['값']:,.2f}",
+                 "앞→뒤": f"{r['앞']:,.2f} → {r['뒤']:,.2f}",
+                 "배수": f"{r['배수']:.1f}배"} for r in 튄칸
+            ]), width="stretch", hide_index=True)
 
     # =====================================================================
     # 0. 최상단 메인 — 주도 교체 확인 신호 (H14, 38차 등록)
@@ -484,7 +762,7 @@ def main():
         "**동시에** 나타난 곳입니다. 단순 순환(주가만 오르고 되돌아감)과 "
         "진짜 주도 교체를 가르려는 신호입니다."
     )
-    confirm_rows = sm.confirmation_rows(ds)
+    confirm_rows = cached_confirmation_rows(ds, 키)
     fired = [r for r in confirm_rows if r["확인"]]
     if fired:
         for row in fired:
@@ -529,7 +807,7 @@ def main():
         "시장을 20%p 이상 이긴 비율**(34차 탐색값)입니다."
     )
 
-    breadth_rows = sm.current_breadth(ds)
+    breadth_rows = cached_current_breadth(ds, 키)
     measured = [r for r in breadth_rows if r["폭"] is not None]
     if measured:
         st.altair_chart(
@@ -559,19 +837,12 @@ def main():
         st.markdown(
             f"**{row['섹터']}** {row['폭']:.0f}% ({row['종목수']}종목){moved}  \n"
             f"{row['상태']} — {zone['zone']} · 이 구간의 과거 1년 폭등률 "
-            f"**{zone['rate']}%** (기준선 {BREADTH_BASELINE}%)  \n"
+            f"**{zone['rate']}%** (기준선 {breadth_baseline(verdict)}%)  \n"
             f"<span style='color:gray;font-size:0.85em'>{zone['note']}</span>",
             unsafe_allow_html=True,
         )
 
-    st.warning(
-        "**이 모델의 판정 상태 (정직화)**  \n"
-        "· **H11(폭 60% 첫 돌파) — 미채택**: 실측 9.4% vs 기준선 26.8%. "
-        "정배열이 다 찬 뒤 사는 것은 **오히려 불리**했습니다 (33차).  \n"
-        "· **H12(폭 40~59% 진입) — 판정 대기**: 탐색에서 33.3%로 가장 좋았으나 "
-        "탐색값은 근거가 못 되어, 2026-08-14 이후 새 신호로만 판정합니다 (34차).  \n"
-        "· 따라서 위 순위는 **아직 매수 근거가 아닌 관찰**입니다."
-    )
+    st.warning("\n".join(breadth_verdict_lines(verdict)))
 
     # =====================================================================
     # 1-2. AI 사이클 추적 (37차) — 저장소 주인 관찰 국면의 실제 순서
@@ -584,8 +855,10 @@ def main():
         "세 선의 **순서**가 이 모델의 핵심 질문입니다."
     )
     ai_members, non_ai = sm.ai_members(ds)
-    ai_series = sm.cycle_series(ds, ai_members, "2024-12-31", since="2025-01-01")
-    non_series = sm.cycle_series(ds, non_ai, "2024-12-31", since="2025-01-01")
+    ai_series = cached_cycle_series(ds, tuple(ai_members), "2024-12-31",
+                                    "2025-01-01", 키)
+    non_series = cached_cycle_series(ds, tuple(non_ai), "2024-12-31",
+                                     "2025-01-01", 키)
     if ai_series:
         import altair as alt
         frames = []
@@ -717,10 +990,7 @@ def main():
             s, b = judged.get("신호") or {}, judged.get("기준선") or {}
             label = HYPOTHESIS_LABELS.get(name, name)
             detail = HYPOTHESIS_DETAILS.get(name, "")
-            rate_text = (
-                f"실측 {s.get('rate')}% (n={s.get('n')}) vs 기준선 {b.get('rate')}%"
-                if s.get("n") else "표본이 아직 없습니다"
-            )
+            rate_text = signal_summary(entry, s, b)
             st.markdown(
                 f"**{label}** — {entry.get('판정', '?')}  \n"
                 f"{detail}  \n"

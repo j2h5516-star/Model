@@ -61,6 +61,164 @@ def quarter_row(**overrides) -> dict:
     return row
 
 
+
+def test_repeated_revenue_is_placeholder_not_measurement():
+    """한 종목에 똑같은 매출값이 4분기 이상 나오면 자리채움입니다 (68차).
+
+    실물: OXY 매출 1 이 23분기 중 20개, BAC 매출 2,000,000 이 24분기 중
+    17개, COF 매출 **-5,000,000**(음수!)이 8개.
+
+    매출은 잣대가 아니지만 **다른 가드들의 잣대**입니다 — 형제 행 잔해
+    판정(100배)·마진 검사·EBITDA 단위 검사가 다 매출을 기준으로 씁니다.
+    가짜 매출이 통행하면 그 가드들이 틀린 기준으로 판단합니다.
+    """
+    rows = [quarter_row(filing_date=f"2024-{m:02d}-28",
+                        announced_date=f"2024-{m:02d}-28",
+                        period_label=f"Q{m}", revenue=2_000_000.0)
+            for m in (1, 4, 7, 10)]
+    result = dataset.build(make_snapshot(eps={"AAA": rows}))
+    kept = result["quarters"]["AAA"]
+    assert all(r["revenue"] is None for r in kept), kept
+    assert any("자리채움" in n for n in result["notes"]), result["notes"]
+
+
+def test_varying_revenue_is_left_alone():
+    """분기마다 다른 진짜 매출은 건드리면 안 됩니다."""
+    rows = [quarter_row(filing_date=f"2024-{m:02d}-28",
+                        announced_date=f"2024-{m:02d}-28",
+                        period_label=f"Q{m}",
+                        revenue=1_000_000.0 + m * 7_000)
+            for m in (1, 4, 7, 10)]
+    kept = dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]
+    assert all(r["revenue"] is not None for r in kept), kept
+
+
+def test_three_repeats_are_not_enough():
+    """3개까지는 우연일 수 있으므로 건드리지 않습니다 (문턱은 4).
+
+    한쪽으로만 막으면 반대로 넘어집니다 — 너무 예민하면 진짜 매출을
+    지웁니다.
+    """
+    rows = [quarter_row(filing_date=f"2024-{m:02d}-28",
+                        announced_date=f"2024-{m:02d}-28",
+                        period_label=f"Q{m}", revenue=2_000_000.0)
+            for m in (1, 4, 7)]
+    rows.append(quarter_row(filing_date="2024-11-28",
+                            announced_date="2024-11-28",
+                            period_label="Q11", revenue=3_100_000.0))
+    kept = dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]
+    assert all(r["revenue"] is not None for r in kept), kept
+
+
+def test_impossible_gross_margin_is_dropped():
+    """이익률은 100%를 넘을 수 없습니다 (매출총이익 ≤ 매출) — 69차."""
+    for bad in (101.0, 250.0, -150.0):
+        snap = make_snapshot(eps={"AAA": [quarter_row(gross_margin_pct=bad)]})
+        result = dataset.build(snap)
+        assert result["quarters"]["AAA"][0]["gross_margin_pct"] is None, bad
+        assert any("매출총이익률" in n for n in result["notes"]), bad
+
+
+def test_normal_gross_margin_passes():
+    """정상 범위(적자 마진 포함)는 그대로 통과해야 합니다."""
+    for ok in (63.4, 0.0, 100.0, -30.0, -100.0):
+        snap = make_snapshot(eps={"AAA": [quarter_row(gross_margin_pct=ok)]})
+        row = dataset.build(snap)["quarters"]["AAA"][0]
+        assert row["gross_margin_pct"] == ok, ok
+
+
+# ---------------------------------------------------------------------------
+# 67차 — 같은 발표일에 두 행 (배당금이 EPS 자리에 들어온 실물)
+# ---------------------------------------------------------------------------
+def test_same_day_siblings_are_both_dropped():
+    """한 발표일에 잣대값 행이 둘이면 **둘 다** 버립니다.
+
+    실물(JPM 2025-04-11): gaap_eps 1.4 와 5.08 이 같은 날에 함께 있습니다.
+    1.4 는 분기 **배당금**이고(1.15→1.25→1.40→1.50 인상 일정과 일치),
+    매출도 22.6 으로 말이 안 됩니다(실제 17,653 백만). 두 행이 번갈아
+    남아 이익 시계열이 톱니가 됐습니다.
+
+    "큰 쪽이 진짜"로 고르지 않는 이유: 크기 규칙은 54차에 **진짜 실적
+    하락 71건을 지운** 사고를 냈습니다. 매출로도 못 가릅니다 — 실물에서
+    **가짜 행 매출이 더 큰** 경우가 있습니다(20.3 vs 13.0).
+    """
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2026-03-31", announced_date="2026-04-11",
+                    period_label="26 Q1", gaap_eps=5.08, adj_eps=None,
+                    revenue=13.0),
+        quarter_row(filing_date="2026-03-30", announced_date="2026-04-11",
+                    period_label="25 Q4", gaap_eps=1.40, adj_eps=None,
+                    revenue=22.6),
+    ]})
+    result = dataset.build(snap)
+    rows = result["quarters"]["AAA"]
+    assert len(rows) == 2, "행 자체는 남습니다 (이력이므로)"
+    assert all(r["gaap_eps"] is None for r in rows), rows
+    assert any("같은 발표일" in n for n in result["notes"]), result["notes"]
+
+
+def test_single_row_per_day_is_untouched():
+    """하루에 한 행이면 건드리지 않습니다 — 멀쩡한 값을 지우면 안 됩니다."""
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2026-03-31", announced_date="2026-04-11",
+                    gaap_eps=5.08, adj_eps=1.25, revenue=17_653_000_000.0),
+        quarter_row(filing_date="2026-06-30", announced_date="2026-07-11",
+                    gaap_eps=5.25, adj_eps=1.30, revenue=17_701_000_000.0),
+    ]})
+    rows = dataset.build(snap)["quarters"]["AAA"]
+    assert [r["gaap_eps"] for r in rows] == [5.08, 5.25], rows
+    assert [r["adj_eps"] for r in rows] == [1.25, 1.30], rows
+
+
+def test_rows_without_announced_date_are_not_grouped():
+    """발표일이 없는 행끼리는 같은 날로 묶으면 안 됩니다.
+
+    None 을 하나의 날짜처럼 묶으면 발표일 없는 행이 서로를 지웁니다.
+    """
+    # 매출도 무너뜨려 둡니다 — 안 그러면 매출 검사에서 먼저 걸러져
+    # 이 시험이 "발표일로 묶는가"를 가리지 못합니다 (가짜 초록불).
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2026-03-31", announced_date=None,
+                    revenue=13.0, gaap_eps=5.08),
+        quarter_row(filing_date="2026-06-30", announced_date=None,
+                    revenue=22.6, gaap_eps=5.25),
+    ]})
+    rows = dataset.build(snap)["quarters"]["AAA"]
+    assert [r["gaap_eps"] for r in rows] == [5.08, 5.25], rows
+
+
+def test_same_day_drop_is_recorded_not_silent():
+    """조용히 버리지 않습니다 — 무엇을 왜 버렸는지 notes 에 남깁니다."""
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(announced_date="2026-04-11", period_label="A",
+                    revenue=13.0, gaap_eps=5.0),
+        quarter_row(announced_date="2026-04-11", period_label="B",
+                    revenue=22.6, gaap_eps=1.4),
+    ]})
+    notes = [n for n in dataset.build(snap)["notes"] if "가릴 수 없어" in n]
+    assert len(notes) == 2, notes
+    assert any("A" in n for n in notes) and any("B" in n for n in notes), notes
+
+
+def test_one_good_revenue_sibling_is_left_to_the_ratio_rule():
+    """형제 중 매출이 멀쩡한 행이 있으면 이 가드는 손대지 않습니다.
+
+    그 경우는 기존 100배 규칙의 영역이고, 54차가 "비슷한 크기면 둘 다
+    남긴다"고 이미 정해 뒀습니다. 새 가드가 그 결정을 덮어쓰면 안 됩니다.
+    """
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2024-03-31", period_label="24 Q1",
+                    announced_date="2024-04-12", revenue=17_653.0,
+                    adj_eps=None, gaap_eps=4.45),
+        quarter_row(filing_date="2023-12-31", period_label="23 Q4",
+                    announced_date="2024-04-12", revenue=900.0,
+                    adj_eps=None, gaap_eps=1.15),
+    ]})
+    rows = {r["period_label"]: r for r in dataset.build(snap)["quarters"]["AAA"]}
+    assert rows["24 Q1"]["gaap_eps"] == 4.45, rows
+    assert rows["23 Q4"]["gaap_eps"] == 1.15, rows
+
+
 # ---------------------------------------------------------------------------
 # 값 검사 — 탈락은 "없음"으로, 고치지 않는다
 # ---------------------------------------------------------------------------
@@ -120,6 +278,213 @@ def test_real_op_income_passes_unit_guard():
     assert rows[0]["op_income"] == -30_000_000.0     # 정렬 후 첫 행 = 26 Q3
     assert rows[1]["op_income"] == 100_000_000.0
 
+
+def test_adjusted_ebitda_unit_mismatch_is_dropped():
+    """조정 EBITDA 단위 미환산(46차 감사 실물 85건)은 없음 처리.
+
+    가장 아픈 예: CIEN 25 Q3 157,962,000 → 25 Q4 **205,536**.
+    저장값으로는 99.9% 급감이지만 실제로는 205,536천 달러(2.06억)로
+    **증가**입니다. 이 오염이 광통신 묶음의 이익 델타를 통째로 뒤집어
+    주도섹터 판정을 틀리게 만들고 있었습니다.
+    """
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(revenue=1_047_000_000.0, adjusted_ebitda=205_536.0),   # 천 달러 착오
+        quarter_row(filing_date="2026-03-31", period_label="26 Q3",
+                    revenue=1_000_000_000.0, adjusted_ebitda=1_200_000_000.0),  # 매출 초과
+    ]})
+    result = dataset.build(snap)
+    rows = result["quarters"]["AAA"]
+    assert all(r["adjusted_ebitda"] is None for r in rows), rows
+    assert sum("EBITDA" in n for n in result["notes"]) >= 2, result["notes"]
+
+
+def test_real_adjusted_ebitda_passes_unit_guard():
+    """정상 EBITDA 마진(20%)과 소폭 적자는 그대로 통과해야 합니다."""
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(revenue=1_000_000_000.0, adjusted_ebitda=200_000_000.0),
+        quarter_row(filing_date="2026-03-31", period_label="26 Q3",
+                    revenue=1_000_000_000.0, adjusted_ebitda=-50_000_000.0),
+    ]})
+    rows = dataset.build(snap)["quarters"]["AAA"]
+    assert rows[0]["adjusted_ebitda"] == -50_000_000.0
+    assert rows[1]["adjusted_ebitda"] == 200_000_000.0
+
+
+
+def test_cumulative_value_in_quarterly_slot_is_dropped():
+    """누적(YTD·연간)값이 분기 칸에 들어온 것은 없음 처리 (52차 감사).
+
+    실물 QCOM: 분기 EPS 가 2.4~2.6 인데 2024-09-29 마감 행만 10.22 —
+    직전 4분기 합 9.77 과 거의 같다. 보도자료의 '연간' 칸을 문 것이다.
+    이런 값은 그 분기에 가짜 급등, 다음 분기에 가짜 급락을 한 쌍 만들어
+    이익 델타를 통째로 뒤집는다.
+    """
+    rows = []
+    day = 1
+    for i, value in enumerate([2.4, 2.5, 2.4, 2.6, 2.5, 2.5, 10.22, 2.6]):
+        rows.append(quarter_row(
+            filing_date=f"2024-{(i % 12) + 1:02d}-28",
+            announced_date=f"2024-{(i % 12) + 1:02d}-28",
+            # 매출은 분기마다 달라야 합니다 — 똑같으면 자리채움으로 걸립니다
+            revenue=1_000_000.0 + i * 1_000,
+            period_label=f"Q{i}", adj_eps=value))
+    result = dataset.build(make_snapshot(eps={"AAA": rows}))
+    kept = [r["adj_eps"] for r in result["quarters"]["AAA"]]
+    assert 10.22 not in kept, kept
+    assert kept.count(2.5) == 3 and 2.6 in kept, kept   # 정상값은 그대로
+    assert any("누적" in n for n in result["notes"]), result["notes"]
+
+
+def test_growth_quarter_is_not_mistaken_for_cumulative():
+    """빠르게 크는 회사의 정상 분기를 누적으로 오인하면 안 됩니다.
+
+    직전 4분기 합과 **닮지 않으면** 건드리지 않습니다.
+    """
+    rows = []
+    for i, value in enumerate([0.10, 0.15, 0.22, 0.33, 0.50, 0.75, 1.10, 1.60]):
+        rows.append(quarter_row(
+            filing_date=f"2024-{(i % 12) + 1:02d}-28",
+            announced_date=f"2024-{(i % 12) + 1:02d}-28",
+            # 매출은 분기마다 달라야 합니다 — 똑같으면 자리채움으로 걸립니다
+            revenue=1_000_000.0 + i * 1_000,
+            period_label=f"Q{i}", adj_eps=value))
+    kept = [r["adj_eps"] for r in
+            dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]]
+    assert kept == [0.10, 0.15, 0.22, 0.33, 0.50, 0.75, 1.10, 1.60], kept
+
+
+def test_loss_quarter_is_never_treated_as_cumulative():
+    """적자(음수) 분기는 누적값일 수 없으므로 건드리지 않습니다."""
+    rows = []
+    for i, value in enumerate([2.0, 2.1, 2.0, 2.2, 2.1, 2.0, -8.3, 2.1]):
+        rows.append(quarter_row(
+            filing_date=f"2024-{(i % 12) + 1:02d}-28",
+            announced_date=f"2024-{(i % 12) + 1:02d}-28",
+            # 매출은 분기마다 달라야 합니다 — 똑같으면 자리채움으로 걸립니다
+            revenue=1_000_000.0 + i * 1_000,
+            period_label=f"Q{i}", adj_eps=value))
+    kept = [r["adj_eps"] for r in
+            dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]]
+    assert -8.3 in kept, kept
+
+
+def test_cumulative_guard_uses_only_past_values():
+    """판정에 쓰는 것은 그 행보다 **앞선** 값들뿐 — 미래를 보지 않습니다.
+
+    앞부분이 똑같은 두 자료를 넣되 **뒤에만** 아주 큰 값을 붙입니다.
+    미래까지 보고 중앙값을 내면 그 큰 값이 중앙값을 끌어올려 앞의 누적값이
+    살아남습니다. 앞엣값의 운명이 뒤엣값에 좌우되면 미래 엿보기입니다.
+    """
+    head = [1.0, 1.0, 1.0, 1.0, 4.2]      # 4.2 = 직전 4분기 합 4.0 과 거의 같음
+
+    def build(tail):
+        rows = [quarter_row(filing_date=f"2024-{(i % 12) + 1:02d}-28",
+                            period_label=f"Q{i}", adj_eps=v)
+                for i, v in enumerate(head + tail)]
+        got = dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]
+        return [r["adj_eps"] for r in got][:len(head)]
+
+    assert build([])[-1] is None, "누적값 4.2 를 못 잡았습니다"
+    assert build([50.0, 50.0, 50.0, 50.0])[-1] is None, (
+        "뒤에 붙은 큰 값이 앞엣값 판정을 바꿨습니다 — 미래를 보고 있습니다")
+
+
+
+def test_yearly_values_hidden_behind_each_other_are_all_dropped():
+    """오염이 오염을 가려 주는 것을 뚫어야 합니다 (73차, 실물 VZ·GS).
+
+    VZ 는 **1월 발표 행마다 연간 EPS** 가 들어와 있습니다 (분기 실제는
+    1.2 안팎인데 4.7~5.2). 검사는 "직전 4분기 합과 거의 같은가"를 보는데,
+    그 직전 4분기 안에 앞의 연간값이 끼어 있으면 합이 8.4 로 부풀어
+    "합과 다르다"고 판정돼 뒤의 연간값이 살아남습니다.
+
+    그래서 한 칸 지울 때마다 처음부터 다시 재야 합니다. 한 번만 재는
+    코드로 되돌리면 뒤의 두 칸(4.80 · 4.80)이 살아남아 이 검사가
+    빨간 불이 됩니다.
+    """
+    분기 = [1.18, 1.22, 1.19, 1.21]        # 네 분기 합이 정확히 4.80
+    값들 = (분기 + [4.80]                    # ← 연간값 ①
+            + [1.18, 1.22, 1.19] + [4.80]   # ← 연간값 ② (①에 가려짐)
+            + [1.21, 1.18, 1.22] + [4.80])  # ← 연간값 ③ (②에 가려짐)
+    def 날짜(i):
+        """13개 행이 필요하므로 해를 넘겨 가며 날짜를 만듭니다."""
+        return f"{2023 + i // 12}-{i % 12 + 1:02d}-28"
+
+    rows = [quarter_row(filing_date=날짜(i), announced_date=날짜(i),
+                        # 매출·날짜는 분기마다 달라야 합니다 (자리채움 가드)
+                        revenue=1_000_000.0 + i * 7_000,
+                        period_label=f"Q{i}", adj_eps=v)
+            for i, v in enumerate(값들)]
+
+    result = dataset.build(make_snapshot(eps={"AAA": rows}))
+    kept = [r["adj_eps"] for r in result["quarters"]["AAA"]]
+
+    assert 4.80 not in kept, f"연간값이 살아남았습니다: {kept}"
+    assert kept.count(None) == 3, f"세 칸 모두 지워져야 합니다: {kept}"
+    assert len([v for v in kept if v is not None]) == 10, kept
+    누적메모 = [n for n in result["notes"] if "누적" in n]
+    assert len(누적메모) == 3, 누적메모
+
+
+def test_parse_debris_row_is_dropped():
+    """같은 발표일의 형제 행보다 매출이 100배 작으면 파싱 잔해로 보고 버립니다.
+
+    실물 JPM(원문 확증): 같은 발표일에
+      · 매출 17,653 · gaap_eps 4.45  ← 진짜 분기 실적
+      · 매출     19.3 · gaap_eps 1.15  ← **분기 배당금**이 EPS 칸에 들어옴
+    이 잔해가 남으면 JPM 델타 9쌍이 전부 '하락'으로 읽힙니다.
+    """
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2024-03-31", period_label="24 Q1",
+                    announced_date="2024-04-12", revenue=17_653.0,
+                    adj_eps=None, gaap_eps=4.45),
+        quarter_row(filing_date="2023-09-30", period_label="23 Q3",
+                    announced_date="2024-04-12", revenue=19.3,
+                    adj_eps=None, gaap_eps=1.15),
+    ]})
+    result = dataset.build(snap)
+    rows = {r["period_label"]: r for r in result["quarters"]["AAA"]}
+    assert rows["24 Q1"]["gaap_eps"] == 4.45, rows       # 진짜는 남는다
+    assert rows["23 Q3"]["gaap_eps"] is None, rows       # 잔해는 버린다
+    assert any("잔해" in n for n in result["notes"]), result["notes"]
+
+
+def test_millions_revenue_rows_are_not_mistaken_for_debris():
+    """매출을 **백만 달러 단위**로 적는 회사의 정상 행을 지우면 안 됩니다.
+
+    '매출이 작다'만으로 자르면 AMD 4,313 · MCHP 1,649 같은 정상 행 172칸이
+    함께 지워집니다. 형제 행이 없으면 건드리지 않습니다.
+    """
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2024-03-31", period_label="24 Q1",
+                    announced_date="2024-04-30", revenue=4_313.0,
+                    adj_eps=0.73, gaap_eps=0.75),
+        quarter_row(filing_date="2024-06-30", period_label="24 Q2",
+                    announced_date="2024-07-30", revenue=5_887.0,
+                    adj_eps=1.13, gaap_eps=0.56),
+    ]})
+    rows = dataset.build(snap)["quarters"]["AAA"]
+    assert [r["adj_eps"] for r in rows] == [0.73, 1.13], rows
+    assert [r["gaap_eps"] for r in rows] == [0.75, 0.56], rows
+
+
+def test_sibling_rows_of_similar_size_are_both_kept():
+    """형제 행이라도 매출 차이가 100배 미만이면 둘 다 남깁니다."""
+    snap = make_snapshot(eps={"AAA": [
+        quarter_row(filing_date="2024-03-31", period_label="24 Q1",
+                    announced_date="2024-04-12", revenue=17_653.0, gaap_eps=4.45),
+        quarter_row(filing_date="2023-12-31", period_label="23 Q4",
+                    announced_date="2024-04-12", revenue=900.0, gaap_eps=1.15),
+    ]})
+    rows = dataset.build(snap)["quarters"]["AAA"]
+    assert all(r["gaap_eps"] is not None for r in rows), rows
+
+
+def test_internal_revenue_marker_does_not_leak():
+    """잔해 판정에 쓴 내부 표시는 밖으로 나가면 안 됩니다."""
+    snap = make_snapshot(eps={"AAA": [quarter_row(revenue=3.55)]})
+    for row in dataset.build(snap)["quarters"]["AAA"]:
+        assert "_raw_revenue" not in row, row
 
 def test_non_number_becomes_none():
     """숫자가 아닌 값(NaN·문자)은 고치지 않고 없음 처리합니다."""

@@ -175,7 +175,7 @@ def test_gauge_counts_fresh_newhigh_ratio():
         "A": _history_rows([1, 1, 1, 1, 2]),   # 마지막 발표 = 신고점
         "B": _history_rows([1, 1, 1, 1, 1]),   # 마지막 발표 = 아님
     })
-    series = me.gauge_series(ds)
+    series = me.gauge_series(ds, min_tickers=1)   # 규칙만 보는 시험 — 분모 최소치는 따로 시험합니다
     # 두 종목의 5번째 발표(2025-01-30) 직후 시점: 신고점 1/2 = 50%
     value = me.gauge_at(series, "2025-02-10")
     assert value == 50.0, value
@@ -186,18 +186,52 @@ def test_gauge_counts_fresh_newhigh_ratio():
 
 def test_gauge_h5_fixed_threshold():
     ds = _mini_ds({"A": _history_rows([1, 1, 1, 1, 2])})
-    series = me.gauge_series(ds)
+    series = me.gauge_series(ds, min_tickers=1)   # 규칙만 보는 시험 — 분모 최소치는 따로 시험합니다
     assert me.gauge_h5_on(series, "2025-02-10") is True     # 100% ≥ 20%
 
 
 def test_gauge_h5b_needs_warmup():
     """이력 52주 미만이면 H5b 는 판단 불가(None)여야 합니다."""
     ds = _mini_ds({"A": _history_rows([1, 1, 1, 1, 2])})
-    series = me.gauge_series(ds)
+    series = me.gauge_series(ds, min_tickers=1)   # 규칙만 보는 시험 — 분모 최소치는 따로 시험합니다
     # 5번째 발표(2025-01-29) 직후 — 첫 판단 가능 게이지 값은 있으나
     # 그 이전 이력이 없다시피 하므로 H5b 는 판단 불가여야 합니다
     assert me.gauge_at(series, "2025-02-10") is not None
     assert me.gauge_h5b_on(series, "2025-02-10") is None
+
+
+def test_게이지는_분모가_작으면_값을_내지_않는다():
+    """비율은 분모가 작으면 시장이 아니라 몇 종목의 형편입니다 (100차).
+
+    ⚠️ 왜 이 시험이 필요한가 — 10년으로 늘리자 표본 앞머리가 드러났고,
+    **2017년의 "시장 전체 실적 신기록 폭 85.7%" 가 평균 2.4개 종목으로
+    잰 값**이었습니다. 그 허상이 H5b 의 확장 중앙값 문턱을 영구히
+    끌어올려 2023~2026 내내 신호가 한 번도 못 뜨게 만들었습니다.
+
+    분모가 최소치에 못 미치면 **없음**이어야 합니다 — 억지로 비율을
+    내지 않는 것이 "없음은 없음으로" 원칙입니다.
+    """
+    ds = _mini_ds({
+        "A": _history_rows([1, 1, 1, 1, 2]),
+        "B": _history_rows([1, 1, 1, 1, 1]),
+    })
+    # 종목이 2개뿐 — 최소치 10 에 한참 못 미친다
+    막힘 = me.gauge_series(ds)
+    assert me.gauge_at(막힘, "2025-02-10") is None, (
+        "종목 2개로 시장의 폭을 말하면 안 된다"
+    )
+    # 최소치를 낮추면 같은 자료로 값이 나온다 (규칙 자체는 그대로)
+    열림 = me.gauge_series(ds, min_tickers=1)
+    assert me.gauge_at(열림, "2025-02-10") == 50.0
+
+
+def test_섹터_게이지는_최소치에_안_걸린다():
+    """섹터는 원래 종목이 적고(1~3개) 화면에 종목수를 함께 보여 주므로,
+    부르는 쪽이 최소치를 1 로 낮춥니다 (app.py). 판정에 안 쓰이는 값을
+    최소치로 죽이면 관찰 자체가 사라집니다."""
+    ds = _mini_ds({"A": _history_rows([1, 1, 1, 1, 2])})
+    섹터 = me.gauge_series(ds, tickers=["A"], min_tickers=1)
+    assert me.gauge_at(섹터, "2025-02-10") == 100.0
 
 
 def test_gauge_h5b_median_rule():
@@ -207,7 +241,7 @@ def test_gauge_h5b_median_rule():
     ds = _mini_ds({
         "A": _history_rows([1] * 11 + [30]),
     }, price_days=800)
-    series = me.gauge_series(ds)
+    series = me.gauge_series(ds, min_tickers=1)   # 규칙만 보는 시험 — 분모 최소치는 따로 시험합니다
     # 게이지는 그 날짜 "직전 주까지"의 상태입니다 — 발표(2026-10-28) 당일에
     # 조회하면 아직 0%(자기 발표를 자기 조건에 넣지 않음), 다음 주에는 100%.
     assert me.gauge_at(series, "2026-10-28") == 0.0

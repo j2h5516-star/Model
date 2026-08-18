@@ -185,6 +185,172 @@ def test_eps_survives_the_merge_into_quarter_rows():
     assert row["gaap_eps"] == -0.83
 
 
+def test_보도자료가_붙었는지_표시가_남는다():
+    """조정 EPS 가 빈 칸일 때 "수집 실패"인지 "회사가 안 준 것"인지
+    가릴 수 있어야 합니다 (98차 계기).
+
+    ⚠️ 이 시험이 왜 필요한가 — 97차에 제가 `source` 로 이걸 재려다
+    **틀린 진단을 냈습니다.** `source` 는 **논갭 영업이익의 출처**만
+    적는 칸이라, 보도자료가 붙었어도 그 안에 논갭 영업이익이 없으면
+    XBRL 값인 '근사치'로 남습니다. 실물 FN·QCOM·TER 는 조정 EPS 를
+    보도자료에서 읽었는데도 전 행이 '근사치'였습니다.
+
+    그래서 **논갭 영업이익이 없는 보도자료**를 일부러 물려, 그때도
+    "붙었다"가 남는지를 못박습니다. 이 경우가 바로 제가 틀렸던 자리입니다.
+    """
+    # ① 논갭 영업이익이 **없는** 보도자료 (source 는 '근사치'로 남는다)
+    row = {"op_income": 100 * M, "source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row, {"adj_eps": 3.72, "op_income": None})
+    assert row["press_matched"] is True, "보도자료가 붙었는데 표시가 안 남았다"
+    assert row["source"] == cfg.SRC_APPROX, (
+        "이 시험의 전제 — 논갭 영업이익이 없으면 source 는 '근사치'로 남는다. "
+        "전제가 깨지면 시험이 재려던 것을 못 잰다."
+    )
+
+    # ② 보도자료가 **안 붙은** 행은 False 여야 한다.
+    #    "없음"이 아니라 **False** 여야 세는 쪽에서 구분이 된다
+    #    (칸 자체가 없으면 옛 데이터와 섞여 조용히 뭉개진다).
+    from sec_fundamentals import _apply_press_to_row  # noqa: F401
+    뼈대 = {"source": cfg.SRC_APPROX, "press_matched": False}
+    assert 뼈대["press_matched"] is False
+
+
+def test_보도자료_표시가_스냅샷까지_간다():
+    """계기는 저장돼야 쓸모가 있습니다 — 69차에 매출총이익률을 읽고도
+    스냅샷에 안 담아 개발 환경에서 쓸 수 없던 사고가 있었습니다."""
+    import measure_store
+    assert "press_matched" in measure_store.EPS_FIELDS
+    rows = measure_store.eps_rows([
+        {"announced_date": "2026-05-04", "adj_eps": 3.72, "press_matched": True},
+        {"announced_date": "2026-02-04", "adj_eps": None, "press_matched": False},
+    ])
+    assert [r["press_matched"] for r in rows] == [True, False], rows
+
+
+def test_xbrl_value_is_kept_beside_the_press_value():
+    """보도자료가 덮어쓰기 **전**의 XBRL 값을 나란히 남겨야 합니다 (90차).
+
+    89차까지 실측한 오류(전년 열·9개월 누적·연간값·부문)는 전부
+    "숫자는 맞는데 자리를 잘못 짚은 것"이었습니다. XBRL 은 값마다
+    기간·단위·부문이 태그로 붙어 그 네 종류가 생길 수 없습니다.
+    어느 쪽을 본선으로 삼을지 **짐작이 아니라 숫자로** 정하려면
+    두 값이 다 남아 있어야 합니다.
+    """
+    row = {"gaap_eps": 1.96, "revenue": 10_236_000_000.0,
+           "gross_margin_pct": 77.0, "source": cfg.SRC_APPROX}
+    press = {"gaap_eps": 1.56, "revenue": 9_000_000_000.0,
+             "gross_margin_pct": 80.0, "op_income": None}
+    sf._apply_press_to_row(row, press)
+
+    # XBRL 값이 옆에 남아 있어야 합니다 (이 시험의 본래 목적)
+    assert row["gaap_eps_xbrl"] == 1.96
+    assert row["revenue_xbrl"] == 10_236_000_000.0
+    assert row["gross_margin_pct_xbrl"] == 77.0
+
+    # 본선 값 — 92차에 매출만 XBRL 우선으로 뒤집었습니다.
+    # (90차에는 셋 다 보도자료가 이겼고, 이 시험이 그 상태를 못박고
+    #  있었습니다. 91차 승부 결과 98:0 을 보고 매출만 바꿨으므로
+    #  시험도 함께 고칩니다 — 실물이 규칙을 이깁니다.)
+    assert row["revenue"] == 10_236_000_000.0, "매출은 XBRL 이 이겨야 합니다"
+    # 99차 — GAAP EPS 도 승부가 났습니다 (야후 심판, 갈린 칸 XBRL 61 : 보도자료 2.
+    # 전체 정확도 77.7% → 91.1%). 이 시험이 "아직 승부가 안 났다"를 못박고
+    # 있어 빨간 불이 났고, 실측이 나온 뒤라 시험 쪽이 낡은 것이므로 고칩니다.
+    assert row["gaap_eps"] == 1.96, "GAAP EPS 도 XBRL 이 이겨야 합니다 (99차)"
+    # 매출총이익률은 **여전히 보도자료**입니다 — 승부가 아니라 정의 차이라
+    # 뒤집지 않았습니다 (회사 논갭 vs 야후·XBRL 갭. 92차 ③)
+    assert row["gross_margin_pct"] == 80.0, "매출총이익률은 뒤집지 않습니다"
+    assert row["gross_margin_pct"] == 80.0, "이익률은 정의 차이라 안 뒤집습니다"
+
+
+def test_xbrl_companion_is_none_when_there_was_no_xbrl_row():
+    """XBRL 에 짝이 없던 분기는 **없음**이어야 합니다 — 지어내지 않습니다."""
+    row = {"source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row, {"gaap_eps": 1.56, "op_income": None})
+    assert row["gaap_eps_xbrl"] is None
+    assert row["revenue_xbrl"] is None
+
+
+def test_adjusted_eps_has_no_xbrl_companion():
+    """조정 EPS·조정 EBITDA 는 XBRL 에 없으므로 짝 칸을 만들지 않습니다.
+
+    없는 것을 만들면 다음 세션이 "XBRL 에도 조정 EPS 가 있구나"라고
+    잘못 읽습니다 (창작 금지).
+    """
+    assert "adj_eps" not in sf._XBRL_KEPT_FIELDS
+    assert "adjusted_ebitda" not in sf._XBRL_KEPT_FIELDS
+    row = {"adj_eps": 9.9, "source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row, {"adj_eps": 1.0, "op_income": None})
+    assert "adj_eps_xbrl" not in row
+
+
+def test_per_share_candidates_are_judged_by_cents_not_by_ratio():
+    """주당 금액은 **비율이 아니라 절대차**로 골라야 합니다 (92차).
+
+    옛 규칙(`low > 0 and high/low <= 2.0`)을 그대로 돌려 보면 EPS 를
+    거의 다 버립니다 — 적자면 `low > 0` 에서 탈락하고, 값이 작아 두 후보의
+    비가 2배를 쉽게 넘습니다. 실제로 XBRL GAAP EPS 가 스냅샷 3,066행에
+    **한 건도** 안 들어와 있었습니다.
+    """
+    # 사실상 같은 값 — 골라야 합니다 (부호와 무관하게)
+    assert sf._pick_close_value([-0.31, -0.30], per_share=True) is not None
+    assert sf._pick_close_value([0.00, 0.01], per_share=True) is not None
+    assert sf._pick_close_value([1.96, 1.96], per_share=True) == 1.96
+
+    # 진짜로 다른 값 — 골라선 안 됩니다 (기본 0.10 vs 희석 0.30 류)
+    assert sf._pick_close_value([0.10, 0.30], per_share=True) is None
+    assert sf._pick_close_value([1.96, 5.00], per_share=True) is None
+
+
+def test_money_candidates_keep_the_ratio_rule():
+    """금액은 자릿수가 커서 비율 판정이 맞습니다 — 건드리지 않았습니다."""
+    assert sf._pick_close_value([100.0, 150.0], per_share=False) == 150.0
+    assert sf._pick_close_value([100.0, 900.0], per_share=False) is None
+
+
+def test_per_share_unit_is_matched_by_word_not_by_spelling():
+    """주당 단위는 제공처마다 표기가 달라 **낱말로** 가려야 합니다 (92차).
+
+    글자 그대로 비교하면 한 글자만 어긋나도 전부 버려집니다.
+    """
+    for 표기 in ("USD/SHARES", "USD/shares", "USD-per-shares", "usd/share"):
+        assert sf._unit_matches(표기, "USD/SHARES"), 표기
+    # 금액 단위가 주당 자리로 새어 들면 자릿수가 무너집니다
+    assert not sf._unit_matches("USD", "USD/SHARES")
+    assert not sf._unit_matches("USD/SHARES", "USD")
+    assert sf._unit_matches("USD", "USD")
+
+
+def test_revenue_prefers_xbrl_but_falls_back_to_the_press_release():
+    """매출은 XBRL 우선, **없을 때만** 보도자료 (92차 — 91차 승부 반영).
+
+    91차 실측: 갈린 98칸에서 XBRL 98 : 보도자료 0.
+    다만 XBRL 이 없는 11칸 중 7칸은 보도자료가 맞던 값이라, 무조건
+    XBRL 로 두면 맞던 값을 잃습니다.
+    """
+    # 둘 다 있으면 XBRL 이 이긴다 (실물 ABBV — 보도자료는 부문 매출)
+    row = {"revenue": 15_423_000_000.0, "source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row, {"revenue": 11_762_000_000.0, "op_income": None})
+    assert row["revenue"] == 15_423_000_000.0
+    assert row["revenue_xbrl"] == 15_423_000_000.0
+
+    # XBRL 이 없으면 보도자료를 쓴다 (실물 ABNB — 보도자료가 맞던 값)
+    row2 = {"revenue": None, "source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row2, {"revenue": 3_096_000_000.0, "op_income": None})
+    assert row2["revenue"] == 3_096_000_000.0
+
+
+def test_gross_margin_is_deliberately_not_flipped():
+    """매출총이익률은 뒤집지 않습니다 — 승부가 아니라 **정의 차이**입니다.
+
+    보도자료는 회사가 발표한 논갭 이익률(ADI 69.4%)이고 XBRL·야후는
+    갭(61.0%)입니다. 심판이 갭 기준이라 XBRL 이 자동으로 이길 뿐입니다.
+    """
+    row = {"gross_margin_pct": 61.0, "source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row, {"gross_margin_pct": 69.4, "op_income": None})
+    assert row["gross_margin_pct"] == 69.4, "이익률까지 뒤집으면 안 됩니다"
+    assert row["gross_margin_pct_xbrl"] == 61.0
+
+
 def test_eps_only_release_is_still_accepted():
     """매출·영업이익을 못 읽어도 조정 EPS 가 있으면 실적발표로 인정합니다.
 
@@ -560,6 +726,556 @@ def test_slide_image_line_is_not_sentence_parsed():
             "Revenue Non-GAAP Earnings per Diluted Share Free Cash Flow "
             "3,900 8.00 550 35% 23%")
     assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
+
+# ---------------------------------------------------------------------------
+# 수식어 없는 "earnings per share" (47차 감사)
+# ---------------------------------------------------------------------------
+def test_bare_earnings_per_share_is_read():
+    """실물 TXN 문장: "earnings per share of $2.14".
+
+    GAAP·net·diluted 중 어느 수식어도 없어서 예전 라벨 다섯 개가 전부
+    놓쳤고, 그 결과 잣대 사다리를 못 넘어 측정에서 통째로 빠진 종목이
+    24개였습니다.
+    """
+    text = (
+        "TI reports second quarter 2026 financial results\n"
+        "DALLAS (July 22, 2026) - Texas Instruments Incorporated today "
+        "reported second quarter revenue of $5.46 billion, net income of "
+        "$1.98 billion and earnings per share of $2.14."
+    )
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True) == 2.14
+
+
+def test_bare_pattern_does_not_steal_nongaap():
+    """"adjusted earnings per share" 는 GAAP 값으로 잡히면 안 됩니다."""
+    text = "The company reported adjusted earnings per share of $3.10 for the quarter."
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True) is None
+    text2 = "Non-GAAP earnings per share was $1.55 in the fourth quarter."
+    assert sf.find_eps_value(text2, sf.LABELS_GAAP_EPS, exclude_nongaap=True) is None
+
+
+def test_specific_labels_still_win_first():
+    """수식어 없는 라벨은 **맨 뒤**에 있어야 합니다 — 실물 HD 2023-11-14.
+
+    실적표에는 Basic 과 Diluted 가 나란히 있고 Basic 이 **위**에 옵니다.
+    수식어 없는 라벨이 앞에 오면 Basic($3.83)을 먼저 물고, 정답인
+    Diluted($3.81)를 놓칩니다. 전수 비교로 확인한 실제 차이입니다
+    (원문 120건 중 3건에서 순서가 값을 바꿨습니다).
+    """
+    text = (
+        "in millions, except per share data\n"
+        "Basic earnings per share       $3.83     $4.25\n"
+        "Diluted earnings per share     $3.81     $4.24\n"
+    )
+    got = sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True)
+    assert got == 3.81, f"Basic 을 집었습니다: {got}"
+
+
+
+# ---------------------------------------------------------------------------
+# 은행·금융 표기 (50차) — "per common share" 와 "숫자가 이름 앞"
+# ---------------------------------------------------------------------------
+def test_per_common_share_is_read():
+    """실물: GS·WFC 는 "per **common** share" 로 씁니다.
+
+    이 한 낱말이 없어서 대형 은행 5곳이 통째로 측정에서 빠져 있었습니다.
+    """
+    gs = "Diluted earnings per common share (EPS)1 was $20.98 for the second quarter"
+    assert sf.find_eps_value(gs, sf.LABELS_GAAP_EPS, exclude_nongaap=True) == 20.98
+    wfc = "Diluted earnings per common share                 2.00    1.60"
+    assert sf.find_eps_value(wfc, sf.LABELS_GAAP_EPS, exclude_nongaap=True) == 2.00
+
+
+def test_bare_eps_of_is_read_but_footnotes_are_not():
+    """실물 BLK "EPS of $12.19" 는 읽고, GS 각주 "EPS1"·"EPS Impact" 는 안 읽습니다."""
+    blk = "EPS of $12.19, or $13.91 as adjusted"
+    assert sf.find_eps_value(blk, sf.LABELS_GAAP_EPS, exclude_nongaap=True) == 12.19
+    noise = "basic EPS1 and diluted EPS1 are shown in Note 21. EPS Impact was 3.00"
+    assert sf.find_eps_value(noise, sf.LABELS_GAAP_EPS, exclude_nongaap=True) is None
+
+
+def test_eps_before_per_share_phrase():
+    """실물 COF: "…or $4.73 per diluted common share" — 숫자가 이름 **앞**."""
+    cof = ("net income for the second quarter of 2026 of $3.0 billion, "
+           "or $4.73 per diluted common share, compared")
+    assert sf.find_eps_before_per_share(cof) == 4.73
+    loss = "net loss of $4.3 billion, or $(8.58) per diluted common share"
+    assert sf.find_eps_before_per_share(loss) == -8.58
+
+
+def test_eps_before_prefers_diluted_and_skips_basic():
+    """희석을 먼저 쓰고, basic 만 있으면 쓰지 않습니다."""
+    both = "or $3.83 per basic share and $3.81 per diluted share"
+    assert sf.find_eps_before_per_share(both) == 3.81
+    only_basic = "or $3.83 per basic share for the quarter"
+    assert sf.find_eps_before_per_share(only_basic) is None
+
+
+def test_eps_before_blocks_nongaap_and_forecast():
+    """논갭·전망 문맥은 GAAP 실적이 아닙니다 (사고 16 규칙 그대로)."""
+    assert sf.find_eps_before_per_share(
+        "adjusted net income, or $5.20 per diluted share, excluded charges") is None
+    assert sf.find_eps_before_per_share(
+        "The company expects full year results of $9.00 per diluted share.") is None
+
+# ---------------------------------------------------------------------------
+# 74차 — 원문 부탁 목록으로 확보한 실물 4건에서 나온 결함들
+# ---------------------------------------------------------------------------
+# 아래 문장은 전부 data/measure/raw/ 에 담겨 온 **실제 보도자료**에서
+# 그대로 옮긴 것입니다 (지어낸 예제가 아닙니다).
+
+def test_share_count_row_is_not_read_as_eps():
+    """주식 수 행을 EPS 로 읽으면 안 됩니다 (실물 UCTT 2026-04-28).
+
+    손익계산서 맨 아래에는 EPS 표 바로 다음에 **주식 수** 표가 붙는데,
+    그 제목도 "…per share" 로 끝납니다. 파서가 그 아래 45.3 을 물고
+    이름에 loss 가 있다고 부호까지 뒤집어 **−45.30** 으로 읽었습니다.
+    UCTT 는 세 해 연속 같은 사고를 냈습니다(−45.30 · −45.10 · −44.60).
+    """
+    # 실물 UCTT 원문의 두 대목을 그대로 붙였습니다: 앞은 진짜 값이 있는
+    # 문장, 뒤는 파서를 넘어뜨린 주식 수 표입니다.
+    text = (
+        "Total revenue was $533.7 million. Total gross margin was 15.8%, "
+        "operating margin was 2.1%, and net loss was $(17.9) million or "
+        "$(0.40) per diluted share.\n"
+        "\n"
+        "Net loss per share attributable to UCT common stockholders:\n"
+        "Basic                        $(0.40)      $(0.11)\n"
+        "Diluted                      $(0.40)      $(0.11)\n"
+        "Shares used in computing net loss per share:\n"
+        "Basic                          45.3         45.1\n"
+        "Diluted                        45.3         45.1\n"
+    )
+    got = sf.parse_press_release(text)["gaap_eps"]
+    assert got == -0.40, got
+    assert got != -45.3, "주식 수를 EPS 로 읽었습니다"
+
+    # ⚠️ 정직하게 적어 둡니다: **이 실물에서는** 줄 넘기 금지만으로도
+    # 막힙니다(45.3 이 이름과 다른 줄에 있으므로). 아래는 표가 한 줄로
+    # 눌린 경우로, 이때는 주식 수 가드가 있어야만 막힙니다. 슬라이드·PDF
+    # 추출에서 표가 한 줄로 눌리는 일은 실제로 있습니다(TSLA 날짜 열 표).
+    # 다만 **주식 수 표가 눌린 실물은 아직 못 봤습니다** — 예방입니다.
+    한줄 = "Shares used in computing net loss per share: Basic 45.3 Diluted 45.1\n"
+    assert sf.find_eps_value(한줄, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+
+def test_annual_value_after_the_number_is_skipped():
+    """값 바로 뒤가 "for the year ended" 면 그 숫자는 연간값입니다.
+
+    실물 GS 2022-01-18 — 한 문장에 연간·전년·분기가 줄줄이 있습니다.
+    파서는 맨 앞의 **연간 59.45** 를 물고 있었습니다. 진짜 분기값은
+    같은 문장 뒤쪽의 **10.81** 입니다.
+    """
+    text = (
+        "Diluted earnings per common share (EPS) was $59.45 for the year "
+        "ended December 31, 2021 compared with $24.74 for the year ended "
+        "December 31, 2020, and was $10.81 for the fourth quarter of 2021 "
+        "compared with $12.08 for the fourth quarter of 2020.\n"
+    )
+    got = sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True)
+    assert got == 10.81, got
+
+
+def test_headline_for_year_is_skipped():
+    """헤드라인의 "of $59.45 for 2021" 도 연간값입니다 (실물 GS)."""
+    text = ("Goldman Sachs Reports Record Earnings Per Common Share of "
+            "$59.45 for 2021\n")
+    got = sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True)
+    assert got is None, got
+
+
+def test_full_year_bullet_line_is_skipped():
+    """줄이 "Full-year …" 로 시작하면 그 줄의 값은 전부 연간입니다.
+
+    실물 VZ 2023-01-24 — 이 한 줄 때문에 조정 EPS 가 5.18(연간)로
+    읽혔습니다. 실제 4분기 조정 EPS 는 1.19 입니다.
+    """
+    line = ("\u2022Full-year 2022 earnings per share (EPS) of $5.06, compared "
+            "with $5.32 in 2021; adjusted EPS1, excluding special items, of "
+            "$5.18, compared with 2021 adjusted EPS1 2 of $5.50.\n")
+    assert sf.find_eps_value(line, sf.LABELS_ADJUSTED_EPS) is None, "연간 줄"
+
+    # 같은 형식의 **분기** 줄은 그대로 읽어야 합니다 (반대쪽도 막습니다)
+    분기줄 = ("\u2022Fourth-quarter 2022 adjusted EPS1, excluding special "
+           "items, of $1.19.\n")
+    assert sf.find_eps_value(분기줄, sf.LABELS_ADJUSTED_EPS) == 1.19
+
+
+def test_eps_search_never_crosses_a_line():
+    """이름 뒤 숫자 탐색이 줄을 넘으면 안 됩니다 (실물 IPGP 2025-02-11).
+
+    각주 문장에 "adjusted EPS" 가 있고, 그 뒤로 줄과 문단을 넘어
+    300자 떨어진 **"Exhibit 99.1"** 을 물어 조정 EPS 가 99.10 이
+    됐습니다. 진짜 EPS 는 그 자리에 없습니다 — 답은 "없음"입니다.
+    """
+    text = (
+        "the amortization of acquired intangible assets of $2.5 million "
+        "excluded from the calculation of adjusted EPS, stock based "
+        "compensation of $11.0 million excluded from adjusted EBITDA.\n"
+        "3\n\n\nExhibit 99.1\n\nIPG PHOTONICS CORPORATION\n"
+    )
+    got = sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS)
+    assert got is None, got
+
+
+def test_label_on_a_heading_line_still_finds_the_next_line_value():
+    """이름이 **제목 줄**이고 값이 다음 줄에 오는 형식도 읽어야 합니다.
+
+    실물 HPE 2026-03-09 — 74차 전수 비교에서 이 형식 2건을 잃는 것을
+    보고 탐색 범위를 "같은 줄"에서 "같은 문단"으로 넓혔습니다.
+    한쪽만 막으면 반대로 넘어집니다.
+    """
+    text = ("Diluted net earnings per share (\u201cEPS\u201d): \n"
+            "\u25e6GAAP of $0.31, down $0.13 from the prior-year period\n")
+    got = sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True)
+    assert got == 0.31, got
+
+
+def test_comparison_to_a_prior_fiscal_year_is_not_annual_context():
+    """"in the fourth quarter of fiscal year 2022" 는 **비교 대상**입니다.
+
+    실물 NTAP — 이것까지 "연간"으로 보면 바로 뒤의 진짜 분기값 1.54 를
+    버리고, 같은 줄 끝의 환율 영향 0.08 을 뭅니다. 74차 전수 비교가
+    잡아낸 제 실수입니다.
+    """
+    line = ("\u2022Earnings per share: GAAP net income per share6 of $1.13 "
+            "compared to $1.14 in the fourth quarter of fiscal year 2022; "
+            "non-GAAP net income per share of $1.54 compared to $1.42 in the "
+            "fourth quarter of fiscal year 2022. The year-over-year "
+            "fluctuations include an unfavorable impact of approximately "
+            "$0.08 from foreign currency exchange rate changes.\n")
+    assert sf.find_eps_value(line, sf.LABELS_ADJUSTED_EPS) == 1.54
+
+    # 반대쪽: 줄이 "Fiscal year 2023 …" 으로 **시작**하면 그 줄은 연간입니다
+    연간줄 = ("\u2022Fiscal year 2023 GAAP net income per share of $5.79; "
+           "fiscal year 2023 non-GAAP net income per share of $5.59\n")
+    assert sf.find_eps_value(연간줄, sf.LABELS_ADJUSTED_EPS) is None
+
+
+def test_section_title_separates_annual_from_quarterly():
+    """구역 제목이 연간/분기를 가릅니다 (76차 — 실물 HPE 2023-11-28).
+
+    값이 있는 줄만 보면 둘을 가를 수 없습니다 — 글자가 똑같습니다.
+    가르는 정보는 **몇 줄 위의 구역 제목**에 있습니다. 이 실물에서
+    파서는 연간 1.54 를 물고 있었고, 진짜 분기값은 0.49 입니다.
+    """
+    text = (
+        "Fiscal 2023 Full-Year Financial Results\n"
+        "\u2022Revenue: $29.1 billion, up 2%\n"
+        "\u2022Diluted net earnings per share (\u201cEPS\u201d): \n"
+        "\u25e6GAAP of $1.54, up 133% from the prior-year period\n"
+        "Fourth Quarter Fiscal 2023 Financial Results  \n"
+        "\u2022Revenue: $7.4 billion, down 7%\n"
+        "\u2022Diluted net EPS: \n"
+        "\u25e6GAAP of $0.49, up 313% from the prior-year period\n"
+    )
+    got = sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True)
+    assert got == 0.49, got
+
+
+def test_document_title_is_not_mistaken_for_a_section_title():
+    """문서 제목을 구역 제목으로 오인하면 **문서 전체**를 버립니다.
+
+    문서 제목은 길고 회사 이름·Reports 가 들어갑니다. 이것을 연간
+    구역이라 보면 그 아래 진짜 분기값까지 전부 사라집니다.
+    """
+    본문 = "\u2022Diluted net EPS: \n\u25e6GAAP of $1.30 for the quarter\n"
+
+    # ⑴ 분기가 함께 적힌 문서 제목 (실물 Western Digital)
+    제목1 = ("Western Digital Reports Fiscal Fourth Quarter and Fiscal Year "
+           "2022 Financial Results\n")
+    # ⑵ 연간만 적힌 문서 제목 — "Reports" 로 알아봅니다
+    제목2 = "Acme Corporation Reports Full Year 2025 Financial Results\n"
+    # ⑶ Reports 도 없는 긴 제목 — **길이**로 알아봅니다
+    제목3 = ("Acme Corporation Global Holdings Limited Full Year 2025 "
+           "Financial Results\n")
+
+    for 제목 in (제목1, 제목2, 제목3):
+        got = sf.find_eps_value(제목 + 본문, sf.LABELS_GAAP_EPS,
+                                exclude_nongaap=True)
+        assert got == 1.30, (제목.strip(), got)
+
+
+def test_section_title_naming_both_periods_is_not_annual_only():
+    """제목에 분기가 함께 있으면 분기값도 그 아래 있습니다.
+
+    실물: "Fourth Quarter and Full Year 2025 Financial Results".
+    """
+    text = ("Fourth Quarter and Full Year 2025 Financial Results\n"
+            "\u2022Diluted net EPS: \n\u25e6GAAP of $0.77\n")
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == 0.77
+
+
+def test_dividend_per_share_is_never_eps():
+    """배당금은 EPS 가 아닙니다 (76차 — 실물 HPE).
+
+    67차에도 JPM 배당금이 EPS 자리에 들어와 이익 시계열을 톱니로
+    만든 적이 있습니다. 같은 사고가 다른 경로로 또 났습니다.
+    """
+    text = ("The Board of Directors declared a regular cash dividend of "
+            "$0.13 per share on the company\u2019s common stock.\n")
+    assert sf.find_eps_before_per_share(text) is None
+
+    # 반대쪽: 진짜 EPS 문장은 그대로 읽어야 합니다
+    진짜 = "net loss was $(17.9) million or $(0.40) per diluted share.\n"
+    assert sf.find_eps_before_per_share(진짜) == -0.40
+
+
+def test_slide_guard_measures_distance_not_the_whole_line():
+    """슬라이드 규칙은 **라벨 앞 거리**로 재야 합니다 (83차 — 실물 BAC).
+
+    눌린 문서는 한 줄이 수천 자입니다. "줄 안에 <img 가 있기만 하면"
+    으로 재면 이미지 뒤에 이어지는 **멀쩡한 문장까지** 버립니다.
+    BAC 는 그래서 **전 분기가 "없음"** 이었습니다 — 진짜 값 1.06 이
+    원문에 그대로 있는데도.
+    실측 거리: BAC 진짜 문장 1,094~4,751자 · PG 슬라이드 잡음 104자.
+    """
+    # 이미지가 **멀리** 있으면 그 뒤 문장은 읽어야 합니다
+    멀리 = ('<img src="a.jpg"/> ' + "x" * 400 +
+          " Diluted earnings per share of $1.06 compared to $0.81.\n")
+    assert sf.find_eps_value(멀리, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == 1.06
+
+    # 이미지가 **바로 앞**이면 차트 숫자 나열이므로 건너뜁니다
+    가까이 = ('<img src="b.jpg"/> \u2022 Core gross margin \u2022 diluted '
+           'earnings per share 5 2 1 6 3\n')
+    assert sf.find_eps_value(가까이, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+
+def test_target_and_range_numbers_are_not_actuals():
+    """">$17.10" 과 "$18.45 - $18.95" 는 전망입니다 (84차 — 실물 UNH).
+
+    83차에 슬라이드 규칙을 좁히자 UNH **전망표**가 새로 읽히면서
+    분기 EPS 가 6.04 → 17.10 으로 **틀려졌습니다.** 내가 낸 회귀입니다.
+
+        UnitedHealth Group Reports Second Quarter 2026 Results
+        • **Earnings of $6.04 Per Share** …            ← 진짜 실적
+        Diluted Net Earnings per Share  **> $17.10**   ← 전망(이상)
+        Earnings per Share  **$18.45 - $18.95**        ← 전망(범위)
+
+    실적에 "이상" 표기를 붙이거나 범위로 적는 회사는 없습니다.
+    """
+    전망 = ("Diluted Net Earnings per Share to Shareholders > $17.10 "
+          "$18.45 - $18.95\n")
+    assert sf.find_eps_value(전망, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+    # 같은 문서의 진짜 실적 문장은 읽어야 합니다.
+    # (이 형식은 숫자가 이름 앞에 오므로 다른 경로가 읽습니다)
+    실적 = "Earnings of $6.04 per diluted share for the second quarter.\n"
+    assert sf.find_eps_before_per_share(실적) == 6.04
+
+    # 둘이 한 문서에 있을 때 전망이 아니라 실적이 나와야 합니다
+    합친것 = 실적 + 전망
+    assert sf.parse_press_release(합친것)["gaap_eps"] == 6.04
+
+
+def test_negative_eps_is_not_mistaken_for_a_range_end():
+    """적자 표기 "-$0.40" 을 범위 뒤끝으로 보면 안 됩니다.
+
+    범위 뒤끝은 **대시 앞에 숫자**가 있습니다("18.45 - $18.95").
+    적자 표기는 그렇지 않습니다. 한쪽만 막으면 반대로 넘어집니다.
+    """
+    text = "GAAP net loss per diluted share was -$0.40 for the quarter.\n"
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == -0.40
+
+
+def test_core_eps_is_non_gaap():
+    """"Core EPS" 는 논갭입니다 (83차 — 실물 PG).
+
+    P&G 는 자기네 논갭 지표를 "Core" 라고 부릅니다:
+    "Diluted EPS $1.63 … **Core EPS $1.59**".
+    이 말을 모르면 논갭 값이 GAAP 칸에 들어갑니다.
+    """
+    text = "Core earnings per share were $1.59, +3% vs the prior year.\n"
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+    # 진짜 GAAP 줄은 그대로 읽어야 합니다
+    진짜 = "Diluted net earnings per share were $1.63 for the quarter.\n"
+    assert sf.find_eps_value(진짜, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == 1.63
+
+
+def test_normal_quarterly_sentence_still_reads(): 
+    """멀쩡한 분기 문장은 그대로 읽혀야 합니다 (한쪽만 막으면 안 됨)."""
+    for 문장, 답 in (
+        ("Fourth quarter non-GAAP earnings per diluted share of $1.66\n", 1.66),
+        ("Adjusted EPS of $0.83 for the third quarter\n", 0.83),
+    ):
+        got = sf.find_eps_value(문장, sf.LABELS_ADJUSTED_EPS)
+        assert got == 답, (문장, got)
+
+    # GAAP 쪽 이름도 마찬가지입니다 (적자 부호 뒤집기 포함)
+    문장 = "net loss per diluted share of $0.42 for the quarter\n"
+    got = sf.find_eps_value(문장, sf.LABELS_GAAP_EPS, exclude_nongaap=True)
+    assert got == -0.42, got
+
+
+def test_impact_sentence_is_not_earnings():
+    """"…per share **by** $0.00" 은 영향을 말하는 문장이지 실적이 아닙니다.
+
+    실물 (87차, CRM 2025-09-03 보도자료 원문 그대로):
+    이 한 문장 때문에 조정 EPS 와 GAAP EPS 가 **둘 다 0.00** 이 됐습니다.
+    진짜 값은 같은 문서의 표에 2.91·1.96 으로 있었습니다.
+    """
+    문장 = (
+        "During the three months ended July 31, 2025 and 2024, gains (losses) "
+        "on strategic investments impacted GAAP diluted net income per share "
+        "by $0.00 and $(0.03) based on a U.S. tax rate of 23.5% and 24.5%, "
+        "respectively, and non-GAAP diluted net income per share by $0.00 "
+        "and $(0.03) based on a non-GAAP tax rate of 22.0%.\n"
+    )
+    assert sf.find_eps_value(문장, sf.LABELS_ADJUSTED_EPS) is None
+    assert sf.find_eps_value(문장, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+
+def test_impact_sentence_does_not_hide_the_real_table_row():
+    """영향 문장을 건너뛴 뒤 **진짜 표의 값**은 그대로 읽어야 합니다.
+
+    걷어내기만 하고 진짜 값까지 놓치면 고친 것이 아닙니다.
+    """
+    글 = (
+        "gains on strategic investments impacted GAAP diluted net income "
+        "per share by $0.00 and $(0.03).\n"
+        "Diluted net income per share      $1.96      $1.47\n"
+    )
+    assert sf.find_eps_value(글, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == 1.96
+
+
+def test_number_at_the_edge_of_the_search_window_is_read_whole():
+    """찾는 창의 끝이 숫자 위에 떨어져도 숫자를 **자르지 않아야** 합니다.
+
+    실물 (87차, CRM): 표의 이름과 값 사이가 공백 40칸쯤 벌어지자 160자
+    창의 끝이 "$1.5|9" 한가운데에 떨어져 **1** 로 읽혔고, 그 뒤 옆 칸의
+    전년 값 1.56 이 채택됐습니다.
+    """
+    이름 = "Diluted net income per share"
+    # 창(160자) 끝이 값 한가운데 오도록 공백을 맞춥니다
+    빈칸 = " " * (160 - 3)
+    글 = f"{이름}{빈칸}$1.59      $1.56\n"
+    자리 = len(이름)
+    읽은값 = sf._parse_number_at(글, 자리)
+    assert 읽은값 is not None and 읽은값[0] == 1.59, 읽은값
+
+
+def test_number_starting_inside_the_tail_is_still_refused():
+    """여유 글자는 숫자를 **끝맺는 데만** 씁니다.
+
+    여유 구간(창 뒤 40자) 안에서 **새로 시작하는** 숫자까지 주워 오면
+    탐색 범위가 160자에서 200자로 몰래 넓어집니다. 그래서 이 시험은
+    숫자를 여유 구간 한가운데(창 끝 +5자)에 두고, 거절되는지 봅니다.
+    """
+    이름 = "Diluted net income per share"
+
+    def 글(숫자시작: int) -> str:
+        """이름 뒤 `숫자시작` 번째 자리에 숫자의 **첫 글자**가 오도록 만듭니다.
+        ("$" 가 한 칸 앞에 붙으므로 공백은 그만큼 덜 넣습니다)"""
+        return 이름 + " " * (숫자시작 - 1) + "$1.59\n"
+
+    # 창(160) 밖 · 여유(40) 안에서 시작하는 숫자 → 거절
+    assert sf._parse_number_at(글(165), len(이름)) is None
+
+    # 창 마지막 자리에서 시작하는 숫자 → 읽어야 합니다 (거절이 과하지 않은지)
+    읽은값 = sf._parse_number_at(글(159), len(이름))
+    assert 읽은값 is not None and 읽은값[0] == 1.59, 읽은값
+
+
+def test_값_없는_제목줄은_건너뛴다():
+    """논갭 조정표의 **제목 줄**이 다음 줄 GAAP 값을 물면 안 됩니다 (103차).
+
+    실물 CRM 2025-05-28 — 조정 EPS 를 **1.59** 로 읽었는데 참값은 **2.58**:
+
+        Non-GAAP diluted net income per share            ← 값이 없다 (제목)
+        GAAP diluted net income per share      $1.59     ← 이걸 물었다
+        Plus: ...
+        Non-GAAP diluted net income per share  $2.58     ← 진짜 값
+
+    논갭 조정표는 맨 위에 결과 항목 **이름만** 적고 조정 내역을 늘어놓은 뒤
+    마지막에 합계를 적습니다. 이름과 숫자의 거리로 고르는 규칙이 바로 아래
+    GAAP 줄의 숫자를 물어 버립니다.
+    """
+    text = (
+        "Non-GAAP diluted net income per share\n"
+        "GAAP diluted net income per share      $1.59      $1.56\n"
+        "Plus: Amortization of purchased intangibles   0.35   0.33\n"
+        "Non-GAAP diluted net income per share  $2.58      $2.44\n"
+    )
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 2.58
+    # GAAP 은 그대로여야 합니다 — 이 가드가 GAAP 을 건드리면 안 됩니다
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS) == 1.59
+
+
+def test_제목줄_가드는_GAAP_이름을_건드리지_않는다():
+    """가드를 모든 주당 이름에 걸었더니 원문 982건 중 **3건이 회귀**했습니다.
+
+    조정표 머리글 "Reconciliation of GAAP net loss per share, diluted, to
+    non-GAAP net income per share, fully diluted:" 안의 GAAP 이름이
+    **우연히 바로 뒤의 올바른 GAAP 값과 가장 가까워서** 정답을 내고
+    있었는데, 그 머리글을 막자 더 나쁜 후보가 이겼습니다
+    (실물 MDB 2025-12-02: GAAP −0.02 → 1.44).
+
+    그래서 가드는 **논갭 이름일 때만** 걸립니다. 이 시험이 그 경계를
+    지킵니다 — 넓히면 하나 고치고 셋을 잃습니다.
+
+    ⚠️ 이 시험은 실물 원문을 씁니다. 처음에 손으로 지어낸 짧은 예문으로
+    썼더니 **가드를 넓혀도 빨간 불이 안 켜졌습니다** — 회귀를 못 잡는
+    시험이었습니다. 실물이 규칙을 이깁니다.
+    """
+    import os
+    경로 = os.path.join(os.path.dirname(__file__), "..",
+                       "data", "measure", "raw", "MDB_2025-12-02.txt")
+    if not os.path.exists(경로):
+        return          # 원문이 없는 환경에서는 건너뜁니다 (없음은 없음으로)
+    text = open(경로, encoding="utf-8", errors="ignore").read()
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS) == -0.02, (
+        "GAAP 이 조정값으로 무너졌습니다 — 가드가 너무 넓습니다"
+    )
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.44
+
+
+
+def test_짝없는_XBRL_사실을_센다():
+    """분기 목록은 **논갭 영업이익에서만** 만들어집니다 (106차 계기).
+
+    그래서 영업이익이 없는 분기의 매출은 **찾아 놓고도 버려집니다.**
+    실물로 그 꼴이 이미 보였습니다 — BAC 는 `Revenues` 가 55건 살아남는데
+    스냅샷의 `revenue_xbrl` 은 44행 전부 비어 있고, 대신 보도자료의
+    쓰레기 값(8달러)이 들어갔습니다.
+
+    아직 **고치지 않습니다.** 분기 목록의 뼈대를 바꾸면 모든 종목의 행이
+    달라져 판정까지 흔들립니다. 먼저 얼마나 버려지는지 세고 그 숫자를 보고
+    정합니다.
+
+    ⚠️ 이 시험은 **진짜 함수(`sf.orphan_counts`)를 부릅니다.** 처음에는
+    세는 규칙을 시험 안에 베껴 썼는데, 그러면 본 코드가 망가져도 초록
+    불이 켜집니다 — 오늘 여러 번 잡아낸 가짜 초록불과 같은 꼴입니다.
+    """
+    series = {
+        "op_income": {"2025-03-31": 10.0, "2025-06-30": 11.0},
+        "revenue": {"2025-03-31": 100.0, "2025-06-30": 110.0,
+                    "2025-09-30": 120.0, "2025-12-31": 130.0},
+        "gaap_eps": {"2025-09-30": 1.0},
+        "gross_profit": {},
+    }
+    센것 = sf.orphan_counts(series, ["2025-03-31", "2025-06-30"], "2020-01-01")
+    assert 센것["분기목록(영업이익 기준)"] == 2
+    assert 센것["revenue"] == 2, "영업이익 없는 두 분기의 매출이 버려집니다"
+    assert 센것["gaap_eps"] == 1
+    assert 센것["gross_profit"] == 0
+
+    # 시작일보다 옛것은 애초에 안 셉니다 (수집 범위 밖)
+    옛것 = sf.orphan_counts(series, ["2025-03-31", "2025-06-30"], "2025-10-01")
+    assert 옛것["revenue"] == 1, 옛것
+
 
 
 if __name__ == "__main__":

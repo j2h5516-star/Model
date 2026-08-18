@@ -53,9 +53,34 @@ _UNIT_PATTERNS = [
     (re.compile(rf"\(\s*\$\s*in\s+{_SCALE_WORDS}\b", re.I), None),
     (re.compile(rf"\bamounts?\s+in\s+{_SCALE_WORDS}\b", re.I), None),
     (re.compile(rf"\bdollars?\s+in\s+{_SCALE_WORDS}\b", re.I), None),
+    # 87차 — 위 넷은 전부 "in" 을 요구합니다. 그런데 단위를 **이름에 붙여**
+    # 적는 회사가 많습니다. 실물 AMD:
+    #     "Revenue ($M)      $10,270      $7,658"
+    # 여기에는 "(in millions)" 표기가 문서 어디에도 없어, 10,270 이 그대로
+    # 들어갔습니다 (야후 10,270,000,000). 매출 단위가 종목마다 · 심지어
+    # 한 종목 안에서도 뒤섞인 원인이 이것입니다 (86차 ⑫ — 44곳/20종목).
+    #
+    # 저장소 원문 732건 실측:
+    #   "($M)" 꼴 (달러기호 있음)   300곳 / 19종목  ← 넣는다
+    #   "(Millions…" 꼴 (in 없음)  335곳 / 25종목  ← 넣는다
+    #   "(M)"  꼴 (달러기호 없음)   180곳 / 11종목  ← **넣지 않는다**
+    #
+    # 마지막 것을 뺀 이유: 실물이 전부 "Shares (M)" — **주식 수**의 단위지
+    # 금액의 단위가 아닙니다. 이걸 매출에 곱하면 값이 100만 배 틀립니다.
+    # 각주 기호 "(A) (B) (C)" 와도 구별이 안 됩니다. 그래서 달러 기호가
+    # 붙은 것만 인정합니다.
+    #
+    # 두 번째 것에 닫는 괄호를 요구하지 않는 이유 — 실물 AMD 손익계산서
+    # 머리글이 "**(Millions except per share amounts and percentages)**"
+    # 입니다. 괄호가 **단위 낱말로 시작하면** 그것은 단위 선언입니다.
+    (re.compile(r"\(\s*\$\s*([MBK])\s*\)"), None),
+    (re.compile(rf"\(\s*\$?\s*{_SCALE_WORDS}\b", re.I), None),
 ]
-# 잡아낸 낱말 → 배수
-_SCALE_MULTIPLIER = {"thousand": 1_000, "million": 1_000_000, "billion": 1_000_000_000}
+# 잡아낸 낱말 → 배수 (약자 M·B·K 포함 — 87차)
+_SCALE_MULTIPLIER = {
+    "thousand": 1_000, "million": 1_000_000, "billion": 1_000_000_000,
+    "k": 1_000, "m": 1_000_000, "b": 1_000_000_000,
+}
 
 # 숫자 하나를 나타내는 패턴 — 예: $ 1,234.5  /  (1,234)  /  45.1
 _NUMBER_RE = re.compile(
@@ -70,6 +95,12 @@ _NUMBER_RE = re.compile(
     """,
     re.I | re.X,
 )
+
+# 창 끝에 걸친 숫자를 **끝까지 읽기 위해** 덧대는 여유 글자 수 (87차).
+# 가장 긴 형태 "(1,234,567.89) billion" 이 30자쯤이라 넉넉히 40 을 둡니다.
+# 이 여유는 숫자를 **끝맺는 데만** 쓰고, 여기서 새로 시작하는 숫자는
+# 위 _parse_number_at 에서 물리치므로 탐색 범위가 넓어지지는 않습니다.
+_NUMBER_TAIL = 40
 
 # 숫자 바로 뒤에 붙어 "이건 퍼센트다"를 뜻하는 표기들.
 # "%" 기호만 보면 "82 percent" 같은 낱말 표기를 금액으로 오인합니다.
@@ -113,10 +144,32 @@ def _parse_number_at(
     """지정한 위치부터 오른쪽으로 훑으며 첫 번째 숫자를 찾아 값으로 바꿉니다.
 
     반환값: (숫자값, 시작위치, 끝위치, 단위단어가붙었는지, 숫자자체의끝) — 못 찾으면 None
+
+    ⚠️ 창(search_len)이 **숫자 한가운데를 자르던 결함** (87차, 실물 CRM):
+       표의 이름과 값 사이가 공백 40칸쯤 벌어지면 160자 창의 끝이 값 위에
+       떨어집니다. 실측 — 창 끝이 197, 값 "$1.59" 는 194~198:
+
+           "GAAP diluted net income per share        $1.5|9"
+                                            창 끝 ────┘
+
+       그래서 1.59 가 아니라 **1** 로 읽혔고, 그 뒤 남은 ".59" 와 옆 칸의
+       전년 값 1.56 까지 후보로 올라와 결국 **전년 값**이 채택됐습니다.
+
+       고치는 방향: 창은 "숫자를 **어디까지 찾아 나설지**"를 정하는 것이지
+       "숫자를 어디서 자를지"가 아닙니다. 그래서 찾는 범위는 그대로 두되
+       (시작 위치가 창 안이어야 함), 숫자가 창 밖으로 이어지면 **끝까지
+       읽습니다.** 창을 그냥 넓히는 것은 답이 아닙니다 — 넓힌 자리에서
+       같은 사고가 다시 납니다.
     """
-    segment = text[search_from : search_from + search_len]
+    segment = text[search_from : search_from + search_len + _NUMBER_TAIL]
     match = _NUMBER_RE.search(segment)
     if not match:
+        return None
+    # 창 밖에서 **시작**한 숫자는 이 자리의 값이 아닙니다.
+    # ⚠️ match.start() 가 아니라 match.start("num") 을 봅니다 — 패턴이
+    #    앞의 공백·괄호·$ 까지 포함해서 시작하므로, match.start() 는
+    #    이름 바로 뒤(공백의 시작)를 가리켜 이 검사가 늘 통과해 버립니다.
+    if match.start("num") >= search_len:
         return None
 
     raw = match.group("num").replace(",", "")
@@ -229,6 +282,39 @@ def _scan_labeled_value(
     for pattern_str in label_patterns:
         pattern = re.compile(pattern_str, re.I)
         for label_match in pattern.finditer(text):
+            # 맨 이름 "revenue" 앞에 **부문 이름**이 붙어 있으면 그것은
+            # 전체 매출이 아니라 **한 조각**입니다 (89차 — 실물 SNOW).
+            #
+            # SNOW 보도자료의 머리기사는 "**Product revenue** of $1.16
+            # billion" 이고, 전체 매출(Total revenue)은 뒤쪽 재무제표에만
+            # 있습니다. 이름과 값의 거리로 고르는 규칙이라 가까운 쪽인
+            # 조각이 이겼습니다.
+            #
+            # 88차 전에는 이 값이 단위 없이 1,090.5 로 들어와 뒷단 검사에
+            # 걸려 XBRL 의 올바른 값(1,144,969,000)이 살아남았습니다.
+            # 88차가 단위를 맞춰 주자 **그럴듯한 크기**가 되면서 올바른
+            # 값을 밀어냈습니다 — 88차 ④에 "그럴듯해져서 더 위험하다"고
+            # 적어 둔 일이 SNOW 네 분기에서 실제로 일어났습니다.
+            #
+            # 저장소 원문 실측 — "revenue" 앞 낱말: deferred 298 · product
+            # 264 · service(s) 290 · organic 151 · other 143 · interest 104
+            # · trading 103 · advertising 94 · subscription 85.
+            # 전부 전체 매출이 아닙니다 (deferred 는 아예 부채 항목).
+            #
+            # 조각만 싣는 회사는 매출이 **없음**이 됩니다 — 조각을 전체라고
+            # 하는 것보다 안전합니다 (헌법 1조).
+            # ⚠️ 다만 **전체 매출이 그 문서에 있을 때만** 조각을 물립니다.
+            #    조각만 싣는 회사가 실제로 있습니다 — 실물 VRTX: 문서 전체에
+            #    "Total/Net revenue" 가 **한 번도 안 나오고** "Product revenue
+            #    of $2.69 billion" 뿐인데, 그 값이 곧 전체 매출입니다.
+            #    무조건 걸러 냈더니 **맞는 값(26.9억)을 잃었습니다.**
+            #    "전체가 있으면 조각을 버리고, 조각뿐이면 조각을 쓴다."
+            if _SEGMENT_REVENUE_RE.search(
+                text[max(0, label_match.start() - _SEGMENT_LOOKBACK):
+                     label_match.end()]
+            ) and _WHOLE_REVENUE_RE.search(text):
+                continue
+
             if avoid_annual:
                 # 라벨 앞쪽(줄을 넘지 않고)에 '연간'을 뜻하는 말이 있으면 건너뜁니다.
                 start = label_match.start()
@@ -237,7 +323,51 @@ def _scan_labeled_value(
                 if _ANNUAL_CONTEXT_RE.search(text[window_start:start]):
                     continue
 
+            # 두 이익률의 **차이**를 말하는 자리면 이익률이 아닙니다
+            # (77차 — 실물 AMBA). 라벨 앞쪽만 보고, 줄을 넘지 않습니다.
+            if is_percent:
+                _s = label_match.start()
+                _ls = text.rfind("\n", 0, _s) + 1
+                # 슬라이드가 눌린 줄은 문장이 아니라 **차트 숫자 나열**입니다
+                # (13차에 EPS 경로에 넣은 규칙을 79차에 이익률에도 적용).
+                # 실물 PG: "<img …/> • Core gross margin • Core operating
+                # margin • Total productivity savings 5% 2% 1% 6% 3% 0% 3%"
+                # — 여기서 읽은 값은 그때그때 달라집니다(51.2 · 30.0 · 100.0).
+                # PG 실제 매출총이익률은 50% 안팎입니다. 읽을 수 없는
+                # 문서에서는 **없음**이 정답입니다.
+                # ⚠️ "줄 안에 <img 가 있는가"로 재면 너무 넓습니다 — 눌린
+                #    문서는 한 줄이 수천 자라, 멀쩡한 문장까지 걸립니다
+                #    (실물 MDB "representing a **74% non-GAAP gross margin**"
+                #     을 잃었습니다). 라벨 **바로 앞**에 있을 때만 봅니다.
+                #    실측 거리: PG 슬라이드 라벨 84~93자 · MDB 정상 문장 447자.
+                if "<img" in text[max(_ls, _s - _SLIDE_LOOKBACK):_s]:
+                    continue
+                # 이미지 태그가 멀어도, **퍼센트가 줄줄이 이어지면** 차트
+                # 계열입니다 (실물 MKSI: "… 46.9% Non-GAAP gross margin
+                # **43.8% 45.0% 44.3% 43.3% 44.7% …**"). 문장이 아니라
+                # 그래프의 값 나열이라 어느 하나를 이번 분기라 할 수 없습니다.
+                # **사이에 낱말이 없는** 퍼센트 3개 이상만 봅니다 —
+                # "71% for Q4-22 compared to 72% … and 73%"(CGNX) 처럼
+                # 낱말이 끼어 있는 정상 문장은 걸리지 않습니다.
+                if _PCT_SERIES_RE.search(text[label_match.end():
+                                              label_match.end() + 80]):
+                    continue
+                if _GM_DIFFERENCE_NEAR_RE.search(
+                    text[max(_ls, _s - _GM_DIFFERENCE_LOOKBACK):_s]
+                ):
+                    continue
+                # 전망 문맥이면 실적이 아닙니다 (77차 — 실물 AMBA:
+                # "Gross margin on a non-GAAP basis **is expected to be**
+                # between 59.0% and 60.5%"). 실제 4분기 값은 59.8% 인데
+                # 가까이 붙은 전망값 59.0 을 물고 있었습니다.
+                # 전망 말은 라벨 **뒤**에 오므로 같은 줄의 앞뒤를 다 봅니다.
+                _le = text.find("\n", label_match.end())
+                _le = _le if _le != -1 else len(text)
+                if _PCT_FORECAST_RE.search(text[_ls:_le]):
+                    continue
+
             search_from = label_match.end()
+
             if same_line_only:
                 line_end = text.find("\n", search_from)
                 limit = (line_end if line_end != -1 else len(text)) - search_from
@@ -270,6 +400,39 @@ def _scan_labeled_value(
                 is_percent_value = bool(_PERCENT_AFTER_RE.match(tail_line))
 
                 if is_percent:
+                    # 이름과 숫자 사이에 **금액**이 끼어 있으면 그 줄은
+                    # 금액 행이고, 끝의 퍼센트는 **증감률 열**입니다
+                    # (82차 — 실물 DELL):
+                    #     Gross margin      $5,057   $4,992   **1** %
+                    #     % of net revenue   21.1 %   22.0 %
+                    # 파서는 저 1 을 매출총이익률 1% 로 저장하고 있었습니다.
+                    # 진짜 비율(21.1%)은 **다음 줄**에 있습니다.
+                    # 비율만 적힌 줄에는 금액이 없으므로 이 규칙에 안 걸립니다.
+                    if _MONEY_BEFORE_RE.search(
+                            text[label_match.end():number_start]):
+                        search_from = number_end
+                        continue
+                    # **베이시스 포인트는 언제나 '변화'** 이지 수준이 아닙니다
+                    # (81차 — 실물 WMT "Gross margin rate **up 2 bps**",
+                    #  "Gross profit rate increased **19 bps**").
+                    # 파서는 이 2 를 매출총이익률 2% 로 저장하고 있었습니다.
+                    # 월마트 실제 매출총이익률은 24~25% 입니다. 이 회사는
+                    # 보도자료에 **수준을 아예 안 적고 변화만** 적으므로
+                    # 정답은 **없음**입니다.
+                    # 이익률 수준을 bps 로 적는 회사는 없습니다("2,450 bps"
+                    # 라고 쓰지 않습니다) — 그래서 bps 는 통째로 거릅니다.
+                    if _BPS_UNIT_RE.match(text[num_end:num_end + 20]):
+                        search_from = number_end
+                        continue
+                    # "from A% to B%" 의 A 는 **지난 기간** 값입니다 (78차 —
+                    # 실물 BMY "gross margin decreased **from 77.3% to
+                    # 76.1%**"). 이번 분기 값은 B 입니다. A 를 건너뛰면
+                    # 다음 바퀴에서 B 를 찾습니다.
+                    if (is_percent_value
+                            and _FROM_BEFORE_RE.search(
+                                text[label_match.end():number_start])):
+                        search_from = number_end
+                        continue
                     # 퍼센트를 찾는 중: %가 붙어 있고 0~100 범위여야 채택
                     if is_percent_value and 0 < value <= 100:
                         gap = number_start - label_match.end()
@@ -309,12 +472,63 @@ LABELS_NONGAAP_OP_INCOME = [
 ]
 
 # 논갭 매출총이익률(%)
+# 77차 실물(AMBA)에서 배운 것: 회사는 **어순을 바꿔** 적습니다 —
+#   "Gross margin **on a non-GAAP basis** for the fourth quarter … was 60.7%"
+# 아래 이름들은 전부 "non-GAAP" 이 앞에 오는 형태만 잡아서 이 문장을
+# 놓쳤고, 그 바람에 훨씬 뒤쪽 각주의 "The difference between GAAP and
+# non-GAAP gross margin was **1.4%**" 를 물어 **1.4% 를 매출총이익률로**
+# 저장했습니다. AMBA 실제 매출총이익률은 60% 안팎입니다.
 LABELS_NONGAAP_GM_PCT = [
     r"non[-\s]?GAAP\s+gross\s+margin(?:\s+percentage)?",
     r"adjusted\s+gross\s+margin",
     r"gross\s+margin\s*\(non[-\s]?GAAP\)",
     r"non[-\s]?GAAP\s+gross\s+profit\s+margin",
+    # 어순이 뒤집힌 형태 (실물 AMBA) — 가장 마지막에 둡니다
+    r"gross\s+margin\s+on\s+an?\s+non[-\s]?GAAP\s+basis",
+    r"gross\s+margin\s+on\s+an?\s+adjusted\s+basis",
 ]
+
+# 매출총이익률 이름 앞에 이 말이 있으면 **이익률이 아니라 두 이익률의 차이**
+# 입니다 (77차 — 실물 AMBA "The difference between GAAP and non-GAAP gross
+# margin was 1.4%"). 차이는 1~3% 라 범위 검사(-100~100%)를 그대로 통과해
+# 그동안 아무도 못 잡았습니다.
+_GM_DIFFERENCE_NEAR_RE = re.compile(
+    r"\bdifference\b|\bgap\s+between\b|\bbridge\b|\breconcil", re.I)
+_GM_DIFFERENCE_LOOKBACK = 70
+
+# 슬라이드 이미지 태그가 라벨 앞 이만큼 안에 있으면 그 줄은 차트 숫자 나열
+_SLIDE_LOOKBACK = 150
+
+# 이름과 숫자 사이의 금액 표기 ($5,057 류) — 그 줄은 금액 행입니다
+_MONEY_BEFORE_RE = re.compile(r"[$€£]\s*[\d,]+")
+
+# 베이시스 포인트 단위 — 이익률의 **변화**를 적는 단위입니다 (수준이 아님)
+_BPS_UNIT_RE = re.compile(r"\s*(?:basis\s+points?\b|bps\b|bp\b)", re.I)
+
+# 사이에 낱말 없이 이어지는 퍼센트 3개 이상 = 그래프의 값 나열
+_PCT_SERIES_RE = re.compile(r"(?:\d+(?:\.\d+)?%\s+){2,}\d+(?:\.\d+)?%")
+
+# "from A% to B%" — A 는 지난 기간, B 가 이번 기간입니다 (78차, 실물 BMY:
+# "On a GAAP basis, gross margin decreased from 77.3% to 76.1%").
+# 이름과 숫자 사이에 from 이 있고, 숫자 뒤가 "to 숫자" 면 그 숫자는 A 입니다.
+# 창을 20자로 좁게 잡습니다 — "benefited from higher pricing and was 76.1%"
+# 처럼 from 이 우연히 멀리 있는 문장까지 건너뛰면 안 됩니다.
+#
+# ⚠️ 처음엔 "숫자 뒤에 to 숫자가 따라오는가"까지 확인했는데, 저장소
+#    원문 652건을 훑어 보니 **그 확인이 필요한 사례가 0건**이었습니다
+#    (반대로 from~to 형태는 12건). 근거 없는 검사는 넣지 않습니다.
+_FROM_BEFORE_RE = re.compile(r"\bfrom\b[^.\n]{0,20}$", re.I)
+
+# 이익률 자리의 **전망** 문맥 (77차 — 실물 AMBA "Gross margin on a non-GAAP
+# basis **is expected to be** between 59.0% and 60.5%"). 실제 4분기 값은
+# 59.8% 인데 가까이 붙은 전망값 59.0 을 물고 있었습니다.
+# ⚠️ 기존 _FORECAST_NEAR_RE 는 "expects/expecting" 만 잡고 **"expected"**
+#    를 못 잡습니다. 그 규칙은 EPS 경로도 함께 쓰므로 건드리지 않고,
+#    이익률 전용 규칙을 따로 둡니다 (고치는 범위를 좁게).
+_PCT_FORECAST_RE = re.compile(
+    r"\b(?:expect(?:s|ed|ing)?|anticipat(?:e|es|ed|ing)|guidance|outlook"
+    r"|estimat(?:e|es|ed)|project(?:s|ed|ing)?|target(?:s|ed|ing)?"
+    r"|reaffirm(?:s|ing|ed)?)\b", re.I)
 
 # GAAP 매출총이익률(%) — 논갭이 없을 때 대체
 LABELS_GAAP_GM_PCT = [
@@ -323,6 +537,47 @@ LABELS_GAAP_GM_PCT = [
 ]
 
 # 매출
+# "revenue" 앞에 붙어 **전체가 아니라 한 조각**임을 뜻하는 말들 (89차).
+# 끝($)에 못박아, 지금 걸린 이름이 바로 그 "조각 매출"일 때만 걸립니다 —
+# "total revenue" · "net revenue" 는 여기 없으므로 그대로 통과합니다.
+_SEGMENT_REVENUE_RE = re.compile(
+    r"\b(?:product|services?|subscription|deferred|organic|other|interest"
+    r"|trading|advertising|licens\w*|maintenance|hardware|software)\s+"
+    r"revenues?\s*$",
+    re.I,
+)
+# 값 없는 **제목 줄** 건너뛰기 (103차 — 87차 ⑤ 로 밀려 있던 마지막 결함).
+#
+# 실물 CRM 2025-05-28 (조정 EPS 를 1.59 로 읽었는데 참값은 2.58):
+#
+#     Non-GAAP diluted net income per share            ← 값이 없다 (제목 줄)
+#     GAAP diluted net income per share      $1.59     ← 다음 줄의 GAAP 값
+#     Plus: ...
+#     Non-GAAP diluted net income per share  $2.58     ← 진짜 값 (같은 줄)
+#
+# 논갭 조정표는 맨 위에 **결과 항목 이름만** 적고 그 아래로 조정 내역을
+# 늘어놓은 뒤 마지막에 합계를 적습니다. 그래서 첫 번째 "Non-GAAP …
+# per share" 는 값이 없는 **제목**인데, 이름과 숫자의 거리로 고르는
+# 규칙이 바로 아래 GAAP 줄의 숫자를 물어 버립니다.
+#
+# 판별법: 이름과 숫자 **사이에 또 다른 주당 항목 이름이 끼어 있으면**
+# 그 이름은 자기 값을 가진 것이 아닙니다. 값은 언제나 자기 이름 바로
+# 뒤에 옵니다 (_scan_labeled_value 의 대전제).
+#
+# ⚠️ **주당 항목 이름일 때만** 봅니다. 매출·영업이익 이름에까지 적용하면
+#    "Net income per share of $1.59" 같은 정상 문장을 잃습니다.
+_PER_SHARE_LABEL_RE = re.compile(r"per\s+(?:diluted\s+)?share", re.I)
+_TITLE_LINE_AHEAD = 200      # 이름 뒤 몇 글자까지 훑어볼 것인가
+_FIRST_DIGIT_RE = re.compile(r"\d")
+
+_SEGMENT_LOOKBACK = 30
+
+# "전체 매출"을 뜻하는 이름이 이 문서에 하나라도 있는가 (89차).
+# 있으면 조각을 버리고, 없으면 조각이라도 씁니다.
+_WHOLE_REVENUE_RE = re.compile(
+    r"\b(?:total\s+revenues?|net\s+revenues?|net\s+sales)\b", re.I
+)
+
 LABELS_REVENUE = [
     r"total\s+revenues?",
     r"net\s+revenues?",
@@ -387,21 +642,54 @@ LABELS_ADJUSTED_EPS = [
 # ⚠️ "non-GAAP" 안에도 "GAAP" 글자가 들어 있습니다. 뒤쪽 패턴들은 아무 수식어 없이
 #    매칭되므로, 실제 채택할 때 앞을 되돌아보며 논갭 표기를 걸러 냅니다
 #    (find_eps_value 의 exclude_nongaap).
+# 50차 감사 — 은행·금융은 "per **common** share" 로 씁니다.
+# 실물: GS "Diluted earnings per common share (EPS)1 was $20.98" ·
+#       WFC "Diluted earnings per common share 2.00" ·
+#       COF "$4.73 per diluted common share".
+# 이 한 낱말이 없어서 대형 은행 5곳이 통째로 측정에서 빠져 있었습니다.
+_SHARE = r"(?:common\s+|ordinary\s+)?share"
+
 LABELS_GAAP_EPS = [
     rf"(?<!non-)(?<!non )GAAP\s+(?:(?:net|diluted)\s+){{0,2}}\(?{_PROFIT_WORD}\)?"
-    r"\s+per\s+(?:diluted\s+)?(?:ordinary\s+)?share",
+    rf"\s+per\s+(?:diluted\s+)?{_SHARE}",
     r"(?<!non-)(?<!non )GAAP\s+(?:diluted\s+)?EPS",
-    rf"net\s+{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?share",
-    rf"diluted\s+{_PROFIT_WORD}\s+per\s+share",
-    rf"{_PROFIT_WORD}\s+per\s+diluted\s+share",
+    rf"net\s+{_PROFIT_WORD}\s+per\s+(?:diluted\s+)?{_SHARE}",
+    rf"diluted\s+{_PROFIT_WORD}\s+per\s+{_SHARE}",
+    rf"{_PROFIT_WORD}\s+per\s+diluted\s+{_SHARE}",
+    # 47차 감사 — "earnings per share of $2.14" 처럼 **아무 수식어 없이**
+    # 쓰는 회사가 있습니다(TXN·은행권 등). 위 다섯 개는 전부 GAAP·net·
+    # diluted 중 하나를 요구해서 이 문장을 놓쳤고, 그 결과 잣대 사다리를
+    # 못 넘어 **측정에서 통째로 빠진 종목이 24개**였습니다.
+    # 가장 마지막에 둡니다 — 앞의 구체적인 이름이 먼저 이깁니다.
+    # 'adjusted/non-GAAP earnings per share' 는 exclude_nongaap 의 같은 줄
+    # 되돌아보기가 막아 줍니다 (이 목록은 항상 그 옵션과 함께 쓰입니다).
+    rf"{_PROFIT_WORD}\s+per\s+{_SHARE}",
+    # 76차 — "•Diluted net EPS: ⏎◦GAAP of $0.49" (실물 HPE). 구역 제목으로
+    # 연간/분기를 나누는 회사는 분기 쪽 이름을 **줄여서** 적습니다.
+    # 위 이름들은 전부 "per share" 를 요구해 이 줄을 놓쳤고, 그 바람에
+    # 연간값(1.54)이나 배당금(0.13)이 EPS 자리에 들어왔습니다.
+    # "net EPS" 로 좁혀 잡습니다 — 맨 EPS 는 각주 표시까지 뭅니다.
+    r"(?:diluted\s+)?net\s+EPS\b",
+    # 50차 — "EPS of $12.19, or $13.91 as adjusted" (실물 BLK).
+    # 이름 없이 EPS 만 쓰는 회사가 있습니다. **"EPS of" 형태로만** 좁혀
+    # 잡습니다 — 맨 EPS 는 각주 표시(GS "EPS1")나 "EPS Impact"(COF) 같은
+    # 문구까지 물어 엉뚱한 숫자를 집습니다.
+    r"(?<!non-)(?<!non )\bEPS\s+of\b",
 ]
 
 # 매칭된 이름 앞쪽에 이 말이 있으면 GAAP 이 아니라 논갭 수치입니다.
 # ⚠️ 바로 앞 한 낱말만 봐서는 안 됩니다. "Non-GAAP net income per diluted share" 에서
 #    'income per diluted share' 부분만 매칭되면 그 앞은 "Non-GAAP net " 이라
 #    'non-GAAP' 이 낱말 하나 건너에 있습니다. 그래서 범위를 두고 훑습니다.
-_NONGAAP_NEAR_RE = re.compile(r"non[-\s]?GAAP|adjusted", re.I)
+# 83차 — "Core EPS" 도 논갭입니다 (실물 PG). P&G 는 자기네 논갭 지표를
+# "Core" 라고 부릅니다: "Diluted EPS $1.63 … **Core EPS $1.59**".
+# 이 말을 모르면 논갭 값이 GAAP 칸에 들어갑니다.
+_NONGAAP_NEAR_RE = re.compile(r"non[-\s]?GAAP|adjusted|\bcore\b", re.I)
 _NONGAAP_LOOKBACK = 40   # 이름 앞 몇 글자까지 되돌아볼 것인가
+
+# 배당금 문맥 — "$0.13 per share" 앞에 배당 이야기가 있으면 EPS 가 아닙니다
+# (76차 — 실물 HPE "regular cash dividend of $0.13 per share").
+_DIVIDEND_NEAR_RE = re.compile(r"\bdividends?\b|\bdistribution\b", re.I)
 
 # 전망·목표 문맥 — 이 낱말들이 EPS 이름 주변에 있으면 그 자리는
 # 분기 **실적**이 아니라 전망·연간 목표입니다 (사고 16 — 실물:
@@ -416,6 +704,153 @@ _FORECAST_NEAR_RE = re.compile(
 )
 _FORECAST_BACK = 80      # 이름 앞
 _FORECAST_AHEAD = 80     # 이름 뒤 (값과 이름 사이의 to approach 류)
+
+# 주식 수 행 (74차 — 실물 원문으로 확증)
+# ---------------------------------------------------------------------------
+# 손익계산서 맨 아래에는 EPS 바로 다음에 **주식 수** 표가 붙습니다:
+#
+#   Net loss per share attributable to UCT common stockholders:
+#   Basic                                   $(0.40)      $(0.11)
+#   Diluted                                 $(0.40)      $(0.11)
+#   Shares used in computing net loss per share:      ← 이 줄도 "per share" 다!
+#   Basic                                     45.3         45.1
+#   Diluted                                   45.3         45.1
+#
+# 파서가 아래쪽 이름을 물어 **45.3 을 EPS 로** 읽었고, 이름에 loss 가 있어
+# 부호까지 뒤집어 **−45.30** 이 됐습니다. UCTT 는 세 해 연속 같은 사고를
+# 냈고(−45.30 · −45.10 · −44.60), 주식 수는 해마다 비슷하니 오염도 비슷한
+# 크기로 되풀이됐습니다.
+#
+# 이름 **앞쪽**에 "shares used in computing" · "weighted average shares" 가
+# 있으면 그 자리는 EPS 가 아니라 주식 수입니다. 건너뜁니다.
+_SHARE_COUNT_NEAR_RE = re.compile(
+    r"(?:shares?\s+(?:used|outstanding)|weighted[-\s]average"
+    r"|number\s+of\s+shares)", re.I,
+)
+_SHARE_COUNT_LOOKBACK = 60
+
+# 연간(누적) 값이라고 **원문이 직접 말하는** 자리 (74차 — 실물로 확증)
+# ---------------------------------------------------------------------------
+# 결산 분기 보도자료에는 분기와 연간이 나란히 실리고, 연간 쪽이 헤드라인인
+# 회사가 많습니다. 원문이 그것을 글자로 적어 두므로 추측할 필요가 없습니다:
+#
+#   GS  "Diluted earnings per common share (EPS) was **$59.45 for the year
+#        ended December 31, 2021** … and was **$10.81 for the fourth quarter**"
+#        → 진짜 분기값은 10.81 인데 59.45 를 읽었습니다.
+#   VZ  "**Full-year** 2022 … adjusted EPS … of **$5.18**"
+#        → 분기 실제는 1.2 안팎입니다.
+#
+# 이름 앞(full year/fiscal year) 또는 값 바로 뒤(for the year ended /
+# for the twelve months ended)에 이 말이 있으면 그 자리는 분기가 아닙니다.
+# **추측이 아니라 원문이 스스로 밝힌 사실**이라 안전합니다.
+# ⚠️ 이름 **앞쪽 되돌아보기**에 쓰는 것은 좁게 잡아야 합니다.
+#    "fiscal year 2022" 는 연간값 표시가 아니라 **비교 대상**으로 늘 나옵니다:
+#      "GAAP net income per share of $1.13 compared to $1.14 in the fourth
+#       quarter of **fiscal year 2022**; non-GAAP net income per share of $1.54"
+#    이것까지 연간이라 보면 진짜 분기값 1.54 를 버립니다 (실물 NTAP —
+#    74차 전수 비교에서 실제로 그렇게 됐고, 0.08(환율 영향)을 물었습니다).
+_ANNUAL_BEFORE_RE = re.compile(
+    r"\bfull[-\s]?year\b|\bfor\s+the\s+(?:full\s+)?year\b"
+    r"|\btwelve\s+months\b|\bfiscal\s+year\s+ended\b",
+    re.I,
+)
+# 줄머리에서는 넓게 봐도 됩니다 — 줄이 "Fiscal year 2023 …" 으로 **시작**
+# 하면 그 줄은 연간 실적 줄입니다 ("Fourth quarter of fiscal year 2023 …"
+# 처럼 분기로 시작하는 줄은 맨 앞이 안 맞아 걸리지 않습니다).
+_ANNUAL_LINE_HEAD_RE = re.compile(
+    r"\bfull[-\s]?year\b|\bfor\s+the\s+(?:full\s+)?year\b"
+    r"|\btwelve\s+months\b|\bfiscal\s+year\s+(?:20\d{2}|ended)\b",
+    re.I,
+)
+_ANNUAL_AFTER_RE = re.compile(
+    r"^\s*(?:in\s+|of\s+)?for\s+(?:the\s+)?(?:full\s+)?"
+    r"(?:year|twelve\s+months|fiscal\s+year)\b"
+    # "…of $59.45 **for 2021**" — 헤드라인이 연도만 적는 형식 (실물 GS)
+    r"|^\s*for\s+(?:fiscal\s+)?20\d{2}\b",
+    re.I,
+)
+_ANNUAL_BACK = 60        # 이름 앞 몇 글자까지 (줄을 넘지 않습니다)
+_ANNUAL_AHEAD = 40       # 값 뒤 몇 글자까지
+_ANNUAL_LINE_HEAD = 24   # 줄머리에서 이만큼 안에 "Full-year" 가 있으면 그 줄은 연간
+
+# 구역 제목으로 연간/분기를 가르기 (76차 — 실물 HPE 로 확증)
+# ---------------------------------------------------------------------------
+# 보도자료는 흔히 **구역 제목**으로 연간과 분기를 나눠 적습니다:
+#
+#   Fiscal 2023 Full-Year Financial Results          ← 구역 제목 ①
+#   •Diluted net earnings per share ("EPS"):
+#   ◦GAAP of $1.54, up 133% …                        ← 연간값
+#   …
+#   Fourth Quarter Fiscal 2023 Financial Results     ← 구역 제목 ②
+#   •Diluted net EPS:
+#   ◦GAAP of $0.49, up 313% …                        ← 진짜 분기값
+#
+# 값이 있는 줄만 봐서는 둘을 가를 수 없습니다 — 글자가 똑같습니다.
+# 가르는 정보는 **몇 줄 위의 구역 제목**에 있습니다.
+#
+# ⚠️ 문서 제목과 구역 제목을 반드시 구분해야 합니다. 문서 제목은
+#    "Western Digital **Reports** Fiscal Fourth Quarter and Fiscal Year
+#    2022 Financial Results" 처럼 **길고** 회사 이름·Reports 가 들어갑니다.
+#    이것을 구역 제목으로 오인해 연간이라 판정하면 **문서 전체를**
+#    버립니다. 그래서 구역 제목은 ⑴ 짧고 ⑵ Reports/Announces 가 없는
+#    줄만 인정합니다.
+# ⚠️ 제목에 "quarter" 가 함께 있으면(예: "Fourth Quarter and Full Year
+#    2025 Financial Results") 분기값도 그 아래 있으므로 건너뛰지 않습니다.
+_SECTION_TITLE_RE = re.compile(r"financial\s+results", re.I)
+_SECTION_DOC_TITLE_RE = re.compile(r"\b(?:reports?|announces?|announced)\b", re.I)
+_SECTION_QUARTER_RE = re.compile(r"\bquarter(?:ly)?\b|\bQ[1-4]\b", re.I)
+_SECTION_MAX_CHARS = 60       # 이보다 길면 문서 제목으로 봅니다
+_SECTION_LOOKBACK_LINES = 12  # 이름에서 몇 줄 위까지 구역 제목을 찾을까
+
+
+def _in_annual_section(text: str, line_start: int) -> bool:
+    """이 줄이 **연간 구역** 안에 있는가 (가장 가까운 구역 제목으로 판단).
+
+    구역 제목을 못 찾으면 False — 모르면 건드리지 않습니다.
+    """
+    줄들 = text[:line_start].split("\n")[-(_SECTION_LOOKBACK_LINES + 1):]
+    for line in reversed(줄들):
+        조각 = line.strip()
+        if not _SECTION_TITLE_RE.search(조각):
+            continue
+        if len(조각) > _SECTION_MAX_CHARS or _SECTION_DOC_TITLE_RE.search(조각):
+            return False              # 문서 제목 — 구역 제목이 아닙니다
+        if _SECTION_QUARTER_RE.search(조각):
+            return False              # 분기 구역
+        return bool(_ANNUAL_LINE_HEAD_RE.search(조각))
+    return False
+
+# 이름 뒤 숫자를 몇 번까지 다시 찾을 것인가 (74차에 4 → 10)
+# ---------------------------------------------------------------------------
+# 왜 늘리는가 (실물 GS): 한 문장에 연간·전년·분기가 줄줄이 있습니다.
+#   "was $59.45 for the year ended December 31, 2021 compared with $24.74
+#    for the year ended December 31, 2020, and was $10.81 for the fourth
+#    quarter of 2021"
+# 앞의 두 연간값과 그 사이의 날짜 정수(31 · 2021 · 31 · 2020)를 건너뛰다
+# 보면 4번으로는 **진짜 분기값 10.81 에 닿기도 전에 포기**합니다.
+#
+# 늘려도 되는 이유: 아래에서 탐색을 **같은 줄 안으로** 못박았기 때문에,
+# 횟수를 늘려도 문단을 건너뛰어 엉뚱한 숫자로 갈 수가 없습니다.
+_EPS_RETRY = 10
+
+# 이름 뒤 숫자를 어디까지 찾을 것인가 (74차)
+#   · 빈 줄(문단 끝)을 넘지 않는다
+#   · 그 안에서도 이 글자 수까지만 (한 문장에 연간·전년·분기가 줄줄이
+#     이어지는 GS 형식이 약 120자라 넉넉히 잡되, 문단을 건너뛸 만큼
+#     길지는 않게)
+_EPS_SPAN = 300
+
+# 숫자 앞의 "이상/약" 표기 — 목표·전망에만 붙습니다 (실적에는 안 붙습니다)
+_TARGET_SIGN_RE = re.compile(r"[>≥~]\s*\$?\s*$")
+
+# 주당 이름 뒤의 "by 숫자" — 영향(변화)을 말하는 문장의 표시 (87차)
+# 마침표·줄바꿈을 넘지 않으므로 **같은 문장 안**에서만 봅니다.
+_PER_SHARE_BY_RE = re.compile(r"[^.\n]{0,25}\bby\s+\$?\s*\(?-?\d", re.I)
+
+# 범위 표기 "$18.45 - $18.95" 의 앞끝/뒤끝
+_RANGE_AFTER_RE = re.compile(r"^\s*[-–]\s*\$\s*\d")
+_RANGE_BEFORE_RE = re.compile(r"\d[\d.,]*\s*[-–]\s*\$?\s*$")
+_BLANK_LINE_RE = re.compile(r"\n[ \t]*\n")
 
 
 def find_eps_value(
@@ -447,9 +882,21 @@ def find_eps_value(
         for label_match in pattern.finditer(text):
             # 이미지 슬라이드가 눌린 줄은 문장이 아니라 차트 숫자 나열입니다
             # (실물: MKSI 8.00 — 연간 차트 값). 슬라이드는 날짜 열 파서만 다룹니다.
+            #
+            # ⚠️ 83차 — "줄 안에 `<img` 가 **있기만** 하면"으로 재던 것을
+            #    **라벨 앞 거리**로 바꿉니다. 눌린 문서는 한 줄이 수천 자라,
+            #    이미지 뒤에 이어지는 **멀쩡한 문장까지 통째로** 버렸습니다.
+            #
+            #    실물 BAC 2025-10-15: "Diluted earnings per share of $1.06
+            #    compared to $0.81" 이 진짜 값인데, 그 줄 맨 앞에 이미지가
+            #    있다는 이유로 건너뛰어 **BAC 전 분기가 "없음"** 이었습니다.
+            #    라벨과 이미지의 실측 거리: BAC 1,094~4,751자 · PG 슬라이드
+            #    잡음 104자. 80차에 매출총이익률 쪽에서 같은 판단을 이미
+            #    했고(150자), 같은 자를 EPS 쪽에도 댑니다.
             line_start = text.rfind("\n", 0, label_match.start()) + 1
-            line_end_pos = text.find("\n", label_match.end())
-            if "<img" in text[line_start : line_end_pos if line_end_pos > 0 else len(text)]:
+            if "<img" in text[max(line_start,
+                                 label_match.start() - _SLIDE_LOOKBACK):
+                             label_match.start()]:
                 continue
 
             # 전망·연간 목표 문맥이면 이 자리는 분기 실적이 아닙니다 (사고 16).
@@ -478,7 +925,89 @@ def find_eps_value(
                 if _NONGAAP_NEAR_RE.search(text[window_start:start]):
                     continue
 
+            # 주식 수 행이면 EPS 가 아닙니다 (74차 — 실물 UCTT).
+            # "Shares used in computing net loss per share:" 도 'per share' 라
+            # 이름에 걸립니다. 앞쪽만 보고, 줄을 넘지 않습니다.
+            _start = label_match.start()
+            _line_start = text.rfind("\n", 0, _start) + 1
+            if _SHARE_COUNT_NEAR_RE.search(
+                text[max(_line_start, _start - _SHARE_COUNT_LOOKBACK):_start]
+            ):
+                continue
+
+            # 원문이 "연간"이라고 **직접 말하는** 자리면 분기값이 아닙니다
+            # (74차 — 실물 GS 59.45 · VZ 5.18). 이름 앞쪽만 여기서 보고,
+            # 값 뒤쪽은 숫자를 읽은 자리에서 다시 봅니다.
+            if _ANNUAL_BEFORE_RE.search(
+                text[max(_line_start, _start - _ANNUAL_BACK):_start]
+            ):
+                continue
+            # 줄(=글머리표 항목)이 "Full-year …" 로 **시작하면** 그 줄의 값은
+            # 전부 연간입니다 (실물 VZ: "•Full-year 2022 earnings per share
+            # (EPS) of $5.06 … adjusted EPS1 … of $5.18"). 이름이 줄머리에서
+            # 멀어 위의 60자 되돌아보기로는 닿지 않습니다. 줄머리 쪽만
+            # 짧게 확인합니다 — 문장 중간의 'full year' 은 보지 않습니다.
+            if _ANNUAL_LINE_HEAD_RE.match(
+                text[_line_start:_line_start + _ANNUAL_LINE_HEAD].lstrip("•·-– \t")
+            ):
+                continue
+            # 몇 줄 위의 **구역 제목**이 연간 구역이라고 말하면 건너뜁니다
+            # (실물 HPE — 위 _in_annual_section 주석 참조)
+            if _in_annual_section(text, _line_start):
+                continue
+
             label_text = label_match.group(0)
+
+            # 이름 바로 뒤가 "**by** $숫자" 면 그것은 **영향(변화)을 말하는
+            # 문장**이지 실적이 아닙니다 (87차 — 실물 CRM):
+            #   "gains (losses) on strategic investments **impacted GAAP
+            #    diluted net income per share by $0.00** and $(0.03)"
+            # 이 한 문장 때문에 CRM 의 조정 EPS·GAAP EPS 가 **둘 다 0.00** 이
+            # 됐습니다 (진짜 값은 같은 문서의 표에 2.91·1.96 으로 있었는데도).
+            # 이름 하나에 두 잣대가 같은 값으로 무너지는 것이 이 결함의 표시입니다.
+            #
+            # 저장소 원문 732건 실측 — **반례가 0건**입니다. 이 꼴로 나온 20곳은
+            # 전부 영향·변화 문장이었습니다:
+            #   CRM "impacted … per share by $0.00" · GOOGL "increased …
+            #   per share by $2.35" · IPGP "decreased … earnings per share
+            #   by $0.03" · EL "impact … per share growth by 6%" ·
+            #   GS "Book value per common share increased by 20.4%"
+            # 진짜 실적 표는 "Diluted net income per share (3)   $1.96" 처럼
+            # 이름과 값 사이에 "by" 가 없습니다.
+            #
+            # 그 숫자 하나만 건너뛰지 않고 **이름 자리를 통째로 포기**합니다 —
+            # "by $0.00 **and $(0.03)**" 처럼 같은 문장에 숫자가 이어지면
+            # 뒤엣것도 영향값이라 건너뛰기만으로는 또 뭅니다.
+            if _PER_SHARE_BY_RE.match(text[label_match.end():
+                                           label_match.end() + 48]):
+                continue
+
+            # 값 없는 **제목 줄**이면 이름 자리를 포기합니다 (103차).
+            # 이름과 숫자 사이에 **또 다른 주당 항목 이름**이 끼어 있으면
+            # 그 이름은 자기 값을 가진 것이 아닙니다 — 자세한 내력은
+            # _PER_SHARE_LABEL_RE 주석에 적어 두었습니다 (실물 CRM).
+            #
+            # ⚠️ **논갭 이름일 때만** 봅니다. 처음에는 모든 주당 이름에
+            #    걸었더니 원문 982건 중 4건이 바뀌었는데 그중 **3건이
+            #    회귀**였습니다 (MDB GAAP −0.02 → 1.44 · SNDK 43.97 → 39.25,
+            #    둘 다 GAAP 이 조정값으로 무너짐). 원인은 이렇습니다 —
+            #    조정표 머리글 "Reconciliation of GAAP net loss per share …
+            #    to non-GAAP net income per share:" 안의 GAAP 이름이
+            #    **우연히 바로 뒤의 올바른 GAAP 값과 가장 가까워서** 정답을
+            #    내고 있었습니다. 그 머리글을 막자 더 나쁜 후보가 이겼습니다.
+            #    실측된 결함(87차 ⑤)은 **조정 EPS** 제목 줄이므로 거기에만
+            #    겁니다 — 넓게 걸면 하나 고치고 셋을 잃습니다.
+            _논갭 = _NONGAAP_NEAR_RE.search(label_match.group(0)) or (
+                _NONGAAP_NEAR_RE.search(
+                    text[max(0, label_match.start() - _NONGAAP_LOOKBACK)
+                         : label_match.start()]
+                )
+            )
+            if _논갭:
+                _앞 = text[label_match.end() : label_match.end() + _TITLE_LINE_AHEAD]
+                _숫자 = _FIRST_DIGIT_RE.search(_앞)
+                if _숫자 and _PER_SHARE_LABEL_RE.search(_앞[: _숫자.start()]):
+                    continue
 
             # 이름이 "적자"라고 말하면 양수를 음수로 뒤집습니다 (아래 두 곳 공용).
             # "net income (loss) per share" 같은 겸용 표기는 선언이 아니므로 제외.
@@ -509,11 +1038,29 @@ def find_eps_value(
                 continue   # 괄호형인데 값을 못 읽으면 이 자리는 건너뜁니다
 
             search_from = label_match.end()
-            for _ in range(4):    # 같은 문장 안에서 최대 4번까지 다시 시도
+            # 탐색은 **같은 문단 안에서만** 합니다 (74차 — 실물 IPGP).
+            #   각주 "… excluded from the calculation of **adjusted EPS**,
+            #   stock based compensation of $11.0 million …" 뒤로 문단을 넘어
+            #   300자 뒤의 "**Exhibit 99.1**"(공시 번호)을 물어 조정 EPS 가
+            #   99.10 이 됐습니다.
+            #
+            # ⚠️ "같은 **줄**"로 못박으면 너무 좁습니다. 이름이 **제목 줄**이고
+            #    값이 다음 줄에 오는 형식이 실제로 흔합니다 (실물 HPE:
+            #    "net earnings per share (“EPS”):⏎◦GAAP of $0.31"). 74차 전수
+            #    비교에서 이 형식 2건을 잃는 것을 보고 문단 단위로 넓혔습니다.
+            #
+            # 문단의 끝 = **빈 줄**. 거기에 글자 수 상한을 함께 겁니다.
+            line_end = min(label_match.end() + _EPS_SPAN, len(text))
+            blank = _BLANK_LINE_RE.search(text, label_match.end(), line_end)
+            if blank:
+                line_end = blank.start()
+            for _ in range(_EPS_RETRY):
                 parsed = _parse_number_at(text, search_from)
                 if parsed is None:
                     break
                 value, num_start, number_end, _had_scale, num_end = parsed
+                if num_start >= line_end:
+                    break            # 줄을 넘었습니다 — 이 이름 자리는 포기
 
                 # 퍼센트 숫자는 EPS 가 아닙니다 (예: "grew 20% to $1.00")
                 tail_line = text[num_end : num_end + 24].split("\n", 1)[0]
@@ -535,6 +1082,39 @@ def find_eps_value(
                 # 그래서 모든 EPS 후보에 적용합니다. 소수점 값을 끝내 못 찾으면
                 # 답은 "없음"입니다 — 없음이 틀림보다 안전합니다.
                 if "." not in text[num_start:num_end]:
+                    search_from = number_end
+                    continue
+
+                # 숫자 바로 앞이 ">" · "≥" · "~" 면 그것은 **목표·전망**이지
+                # 실적이 아닙니다 (84차 — 실물 UNH 전망표):
+                #   "Diluted Net Earnings per Share to UNH Shareholders
+                #    **> $17.10**   $18.45 - $18.95"
+                # 83차에 슬라이드 규칙을 좁히자 이 전망표가 새로 읽히면서
+                # UNH 분기 EPS 가 6.04 → 17.10 으로 **틀려졌습니다.**
+                # "이상/약" 표기를 붙인 실적 숫자는 없습니다.
+                if _TARGET_SIGN_RE.search(text[max(num_start - 4, 0):
+                                               num_start]):
+                    search_from = number_end
+                    continue
+
+                # **범위 표기의 양끝**도 전망입니다 (84차 — 실물 UNH 전망표
+                # "Earnings per Share **$18.45 - $18.95**  $19.50 - $20.00").
+                # 실적을 범위로 적는 회사는 없습니다.
+                #   앞끝: 숫자 뒤에 " - $숫자" 가 이어진다
+                #   뒤끝: 숫자 앞이 "숫자 - $" 다 (적자 표기 "-$0.40" 은
+                #         대시 앞에 숫자가 없어 걸리지 않습니다)
+                if (_RANGE_AFTER_RE.match(text[num_end:num_end + 14])
+                        or _RANGE_BEFORE_RE.search(
+                            text[max(num_start - 16, 0):num_start])):
+                    search_from = number_end
+                    continue
+
+                # 값 **바로 뒤**가 "for the year ended …" 면 그 숫자는 연간값
+                # 입니다 (74차 — 실물 GS: "was $59.45 for the year ended
+                # December 31, 2021 … and was $10.81 for the fourth quarter").
+                # 이 자리는 건너뛰고 다음 숫자를 계속 찾습니다 — 바로 뒤에
+                # 진짜 분기값이 이어지는 경우가 많습니다.
+                if _ANNUAL_AFTER_RE.match(text[num_end:num_end + _ANNUAL_AHEAD]):
                     search_from = number_end
                     continue
 
@@ -586,6 +1166,61 @@ def _cell_per_share(cell: str) -> float | None:
     if value > cfg.EPS_MAX_ABS:
         return None
     return -value if negative else value
+
+
+
+# 50차 — "…net income of $3.0 billion, **or $4.73 per diluted common share**"
+# 처럼 **숫자가 이름 앞**에 오는 문장 (실물: COF·CAT·HD·MCD 등 다수).
+# 기존 find_eps_value 는 이름 뒤에서 숫자를 찾으므로 이 형태를 못 읽습니다.
+# 괄호형("($43.97 diluted net income per share)")은 이미 따로 처리하고 있고,
+# 이것은 그 사촌뻘입니다.
+_EPS_BEFORE_RE = re.compile(
+    r"\$?\s*(\(?-?[\d,]+\.\d{2}\)?)\s+per\s+"
+    r"(?P<kind>diluted\s+|basic\s+)?(?:common\s+|ordinary\s+)?share",
+    re.I,
+)
+
+
+def find_eps_before_per_share(text: str) -> float | None:
+    """"$4.73 per diluted common share" 형태에서 주당 금액을 읽습니다.
+
+    · **희석(diluted)** 표기를 먼저 찾고, 없으면 수식어 없는 것을 씁니다.
+      'basic' 은 쓰지 않습니다 — 희석이 회사가 대표로 내세우는 값입니다.
+    · 같은 줄 앞쪽에 'non-GAAP'·'adjusted' 가 있으면 건너뜁니다.
+    · 괄호 표기 "$(8.58)" 는 음수입니다 (회계 표기).
+    · 전망 문맥(사고 16)이면 건너뜁니다.
+    """
+    if not text:
+        return None
+    for want_diluted in (True, False):
+        for match in _EPS_BEFORE_RE.finditer(text):
+            kind = (match.group("kind") or "").strip().lower()
+            if kind == "basic":
+                continue
+            if want_diluted and kind != "diluted":
+                continue
+            start = match.start()
+            line_start = text.rfind("\n", 0, start) + 1
+            window = text[max(line_start, start - _NONGAAP_LOOKBACK):start]
+            if _NONGAAP_NEAR_RE.search(window):
+                continue
+            # 배당금은 EPS 가 아닙니다 (76차 — 실물 HPE). 67차에도 JPM
+            # 배당금이 EPS 자리에 들어와 이익 시계열을 톱니로 만들었습니다.
+            if _DIVIDEND_NEAR_RE.search(text[line_start:start]):
+                continue
+            back = max(start - _FORECAST_BACK, line_start,
+                       text.rfind(". ", 0, start) + 2)
+            if _FORECAST_NEAR_RE.search(text[back:match.end()]):
+                continue
+            raw = match.group(1)
+            negative = raw.startswith("(") and raw.endswith(")")
+            value = float(raw.strip("()").replace(",", ""))
+            if negative:
+                value = -value
+            if abs(value) > cfg.EPS_MAX_ABS:
+                continue
+            return value
+    return None
 
 
 def find_eps_in_column_table(text: str) -> dict:
@@ -783,6 +1418,9 @@ def parse_press_release(text: str) -> dict:
     result["gaap_eps"] = find_eps_value(
         text, LABELS_GAAP_EPS, exclude_nongaap=True
     )
+    if result["gaap_eps"] is None:
+        # 숫자가 이름 앞에 오는 문장 (50차) — 이름 뒤 탐색이 실패한 뒤에만
+        result["gaap_eps"] = find_eps_before_per_share(text)
 
     # 문장형으로 못 찾았을 때만 열 방향 표를 시도합니다 (실물: CGNX —
     # 열 제목이 여러 줄에 쌓인 표. 확신이 안 서면 그대로 없음).
@@ -906,6 +1544,29 @@ def extract_period_label(text: str, filing_date: str) -> str:
             return f"{year} Q{match.group(1)}"
     # 분기 표현을 못 찾으면 제출 연월만 짧게 표시 (예: "25/05")
     return f"{filing_date[2:4]}/{filing_date[5:7]}"
+
+
+def orphan_counts(series: dict, period_ends, start_date: str) -> dict:
+    """분기 목록에 **짝이 없어 버려지는** XBRL 사실을 셉니다 (106차 계기).
+
+    분기 목록(`period_ends`)은 **논갭 영업이익에서만** 만들어집니다.
+    다른 항목은 그 날짜를 열쇠로 찾으므로, 영업이익이 없는 분기의 값은
+    찾아 놓고도 버려집니다.
+
+    실물로 그 꼴이 보였습니다 — BAC 는 `Revenues` 가 55건 살아남는데
+    스냅샷의 `revenue_xbrl` 은 44행 전부 비어 있고, 대신 보도자료의
+    쓰레기 값(8달러)이 들어갔습니다. 은행·보험은 `OperatingIncomeLoss`
+    를 신고하지 않습니다(이자수익·대손충당금 구조).
+
+    ⚠️ **세기만 합니다.** 분기 목록의 뼈대를 바꾸면 모든 종목의 행이
+    달라져 판정까지 흔들리므로, 먼저 숫자를 보고 고칠지 정합니다.
+    """
+    보유 = set(period_ends)
+    out = {"분기목록(영업이익 기준)": len(보유)}
+    for key in ("revenue", "gaap_eps", "gross_profit"):
+        있는날 = {d for d in (series.get(key) or {}) if d >= start_date}
+        out[key] = len(있는날 - 보유)
+    return out
 
 
 def period_end_label(period_end: str) -> str:
@@ -1035,7 +1696,110 @@ def new_report(ticker: str) -> dict:
         # 개발 환경은 SEC 가 차단되어 실물을 볼 수 없으므로, 실패한 원문을
         # 배포된 앱이 저장소로 커밋해 주면 다음 세션이 그 실물로 파서를 고칩니다.
         "raw_texts": [],
+        # 시간 예산에 걸려 옛 분기를 못 훑고 멈췄나 (94차 — 10년 확장 안전장치)
+        "시간초과": False,
     }
+
+
+# ---------------------------------------------------------------------------
+# 수집 시간 예산 (94차 — 10년 확장 안전장치)
+# ---------------------------------------------------------------------------
+# 깃허브 액션은 180분에 작업을 강제로 끊습니다. 끊기면 그날 수집물도,
+# 애써 내려받은 공시 원문 캐시도 **둘 다** 사라집니다. 10년치를 한 번에
+# 받으려다 매번 이 덫에 걸리면 영영 못 받습니다.
+#
+# 그래서 로봇이 시작할 때 "이 시각까지만 8-K 를 훑는다"는 마감 시각을
+# 정해 두고, 넘으면 지금까지 받은 만큼으로 멈춥니다. 8-K 는 최신 것부터
+# 훑으므로 잘리는 쪽은 항상 **가장 오래된 분기**이고 최근 분기는 온전합니다.
+# 받은 원문은 캐시에 남으니 다음 런이 그만큼 공짜로 앞서 나갑니다.
+#
+# 예산을 안 걸면(기본) 마감이 없어 예전과 똑같이 동작합니다 — 테스트와
+# 개발 환경은 이 길로 갑니다.
+_DEADLINE_LOCK = threading.Lock()
+_DEADLINE: float | None = None
+
+
+def set_collect_budget(minutes: float | None, clock=None) -> None:
+    """지금부터 minutes 분 뒤를 8-K 훑기의 마감으로 정합니다.
+
+    minutes 가 None 이거나 0 이하면 마감을 없앱니다(무제한).
+    clock 은 시험에서 가짜 시계를 끼우기 위한 자리입니다.
+    """
+    global _DEADLINE
+    if clock is None:
+        import time as _time
+        clock = _time.monotonic
+    with _DEADLINE_LOCK:
+        _DEADLINE = None if not minutes or minutes <= 0 else clock() + minutes * 60.0
+
+
+def _budget_over(clock=None) -> bool:
+    """마감을 넘겼는가. 마감이 없으면 항상 False."""
+    with _DEADLINE_LOCK:
+        deadline = _DEADLINE
+    if deadline is None:
+        return False
+    if clock is None:
+        import time as _time
+        clock = _time.monotonic
+    return clock() >= deadline
+
+
+# 원문 부탁 목록 (73차) — 조사(audit_data.py)가 "이 공시는 값을 읽었더라도
+# 원문이 필요하다"고 적어 둔 목록입니다.
+# ---------------------------------------------------------------------------
+# 왜 필요한가: 지금 보관되는 원문은 "잣대값을 하나도 못 읽은" **실패** 공시
+# 뿐입니다. 그래서 VZ 5.18 · GS 59.45 처럼 **잘못 읽은** 값의 원인을 볼
+# 방법이 없었습니다 (개발 환경은 SEC 차단). 목록에 적힌 공시는 값을
+# 읽었어도 원문을 함께 담아 옵니다. **값은 지우지 않습니다.**
+_WANTED_CACHE: dict | None = None
+
+
+def _wanted_raw_set() -> set[tuple[str, str]]:
+    """{(종목, 발표일)} 집합. 파일이 없거나 깨졌으면 빈 집합 (조용히 넘어감)."""
+    global _WANTED_CACHE
+    if _WANTED_CACHE is None:
+        wanted: set[tuple[str, str]] = set()
+        try:
+            with open(os.path.join(cfg.MEASURE_DIR, "wanted_raw.json"),
+                      encoding="utf-8") as f:
+                for row in (json.load(f).get("목록") or []):
+                    종목, 날짜 = row.get("종목"), str(row.get("발표일") or "")[:10]
+                    if 종목 and 날짜:
+                        wanted.add((종목, 날짜))
+        except (OSError, ValueError, AttributeError):
+            pass          # 목록이 없어도 수집은 그대로 돌아야 합니다
+        _WANTED_CACHE = wanted
+    return _WANTED_CACHE
+
+
+def _is_wanted_raw(ticker: str, filing_date) -> bool:
+    """이 공시가 '원문 부탁 목록'에 있는가."""
+    return (ticker, str(filing_date)[:10]) in _wanted_raw_set()
+
+
+def _should_keep_raw(had_exhibit: bool, parsed: dict, text: str) -> bool:
+    """이 보도자료 원문을 고칠 재료로 보관할 것인가.
+
+    보관 자리는 종목당 몇 칸뿐이라 **무엇을 넣느냐가 중요합니다.**
+
+    60차 — 조건을 "조정 EPS 를 못 읽음"에서 "**잣대값을 하나도** 못 읽음"
+    으로 좁혔습니다. 잣대 사다리는 셋(조정EPS·EBITDA·GAAP EPS) 중 아무거나
+    8분기면 되는데, 옛 조건은 GAAP EPS 나 EBITDA 를 멀쩡히 읽은 원문까지
+    보관했습니다. 실측: 보관된 153건을 지금 파서로 다시 읽어 보니
+    **47건(31%)이 이미 잣대값을 읽을 수 있는 것**이었고, 그것들이 정작
+    막힌 종목이 써야 할 자리를 차지하고 있었습니다.
+
+    보도자료 첨부(EX-99)가 아니거나 실적발표로 보이지 않으면 보관하지
+    않습니다 — 파트너십 발표 같은 비실적 8-K 가 자리를 차지한 실물 사고가
+    있었습니다(LITE·COHR 2026-03-02).
+    """
+    if not had_exhibit:
+        return False
+    if any(parsed.get(f) is not None
+           for f in ("adj_eps", "adjusted_ebitda", "gaap_eps")):
+        return False
+    return _looks_like_earnings(text)
 
 
 def _keep_raw_text(report: dict, filing_date: str, url: str, text: str) -> None:
@@ -1043,16 +1807,24 @@ def _keep_raw_text(report: dict, filing_date: str, url: str, text: str) -> None:
 
     파싱 실패 사례가 가장 값진 디버깅 자료입니다 — 지금까지 파서가 계속
     어긋난 이유가 "가짜(지어낸) 예제로만 테스트해서"였기 때문입니다.
-    저장소가 무한히 커지지 않게 종목당 건수와 글자 수에 상한을 둡니다.
+    저장소가 무한히 커지지 않게 종목당 **건수·글자수·총량** 셋 다 막습니다.
+
+    총량 상한이 왜 따로 필요한가 (60차): 건수만 막으면 최악의 경우
+    12건 × 120,000자 = 1.4MB 가 한 종목에 쌓입니다. 실패 종목이 66개면
+    저장소가 93MB 까지 부풀 수 있습니다. 실측 평균은 23KB 라 보통은
+    문제가 안 되지만, **보통을 믿고 상한을 안 두면 언젠가 터집니다.**
     """
     kept = report.setdefault("raw_texts", [])
     if len(kept) >= cfg.MEASURE_RAW_MAX:
+        return
+    piece = text[: cfg.MEASURE_RAW_TEXT_CAP]
+    if sum(len(k["text"]) for k in kept) + len(piece) > cfg.MEASURE_RAW_TOTAL_CAP:
         return
     kept.append(
         {
             "filing_date": filing_date,
             "url": url,
-            "text": text[: cfg.MEASURE_RAW_TEXT_CAP],
+            "text": piece,
         }
     )
 
@@ -1100,6 +1872,20 @@ def fetch_earnings_8k(
         if scanned >= cfg.MAX_8K_SCAN:
             report["note"] = f"8-K {cfg.MAX_8K_SCAN}건까지만 확인했습니다"
             break
+        # 시간 예산 초과 — 옛 분기를 포기하고 지금까지 받은 만큼으로 멈춥니다
+        # (94차. 최신 것부터 훑으므로 잘리는 쪽은 항상 가장 오래된 분기입니다)
+        #
+        # ⚠️ 단, 바닥(COLLECT_BUDGET_FLOOR)을 채우기 전에는 멈추지 않습니다.
+        #    예산은 전체 시계로 재는데 종목은 순서대로 처리되므로, 바닥이
+        #    없으면 뒷쪽 종목이 8-K 를 **한 건도** 못 훑어 최신 분기까지
+        #    잃습니다 — 표본을 늘리려다 있던 표본을 깎는 최악입니다.
+        if report["parsed_ok"] >= cfg.COLLECT_BUDGET_FLOOR and _budget_over():
+            report["시간초과"] = True
+            report["note"] = (
+                f"수집 시간 예산 초과 — 실적 {report['parsed_ok']}건까지만 받았습니다"
+                " (다음 런이 캐시로 이어받습니다)"
+            )
+            break
         scanned += 1
         report["filings_found"] += 1
 
@@ -1109,6 +1895,12 @@ def fetch_earnings_8k(
         report["text_ok"] += 1
         if text_source and not report["text_source"]:
             report["text_source"] = text_source
+
+        # 투자자 설명회 자료는 첨부(EX-99)로 와도 실적발표가 아닙니다 (85차).
+        # 이 검사를 아래 표지 판별보다 **먼저** 두는 이유: 설명회 자료는
+        # 대개 EX-99 첨부라, 표지 판별을 건너뛰는 길로 그대로 들어옵니다.
+        if _looks_like_slide_deck(text):
+            continue
 
         # EX-99 첨부(보도자료)를 확보했다면 표지 문구 판별은 건너뜁니다.
         # 표지에는 숫자가 없어 실적발표인데도 탈락하는 경우가 있기 때문입니다.
@@ -1136,7 +1928,7 @@ def fetch_earnings_8k(
         # ⚠️ 실적발표로 보이는 것만 남깁니다. 실제 저장해 보니 파트너십 발표 같은
         #    비실적 8-K(EPS 가 원래 없는 문서)가 보관 상한(종목당 2건)을 차지해
         #    정작 파서가 진 실적 원문이 못 담겼습니다 (실물: LITE·COHR 2026-03-02).
-        if had_exhibit and parsed["adj_eps"] is None and _looks_like_earnings(text):
+        if _should_keep_raw(had_exhibit, parsed, text):
             _keep_raw_text(
                 report, str(filing.filing_date), _safe_filing_url(filing), text
             )
@@ -1150,6 +1942,15 @@ def fetch_earnings_8k(
                 and had_exhibit):
             _keep_raw_text(
                 report, f"의심정수_{filing.filing_date}",
+                _safe_filing_url(filing), text,
+            )
+
+        # 조사(73차)가 콕 집어 부탁한 공시 — 값을 읽었더라도 원문을 담아 옵니다.
+        # 다음 세션이 "왜 이 값이 들어왔는지"를 실물로 볼 수 있게 하려는 것이고,
+        # **값은 그대로 둡니다** (65차 §④ "표시부터, 지우지 말고").
+        if had_exhibit and _is_wanted_raw(ticker, filing.filing_date):
+            _keep_raw_text(
+                report, f"부탁_{filing.filing_date}",
                 _safe_filing_url(filing), text,
             )
 
@@ -1258,6 +2059,32 @@ _RESULTS_HINTS_RE = re.compile(
 )
 
 
+# 투자자 설명회 자료(슬라이드 묶음)를 실적발표와 가르는 표시 (85차)
+# ---------------------------------------------------------------------------
+# 80·84차에 KLAC·QRVO·MKSI 세 건이 **투자자 설명회 자료인데 실적발표로
+# 통과**해 엉뚱한 값을 냈습니다(KLAC 4.93·35% 는 모델 가정과 KPI 표,
+# MKSI 5.59 는 분기인지 연간인지도 확정 못 한 값). 그때는 근거가 모자라
+# 미뤘는데, 세 번째 사례가 나와 실물로 재 봤습니다.
+#
+# 갈라주는 표시는 **이미지 파일 이름**입니다. 설명회 자료는 장마다 그림이라
+# `src="…slide7.jpg"` · `…p14g1.jpg` · `…ex99_1p81g1.jpg` 처럼 **쪽 번호가
+# 박힌 이름**을 씁니다. 실적발표문에도 그림(로고·차트)은 있지만 그런
+# 이름은 아닙니다.
+#
+# 저장소 원문 694건 실측 — 경계가 아주 깨끗합니다:
+#     쪽 그림 0개   672건   (BAC 19·JPM 14·UNH 17 은 전부 0)
+#     쪽 그림 1~9개   2건
+#     쪽 그림 10개+  20건   (KLAC 142 · GS 118 · QRVO 95 · MKSI 51 · PG 35)
+# 2개와 10개 사이가 비어 있어 문턱을 10으로 둡니다.
+_SLIDE_SRC_RE = re.compile(r'src="[^"]*(?:slide|p\d+g\d+|ex99_1p\d)', re.I)
+_SLIDE_DECK_MIN = 10
+
+
+def _looks_like_slide_deck(text: str) -> bool:
+    """쪽 번호가 박힌 그림이 여럿이면 투자자 설명회 자료입니다."""
+    return len(_SLIDE_SRC_RE.findall(text)) >= _SLIDE_DECK_MIN
+
+
 def _looks_like_earnings(text: str) -> bool:
     """이 공시가 실적발표인지 대략 판별합니다."""
     lowered = text[:20000].lower()
@@ -1265,6 +2092,9 @@ def _looks_like_earnings(text: str) -> bool:
         return False
     # 합병·인수 발표인데 실적 신호가 없으면 실적발표가 아닙니다
     if _MERGER_HINTS_RE.search(lowered) and not _RESULTS_HINTS_RE.search(lowered):
+        return False
+    # 투자자 설명회 자료는 실적발표가 아닙니다 (위 상자 참조)
+    if _looks_like_slide_deck(text):
         return False
     return True
 
@@ -1442,6 +2272,61 @@ _XBRL_CONCEPTS = {
 # 항목별 단위 — 적지 않으면 달러(USD). 주당 금액은 단위가 다릅니다.
 _XBRL_UNITS = {"gaap_eps": "USD/SHARES"}
 
+# 주당 금액이 "같다"고 볼 차이 (92차)
+# ---------------------------------------------------------------------------
+# EPS 는 센트 단위로 발표되므로, 후보 둘이 1센트 안이면 같은 값입니다.
+_PER_SHARE_CLOSE = 0.01
+
+
+def _is_per_share(unit: str) -> bool:
+    """주당 단위인가 — 글자 그대로가 아니라 낱말로 가릅니다."""
+    return "SHARE" in (unit or "").upper()
+
+
+def _unit_matches(row_unit: str, wanted: str) -> bool:
+    """자료의 단위 글자가 우리가 원하는 단위인가.
+
+    주당 단위는 제공처마다 "USD/shares" · "USD-per-shares" · "usd/share"
+    처럼 적는 법이 달라 글자 비교로는 새 나갑니다. 주당 단위에는 반드시
+    "share" 가 들어가고 금액 단위에는 안 들어가므로 그것으로 가릅니다.
+    """
+    if _is_per_share(wanted):
+        return _is_per_share(row_unit)
+    return not _is_per_share(row_unit) and row_unit.upper() == wanted.upper()
+
+
+def _pick_close_value(unique: list[float], per_share: bool) -> float | None:
+    """같은 분기에 후보가 여럿일 때 하나를 고릅니다 (못 고르면 None).
+
+    ⚠️ 92차 — 예전 규칙은 `low > 0 and high / low <= 2.0` 하나뿐이었고,
+       그것이 **주당 금액을 거의 다 버리고 있었습니다.** 규칙을 직접
+       돌려 본 결과(SEC 접속 없이 재현):
+
+           적자 분기   [-0.31, -0.30]  → 제외   ← 사실상 같은 값인데
+           0 근처      [ 0.00,  0.02]  → 제외
+           기본/희석   [ 0.10,  0.30]  → 제외
+           매출        [154억, 154억]  → 통과
+
+       원인 둘. ⑴ `low > 0` 이라 **적자면 무조건 탈락**한다.
+       ⑵ 비율 판정은 값이 작을수록 가혹하다 — 0.10 과 0.30 은 3배지만
+       실제 차이는 20센트뿐이다.
+
+       그래서 **주당 금액은 비율이 아니라 절대차**로 본다. 금액은 자릿수가
+       커서 비율이 맞으므로 그대로 둔다 (거기까지 손대면 검증 범위가
+       넓어져 89차 전망 가드의 실수를 되풀이한다).
+    """
+    if len(unique) == 1:
+        return unique[0]
+    low, high = unique[0], unique[-1]
+    if per_share:
+        # 1e-9 은 부동소수점 여유입니다 — -0.30 − (-0.31) 이 컴퓨터에서는
+        # 0.010000000000000009 로 나와 "1센트 이내"를 아슬아슬하게 벗어납니다.
+        가까움 = (high - low) <= _PER_SHARE_CLOSE + 1e-9
+        return unique[len(unique) // 2] if 가까움 else None
+    if low > 0 and high / low <= 2.0:
+        return unique[len(unique) // 2]
+    return None
+
 
 def fetch_xbrl_approximation(
     ticker: str,
@@ -1477,6 +2362,28 @@ def fetch_xbrl_approximation(
     period_ends = sorted(
         d for d in series.get("op_income", {}) if d >= start_date
     )
+
+    # 106차 계기 — **분기 목록을 논갭 영업이익에서만 만든다**는 사실을
+    # 숫자로 남깁니다.
+    #
+    # 무엇이 의심스러운가: 아래에서 매출·이익률 등은 이 `period_ends` 를
+    # 열쇠로 찾습니다. 그러니 영업이익이 없는 분기의 매출은 **찾아 놓고도
+    # 버려집니다.** 실측으로 그 꼴이 이미 보였습니다 —
+    #
+    #   BAC  Revenues(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 남음 55
+    #   그런데 스냅샷의 revenue_xbrl 은 44행 전부 None
+    #
+    #   은행·보험은 `OperatingIncomeLoss` 를 신고하지 않습니다 (이자수익·
+    #   대손충당금 구조라 "영업이익" 줄이 없습니다). 제약사도 분기에 따라
+    #   빠집니다. 그러면 이 종목들은 XBRL 매출이 **한 칸도** 안 붙고,
+    #   92차 설계상 언제나 보도자료로 떨어져 쓰레기 값이 들어갑니다
+    #   (실물 BAC 8달러 · C −500만 — 106차에 전수로 182칸 확인).
+    #
+    # ⚠️ 아직 **고치지 않습니다.** 분기 목록의 뼈대를 바꾸면 모든 종목의
+    #    행이 달라져 판정까지 흔들립니다. 먼저 **얼마나 버려지는지** 세고,
+    #    그 숫자를 보고 고칠지 정합니다 (짐작으로 뼈대를 건드리지 않는다).
+    if report is not None:
+        report["xbrl_orphan"] = orphan_counts(series, period_ends, start_date)
 
     # ⚠️ **되돌릴 항목은 모든 분기에 있을 때만 씁니다.**
     #
@@ -1562,6 +2469,9 @@ def fetch_xbrl_approximation(
                 "da": da,                 # 감가상각비 — EBITDA 역산에 씁니다
                 "gross_margin_pct": gm_pct,
                 "source": cfg.SRC_APPROX,
+                # 아직 보도자료가 안 붙은 상태 (98차 계기). 붙으면
+                # _apply_press_to_row 가 True 로 바꿉니다.
+                "press_matched": False,
                 "gm_is_gaap": True,
                 "filing_url": f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company={ticker}&type=8-K",
                 "derivation": (
@@ -1739,20 +2649,40 @@ def _period_series(
     candidates: dict[str, list[float]] = {}
     rejected = 0
 
+    # 93차 — 어느 검사가 버리는지 따로 셉니다.
+    #   92차 계기가 "받음 N · 버림 N · 남음 0" 을 보여 줬지만, ①이름과
+    #   ②단위 중 어느 쪽인지는 알려 주지 못했습니다. 본 값의 예시도
+    #   함께 남겨야 다음 실행에서 짐작 없이 확정할 수 있습니다.
+    이름버림 = 단위버림 = 0
+    본이름: list[str] = []
+    본단위: list[str] = []
+
     for _, row in df.iterrows():
         # ① 개념 이름 완전일치 ("us-gaap:Revenues" → "Revenues")
         if concept_col is not None:
             name = str(row[concept_col]).split(":")[-1].strip().lower()
+            if len(본이름) < 3 and name not in 본이름:
+                본이름.append(name)
             if name != wanted:
                 rejected += 1
+                이름버림 += 1
                 continue
 
-        # ② 항목에 맞는 단위만 — 달러 항목은 USD, 주당 항목은 USD/shares.
+        # ② 항목에 맞는 단위만 — 달러 항목은 USD, 주당 항목은 주당 단위.
         #    (다른 단위의 값이 섞이면 자릿수가 무너집니다 — 배포 사고의 원인)
+        #
+        # 92차 — 주당 항목의 단위 글자를 **글자 그대로 맞추지 않습니다.**
+        #   자료 제공처마다 "USD/shares" · "USD-per-shares" · "usd/share"
+        #   처럼 적는 법이 달라, 한 글자만 어긋나도 전부 버려집니다.
+        #   주당 단위에는 반드시 "share" 가 들어가고 금액 단위에는 들어가지
+        #   않으므로, **낱말로** 가릅니다.
         if unit_col is not None:
             row_unit = str(row[unit_col]).strip().upper()
-            if row_unit and row_unit != unit.upper():
+            if len(본단위) < 3 and row_unit not in 본단위:
+                본단위.append(row_unit)
+            if row_unit and not _unit_matches(row_unit, unit):
                 rejected += 1
+                단위버림 += 1
                 continue
 
         try:
@@ -1769,9 +2699,9 @@ def _period_series(
             out[key] = unique[0]
             continue
         # ③ 값이 서로 크게 다르면 어느 것이 맞는지 알 수 없으므로 쓰지 않습니다
-        low, high = unique[0], unique[-1]
-        if low > 0 and high / low <= 2.0:
-            out[key] = unique[len(unique) // 2]   # 비슷하면 가운데 값
+        picked = _pick_close_value(unique, per_share=_is_per_share(unit))
+        if picked is not None:
+            out[key] = picked
         else:
             ambiguous.append(f"{concept} {key}: 후보 {len(unique)}개가 서로 달라 제외")
 
@@ -1780,6 +2710,18 @@ def _period_series(
             report["xbrl_rejected"] = report.get("xbrl_rejected", 0) + rejected
         if ambiguous:
             report.setdefault("xbrl_ambiguous", []).extend(ambiguous)
+        # 91차 — **조용한 0 을 없앤다.**
+        #   XBRL GAAP EPS 가 스냅샷 3,066행에 **한 건도** 안 들어와 있는데
+        #   로봇 기록에 오류가 하나도 없었습니다. 어디서 사라졌는지 알 수가
+        #   없어 추측만 가능했습니다(단위 글자? 개념 이름? 모호 판정?).
+        #   그래서 개념별로 **받은 줄 · 버린 줄 · 남은 분기**를 적어 둡니다.
+        #   다음 실행이 숫자로 말해 주면 그때 고칩니다.
+        report.setdefault("xbrl_calls", []).append(
+            f"{concept}({months}개월): 받음 {len(df)} · "
+            f"이름버림 {이름버림} · 단위버림 {단위버림} · "
+            f"모호 {len(ambiguous)} · 남음 {len(out)} · "
+            f"본이름 {본이름} · 본단위 {본단위}"
+        )
 
     return out
 
@@ -1787,8 +2729,55 @@ def _period_series(
 # ---------------------------------------------------------------------------
 # 바깥에서 호출하는 함수
 # ---------------------------------------------------------------------------
+# 보도자료가 덮어쓰기 전의 XBRL 값을 따로 남길 칸 (90차).
+# 이 셋만인 이유: XBRL 에 **규정으로 존재가 보장된** 항목입니다.
+# 조정 EPS·조정 EBITDA 는 회사가 스스로 정의한 값이라 XBRL 에 없고,
+# 그래서 보도자료 파서가 계속 맡아야 합니다.
+_XBRL_KEPT_FIELDS = ("gaap_eps", "revenue", "gross_margin_pct")
+
+
 def _apply_press_to_row(row: dict, press: dict) -> None:
-    """8-K에서 실제로 뽑힌 값만 XBRL 행에 덮어씁니다 (없는 값은 XBRL 값 유지)."""
+    """8-K에서 실제로 뽑힌 값만 XBRL 행에 덮어씁니다 (없는 값은 XBRL 값 유지).
+
+    ⚠️ 90차 — **덮어쓰기 전에 XBRL 값을 따로 남깁니다.**
+
+    왜 (89차까지의 실측): 야후와 어긋난 칸을 배율로 나눠 보니, 파서가
+    숫자를 잘못 읽는 게 아니라 **엉뚱한 자리의 숫자를 집는** 것이
+    대부분이었습니다 — GAAP EPS 어긋난 128칸 중 전년 열 25.8% ·
+    9개월 누적 18.8% · 연간값 9.4% · 부호 반대 7.0%.
+
+    보도자료는 표를 글자로 납작하게 편 것이라 숫자에 "이건 3개월치다 /
+    올해 열이다 / 전체가 아니라 사업부다"라는 표시가 남아 있지 않습니다.
+    반면 XBRL 은 값마다 기간·단위·부문이 태그로 붙어 있어 그 네 종류가
+    **구조적으로 불가능**합니다. 그런데 지금은 태그 붙은 값을 짐작으로
+    읽은 값이 무조건 덮어쓰고 있었습니다.
+
+    그래서 **먼저 재 봅니다.** 두 값을 나란히 남기고, 야후를 심판으로
+    칸별 승률을 실측한 뒤에 어느 쪽을 본선으로 삼을지 정합니다.
+    (근거 없이 뒤집었다가 되돌린 89차 전망 가드의 실수를 되풀이하지
+    않으려는 것입니다.)
+
+    값은 **하나도 바뀌지 않습니다** — `_xbrl` 칸이 늘어날 뿐입니다.
+    """
+    # 덮어쓰기 전의 XBRL 값 (짝지을 XBRL 행이 없으면 None)
+    for _field in _XBRL_KEPT_FIELDS:
+        row[f"{_field}_xbrl"] = row.get(_field)
+
+    # 이 분기에 **보도자료가 실제로 붙었는가** (98차 계기).
+    #
+    # 왜 필요한가: 조정 EPS 가 빈 칸일 때 원인이 두 가지인데 지금은 구분이
+    # 안 됩니다.
+    #   ㉠ 보도자료를 아예 못 붙였다      → 수집 문제 (고칠 수 있음)
+    #   ㉡ 붙었는데 그 안에 값이 없었다   → 회사가 안 준 것 (없음이 정답)
+    # 둘은 대응이 정반대인데, 표시가 없어서 **짐작밖에 할 수 없었습니다.**
+    #
+    # ⚠️ 기존 `source` 로는 알 수 없습니다. `source` 는 **논갭 영업이익의
+    #    출처**만 적는 칸이라, 보도자료가 붙었어도 그 안에 논갭 영업이익이
+    #    없으면 XBRL 값인 '근사치'로 남습니다 (실물: FN·QCOM·TER 는 조정
+    #    EPS 를 보도자료에서 읽었는데도 전 행이 '근사치'입니다).
+    #    97차에서 제가 `source` 로 이걸 재려다 **틀린 진단을 냈습니다.**
+    row["press_matched"] = True
+
     if press.get("op_income") is not None:
         row["op_income"] = press["op_income"]
         row["source"] = press.get("source") or cfg.SRC_DERIVED
@@ -1816,10 +2805,44 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
     # op_income 성공 여부와 무관하게 따로 옮겨 둡니다.
     if press.get("adj_eps") is not None:
         row["adj_eps"] = press["adj_eps"]
-    if press.get("gaap_eps") is not None:
+    # GAAP EPS — **XBRL 우선, 없으면 보도자료** (99차, 92차 매출과 같은 설계)
+    #
+    # 야후를 심판으로 갈린 칸을 셌더니 **XBRL 61 : 보도자료 2** 였다
+    # (매출 때의 98:0 과 같은 방향). 전체 정확도로도 확인했다:
+    #   지금(보도자료 우선)        341/439 = 77.7%
+    #   XBRL 우선, 없으면 보도자료  400/439 = **91.1%**
+    #
+    # "XBRL 만 쓴다"로 두지 않은 이유: 그러면 93칸(보도자료만 있는 칸)을
+    # 통째로 잃는다. XBRL 이 있는 칸은 5,851행 중 3,241행뿐이고,
+    # **XBRL 만 있고 보도자료가 없는 칸은 0개**라 이 설계는 커버리지를
+    # 한 칸도 안 줄인다.
+    #
+    # ⚠️ 잃는 것을 적어 둔다 — 보도자료가 맞고 XBRL 이 틀린 칸 **2개**를
+    #    잃는다 (ETSY 2026-06-30 −0.49 ↔ −0.36 · BE 2025-10-28 −0.10 ↔
+    #    **−100.0**). BE 의 −100.0 은 우리 XBRL 읽기의 명백한 쓰레기값이다.
+    #    다만 3,241행 중 |EPS|≥50 인 행이 **이 1건뿐**이라, n=1 로 새
+    #    문턱 규칙을 만들지 않는다 — 근거 없는 가드를 넣었다가 되돌린
+    #    89차의 실수를 되풀이하지 않는다. 남은 결함으로 기록만 한다.
+    if row.get("gaap_eps") is None and press.get("gaap_eps") is not None:
         row["gaap_eps"] = press["gaap_eps"]
-    if press.get("revenue") is not None:
+    # 매출 — **XBRL 우선, 없으면 보도자료** (92차, 91차 승부 결과 반영)
+    #
+    # 91차에 야후를 심판으로 셌더니 갈린 98칸에서 **XBRL 98 : 보도자료 0**
+    # 이었다. 이긴 자리의 종류가 그동안 이름 붙인 결함과 겹친다 —
+    # 부문 매출 27건(89차 "조각 매출") · 연간/전망 10건(89차 ⑤).
+    # 실물 ABBV 117.6억(부문) ↔ 154.2억 · ADBE 259억(연간) ↔ 61.9억.
+    #
+    # "XBRL 이 언제나 이긴다"로 두지 않은 이유: 그러면 XBRL 에 없는 11칸을
+    # 잃는데 **그중 7칸이 맞던 값**이다 (ABNB 4 · NTAP 2 · APP 1, 전부
+    # 야후와 일치). 헌법 1조는 "없음이 틀림보다 안전"이지 "없음이 맞음보다
+    # 안전"이 아니다. 그래서 XBRL 이 없을 때만 보도자료를 쓴다 — 잃는 것 0.
+    if row.get("revenue") is None and press.get("revenue") is not None:
         row["revenue"] = press["revenue"]
+    # 매출총이익률은 **뒤집지 않는다** (92차).
+    #   숫자만 보면 169:0 으로 XBRL 압승이지만, 이 칸은 뜻이 다르다 —
+    #   보도자료는 회사가 발표한 **논갭** 이익률이고 XBRL·야후는 **갭**이다
+    #   (실물 ADI 69.4% ↔ 61.0%). 심판이 갭 기준이라 XBRL 이 자동으로
+    #   이길 뿐, 더 정확해서가 아니다 (86차에 이미 적어 둔 정의 차이).
     if press.get("gross_margin_pct") is not None:
         row["gross_margin_pct"] = press["gross_margin_pct"]
     if press.get("period_label"):
@@ -1855,7 +2878,19 @@ def merge_quarters(
             return None
 
     if not xbrl_quarters:
-        return sorted(press_quarters, key=lambda q: q["filing_date"])
+        # XBRL 뼈대가 통째로 비면 보도자료 행을 그대로 돌려주는데, 예전에는
+        # 여기서 **발표일 도장을 찍지 않고** 나갔습니다. 측정은 발표일로만
+        # 전 종목을 줄 세우므로(전략.md 7장), 도장이 없는 행은 측정에서
+        # 통째로 빠집니다. 실제로 22종목(은행·제약·에너지·산업재 전부와
+        # KLAC)이 이 구멍으로 빠져 나가, 41차 검증에서 "판단 불가"군이
+        # 무작위가 아니라 **업종 편향**이 되는 원인이 됐습니다.
+        # → 아래 승격 경로와 똑같이 8-K 제출일을 발표일로 찍어 줍니다.
+        stamped = []
+        for press in sorted(press_quarters, key=lambda q: q["filing_date"]):
+            row = dict(press)
+            row["announced_date"] = press.get("filing_date", "")
+            stamped.append(row)
+        return stamped
     if not press_quarters:
         return xbrl_quarters
 

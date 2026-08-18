@@ -33,7 +33,9 @@ import market_data as md
 import measure_engine
 import measure_store
 import consensus_feed
+import vendor_feed
 import sec_fundamentals as sf
+import leadership
 import sector_model
 
 
@@ -116,7 +118,22 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         tickers = list(cfg.TICKERS)
     progress(f"수집 로봇 시작 — {len(tickers)}종목 · {datetime.now(timezone.utc).isoformat()}")
 
+    # 8-K 훑기에 시간 예산을 겁니다 (94차 — 10년 확장 안전장치).
+    # 넘기면 옛 분기를 포기하고 멈춰, 그날 수집물과 원문 캐시를 꼭 남깁니다.
+    # 자세한 이유는 config.COLLECT_BUDGET_MINUTES 주석에 적어 두었습니다.
+    budget = getattr(cfg, "COLLECT_BUDGET_MINUTES", None)
+    sf.set_collect_budget(budget)
+    progress(f"8-K 훑기 시간 예산: {budget}분" if budget else "8-K 훑기 시간 예산: 없음")
+
     reports = collect_fundamentals(tickers, progress)
+    시간초과 = [r["ticker"] for r in reports if r.get("시간초과")]
+    if 시간초과:
+        progress(
+            f"⏱ 시간 예산에 걸려 옛 분기를 못 받은 종목 {len(시간초과)}개: "
+            + ", ".join(시간초과[:12])
+            + (" …" if len(시간초과) > 12 else "")
+            + " — 다음 런이 캐시로 이어받습니다"
+        )
     daily_map = collect_prices(tickers, progress)
 
     if not success_enough(reports, daily_map, tickers):
@@ -139,6 +156,45 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         # H11·H11b (33차 등록) — 섹터 정배열 폭 모델
         breadth_events = sector_model.collect_breadth_events(ds)
         verdict["가설"].update(judge.judge_sector_breadth(breadth_events))
+        # H18 (43차 등록) — 정배열 완성 시점의 52주선 이격도.
+        # 42차 탐색에서 나온 후보라 등록일 뒤의 새 완성만 판정 표본입니다.
+        verdict["가설"].update(judge.judge_completion_gap(
+            sector_model.completion_events(ds),
+            sector_model.H18_START_DAY, sector_model.H18_GAP_MIN,
+        ))
+        # H19·H20·H21 (44차 등록) — 주도섹터 판정·전환·분기점.
+        # 45차 확정 분류(config.GROUPS)로 매일 다시 셉니다. 표본이 국면
+        # 단위라 오래 "판정 불가"로 남을 것이며, 그것을 그대로 적습니다.
+        states = leadership.weekly_group_state(ds)
+        timeline = leadership.leadership_timeline(states)
+        switches = leadership.evaluate_switches(
+            ds, leadership.switch_events(timeline))
+        inflections = leadership.evaluate_inflections(
+            ds, leadership.inflection_events(timeline))
+        # H19b (46차 ⑦ 등록) — 완성 후 확인형. 기준선은 확인이 서지 않은
+        # 모든 (묶음, 주)이며, 판정 표본은 등록일 뒤의 확인만입니다.
+        confirmations = leadership.evaluate_confirmations(
+            ds, leadership.confirmation_events(ds, states=states))
+        fired = {(e["주"], e["묶음"]) for e in confirmations}
+        members = leadership.group_members(ds, leadership.default_groups())
+        baseline = []
+        for row in states:
+            if (row["주"], row["묶음"]) in fired:
+                continue
+            value = leadership.group_excess(
+                ds, members.get(row["묶음"]) or [], row["주"])
+            if value is not None:
+                baseline.append(value)
+        # 안정성 (52차 감사) — 잣대값을 조금 지워 봤을 때 주도가 얼마나
+        # 바뀌는가. 실패해도 판정 자체는 계속되게 따로 감쌉니다.
+        try:
+            stability = leadership.stability_report(ds)
+        except Exception as exc:
+            stability = {"오류": f"{type(exc).__name__}: {str(exc)[:120]}"}
+        verdict["가설"].update(judge.judge_leadership(
+            timeline, switches, inflections,
+            confirmations=confirmations, baseline=baseline,
+            start_day=leadership.H19B_START_DAY, stability=stability))
         files[f"{cfg.MEASURE_DIR}/verdict.json"] = judge.to_json(verdict)
         verdict_note = " · ".join(
             f"{name}: {entry['판정']}" for name, entry in verdict["가설"].items()
@@ -173,6 +229,22 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         surprise_note = f"서프라이즈 수집 실패: {type(exc).__name__}: {str(exc)[:160]}"
         progress(f"⚠️ {surprise_note}")
 
+    # 두 번째 자 — 데이터 회사(야후) 분기표 (75차, 주인 질문에서 나온 것).
+    # **snapshot.json 과 섞지 않습니다.** 우리 파서 값과 대조해 불일치를
+    # 재기 위한 관찰 전용 축입니다. 실패해도 그날 커밋을 막지 않습니다.
+    try:
+        옛 = vendor_feed.load(f"{cfg.MEASURE_DIR}/vendor.json")
+        보관, vendor_note = vendor_feed.collect(
+            tickers, 옛,
+            as_of=datetime.now(timezone.utc).date().isoformat(),
+            progress=progress,
+        )
+        files[f"{cfg.MEASURE_DIR}/vendor.json"] = vendor_feed.to_json(보관)
+        progress(vendor_note)
+    except Exception as exc:
+        vendor_note = f"두 번째 자 수집 실패: {type(exc).__name__}: {str(exc)[:160]}"
+        progress(f"⚠️ {vendor_note}")
+
     # 로봇 실행 기록 — 다음 세션이 읽습니다
     log = {
         "ran_at": datetime.now(timezone.utc).isoformat(),
@@ -181,6 +253,7 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         "verdict": verdict_note,
         "consensus": consensus_note,
         "surprise": surprise_note,
+        "vendor": vendor_note,
         "per_ticker": [
             {
                 "ticker": r.get("ticker"),
@@ -190,6 +263,20 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
                 "cache_hits": r.get("cache_hits", 0),
                 "cache_downloads": r.get("cache_downloads", 0),
                 "first_error": r.get("first_error", ""),
+                # 91차 — XBRL 조회가 **조용히 0 건**을 돌려주는 자리를 찾기
+                # 위한 계기. GAAP EPS 가 스냅샷에 한 건도 안 들어와 있는데
+                # 오류 기록이 하나도 없어 원인을 짚을 수가 없었습니다.
+                # 개념별 "받음·버림·모호·남음" 을 그대로 남깁니다.
+                "xbrl_calls": r.get("xbrl_calls", []),
+                "xbrl_rejected": r.get("xbrl_rejected", 0),
+                # 94차 — 시간 예산에 걸려 옛 분기를 못 받았나. "10년치를
+                # 받았다"고 짐작하지 말고 이 표시와 note 를 보세요.
+                # 106차 계기 — 분기 목록은 논갭 영업이익에서만 만들어지므로,
+                # 영업이익이 없는 분기의 매출은 찾아 놓고도 버려집니다.
+                # 얼마나 버려지는지 세어 둡니다 (아직 고치지 않고 잽니다).
+                "xbrl_orphan": r.get("xbrl_orphan") or {},
+                "시간초과": bool(r.get("시간초과")),
+                "note": r.get("note", ""),
             }
             for r in reports
         ],

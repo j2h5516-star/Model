@@ -267,6 +267,261 @@ def test_confirmation_rows_require_all_three(monkey=None):
     assert sm.CONFIRM_PAST_DAYS == 63
 
 
+
+# ---------------------------------------------------------------------------
+# 미채택 칸의 한 줄 요약 (48차 — 모양이 다른 가설을 뭉개지 않기)
+# ---------------------------------------------------------------------------
+def test_signal_summary_uses_signal_when_present():
+    entry = {"신규(판정)": {}}
+    got = app.signal_summary(entry, {"n": 12, "rate": 40.0}, {"n": 100, "rate": 25.0})
+    assert "40.0%" in got and "n=12" in got and "25.0%" in got, got
+
+
+def test_signal_summary_reports_leadership_state():
+    """H19 는 성공률이 없는 가설입니다 — '표본이 아직 없습니다'로 뭉개면 안 됩니다."""
+    entry = {"현재_주도": "광통신·대역폭 장비·부품", "국면수": 4}
+    got = app.signal_summary(entry, {}, {})
+    assert "광통신" in got and "4개" in got, got
+    assert "표본이 아직 없습니다" not in got
+
+
+def test_signal_summary_reports_episode_counts():
+    """H20·H21 은 사건 성공/전체로 적고, 있으면 기준선도 함께 적습니다."""
+    entry = {"n": 3, "성공": 1, "rate": 33.3}
+    got = app.signal_summary(entry, {}, {})
+    assert "1/3" in got and "33.3%" in got, got
+    entry2 = {"n": 5, "성공": 2, "rate": 40.0,
+              "기준선(참고)": {"n": 3123, "rate": 24.2}}
+    got2 = app.signal_summary(entry2, {}, {})
+    assert "24.2%" in got2 and "3123" in got2, got2
+
+
+def test_signal_summary_shows_exploration_when_judgment_sample_empty():
+    """H19b 처럼 판정 표본이 0건이면 탐색 표본 수치를 그 사실과 함께 적습니다."""
+    entry = {"신규(판정)": {"n": 0}, "탐색표본(참고)": {"n": 43, "rate": 14.0}}
+    got = app.signal_summary(entry, {}, {})
+    assert "판정 표본 0건" in got and "14.0%" in got and "43" in got, got
+
+
+def test_signal_summary_always_shows_instability():
+    """주도섹터를 적을 때는 **흔들림을 반드시 함께** 적습니다 (52차 감사).
+
+    지목만 적고 흔들림을 빼면 사람이 그것을 확정된 사실로 읽습니다.
+    실측: 잣대값 6% 만 지워도 주도가 210주 중 54주(25.7%) 바뀌고,
+    지금 지목한 주도도 8번 중 4번 달라집니다.
+    """
+    entry = {
+        "현재_주도": "기기 OEM 반도체", "국면수": 18,
+        "안정성": {"판정주수": 210, "지운비율": 0.06, "반복": 8,
+                   "바뀐주_중앙값": 54, "바뀐비율_중앙값": 25.7,
+                   "마지막주_불일치": 4},
+    }
+    got = app.signal_summary(entry, {}, {})
+    assert "기기 OEM 반도체" in got
+    assert "흔들림" in got, got
+    assert "25.7%" in got and "54/210" in got, got
+    assert "8번 중 4번" in got, got
+
+
+def test_instability_shows_the_spread_not_just_the_median():
+    """중앙값만 적으면 정밀도를 과장합니다 (58차).
+
+    같은 6%를 4번 지웠더니 49·60·82·113주로 나왔습니다 — **흔들림을 재는
+    자 자체가 흔들립니다.** 그래서 뽑기 사이 범위를 함께 적습니다.
+    """
+    entry = {
+        "현재_주도": "기기 OEM 반도체", "국면수": 18,
+        "안정성": {"판정주수": 210, "지운비율": 0.06, "반복": 8,
+                   "바뀐주_중앙값": 54, "바뀐비율_중앙값": 25.7,
+                   "바뀐주_최소": 16, "바뀐주_최대": 104,
+                   "마지막주_불일치": 4},
+    }
+    got = app.signal_summary(entry, {}, {})
+    assert "16~104" in got, got
+    assert "54/210" in got, got          # 중앙값도 그대로 남아야 합니다
+
+
+def test_no_fake_spread_when_every_draw_agreed():
+    """뽑기마다 같은 답이 나왔으면 범위를 적지 않습니다 — 없는 폭을
+    만들어 보이면 그것도 창작입니다."""
+    entry = {
+        "현재_주도": "A", "국면수": 3,
+        "안정성": {"판정주수": 210, "지운비율": 0.06, "반복": 8,
+                   "바뀐주_중앙값": 7, "바뀐비율_중앙값": 3.3,
+                   "바뀐주_최소": 7, "바뀐주_최대": 7,
+                   "마지막주_불일치": 0},
+    }
+    got = app.signal_summary(entry, {}, {})
+    assert "갈림" not in got, got
+    assert "7/210" in got, got
+
+
+def test_signal_summary_without_stability_still_works():
+    """안정성이 아직 없으면(옛 판정 파일) 지목만 적고 조용히 넘어갑니다."""
+    entry = {"현재_주도": "금융 중개·자본시장", "국면수": 4}
+    got = app.signal_summary(entry, {}, {})
+    assert "금융" in got and "흔들림" not in got, got
+
+
+# ---------------------------------------------------------------------------
+# 52차 감사 수리 ⑤ — 판정이 옛 코드로 계산됐는지 알리기
+# ---------------------------------------------------------------------------
+def test_old_code_verdict_raises_banner():
+    """판정 파일의 코드 판번호가 지금 코드와 다르면 경고합니다.
+
+    실제 사고: verdict 는 "데이터센터"를 주도로 적었는데 같은 원자료로
+    현재 코드를 돌리면 "기기 OEM 반도체"가 나왔습니다. 코드가 달랐던
+    것인데 화면에는 계산 시각만 있어 알 방법이 없었습니다.
+    """
+    got = app.verdict_code_warning({"code_rev": "47e7141"}, current="0713820")
+    assert got is not None, "옛 코드 판정인데 아무 말도 하지 않았습니다"
+    assert "47e7141" in got and "0713820" in got, got
+    assert "옛 코드" in got, got
+
+
+def test_same_code_verdict_is_silent():
+    """같은 판번호면 조용합니다 — 늘 뜨는 경고는 아무도 안 봅니다."""
+    assert app.verdict_code_warning({"code_rev": "abc1234"},
+                                    current="abc1234") is None
+
+
+def test_unknown_revision_never_warns():
+    """판번호를 못 알아낸 채 적혀 있으면 비교가 안 되니 겁주지 않습니다."""
+    assert app.verdict_code_warning({"code_rev": "알수없음"},
+                                    current="abc1234") is None
+    assert app.verdict_code_warning({"code_rev": "abc1234"},
+                                    current="알수없음") is None
+    assert app.verdict_code_warning(None, current="abc1234") is None
+
+
+def test_verdict_without_code_rev_is_flagged_as_old():
+    """판번호 칸이 아예 없으면 이 수리 이전 판정 — 옛 코드가 확실합니다.
+
+    52차가 걸린 실제 판정 파일이 바로 이 모양이었습니다. 여기서 조용히
+    넘어가면 정작 사고를 일으킨 파일을 놓칩니다.
+    """
+    got = app.verdict_code_warning({"computed_at": "2026-08-15T13:33:32Z"},
+                                   current="abc1234")
+    assert got is not None, "판번호 없는 옛 판정을 그냥 넘겼습니다"
+    assert "판번호가 없" in got, got
+
+
+def test_current_revision_defaults_to_running_code():
+    """current 를 안 주면 지금 돌고 있는 코드의 판번호를 씁니다."""
+    import judge
+    now = judge.code_revision()
+    if now == "알수없음":          # git 이 없는 환경이면 건너뜁니다
+        return
+    assert app.verdict_code_warning({"code_rev": now}) is None
+    assert app.verdict_code_warning({"code_rev": "0" * 7}) is not None
+
+
+def test_정배열폭_판정줄은_판정파일을_읽는다():
+    """화면 숫자가 **글자로 박히면** 데이터가 바뀌어도 아무도 모릅니다 (101차).
+
+    ⚠️ 실제 사고: 이 칸에 "H11 실측 9.4% vs 기준선 26.8%. 정배열이 다 찬
+    뒤 사는 것은 **오히려 불리**했습니다" 가 박혀 있었습니다. 10년 표본으로
+    다시 재니 **31.6% vs 31.6% (n=187)** 이라 그 문장은 거짓말이 돼
+    있었는데, 박힌 글자라 아무 경고도 없었습니다.
+
+    그래서 **다른 숫자를 넣으면 화면도 따라 달라지는지**를 못박습니다.
+    """
+    가짜 = {"가설": {
+        "H11_섹터정배열폭_60": {
+            "판정": "채택",
+            "신규(판정)": {"신호": {"n": 42, "rate": 77.7},
+                          "기준선": {"n": 900, "rate": 11.1}},
+        },
+        "H11b_섹터정배열폭_80": {
+            "판정": "판정 불가",
+            "신규(판정)": {"신호": {"n": 0}, "기준선": {}},
+        },
+    }}
+    본문 = "\n".join(app.breadth_verdict_lines(가짜))
+    assert "77.7" in 본문 and "n=42" in 본문 and "11.1" in 본문, 본문
+    assert "채택" in 본문 and "판정 불가" in 본문, 본문
+    # 옛날에 박혀 있던 숫자가 되살아나면 안 됩니다
+    assert "9.4%" not in 본문 and "26.8%" not in 본문, 본문
+
+
+def test_채택이_없으면_매수근거가_아니라고_말한다():
+    """지금 채택된 가설이 0개입니다 (96차). 화면이 그 상태를 정직하게
+    말하는지 — 실제 판정 파일로 확인합니다."""
+    import json
+    v = json.load(open("data/measure/verdict.json", encoding="utf-8"))
+    이름 = app.adopted_names(v)
+    assert 이름 == [], f"채택된 가설이 생겼습니다: {이름} — 화면 문구를 다시 보세요"
+
+
+def test_기준선은_판정파일을_읽고_없으면_예비값을_쓴다():
+    """기준선도 **글자로 박혀** 있었습니다 (101차).
+
+    화면이 "기준선 26.8%" 라고 말하는 동안 10년 표본의 실제 기준선은
+    31.6%(n=5,004) 였습니다. 판정 파일을 읽게 하고, 파일이 없을 때만
+    문서화된 예비값을 쓰도록 못박습니다 — 지어내지 않습니다.
+    """
+    가짜 = {"가설": {"H11_섹터정배열폭_60": {
+        "신규(판정)": {"기준선": {"n": 5004, "rate": 44.4}}}}}
+    assert app.breadth_baseline(가짜) == 44.4
+    # 판정 파일이 없거나 모양이 다르면 예비값
+    assert app.breadth_baseline(None) == app.BREADTH_BASELINE
+    assert app.breadth_baseline({"가설": {}}) == app.BREADTH_BASELINE
+
+
+def test_가설_설명문에는_숫자를_박지_않는다():
+    """설명문에 실측 숫자를 적으면 데이터가 바뀌어도 아무도 모릅니다 (101차).
+
+    실제 사고: H11 설명에 "오히려 나빴습니다(9.4% vs 기준선 26.8%)" 가
+    박혀 있었는데, 10년 표본에서는 31.6% vs 31.6% 이라 거짓말이었습니다.
+    """
+    for 이름, 글 in app.HYPOTHESIS_DETAILS.items():
+        for 박힌숫자 in ("9.4%", "26.8%"):
+            assert 박힌숫자 not in 글, f"{이름} 설명에 옛 실측치 {박힌숫자} 가 박혀 있습니다"
+
+
+def test_캐시는_값을_바꾸지_않는다():
+    """캐시는 **속도만** 바꿔야 합니다 (102차).
+
+    ⚠️ 처음에는 실데이터로 원본 함수와 캐시를 둘 다 돌려 비교했는데,
+    `confirmation_rows` 하나가 22.7초라 **시험 전체가 시간 초과**로
+    죽었습니다 (103차에 발견). 시험이 느려 못 돌면 안 돌린 것과 같습니다.
+
+    그래서 **가짜 함수를 끼워 "캐시가 원본을 그대로 불러 돌려주는가"**만
+    봅니다 — 값이 같은지는 이 방식이 더 확실하게 못박습니다 (원본이
+    무엇을 돌려주든 그대로 나와야 하므로).
+    """
+    import sector_model as sm
+
+    표식 = [{"섹터": "시험용", "값": 42}]
+    원래 = sm.confirmation_rows
+    sm.confirmation_rows = lambda ds: 표식
+    try:
+        assert app.cached_confirmation_rows({"a": 1}, "열쇠-A") == 표식
+    finally:
+        sm.confirmation_rows = 원래
+
+    원래2 = sm.current_breadth
+    sm.current_breadth = lambda ds: 표식
+    try:
+        assert app.cached_current_breadth({"a": 1}, "열쇠-B") == 표식
+    finally:
+        sm.current_breadth = 원래2
+
+
+
+def test_스냅샷_이름표는_새_수집이면_달라진다():
+    """캐시 열쇠가 안 바뀌면 **새 데이터가 와도 옛 화면**이 남습니다 (102차).
+
+    로봇이 새로 커밋하면 saved_at 이 바뀌므로 캐시가 저절로 갈립니다.
+    saved_at 이 없으면 종목 수라도 씁니다 — 지어내지 않습니다.
+    """
+    a = app.snapshot_key({"saved_at": "2026-08-18T06:20:08"})
+    b = app.snapshot_key({"saved_at": "2026-08-19T09:31:00"})
+    assert a != b, "수집 시각이 다른데 이름표가 같습니다 — 새 데이터가 안 보입니다"
+    assert app.snapshot_key(None) == "없음"
+    assert app.snapshot_key({"tickers": ["A", "B"]}) == "종목2"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

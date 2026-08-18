@@ -140,18 +140,241 @@ def test_raw_failure_texts_become_files():
     assert "1건" in summary
 
 
+def test_snapshot_carries_gross_margin():
+    """매출총이익률이 스냅샷에 담겨야 합니다 (69차).
+
+    수집기는 예전부터 보도자료·XBRL 에서 이 값을 읽고 있었는데 스냅샷에
+    담지 않아 개발 환경에서 쓸 수가 없었습니다. 저장만 안 했을 뿐입니다.
+    """
+    quarters = [{
+        "ticker": "TEST", "filing_date": "2025-01-31",
+        "announced_date": "2025-03-04", "period_label": "25 Q3",
+        "revenue": 135 * M, "op_income": 40 * M, "adj_eps": 0.45,
+        "gross_margin_pct": 63.4, "source": cfg.SRC_DIRECT,
+    }]
+    files, _ = measure_store.build_files(
+        ["TEST"], {"TEST": _fake_daily(), cfg.BENCHMARK: _fake_daily()}, [],
+        load_quarters=lambda t: quarters)
+    row = json.loads(files[f"{cfg.MEASURE_DIR}/snapshot.json"])["eps"]["TEST"][0]
+    assert row["gross_margin_pct"] == 63.4, row
+
+
+def test_missing_gross_margin_stays_none():
+    """회사가 안 줬으면 없음 그대로 — 지어내지 않습니다."""
+    quarters = [{
+        "ticker": "TEST", "filing_date": "2025-01-31",
+        "announced_date": "2025-03-04", "period_label": "25 Q3",
+        "revenue": 135 * M, "adj_eps": 0.45, "source": cfg.SRC_DIRECT,
+    }]
+    files, _ = measure_store.build_files(
+        ["TEST"], {"TEST": _fake_daily(), cfg.BENCHMARK: _fake_daily()}, [],
+        load_quarters=lambda t: quarters)
+    row = json.loads(files[f"{cfg.MEASURE_DIR}/snapshot.json"])["eps"]["TEST"][0]
+    assert row["gross_margin_pct"] is None, row
+
+
 # ---------------------------------------------------------------------------
 # 실패 원문 보관 (sec_fundamentals 쪽)
 # ---------------------------------------------------------------------------
 def test_keep_raw_text_respects_caps():
-    """종목당 건수 상한과 글자 수 상한을 지켜야 저장소가 무한히 안 커짐."""
+    """종목당 건수 상한과 글자 수 상한을 지켜야 저장소가 무한히 안 커짐.
+
+    60차에 총량 상한이 생겨서, 상한 셋이 각각 언제 무는지 나눠 봅니다.
+    보통 크기(23KB) 원문에서는 **건수 상한**이 먼저 뭅니다.
+    """
     report = sf.new_report("TEST")
-    long_text = "가" * (cfg.MEASURE_RAW_TEXT_CAP + 500)
+    normal = "가" * 23_000
     for i in range(cfg.MEASURE_RAW_MAX + 3):
-        sf._keep_raw_text(report, f"2025-0{i + 1}-01", "url", long_text)
+        sf._keep_raw_text(report, f"2025-{i + 1:02d}-01", "url", normal)
     assert len(report["raw_texts"]) == cfg.MEASURE_RAW_MAX
-    for kept in report["raw_texts"]:
-        assert len(kept["text"]) == cfg.MEASURE_RAW_TEXT_CAP
+
+    # 한 건이 글자 수 상한을 넘으면 잘라서 담습니다
+    one = sf.new_report("TEST2")
+    sf._keep_raw_text(one, "2025-01-01", "url",
+                      "가" * (cfg.MEASURE_RAW_TEXT_CAP + 500))
+    assert len(one["raw_texts"][0]["text"]) == cfg.MEASURE_RAW_TEXT_CAP
+
+
+def test_raw_file_names_keep_the_whole_date_and_say_why():
+    """원문 파일 이름은 **날짜를 온전히** 담고, 왜 보관했는지 말해야 합니다 (74차).
+
+    예전에는 말머리까지 합쳐 앞 10글자만 잘라 써서 "부탁_2025-02" 처럼
+    **달까지만** 남았습니다. 같은 달에 두 건이면 서로 덮어썼습니다
+    (실측 3건: BE·INTC·ABNB). 머리말도 전부 "조정 EPS 파싱 실패"라고
+    적혀 있어, 잘못 읽은 원문을 실패 원문으로 오해하게 만들었습니다.
+    """
+    보고 = [{"ticker": "GS", "raw_texts": [
+        {"filing_date": "부탁_2025-02-11", "url": "u1", "text": "가"},
+        {"filing_date": "부탁_2025-02-25", "url": "u2", "text": "나"},
+        {"filing_date": "의심정수_2024-01-16", "url": "u3", "text": "다"},
+        {"filing_date": "2023-07-19", "url": "u4", "text": "라"},
+    ]}]
+    files, _ = measure_store.build_files(
+        tickers=["GS"], daily_map={}, reports=보고,
+        load_quarters=lambda t: [],
+    )
+    이름들 = [k.rsplit("/", 1)[-1] for k in files if k.endswith(".txt")]
+    assert "GS_2025-02-11_부탁.txt" in 이름들, 이름들
+    assert "GS_2025-02-25_부탁.txt" in 이름들, 이름들
+    assert "GS_2024-01-16_의심정수.txt" in 이름들, 이름들
+    assert "GS_2023-07-19.txt" in 이름들, 이름들
+    assert len(이름들) == 4, f"같은 달 두 건이 서로 덮어썼습니다: {이름들}"
+
+    부탁본 = files[[k for k in files if k.endswith("GS_2025-02-11_부탁.txt")][0]]
+    assert "조사가 부탁한 원문" in 부탁본, 부탁본[:120]
+    실패본 = files[[k for k in files if k.endswith("GS_2023-07-19.txt")][0]]
+    assert "파싱 실패" in 실패본, 실패본[:120]
+
+
+def test_investor_slide_deck_is_not_an_earnings_release():
+    """투자자 설명회 자료는 실적발표가 아닙니다 (85차).
+
+    80·84차에 KLAC·QRVO·MKSI 세 건이 설명회 자료인데 실적발표로 통과해
+    엉뚱한 값을 냈습니다 (KLAC 4.93·35% 는 모델 가정과 KPI 표,
+    MKSI 5.59 는 분기인지 연간인지도 확정 못 한 값).
+
+    갈라주는 표시는 **이미지 파일 이름**입니다 — 설명회 자료는 장마다
+    그림이라 쪽 번호가 박힌 이름을 씁니다. 저장소 원문 694건 실측에서
+    쪽 그림 0개가 672건, 10개 이상이 20건이고 그 사이는 2건뿐입니다.
+    """
+    슬라이드 = "".join(
+        f'<img src="q3fy2026slides{i:03d}.jpg" title="slide{i}"/> 내용\n'
+        for i in range(1, 15)
+    ) + "Fourth Quarter Results net income per share of $1.00\n"
+    assert sf._looks_like_slide_deck(슬라이드)
+    assert not sf._looks_like_earnings(슬라이드)
+
+    # 그림이 있는 **정상 보도자료**는 통과해야 합니다 (BAC 는 19장인데
+    # 쪽 번호가 박힌 이름이 하나도 없습니다)
+    정상 = "".join(
+        f'<img src="bac-logo{i}.jpg"/> 내용\n' for i in range(1, 20)
+    ) + ("Bank of America Reports Third Quarter Results. Diluted earnings "
+         "per share of $1.06 compared to $0.81.\n")
+    assert not sf._looks_like_slide_deck(정상)
+    assert sf._looks_like_earnings(정상)
+
+
+def test_wanted_raw_list_is_read_from_the_repo(tmpdir=None):
+    """조사가 부탁한 (종목, 발표일)만 True 가 되어야 합니다 (73차).
+
+    이 길이 막히면 "잘못 읽은 값"의 원문이 영영 안 들어옵니다 —
+    지금 보관되는 것은 **못 읽은** 공시뿐이기 때문입니다.
+    """
+    import json as _json
+    import tempfile
+
+    이전_dir, 이전_cache = cfg.MEASURE_DIR, sf._WANTED_CACHE
+    폴더 = tempfile.mkdtemp()
+    try:
+        with open(os.path.join(폴더, "wanted_raw.json"), "w",
+                  encoding="utf-8") as f:
+            _json.dump({"목록": [
+                {"종목": "VZ", "발표일": "2023-01-24"},
+                {"종목": "GS", "발표일": "2022-01-18"},
+            ]}, f, ensure_ascii=False)
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = 폴더, None
+
+        assert sf._is_wanted_raw("VZ", "2023-01-24")
+        assert sf._is_wanted_raw("GS", "2022-01-18T00:00:00")   # 시각이 붙어도
+        assert not sf._is_wanted_raw("VZ", "2023-04-25")        # 다른 날
+        assert not sf._is_wanted_raw("AAPL", "2023-01-24")      # 다른 종목
+    finally:
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = 이전_dir, 이전_cache
+
+
+def test_missing_wanted_list_does_not_break_collection():
+    """부탁 목록 파일이 없어도 수집은 그대로 돌아야 합니다.
+
+    이 파일은 '있으면 더 담아 오는' 부탁일 뿐, 수집의 전제가 아닙니다.
+    """
+    import tempfile
+
+    이전_dir, 이전_cache = cfg.MEASURE_DIR, sf._WANTED_CACHE
+    try:
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = tempfile.mkdtemp(), None
+        assert sf._wanted_raw_set() == set()
+        assert sf._is_wanted_raw("VZ", "2023-01-24") is False
+    finally:
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = 이전_dir, 이전_cache
+
+
+def test_broken_wanted_list_does_not_break_collection():
+    """목록 파일이 깨져 있어도 수집은 멈추지 않습니다."""
+    import tempfile
+
+    이전_dir, 이전_cache = cfg.MEASURE_DIR, sf._WANTED_CACHE
+    폴더 = tempfile.mkdtemp()
+    try:
+        with open(os.path.join(폴더, "wanted_raw.json"), "w",
+                  encoding="utf-8") as f:
+            f.write("{이건 JSON 이 아니다")
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = 폴더, None
+        assert sf._wanted_raw_set() == set()
+    finally:
+        cfg.MEASURE_DIR, sf._WANTED_CACHE = 이전_dir, 이전_cache
+
+
+def test_only_total_parse_failures_are_kept():
+    """잣대값을 하나라도 읽었으면 보관하지 않습니다 (60차).
+
+    보관 자리는 종목당 몇 칸뿐입니다. 실측: 보관된 153건 중 47건(31%)이
+    이미 잣대값을 읽을 수 있는 것이었고, 그 탓에 정작 잣대가 막힌
+    9종목(CAT·PG·VRTX…)은 고칠 원문이 손에 없었습니다.
+    """
+    earnings = ("Acme Corp Reports Third Quarter Results. "
+                "Revenue was $1,234.5 million for the quarter ended "
+                "September 30, 2025. Net income was $100.0 million.")
+    none_read = {"adj_eps": None, "adjusted_ebitda": None, "gaap_eps": None}
+    assert sf._should_keep_raw(True, none_read, earnings)
+
+    # 셋 중 하나라도 읽혔으면 자리를 쓰지 않습니다
+    for field in ("adj_eps", "adjusted_ebitda", "gaap_eps"):
+        parsed = dict(none_read, **{field: 1.23})
+        assert not sf._should_keep_raw(True, parsed, earnings), field
+
+
+def test_non_earnings_filings_do_not_take_a_slot():
+    """실적발표가 아닌 8-K 는 보관하지 않습니다 (LITE·COHR 실물 사고)."""
+    none_read = {"adj_eps": None, "adjusted_ebitda": None, "gaap_eps": None}
+    partnership = ("Acme Corp Announces Strategic Partnership With Globex "
+                   "to expand its distribution network in Europe.")
+    assert not sf._should_keep_raw(True, none_read, partnership)
+    # 보도자료 첨부(EX-99)가 아예 없으면 파서가 진 것이 아닙니다
+    earnings = ("Acme Corp Reports Third Quarter Results. Revenue was "
+                "$1,234.5 million for the quarter ended September 30, 2025.")
+    assert not sf._should_keep_raw(False, none_read, earnings)
+
+
+def test_raw_cap_is_big_enough_to_repair_a_blocked_ticker():
+    """상한이 너무 작으면 고칠 재료가 안 모입니다 (60차에 2 → 12).
+
+    잣대가 막힌 종목은 분기가 14~16개 비어 있었는데 보관된 원문은 2~3건
+    뿐이라 파서를 고칠 수가 없었습니다. 최소 3년치(12분기)는 담겨야 합니다.
+    """
+    assert cfg.MEASURE_RAW_MAX >= 12, cfg.MEASURE_RAW_MAX
+
+
+def test_raw_total_size_is_capped_per_ticker():
+    """건수만 막으면 한 종목이 1.4MB 까지 쌓입니다 (60차).
+
+    12건 × 120,000자 = 1.4MB, 실패 종목 66개면 저장소 93MB.
+    실측 평균은 23KB 라 보통은 문제가 안 되지만, **보통을 믿고 상한을
+    안 두면 언젠가 터집니다.**
+    """
+    report = sf.new_report("TEST")
+    big = "가" * cfg.MEASURE_RAW_TEXT_CAP
+    for i in range(cfg.MEASURE_RAW_MAX):
+        sf._keep_raw_text(report, f"2025-01-{i + 1:02d}", "url", big)
+    total = sum(len(k["text"]) for k in report["raw_texts"])
+    assert total <= cfg.MEASURE_RAW_TOTAL_CAP, total
+    # 건수 상한에 닿기 전에 총량으로 먼저 막혔어야 합니다
+    assert len(report["raw_texts"]) < cfg.MEASURE_RAW_MAX, len(report["raw_texts"])
+
+    # 보통 크기(23KB)면 12건이 다 들어가야 합니다 — 너무 빡빡하면 안 됩니다
+    normal = sf.new_report("TEST2")
+    for i in range(cfg.MEASURE_RAW_MAX):
+        sf._keep_raw_text(normal, f"2025-01-{i + 1:02d}", "url", "가" * 23_000)
+    assert len(normal["raw_texts"]) == cfg.MEASURE_RAW_MAX, len(normal["raw_texts"])
 
 
 # ---------------------------------------------------------------------------

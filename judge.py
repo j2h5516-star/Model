@@ -21,6 +21,7 @@ data/measure/verdict.json 으로 기록합니다. 수집 로봇이 매일 수집
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timezone
 
 import config as cfg
@@ -134,6 +135,8 @@ def run(events: list[dict], op_events: list[dict] | None = None) -> dict:
 
     out: dict = {
         "computed_at": datetime.now(timezone.utc).isoformat(),
+        # 어느 판 코드로 계산했는가 (52차 감사 — 낡은 판정 식별용)
+        "code_rev": code_revision(),
         "규칙": (
             "11차 사전 등록 — 채택 = 신호 윌슨 하한 > 기준선 윌슨 상한 "
             "(신규 표본, n≥10. n<10 은 판정 불가)"
@@ -213,6 +216,156 @@ def judge_sector_breadth(events: list[dict]) -> dict:
         entry["판정"] = entry["신규(판정)"]["판정"]
         out[name] = entry
     return out
+
+
+# H18 (43차 등록): 정배열 **완성** 시점의 52주선 이격도.
+# 42차 탐색에서 나온 후보이므로 **탐색 표본은 판정에 못 씁니다**(원칙 5).
+# 등록일 뒤에 새로 생긴 완성 사건만 세고, 그 전 것은 참고로만 붙입니다.
+H18_NAME = "H18_완성시_52주선이격도"
+_H18_SURGE_PP = 20.0        # 측정 기본형 — 폭등 = SPY 대비 +20%p
+
+
+def _completion_stats(group: list[dict]) -> dict:
+    n = len(group)
+    hits = sum(1 for e in group if e["초과60"] >= _H18_SURGE_PP)
+    low, high = wilson_interval(hits, n)
+    return {"n": n, "rate": round(hits / n * 100.0, 1) if n else None,
+            "ci": [round(low, 1), round(high, 1)]}
+
+
+def judge_completion_gap(events: list[dict], start_day: str,
+                         gap_min: float) -> dict:
+    """H18 판정 — 정배열 완성 사건 중 이격도가 문턱 이상인 군.
+
+    입력은 sector_model.completion_events 의 사건 목록입니다.
+    표적이 아직 안 끝난 사건(초과60 없음)과 이격도를 못 잰 사건은
+    표본에서 뺍니다 — 값을 만들지 않습니다.
+    """
+    usable = [e for e in events
+              if e.get("초과60") is not None and e.get("이격도") is not None]
+    out: dict = {}
+    for label, pool in (
+        ("신규(판정)", [e for e in usable if e["day"] > start_day]),
+        ("탐색표본(참고)", [e for e in usable if e["day"] <= start_day]),
+    ):
+        signal = [e for e in pool if e["이격도"] >= gap_min]
+        signal_stats = _completion_stats(signal)
+        base_stats = _completion_stats(pool)
+        if signal_stats["n"] < MIN_SIGNAL_N:
+            verdict = "판정 불가"
+        elif signal_stats["ci"][0] > base_stats["ci"][1]:
+            verdict = "채택"
+        else:
+            verdict = "미채택"
+        out[label] = {"신호": signal_stats, "기준선": base_stats,
+                      "판정": verdict}
+    out["판정"] = out["신규(판정)"]["판정"]
+    out["등록일"] = start_day
+    return {H18_NAME: out}
+
+
+# H19·H20·H21 (44차 등록): 주도섹터 판정 · 전환 · 분기점.
+# 사건 단위가 "국면"이라 표본이 매우 작습니다. 44차에서 **미리 적은 대로**
+# n≥10 에 오래 못 미칠 것이므로, 여기서는 억지 결론을 내지 않고
+# 사실(국면 목록·성공/실패)과 "판정 불가"를 그대로 기록만 합니다.
+H19_NAME = "H19_주도섹터_판정"
+H20_NAME = "H20_주도섹터_전환"
+H21_NAME = "H21_주도섹터_분기점"
+
+
+H19B_NAME = "H19b_주도섹터_완성후확인"
+
+
+def judge_leadership(timeline: list[dict], switches: list[dict],
+                     inflections: list[dict],
+                     confirmations: list[dict] | None = None,
+                     baseline: list[float] | None = None,
+                     start_day: str | None = None,
+                     stability: dict | None = None) -> dict:
+    """44차 등록의 세 가설을 기록합니다 (판정은 채택 기준 그대로 적용).
+
+    입력은 leadership.py 가 만든 목록입니다. 이 함수는 세지 않은 것을
+    만들지 않습니다 — 표적을 못 잰 사건은 분모에서 빠집니다.
+    """
+    def _verdict(events: list[dict]) -> dict:
+        usable = [e for e in events if e.get("성공") is not None]
+        hits = sum(1 for e in usable if e["성공"])
+        low, high = wilson_interval(hits, len(usable))
+        return {
+            "n": len(usable),
+            "성공": hits,
+            "rate": round(hits / len(usable) * 100.0, 1) if usable else None,
+            "ci": [round(low, 1), round(high, 1)],
+            "판정": "판정 불가" if len(usable) < MIN_SIGNAL_N else (
+                "채택" if low > 50.0 else "미채택"
+            ),
+        }
+
+    현재 = timeline[-1] if timeline else {}
+    out = {
+        H19_NAME: {
+            "현재_주도": 현재.get("주도"),
+            "기준주": 현재.get("주"),
+            "점수": 현재.get("점수"),
+            "완성수": 현재.get("완성수"),
+            "델타폭": 현재.get("델타폭"),
+            "국면수": len({r["주도"] for r in timeline if r.get("주도")}),
+            # 52차 감사의 요구 — 이 판정이 얼마나 흔들리는지를 **함께** 적는다.
+            # 없으면 사람이 "지금 주도는 X" 만 읽고 그것이 한두 종목으로
+            # 뒤집힌다는 사실을 모른다.
+            "안정성": stability,
+            "판정": "판정 불가",     # 44차 ⑤ — 국면 표본으로는 채택 불가
+        },
+        H20_NAME: {**_verdict(switches), "사건": switches},
+        H21_NAME: {**_verdict(inflections), "사건": inflections},
+    }
+    if confirmations is not None:
+        # H19b (46차 ⑦ 등록) — 탐색에서 나온 후보이므로 **등록일 뒤**의
+        # 확인만 판정 표본입니다. 그 전 것은 참고 칸에만 넣습니다 (원칙 5).
+        cut = start_day or ""
+        new_only = [e for e in confirmations if e.get("주", "") > cut]
+        entry = {
+            "신규(판정)": _verdict(new_only),
+            "탐색표본(참고)": _verdict(
+                [e for e in confirmations if e.get("주", "") <= cut]),
+            "등록일": cut,
+        }
+        if baseline:
+            hits = sum(1 for v in baseline if v >= 10.0)
+            low, high = wilson_interval(hits, len(baseline))
+            entry["기준선(참고)"] = {
+                "n": len(baseline),
+                "rate": round(hits / len(baseline) * 100.0, 1),
+                "ci": [round(low, 1), round(high, 1)],
+            }
+        entry["판정"] = entry["신규(판정)"]["판정"]
+        out[H19B_NAME] = entry
+    return out
+
+
+
+def code_revision() -> str:
+    """지금 돌고 있는 코드의 git 판번호 (짧은 해시).
+
+    52차 감사가 찾아낸 사고: verdict.json 은 "데이터센터"를 주도로 적고
+    있는데 같은 snapshot 으로 현재 코드를 돌리면 "기기 OEM 반도체"가
+    나왔다. **데이터가 아니라 코드가 달랐기 때문**이다(51차 수리가 판정
+    계산보다 뒤였다). 그런데 화면에는 계산 시각만 있고 코드 판번호가 없어
+    사람이 알아챌 방법이 없었다.
+
+    못 알아내면 "알수없음" 을 돌려줍니다 — 지어내지 않습니다.
+    """
+    import subprocess
+    try:
+        out = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            capture_output=True, text=True, timeout=5,
+            cwd=os.path.dirname(os.path.abspath(__file__)),
+        )
+        value = out.stdout.strip()
+        return value if out.returncode == 0 and value else "알수없음"
+    except Exception:
+        return "알수없음"
 
 
 def to_json(verdict: dict) -> str:

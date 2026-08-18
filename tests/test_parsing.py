@@ -233,6 +233,21 @@ def test_merge_without_xbrl_uses_press_only():
     assert len(merged) == 1 and merged[0]["source"] == "직접공시"
 
 
+def test_merge_without_xbrl_still_stamps_announced_date():
+    """XBRL이 비어도 발표일 도장은 찍혀야 함 (41차 검증 발견 결함).
+
+    측정은 발표일로만 전 종목을 줄 세우므로(전략.md 7장), 도장이 없으면
+    그 종목은 측정에서 통째로 빠집니다. 실물에서 22종목(은행·제약·에너지·
+    산업재 전부와 KLAC)이 이 구멍으로 빠져 '판단 불가'군이 업종 편향이
+    됐습니다.
+    """
+    press = [_press_row("2025-04-25", 111.0), _press_row("2025-01-30", 90.0)]
+    merged = sf.merge_quarters([], press)
+    assert [r["announced_date"] for r in merged] == ["2025-01-30", "2025-04-25"], merged
+    # 원본 8-K 목록은 건드리지 않습니다 (원본 불변)
+    assert "announced_date" not in press[0]
+
+
 def test_merge_without_press_keeps_xbrl():
     """8-K가 하나도 없으면 XBRL 뼈대를 그대로 유지해야 함"""
     xbrl = [_xbrl_row("2025-03-31", 100.0)]
@@ -476,6 +491,102 @@ def test_table_unit_headers_are_all_recognised():
     for header, expected in cases.items():
         text = header + "\nNon-GAAP operating income   250,000\n"
         assert sf._detect_table_unit(text, len(text)) == expected, header
+
+
+def test_unit_written_into_the_label_is_recognised():
+    """단위를 표 제목이 아니라 **이름에 붙여** 적는 형식도 알아봐야 합니다.
+
+    실물 (88차, AMD): 문서 어디에도 "(in millions)" 가 없고
+        "Revenue ($M)      $10,270"
+        "(Millions except per share amounts and percentages)"
+    이렇게만 적혀 있어, 10,270 이 그대로 들어갔습니다 (참값 102.7억).
+    매출 단위가 종목마다 · 한 종목 안에서도 뒤섞인 원인이 이것입니다.
+    """
+    cases = {
+        "Revenue ($M)": 1_000_000,
+        "Revenue ($B)": 1_000_000_000,
+        "Revenue ($K)": 1_000,
+        "(Millions)": 1_000_000,
+        "(Millions except per share amounts and percentages) (Unaudited)": 1_000_000,
+        "(Thousands) (Unaudited)": 1_000,
+    }
+    for header, expected in cases.items():
+        text = header + "\nNon-GAAP operating income   250,000\n"
+        assert sf._detect_table_unit(text, len(text)) == expected, header
+
+
+def test_share_count_unit_is_not_treated_as_a_money_unit():
+    """"Shares (M)" 는 **주식 수**의 단위지 금액의 단위가 아닙니다.
+
+    달러 기호 없는 "(M)" 을 단위로 받아들이면 매출이 100만 배 틀립니다.
+    각주 기호 "(A) (B) (C)" 와도 구별이 안 됩니다.
+    실물 (88차): 달러기호 없는 "(M)" 180곳이 전부 "Shares (M)" 였습니다.
+    """
+    text = "Shares (M)\nNon-GAAP operating income   250,000\n"
+    assert sf._detect_table_unit(text, len(text)) == 1
+
+    # 각주 기호도 단위가 아닙니다
+    text2 = "Net revenue (B)\nNon-GAAP operating income   250,000\n"
+    assert sf._detect_table_unit(text2, len(text2)) == 1
+
+
+def test_label_unit_still_never_multiplies_per_share_values():
+    """이름에 붙은 단위라도 **주당 금액에는 절대 곱하지 않아야** 합니다.
+
+    이 저장소에서 가장 중요한 검사입니다 — $1.00 이 $100만이 되면
+    모든 계산이 무너집니다.
+    """
+    text = (
+        "GAAP Quarterly Financial Results\n"
+        "Revenue ($M)                     $10,270\n"
+        "Diluted earnings per share       $0.92\n"
+    )
+    result = sf.parse_press_release(text)
+    assert result["revenue"] == 10_270 * 1_000_000, result["revenue"]
+    assert result["gaap_eps"] == 0.92, f"주당 금액에 단위가 곱해졌습니다: {result['gaap_eps']}"
+
+
+def test_segment_revenue_is_not_read_as_total_revenue():
+    """"Product revenue" 는 매출의 **한 조각**이지 전체 매출이 아닙니다.
+
+    실물 (89차, SNOW): 머리기사가 "Product revenue of $1.16 billion" 이고
+    전체 매출은 뒤쪽 재무제표에만 있습니다. 이름과 값의 거리로 고르는
+    규칙이라 가까운 조각이 이겨, 전체 매출 자리에 조각이 들어갔습니다.
+    """
+    글 = (
+        "(in thousands)\n"
+        "Product revenue                      $ 1,090,500\n"
+        "Total revenue                        $ 1,144,969\n"
+    )
+    assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 1_144_969_000
+
+
+def test_fragment_is_used_when_the_release_publishes_nothing_else():
+    """조각만 실린 보도자료에서는 **조각이라도 씁니다.**
+
+    실물 (89차, VRTX): 문서 전체에 "Total/Net revenue" 가 한 번도 안 나오고
+    "Product revenue of $2.69 billion" 뿐인데 그 값이 곧 전체 매출입니다.
+    처음엔 조각을 무조건 걸러 냈다가 **맞는 값을 잃는 것**을 전수 대조에서
+    보고 규칙을 "전체가 있을 때만 조각을 버린다"로 고쳤습니다.
+    """
+    글 = "(in thousands)\nProduct revenue      $ 400,000\n"
+    assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 400_000_000
+
+
+def test_fragment_loses_to_the_whole_for_every_segment_word():
+    """전체 매출이 함께 실려 있으면 어떤 조각도 이기지 못해야 합니다."""
+    for 조각 in ("Product", "Subscription", "Deferred", "Service",
+                "Advertising", "Interest"):
+        글 = (f"(in thousands)\n{조각} revenue      $ 400,000\n"
+             f"Total revenue                 $ 500,000\n")
+        assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 500_000_000, 조각
+
+
+def test_total_and_net_revenue_are_still_read():
+    """조각을 걸러내면서 **전체 매출까지 잃으면** 고친 것이 아닙니다."""
+    for 이름 in ("Total revenue", "Net revenues", "Net sales", "Revenue"):
+        글 = f"(in thousands)\n{이름}      $ 500,000\n"
+        assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 500_000_000, 이름
 
 
 def test_annual_figures_are_not_read_as_quarterly():
@@ -736,6 +847,209 @@ def test_fiscal_year_quarter_sentence_is_not_annual():
     block = ("Guidance for the second quarter of fiscal 2026:\n"
              "• Full year revenue of $2.0 billion to $2.2 billion\n")
     assert fe.parse_guidance_revenue(block)["mid"] is None, "연간 불릿이 통과!"
+
+
+# ---------------------------------------------------------------------------
+# 77차 — 매출총이익률이 44% 어긋난 원인 (실물 AMBA 로 확증)
+# ---------------------------------------------------------------------------
+
+def test_difference_between_margins_is_not_a_margin():
+    """"두 이익률의 **차이**"를 이익률로 읽으면 안 됩니다 (실물 AMBA).
+
+    각주에 "The difference between GAAP and non-GAAP gross margin was
+    1.4%" 가 있는데, 파서가 이 1.4 를 **매출총이익률**로 저장하고
+    있었습니다. AMBA 실제 매출총이익률은 60% 안팎입니다.
+    차이는 1~3% 라 범위 검사(-100~100%)를 그대로 통과했습니다.
+    """
+    text = ("The difference between GAAP and non-GAAP gross margin was "
+            "1.4% and 2.0%, or $1.4 million and $1.7 million.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) is None
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) is None
+
+
+def test_reversed_word_order_margin_is_read():
+    """회사는 어순을 바꿔 적습니다 — "Gross margin **on a non-GAAP basis**".
+
+    기존 이름들은 전부 "non-GAAP" 이 앞에 오는 형태만 잡아 이 문장을
+    놓쳤고, 그래서 훨씬 뒤쪽 각주의 1.4% 를 물었습니다.
+    """
+    text = ("Gross margin on a non-GAAP basis for the fourth quarter of "
+            "fiscal 2026 \n    was 59.8%, compared with 62.0% for the same "
+            "period in fiscal 2025.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) == 59.8
+
+
+def test_forecast_margin_is_not_an_actual():
+    """전망 이익률을 실적으로 읽으면 안 됩니다 (실물 AMBA).
+
+    "is expected to be between 59.0% and 60.5%" 의 59.0 이 실제 4분기
+    값 59.8 보다 라벨에 가까이 붙어 있어 그쪽을 물고 있었습니다.
+    ⚠️ 기존 전망 규칙은 "expects/expecting" 만 잡고 **"expected"** 를
+       못 잡습니다 — 그래서 이익률 전용 규칙을 따로 뒀습니다.
+    """
+    전망만 = ("Gross margin on a non-GAAP basis is expected to be between "
+            "59.0% and 60.5%.\n")
+    assert sf.find_labeled_value(전망만, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) is None
+
+    # 실적과 전망이 함께 있으면 **실적**을 골라야 합니다
+    둘다 = ("Gross margin on a non-GAAP basis for the fourth quarter \n"
+           "    was 59.8%, compared with 62.0% for the same period.\n"
+           "\u2022   Gross margin on a non-GAAP basis is expected to be "
+           "between 59.0% and 60.5%\n")
+    assert sf.find_labeled_value(둘다, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) == 59.8
+
+
+def test_from_a_to_b_takes_the_current_value():
+    """"from A% to B%" 에서 이번 기간 값은 **B** 입니다 (78차 — 실물 BMY).
+
+    "gross margin decreased from 77.3% to 76.1%" 에서 파서가 앞의 77.3
+    (지난 기간)을 물고 있었습니다.
+    """
+    text = ("\u2022On a GAAP basis, gross margin decreased from 77.3% to "
+            "76.1% for the quarter.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) == 76.1
+
+
+def test_compared_to_sentence_is_not_a_from_to():
+    """"71% for Q4-22 **compared to** 72%" 는 from~to 가 아닙니다.
+
+    한쪽만 막으면 반대로 넘어집니다 — 비교 문장의 앞값이 이번 기간입니다.
+    """
+    text = ("Gross margin was 71% for Q4-22 compared to 72% for Q4-21 "
+            "and 73% for Q3-22.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) == 71.0
+
+    # from 이 **멀리** 있으면(20자 밖) 건드리지 않습니다.
+    # 이 창을 넓히면 아래 같은 정상 문장의 값을 통째로 잃습니다.
+    문장 = ("Gross margin benefited from higher pricing and was 76.1% "
+          "for the quarter.\n")
+    assert sf.find_labeled_value(문장, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) == 76.1
+
+
+def test_slide_deck_numbers_are_not_margins():
+    """슬라이드가 눌린 줄은 문장이 아니라 **차트 숫자 나열**입니다 (79차).
+
+    실물 PG: 보도자료가 슬라이드 묶음이라 이렇게 눌립니다 —
+    "<img …/> • Core gross margin • Core operating margin • Total
+    productivity savings 5% 2% 1% 6% 3% 0% 3%".
+    여기서 읽은 값은 그때그때 달라졌습니다(51.2 · 30.0 · 100.0).
+    PG 실제 매출총이익률은 50% 안팎입니다 — **없음**이 정답입니다.
+    """
+    text = ('<img height="1055" src="slide7.jpg"/> \u2022 Core gross margin '
+            '\u2022 Core operating margin \u2022 Total productivity savings '
+            '5% 2% 1% 6% 3% 0% 3%\n')
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) is None
+
+
+def test_percent_series_is_a_chart_not_a_sentence():
+    """이미지 태그가 멀어도 퍼센트가 줄줄이면 그래프입니다 (실물 MKSI).
+
+    "… 46.9% Non-GAAP gross margin **43.8% 45.0% 44.3% 43.3% 44.7%**" —
+    어느 하나를 이번 분기라 할 수 없습니다.
+    """
+    text = ("45.7% 47.3% 47.6% 46.9% Non-GAAP gross margin 43.8% 45.0% "
+            "44.3% 43.3% 44.7% 45.3%\n")
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) is None
+
+
+def test_sentence_with_several_percents_still_reads():
+    """낱말이 끼어 있는 정상 비교 문장은 걸리지 않아야 합니다.
+
+    실물 CGNX: "Gross margin was 71% for Q4-22 compared to 72% for Q4-21
+    and 73% for Q3-22" — 퍼센트가 셋이지만 그래프가 아닙니다.
+    한쪽만 막으면 반대로 넘어집니다.
+    """
+    text = ("Gross margin was 71% for Q4-22 compared to 72% for Q4-21 "
+            "and 73% for Q3-22.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) == 71.0
+
+    # 이미지 태그가 **멀리** 있는 정상 문장도 그대로 읽어야 합니다
+    #   (실물 MDB — 이 창을 "줄 전체"로 넓히면 74.0 을 잃습니다)
+    멀리 = ('<img src="a.jpg"/> ' + "x" * 300 +
+          " Non-GAAP gross margin was 74%, compared to 77% a year ago.\n")
+    assert sf.find_labeled_value(멀리, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) == 74.0
+
+
+def test_basis_points_are_a_change_not_a_level():
+    """베이시스 포인트는 **변화**이지 이익률 수준이 아닙니다 (81차).
+
+    실물 WMT: "Gross margin rate **up 2 bps**" · "Gross profit rate
+    increased **19 bps**". 파서는 이 2 를 매출총이익률 2% 로 저장하고
+    있었습니다 — 월마트 실제는 24~25% 입니다.
+    이익률 수준을 bps 로 적는 회사는 없습니다("2,450 bps" 라고 쓰지
+    않습니다). 그래서 bps 는 통째로 거릅니다.
+
+    ⚠️ 이 규칙만으로 WMT 가 고쳐지지는 **않습니다** — 그 보도자료에는
+       수준이 아예 안 적혀 있어 정답이 "없음"인데, 파서는 계속 다른
+       숫자를 찾아냅니다. 그 부분은 아직 못 고쳤습니다(측정결과.md).
+    """
+    text = ("\u2022Gross margin rate up 2 bps, led by Walmart U.S.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) is None
+
+    text2 = ("Gross profit rate increased 19 basis points versus last year.\n")
+    assert sf.find_labeled_value(text2, sf.LABELS_GAAP_GM_PCT,
+                                 is_percent=True) is None
+
+
+def test_money_between_label_and_number_is_recognised():
+    """금액 행을 알아보는 규칙 자체를 검사합니다 (82차 — 실물 DELL).
+
+        Non-GAAP gross margin   $5,057   $4,992   **1%**   ← 증감률 열
+        Non-GAAP gross margin     20.7 %   21.6 %          ← 진짜 비율
+
+    파서는 저 1 을 매출총이익률 1% 로 저장하고 있었습니다.
+    실물에서 이 규칙을 넣자 DELL 이 **1.0 → 21.1** 로 바로잡혔습니다.
+
+    ⚠️ 정직하게 적어 둡니다: 이 규칙이 **배선까지 제대로 걸렸는지**를
+       가짜 예제로 재현하지 못했습니다(가짜 예제는 규칙을 빼도 통과합니다
+       — 실물의 다른 줄들이 만드는 거리 관계를 못 흉내 냅니다).
+       근거는 **실물 DELL 파일**이고, 여기서는 규칙 자체만 검사합니다.
+    """
+    금액행 = "                           $5,057                           $4,992                   "
+    비율행 = "                                                  20.7     "
+    assert sf._MONEY_BEFORE_RE.search(금액행), "금액 행을 못 알아봤습니다"
+    assert not sf._MONEY_BEFORE_RE.search(비율행), "비율 행을 금액으로 봤습니다"
+    # 문장형 정상 표기도 금액으로 보면 안 됩니다
+    assert not sf._MONEY_BEFORE_RE.search(" was ")
+    assert not sf._MONEY_BEFORE_RE.search(" on a non-GAAP basis was ")
+
+
+def test_money_before_the_label_does_not_block():
+    """금액이 이름 **앞**에 있는 정상 문장은 건드리면 안 됩니다.
+
+    실물 MDB: "gross profit was $466.2 million, representing a 74%
+    non-GAAP gross margin" — 금액이 앞에 있을 뿐입니다.
+    한쪽만 막으면 반대로 넘어집니다.
+    """
+    text = ("Non-GAAP gross profit was $466.2 million. Non-GAAP gross "
+            "margin was 74% for the quarter.\n")
+    assert sf.find_labeled_value(text, sf.LABELS_NONGAAP_GM_PCT,
+                                 is_percent=True) == 74.0
+
+
+def test_plain_margin_sentence_still_reads():
+    """멀쩡한 이익률 문장은 그대로 읽혀야 합니다 (한쪽만 막으면 안 됨)."""
+    for 문장, 답 in (
+        ("Non-GAAP gross margin was 60.7% for the quarter.\n", 60.7),
+        ("GAAP gross margin was 59.2% in the fourth quarter.\n", 59.2),
+        ("Adjusted gross margin of 45.1% for the period.\n", 45.1),
+    ):
+        got = sf.find_labeled_value(문장, sf.LABELS_NONGAAP_GM_PCT + sf.LABELS_GAAP_GM_PCT,
+                                    is_percent=True)
+        assert got == 답, (문장, got)
 
 
 if __name__ == "__main__":

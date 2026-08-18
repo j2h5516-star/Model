@@ -190,6 +190,210 @@ def test_collect_fundamentals_parallel_keeps_order():
     assert [r["ticker"] for r in reports] == tickers, [r.get("ticker") for r in reports]
 
 
+# ---------------------------------------------------------------------------
+# 수집 시간 예산 (94차) — 10년 확장의 안전장치
+# ---------------------------------------------------------------------------
+# 왜 시험하나: 이 장치가 고장 나는 방향은 두 가지고, 둘 다 조용합니다.
+#   ① 마감을 안 걸면 → 180분에 강제 종료 → 그날 수집물과 캐시가 통째로 소멸
+#   ② 마감이 항상 걸리면 → 매 런이 즉시 멈춰 데이터가 늘지 않음
+# 그래서 "마감 없으면 안 멈춘다"와 "마감 넘기면 멈춘다"를 둘 다 못박습니다.
+def test_시간예산_없으면_멈추지_않는다():
+    import sec_fundamentals as sf
+
+    sf.set_collect_budget(None)
+    try:
+        assert sf._budget_over() is False
+    finally:
+        sf.set_collect_budget(None)
+
+
+def test_시간예산_넘기면_멈춘다():
+    import sec_fundamentals as sf
+
+    시계 = [1000.0]                      # 가짜 시계 (진짜로 기다리지 않기)
+    sf.set_collect_budget(10, clock=lambda: 시계[0])   # 10분 = 600초
+    try:
+        시계[0] = 1000.0 + 599.0
+        assert sf._budget_over(clock=lambda: 시계[0]) is False, "아직 마감 전인데 멈췄다"
+        시계[0] = 1000.0 + 601.0
+        assert sf._budget_over(clock=lambda: 시계[0]) is True, "마감을 넘겼는데 안 멈췄다"
+    finally:
+        sf.set_collect_budget(None)
+
+
+def test_시간예산_0이하는_무제한():
+    import sec_fundamentals as sf
+
+    sf.set_collect_budget(0)
+    try:
+        assert sf._budget_over() is False
+    finally:
+        sf.set_collect_budget(None)
+
+
+def test_시간초과_종목이_로봇기록에_남는다():
+    """잘린 종목을 조용히 넘기지 않는가 — 짐작 대신 기록으로 보게."""
+    import sec_fundamentals as sf
+
+    report = sf.new_report("XYZ")
+    assert report["시간초과"] is False, "새 리포트는 시간초과가 아니어야 한다"
+    report["시간초과"] = True
+    남긴다 = [r["ticker"] for r in [report] if r.get("시간초과")]
+    assert 남긴다 == ["XYZ"]
+
+
+def test_시간예산이_8K_훑기를_실제로_멈춘다():
+    """장치가 **실제로 그 자리에서 실행되는지** 증명한다 (헌법 검증 규칙).
+
+    앞의 세 시험은 `_budget_over()` 자체가 옳게 답하는지만 봤다. 그것이
+    참이어도 **훑기 반복문이 그 함수를 부르지 않으면** 아무 일도 안 일어난다.
+    이 저장소는 "고친 코드가 실행 불가능한 자리에 있던" 사고를 이미 겪었다.
+    그래서 가짜 공시 100건을 물려 fetch_earnings_8k 를 직접 돌리고,
+    마감을 넘긴 뒤 **몇 건에서 멈췄는지**를 센다.
+    """
+    import sys
+    import types
+    sf = cj.sf
+
+    본_공시 = {"n": 0}
+
+    class _가짜공시:
+        def __init__(self, 번호):
+            self.accession_no = f"0001-23-{번호:06d}"
+            self.filing_date = "2020-01-01"
+
+    class _가짜회사:
+        def __init__(self, ticker):
+            pass
+
+        def get_filings(self, **_kw):
+            return [_가짜공시(i) for i in range(100)]
+
+    def 가짜텍스트(ticker, filing, report=None):
+        본_공시["n"] += 1
+        report["parsed_ok"] += 1   # 훑을 때마다 실적 1건을 얻은 셈으로
+        return "", "", False       # 본문 없음 — 파싱까지 가지 않게
+
+    가짜edgar = types.ModuleType("edgar")
+    가짜edgar.Company = _가짜회사
+    옛edgar = sys.modules.get("edgar")
+    옛텍스트 = sf._earnings_text_cached
+    옛신원 = sf._ensure_identity
+    옛바닥 = cfg.COLLECT_BUDGET_FLOOR
+
+    sys.modules["edgar"] = 가짜edgar
+    sf._earnings_text_cached = 가짜텍스트
+    sf._ensure_identity = lambda: None
+    # 바닥은 여기서 재려는 것이 아니므로 낮춰 둔다 (바닥은 따로 시험한다).
+    # 조기 종료(EARLY_STOP_PARSED)에 먼저 걸리지 않게 그것도 100 위로 올린다.
+    cfg.COLLECT_BUDGET_FLOOR = 1
+    옛조기 = cfg.EARLY_STOP_PARSED
+    cfg.EARLY_STOP_PARSED = 10_000
+    try:
+        # ① 마감 없음 — 100건을 끝까지 훑어야 한다
+        sf.set_collect_budget(None)
+        본_공시["n"] = 0
+        보고 = sf.new_report("TT")
+        sf.fetch_earnings_8k("TT", start_date="2016-09-15", report=보고)
+        assert 본_공시["n"] == 100, f"마감이 없는데 {본_공시['n']}건에서 멈췄다"
+        assert 보고["시간초과"] is False
+
+        # ② 5건을 본 뒤 마감이 오게 하는 가짜 시계
+        눈금 = {"n": 0}
+
+        def 시계():
+            눈금["n"] += 1
+            return 눈금["n"]
+
+        # 시작 시점 1, 예산 4초 → 마감 5. 여섯 번째 확인부터 넘긴다.
+        sf.set_collect_budget(4 / 60.0, clock=시계)
+        본_공시["n"] = 0
+        보고2 = sf.new_report("TT")
+        sf.fetch_earnings_8k("TT", start_date="2016-09-15", report=보고2)
+        assert 본_공시["n"] < 100, "마감을 넘겼는데 100건을 다 훑었다 — 반복문이 예산을 안 본다"
+        assert 보고2["시간초과"] is True, "잘렸는데 기록에 안 남았다"
+        assert "시간 예산" in 보고2["note"], 보고2["note"]
+    finally:
+        cfg.COLLECT_BUDGET_FLOOR = 옛바닥
+        cfg.EARLY_STOP_PARSED = 옛조기
+        sf.set_collect_budget(None)
+        sf._earnings_text_cached = 옛텍스트
+        sf._ensure_identity = 옛신원
+        if 옛edgar is None:
+            sys.modules.pop("edgar", None)
+        else:
+            sys.modules["edgar"] = 옛edgar
+
+
+def test_시간예산은_바닥을_못_깎는다():
+    """뒷쪽 종목이 최신 분기까지 잃는 것을 막는가 (94차 ⑦).
+
+    예산은 **전체 시계**로 재는데 종목은 순서대로 처리된다. 바닥이 없으면
+    예산을 넘긴 뒤 차례가 온 종목은 8-K 를 **한 건도** 못 훑어 옛 분기가
+    아니라 **최신 분기까지** 잃는다 — 표본을 늘리려다 있던 표본을 깎는
+    최악이다. 그래서 바닥을 채우기 전에는 예산이 작동하면 안 된다.
+
+    시험 방법: 마감을 **이미 지난 시각**으로 걸어 두고(= 뒷쪽 종목 상황)
+    훑기를 돌린다. 바닥(3건)을 채울 때까지는 훑고, 채운 직후 멈춰야 한다.
+    """
+    import sys
+    import types
+    sf = cj.sf
+
+    본_공시 = {"n": 0}
+
+    class _가짜공시:
+        def __init__(self, 번호):
+            self.accession_no = f"0002-23-{번호:06d}"
+            self.filing_date = "2020-01-01"
+
+    class _가짜회사:
+        def __init__(self, ticker):
+            pass
+
+        def get_filings(self, **_kw):
+            return [_가짜공시(i) for i in range(50)]
+
+    def 가짜텍스트(ticker, filing, report=None):
+        본_공시["n"] += 1
+        report["parsed_ok"] += 1      # 훑을 때마다 실적 1건을 얻은 셈으로
+        return "", "", False
+
+    가짜edgar = types.ModuleType("edgar")
+    가짜edgar.Company = _가짜회사
+    옛edgar = sys.modules.get("edgar")
+    옛텍스트 = sf._earnings_text_cached
+    옛신원 = sf._ensure_identity
+    옛바닥 = cfg.COLLECT_BUDGET_FLOOR
+
+    sys.modules["edgar"] = 가짜edgar
+    sf._earnings_text_cached = 가짜텍스트
+    sf._ensure_identity = lambda: None
+    cfg.COLLECT_BUDGET_FLOOR = 3
+    try:
+        # 마감이 **이미 지난** 상황 (뒷쪽 종목) — 시계를 아주 크게 돌려 둔다
+        눈금 = {"n": 10_000}
+        sf.set_collect_budget(1 / 60.0, clock=lambda: 0)   # 마감 = 1초
+        본_공시["n"] = 0
+        보고 = sf.new_report("TT")
+        sf.fetch_earnings_8k("TT", start_date="2016-09-15", report=보고,)
+        assert 본_공시["n"] >= 3, (
+            f"바닥 3건을 채우기 전에 멈췄다 ({본_공시['n']}건) — "
+            "뒷쪽 종목이 최신 분기까지 잃는다"
+        )
+        assert 본_공시["n"] < 50, f"바닥을 채운 뒤에도 안 멈췄다 ({본_공시['n']}건)"
+        assert 보고["시간초과"] is True
+    finally:
+        cfg.COLLECT_BUDGET_FLOOR = 옛바닥
+        sf.set_collect_budget(None)
+        sf._earnings_text_cached = 옛텍스트
+        sf._ensure_identity = 옛신원
+        if 옛edgar is None:
+            sys.modules.pop("edgar", None)
+        else:
+            sys.modules["edgar"] = 옛edgar
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

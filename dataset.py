@@ -34,6 +34,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import statistics
 from datetime import datetime
 
 import config as cfg
@@ -50,7 +51,8 @@ PER_SHARE_ABS_LIMIT = 100.0
 
 # 분기 행에서 통행시키는 칸 (measure_store.EPS_FIELDS + 가이던스 3칸)
 _NUMBER_FIELDS = ("revenue", "op_income", "adj_eps", "adjusted_ebitda",
-                  "gaap_eps", "guid_eps_low", "guid_eps_high", "guid_eps_mid",
+                  "gaap_eps", "gross_margin_pct",
+                  "guid_eps_low", "guid_eps_high", "guid_eps_mid",
                   "guid_rev_low", "guid_rev_high", "guid_rev_mid",
                   "guid_ebitda_low", "guid_ebitda_high", "guid_ebitda_mid")
 _PER_SHARE_FIELDS = ("adj_eps", "gaap_eps",
@@ -125,6 +127,9 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
             # 주당·백만 단위 착오 3건 실측)은 없음으로. 이 유니버스에 분기
             # 매출 1만 달러 미만 회사는 없습니다.
             if clean.get("revenue") is not None and clean["revenue"] < 10_000:
+                # 잔해 판정은 "형제 행보다 매출이 100배 작은가"를 보는데,
+                # 여기서 먼저 지워 버리면 비교할 값이 사라집니다. 기억해 둡니다.
+                clean["_raw_revenue"] = clean["revenue"]
                 notes.append(
                     f"{ticker} {clean.get('period_label', '?')}: "
                     f"매출 {clean['revenue']} 은 자릿수가 무너진 값이라 없음 처리"
@@ -152,6 +157,39 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
                     )
                     clean["op_income"] = None
 
+            # 조정 EBITDA 단위 검사 (46차 감사) — 위 영업이익 가드와 같은 사고가
+            # EBITDA 칸에서도 일어나고 있었습니다. 실물 85건 · 10종목
+            # (BE CIEN CMCSA ENTG ETSY GNRC PINS PWR SNAP TTMI).
+            # 가장 아픈 예: CIEN 은 25 Q3 157,962,000 → 25 Q4 **205,536** 으로
+            # 저장돼 있어 **99.9% 급감**으로 읽혔습니다. 실제로는 205,536천 달러
+            # (2.06억)로 **증가**입니다. 이 오염이 광통신 묶음의 "이익 델타"를
+            # 통째로 뒤집어, 주도섹터 판정을 틀리게 만들고 있었습니다.
+            # EBITDA 는 이익이므로 매출을 넘을 수 없고, 매출의 0.1% 미만이면
+            # 천/백만 단위 미환산입니다. 고치지 않고 버립니다 (창작 금지).
+            ebitda = clean.get("adjusted_ebitda")
+            if rev is not None and ebitda is not None and rev >= 10_000_000:
+                ratio = ebitda / rev
+                if (abs(ebitda) < rev * 0.001 or ebitda > rev
+                        or ratio * 100.0 < cfg.MARGIN_MIN_PCT):
+                    notes.append(
+                        f"{ticker} {clean.get('period_label', '?')}: "
+                        f"조정 EBITDA {ebitda} 은 매출 {rev} 대비 "
+                        f"{ratio * 100.0:.3f}% — 단위 착오 의심이라 없음 처리"
+                    )
+                    clean["adjusted_ebitda"] = None
+
+            # 매출총이익률 범위 검사 (69차). 이익률은 100%를 넘을 수 없고
+            # (매출총이익 ≤ 매출), -100% 아래면 원가가 매출의 2배를 넘는
+            # 것이라 표의 다른 숫자를 집었을 가능성이 큽니다. 고치지 않고
+            # 버립니다 (창작 금지).
+            gm = clean.get("gross_margin_pct")
+            if gm is not None and not (-100.0 <= gm <= 100.0):
+                notes.append(
+                    f"{ticker} {clean.get('period_label', '?')}: "
+                    f"매출총이익률 {gm}% 는 -100~100 범위 밖이라 없음 처리"
+                )
+                clean["gross_margin_pct"] = None
+
             # 주당 금액 상한 (2차 방어 — 위 PER_SHARE_ABS_LIMIT 주석 참조)
             for field in _PER_SHARE_FIELDS:
                 value = clean.get(field)
@@ -166,8 +204,249 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
             kept.append(clean)
 
         kept.sort(key=lambda r: r["filing_date"])
+        # 정렬 뒤에야 "직전 4분기"를 말할 수 있으므로 여기서 누적값을 거릅니다
+        _drop_repeated_revenue(ticker, kept, notes)
+        _drop_cumulative_values(ticker, kept, notes)
+        _drop_parse_debris(ticker, kept, notes)
+        _drop_same_day_siblings(ticker, kept, notes)
+        for row in kept:
+            row.pop("_raw_revenue", None)      # 내부용 표시는 밖으로 내보내지 않습니다
         cleaned[ticker] = kept
     return cleaned
+
+
+
+# 누적(YTD·연간)값이 분기 칸에 들어온 것 (52차 감사 — 산술로 확증)
+# ---------------------------------------------------------------------------
+# 보도자료에는 "이번 분기"와 "누적 6개월/9개월/연간"이 나란히 실립니다.
+# 파서가 누적 쪽을 물면 그 분기만 몇 배로 튀고, **다음 분기에 정상으로
+# 돌아오면서 가짜 급등·급락을 한 쌍 만듭니다.** 이익 델타가 통째로 뒤집힙니다.
+#
+# 산술 지문: 누적값은 **직전 4분기의 합과 거의 같습니다**
+#   (사업이 평평하거나 완만히 자라면 연간 ≈ 최근 4분기 합)
+#   실측: QCOM 10.22 vs 9.77 · GS 30.06 vs 29.24 · MU 12.20 vs 11.28
+#
+# 판정에 쓰는 값은 **그 행보다 앞선 값들뿐**입니다 — 미래를 보지 않습니다.
+# 부호가 다르면(적자 분기) 누적이 아니므로 건드리지 않습니다.
+# 고치지 않고 버립니다 (창작 금지).
+_CUMULATIVE_FIELDS = ("adj_eps", "adjusted_ebitda", "gaap_eps")
+_CUMULATIVE_MULTIPLE = 2.5      # 지난 값들의 중앙값 대비 이 배수를 넘고
+_CUMULATIVE_TOLERANCE = 0.20    # 직전 4분기 합과 이 비율 안으로 같으면
+_CUMULATIVE_MIN_HISTORY = 4     # 비교할 지난 분기가 이만큼은 있어야 한다
+
+
+def _one_cumulative_pass(ticker: str, rows: list[dict], notes: list[str]) -> bool:
+    """누적값을 **한 칸만** 찾아 없음 처리하고, 지웠으면 True 를 돌려줍니다."""
+    for field in _CUMULATIVE_FIELDS:
+        seen = [(index, row[field]) for index, row in enumerate(rows)
+                if row.get(field) is not None]
+        for position in range(_CUMULATIVE_MIN_HISTORY, len(seen)):
+            index, value = seen[position]
+            # 아래 `value > middle * 배수` 가 음수·0 을 이미 배제합니다.
+            # 적자 분기는 누적값일 수 없으므로 건드리지 않게 됩니다.
+            past = [v for _, v in seen[:position]]
+            middle = statistics.median(abs(v) for v in past)
+            total = sum(v for _, v in seen[position - 4:position])
+            if middle <= 0 or total <= 0:
+                continue
+            if (value > middle * _CUMULATIVE_MULTIPLE
+                    and abs(value - total) / total < _CUMULATIVE_TOLERANCE):
+                notes.append(
+                    f"{ticker} {rows[index].get('period_label', '?')}: "
+                    f"{field}={value} 는 직전 4분기 합 {total:.2f} 과 거의 같고 "
+                    f"지난 중앙값 {middle:.2f} 의 {value / middle:.1f}배 — "
+                    "누적(YTD·연간)값이 분기 칸에 들어온 것으로 보아 없음 처리"
+                )
+                rows[index][field] = None
+                return True
+    return False
+
+
+def _drop_cumulative_values(ticker: str, rows: list[dict], notes: list[str]) -> None:
+    """분기 칸에 들어온 누적(YTD·연간)값을 없음 처리합니다 (제자리 수정).
+
+    **왜 한 번이 아니라 변화가 없을 때까지 반복하는가** (73차, 실물 VZ·GS):
+      이 검사는 "직전 4분기 합과 거의 같은가"를 봅니다. 그런데 그 직전
+      4분기 안에 **이미 오염된 값이 끼어 있으면 합이 부풀어** 진짜 연간값이
+      통과해 버립니다. 오염이 오염을 가려 주는 것입니다.
+
+      실물 VZ(조정 EPS): 1월 발표 행마다 연간값이 들어와 있습니다 —
+        5.18 · 4.71 · 4.59 · 4.71 (분기 실제는 1.2 안팎)
+      두 번째 4.71 을 잴 때 직전 4분기 합이 5.18+1.2+1.21+1.22 = 8.81 로
+      부풀어 "합과 다르다"고 판정돼 살아남았습니다. 앞의 5.18 을 먼저
+      지우고 다시 재면 합이 4.95 가 되어 4.71 이 제대로 걸립니다.
+
+      그래서 **앞에서부터 한 칸씩 지우고 매번 다시 재기**를, 더 지울 것이
+      없을 때까지 반복합니다. 문턱은 하나도 바꾸지 않았습니다 — 같은 자를
+      끝까지 대 보는 것뿐입니다 (원칙 6: 신호보다 장치를 먼저 의심).
+
+      실측(73차): 한 번만 재면 38칸, 반복하면 57칸 (10종목 19칸 추가 —
+      GS 연간 EPS 22.87/40.54/51.32, DELL 7.99/7.98/8.38 등).
+
+    한 번에 한 칸씩만 지우므로 칸 수만큼 돌면 반드시 멈춥니다. 그래도
+    무한 반복을 원천 봉쇄하려고 상한을 걸어 둡니다.
+    """
+    limit = len(rows) * len(_CUMULATIVE_FIELDS) + 1
+    for _ in range(limit):
+        if not _one_cumulative_pass(ticker, rows, notes):
+            return
+
+
+
+# 같은 발표일에 두 행이 있고 한쪽 매출만 무너진 경우 (52차 감사 — 원문 확증)
+# ---------------------------------------------------------------------------
+# 실적 보도자료 한 장에서 두 행이 만들어질 때가 있습니다. 한쪽은 진짜 실적이고,
+# 다른 한쪽은 파서가 **배당금·주식수·수익률 표**를 실적으로 오인한 잔해입니다.
+# 잔해 쪽은 매출이 함께 무너져 있어 구별할 수 있습니다.
+#
+# 실물 (JPM, 원문 확증): 같은 발표일 2024-04-12 에
+#   · 매출 17,653 · gaap_eps 4.45   ← 진짜 분기 실적
+#   · 매출     19.3 · gaap_eps 1.15   ← **분기 배당금**이 EPS 칸에 들어옴
+# 이 잔해가 남아 있으면 JPM 델타 9쌍이 전부 "하락"으로 읽힙니다.
+#
+# ⚠️ "매출이 작다"만으로 자르면 안 됩니다. 매출을 **백만 달러 단위**로 적는
+#    회사(AMD 4,313 · MCHP 1,649)의 정상 행까지 지웁니다 — 실측 172칸.
+#    그래서 **같은 발표일에 100배 이상 큰 매출을 가진 형제 행이 있을 때만**
+#    자릅니다. 고치지 않고 버립니다 (창작 금지).
+_SIBLING_REVENUE_RATIO = 100.0    # 형제 행 매출이 이 배수 이상 크면 잔해로 본다
+
+
+def _revenue_before_guard(row: dict) -> float:
+    """매출 하한 가드가 지우기 **전**의 값 (없으면 지금 값)."""
+    return row.get("_raw_revenue") or row.get("revenue") or 0.0
+
+
+_SAME_DAY_NOTE = (
+    "같은 발표일에 두 행이 있어 어느 쪽이 그 분기 실적인지 가릴 수 없습니다"
+)
+
+
+_REPEATED_REVENUE_MIN = 4
+
+
+def _drop_repeated_revenue(ticker: str, rows: list[dict],
+                           notes: list[str]) -> None:
+    """한 종목 안에서 **똑같은 매출값**이 여러 분기에 반복되면 자리채움입니다.
+
+    진짜 매출은 분기마다 다릅니다. 소수점까지 똑같은 값이 4개 분기 이상
+    나온다면 그것은 측정값이 아니라 채워 넣은 값입니다.
+
+    실물 (68차 실측):
+      OXY  매출 1           이 23분기 중 20개
+      BAC  매출 2,000,000   이 24분기 중 17개  (실제 매출은 250억 달러대)
+      COF  매출 -5,000,000  이 24분기 중  8개  (**음수 매출**)
+      PG   매출 2           이 20분기 중  6개
+      BE   매출 1,000 · MRK 매출 -9 · ETN 매출 232억(연간값으로 보임)
+
+    왜 고쳐야 하나: 매출은 잣대가 아니지만 **다른 가드들의 잣대**입니다.
+    형제 행 잔해 판정(100배 비율)·영업이익 마진 검사·EBITDA 단위 검사가
+    모두 매출을 기준으로 삼습니다. 가짜 매출이 통행하면 그 가드들이
+    **틀린 기준으로 판단**합니다. 실제로 BAC 은 형제 행 매출이 둘 다
+    2,000,000 으로 같아 비율 규칙이 아무것도 못 걸렀습니다.
+
+    값을 고치지 않고 **없음**으로 둡니다 (창작 금지). 매출이 없으면 그
+    가드들은 그냥 넘어갑니다 — 틀린 기준으로 판단하는 것보다 낫습니다.
+    """
+    from collections import Counter
+    values = [row.get("revenue") for row in rows if row.get("revenue") is not None]
+    if len(values) < _REPEATED_REVENUE_MIN:
+        return
+    counts = Counter(values)
+    fake = {v for v, n in counts.items() if n >= _REPEATED_REVENUE_MIN}
+    if not fake:
+        return
+    for row in rows:
+        if row.get("revenue") in fake:
+            notes.append(
+                f"{ticker} {row.get('period_label', '?')}: "
+                f"매출 {row['revenue']:,.0f} 이 이 종목의 "
+                f"{counts[row['revenue']]}개 분기에 똑같이 나와 자리채움 값으로 "
+                "보고 없음 처리 (진짜 매출은 분기마다 다릅니다)"
+            )
+            row["revenue"] = None
+
+
+def _drop_same_day_siblings(ticker: str, rows: list[dict],
+                            notes: list[str]) -> None:
+    """같은 발표일 형제 행인데 **어느 쪽도 매출로 가릴 수 없으면** 둘 다 버립니다.
+
+    이 저장소는 이미 형제 행을 매출 비율(100배)로 가려냅니다
+    (`_drop_parse_debris`) — 배당금 행은 매출이 19.3 처럼 무너져 있고
+    진짜 실적 행은 17,653 이라 잘 갈립니다.
+
+    67차에 그 규칙이 **못 잡는 경우**를 찾았습니다: **양쪽 매출이 다
+    무너진 날**입니다.
+      JPM 2025-01-15 → 매출 20.3 / gaap 1.4  (배당금)
+                       매출 13.0 / gaap 4.82 (진짜 실적)
+    비율이 1.56배뿐이라 100배 규칙이 안 걸리고, 게다가 **가짜 쪽 매출이
+    더 큽니다.** 그래서 두 행이 다 남아 JPM 이익 시계열이
+    1.4 → 5.08 → 1.4 → 5.25 로 톱니가 됐습니다(TTM·신기록·델타가 무의미).
+
+    1.4·1.5 가 배당금인 근거: JPM 의 분기 배당 인상 일정
+    (1.15 → 1.25 → 1.40 → 1.50) 과 값·시점이 정확히 일치합니다.
+
+    **왜 골라서 남기지 않는가**: "큰 쪽이 진짜"는 크기 규칙이고, 54차에
+    크기 규칙으로 **진짜 실적 하락 71건을 지운** 사고가 있었습니다.
+    매출로도 못 가리는 것이 이 경우의 정의입니다. 가릴 방법이 없으면
+    **없음**으로 둡니다 — 없음은 안전하고 틀림은 위험합니다 (원칙 1).
+
+    ⚠️ 매출이 하나라도 멀쩡한 날은 건드리지 않습니다. 그 경우는 기존
+    100배 규칙의 영역이고, 그 규칙이 "비슷한 크기면 둘 다 남긴다"고
+    이미 정해 두었습니다(54차 등록).
+    """
+    by_day: dict[str, list[dict]] = {}
+    for row in rows:
+        day = row.get("announced_date")
+        if day:
+            by_day.setdefault(day, []).append(row)
+    for day, group in by_day.items():
+        if len(group) < 2:
+            continue
+        # 매출이 하한 검사를 통과한 행이 하나라도 있으면 가릴 수 있다 → 넘어감
+        if any(row.get("revenue") is not None for row in group):
+            continue
+        for row in group:
+            dropped = [f for f in _CUMULATIVE_FIELDS if row.get(f) is not None]
+            if not dropped:
+                continue
+            notes.append(
+                f"{ticker} {row.get('period_label', '?')} ({day}): "
+                "같은 발표일 형제 행인데 양쪽 매출이 다 무너져 어느 쪽이 그 "
+                f"분기 실적인지 가릴 수 없어 {'·'.join(dropped)} 없음 처리"
+            )
+            for field in dropped:
+                row[field] = None
+
+
+def _drop_parse_debris(ticker: str, rows: list[dict], notes: list[str]) -> None:
+    """같은 발표일의 형제 행보다 매출이 100배 이상 작은 행의 값을 버립니다."""
+    by_day: dict[str, list[dict]] = {}
+    for row in rows:
+        day = row.get("announced_date")
+        if day:
+            by_day.setdefault(day, []).append(row)
+    for day, group in by_day.items():
+        if len(group) < 2:
+            continue
+        revenues = [_revenue_before_guard(r) for r in group]
+        biggest = max(revenues)
+        if biggest <= 0:
+            continue
+        for row in group:
+            revenue = _revenue_before_guard(row)
+            if not (0 < revenue < biggest / _SIBLING_REVENUE_RATIO):
+                continue
+            dropped = [f for f in _CUMULATIVE_FIELDS if row.get(f) is not None]
+            if not dropped:
+                continue
+            notes.append(
+                f"{ticker} {row.get('period_label', '?')} ({day}): "
+                f"같은 발표일 형제 행의 매출 {biggest:,.0f} 에 견줘 이 행 매출은 "
+                f"{revenue} — 배당금·주식수 표를 실적으로 오인한 잔해로 보아 "
+                f"{'·'.join(dropped)} 없음 처리"
+            )
+            for field in dropped:
+                row[field] = None
 
 
 def _clean_prices(price_map: dict, notes: list[str]) -> dict:

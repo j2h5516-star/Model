@@ -1,0 +1,189 @@
+# 잣대값 파싱 실패 원문 — LSCC 2019-12-10
+# 출처: https://www.sec.gov/Archives/edgar/data/855658/000085565819000136/lscc8-knexuslaunch.htm
+
+lsccex991nexuslaunch
+
+    <img height="768" src="lsccex991nexuslaunch001.jpg" title="slide1" width="1365"/>  Exhibit 99.1 THE LOW POWER LEADER 1 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch002.jpg" title="slide2" width="1365"/> Safe Harbor Forward Looking Statements We may make projections or other forward-looking statements regarding future events during our presentation today. We caution you that such statements are predictions based on information that is currently available and that actual results may differ materially. We refer you to the documents that the company has filed with the SEC, including our 10-K, 10-Qs and 8-Ks. These documents identify important risk factors that could cause actual results to differ materially from those contained in our projections or forward-looking statements. General Notice-Trademarks Lattice Semiconductor Corporation, Lattice Semiconductor (& design) and specific product designations are either registered trademarks or trademarks of Lattice Semiconductor Corporation or its subsidiaries in the United States and/or other countries. Spartan is a registered trademark of Xilinx, Inc. and Cyclone is a registered trademark of Intel Corporation in the United States and/or other countries. 2 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch003.jpg" title="slide3" width="1365"/>  Solid Progress Over the Past Year FOCUSED STRATEGY RE-ENERGIZED TEAM SOLUTION INNOVATION 100% Focus on FPGA New Leadership Team; Application Focused Revitalized Culture Innovation PROFIT EXPANSION INCREASED INVESTMENT STRONGER ROADMAP 2x Growth in Profit Increasing Investment in Faster Cadence; 5x Growth in Cash Flow New Devices and Solutions High Fidelity Execution Note: Net profit and cash flow expansion based on non-GAAP results from Q1 thru Q3 2019 compared to Q1 thru Q3 2018 3 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch004.jpg" title="slide4" width="1365"/> New Products Over the Next 12 Months sensAI 2.0 MachXO3D CrossLinkPlus Next Generation New AI Robust Platform Enhanced Video Next Generation Capabilities Security Bridging FPGA Platform Sampling in H2 2019 Sampling early 2020 LAUNCH DATE LAUNCH DATE MAY 20, 2019 MAY 20, 2019 Q3 2019 Today 4 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch005.jpg" title="slide5" width="1365"/> Our Mission The Low Power Programmable Leader 5 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch006.jpg" title="slide6" width="1365"/> Lattice’s Focus: Low Power, Small Size OTHER FPGA COMPANIES Focused on Large, High Power Devices Focused on Low Power, for Data Center Compute Smaller Form Factors 10 mm 10 mm ~1 W (Small) 55 mm 55 1.40 mm ~1 mW 1.45 mm (Smallest) 55 mm Addressing Applications Where ~200 W With Heat Sink Power Efficiency & Small Size are Important 6 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch007.jpg" title="slide7" width="1365"/> Solving Problems at the Edge AI & IoT AI Inferencing at the Edge VIDEO 10 mm 10 mm ~1 W Embedded Vision (Small) SECURITY Hardware Platform Security 1.40 mm ~1 mW 1.45 mm 5G INFRASTRUCTURE (Smallest) Control & Management AUTOMATION Precision Robotic Motor Control 7 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch008.jpg" title="slide8" width="1365"/> Introducing Our New Low Power FPGA Platform 8 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch009.jpg" title="slide9" width="1365"/> Introducing Our New Low Power FPGA Platform LATTICE INNOVATION SOLUTIONS ARCHITECTURE Hardened D-PHY Fast Programmable I/O Logic Cells Embedded Memory Boot Industry Industry DSP Blocks Ultra Ultra Fast Leading Leading SER Enhanced PLLs Hardened PCIe CIRCUIT 9 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch010.jpg" title="slide10" width="1365"/> Lattice Nexus is Changing the Landscape POWER PERFORMANCE RELIABILITY Operating Power Consumption Video Connectivity Soft Error Rates Up to 2x Faster speed Up to 75% Up to 100x Lower power Lower SER Competition Lattice Competition Lattice Competition Lattice 10 - NASDAQ: LSCC Note: comparing similar class competitive devices
+
+
+
+ <img height="768" src="lsccex991nexuslaunch011.jpg" title="slide11" width="1365"/> Bringing Lattice Nexus Across All our Key End Markets COMMUNICATIONS COMPUTE INDUSTRIAL AUTOMOTIVE CONSUMER 5G Wireless Servers Industrial IoT ADAS Smart Home Switches/Routers Client Factory Automation Infotainment Wearables $3B Lattice Market Opportunity 11 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch012.jpg" title="slide12" width="1365"/>  . Low power leadership . Edge computing ready . Robust and reliable . Smallest form factor . Faster innovation cadence 12 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch013.jpg" title="slide13" width="1365"/>  Steve Douglass Corporate Vice President, R&D 13 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch014.jpg" title="slide14" width="1365"/> Introducing Our New Low Power FPGA Platform LATTICE INNOVATION SOLUTIONS ARCHITECTURE Hardened D-PHY Fast Programmable I/O Logic Cells Embedded Memory Boot Industry Industry DSP Blocks Ultra Ultra Fast Leading Leading SER Enhanced PLLs Hardened PCIe CIRCUIT 14 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch015.jpg" title="slide15" width="1365"/> Circuit Innovation SOLUTIONS LATTICE NEXUS ON TRADITIONAL FPGA ON FDSOI BULK GATE GATE ARCHITECTURE SOURCE DRAIN DRAIN Hardened D-PHY Fast Programmable I/O ULTRA-THIN BURIED OXIDE SOURCE Logic Cells Embedded Memory SER Boot Leading Leading Industry Industry DSP Blocks Ultra Ultra Fast Enhanced PLLs Hardened PCIe CIRCUIT . Greatly reduces transistor leakage and susceptibility to soft errors . FDSOI leverages bulk CMOS process and has fewer processing steps . In high volume production today 15 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch016.jpg" title="slide16" width="1365"/> Circuit Innovation SOLUTIONS POWER RELIABILITY Static Power Soft Error Rate ARCHITECTURE Hardened D-PHY Fast Programmable I/O Logic Cells Embedded Memory SER Boot Leading Leading Industry Industry DSP Blocks Ultra Ultra Fast Enhanced PLLs Hardened PCIe CIRCUIT Bulk FDSOI Bulk FDSOI Half 100x The Power Lower SER 16 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch017.jpg" title="slide17" width="1365"/> Circuit Innovation SOLUTIONS PROGRAMMABLE BODY BIAS GATE Allows customers to SOURCE DRAIN optimize for both: ARCHITECTURE ULTRA-THIN BURIED OXIDE Hardened D-PHY Fast Programmable I/O HIGHER Logic Cells Embedded Memory PERFORMANCE SER Boot Leading Leading Industry Industry DSP Blocks Ultra Ultra Fast Enhanced PLLs Hardened PCIe CIRCUIT LOWER POWER 17 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch018.jpg" title="slide18" width="1365"/> Architecture Innovation SOLUTIONS OPTIMIZED FOR POWER EFFICIENT COMPUTING ARCHITECTURE Hardened D-PHY Fast Programmable I/O DSP EBR DDR Logic Cells Embedded Memory SER Boot Leading Leading Industry Industry DSP Blocks Ultra Ultra Fast Enhanced PLLs Hardened PCIe FABRIC CIRCUIT 18 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch019.jpg" title="slide19" width="1365"/> Architecture Innovation SOLUTIONS OPTIMIZED FOR POWER EFFICIENT COMPUTING ARCHITECTURE Hardened D-PHY Fast Programmable I/O 2x Logic Cells Faster Performance Embedded Memory SER Boot Leading Leading Industry Industry DSP Blocks Ultra Ultra Fast LARGE EBR FABRICDSP RAM Enhanced PLLs Hardened PCIe Half CIRCUIT The Power Note: Performance and power relative to Lattice prior generation devices 19 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch020.jpg" title="slide20" width="1365"/> Human Presence Detection Demo OVERVIEW What You Are Seeing Human presence detection with bounding box around upper body implemented with our first Lattice Nexus based device. Why It Matters KEY APPLICATIONS Human presence detection is a common AI use case in many Edge applications including security cameras, client compute, factory automation, and automotive. Industrial Security Client Smart safety cameras compute doorbells 20 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch021.jpg" title="slide21" width="1365"/> Solutions Innovation SOLUTIONS APPLICATION FOCUSED SOLUTIONS EMBEDDED ARTIFICIAL SECURITY INTELLIGENCE VISION ARCHITECTURE Hardened D-PHY Fast Programmable I/O REFERENCE DESIGN & KITS Logic Cells Embedded Memory SER Boot Leading Leading Industry Industry DSP Blocks Ultra Ultra Fast Enhanced PLLs Hardened PCIe SOFT IP CIRCUIT SOFTWARE 22 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch022.jpg" title="slide22" width="1365"/> Solutions Innovation SOLUTIONS APPLICATION FOCUSED SOLUTIONS EMBEDDED VISION SENSOR BRIDGING SENSOR AGGREGATION ARCHITECTURE D-PHY Hardened D-PHY Fast Programmable I/O SubLVDS D-PHY MACHINE D-PHY D-PHY MOBILE VISION IMAGE PROCESSOR PROCESSOR SENSORS Logic Cells LATTICE D-PHY Embedded Memory LATTICE SER Boot Leading Leading Industry Industry DSP Blocks Ultra Ultra Fast Enhanced PLLs Hardened PCIe IMAGE PROCESSING CIRCUIT D-PHY D-PHY LATTICE 23 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch023.jpg" title="slide23" width="1365"/> Solutions Innovation SOLUTIONS APPLICATION FOCUSED SOLUTIONS EMBEDDED VISION SENSOR BRIDGING SENSOR AGGREGATION ARCHITECTURE D-PHY Hardened D-PHY Fast Programmable I/O Sub-LVDS D-PHY MACHINE D-PHY D-PHY MOBILE VISION IMAGE PROCESSOR PROCESSOR SENSORS Logic Cells LATTICE D-PHY Embedded Memory LATTICE SER Boot Leading Leading Industry Industry DSP Blocks Ultra Ultra Fast Enhanced PLLs Hardened PCIe IMAGE PROCESSING CIRCUIT D-PHY D-PHY LATTICE 24 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch024.jpg" title="slide24" width="1365"/> Camera Aggregation Demo OVERVIEW What You Are Seeing MIPI CSI-2 data streams from 4 cameras are aggregated into a single data stream, bridged to parallel data and displayed in a single HDMI output. Why It Matters Number of sensors are increasing, and the application processors have limited MIPI inputs. KEY APPLICATIONS Number of screen sizes and resolutions are increasing. Need solution that can aggregate data streams for multiple image sensors in applications such as ADAS, drones, AR/VR, robots etc. AR / VR Drones ADAS Robotics 25 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch025.jpg" title="slide25" width="1365"/> Introducing Our New Low Power FPGA Platform … 27 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch026.jpg" title="slide26" width="1365"/> Introducing Lattice CrossLink-NX Hardened MIPI D-PHY Fast Programmable I/O Programmable Logic Embedded Memory DSP Blocks Boot Fast tra Ul IndustryLeading SER Enhanced PLLs Hardened PCIe 28 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch027.jpg" title="slide27" width="1365"/> Introducing Lattice CrossLink-NX Hardened MIPI D-PHY Fast Programmable I/O Programmable Logic Embedded Memory DSP Blocks Boot Fast tra Ul IndustryLeading SER Enhanced PLLs Hardened PCIe 29 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch028.jpg" title="slide28" width="1365"/> A Closer Look at CrossLink-NX PROGRAMMABLE LOGIC CORE FAST PROGRAMMABLE I/O . Low power mode Hardened MIPI D-PHY Fast Programmable I/O . Up to 12 MIPI D-PHY interfaces @ 1.5 Gbps . High performance mode . LVDS, subLVDS, SGMII . High embedded memory count . DDR3 @ 1066 Mbps . Optimized DSP blocks . Up to 192 total I/O Programmable Logic Embedded Memory DSP Blocks Boot Fast tra Ul IndustryLeading SER DEDICATED INTERFACES INSTANT-ON . 8 D-PHY lanes @ 2.5 Gbps . 3 ms I/O configuration . One lane PCIe @ 5 Gbps Enhanced PLLs Hardened PCIe . 14 ms device configuration Enhanced for Customer Needs: Power Efficiency, Performance, Reliability 30 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch029.jpg" title="slide29" width="1365"/>  Esam Elashmawi Chief Marketing & Strategy Officer 31 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch030.jpg" title="slide30" width="1365"/> Customer Engagement LOW POWER HIGH PERFORMANCE HIGH RELIABILITY 32 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch031.jpg" title="slide31" width="1365"/> Solving the Power Challenge LOW POWER POWER IS KEY TO SOLVE PORTABLE & AUTONOMOUS CHALLENGES SYSTEM & OPERATING COSTS HIGH PERFORMANCE LOWEST POWER FPGA … Up to 75% lower power compared to competition HIGH RELIABILITY Operating Power Consumption Xilinx Spartan 7 Intel Cyclone 10 Lattice CrossLink-NX 33 - NASDAQ: LSCC Note: comparing similar class competitive devices
+
+
+
+ <img height="768" src="lsccex991nexuslaunch032.jpg" title="slide32" width="1365"/> CrossLink-NX Low Power Demo OVERVIEW What You Are Seeing Lattice Xilinx Power consumption for Lattice CrossLink-NX- Intel CrossLink-NX Spartan 7 Cyclone 10LP 40 running a typical design compared with Xilinx Spartan 7 (XC7S50) and Intel Cyclone Power monitor 10LP (10CL025). Lattice Xilinx Intel Why It Matters . Simplifies thermal management KEY APPLICATIONS . Improves operating costs . Extends battery life Industrial Factory Drones Medical Servers 5G Robots Automation 34 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch033.jpg" title="slide33" width="1365"/> Solving the Performance Challenge LOW POWER PERFORMANCE IS KEY TO SOLVE USER EXPERIENCE PERFORMANCE FOR AI HIGH PERFORMANCE ENHANCED PERFORMANCE FEATURES Fastest display connection Optimized for power efficient computing 3000 70 HIGH RELIABILITY 2500 60 2000 50 40 1500 30 1000 PHY Speed(Mbps) PHY - 20 500 10 Memory (bits)CellLogic perMemory MIPI D MIPI 0 0 Lattice Xilinx Intel Lattice Xilinx Intel CrossLink-NX Spartan 7 Cyclone 10LP CrossLink-NX Spartan 7 Cyclone 10LP 36 - NASDAQ: LSCC Note: comparing similar class competitive devices
+
+
+
+ <img height="768" src="lsccex991nexuslaunch034.jpg" title="slide34" width="1365"/> sensAI Application Example: Retail Security Camera ALWAYS-ON HUMAN COUNTING PERFORMANCE 10 fps 10x FASTER 1 fps MCU CrossLink- NX-40K Lattice CrossLink-NX POWER Data SRAM Sensor Sensors (weights / activations) Interface Results 600 mW 3x Neural Network Accelerators MCU LOWER 200 mW MCU CrossLink- NX-40K 37 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch035.jpg" title="slide35" width="1365"/> Instant-on LOW POWER PERFORMANCE IS KEY TO SOLVE INCREASED DEMAND FOR INSTANT-ON APPLICATIONS HIGH PERFORMANCE UP TO 50X FASTER I/O wake up time HIGH RELIABILITY Intel Cyclone 10LP Xilinx Spartan 7 Lattice CrossLink-NX Instant-on Range 38 - NASDAQ: LSCC Note: comparing similar class competitive devices
+
+
+
+ <img height="768" src="lsccex991nexuslaunch036.jpg" title="slide36" width="1365"/> Demo: CrossLink-NX Instant-on Demo OVERVIEW VCC RAMP Lattice Monitor What You Are Seeing Time for device to self configure I/O to a user VCC RAMP defined state for Lattice CrossLink-NX-40 compared Xilinx Monitor with Xilinx Spartan 7 (XCS7-50) and Intel Cyclone VCC RAMP 10LP (10LP025). Intel Monitor Why It Matters “Instant-on” I/O configuration is important for KEY APPLICATIONS applications such as LED drivers, motor control and board housekeeping. Reduces complexity, cost, and power dissipation of customer systems. Motor Control Human Machine ADAS Interfaces Note: based on competition’s evaluation boards running at similar frequencies 39 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch037.jpg" title="slide37" width="1365"/> Solving the Reliability Challenge LOW POWER RELIABILITY IS KEY TO SOLVE CRITICAL SAFETY & RUGGEDIZED SYSTEM UP TIME HIGH PERFORMANCE MOST RELIABLE FPGA FOR RUGGEDIZED APPS Temperature Ranges Soft Error Rates (FIT) HIGH RELIABILITY - 40˚C 125˚C Xilinx* Spartan 7 Suitable for: Lattice CrossLink-NX OUTDOOR | AUTOMOTIVE | INDUSTRIAL | AVIONICS FIT (Failure In Time) (1B device hours) * Based on Xilinx published data 41 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch038.jpg" title="slide38" width="1365"/>  Small Size Matters 19 19 mm 15 15 mm 6 6 mm 6 mm 15 mm 19 mm CrossLink-NX Xilinx Spartan 7 Intel Cyclone 10LP LIFCL-40-7MG121C XC7S50-1GCSGA324C 10CL040YU484C6 Logic Cells 40K 50K 40K 42 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch039.jpg" title="slide39" width="1365"/> 43 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch040.jpg" title="slide40" width="1365"/> 44 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch041.jpg" title="slide41" width="1365"/>  Engaged with > 65 customers Early Access Program with 30+ customers Solutions available today 45 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch042.jpg" title="slide42" width="1365"/>  Jim Anderson President, Chief Executive Officer 46 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch043.jpg" title="slide43" width="1365"/> The Lowest Power FPGA Platform SOLUTIONS LOW POWER ARCHITECTURE HIGH PERFORMANCE Hardened D-PHY Fast Programmable I/O Logic Cells Embedded Memory Boot Industry Industry DSP Blocks Fast Ultra Leading SER Leading Enhanced PLLs Hardened PCIe CIRCUIT HIGH RELIABILITY … 47 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch044.jpg" title="slide44" width="1365"/> Faster Cadence of New Devices and Solutions H1 2019 H2 2019 H1 2020 H2 2020 Lattice Lattice Embedded Security Solutions sensAI 2.0 Radiant 2.0 Vision Stack Stack Devices Nexus Nexus MachXO3D CrossLinkPlus CrossLink-NX Product #2 Product #3 48 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch045.jpg" title="slide45" width="1365"/> 49 - NASDAQ: LSCC
+
+
+
+ <img height="768" src="lsccex991nexuslaunch046.jpg" title="slide46" width="1365"/> The Low Power Programmable Leader
+
+
+
