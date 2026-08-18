@@ -21,7 +21,10 @@ import vendor_compare as vc  # noqa: E402
 def 우리분기(filing_date, **kw):
     row = {"filing_date": filing_date, "period_label": "26 Q1",
            "gaap_eps": None, "adj_eps": None, "revenue": None,
-           "gross_margin_pct": None}
+           "gross_margin_pct": None,
+           # 보도자료가 덮어쓰기 전의 XBRL 값 (90차)
+           "gaap_eps_xbrl": None, "revenue_xbrl": None,
+           "gross_margin_pct_xbrl": None}
     row.update(kw)
     return row
 
@@ -242,6 +245,58 @@ def test_wanted_stays_silent_when_the_two_rulers_agree():
                         announced_date="2026-04-20")]}
     v = 보관(AAA=[야후분기("2026-03-31", gaap_eps=1.20, revenue=1_000.0)])
     assert vc.wanted_from_mismatch(q, v) == []
+
+
+def test_duel_counts_who_the_referee_agrees_with():
+    """같은 칸을 두 경로가 읽었을 때 누가 맞았는지 세야 합니다 (90차).
+
+    실물 모양: 보도자료가 **전년 열**을 물어 1.56 을 넣었고,
+    XBRL 은 기간 태그가 붙어 있어 1.96 을 냈습니다. 야후도 1.96.
+    """
+    q = {"CRM": [우리분기("2025-07-31", gaap_eps=1.56,
+                        gaap_eps_xbrl=1.96)]}
+    v = 보관(CRM=[야후분기("2025-07-31", gaap_eps=1.96)])
+    c = vc.duel(q, v)["칸별"]["GAAP EPS"]
+    assert c["둘다읽음"] == 1
+    assert c["XBRL만맞음"] == 1
+    assert c["보도자료만맞음"] == 0 and c["둘다맞음"] == 0
+
+
+def test_duel_counts_the_press_win_too():
+    """반대 경우도 세야 합니다 — 한쪽 편을 들면 안 됩니다."""
+    q = {"AAA": [우리분기("2026-03-31", gaap_eps=1.20, gaap_eps_xbrl=9.99)]}
+    v = 보관(AAA=[야후분기("2026-03-31", gaap_eps=1.20)])
+    c = vc.duel(q, v)["칸별"]["GAAP EPS"]
+    assert c["보도자료만맞음"] == 1 and c["XBRL만맞음"] == 0
+
+
+def test_duel_does_not_score_a_quarter_the_referee_cannot_judge():
+    """야후가 그 칸을 모르면 승부를 세지 않아야 합니다.
+
+    '둘 다 없음'을 무승부로 세면 숫자가 거짓말을 합니다.
+    """
+    q = {"AAA": [우리분기("2026-03-31", gaap_eps=1.20, gaap_eps_xbrl=1.20)]}
+    v = 보관(AAA=[야후분기("2026-03-31")])          # 야후에 값 없음
+    c = vc.duel(q, v)["칸별"]["GAAP EPS"]
+    assert c["둘다읽음"] == 0 and c["둘다맞음"] == 0
+
+
+def test_duel_separates_rows_where_only_one_path_read_anything():
+    """한쪽만 값이 있는 칸은 **승부가 아니라 따로** 세야 합니다."""
+    q = {"AAA": [우리분기("2026-03-31", gaap_eps=1.20, gaap_eps_xbrl=None)],
+         "BBB": [우리분기("2026-03-31", gaap_eps=None, gaap_eps_xbrl=1.20)]}
+    v = 보관(AAA=[야후분기("2026-03-31", gaap_eps=1.20)],
+           BBB=[야후분기("2026-03-31", gaap_eps=1.20)])
+    c = vc.duel(q, v)["칸별"]["GAAP EPS"]
+    assert c["둘다읽음"] == 0
+    assert c["보도자료만있음"] == 1 and c["XBRL만있음"] == 1
+
+
+def test_duel_report_speaks_plainly_when_there_is_nothing_to_compare():
+    """XBRL 값을 아직 안 담은 스냅샷이면 그렇게 말해야 합니다."""
+    q = {"AAA": [우리분기("2026-03-31", gaap_eps=1.20)]}
+    v = 보관(AAA=[야후분기("2026-03-31", gaap_eps=1.20)])
+    assert "맞대 볼 칸이 없습니다" in vc.duel_report(q, v)
 
 
 def test_empty_inputs_do_not_crash():

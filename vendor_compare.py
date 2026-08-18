@@ -259,6 +259,94 @@ def wanted_from_mismatch(quarters: dict, vendor: dict,
     return out
 
 
+def duel(quarters: dict, vendor: dict) -> dict:
+    """**같은 칸을 두 경로가 각각 읽었을 때 누가 맞았나** (90차).
+
+    우리 스냅샷에는 같은 칸의 값이 둘 있습니다:
+      · `gaap_eps`       보도자료 파서가 읽은 값 (없으면 XBRL 값이 그대로)
+      · `gaap_eps_xbrl`  보도자료가 덮어쓰기 **전**의 XBRL 값
+
+    야후를 심판으로 세워 칸별로 셉니다. 이 숫자가 나와야
+    "어느 쪽을 본선으로 삼을까"가 짐작이 아니라 사실이 됩니다.
+
+    ⚠️ 아무것도 고치지 않습니다 — 세기만 합니다.
+    ⚠️ 야후에 값이 없거나 짝을 못 찾은 분기는 아예 세지 않습니다.
+       "둘 다 없음"을 무승부라고 부르면 숫자가 거짓말을 합니다.
+    """
+    티커표 = (vendor or {}).get("tickers") or {}
+    결과 = {이름: {"둘다읽음": 0, "둘다맞음": 0, "보도자료만맞음": 0,
+                "XBRL만맞음": 0, "둘다틀림": 0,
+                "보도자료만있음": 0, "XBRL만있음": 0}
+          for _, _, 이름 in FIELDS}
+    사례: list[dict] = []
+
+    for ticker, rows in sorted((quarters or {}).items()):
+        그쪽 = 티커표.get(ticker)
+        if not 그쪽:
+            continue
+        for 우리행, 그행 in pair_quarters(rows, 그쪽.get("quarters")):
+            if 그행 is None:
+                continue
+            for 우리칸, 그칸, 이름 in FIELDS:
+                심판 = 그행.get(그칸)
+                if 심판 is None:
+                    continue          # 심판이 모르면 승부를 못 가립니다
+                보도 = 우리행.get(우리칸)
+                엑스 = 우리행.get(f"{우리칸}_xbrl")
+                칸 = 결과[이름]
+                if 보도 is None and 엑스 is None:
+                    continue
+                if 엑스 is None:
+                    칸["보도자료만있음"] += 1
+                    continue
+                if 보도 is None:
+                    칸["XBRL만있음"] += 1
+                    continue
+                칸["둘다읽음"] += 1
+                보도맞 = _same(우리칸, 보도, 심판)
+                엑스맞 = _same(우리칸, 엑스, 심판)
+                if 보도맞 and 엑스맞:
+                    칸["둘다맞음"] += 1
+                elif 보도맞:
+                    칸["보도자료만맞음"] += 1
+                elif 엑스맞:
+                    칸["XBRL만맞음"] += 1
+                    사례.append({"종목": ticker, "칸": 이름,
+                                "분기끝": 우리행.get("filing_date"),
+                                "보도자료": 보도, "XBRL": 엑스, "야후": 심판})
+                else:
+                    칸["둘다틀림"] += 1
+    return {"칸별": 결과, "XBRL만맞은칸": 사례}
+
+
+def duel_report(quarters: dict, vendor: dict, limit: int = 15) -> str:
+    """사람이 읽을 한 덩어리 (90차 — 재고 뒤집기의 판단 근거)."""
+    d = duel(quarters, vendor)
+    줄 = ["같은 칸을 두 경로가 읽었을 때 — 야후가 심판 (90차)"]
+    for _, _, 이름 in FIELDS:
+        c = d["칸별"][이름]
+        둘 = c["둘다읽음"]
+        갈린 = c["보도자료만맞음"] + c["XBRL만맞음"]
+        if 둘 == 0:
+            줄.append(f"  {이름:8s} 맞대 볼 칸이 없습니다 "
+                      f"(XBRL 값을 아직 안 담았을 수 있습니다)")
+            continue
+        승 = (f"{c['XBRL만맞음']}:{c['보도자료만맞음']}" if 갈린 else "갈린 칸 없음")
+        줄.append(
+            f"  {이름:8s} 둘 다 읽음 {둘:4d} · 둘 다 맞음 {c['둘다맞음']:4d} · "
+            f"둘 다 틀림 {c['둘다틀림']:4d}\n"
+            f"           갈린 칸 {갈린:4d} — XBRL:보도자료 = {승}   "
+            f"(한쪽만 있음: XBRL {c['XBRL만있음']} · 보도자료 {c['보도자료만있음']})"
+        )
+    if d["XBRL만맞은칸"]:
+        줄.append("\n  XBRL 만 맞은 칸 (보도자료가 틀린 자리):")
+        for row in d["XBRL만맞은칸"][:limit]:
+            줄.append(f"    {row['종목']:6s} {str(row['분기끝'])[:10]:11s} "
+                      f"{row['칸']:8s} 보도자료 {row['보도자료']:>14,.2f} · "
+                      f"XBRL {row['XBRL']:>14,.2f} (야후 {row['야후']:>14,.2f})")
+    return "\n".join(줄)
+
+
 def report(quarters: dict, vendor: dict, flagged: list[dict] | None = None,
            limit: int = 25) -> str:
     """사람이 읽을 한 덩어리 (화면·기록용)."""

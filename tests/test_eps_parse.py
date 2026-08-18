@@ -185,6 +185,51 @@ def test_eps_survives_the_merge_into_quarter_rows():
     assert row["gaap_eps"] == -0.83
 
 
+def test_xbrl_value_is_kept_beside_the_press_value():
+    """보도자료가 덮어쓰기 **전**의 XBRL 값을 나란히 남겨야 합니다 (90차).
+
+    89차까지 실측한 오류(전년 열·9개월 누적·연간값·부문)는 전부
+    "숫자는 맞는데 자리를 잘못 짚은 것"이었습니다. XBRL 은 값마다
+    기간·단위·부문이 태그로 붙어 그 네 종류가 생길 수 없습니다.
+    어느 쪽을 본선으로 삼을지 **짐작이 아니라 숫자로** 정하려면
+    두 값이 다 남아 있어야 합니다.
+    """
+    row = {"gaap_eps": 1.96, "revenue": 10_236_000_000.0,
+           "gross_margin_pct": 77.0, "source": cfg.SRC_APPROX}
+    press = {"gaap_eps": 1.56, "revenue": 9_000_000_000.0,
+             "gross_margin_pct": 80.0, "op_income": None}
+    sf._apply_press_to_row(row, press)
+
+    # 본선 값은 지금까지와 **똑같이** 보도자료가 이깁니다 (아직 안 뒤집음)
+    assert row["gaap_eps"] == 1.56
+    assert row["revenue"] == 9_000_000_000.0
+    # 그리고 XBRL 값이 옆에 남아 있어야 합니다
+    assert row["gaap_eps_xbrl"] == 1.96
+    assert row["revenue_xbrl"] == 10_236_000_000.0
+    assert row["gross_margin_pct_xbrl"] == 77.0
+
+
+def test_xbrl_companion_is_none_when_there_was_no_xbrl_row():
+    """XBRL 에 짝이 없던 분기는 **없음**이어야 합니다 — 지어내지 않습니다."""
+    row = {"source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row, {"gaap_eps": 1.56, "op_income": None})
+    assert row["gaap_eps_xbrl"] is None
+    assert row["revenue_xbrl"] is None
+
+
+def test_adjusted_eps_has_no_xbrl_companion():
+    """조정 EPS·조정 EBITDA 는 XBRL 에 없으므로 짝 칸을 만들지 않습니다.
+
+    없는 것을 만들면 다음 세션이 "XBRL 에도 조정 EPS 가 있구나"라고
+    잘못 읽습니다 (창작 금지).
+    """
+    assert "adj_eps" not in sf._XBRL_KEPT_FIELDS
+    assert "adjusted_ebitda" not in sf._XBRL_KEPT_FIELDS
+    row = {"adj_eps": 9.9, "source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row, {"adj_eps": 1.0, "op_income": None})
+    assert "adj_eps_xbrl" not in row
+
+
 def test_eps_only_release_is_still_accepted():
     """매출·영업이익을 못 읽어도 조정 EPS 가 있으면 실적발표로 인정합니다.
 
