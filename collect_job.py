@@ -248,6 +248,12 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
                 "cache_hits": r.get("cache_hits", 0),
                 "cache_downloads": r.get("cache_downloads", 0),
                 "first_error": r.get("first_error", ""),
+                # 91차 — XBRL 조회가 **조용히 0 건**을 돌려주는 자리를 찾기
+                # 위한 계기. GAAP EPS 가 스냅샷에 한 건도 안 들어와 있는데
+                # 오류 기록이 하나도 없어 원인을 짚을 수가 없었습니다.
+                # 개념별 "받음·버림·모호·남음" 을 그대로 남깁니다.
+                "xbrl_calls": r.get("xbrl_calls", []),
+                "xbrl_rejected": r.get("xbrl_rejected", 0),
             }
             for r in reports
         ],

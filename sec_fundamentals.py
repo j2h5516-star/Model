@@ -2475,6 +2475,16 @@ def _period_series(
             report["xbrl_rejected"] = report.get("xbrl_rejected", 0) + rejected
         if ambiguous:
             report.setdefault("xbrl_ambiguous", []).extend(ambiguous)
+        # 91차 — **조용한 0 을 없앤다.**
+        #   XBRL GAAP EPS 가 스냅샷 3,066행에 **한 건도** 안 들어와 있는데
+        #   로봇 기록에 오류가 하나도 없었습니다. 어디서 사라졌는지 알 수가
+        #   없어 추측만 가능했습니다(단위 글자? 개념 이름? 모호 판정?).
+        #   그래서 개념별로 **받은 줄 · 버린 줄 · 남은 분기**를 적어 둡니다.
+        #   다음 실행이 숫자로 말해 주면 그때 고칩니다.
+        report.setdefault("xbrl_calls", []).append(
+            f"{concept}({months}개월): 받음 {len(df)} · 버림 {rejected} · "
+            f"모호 {len(ambiguous)} · 남음 {len(out)}"
+        )
 
     return out
 
