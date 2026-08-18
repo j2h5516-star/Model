@@ -2137,6 +2137,61 @@ _XBRL_CONCEPTS = {
 # 항목별 단위 — 적지 않으면 달러(USD). 주당 금액은 단위가 다릅니다.
 _XBRL_UNITS = {"gaap_eps": "USD/SHARES"}
 
+# 주당 금액이 "같다"고 볼 차이 (92차)
+# ---------------------------------------------------------------------------
+# EPS 는 센트 단위로 발표되므로, 후보 둘이 1센트 안이면 같은 값입니다.
+_PER_SHARE_CLOSE = 0.01
+
+
+def _is_per_share(unit: str) -> bool:
+    """주당 단위인가 — 글자 그대로가 아니라 낱말로 가릅니다."""
+    return "SHARE" in (unit or "").upper()
+
+
+def _unit_matches(row_unit: str, wanted: str) -> bool:
+    """자료의 단위 글자가 우리가 원하는 단위인가.
+
+    주당 단위는 제공처마다 "USD/shares" · "USD-per-shares" · "usd/share"
+    처럼 적는 법이 달라 글자 비교로는 새 나갑니다. 주당 단위에는 반드시
+    "share" 가 들어가고 금액 단위에는 안 들어가므로 그것으로 가릅니다.
+    """
+    if _is_per_share(wanted):
+        return _is_per_share(row_unit)
+    return not _is_per_share(row_unit) and row_unit.upper() == wanted.upper()
+
+
+def _pick_close_value(unique: list[float], per_share: bool) -> float | None:
+    """같은 분기에 후보가 여럿일 때 하나를 고릅니다 (못 고르면 None).
+
+    ⚠️ 92차 — 예전 규칙은 `low > 0 and high / low <= 2.0` 하나뿐이었고,
+       그것이 **주당 금액을 거의 다 버리고 있었습니다.** 규칙을 직접
+       돌려 본 결과(SEC 접속 없이 재현):
+
+           적자 분기   [-0.31, -0.30]  → 제외   ← 사실상 같은 값인데
+           0 근처      [ 0.00,  0.02]  → 제외
+           기본/희석   [ 0.10,  0.30]  → 제외
+           매출        [154억, 154억]  → 통과
+
+       원인 둘. ⑴ `low > 0` 이라 **적자면 무조건 탈락**한다.
+       ⑵ 비율 판정은 값이 작을수록 가혹하다 — 0.10 과 0.30 은 3배지만
+       실제 차이는 20센트뿐이다.
+
+       그래서 **주당 금액은 비율이 아니라 절대차**로 본다. 금액은 자릿수가
+       커서 비율이 맞으므로 그대로 둔다 (거기까지 손대면 검증 범위가
+       넓어져 89차 전망 가드의 실수를 되풀이한다).
+    """
+    if len(unique) == 1:
+        return unique[0]
+    low, high = unique[0], unique[-1]
+    if per_share:
+        # 1e-9 은 부동소수점 여유입니다 — -0.30 − (-0.31) 이 컴퓨터에서는
+        # 0.010000000000000009 로 나와 "1센트 이내"를 아슬아슬하게 벗어납니다.
+        가까움 = (high - low) <= _PER_SHARE_CLOSE + 1e-9
+        return unique[len(unique) // 2] if 가까움 else None
+    if low > 0 and high / low <= 2.0:
+        return unique[len(unique) // 2]
+    return None
+
 
 def fetch_xbrl_approximation(
     ticker: str,
@@ -2442,11 +2497,17 @@ def _period_series(
                 rejected += 1
                 continue
 
-        # ② 항목에 맞는 단위만 — 달러 항목은 USD, 주당 항목은 USD/shares.
+        # ② 항목에 맞는 단위만 — 달러 항목은 USD, 주당 항목은 주당 단위.
         #    (다른 단위의 값이 섞이면 자릿수가 무너집니다 — 배포 사고의 원인)
+        #
+        # 92차 — 주당 항목의 단위 글자를 **글자 그대로 맞추지 않습니다.**
+        #   자료 제공처마다 "USD/shares" · "USD-per-shares" · "usd/share"
+        #   처럼 적는 법이 달라, 한 글자만 어긋나도 전부 버려집니다.
+        #   주당 단위에는 반드시 "share" 가 들어가고 금액 단위에는 들어가지
+        #   않으므로, **낱말로** 가릅니다.
         if unit_col is not None:
             row_unit = str(row[unit_col]).strip().upper()
-            if row_unit and row_unit != unit.upper():
+            if row_unit and not _unit_matches(row_unit, unit):
                 rejected += 1
                 continue
 
@@ -2464,9 +2525,9 @@ def _period_series(
             out[key] = unique[0]
             continue
         # ③ 값이 서로 크게 다르면 어느 것이 맞는지 알 수 없으므로 쓰지 않습니다
-        low, high = unique[0], unique[-1]
-        if low > 0 and high / low <= 2.0:
-            out[key] = unique[len(unique) // 2]   # 비슷하면 가운데 값
+        picked = _pick_close_value(unique, per_share=_is_per_share(unit))
+        if picked is not None:
+            out[key] = picked
         else:
             ambiguous.append(f"{concept} {key}: 후보 {len(unique)}개가 서로 달라 제외")
 
@@ -2555,8 +2616,24 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
         row["adj_eps"] = press["adj_eps"]
     if press.get("gaap_eps") is not None:
         row["gaap_eps"] = press["gaap_eps"]
-    if press.get("revenue") is not None:
+    # 매출 — **XBRL 우선, 없으면 보도자료** (92차, 91차 승부 결과 반영)
+    #
+    # 91차에 야후를 심판으로 셌더니 갈린 98칸에서 **XBRL 98 : 보도자료 0**
+    # 이었다. 이긴 자리의 종류가 그동안 이름 붙인 결함과 겹친다 —
+    # 부문 매출 27건(89차 "조각 매출") · 연간/전망 10건(89차 ⑤).
+    # 실물 ABBV 117.6억(부문) ↔ 154.2억 · ADBE 259억(연간) ↔ 61.9억.
+    #
+    # "XBRL 이 언제나 이긴다"로 두지 않은 이유: 그러면 XBRL 에 없는 11칸을
+    # 잃는데 **그중 7칸이 맞던 값**이다 (ABNB 4 · NTAP 2 · APP 1, 전부
+    # 야후와 일치). 헌법 1조는 "없음이 틀림보다 안전"이지 "없음이 맞음보다
+    # 안전"이 아니다. 그래서 XBRL 이 없을 때만 보도자료를 쓴다 — 잃는 것 0.
+    if row.get("revenue") is None and press.get("revenue") is not None:
         row["revenue"] = press["revenue"]
+    # 매출총이익률은 **뒤집지 않는다** (92차).
+    #   숫자만 보면 169:0 으로 XBRL 압승이지만, 이 칸은 뜻이 다르다 —
+    #   보도자료는 회사가 발표한 **논갭** 이익률이고 XBRL·야후는 **갭**이다
+    #   (실물 ADI 69.4% ↔ 61.0%). 심판이 갭 기준이라 XBRL 이 자동으로
+    #   이길 뿐, 더 정확해서가 아니다 (86차에 이미 적어 둔 정의 차이).
     if press.get("gross_margin_pct") is not None:
         row["gross_margin_pct"] = press["gross_margin_pct"]
     if press.get("period_label"):

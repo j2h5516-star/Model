@@ -200,13 +200,18 @@ def test_xbrl_value_is_kept_beside_the_press_value():
              "gross_margin_pct": 80.0, "op_income": None}
     sf._apply_press_to_row(row, press)
 
-    # 본선 값은 지금까지와 **똑같이** 보도자료가 이깁니다 (아직 안 뒤집음)
-    assert row["gaap_eps"] == 1.56
-    assert row["revenue"] == 9_000_000_000.0
-    # 그리고 XBRL 값이 옆에 남아 있어야 합니다
+    # XBRL 값이 옆에 남아 있어야 합니다 (이 시험의 본래 목적)
     assert row["gaap_eps_xbrl"] == 1.96
     assert row["revenue_xbrl"] == 10_236_000_000.0
     assert row["gross_margin_pct_xbrl"] == 77.0
+
+    # 본선 값 — 92차에 매출만 XBRL 우선으로 뒤집었습니다.
+    # (90차에는 셋 다 보도자료가 이겼고, 이 시험이 그 상태를 못박고
+    #  있었습니다. 91차 승부 결과 98:0 을 보고 매출만 바꿨으므로
+    #  시험도 함께 고칩니다 — 실물이 규칙을 이깁니다.)
+    assert row["revenue"] == 10_236_000_000.0, "매출은 XBRL 이 이겨야 합니다"
+    assert row["gaap_eps"] == 1.56, "GAAP EPS 는 아직 승부가 안 났습니다"
+    assert row["gross_margin_pct"] == 80.0, "이익률은 정의 차이라 안 뒤집습니다"
 
 
 def test_xbrl_companion_is_none_when_there_was_no_xbrl_row():
@@ -228,6 +233,74 @@ def test_adjusted_eps_has_no_xbrl_companion():
     row = {"adj_eps": 9.9, "source": cfg.SRC_APPROX}
     sf._apply_press_to_row(row, {"adj_eps": 1.0, "op_income": None})
     assert "adj_eps_xbrl" not in row
+
+
+def test_per_share_candidates_are_judged_by_cents_not_by_ratio():
+    """주당 금액은 **비율이 아니라 절대차**로 골라야 합니다 (92차).
+
+    옛 규칙(`low > 0 and high/low <= 2.0`)을 그대로 돌려 보면 EPS 를
+    거의 다 버립니다 — 적자면 `low > 0` 에서 탈락하고, 값이 작아 두 후보의
+    비가 2배를 쉽게 넘습니다. 실제로 XBRL GAAP EPS 가 스냅샷 3,066행에
+    **한 건도** 안 들어와 있었습니다.
+    """
+    # 사실상 같은 값 — 골라야 합니다 (부호와 무관하게)
+    assert sf._pick_close_value([-0.31, -0.30], per_share=True) is not None
+    assert sf._pick_close_value([0.00, 0.01], per_share=True) is not None
+    assert sf._pick_close_value([1.96, 1.96], per_share=True) == 1.96
+
+    # 진짜로 다른 값 — 골라선 안 됩니다 (기본 0.10 vs 희석 0.30 류)
+    assert sf._pick_close_value([0.10, 0.30], per_share=True) is None
+    assert sf._pick_close_value([1.96, 5.00], per_share=True) is None
+
+
+def test_money_candidates_keep_the_ratio_rule():
+    """금액은 자릿수가 커서 비율 판정이 맞습니다 — 건드리지 않았습니다."""
+    assert sf._pick_close_value([100.0, 150.0], per_share=False) == 150.0
+    assert sf._pick_close_value([100.0, 900.0], per_share=False) is None
+
+
+def test_per_share_unit_is_matched_by_word_not_by_spelling():
+    """주당 단위는 제공처마다 표기가 달라 **낱말로** 가려야 합니다 (92차).
+
+    글자 그대로 비교하면 한 글자만 어긋나도 전부 버려집니다.
+    """
+    for 표기 in ("USD/SHARES", "USD/shares", "USD-per-shares", "usd/share"):
+        assert sf._unit_matches(표기, "USD/SHARES"), 표기
+    # 금액 단위가 주당 자리로 새어 들면 자릿수가 무너집니다
+    assert not sf._unit_matches("USD", "USD/SHARES")
+    assert not sf._unit_matches("USD/SHARES", "USD")
+    assert sf._unit_matches("USD", "USD")
+
+
+def test_revenue_prefers_xbrl_but_falls_back_to_the_press_release():
+    """매출은 XBRL 우선, **없을 때만** 보도자료 (92차 — 91차 승부 반영).
+
+    91차 실측: 갈린 98칸에서 XBRL 98 : 보도자료 0.
+    다만 XBRL 이 없는 11칸 중 7칸은 보도자료가 맞던 값이라, 무조건
+    XBRL 로 두면 맞던 값을 잃습니다.
+    """
+    # 둘 다 있으면 XBRL 이 이긴다 (실물 ABBV — 보도자료는 부문 매출)
+    row = {"revenue": 15_423_000_000.0, "source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row, {"revenue": 11_762_000_000.0, "op_income": None})
+    assert row["revenue"] == 15_423_000_000.0
+    assert row["revenue_xbrl"] == 15_423_000_000.0
+
+    # XBRL 이 없으면 보도자료를 쓴다 (실물 ABNB — 보도자료가 맞던 값)
+    row2 = {"revenue": None, "source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row2, {"revenue": 3_096_000_000.0, "op_income": None})
+    assert row2["revenue"] == 3_096_000_000.0
+
+
+def test_gross_margin_is_deliberately_not_flipped():
+    """매출총이익률은 뒤집지 않습니다 — 승부가 아니라 **정의 차이**입니다.
+
+    보도자료는 회사가 발표한 논갭 이익률(ADI 69.4%)이고 XBRL·야후는
+    갭(61.0%)입니다. 심판이 갭 기준이라 XBRL 이 자동으로 이길 뿐입니다.
+    """
+    row = {"gross_margin_pct": 61.0, "source": cfg.SRC_APPROX}
+    sf._apply_press_to_row(row, {"gross_margin_pct": 69.4, "op_income": None})
+    assert row["gross_margin_pct"] == 69.4, "이익률까지 뒤집으면 안 됩니다"
+    assert row["gross_margin_pct_xbrl"] == 61.0
 
 
 def test_eps_only_release_is_still_accepted():
