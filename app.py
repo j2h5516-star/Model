@@ -27,6 +27,7 @@ from datetime import date, timedelta
 import audit_data
 import config as cfg
 import dataset
+import sector_model as sm
 import judge
 import measure_engine as me
 
@@ -558,6 +559,74 @@ def breadth_zone(breadth: float | None) -> dict:
     return {"zone": "판단 불가", "rate": None, "note": ""}
 
 
+# ---------------------------------------------------------------------------
+# 무거운 계산 캐시 (102차) — 화면이 57초 걸리던 문제
+# ---------------------------------------------------------------------------
+# 10년 확장 뒤 마지막 구역까지 그려지는 데 57~59초가 걸렸습니다. 짐작하지
+# 않고 하나씩 재 봤습니다 (412px 실측):
+#
+#   sm.confirmation_rows   22.7초   ← 1위 (전체의 40%)
+#   sm.current_breadth      5.1초
+#   sm.cycle_series ×2      5.6초
+#   dataset.build           1.4초
+#                          ------
+#                          약 35초 + 스트림릿 그리기
+#
+# 이 값들은 **로봇이 새 데이터를 커밋할 때만** 바뀝니다. 같은 스냅샷을
+# 화면 새로 고칠 때마다 다시 계산할 이유가 없습니다.
+#
+# ⚠️ 캐시는 **속도만** 바꿉니다. 같은 입력이면 값이 똑같아야 하고, 그것을
+#    시험으로 못박습니다 — 캐시가 값을 바꾸면 그건 고쳐야 할 결함입니다.
+#    (측정 코드는 한 줄도 안 건드렸습니다. 계산 결과를 다시 쓰기만 합니다.)
+def _cached(fn):
+    """스트림릿이 있으면 결과를 담아 두고, 없으면 그냥 돌립니다.
+
+    시험은 스트림릿 없이 app 을 불러오므로 그대로 통과해야 합니다.
+    """
+    try:
+        import streamlit as st
+    except Exception:
+        return fn
+    try:
+        return st.cache_data(show_spinner=False)(fn)
+    except Exception:
+        return fn
+
+
+def snapshot_key(snapshot: dict | None) -> str:
+    """이 스냅샷을 가리키는 짧은 이름표 — 캐시를 언제 버릴지 정합니다.
+
+    로봇이 새로 커밋하면 saved_at 이 바뀌므로 캐시가 저절로 갈립니다.
+    saved_at 이 없으면 종목 수라도 씁니다 (없는 값을 지어내지 않습니다).
+    """
+    if not snapshot:
+        return "없음"
+    return str(snapshot.get("saved_at") or f"종목{len(snapshot.get('tickers') or [])}")
+
+
+# 아래 함수들의 앞머리 `_ds` 는 **밑줄로 시작**합니다 — 스트림릿은 밑줄로
+# 시작하는 인자를 캐시 열쇠에서 뺍니다. 큰 표를 통째로 해시하면 그 자체가
+# 몇 초씩 걸리기 때문입니다. 대신 `키`(스냅샷 이름표)로 갈아 끼웁니다.
+@_cached
+def cached_dataset(_snapshot: dict, 키: str) -> dict:
+    return dataset.build(_snapshot)
+
+
+@_cached
+def cached_confirmation_rows(_ds: dict, 키: str) -> list[dict]:
+    return sm.confirmation_rows(_ds)
+
+
+@_cached
+def cached_current_breadth(_ds: dict, 키: str) -> list[dict]:
+    return sm.current_breadth(_ds)
+
+
+@_cached
+def cached_cycle_series(_ds: dict, members: tuple, base_day: str,
+                        since: str, 키: str) -> list[dict]:
+    return sm.cycle_series(_ds, list(members), base_day, since=since)
+
 def breadth_verdict_lines(verdict: dict) -> list[str]:
     """정배열 폭 모델의 판정 상태 줄 — **판정 파일에서 그때그때 읽습니다** (101차).
 
@@ -643,7 +712,8 @@ def main():
     surprise = load_json("surprise.json")
     is_v3 = verdict_is_v3(verdict)
     snapshot = dataset.load()
-    ds = dataset.build(snapshot)
+    키 = snapshot_key(snapshot)
+    ds = cached_dataset(snapshot, 키)
 
     if log:
         st.caption(f"로봇 마지막 수집: {str(log.get('ran_at', '?'))[:16]} UTC · "
@@ -692,7 +762,7 @@ def main():
         "**동시에** 나타난 곳입니다. 단순 순환(주가만 오르고 되돌아감)과 "
         "진짜 주도 교체를 가르려는 신호입니다."
     )
-    confirm_rows = sm.confirmation_rows(ds)
+    confirm_rows = cached_confirmation_rows(ds, 키)
     fired = [r for r in confirm_rows if r["확인"]]
     if fired:
         for row in fired:
@@ -737,7 +807,7 @@ def main():
         "시장을 20%p 이상 이긴 비율**(34차 탐색값)입니다."
     )
 
-    breadth_rows = sm.current_breadth(ds)
+    breadth_rows = cached_current_breadth(ds, 키)
     measured = [r for r in breadth_rows if r["폭"] is not None]
     if measured:
         st.altair_chart(
@@ -785,8 +855,10 @@ def main():
         "세 선의 **순서**가 이 모델의 핵심 질문입니다."
     )
     ai_members, non_ai = sm.ai_members(ds)
-    ai_series = sm.cycle_series(ds, ai_members, "2024-12-31", since="2025-01-01")
-    non_series = sm.cycle_series(ds, non_ai, "2024-12-31", since="2025-01-01")
+    ai_series = cached_cycle_series(ds, tuple(ai_members), "2024-12-31",
+                                    "2025-01-01", 키)
+    non_series = cached_cycle_series(ds, tuple(non_ai), "2024-12-31",
+                                     "2025-01-01", 키)
     if ai_series:
         import altair as alt
         frames = []

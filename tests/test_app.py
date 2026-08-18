@@ -479,6 +479,35 @@ def test_가설_설명문에는_숫자를_박지_않는다():
             assert 박힌숫자 not in 글, f"{이름} 설명에 옛 실측치 {박힌숫자} 가 박혀 있습니다"
 
 
+def test_캐시는_값을_바꾸지_않는다():
+    """캐시는 **속도만** 바꿔야 합니다 (102차).
+
+    10년 확장 뒤 화면이 57초 걸려 무거운 계산을 캐시에 담았습니다.
+    캐시가 값을 바꾸면 그건 속도 개선이 아니라 **결함**입니다.
+    측정 코드를 한 줄도 안 건드렸음을 여기서 못박습니다.
+    """
+    import sector_model as sm
+    import dataset
+    snap = dataset.load()
+    키 = app.snapshot_key(snap)
+    ds = app.cached_dataset(snap, 키)
+    assert app.cached_confirmation_rows(ds, 키) == sm.confirmation_rows(ds)
+    assert app.cached_current_breadth(ds, 키) == sm.current_breadth(ds)
+
+
+def test_스냅샷_이름표는_새_수집이면_달라진다():
+    """캐시 열쇠가 안 바뀌면 **새 데이터가 와도 옛 화면**이 남습니다 (102차).
+
+    로봇이 새로 커밋하면 saved_at 이 바뀌므로 캐시가 저절로 갈립니다.
+    saved_at 이 없으면 종목 수라도 씁니다 — 지어내지 않습니다.
+    """
+    a = app.snapshot_key({"saved_at": "2026-08-18T06:20:08"})
+    b = app.snapshot_key({"saved_at": "2026-08-19T09:31:00"})
+    assert a != b, "수집 시각이 다른데 이름표가 같습니다 — 새 데이터가 안 보입니다"
+    assert app.snapshot_key(None) == "없음"
+    assert app.snapshot_key({"tickers": ["A", "B"]}) == "종목2"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
