@@ -105,17 +105,29 @@ def announcements_from_frame(frame) -> list[dict]:
     if frame is None or getattr(frame, "empty", True):
         return []
     열이름 = {c.lower(): c for c in frame.columns}
-    실제 = 열이름.get("epsactual") or 열이름.get("eps actual")
-    추정 = 열이름.get("epsestimate") or 열이름.get("eps estimate")
+    # 창구가 둘이라 열 이름이 다릅니다 (105차)
+    #   earnings_history      → epsActual · epsEstimate
+    #   get_earnings_dates    → Reported EPS · EPS Estimate
+    # 둘 다 받아들입니다 — 어느 창구를 쓰든 같은 모양으로 담기게.
+    실제 = (열이름.get("epsactual") or 열이름.get("eps actual")
+            or 열이름.get("reported eps"))
+    추정 = (열이름.get("epsestimate") or 열이름.get("eps estimate"))
     out = []
     for index, row in frame.iterrows():
         날짜 = str(index)[:10]
         if len(날짜) != 10 or 날짜[4] != "-":
             continue
+        값 = _number(row[실제]) if 실제 else None
+        추정값 = _number(row[추정]) if 추정 else None
+        # get_earnings_dates 는 **앞으로 있을 발표**도 함께 줍니다 (값이
+        # 아직 없음). 둘 다 없는 줄은 심판으로 쓸 수 없으므로 담지
+        # 않습니다 — 값을 지어내는 것이 아니라 빈 줄을 안 싣는 것입니다.
+        if 값 is None and 추정값 is None:
+            continue
         out.append({
             "announced_date": 날짜,
-            "street_eps": _number(row[실제]) if 실제 else None,
-            "street_estimate": _number(row[추정]) if 추정 else None,
+            "street_eps": 값,
+            "street_estimate": 추정값,
         })
     out.sort(key=lambda r: r["announced_date"])
     return out
@@ -125,10 +137,19 @@ def fetch(ticker: str) -> dict:
     """한 종목의 분기표와 발표 기록을 받아 옵니다 (로봇 환경에서만 동작)."""
     import yfinance as yf
 
+    import config as cfg
+
     handle = yf.Ticker(ticker)
+    # 발표 기록은 **깊은 창구**로 받습니다 (105차 — 자세한 이유는
+    # config.VENDOR_EARNINGS_LIMIT 주석에). 옛 판(또는 야후 변경)으로
+    # 그 창구가 없으면 예전 창구로 돌아갑니다 — 없는 것보다 낫습니다.
+    try:
+        frame = handle.get_earnings_dates(limit=cfg.VENDOR_EARNINGS_LIMIT)
+    except Exception:
+        frame = handle.earnings_history
     return {
         "quarters": quarters_from_frame(handle.quarterly_income_stmt),
-        "announcements": announcements_from_frame(handle.earnings_history),
+        "announcements": announcements_from_frame(frame),
     }
 
 

@@ -152,6 +152,59 @@ def test_archive_says_it_is_not_merged():
         vf.fetch = 원래
 
 
+def test_깊은_창구의_열이름도_읽는다():
+    """심판을 깊은 창구로 바꿨습니다 (105차). 열 이름이 다릅니다.
+
+    ⚠️ 왜 바꿨나: 야후 심판이 우리 5,851행 중 **962행(16%)** 만 보고
+    있었습니다. 손익계산서 창구는 yfinance 소스에 *"Yahoo returns maximum
+    4 years or 5 quarters, regardless of start_dt"* 라고 적힌 **하드
+    한계**라 못 늘립니다. 반면 발표 기록 창구(get_earnings_dates)는
+    `limit` 을 받고 야후가 **100까지** 허용합니다 — 약 25년.
+
+    두 창구의 열 이름이 다르므로 **둘 다** 읽어야 합니다.
+      earnings_history    → epsActual · epsEstimate   (실측 4건뿐)
+      get_earnings_dates  → Reported EPS · EPS Estimate
+    """
+    import pandas as pd
+
+    깊은창구 = pd.DataFrame(
+        {"EPS Estimate": [1.00, 1.10], "Reported EPS": [1.05, 1.20],
+         "Surprise(%)": [5.0, 9.1]},
+        index=pd.to_datetime(["2017-02-01", "2017-05-02"]),
+    )
+    행 = vf.announcements_from_frame(깊은창구)
+    assert [r["announced_date"] for r in 행] == ["2017-02-01", "2017-05-02"]
+    assert [r["street_eps"] for r in 행] == [1.05, 1.20]
+    assert [r["street_estimate"] for r in 행] == [1.00, 1.10]
+
+    # 옛 창구도 그대로 읽혀야 합니다 (되돌아갈 길을 남겨 뒀으므로)
+    옛창구 = pd.DataFrame(
+        {"epsEstimate": [2.00], "epsActual": [2.10]},
+        index=pd.to_datetime(["2026-05-01"]),
+    )
+    행2 = vf.announcements_from_frame(옛창구)
+    assert 행2 == [{"announced_date": "2026-05-01",
+                   "street_eps": 2.10, "street_estimate": 2.00}]
+
+
+def test_아직_안_나온_발표는_담지_않는다():
+    """깊은 창구는 **앞으로 있을 발표**도 함께 줍니다 (값이 아직 없음).
+
+    둘 다 없는 줄은 심판으로 쓸 수 없으므로 담지 않습니다 — 값을
+    지어내는 것이 아니라 빈 줄을 안 싣는 것입니다. 추정만 있는 줄은
+    남깁니다 (그것도 사실이므로).
+    """
+    import pandas as pd
+
+    frame = pd.DataFrame(
+        {"EPS Estimate": [1.00, 1.30, None], "Reported EPS": [1.05, None, None]},
+        index=pd.to_datetime(["2026-05-01", "2026-08-01", "2026-11-01"]),
+    )
+    행 = vf.announcements_from_frame(frame)
+    assert [r["announced_date"] for r in 행] == ["2026-05-01", "2026-08-01"], 행
+    assert 행[1]["street_eps"] is None and 행[1]["street_estimate"] == 1.30
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
