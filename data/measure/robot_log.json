@@ -1,17 +1,17 @@
 {
- "ran_at": "2026-08-18T06:32:34.685922+00:00",
+ "ran_at": "2026-08-19T00:49:15.476585+00:00",
  "tickers": 160,
  "summary": "조정 EPS 시계열 160종목 · 일봉 161종목(기준지수 포함) · 파싱 실패 원문 638건",
- "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 미채택 · H6_결합_H5bxH2b: 미채택 · H7_EBITDA_첫돌파: 미채택 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 미채택 · H10_논갭영업이익_저평가_첫신기록: 미채택 · H11_섹터정배열폭_60: 미채택 · H11b_섹터정배열폭_80: 미채택 · H18_완성시_52주선이격도: 판정 불가 · H19_주도섹터_판정: 판정 불가 · H20_주도섹터_전환: 미채택 · H21_주도섹터_분기점: 미채택 · H19b_주도섹터_완성후확인: 판정 불가",
- "consensus": "컨센서스: 확보 160종목 · 원장 추가 12건 · 실패 0종목",
+ "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 미채택 · H6_결합_H5bxH2b: 미채택 · H7_EBITDA_첫돌파: 미채택 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 미채택 · H10_논갭영업이익_저평가_첫신기록: 미채택 · H11_섹터정배열폭_60: 미채택 · H11b_섹터정배열폭_80: 미채택 · H18_완성시_52주선이격도: 판정 불가 · H19_주도섹터_판정: 판정 불가 · H20_주도섹터_전환: 미채택 · H21_주도섹터_분기점: 판정 불가 · H19b_주도섹터_완성후확인: 판정 불가",
+ "consensus": "컨센서스: 확보 160종목 · 원장 추가 1건 · 실패 0종목",
  "surprise": "서프라이즈: 확보 160종목 · 신규 0분기 · 실패 0종목",
- "vendor": "두 번째 자(야후) — 160종목 성공 · 0종목 실패 · 분기 962개 · 발표기록 639개 · 과거 소급 변경 23칸",
+ "vendor": "두 번째 자(야후) — 160종목 성공 · 0종목 실패 · 분기 962개 · 발표기록 12438개 · 과거 소급 변경 0칸",
  "per_ticker": [
   {
    "ticker": "CRDO",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 7.2,
+   "seconds": 6.1,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": "",
@@ -32,6 +32,12 @@
     "EarningsPerShareDiluted(3개월): 받음 24 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 15 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 268,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 19,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -39,7 +45,7 @@
    "ticker": "CLS",
    "adj_eps_ok": 9,
    "merged_direct": 1,
-   "seconds": 5.7,
+   "seconds": 6.0,
    "cache_hits": 24,
    "cache_downloads": 0,
    "first_error": "",
@@ -62,6 +68,12 @@
     "EarningsPerShareDiluted(3개월): 받음 10 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 61,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 10,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -69,7 +81,7 @@
    "ticker": "MU",
    "adj_eps_ok": 32,
    "merged_direct": 29,
-   "seconds": 52.5,
+   "seconds": 52.9,
    "cache_hits": 61,
    "cache_downloads": 52,
    "first_error": "",
@@ -95,6 +107,12 @@
     "EarningsPerShareDiluted(3개월): 받음 197 · 이름버림 10 · 단위버림 0 · 모호 0 · 남음 60 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 710,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -102,7 +120,7 @@
    "ticker": "SNDK",
    "adj_eps_ok": 7,
    "merged_direct": 6,
-   "seconds": 4.5,
+   "seconds": 4.3,
    "cache_hits": 14,
    "cache_downloads": 0,
    "first_error": "",
@@ -123,6 +141,12 @@
     "EarningsPerShareDiluted(3개월): 받음 7 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 105,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 8,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -130,7 +154,7 @@
    "ticker": "LITE",
    "adj_eps_ok": 36,
    "merged_direct": 11,
-   "seconds": 48.7,
+   "seconds": 49.4,
    "cache_hits": 40,
    "cache_downloads": 39,
    "first_error": "",
@@ -157,6 +181,12 @@
     "EarningsPerShareDiluted(3개월): 받음 113 · 이름버림 0 · 단위버림 0 · 모호 5 · 남음 36 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 662,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -164,7 +194,7 @@
    "ticker": "STRL",
    "adj_eps_ok": 12,
    "merged_direct": 8,
-   "seconds": 151.6,
+   "seconds": 152.2,
    "cache_hits": 50,
    "cache_downloads": 47,
    "first_error": "",
@@ -188,6 +218,12 @@
     "EarningsPerShareDiluted(3개월): 받음 133 · 이름버림 24 · 단위버림 0 · 모호 5 · 남음 47 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 589,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -195,7 +231,7 @@
    "ticker": "MXL",
    "adj_eps_ok": 28,
    "merged_direct": 27,
-   "seconds": 33.4,
+   "seconds": 32.4,
    "cache_hits": 41,
    "cache_downloads": 28,
    "first_error": "",
@@ -219,6 +255,12 @@
     "EarningsPerShareDiluted(3개월): 받음 167 · 이름버림 4 · 단위버림 0 · 모호 1 · 남음 58 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 800,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -226,9 +268,9 @@
    "ticker": "COHR",
    "adj_eps_ok": 23,
    "merged_direct": 18,
-   "seconds": 94.8,
-   "cache_hits": 73,
-   "cache_downloads": 47,
+   "seconds": 101.1,
+   "cache_hits": 65,
+   "cache_downloads": 55,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 62 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 34 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -250,6 +292,12 @@
     "EarningsPerShareDiluted(3개월): 받음 212 · 이름버림 12 · 단위버림 0 · 모호 8 · 남음 55 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 814,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 32,
+    "revenue": 8,
+    "gaap_eps": 6,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -257,7 +305,7 @@
    "ticker": "TTMI",
    "adj_eps_ok": 34,
    "merged_direct": 31,
-   "seconds": 52.0,
+   "seconds": 33.9,
    "cache_hits": 46,
    "cache_downloads": 37,
    "first_error": "",
@@ -283,6 +331,12 @@
     "EarningsPerShareDiluted(3개월): 받음 92 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 48 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 524,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -290,7 +344,7 @@
    "ticker": "ICHR",
    "adj_eps_ok": 35,
    "merged_direct": 33,
-   "seconds": 27.1,
+   "seconds": 50.8,
    "cache_hits": 43,
    "cache_downloads": 41,
    "first_error": "",
@@ -312,6 +366,12 @@
     "EarningsPerShareDiluted(3개월): 받음 58 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 34 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 370,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 42,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -319,7 +379,7 @@
    "ticker": "AMD",
    "adj_eps_ok": 34,
    "merged_direct": 35,
-   "seconds": 56.7,
+   "seconds": 70.1,
    "cache_hits": 64,
    "cache_downloads": 53,
    "first_error": "",
@@ -348,6 +408,12 @@
     "EarningsPerShareDiluted(3개월): 받음 179 · 이름버림 5 · 단위버림 0 · 모호 5 · 남음 57 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 730,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 3,
+    "gaap_eps": 0,
+    "gross_profit": 3
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -355,7 +421,7 @@
    "ticker": "PLTR",
    "adj_eps_ok": 22,
    "merged_direct": 24,
-   "seconds": 13.2,
+   "seconds": 14.3,
    "cache_hits": 32,
    "cache_downloads": 13,
    "first_error": "",
@@ -377,6 +443,12 @@
     "EarningsPerShareDiluted(3개월): 받음 36 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 21 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 261,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 27,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -384,7 +456,7 @@
    "ticker": "ZETA",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 19.3,
+   "seconds": 17.6,
    "cache_hits": 35,
    "cache_downloads": 11,
    "first_error": "",
@@ -404,6 +476,12 @@
     "EarningsPerShareDiluted(3개월): 받음 32 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 19 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 306,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 24,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -411,7 +489,7 @@
    "ticker": "INTC",
    "adj_eps_ok": 34,
    "merged_direct": 32,
-   "seconds": 71.5,
+   "seconds": 73.6,
    "cache_hits": 71,
    "cache_downloads": 65,
    "first_error": "",
@@ -433,6 +511,12 @@
     "EarningsPerShareDiluted(3개월): 받음 103 · 이름버림 5 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 623,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -440,7 +524,7 @@
    "ticker": "ENPH",
    "adj_eps_ok": 35,
    "merged_direct": 36,
-   "seconds": 50.8,
+   "seconds": 57.2,
    "cache_hits": 40,
    "cache_downloads": 44,
    "first_error": "",
@@ -462,6 +546,12 @@
     "EarningsPerShareDiluted(3개월): 받음 18 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 13 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 697,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -469,7 +559,7 @@
    "ticker": "SWKS",
    "adj_eps_ok": 36,
    "merged_direct": 32,
-   "seconds": 38.3,
+   "seconds": 36.1,
    "cache_hits": 53,
    "cache_downloads": 43,
    "first_error": "",
@@ -493,6 +583,12 @@
     "EarningsPerShareDiluted(3개월): 받음 177 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 62 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 711,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -500,7 +596,7 @@
    "ticker": "PYPL",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 80.8,
+   "seconds": 99.3,
    "cache_hits": 71,
    "cache_downloads": 60,
    "first_error": "",
@@ -524,6 +620,12 @@
     "EarningsPerShareDiluted(3개월): 받음 122 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 44 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 664,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -531,9 +633,9 @@
    "ticker": "QRVO",
    "adj_eps_ok": 26,
    "merged_direct": 22,
-   "seconds": 23.5,
-   "cache_hits": 50,
-   "cache_downloads": 27,
+   "seconds": 19.0,
+   "cache_hits": 49,
+   "cache_downloads": 28,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 64 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 35 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -549,6 +651,12 @@
     "EarningsPerShareDiluted(3개월): 받음 117 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 44 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 500,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -556,7 +664,7 @@
    "ticker": "APP",
    "adj_eps_ok": 0,
    "merged_direct": 3,
-   "seconds": 23.6,
+   "seconds": 21.2,
    "cache_hits": 53,
    "cache_downloads": 5,
    "first_error": "",
@@ -578,6 +686,12 @@
     "EarningsPerShareDiluted(3개월): 받음 34 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 20 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 368,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 26,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -585,7 +699,7 @@
    "ticker": "NVDA",
    "adj_eps_ok": 39,
    "merged_direct": 37,
-   "seconds": 63.6,
+   "seconds": 69.0,
    "cache_hits": 47,
    "cache_downloads": 53,
    "first_error": "",
@@ -614,6 +728,12 @@
     "EarningsPerShareDiluted(3개월): 받음 177 · 이름버림 0 · 단위버림 0 · 모호 7 · 남음 57 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 879,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -621,7 +741,7 @@
    "ticker": "ANET",
    "adj_eps_ok": 38,
    "merged_direct": 39,
-   "seconds": 40.3,
+   "seconds": 40.0,
    "cache_hits": 38,
    "cache_downloads": 37,
    "first_error": "",
@@ -646,6 +766,12 @@
     "EarningsPerShareDiluted(3개월): 받음 122 · 이름버림 0 · 단위버림 0 · 모호 6 · 남음 41 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 797,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -653,30 +779,36 @@
    "ticker": "FN",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 40.5,
+   "seconds": 43.1,
    "cache_hits": 33,
    "cache_downloads": 34,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 90 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 48 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
-    "OperatingIncomeLoss(12개월): 받음 42 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
+    "OperatingIncomeLoss(12개월): 받음 45 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
     "ShareBasedCompensation(3개월): 받음 465 · 이름버림 379 · 단위버림 0 · 모호 0 · 남음 46 · 본이름 ['adjustmentsrelatedtotaxwithholdingforsharebasedcompensation', 'adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpensenetoftax'] · 본단위 ['USD']",
     "AllocatedShareBasedCompensationExpense(3개월): 받음 84 · 이름버림 84 · 단위버림 0 · 모호 0 · 남음 0 · 본이름 ['allocatedsharebasedcompensationexpensenetoftax'] · 본단위 []",
-    "ShareBasedCompensation(12개월): 받음 470 · 이름버림 428 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['adjustmentsrelatedtotaxwithholdingforsharebasedcompensation', 'adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpensenetoftax'] · 본단위 ['USD']",
-    "AllocatedShareBasedCompensationExpense(12개월): 받음 42 · 이름버림 42 · 단위버림 0 · 모호 0 · 남음 0 · 본이름 ['allocatedsharebasedcompensationexpensenetoftax'] · 본단위 []",
+    "ShareBasedCompensation(12개월): 받음 496 · 이름버림 451 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['adjustmentsrelatedtotaxwithholdingforsharebasedcompensation', 'adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpensenetoftax'] · 본단위 ['USD']",
+    "AllocatedShareBasedCompensationExpense(12개월): 받음 45 · 이름버림 45 · 단위버림 0 · 모호 0 · 남음 0 · 본이름 ['allocatedsharebasedcompensationexpensenetoftax'] · 본단위 []",
     "DepreciationAndAmortization(3개월): 받음 20 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 11 · 본이름 ['depreciationandamortization'] · 본단위 ['USD']",
-    "DepreciationAndAmortization(12개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 12 · 본이름 ['depreciationandamortization'] · 본단위 ['USD']",
+    "DepreciationAndAmortization(12개월): 받음 33 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 13 · 본이름 ['depreciationandamortization'] · 본단위 ['USD']",
     "AmortizationOfIntangibleAssets(3개월): 받음 86 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 46 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
-    "AmortizationOfIntangibleAssets(12개월): 받음 42 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
+    "AmortizationOfIntangibleAssets(12개월): 받음 45 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
     "Revenues(3개월): 받음 132 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['revenues'] · 본단위 ['USD']",
     "RevenueFromContractWithCustomerIncludingAssessedTax(3개월): 받음 45 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 24 · 본이름 ['revenuefromcontractwithcustomerincludingassessedtax'] · 본단위 ['USD']",
-    "Revenues(12개월): 받음 42 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['revenues'] · 본단위 ['USD']",
-    "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 19 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['revenuefromcontractwithcustomerincludingassessedtax'] · 본단위 ['USD']",
+    "Revenues(12개월): 받음 45 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['revenues'] · 본단위 ['USD']",
+    "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 22 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 9 · 본이름 ['revenuefromcontractwithcustomerincludingassessedtax'] · 본단위 ['USD']",
     "GrossProfit(3개월): 받음 162 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 58 · 본이름 ['grossprofit'] · 본단위 ['USD']",
-    "GrossProfit(12개월): 받음 42 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['grossprofit'] · 본단위 ['USD']",
+    "GrossProfit(12개월): 받음 45 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['grossprofit'] · 본단위 ['USD']",
     "EarningsPerShareDiluted(3개월): 받음 162 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 58 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
-   "xbrl_rejected": 933,
+   "xbrl_rejected": 959,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -684,7 +816,7 @@
    "ticker": "SMCI",
    "adj_eps_ok": 23,
    "merged_direct": 25,
-   "seconds": 48.1,
+   "seconds": 50.9,
    "cache_hits": 75,
    "cache_downloads": 47,
    "first_error": "",
@@ -706,6 +838,12 @@
     "EarningsPerShareDiluted(3개월): 받음 162 · 이름버림 0 · 단위버림 0 · 모호 8 · 남음 50 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1567,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -713,7 +851,7 @@
    "ticker": "LSCC",
    "adj_eps_ok": 39,
    "merged_direct": 36,
-   "seconds": 53.7,
+   "seconds": 46.1,
    "cache_hits": 50,
    "cache_downloads": 48,
    "first_error": "",
@@ -739,6 +877,12 @@
     "EarningsPerShareDiluted(3개월): 받음 123 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 49 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 464,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -746,7 +890,7 @@
    "ticker": "SYNA",
    "adj_eps_ok": 37,
    "merged_direct": 36,
-   "seconds": 44.3,
+   "seconds": 41.9,
    "cache_hits": 48,
    "cache_downloads": 51,
    "first_error": "",
@@ -772,6 +916,12 @@
     "EarningsPerShareDiluted(3개월): 받음 97 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 54 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 958,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 43,
+    "revenue": 0,
+    "gaap_eps": 1,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -779,7 +929,7 @@
    "ticker": "UCTT",
    "adj_eps_ok": 9,
    "merged_direct": 31,
-   "seconds": 38.4,
+   "seconds": 40.5,
    "cache_hits": 57,
    "cache_downloads": 32,
    "first_error": "",
@@ -806,6 +956,12 @@
     "EarningsPerShareDiluted(3개월): 받음 98 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 52 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 636,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -813,7 +969,7 @@
    "ticker": "ONTO",
    "adj_eps_ok": 35,
    "merged_direct": 32,
-   "seconds": 44.4,
+   "seconds": 50.5,
    "cache_hits": 46,
    "cache_downloads": 50,
    "first_error": "",
@@ -837,6 +993,12 @@
     "EarningsPerShareDiluted(3개월): 받음 102 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 53 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 959,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 42,
+    "revenue": 3,
+    "gaap_eps": 1,
+    "gross_profit": 2
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -844,7 +1006,7 @@
    "ticker": "IPGP",
    "adj_eps_ok": 9,
    "merged_direct": 6,
-   "seconds": 47.3,
+   "seconds": 49.0,
    "cache_hits": 51,
    "cache_downloads": 50,
    "first_error": "",
@@ -867,6 +1029,12 @@
     "EarningsPerShareDiluted(3개월): 받음 172 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 61 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 773,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -874,7 +1042,7 @@
    "ticker": "CGNX",
    "adj_eps_ok": 18,
    "merged_direct": 29,
-   "seconds": 30.8,
+   "seconds": 32.1,
    "cache_hits": 36,
    "cache_downloads": 25,
    "first_error": "",
@@ -899,6 +1067,12 @@
     "EarningsPerShareDiluted(3개월): 받음 122 · 이름버림 0 · 단위버림 0 · 모호 11 · 남음 45 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1260,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -906,7 +1080,7 @@
    "ticker": "AVGO",
    "adj_eps_ok": 31,
    "merged_direct": 6,
-   "seconds": 98.3,
+   "seconds": 101.2,
    "cache_hits": 57,
    "cache_downloads": 61,
    "first_error": "",
@@ -928,6 +1102,12 @@
     "EarningsPerShareDiluted(3개월): 받음 74 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 28 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 458,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 33,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -935,7 +1115,7 @@
    "ticker": "QCOM",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 94.1,
+   "seconds": 102.6,
    "cache_hits": 45,
    "cache_downloads": 79,
    "first_error": "",
@@ -956,6 +1136,12 @@
     "EarningsPerShareDiluted(3개월): 받음 193 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 65 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 621,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 2,
+    "gaap_eps": 1,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -963,7 +1149,7 @@
    "ticker": "TXN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 58.2,
+   "seconds": 59.5,
    "cache_hits": 48,
    "cache_downloads": 54,
    "first_error": "",
@@ -983,6 +1169,12 @@
     "EarningsPerShareDiluted(3개월): 받음 160 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 60 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 447,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -990,7 +1182,7 @@
    "ticker": "ADI",
    "adj_eps_ok": 30,
    "merged_direct": 27,
-   "seconds": 62.2,
+   "seconds": 69.8,
    "cache_hits": 50,
    "cache_downloads": 58,
    "first_error": "",
@@ -1012,6 +1204,12 @@
     "EarningsPerShareDiluted(3개월): 받음 168 · 이름버림 2 · 단위버림 0 · 모호 3 · 남음 58 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 955,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 34,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1019,7 +1217,7 @@
    "ticker": "MCHP",
    "adj_eps_ok": 8,
    "merged_direct": 36,
-   "seconds": 81.6,
+   "seconds": 83.6,
    "cache_hits": 59,
    "cache_downloads": 49,
    "first_error": "",
@@ -1048,6 +1246,12 @@
     "EarningsPerShareDiluted(3개월): 받음 192 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 63 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1355,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1055,7 +1259,7 @@
    "ticker": "NXPI",
    "adj_eps_ok": 14,
    "merged_direct": 20,
-   "seconds": 53.3,
+   "seconds": 46.6,
    "cache_hits": 31,
    "cache_downloads": 23,
    "first_error": "",
@@ -1076,6 +1280,12 @@
     "EarningsPerShareDiluted(3개월): 받음 40 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 23 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 182,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 30,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1083,7 +1293,7 @@
    "ticker": "MRVL",
    "adj_eps_ok": 21,
    "merged_direct": 16,
-   "seconds": 21.1,
+   "seconds": 22.0,
    "cache_hits": 68,
    "cache_downloads": 16,
    "first_error": "",
@@ -1105,6 +1315,12 @@
     "EarningsPerShareDiluted(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 285,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 19,
+    "revenue": 3,
+    "gaap_eps": 2,
+    "gross_profit": 3
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1112,7 +1328,7 @@
    "ticker": "KLAC",
    "adj_eps_ok": 41,
    "merged_direct": 44,
-   "seconds": 58.5,
+   "seconds": 60.6,
    "cache_hits": 58,
    "cache_downloads": 60,
    "first_error": "",
@@ -1137,6 +1353,12 @@
     "EarningsPerShareDiluted(3개월): 받음 186 · 이름버림 0 · 단위버림 2 · 모호 0 · 남음 63 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']"
    ],
    "xbrl_rejected": 1293,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 36,
+    "gaap_eps": 35,
+    "gross_profit": 20
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1144,7 +1366,7 @@
    "ticker": "LRCX",
    "adj_eps_ok": 37,
    "merged_direct": 37,
-   "seconds": 67.2,
+   "seconds": 68.1,
    "cache_hits": 35,
    "cache_downloads": 63,
    "first_error": "",
@@ -1170,6 +1392,12 @@
     "EarningsPerShareDiluted(3개월): 받음 96 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 48 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 912,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1177,7 +1405,7 @@
    "ticker": "AMAT",
    "adj_eps_ok": 40,
    "merged_direct": 38,
-   "seconds": 59.1,
+   "seconds": 63.5,
    "cache_hits": 46,
    "cache_downloads": 49,
    "first_error": "",
@@ -1204,6 +1432,12 @@
     "EarningsPerShareDiluted(3개월): 받음 168 · 이름버림 2 · 단위버림 0 · 모호 4 · 남음 60 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 810,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1211,7 +1445,7 @@
    "ticker": "TER",
    "adj_eps_ok": 33,
    "merged_direct": 0,
-   "seconds": 38.9,
+   "seconds": 39.8,
    "cache_hits": 47,
    "cache_downloads": 27,
    "first_error": "",
@@ -1237,6 +1471,12 @@
     "EarningsPerShareDiluted(3개월): 받음 172 · 이름버림 3 · 단위버림 0 · 모호 0 · 남음 68 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1108,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 41,
+    "revenue": 1,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1244,7 +1484,7 @@
    "ticker": "ENTG",
    "adj_eps_ok": 35,
    "merged_direct": 34,
-   "seconds": 87.2,
+   "seconds": 63.2,
    "cache_hits": 78,
    "cache_downloads": 63,
    "first_error": "",
@@ -1266,6 +1506,12 @@
     "EarningsPerShareDiluted(3개월): 받음 201 · 이름버림 5 · 단위버림 0 · 모호 0 · 남음 64 · 본이름 ['earningspersharediluted', 'businessacquisitionproformaearningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1266,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1273,9 +1519,9 @@
    "ticker": "MKSI",
    "adj_eps_ok": 34,
    "merged_direct": 32,
-   "seconds": 67.0,
-   "cache_hits": 59,
-   "cache_downloads": 38,
+   "seconds": 75.8,
+   "cache_hits": 58,
+   "cache_downloads": 39,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 162 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 61 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1301,6 +1547,12 @@
     "EarningsPerShareDiluted(3개월): 받음 170 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 62 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 946,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1308,7 +1560,7 @@
    "ticker": "FORM",
    "adj_eps_ok": 38,
    "merged_direct": 29,
-   "seconds": 33.7,
+   "seconds": 45.0,
    "cache_hits": 35,
    "cache_downloads": 39,
    "first_error": "",
@@ -1331,6 +1583,12 @@
     "EarningsPerShareDiluted(3개월): 받음 115 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 566,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1338,7 +1596,7 @@
    "ticker": "ACLS",
    "adj_eps_ok": 8,
    "merged_direct": 7,
-   "seconds": 54.1,
+   "seconds": 35.0,
    "cache_hits": 39,
    "cache_downloads": 29,
    "first_error": "",
@@ -1361,6 +1619,12 @@
     "EarningsPerShareDiluted(3개월): 받음 119 · 이름버림 0 · 단위버림 0 · 모호 5 · 남음 45 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 438,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1368,7 +1632,7 @@
    "ticker": "AMBA",
    "adj_eps_ok": 10,
    "merged_direct": 10,
-   "seconds": 19.3,
+   "seconds": 62.6,
    "cache_hits": 42,
    "cache_downloads": 38,
    "first_error": "",
@@ -1394,6 +1658,12 @@
     "EarningsPerShareDiluted(3개월): 받음 82 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 44 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 917,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1401,7 +1671,7 @@
    "ticker": "POWI",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 28.5,
+   "seconds": 26.8,
    "cache_hits": 36,
    "cache_downloads": 34,
    "first_error": "",
@@ -1422,6 +1692,12 @@
     "EarningsPerShareDiluted(3개월): 받음 178 · 이름버림 0 · 단위버림 0 · 모호 9 · 남음 54 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 473,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1429,9 +1705,9 @@
    "ticker": "DIOD",
    "adj_eps_ok": 22,
    "merged_direct": 5,
-   "seconds": 50.1,
+   "seconds": 61.1,
    "cache_hits": 40,
-   "cache_downloads": 43,
+   "cache_downloads": 44,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 98 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1452,6 +1728,12 @@
     "EarningsPerShareDiluted(3개월): 받음 182 · 이름버림 4 · 단위버림 0 · 모호 0 · 남음 63 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 920,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1459,7 +1741,7 @@
    "ticker": "SLAB",
    "adj_eps_ok": 35,
    "merged_direct": 26,
-   "seconds": 42.0,
+   "seconds": 23.7,
    "cache_hits": 46,
    "cache_downloads": 47,
    "first_error": "",
@@ -1482,6 +1764,12 @@
     "EarningsPerShareDiluted(3개월): 받음 98 · 이름버림 4 · 단위버림 0 · 모호 0 · 남음 50 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 858,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 31,
+    "revenue": 5,
+    "gaap_eps": 3,
+    "gross_profit": 5
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1489,7 +1777,7 @@
    "ticker": "MPWR",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 39.0,
+   "seconds": 37.7,
    "cache_hits": 42,
    "cache_downloads": 42,
    "first_error": "",
@@ -1513,6 +1801,12 @@
     "EarningsPerShareDiluted(3개월): 받음 151 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 55 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 948,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1520,7 +1814,7 @@
    "ticker": "CIEN",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 227.1,
+   "seconds": 181.7,
    "cache_hits": 47,
    "cache_downloads": 48,
    "first_error": "",
@@ -1541,6 +1835,12 @@
     "EarningsPerShareDiluted(3개월): 받음 94 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 53 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 480,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 41,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1548,7 +1848,7 @@
    "ticker": "EXTR",
    "adj_eps_ok": 39,
    "merged_direct": 34,
-   "seconds": 192.2,
+   "seconds": 191.8,
    "cache_hits": 37,
    "cache_downloads": 44,
    "first_error": "",
@@ -1572,6 +1872,12 @@
     "EarningsPerShareDiluted(3개월): 받음 114 · 이름버림 21 · 단위버림 0 · 모호 1 · 남음 48 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 824,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 36,
+    "revenue": 0,
+    "gaap_eps": 2,
+    "gross_profit": 4
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1579,7 +1885,7 @@
    "ticker": "NTAP",
    "adj_eps_ok": 40,
    "merged_direct": 38,
-   "seconds": 234.9,
+   "seconds": 236.3,
    "cache_hits": 36,
    "cache_downloads": 48,
    "first_error": "",
@@ -1608,6 +1914,12 @@
     "EarningsPerShareDiluted(3개월): 받음 128 · 이름버림 0 · 단위버림 0 · 모호 5 · 남음 51 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 899,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1615,7 +1927,7 @@
    "ticker": "P",
    "adj_eps_ok": 0,
    "merged_direct": 25,
-   "seconds": 59.4,
+   "seconds": 78.0,
    "cache_hits": 31,
    "cache_downloads": 37,
    "first_error": "",
@@ -1641,6 +1953,12 @@
     "EarningsPerShareDiluted(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 494,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 34,
+    "revenue": 1,
+    "gaap_eps": 0,
+    "gross_profit": 5
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1648,7 +1966,7 @@
    "ticker": "WDC",
    "adj_eps_ok": 28,
    "merged_direct": 32,
-   "seconds": 89.5,
+   "seconds": 96.6,
    "cache_hits": 69,
    "cache_downloads": 87,
    "first_error": "",
@@ -1672,6 +1990,12 @@
     "EarningsPerShareDiluted(3개월): 받음 188 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 63 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1390,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 32,
+    "revenue": 5,
+    "gaap_eps": 4,
+    "gross_profit": 5
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1679,7 +2003,7 @@
    "ticker": "STX",
    "adj_eps_ok": 34,
    "merged_direct": 30,
-   "seconds": 73.3,
+   "seconds": 74.5,
    "cache_hits": 72,
    "cache_downloads": 54,
    "first_error": "",
@@ -1702,6 +2026,12 @@
     "EarningsPerShareDiluted(3개월): 받음 93 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 48 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 438,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 36,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1709,9 +2039,9 @@
    "ticker": "DELL",
    "adj_eps_ok": 29,
    "merged_direct": 30,
-   "seconds": 94.7,
-   "cache_hits": 74,
-   "cache_downloads": 55,
+   "seconds": 108.0,
+   "cache_hits": 72,
+   "cache_downloads": 57,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 68 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 30 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1731,6 +2061,12 @@
     "EarningsPerShareDiluted(3개월): 받음 45 · 이름버림 0 · 단위버림 0 · 모호 6 · 남음 20 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 257,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 32,
+    "revenue": 4,
+    "gaap_eps": 0,
+    "gross_profit": 4
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1738,7 +2074,7 @@
    "ticker": "VIAV",
    "adj_eps_ok": 34,
    "merged_direct": 19,
-   "seconds": 73.2,
+   "seconds": 76.0,
    "cache_hits": 46,
    "cache_downloads": 39,
    "first_error": "",
@@ -1762,6 +2098,12 @@
     "EarningsPerShareDiluted(3개월): 받음 186 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 58 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 471,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 2,
+    "gaap_eps": 1,
+    "gross_profit": 2
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1769,7 +2111,7 @@
    "ticker": "AAOI",
    "adj_eps_ok": 38,
    "merged_direct": 2,
-   "seconds": 73.0,
+   "seconds": 69.3,
    "cache_hits": 81,
    "cache_downloads": 61,
    "first_error": "",
@@ -1793,6 +2135,12 @@
     "EarningsPerShareDiluted(3개월): 받음 156 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 53 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 316,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1800,7 +2148,7 @@
    "ticker": "TWLO",
    "adj_eps_ok": 37,
    "merged_direct": 34,
-   "seconds": 54.1,
+   "seconds": 486.4,
    "cache_hits": 46,
    "cache_downloads": 49,
    "first_error": "",
@@ -1824,6 +2172,12 @@
     "EarningsPerShareDiluted(3개월): 받음 34 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 20 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 407,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1831,7 +2185,7 @@
    "ticker": "DDOG",
    "adj_eps_ok": 28,
    "merged_direct": 28,
-   "seconds": 23.4,
+   "seconds": 26.6,
    "cache_hits": 30,
    "cache_downloads": 13,
    "first_error": "",
@@ -1855,6 +2209,12 @@
     "EarningsPerShareDiluted(3개월): 받음 39 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 23 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 464,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 31,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1862,7 +2222,7 @@
    "ticker": "NET",
    "adj_eps_ok": 29,
    "merged_direct": 20,
-   "seconds": 19.7,
+   "seconds": 17.5,
    "cache_hits": 41,
    "cache_downloads": 14,
    "first_error": "",
@@ -1884,6 +2244,12 @@
     "EarningsPerShareDiluted(3개월): 받음 32 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 19 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 407,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 31,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1891,7 +2257,7 @@
    "ticker": "MDB",
    "adj_eps_ok": 36,
    "merged_direct": 19,
-   "seconds": 511.8,
+   "seconds": 519.1,
    "cache_hits": 36,
    "cache_downloads": 32,
    "first_error": "",
@@ -1914,6 +2280,12 @@
     "EarningsPerShareDiluted(3개월): 받음 2 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 2 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 384,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 33,
+    "revenue": 4,
+    "gaap_eps": 0,
+    "gross_profit": 5
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1921,7 +2293,7 @@
    "ticker": "SNOW",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 479.3,
+   "seconds": 483.1,
    "cache_hits": 36,
    "cache_downloads": 7,
    "first_error": "",
@@ -1943,6 +2315,12 @@
     "EarningsPerShareDiluted(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 636,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 26,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1950,7 +2328,7 @@
    "ticker": "OKTA",
    "adj_eps_ok": 38,
    "merged_direct": 17,
-   "seconds": 520.2,
+   "seconds": 84.2,
    "cache_hits": 41,
    "cache_downloads": 40,
    "first_error": "",
@@ -1974,6 +2352,12 @@
     "EarningsPerShareDiluted(3개월): 받음 32 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 19 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 467,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 28,
+    "revenue": 7,
+    "gaap_eps": 3,
+    "gross_profit": 11
+   },
    "시간초과": false,
    "note": ""
   },
@@ -1981,7 +2365,7 @@
    "ticker": "ZS",
    "adj_eps_ok": 33,
    "merged_direct": 31,
-   "seconds": 34.9,
+   "seconds": 35.0,
    "cache_hits": 36,
    "cache_downloads": 23,
    "first_error": "",
@@ -2002,6 +2386,12 @@
     "EarningsPerShareDiluted(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 404,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 36,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2009,7 +2399,7 @@
    "ticker": "CRWD",
    "adj_eps_ok": 29,
    "merged_direct": 22,
-   "seconds": 46.9,
+   "seconds": 50.0,
    "cache_hits": 40,
    "cache_downloads": 23,
    "first_error": "",
@@ -2030,6 +2420,12 @@
     "EarningsPerShareDiluted(3개월): 받음 34 · 이름버림 2 · 단위버림 0 · 모호 1 · 남음 18 · 본이름 ['earningspersharediluted', 'earningspersharedilutedproformaadjustment'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 309,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 29,
+    "revenue": 4,
+    "gaap_eps": 0,
+    "gross_profit": 4
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2037,7 +2433,7 @@
    "ticker": "S",
    "adj_eps_ok": 20,
    "merged_direct": 6,
-   "seconds": 42.6,
+   "seconds": 41.9,
    "cache_hits": 42,
    "cache_downloads": 1,
    "first_error": "",
@@ -2060,6 +2456,12 @@
     "EarningsPerShareDiluted(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 162,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 23,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2067,7 +2469,7 @@
    "ticker": "HUBS",
    "adj_eps_ok": 37,
    "merged_direct": 34,
-   "seconds": 66.4,
+   "seconds": 70.6,
    "cache_hits": 39,
    "cache_downloads": 41,
    "first_error": "",
@@ -2093,6 +2495,12 @@
     "EarningsPerShareDiluted(3개월): 받음 26 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 13 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 464,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 35,
+    "revenue": 5,
+    "gaap_eps": 0,
+    "gross_profit": 5
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2100,7 +2508,7 @@
    "ticker": "BILL",
    "adj_eps_ok": 22,
    "merged_direct": 16,
-   "seconds": 39.0,
+   "seconds": 37.1,
    "cache_hits": 57,
    "cache_downloads": 20,
    "first_error": "",
@@ -2124,6 +2532,12 @@
     "EarningsPerShareDiluted(3개월): 받음 26 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 15 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 491,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 29,
+    "revenue": 2,
+    "gaap_eps": 1,
+    "gross_profit": 2
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2131,7 +2545,7 @@
    "ticker": "U",
    "adj_eps_ok": 16,
    "merged_direct": 2,
-   "seconds": 23.1,
+   "seconds": 21.4,
    "cache_hits": 65,
    "cache_downloads": 10,
    "first_error": "",
@@ -2155,6 +2569,12 @@
     "EarningsPerShareDiluted(3개월): 받음 32 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 19 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 306,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 27,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2162,10 +2582,10 @@
    "ticker": "ROKU",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 65.9,
+   "seconds": 90.6,
    "cache_hits": 45,
    "cache_downloads": 46,
-   "first_error": "",
+   "first_error": "[press_releases] ReadTimeout: The read operation timed out",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 54 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 30 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
     "OperatingIncomeLoss(12개월): 받음 27 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 11 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2186,6 +2606,12 @@
     "EarningsPerShareDiluted(3개월): 받음 62 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 33 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 636,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 1
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2193,7 +2619,7 @@
    "ticker": "SNAP",
    "adj_eps_ok": 29,
    "merged_direct": 20,
-   "seconds": 75.4,
+   "seconds": 58.4,
    "cache_hits": 50,
    "cache_downloads": 39,
    "first_error": "",
@@ -2215,6 +2641,12 @@
     "EarningsPerShareDiluted(3개월): 받음 58 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 32 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 155,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2222,7 +2654,7 @@
    "ticker": "ZM",
    "adj_eps_ok": 31,
    "merged_direct": 29,
-   "seconds": 18.2,
+   "seconds": 12.9,
    "cache_hits": 41,
    "cache_downloads": 24,
    "first_error": "",
@@ -2244,6 +2676,12 @@
     "EarningsPerShareDiluted(3개월): 받음 60 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 28 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 397,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 33,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2251,7 +2689,7 @@
    "ticker": "DOCU",
    "adj_eps_ok": 33,
    "merged_direct": 33,
-   "seconds": 49.9,
+   "seconds": 42.7,
    "cache_hits": 49,
    "cache_downloads": 31,
    "first_error": "",
@@ -2273,6 +2711,12 @@
     "EarningsPerShareDiluted(3개월): 받음 36 · 이름버림 4 · 단위버림 0 · 모호 0 · 남음 19 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 427,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2280,7 +2724,7 @@
    "ticker": "TSLA",
    "adj_eps_ok": 18,
    "merged_direct": 0,
-   "seconds": 89.9,
+   "seconds": 83.5,
    "cache_hits": 59,
    "cache_downloads": 109,
    "first_error": "",
@@ -2305,6 +2749,12 @@
     "EarningsPerShareDiluted(3개월): 받음 63 · 이름버림 0 · 단위버림 0 · 모호 8 · 남음 26 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 580,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 35,
+    "revenue": 5,
+    "gaap_eps": 2,
+    "gross_profit": 5
+   },
    "시간초과": false,
    "note": "보도자료 형식 특수(config.PRESS_PARSE_SKIP) — 날짜 열 EPS 만 부분 파싱, 나머지는 XBRL 근사"
   },
@@ -2312,7 +2762,7 @@
    "ticker": "TTD",
    "adj_eps_ok": 40,
    "merged_direct": 10,
-   "seconds": 28.9,
+   "seconds": 29.4,
    "cache_hits": 50,
    "cache_downloads": 46,
    "first_error": "",
@@ -2333,6 +2783,12 @@
     "EarningsPerShareDiluted(3개월): 받음 60 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 30 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 543,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2340,7 +2796,7 @@
    "ticker": "FSLR",
    "adj_eps_ok": 9,
    "merged_direct": 0,
-   "seconds": 37.3,
+   "seconds": 43.6,
    "cache_hits": 42,
    "cache_downloads": 60,
    "first_error": "",
@@ -2365,6 +2821,12 @@
     "EarningsPerShareDiluted(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 51 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 780,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 1
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2372,7 +2834,7 @@
    "ticker": "SEDG",
    "adj_eps_ok": 40,
    "merged_direct": 35,
-   "seconds": 47.7,
+   "seconds": 43.9,
    "cache_hits": 53,
    "cache_downloads": 45,
    "first_error": "",
@@ -2396,6 +2858,12 @@
     "EarningsPerShareDiluted(3개월): 받음 66 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 35 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 430,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 2,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2403,7 +2871,7 @@
    "ticker": "GNRC",
    "adj_eps_ok": 5,
    "merged_direct": 35,
-   "seconds": 54.0,
+   "seconds": 60.4,
    "cache_hits": 37,
    "cache_downloads": 37,
    "first_error": "",
@@ -2425,6 +2893,12 @@
     "EarningsPerShareDiluted(3개월): 받음 190 · 이름버림 4 · 단위버림 0 · 모호 0 · 남음 61 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 774,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2432,7 +2906,7 @@
    "ticker": "GOOGL",
    "adj_eps_ok": 2,
    "merged_direct": 5,
-   "seconds": 59.7,
+   "seconds": 63.0,
    "cache_hits": 58,
    "cache_downloads": 45,
    "first_error": "",
@@ -2451,6 +2925,12 @@
     "EarningsPerShareDiluted(3개월): 받음 60 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 31 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 330,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2458,7 +2938,7 @@
    "ticker": "META",
    "adj_eps_ok": 2,
    "merged_direct": 2,
-   "seconds": 49.5,
+   "seconds": 48.0,
    "cache_hits": 58,
    "cache_downloads": 41,
    "first_error": "",
@@ -2480,6 +2960,12 @@
     "EarningsPerShareDiluted(3개월): 받음 89 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 42 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 512,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2487,7 +2973,7 @@
    "ticker": "AMZN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 81.3,
+   "seconds": 84.1,
    "cache_hits": 48,
    "cache_downloads": 39,
    "first_error": "",
@@ -2513,6 +2999,12 @@
     "EarningsPerShareDiluted(3개월): 받음 192 · 이름버림 0 · 단위버림 0 · 모호 11 · 남음 56 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 565,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2520,7 +3012,7 @@
    "ticker": "NFLX",
    "adj_eps_ok": 1,
    "merged_direct": 21,
-   "seconds": 73.7,
+   "seconds": 84.6,
    "cache_hits": 48,
    "cache_downloads": 56,
    "first_error": "",
@@ -2542,6 +3034,12 @@
     "EarningsPerShareDiluted(3개월): 받음 194 · 이름버림 0 · 단위버림 0 · 모호 7 · 남음 59 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1542,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2549,7 +3047,7 @@
    "ticker": "PINS",
    "adj_eps_ok": 30,
    "merged_direct": 10,
-   "seconds": 30.9,
+   "seconds": 33.6,
    "cache_hits": 49,
    "cache_downloads": 21,
    "first_error": "",
@@ -2569,14 +3067,20 @@
     "EarningsPerShareDiluted(3개월): 받음 32 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 19 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 358,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 34,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
   {
    "ticker": "EBAY",
-   "adj_eps_ok": 34,
+   "adj_eps_ok": 24,
    "merged_direct": 35,
-   "seconds": 75.1,
+   "seconds": 68.7,
    "cache_hits": 54,
    "cache_downloads": 54,
    "first_error": "",
@@ -2605,6 +3109,12 @@
     "EarningsPerShareDiluted(3개월): 받음 204 · 이름버림 0 · 단위버림 2 · 모호 0 · 남음 68 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']"
    ],
    "xbrl_rejected": 702,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2612,7 +3122,7 @@
    "ticker": "ETSY",
    "adj_eps_ok": 0,
    "merged_direct": 8,
-   "seconds": 49.7,
+   "seconds": 61.3,
    "cache_hits": 50,
    "cache_downloads": 32,
    "first_error": "",
@@ -2636,6 +3146,12 @@
     "EarningsPerShareDiluted(3개월): 받음 60 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 33 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 694,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 2,
+    "gaap_eps": 1,
+    "gross_profit": 2
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2643,7 +3159,7 @@
    "ticker": "ABNB",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 23.9,
+   "seconds": 23.8,
    "cache_hits": 34,
    "cache_downloads": 6,
    "first_error": "",
@@ -2662,6 +3178,12 @@
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 15 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 7 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']"
    ],
    "xbrl_rejected": 528,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 23,
+    "revenue": 3,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2669,7 +3191,7 @@
    "ticker": "DASH",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 20.4,
+   "seconds": 20.9,
    "cache_hits": 50,
    "cache_downloads": 7,
    "first_error": "",
@@ -2689,6 +3211,12 @@
     "EarningsPerShareDiluted(3개월): 받음 32 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 19 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 464,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 26,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2696,7 +3224,7 @@
    "ticker": "VRT",
    "adj_eps_ok": 13,
    "merged_direct": 23,
-   "seconds": 106.5,
+   "seconds": 106.1,
    "cache_hits": 76,
    "cache_downloads": 33,
    "first_error": "",
@@ -2716,6 +3244,12 @@
     "EarningsPerShareDiluted(3개월): 받음 48 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 20 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 335,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 26,
+    "revenue": 10,
+    "gaap_eps": 3,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2723,7 +3257,7 @@
    "ticker": "ETN",
    "adj_eps_ok": 26,
    "merged_direct": 44,
-   "seconds": 46.7,
+   "seconds": 45.5,
    "cache_hits": 37,
    "cache_downloads": 34,
    "first_error": "",
@@ -2743,6 +3277,12 @@
     "EarningsPerShareDiluted(3개월): 받음 90 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 44 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 595,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 35,
+    "gaap_eps": 30,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2750,7 +3290,7 @@
    "ticker": "PWR",
    "adj_eps_ok": 42,
    "merged_direct": 0,
-   "seconds": 78.8,
+   "seconds": 81.1,
    "cache_hits": 51,
    "cache_downloads": 46,
    "first_error": "",
@@ -2771,6 +3311,12 @@
     "EarningsPerShareDiluted(3개월): 받음 154 · 이름버림 56 · 단위버림 0 · 모호 0 · 남음 54 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 623,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2778,7 +3324,7 @@
    "ticker": "VST",
    "adj_eps_ok": 0,
    "merged_direct": 7,
-   "seconds": 163.1,
+   "seconds": 172.6,
    "cache_hits": 86,
    "cache_downloads": 61,
    "first_error": "",
@@ -2802,6 +3348,12 @@
     "EarningsPerShareDiluted(3개월): 받음 61 · 이름버림 1 · 단위버림 0 · 모호 0 · 남음 31 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 227,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2809,7 +3361,7 @@
    "ticker": "NRG",
    "adj_eps_ok": 9,
    "merged_direct": 26,
-   "seconds": 171.0,
+   "seconds": 170.7,
    "cache_hits": 64,
    "cache_downloads": 42,
    "first_error": "",
@@ -2833,6 +3385,12 @@
     "EarningsPerShareDiluted(3개월): 받음 196 · 이름버림 0 · 단위버림 0 · 모호 7 · 남음 59 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 471,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 3,
+    "gaap_eps": 3,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2840,7 +3398,7 @@
    "ticker": "NEE",
    "adj_eps_ok": 38,
    "merged_direct": 0,
-   "seconds": 204.0,
+   "seconds": 214.4,
    "cache_hits": 95,
    "cache_downloads": 83,
    "first_error": "",
@@ -2859,6 +3417,12 @@
     "EarningsPerShareDiluted(3개월): 받음 194 · 이름버림 4 · 단위버림 0 · 모호 9 · 남음 57 · 본이름 ['earningspersharediluted', 'earningspersharedilutedproformaadjustment'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 103,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2866,7 +3430,7 @@
    "ticker": "SO",
    "adj_eps_ok": 1,
    "merged_direct": 0,
-   "seconds": 111.3,
+   "seconds": 115.1,
    "cache_hits": 97,
    "cache_downloads": 89,
    "first_error": "",
@@ -2887,6 +3451,12 @@
     "EarningsPerShareDiluted(3개월): 받음 148 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 62 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 433,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 1,
+    "gaap_eps": 1,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2894,7 +3464,7 @@
    "ticker": "RUN",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 55.6,
+   "seconds": 58.4,
    "cache_hits": 39,
    "cache_downloads": 61,
    "first_error": "",
@@ -2917,6 +3487,12 @@
     "EarningsPerShareDiluted(3개월): 받음 87 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 35 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 578,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 35,
+    "revenue": 5,
+    "gaap_eps": 2,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2924,7 +3500,7 @@
    "ticker": "BE",
    "adj_eps_ok": 29,
    "merged_direct": 16,
-   "seconds": 49.2,
+   "seconds": 37.3,
    "cache_hits": 63,
    "cache_downloads": 43,
    "first_error": "",
@@ -2944,6 +3520,12 @@
     "EarningsPerShareDiluted(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 17 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 316,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 31,
+    "revenue": 6,
+    "gaap_eps": 0,
+    "gross_profit": 5
+   },
    "시간초과": false,
    "note": ""
   },
@@ -2951,7 +3533,7 @@
    "ticker": "ADBE",
    "adj_eps_ok": 36,
    "merged_direct": 34,
-   "seconds": 56.8,
+   "seconds": 57.6,
    "cache_hits": 47,
    "cache_downloads": 39,
    "first_error": "",
@@ -2977,6 +3559,12 @@
     "EarningsPerShareDiluted(3개월): 받음 186 · 이름버림 3 · 단위버림 0 · 모호 0 · 남음 65 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 414,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 36,
+    "revenue": 1,
+    "gaap_eps": 1,
+    "gross_profit": 1
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2984,7 +3572,7 @@
    "ticker": "CRM",
    "adj_eps_ok": 33,
    "merged_direct": 32,
-   "seconds": 86.6,
+   "seconds": 93.5,
    "cache_hits": 51,
    "cache_downloads": 46,
    "first_error": "",
@@ -3015,6 +3603,12 @@
     "EarningsPerShareDiluted(3개월): 받음 190 · 이름버림 0 · 단위버림 1 · 모호 7 · 남음 58 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']"
    ],
    "xbrl_rejected": 1040,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 2,
+    "gaap_eps": 1,
+    "gross_profit": 2
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3022,7 +3616,7 @@
    "ticker": "NOW",
    "adj_eps_ok": 38,
    "merged_direct": 34,
-   "seconds": 116.0,
+   "seconds": 125.7,
    "cache_hits": 42,
    "cache_downloads": 42,
    "first_error": "",
@@ -3045,6 +3639,12 @@
     "EarningsPerShareDiluted(3개월): 받음 61 · 이름버림 4 · 단위버림 0 · 모호 2 · 남음 32 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 926,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 35,
+    "revenue": 5,
+    "gaap_eps": 2,
+    "gross_profit": 5
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3052,7 +3652,7 @@
    "ticker": "ORCL",
    "adj_eps_ok": 36,
    "merged_direct": 37,
-   "seconds": 118.7,
+   "seconds": 125.0,
    "cache_hits": 47,
    "cache_downloads": 39,
    "first_error": "",
@@ -3074,6 +3674,12 @@
     "EarningsPerShareDiluted(3개월): 받음 162 · 이름버림 60 · 단위버림 0 · 모호 1 · 남음 53 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1412,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3081,7 +3687,7 @@
    "ticker": "TEAM",
    "adj_eps_ok": 17,
    "merged_direct": 16,
-   "seconds": 49.7,
+   "seconds": 57.5,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": "",
@@ -3101,6 +3707,12 @@
     "EarningsPerShareDiluted(3개월): 받음 24 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 15 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 51,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 20,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -3108,7 +3720,7 @@
    "ticker": "WDAY",
    "adj_eps_ok": 27,
    "merged_direct": 33,
-   "seconds": 78.2,
+   "seconds": 78.7,
    "cache_hits": 57,
    "cache_downloads": 43,
    "first_error": "",
@@ -3131,6 +3743,12 @@
     "EarningsPerShareDiluted(3개월): 받음 32 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 19 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 532,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 33,
+    "revenue": 6,
+    "gaap_eps": 1,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3138,7 +3756,7 @@
    "ticker": "CSCO",
    "adj_eps_ok": 38,
    "merged_direct": 39,
-   "seconds": 114.8,
+   "seconds": 117.5,
    "cache_hits": 58,
    "cache_downloads": 72,
    "first_error": "",
@@ -3165,6 +3783,12 @@
     "EarningsPerShareDiluted(3개월): 받음 151 · 이름버림 0 · 단위버림 1 · 모호 0 · 남음 60 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']"
    ],
    "xbrl_rejected": 1261,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -3172,7 +3796,7 @@
    "ticker": "HPQ",
    "adj_eps_ok": 38,
    "merged_direct": 3,
-   "seconds": 179.8,
+   "seconds": 179.5,
    "cache_hits": 63,
    "cache_downloads": 60,
    "first_error": "",
@@ -3198,6 +3822,12 @@
     "EarningsPerShareDiluted(3개월): 받음 106 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 50 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 870,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3205,7 +3835,7 @@
    "ticker": "HPE",
    "adj_eps_ok": 2,
    "merged_direct": 18,
-   "seconds": 96.7,
+   "seconds": 71.3,
    "cache_hits": 68,
    "cache_downloads": 37,
    "first_error": "",
@@ -3225,6 +3855,12 @@
     "EarningsPerShareDiluted(3개월): 받음 80 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 39 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 360,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3232,7 +3868,7 @@
    "ticker": "JPM",
    "adj_eps_ok": 0,
    "merged_direct": 44,
-   "seconds": 148.5,
+   "seconds": 160.5,
    "cache_hits": 66,
    "cache_downloads": 56,
    "first_error": "",
@@ -3248,6 +3884,12 @@
     "EarningsPerShareDiluted(3개월): 받음 110 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 54 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 305,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 0,
+    "gaap_eps": 30,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3255,7 +3897,7 @@
    "ticker": "BAC",
    "adj_eps_ok": 2,
    "merged_direct": 44,
-   "seconds": 363.8,
+   "seconds": 156.1,
    "cache_hits": 50,
    "cache_downloads": 46,
    "first_error": "",
@@ -3272,6 +3914,12 @@
     "EarningsPerShareDiluted(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 모호 7 · 남음 48 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 358,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 40,
+    "gaap_eps": 27,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3279,7 +3927,7 @@
    "ticker": "WFC",
    "adj_eps_ok": 0,
    "merged_direct": 28,
-   "seconds": 456.7,
+   "seconds": 467.1,
    "cache_hits": 88,
    "cache_downloads": 112,
    "first_error": "",
@@ -3298,6 +3946,12 @@
     "EarningsPerShareDiluted(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 모호 5 · 남음 50 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 407,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 15,
+    "gaap_eps": 25,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "8-K 200건까지만 확인했습니다"
   },
@@ -3325,6 +3979,12 @@
     "EarningsPerShareDiluted(3개월): 받음 234 · 이름버림 0 · 단위버림 0 · 모호 8 · 남음 57 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 487,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 38,
+    "gaap_eps": 32,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "8-K 200건까지만 확인했습니다"
   },
@@ -3332,7 +3992,7 @@
    "ticker": "GS",
    "adj_eps_ok": 0,
    "merged_direct": 41,
-   "seconds": 258.5,
+   "seconds": 482.2,
    "cache_hits": 97,
    "cache_downloads": 103,
    "first_error": "",
@@ -3348,6 +4008,12 @@
     "EarningsPerShareDiluted(3개월): 받음 105 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 56 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 381,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 0,
+    "gaap_eps": 30,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "8-K 200건까지만 확인했습니다"
   },
@@ -3355,7 +4021,7 @@
    "ticker": "MS",
    "adj_eps_ok": 19,
    "merged_direct": 43,
-   "seconds": 144.2,
+   "seconds": 132.7,
    "cache_hits": 52,
    "cache_downloads": 56,
    "first_error": "",
@@ -3375,6 +4041,12 @@
     "EarningsPerShareDiluted(3개월): 받음 192 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 67 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 381,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 1,
+    "gaap_eps": 35,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -3382,7 +4054,7 @@
    "ticker": "SCHW",
    "adj_eps_ok": 0,
    "merged_direct": 44,
-   "seconds": 965.9,
+   "seconds": 973.3,
    "cache_hits": 58,
    "cache_downloads": 62,
    "first_error": "",
@@ -3399,6 +4071,12 @@
     "EarningsPerShareDiluted(3개월): 받음 196 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 66 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 595,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 40,
+    "gaap_eps": 35,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3406,7 +4084,7 @@
    "ticker": "BLK",
    "adj_eps_ok": 1,
    "merged_direct": 5,
-   "seconds": 333.6,
+   "seconds": 70.2,
    "cache_hits": 24,
    "cache_downloads": 0,
    "first_error": "",
@@ -3425,6 +4103,12 @@
     "EarningsPerShareDiluted(3개월): 받음 12 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 9 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 77,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 11,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -3432,7 +4116,7 @@
    "ticker": "V",
    "adj_eps_ok": 33,
    "merged_direct": 0,
-   "seconds": 916.7,
+   "seconds": 911.0,
    "cache_hits": 78,
    "cache_downloads": 63,
    "first_error": "",
@@ -3452,6 +4136,12 @@
     "Revenues(12개월): 받음 36 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 14 · 본이름 ['revenues'] · 본단위 ['USD']"
    ],
    "xbrl_rejected": 577,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3459,7 +4149,7 @@
    "ticker": "MA",
    "adj_eps_ok": 38,
    "merged_direct": 0,
-   "seconds": 554.8,
+   "seconds": 852.1,
    "cache_hits": 57,
    "cache_downloads": 53,
    "first_error": "",
@@ -3481,6 +4171,12 @@
     "EarningsPerShareDiluted(3개월): 받음 184 · 이름버림 0 · 단위버림 0 · 모호 7 · 남음 59 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 754,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3488,7 +4184,7 @@
    "ticker": "AXP",
    "adj_eps_ok": 8,
    "merged_direct": 34,
-   "seconds": 54.1,
+   "seconds": 72.8,
    "cache_hits": 101,
    "cache_downloads": 99,
    "first_error": "",
@@ -3510,6 +4206,12 @@
     "EarningsPerShareDiluted(3개월): 받음 164 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 67 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 401,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 38,
+    "gaap_eps": 35,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "8-K 200건까지만 확인했습니다"
   },
@@ -3517,7 +4219,7 @@
    "ticker": "COF",
    "adj_eps_ok": 0,
    "merged_direct": 44,
-   "seconds": 98.9,
+   "seconds": 116.9,
    "cache_hits": 72,
    "cache_downloads": 125,
    "first_error": "",
@@ -3541,6 +4243,12 @@
     "EarningsPerShareDiluted(3개월): 받음 126 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 54 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 281,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 39,
+    "gaap_eps": 30,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3548,7 +4256,7 @@
    "ticker": "LLY",
    "adj_eps_ok": 40,
    "merged_direct": 44,
-   "seconds": 84.1,
+   "seconds": 81.1,
    "cache_hits": 46,
    "cache_downloads": 43,
    "first_error": "",
@@ -3567,6 +4275,12 @@
     "EarningsPerShareDiluted(3개월): 받음 144 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 182,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 40,
+    "gaap_eps": 34,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3574,7 +4288,7 @@
    "ticker": "UNH",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 66.1,
+   "seconds": 55.4,
    "cache_hits": 79,
    "cache_downloads": 55,
    "first_error": "",
@@ -3594,6 +4308,12 @@
     "EarningsPerShareDiluted(3개월): 받음 144 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 60 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 730,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3601,7 +4321,7 @@
    "ticker": "JNJ",
    "adj_eps_ok": 40,
    "merged_direct": 44,
-   "seconds": 36.4,
+   "seconds": 37.0,
    "cache_hits": 57,
    "cache_downloads": 48,
    "first_error": "",
@@ -3627,6 +4347,12 @@
     "EarningsPerShareDiluted(3개월): 받음 189 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 65 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 541,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 37,
+    "gaap_eps": 36,
+    "gross_profit": 39
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3634,9 +4360,9 @@
    "ticker": "ABBV",
    "adj_eps_ok": 34,
    "merged_direct": 0,
-   "seconds": 608.2,
+   "seconds": 597.4,
    "cache_hits": 74,
-   "cache_downloads": 60,
+   "cache_downloads": 61,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 82 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 44 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3655,6 +4381,12 @@
     "EarningsPerShareDiluted(3개월): 받음 146 · 이름버림 2 · 단위버림 0 · 모호 0 · 남음 58 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 520,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3662,7 +4394,7 @@
    "ticker": "MRK",
    "adj_eps_ok": 40,
    "merged_direct": 41,
-   "seconds": 530.7,
+   "seconds": 590.4,
    "cache_hits": 35,
    "cache_downloads": 46,
    "first_error": "",
@@ -3680,6 +4412,12 @@
     "EarningsPerShareDiluted(3개월): 받음 113 · 이름버림 9 · 단위버림 0 · 모호 2 · 남음 53 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 853,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 36,
+    "gaap_eps": 30,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -3687,7 +4425,7 @@
    "ticker": "PFE",
    "adj_eps_ok": 20,
    "merged_direct": 44,
-   "seconds": 762.0,
+   "seconds": 841.5,
    "cache_hits": 45,
    "cache_downloads": 56,
    "first_error": "",
@@ -3708,6 +4446,12 @@
     "EarningsPerShareDiluted(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 54 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 318,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 36,
+    "gaap_eps": 29,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3715,7 +4459,7 @@
    "ticker": "AMGN",
    "adj_eps_ok": 28,
    "merged_direct": 27,
-   "seconds": 120.1,
+   "seconds": 135.0,
    "cache_hits": 42,
    "cache_downloads": 39,
    "first_error": "",
@@ -3742,6 +4486,12 @@
     "EarningsPerShareDiluted(3개월): 받음 200 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 67 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 538,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3749,7 +4499,7 @@
    "ticker": "GILD",
    "adj_eps_ok": 35,
    "merged_direct": 22,
-   "seconds": 174.6,
+   "seconds": 154.6,
    "cache_hits": 49,
    "cache_downloads": 44,
    "first_error": "",
@@ -3773,6 +4523,12 @@
     "EarningsPerShareDiluted(3개월): 받음 192 · 이름버림 0 · 단위버림 1 · 모호 7 · 남음 60 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']"
    ],
    "xbrl_rejected": 734,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3780,9 +4536,9 @@
    "ticker": "BMY",
    "adj_eps_ok": 37,
    "merged_direct": 44,
-   "seconds": 459.8,
-   "cache_hits": 58,
-   "cache_downloads": 85,
+   "seconds": 464.8,
+   "cache_hits": 43,
+   "cache_downloads": 100,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 2 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 2 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3801,6 +4557,12 @@
     "EarningsPerShareDiluted(3개월): 받음 192 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 67 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 460,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 38,
+    "gaap_eps": 35,
+    "gross_profit": 18
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3808,7 +4570,7 @@
    "ticker": "REGN",
    "adj_eps_ok": 38,
    "merged_direct": 0,
-   "seconds": 306.5,
+   "seconds": 282.8,
    "cache_hits": 34,
    "cache_downloads": 39,
    "first_error": "",
@@ -3829,6 +4591,12 @@
     "EarningsPerShareDiluted(3개월): 받음 162 · 이름버림 0 · 단위버림 0 · 모호 5 · 남음 51 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 540,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3836,7 +4604,7 @@
    "ticker": "VRTX",
    "adj_eps_ok": 24,
    "merged_direct": 28,
-   "seconds": 231.7,
+   "seconds": 141.6,
    "cache_hits": 41,
    "cache_downloads": 52,
    "first_error": "",
@@ -3857,6 +4625,12 @@
     "EarningsPerShareDiluted(3개월): 받음 168 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 63 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1134,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 2,
+    "gaap_eps": 1,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -3864,7 +4638,7 @@
    "ticker": "ISRG",
    "adj_eps_ok": 11,
    "merged_direct": 32,
-   "seconds": 84.7,
+   "seconds": 83.0,
    "cache_hits": 39,
    "cache_downloads": 31,
    "first_error": "",
@@ -3887,6 +4661,12 @@
     "EarningsPerShareDiluted(3개월): 받음 204 · 이름버림 0 · 단위버림 4 · 모호 10 · 남음 58 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']"
    ],
    "xbrl_rejected": 1486,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3894,7 +4674,7 @@
    "ticker": "WMT",
    "adj_eps_ok": 26,
    "merged_direct": 20,
-   "seconds": 223.7,
+   "seconds": 251.6,
    "cache_hits": 58,
    "cache_downloads": 34,
    "first_error": "",
@@ -3915,6 +4695,12 @@
     "EarningsPerShareDiluted(3개월): 받음 185 · 이름버림 0 · 단위버림 1 · 모호 4 · 남음 61 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']"
    ],
    "xbrl_rejected": 176,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3922,7 +4708,7 @@
    "ticker": "COST",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 140.5,
+   "seconds": 108.5,
    "cache_hits": 33,
    "cache_downloads": 60,
    "first_error": "",
@@ -3944,6 +4730,12 @@
     "EarningsPerShareDiluted(3개월): 받음 180 · 이름버림 0 · 단위버림 8 · 모호 0 · 남음 60 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']"
    ],
    "xbrl_rejected": 809,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3951,9 +4743,9 @@
    "ticker": "PG",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 184.3,
-   "cache_hits": 61,
-   "cache_downloads": 56,
+   "seconds": 109.9,
+   "cache_hits": 52,
+   "cache_downloads": 65,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 230 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 66 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3973,6 +4765,12 @@
     "EarningsPerShareDiluted(3개월): 받음 224 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 66 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1034,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3980,7 +4778,7 @@
    "ticker": "KO",
    "adj_eps_ok": 1,
    "merged_direct": 33,
-   "seconds": 327.8,
+   "seconds": 157.9,
    "cache_hits": 53,
    "cache_downloads": 59,
    "first_error": "",
@@ -4000,6 +4798,12 @@
     "EarningsPerShareDiluted(3개월): 받음 102 · 이름버림 0 · 단위버림 2 · 모호 3 · 남음 50 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']"
    ],
    "xbrl_rejected": 629,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4007,7 +4811,7 @@
    "ticker": "PEP",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 62.2,
+   "seconds": 61.0,
    "cache_hits": 47,
    "cache_downloads": 38,
    "first_error": "",
@@ -4032,6 +4836,12 @@
     "EarningsPerShareDiluted(3개월): 받음 112 · 이름버림 2 · 단위버림 0 · 모호 0 · 남음 56 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1060,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4039,7 +4849,7 @@
    "ticker": "MCD",
    "adj_eps_ok": 9,
    "merged_direct": 0,
-   "seconds": 74.0,
+   "seconds": 427.5,
    "cache_hits": 56,
    "cache_downloads": 68,
    "first_error": "",
@@ -4058,6 +4868,12 @@
     "EarningsPerShareDiluted(3개월): 받음 184 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 65 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 1090,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -4065,7 +4881,7 @@
    "ticker": "SBUX",
    "adj_eps_ok": 42,
    "merged_direct": 35,
-   "seconds": 593.8,
+   "seconds": 607.9,
    "cache_hits": 69,
    "cache_downloads": 62,
    "first_error": "",
@@ -4088,6 +4904,12 @@
     "EarningsPerShareDiluted(3개월): 받음 160 · 이름버림 0 · 단위버림 2 · 모호 5 · 남음 57 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']"
    ],
    "xbrl_rejected": 897,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4095,7 +4917,7 @@
    "ticker": "NKE",
    "adj_eps_ok": 0,
    "merged_direct": 44,
-   "seconds": 529.6,
+   "seconds": 520.2,
    "cache_hits": 48,
    "cache_downloads": 49,
    "first_error": "",
@@ -4116,15 +4938,21 @@
     "EarningsPerShareDiluted(3개월): 받음 102 · 이름버림 0 · 단위버림 0 · 모호 6 · 남음 48 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 372,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 33,
+    "gaap_eps": 29,
+    "gross_profit": 39
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
   {
    "ticker": "HD",
-   "adj_eps_ok": 8,
-   "merged_direct": 7,
-   "seconds": 349.1,
-   "cache_hits": 58,
+   "adj_eps_ok": 9,
+   "merged_direct": 8,
+   "seconds": 165.0,
+   "cache_hits": 59,
    "cache_downloads": 53,
    "first_error": "",
    "xbrl_calls": [
@@ -4148,6 +4976,12 @@
     "EarningsPerShareDiluted(3개월): 받음 165 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 59 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 528,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 35,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -4155,7 +4989,7 @@
    "ticker": "LOW",
    "adj_eps_ok": 38,
    "merged_direct": 14,
-   "seconds": 158.5,
+   "seconds": 149.6,
    "cache_hits": 44,
    "cache_downloads": 57,
    "first_error": "",
@@ -4179,6 +5013,12 @@
     "EarningsPerShareDiluted(3개월): 받음 98 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 51 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 484,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 36,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4186,7 +5026,7 @@
    "ticker": "TGT",
    "adj_eps_ok": 39,
    "merged_direct": 2,
-   "seconds": 117.3,
+   "seconds": 120.6,
    "cache_hits": 57,
    "cache_downloads": 51,
    "first_error": "",
@@ -4211,6 +5051,12 @@
     "EarningsPerShareDiluted(3개월): 받음 172 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 61 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 389,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 35,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -4218,7 +5064,7 @@
    "ticker": "EL",
    "adj_eps_ok": 17,
    "merged_direct": 20,
-   "seconds": 171.8,
+   "seconds": 189.3,
    "cache_hits": 61,
    "cache_downloads": 48,
    "first_error": "",
@@ -4244,6 +5090,12 @@
     "EarningsPerShareDiluted(3개월): 받음 176 · 이름버림 0 · 단위버림 0 · 모호 5 · 남음 57 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 386,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4251,7 +5103,7 @@
    "ticker": "CAT",
    "adj_eps_ok": 0,
    "merged_direct": 17,
-   "seconds": 162.6,
+   "seconds": 155.7,
    "cache_hits": 33,
    "cache_downloads": 45,
    "first_error": "",
@@ -4273,6 +5125,12 @@
     "EarningsPerShareDiluted(3개월): 받음 208 · 이름버림 0 · 단위버림 0 · 모호 7 · 남음 61 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 985,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 1,
+    "gaap_eps": 1,
+    "gross_profit": 1
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4280,7 +5138,7 @@
    "ticker": "DE",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 198.8,
+   "seconds": 188.6,
    "cache_hits": 55,
    "cache_downloads": 92,
    "first_error": "",
@@ -4302,6 +5160,12 @@
     "EarningsPerShareDiluted(3개월): 받음 194 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 66 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 321,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 27,
+    "revenue": 9,
+    "gaap_eps": 8,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -4309,7 +5173,7 @@
    "ticker": "HON",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 155.2,
+   "seconds": 136.2,
    "cache_hits": 65,
    "cache_downloads": 68,
    "first_error": "",
@@ -4333,6 +5197,12 @@
     "EarningsPerShareDiluted(3개월): 받음 200 · 이름버림 0 · 단위버림 0 · 모호 10 · 남음 59 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 230,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 21,
+    "revenue": 17,
+    "gaap_eps": 17,
+    "gross_profit": 18
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4340,7 +5210,7 @@
    "ticker": "GE",
    "adj_eps_ok": 31,
    "merged_direct": 44,
-   "seconds": 126.9,
+   "seconds": 126.3,
    "cache_hits": 53,
    "cache_downloads": 64,
    "first_error": "",
@@ -4366,6 +5236,12 @@
     "EarningsPerShareDiluted(3개월): 받음 254 · 이름버림 0 · 단위버림 0 · 모호 14 · 남음 57 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 365,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 39,
+    "gaap_eps": 25,
+    "gross_profit": 2
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4373,7 +5249,7 @@
    "ticker": "UNP",
    "adj_eps_ok": 6,
    "merged_direct": 8,
-   "seconds": 112.9,
+   "seconds": 118.6,
    "cache_hits": 57,
    "cache_downloads": 100,
    "first_error": "",
@@ -4391,6 +5267,12 @@
     "EarningsPerShareDiluted(3개월): 받음 192 · 이름버림 0 · 단위버림 0 · 모호 5 · 남음 62 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 450,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4398,9 +5280,9 @@
    "ticker": "UPS",
    "adj_eps_ok": 32,
    "merged_direct": 33,
-   "seconds": 54.5,
+   "seconds": 69.5,
    "cache_hits": 40,
-   "cache_downloads": 32,
+   "cache_downloads": 33,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 192 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 67 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4420,6 +5302,12 @@
     "EarningsPerShareDiluted(3개월): 받음 198 · 이름버림 6 · 단위버림 0 · 모호 7 · 남음 60 · 본이름 ['earningspersharediluted', 'earningspersharedilutedproformaadjustment'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 196,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4427,7 +5315,7 @@
    "ticker": "FDX",
    "adj_eps_ok": 14,
    "merged_direct": 1,
-   "seconds": 81.2,
+   "seconds": 72.1,
    "cache_hits": 61,
    "cache_downloads": 35,
    "first_error": "",
@@ -4451,6 +5339,12 @@
     "EarningsPerShareDiluted(3개월): 받음 190 · 이름버림 0 · 단위버림 0 · 모호 7 · 남음 58 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 795,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4458,7 +5352,7 @@
    "ticker": "BA",
    "adj_eps_ok": 16,
    "merged_direct": 0,
-   "seconds": 133.0,
+   "seconds": 145.7,
    "cache_hits": 60,
    "cache_downloads": 75,
    "first_error": "",
@@ -4482,6 +5376,12 @@
     "EarningsPerShareDiluted(3개월): 받음 192 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 63 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 779,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 36,
+    "revenue": 4,
+    "gaap_eps": 2,
+    "gross_profit": 2
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4489,7 +5389,7 @@
    "ticker": "T",
    "adj_eps_ok": 23,
    "merged_direct": 21,
-   "seconds": 111.1,
+   "seconds": 114.3,
    "cache_hits": 50,
    "cache_downloads": 44,
    "first_error": "",
@@ -4509,6 +5409,12 @@
     "EarningsPerShareDiluted(3개월): 받음 193 · 이름버림 2 · 단위버림 0 · 모호 7 · 남음 59 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 414,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 1,
+    "gaap_eps": 1,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4516,7 +5422,7 @@
    "ticker": "VZ",
    "adj_eps_ok": 29,
    "merged_direct": 11,
-   "seconds": 127.4,
+   "seconds": 131.8,
    "cache_hits": 67,
    "cache_downloads": 56,
    "first_error": "",
@@ -4536,6 +5442,12 @@
     "EarningsPerShareDiluted(3개월): 받음 210 · 이름버림 0 · 단위버림 0 · 모호 6 · 남음 60 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 184,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4543,7 +5455,7 @@
    "ticker": "TMUS",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 158.9,
+   "seconds": 137.7,
    "cache_hits": 92,
    "cache_downloads": 71,
    "first_error": "",
@@ -4563,6 +5475,12 @@
     "EarningsPerShareDiluted(3개월): 받음 194 · 이름버림 0 · 단위버림 0 · 모호 5 · 남음 58 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 555,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4570,7 +5488,7 @@
    "ticker": "CMCSA",
    "adj_eps_ok": 28,
    "merged_direct": 24,
-   "seconds": 116.8,
+   "seconds": 117.9,
    "cache_hits": 71,
    "cache_downloads": 63,
    "first_error": "",
@@ -4594,6 +5512,12 @@
     "EarningsPerShareDiluted(3개월): 받음 211 · 이름버림 11 · 단위버림 0 · 모호 4 · 남음 63 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 613,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4601,7 +5525,7 @@
    "ticker": "DIS",
    "adj_eps_ok": 7,
    "merged_direct": 0,
-   "seconds": 114.7,
+   "seconds": 114.6,
    "cache_hits": 54,
    "cache_downloads": 48,
    "first_error": "",
@@ -4621,6 +5545,12 @@
     "EarningsPerShareDiluted(3개월): 받음 77 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 33 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 419,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4628,7 +5558,7 @@
    "ticker": "XOM",
    "adj_eps_ok": 1,
    "merged_direct": 44,
-   "seconds": 96.9,
+   "seconds": 121.4,
    "cache_hits": 83,
    "cache_downloads": 65,
    "first_error": "",
@@ -4644,6 +5574,12 @@
     "EarningsPerShareDiluted(3개월): 받음 106 · 이름버림 4 · 단위버림 0 · 모호 0 · 남음 54 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 224,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 37,
+    "gaap_eps": 29,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4651,7 +5587,7 @@
    "ticker": "CVX",
    "adj_eps_ok": 15,
    "merged_direct": 41,
-   "seconds": 100.5,
+   "seconds": 85.7,
    "cache_hits": 68,
    "cache_downloads": 62,
    "first_error": "",
@@ -4670,6 +5606,12 @@
     "EarningsPerShareDiluted(3개월): 받음 108 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 56 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 556,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 40,
+    "gaap_eps": 30,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -4677,7 +5619,7 @@
    "ticker": "COP",
    "adj_eps_ok": 10,
    "merged_direct": 25,
-   "seconds": 54.2,
+   "seconds": 53.4,
    "cache_hits": 51,
    "cache_downloads": 50,
    "first_error": "",
@@ -4695,6 +5637,12 @@
     "EarningsPerShareDiluted(3개월): 받음 105 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 53 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 522,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 40,
+    "gaap_eps": 30,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": ""
   },
@@ -4702,7 +5650,7 @@
    "ticker": "SLB",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 60.7,
+   "seconds": 62.6,
    "cache_hits": 58,
    "cache_downloads": 54,
    "first_error": "",
@@ -4724,6 +5672,12 @@
     "EarningsPerShareDiluted(3개월): 받음 110 · 이름버림 6 · 단위버림 0 · 모호 0 · 남음 55 · 본이름 ['businessacquisitionproformaearningspersharediluted', 'earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 477,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 31,
+    "revenue": 9,
+    "gaap_eps": 7,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4731,7 +5685,7 @@
    "ticker": "OXY",
    "adj_eps_ok": 30,
    "merged_direct": 44,
-   "seconds": 128.0,
+   "seconds": 114.7,
    "cache_hits": 72,
    "cache_downloads": 74,
    "first_error": "",
@@ -4749,6 +5703,12 @@
     "EarningsPerShareDiluted(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 55 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
    "xbrl_rejected": 336,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 40,
+    "gaap_eps": 30,
+    "gross_profit": 0
+   },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   }
