@@ -233,6 +233,47 @@ def _completion_stats(group: list[dict]) -> dict:
             "ci": [round(low, 1), round(high, 1)]}
 
 
+
+# ---------------------------------------------------------------------------
+# H22·H22b (109차 등록) — 신고점의 **폭**
+# ---------------------------------------------------------------------------
+# 109차 탐색(3,100건)에서 나온 후보입니다. `new_high` 는 참/거짓이라
+# 직전 정점을 1% 넘은 것과 50% 넘은 것이 똑같이 "신고점"이었는데,
+# 폭으로 갈라 보니 단조로 들었습니다 (기준선 13.0%):
+#
+#   폭 1~3% 7.5% · 3~5% 7.8% · 5~10% 12.6% · 10~20% 16.1% · 20%↑ 18.5%
+#
+# 간신히 넘긴 것은 기준선보다 **나쁘고**, 크게 넘은 것만 뚜렷이 웃돕니다.
+# 둘이 한 바구니에 섞여 상쇄되던 것이 "신고점에 우위가 없다"의 정체입니다.
+#
+# ⚠️ **문턱 5%·20% 는 그 표를 보고 골랐습니다.** 그래서 탐색에 쓴 표본으로는
+#    절대 판정하지 않습니다 — 등록일 **뒤**의 새 발표만 셉니다. 그것이
+#    사후 맞추기를 막는 유일한 방법입니다 (헌법 5조 탐색 규율).
+H22_START_DAY = "2026-08-19"      # 등록일 — 이 날 **뒤**의 발표만 판정 표본
+H22_LEVELS = (("H22_신고점폭_5", 5.0), ("H22b_신고점폭_20", 20.0))
+
+
+def judge_newhigh_margin(events: list[dict], start_day: str = H22_START_DAY) -> dict:
+    """H22·H22b 판정 — 신고점 폭이 문턱 이상인 군 vs 같은 표본 전체.
+
+    표본: 조정 EPS 잣대 사건 중 **폭을 잴 수 있는 것**
+    (직전 정점이 있고 그 정점이 양수인 발표 — 적자에서 적자로 옮겨간
+    것을 "몇 % 성장"이라 부를 수 없으므로 측정 장치가 없음으로 둡니다).
+    """
+    usable = [e for e in events if _adj(e) and e.get("신고점폭") is not None]
+    out: dict = {}
+    for name, level in H22_LEVELS:
+        entry: dict = {"등록일": start_day, "문턱": level}
+        for label, pool in (
+            ("신규(판정)", [e for e in usable if e["announced"] > start_day]),
+            ("탐색표본(참고)", [e for e in usable if e["announced"] <= start_day]),
+        ):
+            signal = [e for e in pool if e["신고점폭"] >= level]
+            entry[label] = _judge(signal, pool)
+        entry["판정"] = entry["신규(판정)"]["판정"]
+        out[name] = entry
+    return out
+
 def judge_completion_gap(events: list[dict], start_day: str,
                          gap_min: float) -> dict:
     """H18 판정 — 정배열 완성 사건 중 이격도가 문턱 이상인 군.

@@ -131,6 +131,21 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
             current = ttm[-1] if ttm else None
             had_prior = past_peak is not None
             new_high = current is not None and had_prior and current > past_peak
+            # 신고점의 **폭** — 직전 정점을 몇 % 넘었나 (H22·H22b, 109차 등록).
+            #
+            # 왜 필요한가: `new_high` 는 참/거짓이라 직전 정점을 1% 넘은
+            # 것과 50% 넘은 것이 **똑같이 "신고점"** 이었습니다. 109차
+            # 탐색(3,100건)에서 폭이 단조로 듣는 것이 나왔습니다 —
+            #   폭 1~3% 7.5% · 3~5% 7.8% · 10~20% 16.1% · 20%↑ 18.5%
+            #   (기준선 13.0% · 신고점 이진 전체 12.6%)
+            # 간신히 넘긴 것은 기준선보다 **나쁘고**, 크게 넘은 것만
+            # 뚜렷이 웃돕니다. 둘이 한 바구니에 섞여 상쇄되고 있었습니다.
+            #
+            # 정점이 음수면 비율의 뜻이 뒤집히므로 **없음**으로 둡니다
+            # (적자에서 적자로 옮겨간 것을 "몇 % 성장"이라 부를 수 없습니다).
+            폭 = None
+            if new_high and past_peak and past_peak > 0:
+                폭 = (current - past_peak) / past_peak * 100.0
             if current is not None and (past_peak is None or current > past_peak):
                 past_peak = current
             streak = streak + 1 if new_high else 0
@@ -148,6 +163,7 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
                     "new_high": new_high,
                     "newhigh_streak": streak,
                     "ttm": current,
+                    "신고점폭": 폭,
                     "decidable": current is not None and had_prior,
                 }
             )
@@ -331,7 +347,7 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
     """모든 발표 사건 목록과 건너뛴 사유 집계를 돌려줍니다.
 
     사건: {"ticker", "잣대", "announced", "new_high", "newhigh_streak",
-           "h5", "h5b", "excess"}
+           "h5", "h5b", "below52", "신고점폭", "excess"}
 
     잣대는 12차 등록의 사다리로 종목마다 하나로 고정됩니다. 게이지(H5·H5b)는
     등록 정의 그대로 **조정 EPS 잣대**의 폭만 잽니다 (사다리와 무관).
@@ -369,6 +385,8 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
                     "h5b": gauge_h5b_on(series, state["announced"]),
                     # H9 (21차 등록): 발표 시점 주봉 종가 < 52주 이동평균
                     "below52": below_52wk_ma(prices, state["announced"]),
+                    # H22·H22b (109차 등록) — 신고점을 직전 정점 대비 몇 % 넘었나
+                    "신고점폭": state.get("신고점폭"),
                     "excess": excess,
                 }
             )

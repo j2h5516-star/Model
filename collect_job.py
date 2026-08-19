@@ -193,6 +193,9 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         verdict["가설"].update(judge.judge_sector_breadth(breadth_events))
         # H18 (43차 등록) — 정배열 완성 시점의 52주선 이격도.
         # 42차 탐색에서 나온 후보라 등록일 뒤의 새 완성만 판정 표본입니다.
+        # H22·H22b (109차 등록) — 신고점의 폭. 판정 표본은 등록일 뒤의
+        # 새 발표만이며, 탐색에 쓴 표본은 '탐색표본(참고)'로 따로 적습니다.
+        verdict["가설"].update(judge.judge_newhigh_margin(events))
         verdict["가설"].update(judge.judge_completion_gap(
             sector_model.completion_events(ds),
             sector_model.H18_START_DAY, sector_model.H18_GAP_MIN,

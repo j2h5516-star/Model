@@ -340,6 +340,39 @@ def test_collect_metric_events_op_income_only():
     assert all(e["잣대"] != "op_income" for e in ladder_events)
 
 
+def test_신고점의_폭을_함께_담는다():
+    """H22·H22b (109차 등록) — 신고점을 직전 정점 대비 몇 % 넘었나.
+
+    ⚠️ 왜 필요한가: `new_high` 는 참/거짓이라 1% 넘은 것과 50% 넘은 것이
+    똑같이 "신고점"이었습니다. 109차 탐색에서 폭이 단조로 듣는 것이
+    나왔습니다 — 간신히 넘긴 것은 기준선보다 **나쁘고**(1~3% 7.5%),
+    크게 넘은 것만 뚜렷이 웃돕니다(20%↑ 18.5%, 기준선 13.0%).
+    """
+    # TTM 이 4분기 합이므로 값을 조절해 정점을 만든다
+    rows = _history_rows([1, 1, 1, 1, 1, 1, 2])
+    states = me.earnings_states(rows)
+    폭들 = [s["신고점폭"] for s in states if s["신고점폭"] is not None]
+    assert 폭들, "신고점인데 폭이 하나도 안 담겼습니다"
+    # 4+1 = 5 → 4 에서 25% 오름
+    assert abs(폭들[-1] - 25.0) < 0.01, 폭들
+
+
+def test_정점이_음수면_폭을_안_잰다():
+    """적자에서 적자로 옮겨간 것을 "몇 % 성장"이라 부를 수 없습니다.
+    억지로 숫자를 만들지 않고 **없음**으로 둡니다 (창작 금지)."""
+    rows = _history_rows([-1, -1, -1, -1, -1, -1, 3])
+    states = me.earnings_states(rows)
+    돌파 = [s for s in states if s["new_high"]]
+    # ⚠️ 처음에는 `ttm > 0` 인 돌파만 보게 썼는데, 이 자료의 돌파는 TTM 이
+    #    정확히 0 이라 **조건절이 한 번도 참이 안 되어** 시험이 아무것도
+    #    안 지켰습니다 (오늘 다섯 번째 가짜 초록불). 돌파 자체를 봅니다.
+    assert 돌파, "이 자료에는 돌파가 있어야 시험이 뜻을 가집니다"
+    for s in 돌파:
+        assert s["신고점폭"] is None, (
+            f"직전 정점이 음수(-4)인데 폭을 쟀습니다: {s}"
+        )
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
