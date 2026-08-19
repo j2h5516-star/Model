@@ -22,7 +22,6 @@
       "TaskList",
       "SendUserFile",
       "Artifact",
-
       "mcp__github",
       "mcp__github__actions_get",
       "mcp__github__actions_list",
@@ -39,7 +38,6 @@
       "mcp__github__add_issue_comment",
       "mcp__github__subscribe_pr_activity",
       "mcp__github__unsubscribe_pr_activity",
-
       "mcp__Claude_Code_Remote",
       "mcp__Claude_Code_Remote__list_triggers",
       "mcp__Claude_Code_Remote__create_trigger",
@@ -55,7 +53,6 @@
       "mcp__Claude_Code_Remote__register_repo_root",
       "mcp__Claude_Code_Remote__subscribe_pr_activity",
       "mcp__Claude_Code_Remote__unsubscribe_pr_activity",
-
       "mcp__claude-code-remote",
       "mcp__claude-code-remote__list_triggers",
       "mcp__claude-code-remote__create_trigger",
@@ -65,6 +62,19 @@
       "mcp__claude-code-remote__send_later",
       "mcp__claude-code-remote__get_session",
       "mcp__claude-code-remote__list_repos"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session_start.sh",
+            "timeout": 30
+          }
+        ]
+      }
     ]
   }
 }
