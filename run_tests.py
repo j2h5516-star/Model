@@ -28,6 +28,7 @@ TEST_FILES = [
     "tests/test_vendor_compare.py",  # 두 자 대조 (75차 — 재기만 하고 고치지 않음)
     "tests/test_dataset.py",     # 데이터 계층 (v3 4단계 — 재료 손질)
     "tests/test_audit_data.py",  # 재료 오염 전수조사 (73차 — 지우지 않고 세기)
+    "tests/test_data_health.py",     # 수집물 전체 건강검진 (108차 — 값은 안 바꾸고 세기만)
     "tests/test_measure_engine.py",  # 측정 장치 (v3 5단계 — 11차 등록 구현)
     "tests/test_sector_model.py",    # 정배열 장치 (39·43차 등록 — 완성·이격도)
     "tests/test_leadership.py",      # 주도섹터 모델 (44차 등록 — 판정·전환·분기점)

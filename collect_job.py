@@ -27,6 +27,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
 import config as cfg
+import data_health
 import dataset
 import judge
 import market_data as md
@@ -142,6 +143,40 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
 
     files, summary = measure_store.build_files(tickers, daily_map, reports)
 
+    # 수집물 전체 건강검진 (108차) — **값을 바꾸지 않고 세기만** 합니다.
+    #
+    # data_quality 는 "한 분기 안에서 앞뒤가 맞나"를 보는데, 2026-08-18 에
+    # 찾아낸 사고들은 전부 그 그물을 빠져나갔습니다 (칸이 통째로 빔 ·
+    # 그럴듯한 쓰레기 · 고침의 부수 피해). 셋 다 **세어야만** 드러나므로
+    # 로봇이 매일 세게 합니다. 자세한 내력은 data_health.py 머리말에.
+    #
+    # ⚠️ 어제 수집물은 **덮어쓰기 전에** 읽어야 합니다 (write_files 전).
+    건강 = None
+    try:
+        어제 = None
+        옛경로 = f"{cfg.MEASURE_DIR}/snapshot.json"
+        if os.path.exists(옛경로):
+            with open(옛경로, encoding="utf-8") as f:
+                어제 = (json.load(f) or {}).get("eps")
+        새 = json.loads(files[f"{cfg.MEASURE_DIR}/snapshot.json"])["eps"]
+        건강 = data_health.report(새, 어제)
+        채움 = 건강["채움률"]
+        빈칸 = [k for k in data_health.WATCHED_FIELDS
+                if (채움.get(k) or {}).get("찬칸") == 0]
+        progress(
+            "🩺 건강검진 — "
+            + " · ".join(
+                f"{k} {채움[k]['비율']}%" for k in ("revenue", "adj_eps", "gaap_eps")
+            )
+            + (f" · 어제 대비 바뀐 칸 {건강['어제 대비']['바뀐 칸']}"
+               if 건강.get("어제 대비") else " · 어제 수집물 없음")
+            + f" · 이상값 매출 {건강['이상값']['revenue']['건수']}칸"
+            + (f" · ⚠️ 통째로 빈 칸: {', '.join(빈칸)}" if 빈칸 else "")
+        )
+    except Exception as exc:
+        건강 = {"오류": f"{type(exc).__name__}: {str(exc)[:160]}"}
+        progress(f"⚠️ 건강검진 실패: {건강['오류']}")
+
     # v3 5단계 — 수집 성공 시 등록된 판정(11차)을 자동 계산합니다 (사람 개입 없음).
     # 방금 만든 snapshot 내용으로 데이터 계층 → 측정 장치 → 자동 판정 순서.
     # ⚠️ 판정이 실패해도 그날의 **데이터 커밋은 막지 않습니다** — 데이터가 더
@@ -254,6 +289,10 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         "consensus": consensus_note,
         "surprise": surprise_note,
         "vendor": vendor_note,
+        # 수집물 전체 건강검진 (108차) — 채움률·어제 대비 변화·이상값.
+        # 값은 안 바꾸고 세기만 합니다. 며칠 쌓아 정상 범위를 실측한 뒤
+        # 경보 문턱을 사전 등록합니다.
+        "건강검진": 건강,
         "per_ticker": [
             {
                 "ticker": r.get("ticker"),
