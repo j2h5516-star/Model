@@ -2359,9 +2359,39 @@ def fetch_xbrl_approximation(
     for key in _XBRL_CONCEPTS:
         series[key] = _series_for_key(key, facts, report)
 
-    period_ends = sorted(
-        d for d in series.get("op_income", {}) if d >= start_date
-    )
+    return _quarters_from_series(ticker, series, start_date, report)
+
+
+
+
+def _quarters_from_series(
+    ticker: str,
+    series: dict,
+    start_date: str,
+    report: dict | None = None,
+) -> list[dict]:
+    """XBRL 시계열(series)에서 분기 뼈대 행을 조립합니다 (113차에 분리).
+
+    fetch_xbrl_approximation 에서 떼어 낸 순수 함수입니다 — SEC 접속 없이
+    가짜 시계열로 시험하기 위해서입니다 (개발 환경은 SEC 차단).
+    """
+    # 분기 목록 — **세 항목의 합집합** (113차. 예전에는 영업이익 하나뿐).
+    #
+    # 왜 바꾸나 (106·107차 실측): 은행·보험은 `OperatingIncomeLoss` 를
+    # 신고하지 않아(이자수익·대손충당금 구조) 분기 목록이 **아예 안
+    # 만들어졌고**, 그래서 멀쩡히 찾아 둔 매출 851건 · GAAP EPS 760건 ·
+    # 매출총이익 221건 = **1,832건이 붙을 자리가 없어 버려졌습니다**
+    # (22종목 — 금융 9 · 제약 5 · 에너지 4 등). 그 빈자리에 보도자료의
+    # 쓰레기 값(BAC 매출 8달러)이 대신 들어갔습니다.
+    #
+    # 합집합으로 만들면 영업이익이 없는 분기도 매출·GAAP EPS 가 있으면
+    # 행이 생기고, 8-K 짝짓기가 발표일 도장을 찍어 측정에 들어갑니다.
+    period_ends = sorted({
+        d
+        for key in ("op_income", "revenue", "gaap_eps")
+        for d in series.get(key, {})
+        if d >= start_date
+    })
 
     # 106차 계기 — **분기 목록을 논갭 영업이익에서만 만든다**는 사실을
     # 숫자로 남깁니다.
@@ -2417,35 +2447,44 @@ def fetch_xbrl_approximation(
     quarters: list[dict] = []
     for period_end in period_ends:
         gaap_op = series["op_income"].get(period_end)
-        if gaap_op is None:
-            continue
 
         # GAAP 희석 EPS — 구조화 값 그대로. 비상식 크기만 없음 처리 (2차 방어)
         gaap_eps = series.get("gaap_eps", {}).get(period_end)
         if gaap_eps is not None and abs(gaap_eps) > cfg.EPS_MAX_ABS:
             gaap_eps = None
 
-        sbc = (series["sbc"].get(period_end) or 0.0) if consistent["sbc"] else 0.0
-        amort = (
-            (series["amortization"].get(period_end) or 0.0)
-            if consistent["amortization"] else 0.0
-        )
+        # 영업이익이 없는 분기(은행 등)는 근사 논갭도 없습니다 — 지어내지
+        # 않고 없음으로 둡니다 (113차). 되돌림(sbc·amort)은 영업이익이
+        # 있을 때만 뜻이 있습니다.
+        if gaap_op is None:
+            sbc = amort = 0.0
+            approx_op = None
+        else:
+            sbc = (series["sbc"].get(period_end) or 0.0) if consistent["sbc"] else 0.0
+            amort = (
+                (series["amortization"].get(period_end) or 0.0)
+                if consistent["amortization"] else 0.0
+            )
+            approx_op = gaap_op + sbc + amort
         da = series.get("depreciation_amortization", {}).get(period_end)
         revenue = series["revenue"].get(period_end)
         gross_profit = series["gross_profit"].get(period_end)
 
+
         # 교차검증: 매출 ≥ 매출총이익 ≥ 0 이어야 하고, 영업이익은 매출을 넘을 수 없습니다.
         # 이 관계가 깨졌다면 매출 자리에 엉뚱한 항목이 들어온 것이므로 매출을 비웁니다.
         # (비워 두면 뒤의 검사 단계가 "매출 없음"으로 처리해 영업이익만 씁니다)
-        approx_op = gaap_op + sbc + amort
         if revenue is not None:
             bad_gross = (
                 gross_profit is not None and (gross_profit < 0 or gross_profit > revenue)
             )
             # 적자 분기는 영업이익이 매출보다 클 수 있습니다(비용이 매출을 넘으므로).
             # 흑자일 때만 "영업이익 ≤ 매출"을 강제하고, 적자는 마진 하한으로만 봅니다.
-            bad_op = approx_op > revenue or (
-                approx_op < 0 and approx_op / revenue * 100.0 < cfg.MARGIN_MIN_PCT
+            # 영업이익이 없으면(113차) 이 검사는 건너뜁니다 — 검사할 값이 없습니다.
+            bad_op = approx_op is not None and (
+                approx_op > revenue or (
+                    approx_op < 0 and approx_op / revenue * 100.0 < cfg.MARGIN_MIN_PCT
+                )
             )
             if revenue <= 0 or bad_op or bad_gross:
                 if report is not None:
@@ -2454,6 +2493,12 @@ def fetch_xbrl_approximation(
                     )
                 revenue = None
                 gross_profit = None
+
+        # 셋 다 없는 분기는 행을 만들 재료가 없습니다 (113차).
+        # ⚠️ 교차검증 **뒤**에 둡니다 — 검증이 매출을 비워 셋 다 없어진
+        #    행도 걸러야 하기 때문입니다 (앞에 두면 그 경우를 놓칩니다).
+        if approx_op is None and revenue is None and gaap_eps is None:
+            continue
 
         gm_pct = None
         if revenue and gross_profit is not None and revenue > 0:
@@ -2475,12 +2520,18 @@ def fetch_xbrl_approximation(
                 "gm_is_gaap": True,
                 "filing_url": f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company={ticker}&type=8-K",
                 "derivation": (
-                    "보도자료를 읽지 못해 SEC XBRL 회계데이터로 근사했습니다.\n\n"
-                    f"GAAP 영업이익 ${gaap_op/1e6:,.1f}M\n\n"
-                    f"+ 주식보상비 ${sbc/1e6:,.1f}M\n\n"
-                    f"+ 무형자산상각 ${amort/1e6:,.1f}M\n\n"
-                    f"= **${approx_op/1e6:,.1f}M** (근사치)\n\n"
-                    "※ GM%는 GAAP 값(매출총이익 ÷ 매출)을 사용했습니다."
+                    (
+                        "보도자료를 읽지 못해 SEC XBRL 회계데이터로 근사했습니다.\n\n"
+                        f"GAAP 영업이익 ${gaap_op/1e6:,.1f}M\n\n"
+                        f"+ 주식보상비 ${sbc/1e6:,.1f}M\n\n"
+                        f"+ 무형자산상각 ${amort/1e6:,.1f}M\n\n"
+                        f"= **${approx_op/1e6:,.1f}M** (근사치)\n\n"
+                        "※ GM%는 GAAP 값(매출총이익 ÷ 매출)을 사용했습니다."
+                    ) if gaap_op is not None else (
+                        "XBRL 에 영업이익 항목이 없는 회사(은행 등)라 매출·"
+                        "GAAP EPS 만 담은 뼈대 행입니다 (113차). 논갭 근사는 "
+                        "지어내지 않고 없음으로 둡니다."
+                    )
                 ),
                 "guidance_text": "",
             }
@@ -2488,7 +2539,6 @@ def fetch_xbrl_approximation(
 
     quarters.sort(key=lambda q: q["filing_date"])
     return quarters
-
 
 def _series_for_key(key: str, facts, report: dict | None = None) -> dict[str, float]:
     """개념 묶음(key) 하나의 분기 시계열을 만듭니다.

@@ -1278,6 +1278,78 @@ def test_짝없는_XBRL_사실을_센다():
 
 
 
+def _은행모양_series(**추가):
+    base = {"op_income": {}, "revenue": {}, "gaap_eps": {}, "gross_profit": {},
+            "sbc": {}, "amortization": {}, "depreciation_amortization": {}}
+    base.update(추가)
+    return base
+
+
+def test_영업이익_없는_회사도_뼈대가_생긴다():
+    """113차 — 분기 목록을 영업이익 하나가 아니라 세 항목의 합집합에서.
+
+    실측 근거(106·107차): 은행·보험은 OperatingIncomeLoss 를 신고하지 않아
+    분기 목록이 아예 안 만들어졌고, 찾아 둔 XBRL 사실 **1,832건**(매출 851 ·
+    GAAP EPS 760 · 매출총이익 221)이 붙을 자리가 없어 버려졌습니다.
+    22종목(금융 9·제약 5·에너지 4 등)이 XBRL 보호를 한 칸도 못 받았습니다.
+    """
+    series = _은행모양_series(
+        revenue={"2025-03-31": 2.0e10, "2025-06-30": 2.1e10},
+        gaap_eps={"2025-03-31": 0.85, "2025-06-30": 0.90},
+    )
+    rows = sf._quarters_from_series("BANK", series, "2020-01-01")
+    assert len(rows) == 2, "영업이익이 없다고 분기 행이 통째로 사라졌습니다 (113차 전 결함)"
+    assert rows[0]["revenue"] == 2.0e10
+    assert rows[0]["gaap_eps"] == 0.85
+    assert rows[0]["op_income"] is None, "없는 논갭 근사를 지어내면 안 됩니다"
+
+
+def test_셋_다_없는_분기는_행을_만들지_않는다():
+    """빈 행은 재료가 아니라 소음입니다.
+
+    ⚠️ 처음에는 주식보상비에만 날짜가 있는 자료로 썼는데, 주식보상비는
+    분기 목록 합집합에 **애초에 안 들어가** 시험이 아무것도 안 지켰습니다
+    (돌연변이가 초록 불 — 가짜 초록불). 가드에 실제로 닿는 두 경우로
+    다시 썼습니다:
+      ㉠ EPS 만 있는데 상한을 넘어 없음 처리된 분기
+      ㉡ 매출만 있는데 교차검증(매출 ≤ 0)이 비운 분기
+    """
+    # ㉠ 상한(100)을 넘는 EPS 하나뿐 → 없음 처리 → 셋 다 없음
+    series = _은행모양_series(gaap_eps={"2025-03-31": 5000.0})
+    assert sf._quarters_from_series("TT", series, "2020-01-01") == []
+    # ㉡ 매출 0 이하 → 교차검증이 비움 → 셋 다 없음
+    series2 = _은행모양_series(revenue={"2025-03-31": -5.0})
+    assert sf._quarters_from_series("TT", series2, "2020-01-01") == []
+
+
+def test_BAC_시나리오_전체_쓰레기_매출이_밀려난다():
+    """이 시험이 182칸 쓰레기의 사망 확인서입니다 (106차 실측 기반).
+
+    실물: BAC 는 XBRL 매출 55건이 살아 있는데 뼈대가 없어 전부 버려졌고,
+    보도자료의 쓰레기 값(매출 **8달러**, 중앙값 220억)이 대신 들어갔습니다.
+
+    113차 후의 올바른 흐름:
+      뼈대 행 생성(매출 2.0e10) → 8-K 가 짝지어짐(발표일 도장) →
+      92차 규칙 "매출은 XBRL 우선"에 따라 쓰레기 8.0 은 **밀려나고**
+      XBRL 값이 남는다. 조정 EPS 는 보도자료에서 온다.
+    """
+    series = _은행모양_series(
+        revenue={"2025-03-31": 2.0e10},
+        gaap_eps={"2025-03-31": 0.85},
+    )
+    뼈대 = sf._quarters_from_series("BAC", series, "2020-01-01")
+    보도 = [{"filing_date": "2025-04-15",      # 분기 종료 15일 뒤 발표
+            "revenue": 8.0,                    # 실물 쓰레기 값 그대로
+            "adj_eps": 0.90, "gaap_eps": 0.83, "op_income": None}]
+    합침 = sf.merge_quarters(뼈대, 보도)
+    행 = 합침[0]
+    assert 행["announced_date"] == "2025-04-15", "발표일 도장이 안 찍혔습니다 — 측정에서 빠집니다"
+    assert 행["revenue"] == 2.0e10, f"쓰레기 매출이 XBRL 을 밀어냈습니다: {행['revenue']}"
+    assert 행["revenue_xbrl"] == 2.0e10
+    assert 행["adj_eps"] == 0.90, "조정 EPS 는 보도자료에서 와야 합니다 (XBRL 에 없음)"
+    assert 행["press_matched"] is True
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
