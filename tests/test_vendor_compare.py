@@ -306,6 +306,85 @@ def test_empty_inputs_do_not_crash():
     assert "확인 못함" in vc.report({}, {})
 
 
+# ---------------------------------------------------------------------------
+# 월가 발표 EPS ↔ 회사 조정 EPS 배관 (115차)
+# ---------------------------------------------------------------------------
+
+def 월가발표(announced_date, eps, 날짜뜻="발표일"):
+    return {"announced_date": announced_date, "날짜뜻": 날짜뜻,
+            "street_eps": eps, "street_estimate": None}
+
+
+def 발표보관(**티커):
+    return {"tickers": {t: {"announcements": a} for t, a in 티커.items()}}
+
+
+def test_street_annual_shape_is_flagged_and_asked_first():
+    """FDX 실물 재현: 우리 값 = 월가 4분기 합이면 '연간값 모양'으로 표시하고
+    부탁 목록의 맨 앞에 둬야 합니다 (111차에서 산술로 확정된 결함 종류)."""
+    q = {"FDX": [
+        {"announced_date": "2024-06-25", "adj_eps": 17.80},   # 연간값 오염
+    ], "BBB": [
+        {"announced_date": "2024-06-25", "adj_eps": 9.99},    # 그냥 갈림 (월가 1.00)
+    ]}
+    v = 발표보관(
+        FDX=[월가발표("2023-09-21", 4.55), 월가발표("2023-12-19", 3.99),
+             월가발표("2024-03-21", 3.86), 월가발표("2024-06-25", 5.41)],
+        BBB=[월가발표("2024-06-25", 1.00)],
+    )
+    갈림 = vc.street_mismatch(q, v)
+    fdx = next(c for c in 갈림 if c["종목"] == "FDX")
+    assert fdx["연간모양"] is True and fdx["사합"] == 17.81
+    bbb = next(c for c in 갈림 if c["종목"] == "BBB")
+    assert bbb["연간모양"] is False        # 앞선 4분기가 없으면 판정 불가
+    부탁 = vc.wanted_from_street(q, v)
+    assert 부탁[0]["종목"] == "FDX"        # 연간모양이 벌어진 폭보다 앞
+    assert 부탁[0]["칸"] == "조정 EPS"
+    assert "연간값 모양" in 부탁[0]["이유"]
+    assert 부탁[0]["발표일"] == "2024-06-25"   # 우리 8-K 발표일 그대로
+
+
+def test_street_agreement_within_tolerance_is_not_asked():
+    """1.5센트 안이면 같은 값 — 부탁 목록을 어지럽히면 안 됩니다 (111차 기준)."""
+    q = {"AAA": [{"announced_date": "2026-01-10", "adj_eps": 1.23}]}
+    v = 발표보관(AAA=[월가발표("2026-01-10", 1.24)])
+    assert vc.street_mismatch(q, v) == []
+    assert vc.wanted_from_street(q, v) == []
+
+
+def test_street_pairing_allows_next_day_filing_but_not_far_dates():
+    """장 마감 후 발표는 8-K 가 다음 날 제출됩니다 — ±3일은 짝으로,
+    그보다 멀면 억지로 붙이지 않습니다."""
+    q = {"AAA": [{"announced_date": "2026-01-11", "adj_eps": 5.00}],
+         "BBB": [{"announced_date": "2026-03-01", "adj_eps": 5.00}]}
+    v = 발표보관(AAA=[월가발표("2026-01-10", 1.00)],
+              BBB=[월가발표("2026-01-10", 1.00)])
+    갈림 = vc.street_mismatch(q, v)
+    assert [c["종목"] for c in 갈림] == ["AAA"]     # BBB 는 50일 차 — 짝 없음
+
+
+def test_street_ignores_quarter_end_dated_announcements():
+    """날짜뜻이 '분기끝'인 줄(earnings_history 예비 경로)은 발표일이
+    아니므로 짝짓기에 쓰면 안 됩니다 (105차 ⑥에서 실측한 함정)."""
+    q = {"AAA": [{"announced_date": "2026-01-10", "adj_eps": 5.00}]}
+    v = 발표보관(AAA=[월가발표("2026-01-10", 1.00, 날짜뜻="분기끝")])
+    assert vc.street_mismatch(q, v) == []
+
+
+def test_street_wanted_respects_the_per_ticker_cap():
+    """같은 종목만 목록을 가득 채우면 안 됩니다 (86차와 같은 이유)."""
+    q = {"AAA": [{"announced_date": f"2024-0{m}-10", "adj_eps": 9.0}
+                 for m in (1, 4, 7)],
+         "BBB": [{"announced_date": "2024-02-10", "adj_eps": 7.0}]}
+    v = 발표보관(
+        AAA=[월가발표(f"2024-0{m}-10", 1.0) for m in (1, 4, 7)],
+        BBB=[월가발표("2024-02-10", 1.0)],
+    )
+    부탁 = vc.wanted_from_street(q, v)
+    assert sum(1 for r in 부탁 if r["종목"] == "AAA") == 2
+    assert sum(1 for r in 부탁 if r["종목"] == "BBB") == 1
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

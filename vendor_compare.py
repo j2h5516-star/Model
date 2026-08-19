@@ -259,6 +259,141 @@ def wanted_from_mismatch(quarters: dict, vendor: dict,
     return out
 
 
+# ---------------------------------------------------------------------------
+# 월가 발표 EPS ↔ 회사 조정 EPS (111차 측정 → 115차 배관)
+# ---------------------------------------------------------------------------
+# 이 파일 머리말의 "조정 EPS 는 맞대지 않습니다"는 그대로 유효합니다 —
+# 뜻이 다른 둘을 **불일치율**로 세면 숫자가 거짓말을 합니다.
+#
+# 여기서 하는 일은 다릅니다. 111차 실측으로 월가 "발표 EPS"의 정체가
+# 드러났습니다: 발표일로 짝지은 3,132칸 중 72.4%가 1.5센트 안에서 회사
+# 조정 EPS 와 일치하고 **차이의 중앙값은 정확히 0** — 월가는 대부분 회사
+# 조정 EPS 를 그대로 받아 적습니다. 그러므로 크게 갈린 꼬리는 높은
+# 확률로 **어느 한쪽의 결함**이고, 가장 크게 갈린 6곳을 산술로 확인하니
+# 우리 쪽 연간값 오염이었습니다 (FDX 17.80 = 직전 4분기 월가 합 17.81 ·
+# AXP 15.38 = 15.39, 각 0.1% 차).
+#
+# 조정 EPS 는 XBRL 이 못 지키는 유일한 잣대 칸입니다(XBRL 에 그 값이
+# 없음). 그래서 이 심판이 만든 의심 목록을 `부탁_` 원문 요청으로 이어,
+# 다음 세션이 실물 보도자료로 원인을 확인합니다. **값은 지우지 않습니다.**
+
+# 발표일 짝짓기 허용 오차 — 장 마감 후 발표는 8-K 제출이 다음 날로
+# 넘어가기도 합니다. 분기 발표는 약 90일 간격이라 3일이면 안전합니다.
+STREET_MATCH_DAYS = 3
+
+# 111차와 같은 기준: 1.5센트 안이면 같은 값으로 봅니다.
+STREET_EPS_TOLERANCE = 0.015
+
+# "연간값 모양" 판정 — 우리 값이 그 발표일까지의 월가 4개 분기 합과
+# 2% 안이면 연간값 오염으로 표시합니다 (FDX·AXP 는 0.1% 차였습니다).
+ANNUAL_SHAPE_REL = 0.02
+
+
+def street_mismatch(quarters: dict, vendor: dict) -> list[dict]:
+    """회사 조정 EPS 와 월가 발표 EPS 가 크게 갈린 칸을 셉니다.
+
+    아무것도 고치지 않습니다 — 갈린 칸을 적기만 합니다.
+
+    짝짓기는 **발표일**로만 합니다. vendor.json 의 announcements 에는
+    날짜 뜻이 두 가지 섞여 있습니다 (105차 ⑥에서 실측한 함정):
+      · 날짜뜻 "발표일"  — get_earnings_dates 경로. 짝짓기에 씁니다.
+      · 날짜뜻 "분기끝"  — earnings_history 예비 경로. 발표일이 아니므로
+                          여기서는 **쓰지 않습니다** (억지로 붙이지 않음).
+    """
+    티커표 = (vendor or {}).get("tickers") or {}
+    out: list[dict] = []
+    for ticker, rows in sorted((quarters or {}).items()):
+        발표들 = [
+            (_day(a.get("announced_date")), a)
+            for a in (티커표.get(ticker) or {}).get("announcements") or []
+            if a.get("날짜뜻") == "발표일" and a.get("street_eps") is not None
+        ]
+        발표들 = sorted(((d, a) for d, a in 발표들 if d is not None),
+                      key=lambda 짝: 짝[0])
+        if not 발표들:
+            continue
+        남은 = list(range(len(발표들)))
+        for row in rows or []:
+            ours = row.get("adj_eps")
+            우리날 = _day(row.get("announced_date"))
+            if ours is None or 우리날 is None:
+                continue
+            자리, 거리 = None, None
+            for i in 남은:
+                d = abs((발표들[i][0] - 우리날).days)
+                if d <= STREET_MATCH_DAYS and (거리 is None or d < 거리):
+                    자리, 거리 = i, d
+            if 자리 is None:
+                continue
+            남은.remove(자리)          # 한 발표를 두 번 쓰지 않습니다
+            street = 발표들[자리][1]["street_eps"]
+            if abs(ours - street) <= STREET_EPS_TOLERANCE:
+                continue
+            # 연간값 모양인가 — 그 발표를 포함한 월가 4개 분기의 합과 비교
+            사합 = None
+            if 자리 >= 3:
+                넷 = [발표들[j][1]["street_eps"] for j in range(자리 - 3, 자리 + 1)]
+                if all(v is not None for v in 넷):
+                    사합 = sum(넷)
+            연간모양 = (사합 is not None and 사합 != 0
+                    and abs(ours - 사합) / abs(사합) <= ANNUAL_SHAPE_REL)
+            out.append({
+                "종목": ticker,
+                "발표일": str(row.get("announced_date"))[:10],
+                "우리": ours,
+                "월가": street,
+                "사합": round(사합, 2) if 사합 is not None else None,
+                "연간모양": 연간모양,
+            })
+    return out
+
+
+def wanted_from_street(quarters: dict, vendor: dict,
+                       limit: int = 20) -> list[dict]:
+    """월가와 크게 갈린 조정 EPS 칸을 `부탁_` 원문 요청으로 바꿉니다.
+
+    차례 정하기 — 자리(limit)가 귀하므로:
+      ① **연간값 모양이 앞** — 우리 결함일 확률이 가장 높은 칸입니다
+        (111차에서 산술로 확정된 종류). 정의 차이는 이 모양이 안 나옵니다.
+      ② 그다음은 벌어진 폭 순 — 어느 쪽으로 벌어졌든
+        (wanted_from_mismatch 가 86차 CRM 에서 배운 것과 같은 이유).
+    종목당 2건 제한(_PER_TICKER_MAX)도 같은 이유로 같습니다.
+    """
+    def 벌어진폭(cell) -> float:
+        a, b = abs(cell["우리"]), abs(cell["월가"])
+        큰쪽, 작은쪽 = max(a, b), min(a, b)
+        if 큰쪽 == 0:
+            return 0.0
+        if 작은쪽 == 0:
+            return float("inf")
+        return 큰쪽 / 작은쪽
+
+    골라낸 = sorted(street_mismatch(quarters, vendor),
+                 key=lambda c: (not c["연간모양"], -벌어진폭(c)))
+    out = []
+    종목별: dict[str, int] = {}
+    for cell in 골라낸:
+        종목 = cell["종목"]
+        if 종목별.get(종목, 0) >= _PER_TICKER_MAX:
+            continue
+        종목별[종목] = 종목별.get(종목, 0) + 1
+        이유 = f"월가는 {cell['월가']:,.2f} 라고 함 (우리 {cell['우리']:,.2f})"
+        if cell["연간모양"]:
+            이유 += (f" — 연간값 모양: 우리 값이 월가 4분기 합"
+                   f" {cell['사합']:,.2f} 과 2% 안")
+        out.append({
+            "종목": 종목,
+            "발표일": cell["발표일"],
+            "칸": "조정 EPS",
+            "값": cell["우리"],
+            "배수": None,
+            "이유": 이유,
+        })
+        if len(out) >= limit:
+            break
+    return out
+
+
 def duel(quarters: dict, vendor: dict) -> dict:
     """**같은 칸을 두 경로가 각각 읽었을 때 누가 맞았나** (90차).
 

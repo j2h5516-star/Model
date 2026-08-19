@@ -313,8 +313,9 @@ def write_wanted(quarters: dict, path: str = WANTED_PATH,
     목록 = merge_wanted(extra or [], wanted_raw_filings(quarters))
     with open(path, "w", encoding="utf-8") as f:
         json.dump({
-            "설명": ("'원문이 필요한 공시' 목록입니다. 두 곳에서 옵니다 — "
-                   "바깥 자(야후)와 어긋난 칸(vendor_compare)과 "
+            "설명": ("'원문이 필요한 공시' 목록입니다. 세 곳에서 옵니다 — "
+                   "바깥 자(야후)와 어긋난 칸(vendor_compare), "
+                   "월가 발표 EPS 와 갈린 조정 EPS 칸(115차 배관), "
                    "이웃 분기와 어긋난 칸(audit_data). "
                    "수집 로봇은 이 목록에 있는 공시는 값을 읽었더라도 원문을 "
                    "함께 담아 옵니다 — 잘못 읽은 값의 원인을 다음 세션이 "
@@ -345,8 +346,16 @@ if __name__ == "__main__":
         import vendor_compare as _vc
 
         with open("data/measure/vendor.json", encoding="utf-8") as _f:
-            _바깥 = _vc.wanted_from_mismatch(_q, _json.load(_f))
+            _야후 = _json.load(_f)
+        _바깥 = _vc.wanted_from_mismatch(_q, _야후)
         print(f"바깥 자(야후)와 어긋난 칸 {len(_바깥)}건을 목록 앞자리에 둡니다.")
+        # 월가 발표 EPS 와 갈린 조정 EPS 칸 (115차 배관 — 111차 실측이 근거).
+        # 조정 EPS 는 XBRL 이 못 지키는 유일한 잣대 칸이라, 이 심판이
+        # 만든 의심 목록만이 원문 감사로 가는 길입니다.
+        _조정 = _vc.wanted_from_street(_q, _야후)
+        연간 = sum(1 for r in _조정 if "연간값 모양" in r["이유"])
+        print(f"월가와 갈린 조정 EPS {len(_조정)}건(연간값 모양 {연간}건)을 그 뒤에 둡니다.")
+        _바깥 = _바깥 + _조정
     except (OSError, ValueError) as _e:
         print(f"야후 파일을 못 읽어 바깥 자 없이 적습니다: {_e}")
     print(f"원문 부탁 목록 {write_wanted(_q, extra=_바깥)}건 → {WANTED_PATH}")
