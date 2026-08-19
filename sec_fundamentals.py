@@ -751,7 +751,16 @@ _SHARE_COUNT_LOOKBACK = 60
 #    74차 전수 비교에서 실제로 그렇게 됐고, 0.08(환율 영향)을 물었습니다).
 _ANNUAL_BEFORE_RE = re.compile(
     r"\bfull[-\s]?year\b|\bfor\s+the\s+(?:full\s+)?year\b"
-    r"|\btwelve\s+months\b|\bfiscal\s+year\s+ended\b",
+    r"|\btwelve\s+months\b|\bfiscal\s+year\s+ended\b"
+    # "annual" (119차 — 실물 ADBE): "reported **annual** GAAP diluted
+    # earnings per share of $3.38 and non-GAAP diluted earnings per share
+    # of $4.31" — 조정 EPS 이름 앞 52자에 annual 이 있는데 위 낱말들에는
+    # 없어 연간값 4.31 을 분기로 물었습니다. \bannual\b 이므로
+    # annualized(연율화)는 걸리지 않습니다.
+    r"|\bannual\b"
+    # "FY 2025"/"FY2025" (119차 — 실물 AXP 머리글: "FY 2025 EARNINGS PER
+    # SHARE ROSE TO $15.38"). FY 는 fiscal year 의 표준 약자입니다.
+    r"|\bFY\s*20\d{2}\b",
     re.I,
 )
 # 줄머리에서는 넓게 봐도 됩니다 — 줄이 "Fiscal year 2023 …" 으로 **시작**
@@ -771,6 +780,53 @@ _ANNUAL_AFTER_RE = re.compile(
 )
 _ANNUAL_BACK = 60        # 이름 앞 몇 글자까지 (줄을 넘지 않습니다)
 _ANNUAL_AHEAD = 40       # 값 뒤 몇 글자까지
+
+# 이름과 값 **사이**의 연간 표시 (119차 — 실물 SWKS·MCHP):
+#   "Non-GAAP diluted earnings per share **for fiscal year 2018** was $7.22"
+#   "Non-GAAP earnings per diluted share **for the fiscal year ended
+#    March 31, 2025** were $1.31"
+# 이름 앞도 값 뒤도 아니라 **사이**에 있어 기존 두 가드를 다 빠져나갔습니다.
+# ⚠️ 사이 구간에 quarter 가 함께 있으면(비교 문구) 연간으로 보지 않습니다 —
+#    74차 NTAP 반례("in the fourth quarter of fiscal year 2022")와 같은 꼴.
+_ANNUAL_GAP_RE = re.compile(
+    r"\bfor\s+(?:the\s+)?fiscal\s+(?:year\b|20\d{2}\b)"
+    r"|\bfiscal\s+year\s+ended\b"
+    r"|\bfor\s+the\s+(?:full\s+)?year\b|\bfull[-\s]?year\b"
+    r"|\btwelve\s+months\b",
+    re.I,
+)
+
+# 값 뒤가 "to $숫자" 면 **전망 범위**입니다 (119차 — 실물 LOW·LLY·NEE):
+#   "Adjusted diluted EPS of approximately **$11.80 to $11.90**" (연간 전망)
+#   "Earnings per share (non-GAAP)  **$5.60 to $5.70**" (전망 조정표)
+# 실적을 "X to Y" 범위로 적는 회사는 없습니다 — 84차의 "X - Y" 범위
+# 가드와 같은 근거이며 to 표기만 빠져 있었습니다.
+_RANGE_TO_AFTER_RE = re.compile(r"^\s*to\s*\$?\d")
+# 범위의 **뒤끝**: 숫자 앞이 "$소수 to $" 면 그 숫자는 범위의 위끝입니다
+# ("$5.60 to $5.70" 에서 앞끝만 막으면 뒤끝 5.70 을 뭅니다 — 84차의
+#  "X - Y" 범위 가드가 앞·뒤 양끝을 막는 것과 같은 구조).
+# ⚠️ 앞이 **달러 소수**일 때만 겁니다. 처음에 `숫자 to $` 로 넓게 걸었더니
+#    성장 문구 "increased 16% for Q3 **to $1.61**"(실물 DIS)의 Q3 의 3 이
+#    걸려 **진짜 분기값을 버리고 전년값 1.39 를 물었습니다** (전수 채점에서
+#    발각). "% to $"·"Q3 to $" 는 범위가 아닙니다.
+_RANGE_TO_BEFORE_RE = re.compile(r"\$\d+\.\d+\s*to\s*\$?\s*$", re.I)
+# "from $X to $Y" 는 범위가 아니라 **변화 문구**입니다 (실물 AMGN:
+# "Non-GAAP EPS remained relatively unchanged **from $5.31 to $5.29** for
+# the fourth quarter" — 5.31 이 전년, **5.29 가 진짜 이번 분기값**).
+# 뒤끝 가드가 이 Y 까지 죽이면 옳은 값을 잃으므로, from 이 이끄는 짝의
+# 뒤끝은 살립니다. 앞끝(X)은 아래 _FROM_BEFORE_RE 가 전년값으로 거릅니다.
+_FROM_RANGE_RE = re.compile(r"\bfrom\s*\$\d+\.\d+\s*to\s*\$?\s*$", re.I)
+# 값 바로 앞이 "from $" 면 그 숫자는 **비교 원점(전년·직전)**입니다
+# ("improved to $1.61 from $1.39" 의 1.39, "from $5.31 to $5.29" 의 5.31).
+_FROM_BEFORE_RE = re.compile(r"\bfrom\s*\$?\s*$", re.I)
+
+# 줄이 "Fiscal 2018 …" 로 시작하면 그 줄은 연간 줄입니다 (119차 — 실물
+# SYNA: "• Fiscal 2018 revenue of $1.63 billion, … non-GAAP net income per
+# diluted share of $4.05"). 기존 줄머리 가드는 "fiscal year 20xx" 만 알고
+# "Fiscal 20xx"(year 생략)를 몰랐습니다. quarter 가 같은 줄머리에 있으면
+# ("Fiscal 2018 fourth quarter …") 분기 줄이므로 건너뛰지 않습니다.
+_FISCAL_HEAD_RE = re.compile(r"^fiscal\s+20\d{2}\b", re.I)
+_FISCAL_HEAD_SPAN = 60   # 줄머리에서 이만큼 안에서 quarter 여부를 함께 봅니다
 _ANNUAL_LINE_HEAD = 24   # 줄머리에서 이만큼 안에 "Full-year" 가 있으면 그 줄은 연간
 
 # 구역 제목으로 연간/분기를 가르기 (76차 — 실물 HPE 로 확증)
@@ -951,6 +1007,29 @@ def find_eps_value(
                 text[_line_start:_line_start + _ANNUAL_LINE_HEAD].lstrip("•·-– \t")
             ):
                 continue
+            # 줄이 "Fiscal 20xx"로 **시작**하고 그 줄머리에 quarter 가 없으면
+            # 연간 줄입니다 (119차 — 실물 SYNA, 위 _FISCAL_HEAD_RE 주석)
+            _머리 = text[_line_start:_line_start + _FISCAL_HEAD_SPAN].lstrip("•·-– \t")
+            if _FISCAL_HEAD_RE.match(_머리) and not _SECTION_QUARTER_RE.search(_머리):
+                continue
+            # 겹친 머리글: **바로 윗줄**이 "Fiscal 20xx …"/"Full-year …" 로
+            # 시작하는 짧은 제목 줄이고 이 줄에도 quarter 가 없으면, 이 줄은
+            # 그 연간 머리글의 연속입니다 (119차 — 실물 QCOM:
+            #   "Fiscal 2017 Revenues $22.3 billion
+            #    GAAP EPS $1.65, Non-GAAP EPS $4.28").
+            # 조건을 셋 다 요구해 좁게 겁니다 — 윗줄이 길거나(제목이 아님)
+            # quarter 가 보이면 건드리지 않습니다.
+            _윗줄 = text[:_line_start].rstrip("\n")
+            _윗시작 = _윗줄.rfind("\n") + 1
+            _윗글 = _윗줄[_윗시작:].strip().lstrip("•·-– \t")
+            _이줄 = text[_line_start:text.find("\n", _line_start)
+                        if text.find("\n", _line_start) != -1 else len(text)]
+            if (_윗글 and len(_윗글) <= 60
+                    and (_FISCAL_HEAD_RE.match(_윗글)
+                         or _ANNUAL_LINE_HEAD_RE.match(_윗글))
+                    and not _SECTION_QUARTER_RE.search(_윗글)
+                    and not _SECTION_QUARTER_RE.search(_이줄[:120])):
+                continue
             # 몇 줄 위의 **구역 제목**이 연간 구역이라고 말하면 건너뜁니다
             # (실물 HPE — 위 _in_annual_section 주석 참조)
             if _in_annual_section(text, _line_start):
@@ -1117,6 +1196,38 @@ def find_eps_value(
                 if _ANNUAL_AFTER_RE.match(text[num_end:num_end + _ANNUAL_AHEAD]):
                     search_from = number_end
                     continue
+
+                # "X to Y" 전망 범위의 양끝 (119차 — 위 _RANGE_TO_AFTER_RE
+                # 주석). 앞끝은 값 뒤의 "to $숫자"로, 뒤끝은 값 앞의
+                # "$소수 to $"로 알아봅니다. 단 "from $X to $Y" 는 범위가
+                # 아니라 변화 문구라 뒤끝(Y = 진짜 값)을 살립니다 (실물 AMGN).
+                _앞쪽 = text[max(num_start - 28, 0):num_start]
+                if (_RANGE_TO_AFTER_RE.match(text[num_end:num_end + 16])
+                        or (_RANGE_TO_BEFORE_RE.search(_앞쪽)
+                            and not _FROM_RANGE_RE.search(_앞쪽))):
+                    search_from = number_end
+                    continue
+
+                # 값 바로 앞이 "from $" 면 비교 원점(전년값)입니다 — 건너뛰고
+                # 다음 숫자를 봅니다 (실물 AMGN "from $5.31 to $5.29").
+                if _FROM_BEFORE_RE.search(text[max(num_start - 10, 0):num_start]):
+                    search_from = number_end
+                    continue
+
+                # 이름과 값 **사이**가 짧고 거기에 연간 표시가 있으면 그
+                # 표시는 이름을 직접 꾸미는 말입니다 — 이 자리는 연간입니다
+                # (119차 — 실물 SWKS "… per share **for fiscal year 2018**
+                # was $7.22" · MCHP). 같은 구간에 quarter 가 있으면 비교
+                # 문구이므로 제외합니다 (NTAP 반례).
+                # ⚠️ 60자 제한이 핵심입니다 — GS 처럼 연간·전년·분기가 한
+                #    문장에 줄줄이 나열되면 뒤쪽 분기값의 사이 구간에도
+                #    앞 연간 문구가 들어오는데, 그건 이름을 꾸미는 말이
+                #    아닙니다 (제한 없이 걸면 GS 분기값 10.81 을 잃습니다 —
+                #    기존 시험이 빨간 불로 잡아 줬습니다).
+                _사이 = text[label_match.end():num_start]
+                if (len(_사이) <= 60 and _ANNUAL_GAP_RE.search(_사이)
+                        and not _SECTION_QUARTER_RE.search(_사이)):
+                    break            # 자리 포기 — 다음 이름 자리로
 
                 # 이름이 "적자"라고 말하고 있는데 숫자가 양수면 부호를 뒤집습니다.
                 #   "net loss per diluted share of $0.83"  →  −0.83

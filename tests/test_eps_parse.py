@@ -1239,7 +1239,14 @@ def test_제목줄_가드는_GAAP_이름을_건드리지_않는다():
     assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS) == -0.02, (
         "GAAP 이 조정값으로 무너졌습니다 — 가드가 너무 넓습니다"
     )
-    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.44
+    # ⚠️ 119차 정정: 이 자리는 원래 1.44 를 정답으로 적었는데, 실물을 다시
+    # 보니 1.44 는 **다음 분기 전망표**("Non-GAAP Net Income per Share
+    # $1.44 to $1.48")의 앞끝이었습니다. 진짜 분기값은 대조표의 1.41
+    # ("Non-GAAP net income per share, diluted $1.41 $1.33 …" — 뒤 셋은
+    # 전년·9개월 열). 119차의 "X to Y" 범위 가드가 전망값을 거르면서
+    # 올바른 값으로 옮겨 왔습니다. 당시 동작을 정답으로 박았던 시험의
+    # 오류입니다 — 시험도 실물로 검산해야 합니다.
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.41
 
 
 
@@ -1348,6 +1355,90 @@ def test_BAC_시나리오_전체_쓰레기_매출이_밀려난다():
     assert 행["revenue_xbrl"] == 2.0e10
     assert 행["adj_eps"] == 0.90, "조정 EPS 는 보도자료에서 와야 합니다 (XBRL 에 없음)"
     assert 행["press_matched"] is True
+
+
+# ---------------------------------------------------------------------------
+# 연간값 오염 6갈래 (119차 — 부탁_ 원문 17건 실물 감사로 확정한 구멍들)
+# ---------------------------------------------------------------------------
+def test_연간낱말_annual_이_이름_앞에_있으면_건너뛴다():
+    """실물 ADBE: "reported annual GAAP … and non-GAAP diluted earnings per
+    share of $4.31" — annual 이 기존 연간 낱말 목록에 없어 연간값을 물었다."""
+    text = ("The company reported annual GAAP diluted earnings per share of "
+            "$3.38 and non-GAAP diluted earnings per share of $4.31.\n\n"
+            "Fourth quarter non-GAAP diluted earnings per share of $1.26.")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.26
+
+
+def test_이름과_값_사이의_연간표시를_알아본다():
+    """실물 SWKS: "Non-GAAP diluted earnings per share **for fiscal year
+    2018** was $7.22" — 이름 앞도 값 뒤도 아닌 **사이**라 다 빠져나갔다."""
+    text = ("Record Q4 Revenue with GAAP Diluted EPS of $1.58 and "
+            "Non-GAAP EPS of $1.94\n\n"
+            "Non-GAAP diluted earnings per share for fiscal year 2018 "
+            "was $7.22, up 12 percent.")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.94
+
+
+def test_사이_연간표시라도_quarter_가_있으면_비교문구다():
+    """74차 NTAP 반례 보존: "in the fourth quarter of fiscal year 2022" 는
+    연간 표시가 아니라 비교 문구 — 진짜 분기값을 버리면 안 된다."""
+    text = ("Non-GAAP net income per share compared to the fourth quarter "
+            "of fiscal year 2022 was $1.54.")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.54
+
+
+def test_전망범위_X_to_Y_는_양끝_다_안_문다():
+    """실물 LOW·LLY·NEE: "Adjusted diluted earnings per share of
+    approximately $11.80 to $11.90" (연간 전망) — 앞끝도 뒤끝도 실적이 아니다."""
+    text = ("Full Year 2024 Outlook\n"
+            "Adjusted diluted earnings per share of approximately "
+            "$11.80 to $11.90 (previously $11.70 to $11.90)")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
+def test_from_X_to_Y_변화문구는_Y_가_진짜_값이다():
+    """실물 AMGN: "Non-GAAP EPS remained relatively unchanged from $5.31 to
+    $5.29 for the fourth quarter" — 5.31 은 전년, 5.29 가 이번 분기.
+    범위 가드를 넓게 걸면 옳은 값(5.29)까지 잃는다."""
+    text = ("Non-GAAP EPS remained relatively unchanged from $5.31 to "
+            "$5.29 for the fourth quarter as expenses were offset.")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 5.29
+
+
+def test_성장문구_increased_to_는_그대로_읽는다():
+    """실물 DIS: "adjusted EPS(1) increased 16% for Q3 to $1.61 from $1.39"
+    — 처음 만든 뒤끝 가드가 "Q3 to $" 까지 물어 진짜 값을 버리고 전년값
+    1.39 를 집었다 (전수 채점에서 발각). 1.61 이어야 한다."""
+    text = ("Diluted earnings per share (EPS) for Q3 improved to $2.92 from "
+            "$1.43 in Q3 fiscal 2024, and adjusted EPS(1) increased 16% for "
+            "Q3 to $1.61 from $1.39 in Q3 fiscal 2024")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.61
+
+
+def test_줄이_Fiscal_20xx_로_시작하면_연간_줄이다():
+    """실물 SYNA: "• Fiscal 2018 revenue of $1.63 billion, … non-GAAP net
+    income per diluted share of $4.05" — 줄머리 가드가 "fiscal year" 만
+    알고 year 생략형을 몰랐다."""
+    text = ("• Fiscal 2018 revenue of $1.63 billion, GAAP net income (loss) "
+            "per diluted share of $(3.63) and non-GAAP net income per "
+            "diluted share of $4.05\n"
+            "• Fourth quarter non-GAAP net income per diluted share of $1.00\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.0
+
+
+def test_Fiscal_20xx_줄머리라도_quarter_가_붙으면_분기_줄이다():
+    text = ("Fiscal 2018 fourth quarter non-GAAP net income per diluted "
+            "share of $1.00\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.0
+
+
+def test_겹친_머리글_윗줄이_연간이면_아랫줄도_연간이다():
+    """실물 QCOM 머리글 더미: "Fiscal 2017 Revenues $22.3 billion ⏎ GAAP EPS
+    $1.65, Non-GAAP EPS $4.28" — 연간 표시는 윗줄에만 있다."""
+    text = ("Fiscal 2017 Revenues $22.3 billion\n"
+            "GAAP EPS $1.65, Non-GAAP EPS $4.28\n\n"
+            "Fourth quarter Non-GAAP EPS of $0.92\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.92
 
 
 if __name__ == "__main__":
