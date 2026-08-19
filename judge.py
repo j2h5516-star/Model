@@ -274,6 +274,40 @@ def judge_newhigh_margin(events: list[dict], start_day: str = H22_START_DAY) -> 
         out[name] = entry
     return out
 
+# ---------------------------------------------------------------------------
+# H23 (116차 등록) — 깊은 게이지의 H5b
+# ---------------------------------------------------------------------------
+# 100차 ③에서 실측한 편향(이력이 짧으면 신고점이 수학적으로 쉬움)이
+# 게이지 앞머리를 허상으로 부풀립니다. H23 은 게이지의 분자·분모를
+# "그 종목의 8번째 이상 판단 가능한 발표"로 제한한 **깊은 게이지**에
+# H5b 와 같은 규칙(직전 이력 중앙값 초과)을 적용합니다.
+#
+# ⚠️ 이 가설은 100차의 깊이 표를 **보고 나서** 만들었습니다. 그래서
+#    그 표본으로는 절대 판정하지 않습니다 — 등록일 뒤의 새 발표만
+#    셉니다 (H22 와 같은 규율, 헌법 5조).
+H23_START_DAY = "2026-08-19"
+H23_NAME = "H23_실적폭_중앙값_깊은게이지"
+
+
+def judge_deep_gauge(events: list[dict], start_day: str = H23_START_DAY) -> dict:
+    """H23 판정 — 깊은 게이지가 켜진 상태의 발표 vs 같은 표본 전체.
+
+    표본: 조정 EPS 잣대 사건 중 깊은 게이지를 판단할 수 있는 것
+    (워밍업 52주 미만·분모 10종목 미만 등 판단 불가 사건은 뺍니다 —
+    H5b 와 같은 제외 규칙).
+    """
+    usable = [e for e in events if _adj(e) and e.get("h5b_깊은") is not None]
+    entry: dict = {"등록일": start_day}
+    for label, pool in (
+        ("신규(판정)", [e for e in usable if e["announced"] > start_day]),
+        ("탐색표본(참고)", [e for e in usable if e["announced"] <= start_day]),
+    ):
+        signal = [e for e in pool if e["h5b_깊은"] is True]
+        entry[label] = _judge(signal, pool)
+    entry["판정"] = entry["신규(판정)"]["판정"]
+    return {H23_NAME: entry}
+
+
 def judge_completion_gap(events: list[dict], start_day: str,
                          gap_min: float) -> dict:
     """H18 판정 — 정배열 완성 사건 중 이격도가 문턱 이상인 군.

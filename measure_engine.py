@@ -67,6 +67,16 @@ ENTRY_MAX_GAP_DAYS = 10      # 발표 후 이 일수 안에 거래일이 없으�
 LADDER_MIN_QUARTERS = 8      # 12차 등록 — 잣대로 인정할 최소 보유 분기
 LADDER = ("adj_eps", "adjusted_ebitda", "gaap_eps")   # 사다리 순서 (12차 등록)
 
+# H23 (116차 등록) — "깊은 게이지"의 이력 문턱.
+#
+# 100차 ③에서 실측한 편향: 이력이 짧으면 신고점이 수학적으로 쉽습니다
+# (1~5번째 판단 가능한 발표는 56.8% 가 신고점, 12번째 이후는 40.4% —
+# 단조 감소). 그래서 게이지 앞머리가 시장 사실이 아니라 허상으로 붑니다.
+# 깊은 게이지는 그 종목의 GAUGE_MIN_HISTORY 번째 이상 판단 가능한
+# 발표만 분자·분모에 넣습니다. 8 은 결과를 보고 고른 수가 아니라
+# 이미 등록돼 있던 LADDER_MIN_QUARTERS 를 그대로 쓴 것입니다 (100차 ⑥).
+GAUGE_MIN_HISTORY = LADDER_MIN_QUARTERS
+
 
 def _to_date(text: str) -> date:
     return date.fromisoformat(str(text)[:10])
@@ -168,6 +178,15 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
                 }
             )
     states.sort(key=lambda s: s["announced"])
+    # 몇 번째 판단 가능한 발표인가 (누적) — H23(116차 등록)이 씁니다.
+    # 판단 불가 발표는 세지 않고 값도 없음으로 둡니다.
+    깊이 = 0
+    for state in states:
+        if state["decidable"]:
+            깊이 += 1
+            state["판단횟수"] = 깊이
+        else:
+            state["판단횟수"] = None
     return states
 
 
@@ -243,6 +262,7 @@ def gauge_series(
     ds: dict,
     tickers: list[str] | None = None,
     min_tickers: int = GAUGE_MIN_TICKERS,
+    min_history: int = 0,
 ) -> dict:
     """실적 폭 게이지 시계열: {"weeks": [...], "values": [...]}.
 
@@ -259,6 +279,11 @@ def gauge_series(
       섹터 게이지는 원래 종목이 적고(1~3개도 있음) 화면에 **종목수를 함께
       보여 주므로** 부르는 쪽에서 1 로 낮춥니다 — 판정에 안 쓰이는 값을
       최소치로 죽이면 관찰 자체가 사라지기 때문입니다.
+
+    min_history: 그 종목의 **몇 번째 이상** 판단 가능한 발표만 넣을 것인가
+      (H23, 116차 등록). 0 이면 기존 게이지 그대로입니다. 이력이 얕은
+      발표는 분자·분모 **양쪽에서** 뺍니다 — 분자만 빼면 비율이 거짓말을
+      합니다.
     """
     per_ticker: dict[str, list[dict]] = {
         t: earnings_states(ds["quarters"].get(t) or [])
@@ -277,6 +302,8 @@ def gauge_series(
             age = (_to_date(week_end) - _to_date(state["announced"])).days
             if age > FRESH_DAYS or not state["decidable"]:
                 continue          # 김빠졌거나 판단 불가면 분모에서 뺀다
+            if min_history and (state.get("판단횟수") or 0) < min_history:
+                continue          # 이력이 얕은 발표는 안 센다 (H23)
             fresh_total += 1
             fresh_newhigh += bool(state["new_high"])
         # 분모가 최소치에 못 미치면 **없음** (100차). 비율은 분모가 작을수록
@@ -354,6 +381,10 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
     """
     spy = ds["prices"].get(ds["benchmark"])
     series = gauge_series(ds)
+    # H23 (116차 등록) — 이력 8번째 이상 발표만으로 계산한 "깊은 게이지".
+    # 기존 게이지와 나란히 계산해 사건마다 h5b_깊은 으로 붙입니다.
+    # 기존 h5·h5b 는 하나도 안 바뀝니다 (등록된 가설의 표본 보존).
+    deep_series = gauge_series(ds, min_history=GAUGE_MIN_HISTORY)
     events: list[dict] = []
     skipped = {"주가없음": 0, "우측검열": 0, "주가시작전": 0,
                "잣대없음": 0, "기타": 0}
@@ -383,6 +414,8 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
                     "newhigh_streak": state["newhigh_streak"],
                     "h5": gauge_h5_on(series, state["announced"]),
                     "h5b": gauge_h5b_on(series, state["announced"]),
+                    # H23 (116차 등록) — 깊은 게이지의 H5b 규칙
+                    "h5b_깊은": gauge_h5b_on(deep_series, state["announced"]),
                     # H9 (21차 등록): 발표 시점 주봉 종가 < 52주 이동평균
                     "below52": below_52wk_ma(prices, state["announced"]),
                     # H22·H22b (109차 등록) — 신고점을 직전 정점 대비 몇 % 넘었나

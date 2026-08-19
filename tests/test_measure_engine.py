@@ -373,6 +373,61 @@ def test_정점이_음수면_폭을_안_잰다():
         )
 
 
+def test_판단횟수는_판단_가능한_발표만_센다():
+    """H23 (116차 등록)의 재료 — 몇 번째 판단 가능한 발표인가.
+
+    100차 ③에서 실측한 편향(이력이 짧으면 신고점이 수학적으로 쉬움)을
+    다루려면 각 발표의 깊이를 알아야 합니다. TTM 이 없거나 비교할 정점이
+    없는 발표는 세지 않고 값도 없음입니다 — 억지로 0을 만들지 않습니다."""
+    states = me.earnings_states(_history_rows([1, 1, 1, 1, 2, 2, 2]))
+    # 1~4번째: TTM 미완성 또는 비교할 정점 없음 → 판단 불가, 깊이 없음
+    for s in states[:4]:
+        assert not s["decidable"] and s["판단횟수"] is None, s
+    # 5번째부터 판단 가능 → 깊이 1, 2, 3
+    assert [s["판단횟수"] for s in states[4:]] == [1, 2, 3], states[4:]
+
+
+def _late_rows(eps_by_quarter, skip_quarters):
+    """_history_rows 와 같되 91일 간격 skip_quarters 개만큼 늦게 시작합니다."""
+    from datetime import date, timedelta
+    rows = []
+    day = date(2024, 1, 31) + timedelta(days=91 * skip_quarters)
+    for eps in eps_by_quarter:
+        rows.append(q(day.isoformat(), day.isoformat(), eps))
+        day += timedelta(days=91)
+    return rows
+
+
+def test_깊은_게이지는_얕은_이력_발표를_안_센다():
+    """H23 (116차 등록) — 깊은 게이지는 그 종목의 8번째 이상 판단 가능한
+    발표만 분자·분모에 넣습니다.
+
+    깊은 종목(12분기, 마지막 발표 깊이 8, 신고점 아님)과 얕은 종목
+    (5분기, 마지막 발표 깊이 1, 신고점)이 같은 날 신선합니다.
+    기존 게이지는 50%(얕은 신고점이 분자를 채움), 깊은 게이지는 0%
+    (얕은 발표가 분자·분모 모두에서 빠짐)여야 합니다."""
+    ds = _mini_ds({
+        "깊은": _history_rows([1] * 12),               # 마지막 발표 = 12번째 분기, 깊이 8
+        "얕은": _late_rows([1, 1, 1, 1, 2], 7),        # 같은 날 5번째 분기, 깊이 1
+    }, price_days=800)
+    from datetime import date, timedelta
+    마지막발표 = me.earnings_states(ds["quarters"]["깊은"])[-1]["announced"]
+    # 주간 격자는 각 주 마지막 거래일이므로, 발표 주가 끝난 뒤로 잡습니다
+    기준일 = (date.fromisoformat(마지막발표) + timedelta(days=10)).isoformat()
+    기존 = me.gauge_series(ds, min_tickers=1)
+    깊은 = me.gauge_series(ds, min_tickers=1, min_history=me.GAUGE_MIN_HISTORY)
+    assert me.gauge_at(기존, 기준일) == 50.0, me.gauge_at(기존, 기준일)
+    assert me.gauge_at(깊은, 기준일) == 0.0, me.gauge_at(깊은, 기준일)
+
+
+def test_collect_events_carry_h5b_깊은():
+    """사건마다 깊은 게이지의 H5b 판정이 붙어야 판정기가 H23 을 잴 수
+    있습니다. 판단 불가면 없음(None)으로 붙습니다 — 값을 만들지 않습니다."""
+    ds = _mini_ds({"A": _history_rows([1, 1, 1, 1, 2, 2, 2, 2])}, price_days=800)
+    events, _ = me.collect_events(ds)
+    assert events and all("h5b_깊은" in e for e in events)
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

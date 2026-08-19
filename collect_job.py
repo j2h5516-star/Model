@@ -198,6 +198,9 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         # H22·H22b (109차 등록) — 신고점의 폭. 판정 표본은 등록일 뒤의
         # 새 발표만이며, 탐색에 쓴 표본은 '탐색표본(참고)'로 따로 적습니다.
         verdict["가설"].update(judge.judge_newhigh_margin(events))
+        # H23 (116차 등록) — 깊은 게이지의 H5b. 100차 깊이 표를 보고 만든
+        # 가설이라 판정 표본은 등록일 뒤의 새 발표만입니다.
+        verdict["가설"].update(judge.judge_deep_gauge(events))
         verdict["가설"].update(judge.judge_completion_gap(
             sector_model.completion_events(ds),
             sector_model.H18_START_DAY, sector_model.H18_GAP_MIN,
