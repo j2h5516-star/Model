@@ -1,0 +1,383 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — MDB 2026-03-02
+# 출처: https://www.sec.gov/Archives/edgar/data/1441816/000162828026013199/mdb-20260302.htm
+
+Document
+
+Exhibit 99.1
+
+MongoDB, Inc. Announces Fourth Quarter Fiscal 2026 Financial Results
+Fourth Quarter Fiscal 2026 Total Revenue of $695.1 million, up 27%  year-over-year
+Full Year Fiscal 2026 Total Revenue of $2.46 billion, up 23% year-over-year
+Atlas Revenue up 29% year-over-year in the Fourth Quarter and Full Year Fiscal 2026
+Added 2,700 Customers, with Over 65,200 Total Customers as of January 31, 2026
+
+NEW YORK - March 2, 2026 - MongoDB, Inc. (NASDAQ: MDB) today announced its financial results for the fourth quarter ended January 31, 2026.
+"We delivered strong fourth quarter results driven by our continued go-to-market execution and the broad-based demand we are seeing across our product lines, as customers deploy additional elements of the MongoDB platform. At the same time, we significantly outperformed on operating margin, achieving a rule of 40 performance and demonstrating we can drive durable revenue growth while simultaneously expanding margin," said CJ Desai, President and Chief Executive Officer of MongoDB.
+"Whether it's AI & digital natives looking for a highly performant solution that dynamically scales, a large enterprise looking for multi-cloud resiliency for their mission critical applications, or a customer seeking an integrated offering for AI agents with features such as search, vector search and embeddings in a single intelligent data layer, customers are excited about the strength of the MongoDB platform, the innovations we have been bringing to market, and plan to deliver in the years to come."
+Fourth Quarter Fiscal 2026 Financial Highlights
+•Revenue:  Total revenue was $695.1 million for the fourth quarter of fiscal 2026, an increase of 27% year-over-year. Subscription revenue was $673.1 million, an increase of 27% year-over-year, and services revenue was $22.0 million, an increase of 26% year-over-year.
+•Gross Profit:  Gross profit was $507.7 million for the fourth quarter of fiscal 2026, representing a 73% gross margin compared to 73% in the year-ago period. Non-GAAP gross profit was $524.7 million, representing a 75% non-GAAP gross margin, compared to a non-GAAP gross margin of 75% in the year-ago period.
+•Income (Loss) from Operations: Income from operations was $0.3 million for the fourth quarter of fiscal 2026, compared to a loss from operations of $18.6 million in the year-ago period. Non-GAAP income from operations was $158.8 million, compared to non-GAAP income from operations of $112.5 million in the year-ago period.
+•Net Income: Net income was $15.5 million, or $0.18 per share, based on 86.5 million diluted weighted-average shares outstanding, for the fourth quarter of fiscal 2026. This compares to a net income of $15.8 million, or $0.19 per share, in the year-ago period. Non-GAAP net income was $142.7 million, or $1.65 per share, based on 86.5 million fully diluted weighted-average shares outstanding. This compares to a non-GAAP net income of $108.4 million, or $1.28, per share in the year-ago period.
+•Cash Flow: As of January 31, 2026, MongoDB had $2.4 billion in cash, cash equivalents, short-term investments and restricted cash. During the three months ended January 31, 2026, MongoDB generated $179.6 million of cash from operations, compared to $50.5 million of cash from operations in the year-ago period. MongoDB used $1.1 million of cash in capital expenditures and used $1.7 million of cash in principal payments of finance leases, leading to free cash flow of $176.7 million, compared to free cash flow of $22.9 million in the year-ago period.
+A reconciliation of each non-GAAP measure to the most directly comparable GAAP measure has been provided in the financial statement tables included at the end of this press release. An explanation of these measures is also included below under the heading “Non-GAAP Financial Measures.”
+Fourth Quarter Fiscal 2026 and Recent Business Highlights
+•At its flagship MongoDB.local San Francisco event, MongoDB announced the integration of its core database with industry-leading embedding and reranking models from Voyage AI by MongoDB. This integration creates a unified data intelligence layer for production AI, allowing developers to build sophisticated applications at scale with reduced hallucination risk and no requirement to move or duplicate data.
+•MongoDB introduced a set of new AI capabilities designed to simplify how intelligent applications are built and operated. The launch included five new embedding models from Voyage AI by MongoDB (including the Voyage 4 series), Automated Embedding for MongoDB Community Vector Search, and new embedding and reranking AI model APIs for Atlas. Additionally, MongoDB launched an AI-powered data operations assistant for MongoDB Compass and Atlas Data Explorer. 
+•MongoDB announced an expansion to its MongoDB for Startups program; a reciprocal partner ecosystem that gives AI-first startups a production-ready data foundation and integrated stack from day one. MongoDB for Startups members now represent more than $200 billion in aggregate valuation, and MongoDB is increasing its Bay Area investment to deepen engagement with high-growth AI founders and drive long-term AI workloads on MongoDB.
+•MongoDB was recognized as the Amazon Web Services (AWS) Global Technology Partner of the Year, reflecting the deep integration between MongoDB Atlas and AWS’s leading AI services—including Amazon Bedrock, Amazon SageMaker, and Amazon Q—and our shared focus on helping customers modernize applications and ship production generative AI workloads faster and more efficiently.
+Leadership Update 
+Effective March 3rd, 2026, Erica Volini joins MongoDB as Chief Customer Officer to accelerate the company's next phase of growth. Erica brings a rare blend of experience serving large enterprise customers and scaling partner­ led growth – from leading a multi-billion dollar practice at Deloitte to most recently scaling ServiceNow's partner ecosystem and broader GTM strategy, as the company exceeded $10 billion in annual revenue.
+MongoDB is also announcing that Cedric Pech, President of Field Operations, and Paul Capombassis, Chief Revenue Officer (CRO), are leaving MongoDB. This transition has been planned for some time, and the management team believes now is the right moment for this change. MongoDB extends the company's sincere gratitude for their contributions over the last decade, where they have been instrumental in building the foundation of the GTM engine. MongoDB has a deep bench of go-to-market talent, and the team is well-positioned to execute against its objectives without disruption. MongoDB is also in the latter stages of an executive search for a new CRO. To ensure operational continuity, Mr. Capombassis will remain as CRO through the end of the first quarter. He will serve as an advisor in the second quarter to ensure a seamless transition to the new CRO.
+2
+
+
+First Quarter Fiscal Year 2027 Guidance
+Based on information available to management as of today, March 2, 2026, MongoDB is issuing the following financial guidance for the first quarter fiscal 2027.
+
+Revenues are expected to be in the range of:                            $659 million to $664 million                                                                    
+                                                                        GAAP                                                                                    Non-GAAP
+Income (Loss) from Operations are expected to be in the range of:       $(48.0) million to $(44.0) million                              $105.0 million to $109.0 million
+Net Income (Loss) per Share is expected to be in the range of:          $(0.34) to $(0.29)                                                                $1.15 to $1.19
+Full Year Fiscal 2027 Guidance
+Based on information available to management as of today, March 2, 2026, MongoDB is issuing the following financial guidance for the full year fiscal 2027.
+
+Revenues are expected to be in the range of:                            $2.860 billion to $2.900 billion                                                                
+                                                                        GAAP                                                                                    Non-GAAP
+Income (Loss) from Operations are expected to be in the range of:       $(117.0) million to $(97.0) million                             $545.0 million to $565.0 million
+Net Income (Loss) per Share is expected to be in the range of:          $(0.73) to $(0.49)                                                                $5.75 to $5.93
+Conference Call Information
+MongoDB will host a conference call today, March 2, 2026, at 5:00 p.m. (Eastern Time) to discuss its financial results and business outlook. A live webcast of the call will be available on the “Investor Relations” page of MongoDB’s website at https://investors.mongodb.com. To access the call by phone, please go to this link (registration link), and you will be provided with dial in details. To avoid delays, we encourage participants to dial into the conference call fifteen minutes ahead of the scheduled start time. A replay of the webcast will also be available for a limited time at http://investors.mongodb.com.
+3
+
+
+Forward-Looking Statements
+This press release includes certain “forward-looking statements” within the meaning of Section 27A of the Securities Act of 1933, as amended, or the Securities Act, and Section 21E of the Securities Exchange Act of 1934, as amended, including statements concerning MongoDB’s financial guidance for the fourth fiscal quarter and full year fiscal 2027. These forward-looking statements include, but are not limited to, plans, objectives, expectations and intentions and other statements contained in this press release that are not historical facts and statements identified by words such as “anticipate,” “believe,” “continue,” “could,” “estimate,” “expect,” “intend,” “may,” “plan,” “project,” “will,” “would” or the negative or plural of these words or similar expressions or variations. These forward-looking statements reflect our current views about our plans, intentions, expectations, strategies and prospects, which are based on the information currently available to us and on assumptions we have made. Although we believe that our plans, intentions, expectations, strategies and prospects as reflected in or suggested by those forward-looking statements are reasonable, we can give no assurance that the plans, intentions, expectations or strategies will be attained or achieved. Furthermore, actual results may differ materially from those described in the forward-looking statements and are subject to a variety of assumptions, uncertainties, risks and factors that are beyond our control including, without limitation: our customers renewing their subscriptions with us and expanding their usage of software and related services; global political changes; the effects of the ongoing military conflicts between Russia and Ukraine and Israel and Hamas and recent events in Venezuela on our business and future operating results; economic downturns and/or the effects of rising interest rates, inflation and volatility in the global economy and financial markets on our business and future operating results; our potential failure to meet publicly announced guidance or other expectations about our business and future operating results; reputational harm or other adverse consequences resulting from use of AI and ML in our product offerings and internal operations if they don't produce the desired benefits; our limited operating history; our history of losses; our potential failure to repurchase shares of our common stock at favorable prices, if at all; failure of our platform to satisfy customer demands; the effects of increased competition; our investments in new products and our ability to introduce new features, services or enhancements, including AI and ML; social, ethical and security issues relating to the use of new and evolving technologies, such as artificial intelligence, in our offerings or partnerships; our ability to effectively expand our sales and marketing organization; our ability to continue to build and maintain credibility with the developer community; our ability to add new customers or increase sales to our existing customers; our ability to maintain, protect, enforce and enhance our intellectual property; our ability to continue to increase revenue from our Atlas platform; the effects of social, ethical and regulatory issues relating to the use of new and evolving technologies, such as AI and ML, in our offerings or partnerships; the growth and expansion of the market for database products and our ability to penetrate that market; our ability to maintain the security of our software and adequately address privacy concerns; our ability to manage our growth effectively and successfully recruit and retain additional highly-qualified personnel; our ability to integrate acquisitions and work with our strategic partners effectively; and the price volatility of our common stock. These and other risks and uncertainties are more fully described in our filings with the Securities and Exchange Commission (“SEC”), including under the caption “Risk Factors” in our Quarterly Report on Form 10-Q for the fiscal quarter ended October 31, 2025, filed with the SEC on December 2, 2025. Additional information will be made available in our Annual Report on Form 10-K for the fiscal year ended January 31, 2026, and other filings and reports that we may file from time to time with the SEC. Except as required by law, we undertake no duty or obligation to update any forward-looking statements contained in this release as a result of new information, future events, changes in expectations or otherwise.
+Non-GAAP Financial Measures
+This press release includes the following financial measures defined as non-GAAP financial measures by the SEC: non-GAAP gross profit, non-GAAP gross margin, non-GAAP operating expenses, non-GAAP income from operations, non-GAAP operating margin, non-GAAP net income, non-GAAP net income per share and free cash flow. Non-GAAP gross profit and non-GAAP gross margin exclude expenses associated with stock-based compensation. Non-GAAP operating expenses, non-GAAP income from operations, non-GAAP operating margin, non-GAAP net income and non-GAAP net income per share exclude:
+•expenses associated with stock-based compensation including employer payroll taxes upon the vesting and exercising of stock-based awards and expenses related to stock appreciation rights previously issued to our employees in China;
+4
+
+
+•amortization of intangible assets for the acquired technology and acquired customer relationships associated with prior acquisitions;
+•certain acquisition-related costs and other, including due diligence costs, professional fees in connection with an acquisition and certain integration-related expenses. These expenses are unpredictable, and dependent on factors that may be outside of our control and unrelated to the continuing operations of the acquired business or our Company. In addition, the size and complexity of an acquisition, which often drives the magnitude of acquisition-related costs, may not be indicative of such future costs;
+•restructuring costs associated with a formal restructuring plan that are primarily related to workforce reductions. The Company excludes these expenses because they are not reflective of ordinary course ongoing business and operating results; and
+•in the case of non-GAAP net income and non-GAAP net income per share, amortization of the debt issuance costs associated with our convertible senior notes and gains or losses on our financial instruments;
+•additionally, non-GAAP net income and non-GAAP net income per share are adjusted for an assumed provision for income taxes based on an estimated long-term non-GAAP tax rate as well as the tax charges or benefits resulting from the integration of intellectual property from acquisitions. The non-GAAP tax rate was calculated utilizing a three-year financial projection that excludes the direct impact of the GAAP to non-GAAP adjustments and considers other factors such as operating structure and existing tax positions in various jurisdictions. We intend to periodically reevaluate the projected long-term tax rate, as necessary, for significant events and our ongoing analysis of relevant tax law changes.
+MongoDB uses these non-GAAP financial measures internally in analyzing its financial results and believes they are useful to investors, as a supplement to GAAP measures, in evaluating MongoDB’s ongoing operational performance. MongoDB believes that the use of these non-GAAP financial measures provides an additional tool for investors to use in evaluating ongoing operating results and trends and in comparing its financial results with other companies in MongoDB’s industry, many of which may present similar non-GAAP financial measures to investors.
+Free cash flow represents net cash from/used in operating activities, less capital expenditures, principal payments of finance lease liabilities and capitalized software development costs, if any. MongoDB uses free cash flow to understand and evaluate its liquidity and to generate future operating plans. The exclusion of capital expenditures, principal payments of finance lease liabilities and amounts capitalized for software development facilitates comparisons of MongoDB’s liquidity on a period-to-period basis and excludes items that it does not consider to be indicative of its liquidity. MongoDB believes that free cash flow is a measure of liquidity that provides useful information to investors in understanding and evaluating the strength of its liquidity and future ability to generate cash that can be used for strategic opportunities or investing in its business in the same manner as MongoDB’s management and board of directors.
+Non-GAAP financial measures have limitations as an analytical tool and should not be considered in isolation from, or as a substitute for, financial information prepared in accordance with GAAP. In particular, other companies may report non-GAAP gross profit, non-GAAP gross margin, non-GAAP operating expenses, non-GAAP income from operations, non-GAAP net income, non-GAAP net income per share, free cash flow or similarly titled measures but calculate them differently, which reduces their usefulness as comparative measures. Investors are encouraged to review the reconciliation of these non-GAAP financial measures to their most directly comparable GAAP financial measures, as presented below. This earnings press release and any future releases containing such non-GAAP reconciliations can also be found on the Investor Relations page of MongoDB’s website at https://investors.mongodb.com.
+About MongoDB
+Headquartered in New York, MongoDB’s mission is to empower innovators to create, transform, and disrupt industries with software and data. MongoDB's unified, intelligent data platform was built to power the next generation of applications, and MongoDB is the most widely available, globally distributed database on the market. With integrated capabilities for operational data, search, real-time analytics, and AI-powered retrieval, MongoDB helps organizations everywhere move faster, innovate more efficiently, and simplify complex architectures. 
+5
+
+
+Millions of developers and more than 60,000 customers across almost every industry—including approximately 75% of the Fortune 100—rely on MongoDB for their most important applications. To learn more, visit mongodb.com.
+Investor Relations
+Jess Lubert
+jess.lubert@mongodb.com
+Media Relations
+MongoDB
+press@mongodb.com
+6
+
+
+MONGODB, INC. 
+CONDENSED CONSOLIDATED BALANCE SHEETS
+(in thousands of U.S. dollars, except share and per share data)
+(unaudited)
+
+                                                                                                                                                                                                                                                                                                           January 31, 2026                 January 31, 2025
+Assets                                                                                                                                                                                                                                                                                                                                                      
+Current assets:                                                                                                                                                                                                                                                                                                                                             
+Cash and cash equivalents                                                                                                                                                                                                                                                                                $1,083,540                         $490,133        
+Short-term investments                                                                                                                                                                                                                                                                                    1,303,701                        1,846,444        
+Accounts receivable, net of allowance for doubtful accounts of $12,979 and $8,888 as of January 31, 2026 and January 31, 2025, respectively                                                                                                                                                                 499,002                          393,099        
+Deferred commissions                                                                                                                                                                                                                                                                                        131,442                          112,632        
+Prepaid expenses and other current assets                                                                                                                                                                                                                                                                    97,170                           81,214        
+Total current assets                                                                                                                                                                                                                                                                                      3,114,855                        2,923,522        
+Property and equipment, net                                                                                                                                                                                                                                                                                  39,773                           46,377        
+Operating lease right-of-use assets                                                                                                                                                                                                                                                                          28,978                           34,607        
+Goodwill                                                                                                                                                                                                                                                                                                    191,397                           69,679        
+Intangible assets, net                                                                                                                                                                                                                                                                                       34,502                           24,597        
+Deferred tax assets                                                                                                                                                                                                                                                                                          26,021                           20,810        
+Other assets                                                                                                                                                                                                                                                                                                323,322                          310,701        
+Total assets                                                                                                                                                                                                                                                                                             $3,758,848                       $3,430,293        
+Liabilities and Stockholders’ Equity                                                                                                                                                                                                                                                                                                                        
+Current liabilities:                                                                                                                                                                                                                                                                                                                                        
+Accounts payable                                                                                                                                                                                                                                                                                            $20,269                          $10,467        
+Accrued compensation and benefits                                                                                                                                                                                                                                                                           143,046                          120,354        
+Operating lease liabilities                                                                                                                                                                                                                                                                                   9,259                            9,126        
+Other accrued liabilities                                                                                                                                                                                                                                                                                   109,803                           87,659        
+Deferred revenue                                                                                                                                                                                                                                                                                            387,119                          334,381        
+Total current liabilities                                                                                                                                                                                                                                                                                   669,496                          561,987        
+Deferred tax liability                                                                                                                                                                                                                                                                                          352                              262        
+Operating lease liabilities                                                                                                                                                                                                                                                                                  23,600                           27,374        
+Deferred revenue                                                                                                                                                                                                                                                                                             83,588                           25,404        
+Other liabilities                                                                                                                                                                                                                                                                                            29,454                           33,042        
+Total liabilities                                                                                                                                                                                                                                                                                           806,490                          648,069        
+Stockholders’ equity:                                                                                                                                                                                                                                                                                                                                       
+Common stock, par value of $0.001 per share; 1,000,000,000 shares authorized as of January 31, 2026 and January 31, 2025; 83,370,769 shares issued and 80,492,774 shares outstanding as of January 31, 2026; 80,558,847 shares issued and 80,467,811 shares outstanding as of January 31, 2025                   81                               78        
+Additional paid-in capital                                                                                                                                                                                                                                                                                5,345,494                        4,625,093        
+Treasury stock, 2,877,995 shares (repurchased at an average of $171.84 per share) as of January 31, 2026 and 99,371 shares (repurchased at an average of $13.27 per share) as of January 31, 2025                                                                                                         (494,569)                          (1,319)        
+Accumulated other comprehensive income (loss)                                                                                                                                                                                                                                                                13,207                            (924)        
+Accumulated deficit                                                                                                                                                                                                                                                                                     (1,911,855)                      (1,840,704)        
+Total stockholders’ equity                                                                                                                                                                                                                                                                                2,952,358                        2,782,224        
+Total liabilities and stockholders’ equity                                                                                                                                                                                                                                                               $3,758,848                       $3,430,293        
+7
+
+
+MONGODB, INC. 
+CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS
+(in thousands of U.S. dollars, except share and per share data)
+(unaudited)
+
+                                                                                                        Three Months Ended January 31,                                           Years Ended January 31,
+2026                                                                                             2025                                    2026                          2025                             
+Revenue:                                                                                                                                                                                                
+Subscription                                                                    $673,100                                $530,958                     $2,385,977                          $1,943,864     
+Services                                                                          21,972                                  17,440                         77,820                              62,579     
+Total revenue                                                                    695,072                                 548,398                      2,463,797                           2,006,443     
+Cost of revenue:                                                                                                                                                                                        
+Subscription(1)                                                                  155,076                                 122,676                        571,531                             441,404     
+Services(1)                                                                       32,336                                  26,339                        124,527                              93,892     
+Total cost of revenue                                                            187,412                                 149,015                        696,058                             535,296     
+Gross profit                                                                     507,660                                 399,383                      1,767,739                           1,471,147     
+Operating expenses:                                                                                                                                                                                     
+Sales and marketing(1)                                                           248,537                                 212,211                        944,389                             871,148     
+Research and development(1)                                                      189,125                                 150,400                        716,303                             596,837     
+General and administrative(1)                                                     69,694                                  55,334                        244,015                             219,226     
+Total operating expenses                                                         507,356                                 417,945                      1,904,707                           1,687,211     
+Income (loss) from operations                                                        304                                (18,562)                      (136,968)                           (216,064)     
+Other income, net                                                                 19,099                                  22,716                         81,277                              84,465     
+Income (loss) before provision for (benefit from) income taxes                    19,403                                   4,154                       (55,691)                           (131,599)     
+Provision for (benefit from) income taxes                                          3,873                                (11,672)                         15,460                             (2,527)     
+Net income (loss)                                                                $15,530                                 $15,826                      $(71,151)                          $(129,072)     
+Net income (loss) per share:                                                                                                                                                                            
+Basic                                                                              $0.19                                   $0.20                        $(0.88)                             $(1.73)     
+Diluted                                                                            $0.18                                   $0.19                        $(0.88)                             $(1.73)     
+Weighted-average shares used to compute net income (loss) per share:                                                                                                                                    
+Basic                                                                         81,281,748                              77,631,824                     81,246,520                          74,555,001     
+Diluted                                                                       86,457,703                              84,594,079                     81,246,520                          74,555,001     
+(1)    Includes stock‑based compensation expense as follows:
+
+                                                                      Three Months Ended January 31,                                       Years Ended January 31,
+2026                                                             2025                                  2026                        2025                           
+Cost of revenue—subscription                      $8,444                                $7,982                      $34,660                           $29,548     
+Cost of revenue—services                           4,444                                 3,766                       17,183                            13,917     
+Sales and marketing                               37,454                                40,124                      149,786                           161,317     
+Research and development                          70,808                                58,156                      279,581                           226,367     
+General and administrative                        22,843                                15,014                       69,244                            62,791     
+Total stock‑based compensation expense          $143,993                              $125,042                     $550,454                          $493,940     
+8
+
+
+MONGODB, INC. 
+CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS
+(in thousands of U.S. dollars)
+(unaudited)
+
+                                                                                                                        Three Months Ended January 31,                                           Years Ended January 31,
+2026                                                                                                                                              2025   2026                                                       2025
+Cash flows from operating activities                                                                                                                                                                                    
+Net income (loss)                                                                                  $15,530                               $15,826                      $(71,151)                          $(129,072)     
+Adjustments to reconcile net loss to net cash provided by operating activities:                                                                                                                                         
+Depreciation and amortization                                                                        5,740                                 2,171                         22,394                              11,751     
+Stock-based compensation                                                                           143,993                               125,042                        550,454                             493,940     
+Amortization of debt discount and issuance costs                                                         —                                     —                              —                               2,419     
+Amortization of finance right-of-use assets                                                            993                                   993                          3,974                               3,974     
+Amortization of operating right-of-use assets                                                        2,546                                 2,948                         11,044                              11,248     
+Deferred income taxes                                                                              (2,471)                              (15,995)                        (3,158)                            (16,794)     
+Amortization of premium and accretion of discount on short-term investments, net                   (2,094)                               (5,942)                       (10,843)                            (25,059)     
+Realized and unrealized loss (gain) on financial instruments, net                                      500                                   253                          1,063                               (937)     
+Unrealized foreign exchange loss (gain)                                                              1,078                               (2,956)                          2,118                               (964)     
+Change in operating assets and liabilities, net of effects of business combinations:                                                                                                                                    
+Accounts receivable, net                                                                          (81,222)                              (57,978)                      (106,410)                            (69,236)     
+Prepaid expenses and other current assets                                                          (9,173)                              (24,231)                       (11,056)                            (24,813)     
+Deferred commissions                                                                              (20,743)                              (30,333)                        (9,791)                            (69,127)     
+Other long-term assets                                                                                 992                              (12,973)                       (13,007)                            (30,677)     
+Accounts payable                                                                                     5,361                               (1,028)                          8,916                                 541     
+Accrued liabilities                                                                                 16,907                                 2,760                         27,830                              25,254     
+Operating lease liabilities                                                                        (2,784)                               (2,931)                       (11,105)                            (12,076)     
+Deferred revenue                                                                                   102,907                                54,990                        112,366                            (16,362)     
+Other liabilities, non-current                                                                       1,544                                  (78)                          1,510                             (3,819)     
+Net cash provided by operating activities                                                          179,604                                50,538                        505,148                             150,191     
+Cash flows from investing activities                                                                                                                                                                                    
+Purchases of property, equipment and other assets                                                  (1,134)                              (25,979)                        (4,960)                            (29,550)     
+Business combination, net of cash acquired                                                               —                                     —                        (2,032)                                   —     
+Investments in non-marketable securities                                                             (866)                               (5,500)                        (9,188)                            (11,250)     
+Proceeds from the sales of marketable securities                                                         —                                44,984                        127,660                              44,984     
+Proceeds from maturities of marketable securities                                                  249,000                               182,600                        844,970                             752,600     
+Purchases of marketable securities                                                                (80,343)                             (442,421)                      (417,635)                         (1,414,224)     
+Net cash provided by (used in) investing activities                                                166,657                             (246,316)                        538,815                           (657,440)     
+Cash flows from financing activities                                                                                                                                                                                    
+Repurchases of common stock                                                                       (57,254)                                     —                      (400,333)                                   —     
+Proceeds from settlement of capped calls                                                                 —                                 (366)                              —                             170,223     
+Proceeds from the issuance of common stock under the Employee Stock Purchase Plan                   17,907                                34,427                         40,824                              36,048     
+Proceeds from exercise of stock options                                                                861                              (16,672)                          3,183                               1,968     
+Taxes paid related to net share settlement of equity awards                                       (60,078)                                     —                       (98,574)                                   —     
+Principal payments of finance leases                                                               (1,739)                               (1,645)                        (7,539)                             (6,179)     
+Net cash (used in) provided by financing activities                                              (100,303)                                15,744                      (462,439)                             202,060     
+Effect of exchange rate changes on cash, cash equivalents and restricted cash                        3,497                               (2,876)                         12,348                             (5,701)     
+Net increase (decrease) in cash, cash equivalents and restricted cash                              249,455                             (182,910)                        593,872                           (310,890)     
+Cash, cash equivalents and restricted cash, beginning of period                                    837,170                               675,663                        492,753                             803,643     
+Cash, cash equivalents and restricted cash, end of period                                       $1,086,625                              $492,753                     $1,086,625                            $492,753     
+9
+
+
+MONGODB, INC. 
+RECONCILIATION OF GAAP MEASURES TO NON-GAAP MEASURES
+(in thousands of U.S. dollars, except share and per share data)
+(unaudited)
+
+                                                                                                                Three Months Ended January 31,                                           Years Ended January 31,
+2026                                                                                                                                      2025                          2026                                2025
+Reconciliation of GAAP gross profit to non-GAAP gross profit:                                                                                                                                                   
+Gross profit on a GAAP basis                                                              $507,660                              $399,383                     $1,767,739                          $1,471,147     
+Gross margin (Gross profit/Total revenue) on a GAAP basis                                       73     %                              73     %                       72    %                             73    %
+Add back:                                                                                                                                                                                                       
+Expenses associated with stock-based compensation: Cost of Revenue—Subscription              9,080                                 8,220                         35,832                              30,365     
+Expenses associated with stock-based compensation: Cost of Revenue—Services                  4,939                                 4,114                         18,748                              14,507     
+Restructuring                                                                                    —                                     —                             88                                   —     
+Amortization of intangible assets                                                            3,023                                     —                         11,441                                   —     
+Non-GAAP gross profit                                                                     $524,702                              $411,717                     $1,833,848                          $1,516,019     
+Non-GAAP gross margin (Non-GAAP gross profit/Total revenue)                                     75     %                              75     %                       74    %                             76    %
+Reconciliation of GAAP operating expenses to non-GAAP operating expenses:                                                                                                                                       
+Sales and marketing operating expense on a GAAP basis                                     $248,537                              $212,211                       $944,389                            $871,148     
+Less:                                                                                                                                                                                                           
+Expenses associated with stock-based compensation                                           40,734                                41,725                        156,906                             166,854     
+Restructuring                                                                                (254)                                     —                          4,521                                   —     
+Amortization of intangible assets                                                                —                                     —                              —                                  85     
+Non-GAAP sales and marketing operating expense                                            $208,057                              $170,486                       $782,962                            $704,209     
+Research and development operating expense on a GAAP basis                                $189,125                              $150,400                       $716,303                            $596,837     
+Less:                                                                                                                                                                                                           
+Expenses associated with stock-based compensation                                           76,848                                61,091                        290,415                             234,257     
+Restructuring                                                                                    —                                     —                            159                                   —     
+Amortization of intangible assets                                                              170                                   170                            680                               3,078     
+Certain acquisition-related costs and other                                                      —                                     —                             40                                   —     
+Non-GAAP research and development operating expense                                       $112,107                               $89,139                       $425,009                            $359,502     
+General and administrative operating expense on a GAAP basis                               $69,694                               $55,334                       $244,015                            $219,226     
+Less:                                                                                                                                                                                                           
+Expenses associated with stock-based compensation                                           24,020                                15,725                         72,472                              66,194     
+Restructuring                                                                                 (55)                                     —                           (55)                                   —     
+Certain acquisition-related costs and other                                                      —                                     —                          1,894                                   —     
+Non-GAAP general and administrative operating expense                                      $45,729                               $39,609                       $169,704                            $153,032     
+Reconciliation of GAAP loss from operations to non-GAAP income from operations:                                                                                                                                 
+10
+
+
+
+                                                                                                                                     Three Months Ended January 31,                                           Years Ended January 31,
+2026                                                                                                                                                           2025                          2026                                2025
+Income (loss) from operations on a GAAP basis                                                                      $304                             $(18,562)                     $(136,968)                          $(216,064)     
+GAAP operating margin (Loss from operations/Total revenue)                                                            —     %                             (3)     %                      (6)    %                           (11)    %
+Add back:                                                                                                                                                                                                                            
+Expenses associated with stock-based compensation                                                               155,621                               130,874                        574,373                             512,177     
+Restructuring                                                                                                     (309)                                     —                          4,713                                   —     
+Amortization of intangible assets                                                                                 3,193                                   170                         12,121                               3,163     
+Certain acquisition-related costs and other                                                                           —                                     —                          1,934                                   —     
+Non-GAAP income from operations                                                                                $158,809                              $112,482                       $456,173                            $299,276     
+Non-GAAP operating margin (Non-GAAP income from operations/Total revenue)                                            23     %                              21     %                       19    %                             15    %
+Reconciliation of GAAP net loss to non-GAAP net income:                                                                                                                                                                              
+Net income (loss) on a GAAP basis                                                                               $15,530                               $15,826                      $(71,151)                          $(129,072)     
+Add back:                                                                                                                                                                                                                            
+Expenses associated with stock-based compensation                                                               155,621                               130,874                        574,373                             512,177     
+Restructuring                                                                                                     (309)                                     —                          4,713                                   —     
+Amortization of intangible assets                                                                                 3,193                                   170                         12,121                               3,163     
+Certain acquisition-related costs and other                                                                           —                                     —                          1,934                                   —     
+Amortization of debt issuance costs related to convertible senior notes                                               —                                     —                              —                               2,419     
+Less:                                                                                                                                                                                                                                
+Gain (loss) on financial instruments, net                                                                         (500)                                 (253)                        (1,063)                                 937     
+Income tax effects and adjustments *                                                                             31,809                                38,762                         92,243                              79,572     
+Non-GAAP net income                                                                                            $142,726                              $108,361                       $430,810                            $308,178     
+Reconciliation of GAAP net loss per share, diluted, to non-GAAP net income per share, fully diluted:                                                                                                                                 
+Net income (loss) per share, diluted, on a GAAP basis                                                             $0.18                                 $0.19                        $(0.88)                             $(1.73)     
+Add back:                                                                                                                                                                                                                            
+Expenses associated with stock-based compensation                                                                  1.80                                  1.55                           7.07                                6.87     
+Restructuring                                                                                                         —                                     —                           0.06                                   —     
+Amortization of intangible assets                                                                                  0.04                                     —                           0.15                                0.04     
+Certain acquisition-related costs and other                                                                           —                                     —                           0.02                                   —     
+Amortization of debt issuance costs related to convertible senior notes                                               —                                     —                              —                                0.03     
+Less:                                                                                                                                                                                                                                
+Gain (loss) on financial instruments, net                                                                        (0.01)                                     —                         (0.01)                                0.01     
+Income tax effects and adjustments *                                                                               0.38                                  0.46                           1.14                                1.07     
+Non-GAAP net income per share, diluted                                                                            $1.65                                 $1.28                          $5.29                               $4.13     
+Adjustment for fully diluted earnings per share                                                                       —                                     —                         (0.32)                              (0.47)     
+Non-GAAP net income per share, fully diluted **                                                                   $1.65                                 $1.28                          $4.97                               $3.66     
+* Non-GAAP financial information is adjusted for an assumed benefit (provision) for income taxes based on our long-term projected tax rate of 20%. Due to the differences in the tax treatment of items excluded from non-GAAP earnings, our estimated tax rate on non-GAAP income may differ from our GAAP tax rate and from our actual tax liabilities.
+** Fully diluted non-GAAP net income per share is calculated based upon 86.5 million and 86.7 million of fully diluted weighted-average shares of outstanding common stock for the three and twelve months ended January 31, 2026, respectively, and 84.6 million and 84.1 million of fully diluted weighted-average shares of outstanding common stock for the three and twelve months ended January 31, 2025, respectively.
+11
+
+
+The following table presents a reconciliation of free cash flow to net cash provided by operating activities, the most directly comparable GAAP measure, for each of the periods indicated (unaudited, in thousands):
+
+                                                                         Three Months Ended January 31,                                       Years Ended January 31,
+2026                                                                2025                                  2026                        2025                           
+Net cash provided by operating activities          $179,604                               $50,538                     $505,148                          $150,191     
+Capital expenditures                                (1,134)                              (25,979)                      (4,960)                          (29,550)     
+Principal payments of finance leases                (1,739)                               (1,645)                      (7,539)                           (6,179)     
+Free cash flow                                     $176,731                               $22,914                     $492,649                          $114,462     
+12
+
+
+MONGODB, INC. 
+RECONCILIATION OF GAAP GUIDANCE TO NON-GAAP GUIDANCE
+FIRST QUARTER & FULL YEAR FISCAL 2027
+(in millions of U.S. dollars, except share and per share data)
+(unaudited)
+
+                                                                    First Quarter                           Full Year
+                                                                      Fiscal 2027                         Fiscal 2027
+Income (loss) from operations - GAAP Guidance                  $(48.0) to $(44.0)                 $(117.0) to $(97.0)
+Add back:                                                                                                            
+Expenses associated with stock-based compensation                           150.0                               650.0
+Amortization of intangible assets                                             3.0                                12.0
+Income (loss) from operations- Non-GAAP Guidance                 $105.0 to $109.0                    $545.0 to $565.0
+
+                                                                    First Quarter                           Full Year
+                                                                      Fiscal 2027                         Fiscal 2027
+Net income (loss) per share - GAAP Guidance                    $(0.34) to $(0.29)                  $(0.73) to $(0.49)
+Add back:                                                                                                            
+Expenses associated with stock-based compensation                            1.85                                7.95
+Amortization of intangible assets                                            0.04                                0.15
+Less:                                                                                                                
+Income tax effects and adjustments*                                  0.33 to 0.44                        1.27 to 1.32
+Adjustment for fully diluted earnings per share                            (0.07)                    (0.35) to (0.36)
+Net income (loss) per share - Non-GAAP Guidance                    $1.15 to $1.19                      $5.75 to $5.93
+* Non-GAAP financial information is adjusted for an assumed provision for income taxes based on our long-term projected tax rate of 20%. Due to the differences in the tax treatment of items excluded from non-GAAP earnings, our estimated tax rate on non-GAAP income may differ from our GAAP tax rate and from our actual tax liabilities.
+13
+
+
+MONGODB, INC. 
+CUSTOMER COUNT METRICS
+The following table presents certain customer count information as of the periods indicated:
+
+                                    1/31/2024         4/30/2024         7/31/2024        10/31/2024         1/31/2025         4/30/2025         7/31/2025        10/31/2025         1/31/2026
+Total Customers(a)                    47,800+           49,200+           50,700+           52,600+           54,500+           57,100+           59,900+           62,500+           65,200+
+Atlas Customers(b)                    46,300+           47,700+           49,200+           51,100+           53,100+           55,800+           58,500+           61,200+           63,900+
+Customers over $100K(c)                 2,052             2,137             2,189             2,314             2,396             2,506             2,564             2,694             2,799
+(a) Our definition of “customer” excludes users of our free offerings and all affiliated entities are counted as a single customer.
+(b) For the fourth quarter ended January 31, 2026, our Atlas customer count includes Voyage customers, consistent with their inclusion in Atlas (cloud) revenue. Prior-period amounts for the Atlas customer count have been adjusted to conform to the current presentation where applicable and total customer count remains unchanged.
+(c) Represents the number of customers with $100,000 or greater in annualized recurring revenue (“ARR”). ARR includes the revenue we expect to receive from our customers over the following 12 months based on contractual commitments and, in the case of Direct Sales Customers of Atlas, by annualizing the prior 90 days of their actual consumption of Atlas, assuming no increases or reductions in their subscriptions or usage. For all other customers of our self-serve products, we calculate ARR by annualizing the prior 30 days of their actual consumption of such products, assuming no increases or reductions in usage. ARR excludes professional services.
+14
+
+
+MONGODB, INC. 
+SUPPLEMENTAL REVENUE INFORMATION
+The following table presents certain supplemental revenue information as of the periods indicated:
+
+                                                                     1/31/2024                  4/30/2024                  7/31/2024                 10/31/2024                  1/31/2025                  4/30/2025                  7/31/2025                 10/31/2025                  1/31/2026
+MongoDB Enterprise Advanced: % of Subscription Revenue                26     %                   25     %                   24     %                   25     %                   23     %                   22     %                   21     %                   20     %                   21     %
+The following table presents the Company’s revenues disaggregated by subscription product categories and services (in thousands):
+
+                                                                               Three Months Ended January 31,                                           Years Ended January 31,
+Subscription product categories and services:                      2026   2025                                  2026                          2025                             
+Atlas-related                                            $502,604                              $389,042                     $1,807,866                          $1,405,184     
+Other subscription                                        170,496                               141,916                        578,111                             538,680     
+Services                                                   21,972                                17,440                         77,820                              62,579     
+Total                                                    $695,072                              $548,398                     $2,463,797                          $2,006,443     
+15
+
+
+
+

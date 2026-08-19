@@ -1,17 +1,171 @@
 {
- "ran_at": "2026-08-19T00:49:15.476585+00:00",
+ "ran_at": "2026-08-19T12:30:33.623373+00:00",
  "tickers": 160,
- "summary": "조정 EPS 시계열 160종목 · 일봉 161종목(기준지수 포함) · 파싱 실패 원문 638건",
- "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 미채택 · H6_결합_H5bxH2b: 미채택 · H7_EBITDA_첫돌파: 미채택 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 미채택 · H10_논갭영업이익_저평가_첫신기록: 미채택 · H11_섹터정배열폭_60: 미채택 · H11b_섹터정배열폭_80: 미채택 · H18_완성시_52주선이격도: 판정 불가 · H19_주도섹터_판정: 판정 불가 · H20_주도섹터_전환: 미채택 · H21_주도섹터_분기점: 판정 불가 · H19b_주도섹터_완성후확인: 판정 불가",
- "consensus": "컨센서스: 확보 160종목 · 원장 추가 1건 · 실패 0종목",
- "surprise": "서프라이즈: 확보 160종목 · 신규 0분기 · 실패 0종목",
- "vendor": "두 번째 자(야후) — 160종목 성공 · 0종목 실패 · 분기 962개 · 발표기록 12438개 · 과거 소급 변경 0칸",
+ "summary": "조정 EPS 시계열 160종목 · 일봉 161종목(기준지수 포함) · 파싱 실패 원문 636건",
+ "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 미채택 · H6_결합_H5bxH2b: 미채택 · H7_EBITDA_첫돌파: 미채택 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 미채택 · H10_논갭영업이익_저평가_첫신기록: 미채택 · H11_섹터정배열폭_60: 미채택 · H11b_섹터정배열폭_80: 미채택 · H22_신고점폭_5: 판정 불가 · H22b_신고점폭_20: 판정 불가 · H23_실적폭_중앙값_깊은게이지: 판정 불가 · H18_완성시_52주선이격도: 판정 불가 · H19_주도섹터_판정: 판정 불가 · H20_주도섹터_전환: 미채택 · H21_주도섹터_분기점: 미채택 · H19b_주도섹터_완성후확인: 판정 불가",
+ "consensus": "컨센서스: 확보 160종목 · 원장 추가 2건 · 실패 0종목",
+ "surprise": "서프라이즈: 확보 160종목 · 신규 2분기 · 실패 0종목",
+ "vendor": "두 번째 자(야후) — 160종목 성공 · 0종목 실패 · 분기 959개 · 발표기록 12438개 · 과거 소급 변경 18칸",
+ "건강검진": {
+  "설명": "수집물 전체 건강검진 (108차). **값을 바꾸지 않고 세기만 합니다.** 경보 문턱은 며칠치를 쌓아 정상 범위를 실측한 뒤 사전 등록합니다.",
+  "채움률": {
+   "행": 5925,
+   "revenue": {
+    "찬칸": 5773,
+    "비율": 97.4
+   },
+   "adj_eps": {
+    "찬칸": 3304,
+    "비율": 55.8
+   },
+   "adjusted_ebitda": {
+    "찬칸": 640,
+    "비율": 10.8
+   },
+   "gaap_eps": {
+    "찬칸": 5678,
+    "비율": 95.8
+   },
+   "op_income": {
+    "찬칸": 5057,
+    "비율": 85.4
+   },
+   "gross_margin_pct": {
+    "찬칸": 3631,
+    "비율": 61.3
+   },
+   "revenue_xbrl": {
+    "찬칸": 4930,
+    "비율": 83.2
+   },
+   "gaap_eps_xbrl": {
+    "찬칸": 3864,
+    "비율": 65.2
+   },
+   "press_matched": {
+    "찬칸": 5906,
+    "비율": 99.7
+   }
+  },
+  "이상값": {
+   "revenue": {
+    "건수": 17,
+    "예시": [
+     {
+      "종목": "WDC",
+      "발표일": "2016-12-22",
+      "값": -1.0,
+      "그 종목 중앙값": 3834500000.0
+     },
+     {
+      "종목": "GS",
+      "발표일": "2018-10-16",
+      "값": 3.0,
+      "그 종목 중앙값": 8184.0
+     },
+     {
+      "종목": "XOM",
+      "발표일": "2017-01-04",
+      "값": 198.0,
+      "그 종목 중앙값": 76660000000.0
+     },
+     {
+      "종목": "MRK",
+      "발표일": "2016-10-25",
+      "값": 228.0,
+      "그 종목 중앙값": 12852500000.0
+     },
+     {
+      "종목": "MRK",
+      "발표일": "2017-05-02",
+      "값": 310.0,
+      "그 종목 중앙값": 12852500000.0
+     }
+    ]
+   },
+   "op_income": {
+    "건수": 712,
+    "예시": [
+     {
+      "종목": "NET",
+      "발표일": "2022-08-04",
+      "값": 0.0,
+      "그 종목 중앙값": 39814.0
+     },
+     {
+      "종목": "OKTA",
+      "발표일": "2023-11-29",
+      "값": 0.0,
+      "그 종목 중앙값": 173.0
+     },
+     {
+      "종목": "ZS",
+      "발표일": "2019-02-28",
+      "값": 0.0,
+      "그 종목 중앙값": 94583.0
+     },
+     {
+      "종목": "ZS",
+      "발표일": "2019-05-30",
+      "값": 0.0,
+      "그 종목 중앙값": 94583.0
+     },
+     {
+      "종목": "MXL",
+      "발표일": "2025-07-23",
+      "값": 0.02,
+      "그 종목 중앙값": 33268.5
+     }
+    ]
+   }
+  },
+  "어제 대비": {
+   "맞대본 분기": 5636,
+   "바뀐 칸": 2471,
+   "사라진 분기": 185,
+   "새 분기": 288,
+   "많이 바뀐 종목": [
+    {
+     "종목": "OXY",
+     "칸": 180
+    },
+    {
+     "종목": "JNJ",
+     "칸": 166
+    },
+    {
+     "종목": "KLAC",
+     "칸": 149
+    },
+    {
+     "종목": "CVX",
+     "칸": 148
+    },
+    {
+     "종목": "MRK",
+     "칸": 142
+    },
+    {
+     "종목": "XOM",
+     "칸": 140
+    },
+    {
+     "종목": "SCHW",
+     "칸": 131
+    },
+    {
+     "종목": "C",
+     "칸": 129
+    }
+   ]
+  }
+ },
  "per_ticker": [
   {
    "ticker": "CRDO",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 6.1,
+   "seconds": 6.2,
    "cache_hits": 36,
    "cache_downloads": 0,
    "first_error": "",
@@ -45,7 +199,7 @@
    "ticker": "CLS",
    "adj_eps_ok": 9,
    "merged_direct": 1,
-   "seconds": 6.0,
+   "seconds": 6.4,
    "cache_hits": 24,
    "cache_downloads": 0,
    "first_error": "",
@@ -81,9 +235,9 @@
    "ticker": "MU",
    "adj_eps_ok": 32,
    "merged_direct": 29,
-   "seconds": 52.9,
-   "cache_hits": 61,
-   "cache_downloads": 52,
+   "seconds": 18.8,
+   "cache_hits": 113,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 187 · 이름버림 0 · 단위버림 0 · 모호 5 · 남음 55 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -120,7 +274,7 @@
    "ticker": "SNDK",
    "adj_eps_ok": 7,
    "merged_direct": 6,
-   "seconds": 4.3,
+   "seconds": 4.9,
    "cache_hits": 14,
    "cache_downloads": 0,
    "first_error": "",
@@ -154,9 +308,9 @@
    "ticker": "LITE",
    "adj_eps_ok": 36,
    "merged_direct": 11,
-   "seconds": 49.4,
-   "cache_hits": 40,
-   "cache_downloads": 39,
+   "seconds": 30.2,
+   "cache_hits": 79,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 130 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 45 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -194,9 +348,9 @@
    "ticker": "STRL",
    "adj_eps_ok": 12,
    "merged_direct": 8,
-   "seconds": 152.2,
-   "cache_hits": 50,
-   "cache_downloads": 47,
+   "seconds": 87.1,
+   "cache_hits": 97,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 114 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 52 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -231,9 +385,9 @@
    "ticker": "MXL",
    "adj_eps_ok": 28,
    "merged_direct": 27,
-   "seconds": 32.4,
-   "cache_hits": 41,
-   "cache_downloads": 28,
+   "seconds": 38.8,
+   "cache_hits": 69,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 92 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 46 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -268,9 +422,9 @@
    "ticker": "COHR",
    "adj_eps_ok": 23,
    "merged_direct": 18,
-   "seconds": 101.1,
-   "cache_hits": 65,
-   "cache_downloads": 55,
+   "seconds": 67.5,
+   "cache_hits": 120,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 62 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 34 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -293,9 +447,9 @@
    ],
    "xbrl_rejected": 814,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 32,
-    "revenue": 8,
-    "gaap_eps": 6,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -305,9 +459,9 @@
    "ticker": "TTMI",
    "adj_eps_ok": 34,
    "merged_direct": 31,
-   "seconds": 33.9,
-   "cache_hits": 46,
-   "cache_downloads": 37,
+   "seconds": 12.6,
+   "cache_hits": 83,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 99 · 이름버림 7 · 단위버림 0 · 모호 0 · 남음 49 · 본이름 ['disposalgroupincludingdiscontinuedoperationoperatingincomeloss', 'operatingincomeloss'] · 본단위 ['USD']",
@@ -344,9 +498,9 @@
    "ticker": "ICHR",
    "adj_eps_ok": 35,
    "merged_direct": 33,
-   "seconds": 50.8,
-   "cache_hits": 43,
-   "cache_downloads": 41,
+   "seconds": 29.6,
+   "cache_hits": 84,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 58 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 34 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -378,10 +532,10 @@
   {
    "ticker": "AMD",
    "adj_eps_ok": 34,
-   "merged_direct": 35,
-   "seconds": 70.1,
-   "cache_hits": 64,
-   "cache_downloads": 53,
+   "merged_direct": 38,
+   "seconds": 23.8,
+   "cache_hits": 117,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 174 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 59 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -409,10 +563,10 @@
    ],
    "xbrl_rejected": 730,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 37,
-    "revenue": 3,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
     "gaap_eps": 0,
-    "gross_profit": 3
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -421,9 +575,9 @@
    "ticker": "PLTR",
    "adj_eps_ok": 22,
    "merged_direct": 24,
-   "seconds": 14.3,
-   "cache_hits": 32,
-   "cache_downloads": 13,
+   "seconds": 6.2,
+   "cache_hits": 45,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 36 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 21 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -456,9 +610,9 @@
    "ticker": "ZETA",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 17.6,
-   "cache_hits": 35,
-   "cache_downloads": 11,
+   "seconds": 15.3,
+   "cache_hits": 46,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 32 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 19 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -489,9 +643,9 @@
    "ticker": "INTC",
    "adj_eps_ok": 34,
    "merged_direct": 32,
-   "seconds": 73.6,
-   "cache_hits": 71,
-   "cache_downloads": 65,
+   "seconds": 19.9,
+   "cache_hits": 136,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 105 · 이름버림 7 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['operatingincomeloss', 'segmentreportinginformationoperatingincomeloss'] · 본단위 ['USD']",
@@ -524,9 +678,9 @@
    "ticker": "ENPH",
    "adj_eps_ok": 35,
    "merged_direct": 36,
-   "seconds": 57.2,
-   "cache_hits": 40,
-   "cache_downloads": 44,
+   "seconds": 20.5,
+   "cache_hits": 84,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 88 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 39 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -559,9 +713,9 @@
    "ticker": "SWKS",
    "adj_eps_ok": 36,
    "merged_direct": 32,
-   "seconds": 36.1,
-   "cache_hits": 53,
-   "cache_downloads": 43,
+   "seconds": 15.2,
+   "cache_hits": 96,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 100 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 53 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -596,9 +750,9 @@
    "ticker": "PYPL",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 99.3,
-   "cache_hits": 71,
-   "cache_downloads": 60,
+   "seconds": 24.9,
+   "cache_hits": 131,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 66 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 36 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -633,9 +787,9 @@
    "ticker": "QRVO",
    "adj_eps_ok": 26,
    "merged_direct": 22,
-   "seconds": 19.0,
-   "cache_hits": 49,
-   "cache_downloads": 28,
+   "seconds": 15.3,
+   "cache_hits": 77,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 64 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 35 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -664,9 +818,9 @@
    "ticker": "APP",
    "adj_eps_ok": 0,
    "merged_direct": 3,
-   "seconds": 21.2,
-   "cache_hits": 53,
-   "cache_downloads": 5,
+   "seconds": 14.7,
+   "cache_hits": 58,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 34 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 20 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -699,9 +853,9 @@
    "ticker": "NVDA",
    "adj_eps_ok": 39,
    "merged_direct": 37,
-   "seconds": 69.0,
-   "cache_hits": 47,
-   "cache_downloads": 53,
+   "seconds": 17.6,
+   "cache_hits": 100,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 98 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -741,9 +895,9 @@
    "ticker": "ANET",
    "adj_eps_ok": 38,
    "merged_direct": 39,
-   "seconds": 40.0,
-   "cache_hits": 38,
-   "cache_downloads": 37,
+   "seconds": 17.1,
+   "cache_hits": 75,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 122 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 47 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -779,9 +933,9 @@
    "ticker": "FN",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 43.1,
-   "cache_hits": 33,
-   "cache_downloads": 34,
+   "seconds": 16.3,
+   "cache_hits": 67,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 90 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 48 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -816,9 +970,9 @@
    "ticker": "SMCI",
    "adj_eps_ok": 23,
    "merged_direct": 25,
-   "seconds": 50.9,
-   "cache_hits": 75,
-   "cache_downloads": 47,
+   "seconds": 12.9,
+   "cache_hits": 122,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 90 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 48 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -851,9 +1005,9 @@
    "ticker": "LSCC",
    "adj_eps_ok": 39,
    "merged_direct": 36,
-   "seconds": 46.1,
-   "cache_hits": 50,
-   "cache_downloads": 48,
+   "seconds": 21.9,
+   "cache_hits": 98,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 92 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 49 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -890,9 +1044,9 @@
    "ticker": "SYNA",
    "adj_eps_ok": 37,
    "merged_direct": 36,
-   "seconds": 41.9,
-   "cache_hits": 48,
-   "cache_downloads": 51,
+   "seconds": 31.8,
+   "cache_hits": 99,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 96 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 54 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -917,9 +1071,9 @@
    ],
    "xbrl_rejected": 958,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 43,
+    "분기목록(영업이익 기준)": 44,
     "revenue": 0,
-    "gaap_eps": 1,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -929,9 +1083,9 @@
    "ticker": "UCTT",
    "adj_eps_ok": 9,
    "merged_direct": 31,
-   "seconds": 40.5,
-   "cache_hits": 57,
-   "cache_downloads": 32,
+   "seconds": 15.2,
+   "cache_hits": 89,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 100 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 53 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -968,10 +1122,10 @@
   {
    "ticker": "ONTO",
    "adj_eps_ok": 35,
-   "merged_direct": 32,
-   "seconds": 50.5,
-   "cache_hits": 46,
-   "cache_downloads": 50,
+   "merged_direct": 34,
+   "seconds": 16.7,
+   "cache_hits": 96,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 92 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -994,10 +1148,10 @@
    ],
    "xbrl_rejected": 959,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 42,
-    "revenue": 3,
-    "gaap_eps": 1,
-    "gross_profit": 2
+    "분기목록(영업이익 기준)": 45,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -1006,9 +1160,9 @@
    "ticker": "IPGP",
    "adj_eps_ok": 9,
    "merged_direct": 6,
-   "seconds": 49.0,
-   "cache_hits": 51,
-   "cache_downloads": 50,
+   "seconds": 19.7,
+   "cache_hits": 101,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 92 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 49 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1042,9 +1196,9 @@
    "ticker": "CGNX",
    "adj_eps_ok": 18,
    "merged_direct": 29,
-   "seconds": 32.1,
-   "cache_hits": 36,
-   "cache_downloads": 25,
+   "seconds": 18.2,
+   "cache_hits": 61,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 122 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 55 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1080,9 +1234,9 @@
    "ticker": "AVGO",
    "adj_eps_ok": 31,
    "merged_direct": 6,
-   "seconds": 101.2,
-   "cache_hits": 57,
-   "cache_downloads": 61,
+   "seconds": 34.6,
+   "cache_hits": 118,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 74 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 30 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1115,9 +1269,9 @@
    "ticker": "QCOM",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 102.6,
-   "cache_hits": 45,
-   "cache_downloads": 79,
+   "seconds": 22.7,
+   "cache_hits": 124,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 197 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 65 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1137,9 +1291,9 @@
    ],
    "xbrl_rejected": 621,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 38,
-    "revenue": 2,
-    "gaap_eps": 1,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -1149,9 +1303,9 @@
    "ticker": "TXN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 59.5,
-   "cache_hits": 48,
-   "cache_downloads": 54,
+   "seconds": 15.7,
+   "cache_hits": 102,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 160 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 63 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1182,9 +1336,9 @@
    "ticker": "ADI",
    "adj_eps_ok": 30,
    "merged_direct": 27,
-   "seconds": 69.8,
-   "cache_hits": 50,
-   "cache_downloads": 58,
+   "seconds": 14.7,
+   "cache_hits": 108,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 166 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 61 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1217,9 +1371,9 @@
    "ticker": "MCHP",
    "adj_eps_ok": 8,
    "merged_direct": 36,
-   "seconds": 83.6,
-   "cache_hits": 59,
-   "cache_downloads": 49,
+   "seconds": 16.9,
+   "cache_hits": 108,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 192 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 65 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1259,9 +1413,9 @@
    "ticker": "NXPI",
    "adj_eps_ok": 14,
    "merged_direct": 20,
-   "seconds": 46.6,
-   "cache_hits": 31,
-   "cache_downloads": 23,
+   "seconds": 19.2,
+   "cache_hits": 54,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 40 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 23 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1292,10 +1446,10 @@
   {
    "ticker": "MRVL",
    "adj_eps_ok": 21,
-   "merged_direct": 16,
-   "seconds": 22.0,
-   "cache_hits": 68,
-   "cache_downloads": 16,
+   "merged_direct": 18,
+   "seconds": 12.5,
+   "cache_hits": 84,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 16 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1316,10 +1470,10 @@
    ],
    "xbrl_rejected": 285,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 19,
-    "revenue": 3,
-    "gaap_eps": 2,
-    "gross_profit": 3
+    "분기목록(영업이익 기준)": 22,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": ""
@@ -1327,10 +1481,10 @@
   {
    "ticker": "KLAC",
    "adj_eps_ok": 41,
-   "merged_direct": 44,
-   "seconds": 60.6,
-   "cache_hits": 58,
-   "cache_downloads": 60,
+   "merged_direct": 40,
+   "seconds": 19.7,
+   "cache_hits": 118,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 62 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 23 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1354,10 +1508,10 @@
    ],
    "xbrl_rejected": 1293,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 36,
-    "gaap_eps": 35,
-    "gross_profit": 20
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -1366,9 +1520,9 @@
    "ticker": "LRCX",
    "adj_eps_ok": 37,
    "merged_direct": 37,
-   "seconds": 68.1,
-   "cache_hits": 35,
-   "cache_downloads": 63,
+   "seconds": 14.0,
+   "cache_hits": 98,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 96 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 51 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1405,9 +1559,9 @@
    "ticker": "AMAT",
    "adj_eps_ok": 40,
    "merged_direct": 38,
-   "seconds": 63.5,
-   "cache_hits": 46,
-   "cache_downloads": 49,
+   "seconds": 21.1,
+   "cache_hits": 95,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 103 · 이름버림 5 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['operatingincomeloss', 'segmentreportinginformationoperatingincomeloss'] · 본단위 ['USD']",
@@ -1445,9 +1599,9 @@
    "ticker": "TER",
    "adj_eps_ok": 33,
    "merged_direct": 0,
-   "seconds": 39.8,
-   "cache_hits": 47,
-   "cache_downloads": 27,
+   "seconds": 15.7,
+   "cache_hits": 74,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 169 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 68 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1472,8 +1626,8 @@
    ],
    "xbrl_rejected": 1108,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 41,
-    "revenue": 1,
+    "분기목록(영업이익 기준)": 42,
+    "revenue": 0,
     "gaap_eps": 0,
     "gross_profit": 0
    },
@@ -1484,9 +1638,9 @@
    "ticker": "ENTG",
    "adj_eps_ok": 35,
    "merged_direct": 34,
-   "seconds": 63.2,
-   "cache_hits": 78,
-   "cache_downloads": 63,
+   "seconds": 26.1,
+   "cache_hits": 141,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 92 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 49 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1519,9 +1673,9 @@
    "ticker": "MKSI",
    "adj_eps_ok": 34,
    "merged_direct": 32,
-   "seconds": 75.8,
-   "cache_hits": 58,
-   "cache_downloads": 39,
+   "seconds": 36.3,
+   "cache_hits": 97,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 162 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 61 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1560,9 +1714,9 @@
    "ticker": "FORM",
    "adj_eps_ok": 38,
    "merged_direct": 29,
-   "seconds": 45.0,
-   "cache_hits": 35,
-   "cache_downloads": 39,
+   "seconds": 21.0,
+   "cache_hits": 74,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 155 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 58 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1596,9 +1750,9 @@
    "ticker": "ACLS",
    "adj_eps_ok": 8,
    "merged_direct": 7,
-   "seconds": 35.0,
-   "cache_hits": 39,
-   "cache_downloads": 29,
+   "seconds": 29.1,
+   "cache_hits": 68,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 92 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 49 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1632,9 +1786,9 @@
    "ticker": "AMBA",
    "adj_eps_ok": 10,
    "merged_direct": 10,
-   "seconds": 62.6,
-   "cache_hits": 42,
-   "cache_downloads": 38,
+   "seconds": 35.1,
+   "cache_hits": 80,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 82 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 44 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1671,9 +1825,9 @@
    "ticker": "POWI",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 26.8,
-   "cache_hits": 36,
-   "cache_downloads": 34,
+   "seconds": 7.3,
+   "cache_hits": 70,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 98 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1705,9 +1859,9 @@
    "ticker": "DIOD",
    "adj_eps_ok": 22,
    "merged_direct": 5,
-   "seconds": 61.1,
-   "cache_hits": 40,
-   "cache_downloads": 44,
+   "seconds": 30.2,
+   "cache_hits": 84,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 98 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1740,10 +1894,10 @@
   {
    "ticker": "SLAB",
    "adj_eps_ok": 35,
-   "merged_direct": 26,
-   "seconds": 23.7,
-   "cache_hits": 46,
-   "cache_downloads": 47,
+   "merged_direct": 31,
+   "seconds": 13.6,
+   "cache_hits": 93,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 94 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 47 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1765,10 +1919,10 @@
    ],
    "xbrl_rejected": 858,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 31,
-    "revenue": 5,
-    "gaap_eps": 3,
-    "gross_profit": 5
+    "분기목록(영업이익 기준)": 36,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -1777,9 +1931,9 @@
    "ticker": "MPWR",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 37.7,
-   "cache_hits": 42,
-   "cache_downloads": 42,
+   "seconds": 28.0,
+   "cache_hits": 84,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 151 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 58 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1814,9 +1968,9 @@
    "ticker": "CIEN",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 181.7,
-   "cache_hits": 47,
-   "cache_downloads": 48,
+   "seconds": 20.3,
+   "cache_hits": 95,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 94 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 53 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1848,9 +2002,9 @@
    "ticker": "EXTR",
    "adj_eps_ok": 39,
    "merged_direct": 34,
-   "seconds": 191.8,
-   "cache_hits": 37,
-   "cache_downloads": 44,
+   "seconds": 14.1,
+   "cache_hits": 81,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 92 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 45 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1873,10 +2027,10 @@
    ],
    "xbrl_rejected": 824,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 36,
+    "분기목록(영업이익 기준)": 38,
     "revenue": 0,
-    "gaap_eps": 2,
-    "gross_profit": 4
+    "gaap_eps": 0,
+    "gross_profit": 2
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -1885,9 +2039,9 @@
    "ticker": "NTAP",
    "adj_eps_ok": 40,
    "merged_direct": 38,
-   "seconds": 236.3,
-   "cache_hits": 36,
-   "cache_downloads": 48,
+   "seconds": 148.1,
+   "cache_hits": 84,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 96 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 51 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1927,9 +2081,9 @@
    "ticker": "P",
    "adj_eps_ok": 0,
    "merged_direct": 25,
-   "seconds": 78.0,
-   "cache_hits": 31,
-   "cache_downloads": 37,
+   "seconds": 146.7,
+   "cache_hits": 68,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 64 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 31 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1954,10 +2108,10 @@
    ],
    "xbrl_rejected": 494,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 34,
-    "revenue": 1,
+    "분기목록(영업이익 기준)": 35,
+    "revenue": 0,
     "gaap_eps": 0,
-    "gross_profit": 5
+    "gross_profit": 4
    },
    "시간초과": false,
    "note": ""
@@ -1965,10 +2119,10 @@
   {
    "ticker": "WDC",
    "adj_eps_ok": 28,
-   "merged_direct": 32,
-   "seconds": 96.6,
-   "cache_hits": 69,
-   "cache_downloads": 87,
+   "merged_direct": 37,
+   "seconds": 159.8,
+   "cache_hits": 156,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 181 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 60 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -1991,10 +2145,10 @@
    ],
    "xbrl_rejected": 1390,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 32,
-    "revenue": 5,
-    "gaap_eps": 4,
-    "gross_profit": 5
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -2003,9 +2157,9 @@
    "ticker": "STX",
    "adj_eps_ok": 34,
    "merged_direct": 30,
-   "seconds": 74.5,
-   "cache_hits": 72,
-   "cache_downloads": 54,
+   "seconds": 28.7,
+   "cache_hits": 126,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 93 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 48 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2039,9 +2193,9 @@
    "ticker": "DELL",
    "adj_eps_ok": 29,
    "merged_direct": 30,
-   "seconds": 108.0,
-   "cache_hits": 72,
-   "cache_downloads": 57,
+   "seconds": 41.5,
+   "cache_hits": 129,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 68 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 30 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2062,10 +2216,10 @@
    ],
    "xbrl_rejected": 257,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 32,
-    "revenue": 4,
+    "분기목록(영업이익 기준)": 36,
+    "revenue": 0,
     "gaap_eps": 0,
-    "gross_profit": 4
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -2073,10 +2227,10 @@
   {
    "ticker": "VIAV",
    "adj_eps_ok": 34,
-   "merged_direct": 19,
-   "seconds": 76.0,
-   "cache_hits": 46,
-   "cache_downloads": 39,
+   "merged_direct": 20,
+   "seconds": 36.1,
+   "cache_hits": 85,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 143 · 이름버림 0 · 단위버림 0 · 모호 7 · 남음 47 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2099,10 +2253,10 @@
    ],
    "xbrl_rejected": 471,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 37,
-    "revenue": 2,
-    "gaap_eps": 1,
-    "gross_profit": 2
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -2111,9 +2265,9 @@
    "ticker": "AAOI",
    "adj_eps_ok": 38,
    "merged_direct": 2,
-   "seconds": 69.3,
-   "cache_hits": 81,
-   "cache_downloads": 61,
+   "seconds": 20.7,
+   "cache_hits": 142,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 156 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 53 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2148,9 +2302,9 @@
    "ticker": "TWLO",
    "adj_eps_ok": 37,
    "merged_direct": 34,
-   "seconds": 486.4,
-   "cache_hits": 46,
-   "cache_downloads": 49,
+   "seconds": 18.1,
+   "cache_hits": 95,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 62 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 34 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2185,9 +2339,9 @@
    "ticker": "DDOG",
    "adj_eps_ok": 28,
    "merged_direct": 28,
-   "seconds": 26.6,
-   "cache_hits": 30,
-   "cache_downloads": 13,
+   "seconds": 10.5,
+   "cache_hits": 43,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 42 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 24 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2222,9 +2376,9 @@
    "ticker": "NET",
    "adj_eps_ok": 29,
    "merged_direct": 20,
-   "seconds": 17.5,
-   "cache_hits": 41,
-   "cache_downloads": 14,
+   "seconds": 10.4,
+   "cache_hits": 55,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 42 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 24 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2257,9 +2411,9 @@
    "ticker": "MDB",
    "adj_eps_ok": 36,
    "merged_direct": 19,
-   "seconds": 519.1,
-   "cache_hits": 36,
-   "cache_downloads": 32,
+   "seconds": 486.6,
+   "cache_hits": 68,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 52 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 26 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2281,10 +2435,10 @@
    ],
    "xbrl_rejected": 384,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 33,
-    "revenue": 4,
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 0,
     "gaap_eps": 0,
-    "gross_profit": 5
+    "gross_profit": 1
    },
    "시간초과": false,
    "note": ""
@@ -2293,9 +2447,9 @@
    "ticker": "SNOW",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 483.1,
-   "cache_hits": 36,
-   "cache_downloads": 7,
+   "seconds": 482.0,
+   "cache_hits": 43,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 34 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 20 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2327,10 +2481,10 @@
   {
    "ticker": "OKTA",
    "adj_eps_ok": 38,
-   "merged_direct": 17,
-   "seconds": 84.2,
-   "cache_hits": 41,
-   "cache_downloads": 40,
+   "merged_direct": 21,
+   "seconds": 488.4,
+   "cache_hits": 81,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 56 · 이름버림 0 · 단위버림 0 · 모호 6 · 남음 25 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2353,10 +2507,10 @@
    ],
    "xbrl_rejected": 467,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 28,
-    "revenue": 7,
-    "gaap_eps": 3,
-    "gross_profit": 11
+    "분기목록(영업이익 기준)": 35,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 4
    },
    "시간초과": false,
    "note": ""
@@ -2365,9 +2519,9 @@
    "ticker": "ZS",
    "adj_eps_ok": 33,
    "merged_direct": 31,
-   "seconds": 35.0,
-   "cache_hits": 36,
-   "cache_downloads": 23,
+   "seconds": 14.0,
+   "cache_hits": 59,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 50 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 28 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2398,10 +2552,10 @@
   {
    "ticker": "CRWD",
    "adj_eps_ok": 29,
-   "merged_direct": 22,
-   "seconds": 50.0,
-   "cache_hits": 40,
-   "cache_downloads": 23,
+   "merged_direct": 26,
+   "seconds": 11.9,
+   "cache_hits": 63,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 44 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 24 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2421,10 +2575,10 @@
    ],
    "xbrl_rejected": 309,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 29,
-    "revenue": 4,
+    "분기목록(영업이익 기준)": 33,
+    "revenue": 0,
     "gaap_eps": 0,
-    "gross_profit": 4
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": ""
@@ -2433,9 +2587,9 @@
    "ticker": "S",
    "adj_eps_ok": 20,
    "merged_direct": 6,
-   "seconds": 41.9,
-   "cache_hits": 42,
-   "cache_downloads": 1,
+   "seconds": 34.5,
+   "cache_hits": 43,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2468,10 +2622,10 @@
   {
    "ticker": "HUBS",
    "adj_eps_ok": 37,
-   "merged_direct": 34,
-   "seconds": 70.6,
-   "cache_hits": 39,
-   "cache_downloads": 41,
+   "merged_direct": 39,
+   "seconds": 36.7,
+   "cache_hits": 80,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 70 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 35 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2496,10 +2650,10 @@
    ],
    "xbrl_rejected": 464,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 35,
-    "revenue": 5,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
     "gaap_eps": 0,
-    "gross_profit": 5
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": ""
@@ -2509,8 +2663,8 @@
    "adj_eps_ok": 22,
    "merged_direct": 16,
    "seconds": 37.1,
-   "cache_hits": 57,
-   "cache_downloads": 20,
+   "cache_hits": 77,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 48 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 25 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2533,10 +2687,10 @@
    ],
    "xbrl_rejected": 491,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 29,
-    "revenue": 2,
-    "gaap_eps": 1,
-    "gross_profit": 2
+    "분기목록(영업이익 기준)": 31,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": ""
@@ -2545,9 +2699,9 @@
    "ticker": "U",
    "adj_eps_ok": 16,
    "merged_direct": 2,
-   "seconds": 21.4,
-   "cache_hits": 65,
-   "cache_downloads": 10,
+   "seconds": 3.6,
+   "cache_hits": 75,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 36 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 21 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2582,10 +2736,10 @@
    "ticker": "ROKU",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 90.6,
-   "cache_hits": 45,
-   "cache_downloads": 46,
-   "first_error": "[press_releases] ReadTimeout: The read operation timed out",
+   "seconds": 17.9,
+   "cache_hits": 91,
+   "cache_downloads": 0,
+   "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 54 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 30 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
     "OperatingIncomeLoss(12개월): 받음 27 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 11 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2619,9 +2773,9 @@
    "ticker": "SNAP",
    "adj_eps_ok": 29,
    "merged_direct": 20,
-   "seconds": 58.4,
-   "cache_hits": 50,
-   "cache_downloads": 39,
+   "seconds": 53.3,
+   "cache_hits": 89,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 58 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 32 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2654,9 +2808,9 @@
    "ticker": "ZM",
    "adj_eps_ok": 31,
    "merged_direct": 29,
-   "seconds": 12.9,
-   "cache_hits": 41,
-   "cache_downloads": 24,
+   "seconds": 9.8,
+   "cache_hits": 65,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 60 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 28 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2689,9 +2843,9 @@
    "ticker": "DOCU",
    "adj_eps_ok": 33,
    "merged_direct": 33,
-   "seconds": 42.7,
-   "cache_hits": 49,
-   "cache_downloads": 31,
+   "seconds": 18.9,
+   "cache_hits": 80,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 50 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 28 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2724,9 +2878,9 @@
    "ticker": "TSLA",
    "adj_eps_ok": 18,
    "merged_direct": 0,
-   "seconds": 83.5,
-   "cache_hits": 59,
-   "cache_downloads": 109,
+   "seconds": 29.6,
+   "cache_hits": 168,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 92 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 47 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2750,10 +2904,10 @@
    ],
    "xbrl_rejected": 580,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 35,
-    "revenue": 5,
-    "gaap_eps": 2,
-    "gross_profit": 5
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "보도자료 형식 특수(config.PRESS_PARSE_SKIP) — 날짜 열 EPS 만 부분 파싱, 나머지는 XBRL 근사"
@@ -2762,9 +2916,9 @@
    "ticker": "TTD",
    "adj_eps_ok": 40,
    "merged_direct": 10,
-   "seconds": 29.4,
-   "cache_hits": 50,
-   "cache_downloads": 46,
+   "seconds": 10.1,
+   "cache_hits": 96,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 60 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 33 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2796,9 +2950,9 @@
    "ticker": "FSLR",
    "adj_eps_ok": 9,
    "merged_direct": 0,
-   "seconds": 43.6,
-   "cache_hits": 42,
-   "cache_downloads": 60,
+   "seconds": 28.5,
+   "cache_hits": 102,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 54 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2833,10 +2987,10 @@
   {
    "ticker": "SEDG",
    "adj_eps_ok": 40,
-   "merged_direct": 35,
-   "seconds": 43.9,
-   "cache_hits": 53,
-   "cache_downloads": 45,
+   "merged_direct": 37,
+   "seconds": 9.6,
+   "cache_hits": 98,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 68 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 37 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2859,8 +3013,8 @@
    ],
    "xbrl_rejected": 430,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 37,
-    "revenue": 2,
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
     "gaap_eps": 0,
     "gross_profit": 0
    },
@@ -2871,9 +3025,9 @@
    "ticker": "GNRC",
    "adj_eps_ok": 5,
    "merged_direct": 35,
-   "seconds": 60.4,
-   "cache_hits": 37,
-   "cache_downloads": 37,
+   "seconds": 25.1,
+   "cache_hits": 74,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 188 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 62 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2906,9 +3060,9 @@
    "ticker": "GOOGL",
    "adj_eps_ok": 2,
    "merged_direct": 5,
-   "seconds": 63.0,
-   "cache_hits": 58,
-   "cache_downloads": 45,
+   "seconds": 12.2,
+   "cache_hits": 103,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 66 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 36 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2938,9 +3092,9 @@
    "ticker": "META",
    "adj_eps_ok": 2,
    "merged_direct": 2,
-   "seconds": 48.0,
-   "cache_hits": 58,
-   "cache_downloads": 41,
+   "seconds": 10.6,
+   "cache_hits": 99,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 86 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 46 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -2973,9 +3127,9 @@
    "ticker": "AMZN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 84.1,
-   "cache_hits": 48,
-   "cache_downloads": 39,
+   "seconds": 21.6,
+   "cache_hits": 87,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 168 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 64 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3012,9 +3166,9 @@
    "ticker": "NFLX",
    "adj_eps_ok": 1,
    "merged_direct": 21,
-   "seconds": 84.6,
-   "cache_hits": 48,
-   "cache_downloads": 56,
+   "seconds": 29.4,
+   "cache_hits": 104,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 120 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 58 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3047,9 +3201,9 @@
    "ticker": "PINS",
    "adj_eps_ok": 30,
    "merged_direct": 10,
-   "seconds": 33.6,
-   "cache_hits": 49,
-   "cache_downloads": 21,
+   "seconds": 23.0,
+   "cache_hits": 70,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 46 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 26 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3080,9 +3234,9 @@
    "ticker": "EBAY",
    "adj_eps_ok": 24,
    "merged_direct": 35,
-   "seconds": 68.7,
-   "cache_hits": 54,
-   "cache_downloads": 54,
+   "seconds": 21.4,
+   "cache_hits": 108,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 110 · 이름버림 4 · 단위버림 0 · 모호 0 · 남음 55 · 본이름 ['disposalgroupincludingdiscontinuedoperationoperatingincomeloss', 'operatingincomeloss'] · 본단위 ['USD']",
@@ -3121,10 +3275,10 @@
   {
    "ticker": "ETSY",
    "adj_eps_ok": 0,
-   "merged_direct": 8,
-   "seconds": 61.3,
-   "cache_hits": 50,
-   "cache_downloads": 32,
+   "merged_direct": 9,
+   "seconds": 44.3,
+   "cache_hits": 82,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 70 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 37 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3147,10 +3301,10 @@
    ],
    "xbrl_rejected": 694,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 38,
-    "revenue": 2,
-    "gaap_eps": 1,
-    "gross_profit": 2
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -3159,9 +3313,9 @@
    "ticker": "ABNB",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 23.8,
-   "cache_hits": 34,
-   "cache_downloads": 6,
+   "seconds": 22.8,
+   "cache_hits": 40,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 34 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 19 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3179,8 +3333,8 @@
    ],
    "xbrl_rejected": 528,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 23,
-    "revenue": 3,
+    "분기목록(영업이익 기준)": 26,
+    "revenue": 0,
     "gaap_eps": 0,
     "gross_profit": 0
    },
@@ -3191,9 +3345,9 @@
    "ticker": "DASH",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 20.9,
-   "cache_hits": 50,
-   "cache_downloads": 7,
+   "seconds": 7.0,
+   "cache_hits": 57,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 34 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 20 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3224,9 +3378,9 @@
    "ticker": "VRT",
    "adj_eps_ok": 13,
    "merged_direct": 23,
-   "seconds": 106.1,
-   "cache_hits": 76,
-   "cache_downloads": 33,
+   "seconds": 25.8,
+   "cache_hits": 109,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 34 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 20 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3245,9 +3399,9 @@
    ],
    "xbrl_rejected": 335,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 26,
-    "revenue": 10,
-    "gaap_eps": 3,
+    "분기목록(영업이익 기준)": 36,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -3256,10 +3410,10 @@
   {
    "ticker": "ETN",
    "adj_eps_ok": 26,
-   "merged_direct": 44,
-   "seconds": 45.5,
-   "cache_hits": 37,
-   "cache_downloads": 34,
+   "merged_direct": 0,
+   "seconds": 19.2,
+   "cache_hits": 71,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 8 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3278,9 +3432,9 @@
    ],
    "xbrl_rejected": 595,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 35,
-    "gaap_eps": 30,
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -3290,9 +3444,9 @@
    "ticker": "PWR",
    "adj_eps_ok": 42,
    "merged_direct": 0,
-   "seconds": 81.1,
-   "cache_hits": 51,
-   "cache_downloads": 46,
+   "seconds": 28.8,
+   "cache_hits": 97,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 128 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 59 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3324,9 +3478,9 @@
    "ticker": "VST",
    "adj_eps_ok": 0,
    "merged_direct": 7,
-   "seconds": 172.6,
-   "cache_hits": 86,
-   "cache_downloads": 61,
+   "seconds": 37.7,
+   "cache_hits": 147,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 61 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 32 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3361,9 +3515,9 @@
    "ticker": "NRG",
    "adj_eps_ok": 9,
    "merged_direct": 26,
-   "seconds": 170.7,
-   "cache_hits": 64,
-   "cache_downloads": 42,
+   "seconds": 39.3,
+   "cache_hits": 106,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 208 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 62 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3386,9 +3540,9 @@
    ],
    "xbrl_rejected": 471,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 37,
-    "revenue": 3,
-    "gaap_eps": 3,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -3398,9 +3552,9 @@
    "ticker": "NEE",
    "adj_eps_ok": 38,
    "merged_direct": 0,
-   "seconds": 214.4,
-   "cache_hits": 95,
-   "cache_downloads": 83,
+   "seconds": 32.7,
+   "cache_hits": 178,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 182 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 65 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3430,9 +3584,9 @@
    "ticker": "SO",
    "adj_eps_ok": 1,
    "merged_direct": 0,
-   "seconds": 115.1,
-   "cache_hits": 97,
-   "cache_downloads": 89,
+   "seconds": 14.8,
+   "cache_hits": 186,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 172 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 64 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3452,9 +3606,9 @@
    ],
    "xbrl_rejected": 433,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 38,
-    "revenue": 1,
-    "gaap_eps": 1,
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -3464,9 +3618,9 @@
    "ticker": "RUN",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 58.4,
-   "cache_hits": 39,
-   "cache_downloads": 61,
+   "seconds": 26.2,
+   "cache_hits": 100,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 68 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 34 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3488,9 +3642,9 @@
    ],
    "xbrl_rejected": 578,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 35,
-    "revenue": 5,
-    "gaap_eps": 2,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -3499,10 +3653,10 @@
   {
    "ticker": "BE",
    "adj_eps_ok": 29,
-   "merged_direct": 16,
-   "seconds": 37.3,
-   "cache_hits": 63,
-   "cache_downloads": 43,
+   "merged_direct": 17,
+   "seconds": 19.2,
+   "cache_hits": 106,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 66 · 이름버림 0 · 단위버림 0 · 모호 6 · 남음 25 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3521,10 +3675,10 @@
    ],
    "xbrl_rejected": 316,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 31,
-    "revenue": 6,
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 0,
     "gaap_eps": 0,
-    "gross_profit": 5
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": ""
@@ -3533,9 +3687,9 @@
    "ticker": "ADBE",
    "adj_eps_ok": 36,
    "merged_direct": 34,
-   "seconds": 57.6,
-   "cache_hits": 47,
-   "cache_downloads": 39,
+   "seconds": 17.8,
+   "cache_hits": 86,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 98 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3560,10 +3714,10 @@
    ],
    "xbrl_rejected": 414,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 36,
-    "revenue": 1,
-    "gaap_eps": 1,
-    "gross_profit": 1
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -3572,9 +3726,9 @@
    "ticker": "CRM",
    "adj_eps_ok": 33,
    "merged_direct": 32,
-   "seconds": 93.5,
-   "cache_hits": 51,
-   "cache_downloads": 46,
+   "seconds": 75.6,
+   "cache_hits": 97,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 190 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 63 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3604,10 +3758,10 @@
    ],
    "xbrl_rejected": 1040,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 37,
-    "revenue": 2,
-    "gaap_eps": 1,
-    "gross_profit": 2
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -3615,10 +3769,10 @@
   {
    "ticker": "NOW",
    "adj_eps_ok": 38,
-   "merged_direct": 34,
-   "seconds": 125.7,
-   "cache_hits": 42,
-   "cache_downloads": 42,
+   "merged_direct": 38,
+   "seconds": 64.8,
+   "cache_hits": 84,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 86 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 43 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3640,10 +3794,10 @@
    ],
    "xbrl_rejected": 926,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 35,
-    "revenue": 5,
-    "gaap_eps": 2,
-    "gross_profit": 5
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -3652,9 +3806,9 @@
    "ticker": "ORCL",
    "adj_eps_ok": 36,
    "merged_direct": 37,
-   "seconds": 125.0,
-   "cache_hits": 47,
-   "cache_downloads": 39,
+   "seconds": 64.7,
+   "cache_hits": 86,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 102 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 54 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3687,7 +3841,7 @@
    "ticker": "TEAM",
    "adj_eps_ok": 17,
    "merged_direct": 16,
-   "seconds": 57.5,
+   "seconds": 19.1,
    "cache_hits": 39,
    "cache_downloads": 0,
    "first_error": "",
@@ -3719,10 +3873,10 @@
   {
    "ticker": "WDAY",
    "adj_eps_ok": 27,
-   "merged_direct": 33,
-   "seconds": 78.7,
-   "cache_hits": 57,
-   "cache_downloads": 43,
+   "merged_direct": 38,
+   "seconds": 23.6,
+   "cache_hits": 100,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 154 · 이름버림 0 · 단위버림 0 · 모호 5 · 남음 51 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3744,9 +3898,9 @@
    ],
    "xbrl_rejected": 532,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 33,
-    "revenue": 6,
-    "gaap_eps": 1,
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -3756,9 +3910,9 @@
    "ticker": "CSCO",
    "adj_eps_ok": 38,
    "merged_direct": 39,
-   "seconds": 117.5,
-   "cache_hits": 58,
-   "cache_downloads": 72,
+   "seconds": 21.9,
+   "cache_hits": 130,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 130 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 57 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3796,9 +3950,9 @@
    "ticker": "HPQ",
    "adj_eps_ok": 38,
    "merged_direct": 3,
-   "seconds": 179.5,
-   "cache_hits": 63,
-   "cache_downloads": 60,
+   "seconds": 92.5,
+   "cache_hits": 123,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 106 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 54 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3835,9 +3989,9 @@
    "ticker": "HPE",
    "adj_eps_ok": 2,
    "merged_direct": 18,
-   "seconds": 71.3,
-   "cache_hits": 68,
-   "cache_downloads": 37,
+   "seconds": 55.9,
+   "cache_hits": 105,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 88 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 39 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -3867,10 +4021,10 @@
   {
    "ticker": "JPM",
    "adj_eps_ok": 0,
-   "merged_direct": 44,
-   "seconds": 160.5,
-   "cache_hits": 66,
-   "cache_downloads": 56,
+   "merged_direct": 0,
+   "seconds": 131.8,
+   "cache_hits": 122,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 122 · 이름버림 16 · 단위버림 0 · 모호 0 · 남음 53 · 본이름 ['excesstaxbenefitfromsharebasedcompensationfinancingactivities', 'sharebasedcompensation'] · 본단위 ['USD']",
@@ -3885,9 +4039,9 @@
    ],
    "xbrl_rejected": 305,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
+    "분기목록(영업이익 기준)": 30,
     "revenue": 0,
-    "gaap_eps": 30,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -3896,10 +4050,10 @@
   {
    "ticker": "BAC",
    "adj_eps_ok": 2,
-   "merged_direct": 44,
-   "seconds": 156.1,
-   "cache_hits": 50,
-   "cache_downloads": 46,
+   "merged_direct": 0,
+   "seconds": 339.1,
+   "cache_hits": 96,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 82 · 이름버림 60 · 단위버림 0 · 모호 1 · 남음 11 · 본이름 ['excesstaxbenefitfromsharebasedcompensationfinancingactivities', 'sharebasedcompensation', 'sharebasedcompensationarrangementbysharebasedpaymentawardequityinstrumentsotherthanoptionsgrantsinperiod'] · 본단위 ['USD']",
@@ -3915,9 +4069,9 @@
    ],
    "xbrl_rejected": 358,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 40,
-    "gaap_eps": 27,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -3926,10 +4080,10 @@
   {
    "ticker": "WFC",
    "adj_eps_ok": 0,
-   "merged_direct": 28,
-   "seconds": 467.1,
-   "cache_hits": 88,
-   "cache_downloads": 112,
+   "merged_direct": 0,
+   "seconds": 59.4,
+   "cache_hits": 200,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 105 · 이름버림 97 · 단위버림 0 · 모호 0 · 남음 5 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'adjustmentstoadditionalpaidincapitaltaxeffectfromsharebasedcompensation', 'employeeservicesharebasedcompensationtaxbenefitrealizedfromexerciseofstockoptions'] · 본단위 ['USD']",
@@ -3947,9 +4101,9 @@
    ],
    "xbrl_rejected": 407,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 15,
-    "gaap_eps": 25,
+    "분기목록(영업이익 기준)": 31,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -3958,10 +4112,10 @@
   {
    "ticker": "C",
    "adj_eps_ok": 3,
-   "merged_direct": 41,
-   "seconds": 420.1,
-   "cache_hits": 100,
-   "cache_downloads": 100,
+   "merged_direct": 0,
+   "seconds": 255.4,
+   "cache_hits": 200,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 38 · 이름버림 38 · 단위버림 0 · 모호 0 · 남음 0 · 본이름 ['allocatedsharebasedcompensationexpense', 'paymentsrelatedtotaxwithholdingforsharebasedcompensation', 'sharebasedcompensationarrangementbysharebasedpaymentawardequityinstrumentsotherthanoptionsgrantsinperiod'] · 본단위 []",
@@ -3980,9 +4134,9 @@
    ],
    "xbrl_rejected": 487,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 38,
-    "gaap_eps": 32,
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -3991,10 +4145,10 @@
   {
    "ticker": "GS",
    "adj_eps_ok": 0,
-   "merged_direct": 41,
-   "seconds": 482.2,
-   "cache_hits": 97,
-   "cache_downloads": 103,
+   "merged_direct": 0,
+   "seconds": 821.6,
+   "cache_hits": 200,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 70 · 이름버림 35 · 단위버림 0 · 모호 0 · 남음 19 · 본이름 ['excesstaxbenefitfromsharebasedcompensationfinancingactivities', 'paymentsrelatedtotaxwithholdingforsharebasedcompensation', 'sharebasedcompensation'] · 본단위 ['USD']",
@@ -4009,9 +4163,9 @@
    ],
    "xbrl_rejected": 381,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
+    "분기목록(영업이익 기준)": 30,
     "revenue": 0,
-    "gaap_eps": 30,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -4020,10 +4174,10 @@
   {
    "ticker": "MS",
    "adj_eps_ok": 19,
-   "merged_direct": 43,
-   "seconds": 132.7,
-   "cache_hits": 52,
-   "cache_downloads": 56,
+   "merged_direct": 0,
+   "seconds": 925.7,
+   "cache_hits": 108,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 67 · 이름버림 33 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['effectiveincometaxratereconciliationsharebasedcompensationexcesstaxbenefitamount', 'excesstaxbenefitfromsharebasedcompensationfinancingactivities', 'sharebasedcompensation'] · 본단위 ['USD']",
@@ -4042,9 +4196,9 @@
    ],
    "xbrl_rejected": 381,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 1,
-    "gaap_eps": 35,
+    "분기목록(영업이익 기준)": 35,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -4053,10 +4207,10 @@
   {
    "ticker": "SCHW",
    "adj_eps_ok": 0,
-   "merged_direct": 44,
-   "seconds": 973.3,
-   "cache_hits": 58,
-   "cache_downloads": 62,
+   "merged_direct": 0,
+   "seconds": 43.1,
+   "cache_hits": 120,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 92 · 이름버림 58 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'excesstaxbenefitfromsharebasedcompensationfinancingactivities', 'excesstaxbenefitfromsharebasedcompensationoperatingactivities'] · 본단위 ['USD']",
@@ -4072,9 +4226,9 @@
    ],
    "xbrl_rejected": 595,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 40,
-    "gaap_eps": 35,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -4084,7 +4238,7 @@
    "ticker": "BLK",
    "adj_eps_ok": 1,
    "merged_direct": 5,
-   "seconds": 70.2,
+   "seconds": 28.9,
    "cache_hits": 24,
    "cache_downloads": 0,
    "first_error": "",
@@ -4116,9 +4270,9 @@
    "ticker": "V",
    "adj_eps_ok": 33,
    "merged_direct": 0,
-   "seconds": 911.0,
-   "cache_hits": 78,
-   "cache_downloads": 63,
+   "seconds": 874.0,
+   "cache_hits": 141,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 110 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 56 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4149,9 +4303,9 @@
    "ticker": "MA",
    "adj_eps_ok": 38,
    "merged_direct": 0,
-   "seconds": 852.1,
-   "cache_hits": 57,
-   "cache_downloads": 53,
+   "seconds": 360.1,
+   "cache_hits": 110,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 184 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 66 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4183,10 +4337,10 @@
   {
    "ticker": "AXP",
    "adj_eps_ok": 8,
-   "merged_direct": 34,
-   "seconds": 72.8,
-   "cache_hits": 101,
-   "cache_downloads": 99,
+   "merged_direct": 0,
+   "seconds": 11.5,
+   "cache_hits": 200,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 10 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4207,9 +4361,9 @@
    ],
    "xbrl_rejected": 401,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 38,
-    "gaap_eps": 35,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -4218,10 +4372,10 @@
   {
    "ticker": "COF",
    "adj_eps_ok": 0,
-   "merged_direct": 44,
-   "seconds": 116.9,
-   "cache_hits": 72,
-   "cache_downloads": 125,
+   "merged_direct": 0,
+   "seconds": 28.9,
+   "cache_hits": 197,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 131 · 이름버림 97 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'sharebasedcompensation'] · 본단위 ['USD']",
@@ -4244,9 +4398,9 @@
    ],
    "xbrl_rejected": 281,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 39,
-    "gaap_eps": 30,
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -4255,10 +4409,10 @@
   {
    "ticker": "LLY",
    "adj_eps_ok": 40,
-   "merged_direct": 44,
-   "seconds": 81.1,
-   "cache_hits": 46,
-   "cache_downloads": 43,
+   "merged_direct": 0,
+   "seconds": 30.1,
+   "cache_hits": 89,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 66 · 이름버림 30 · 단위버림 0 · 모호 1 · 남음 17 · 본이름 ['allocatedsharebasedcompensationexpense', 'sharebasedcompensation'] · 본단위 ['USD']",
@@ -4276,9 +4430,9 @@
    ],
    "xbrl_rejected": 182,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 40,
-    "gaap_eps": 34,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -4288,9 +4442,9 @@
    "ticker": "UNH",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 55.4,
-   "cache_hits": 79,
-   "cache_downloads": 55,
+   "seconds": 27.6,
+   "cache_hits": 134,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 144 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 60 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4320,10 +4474,10 @@
   {
    "ticker": "JNJ",
    "adj_eps_ok": 40,
-   "merged_direct": 44,
-   "seconds": 37.0,
-   "cache_hits": 57,
-   "cache_downloads": 48,
+   "merged_direct": 0,
+   "seconds": 23.3,
+   "cache_hits": 105,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 26 · 이름버림 2 · 단위버림 0 · 모호 0 · 남음 15 · 본이름 ['operatingincomeloss', 'segmentreportinginformationoperatingincomeloss'] · 본단위 ['USD']",
@@ -4348,10 +4502,10 @@
    ],
    "xbrl_rejected": 541,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 37,
-    "gaap_eps": 36,
-    "gross_profit": 39
+    "분기목록(영업이익 기준)": 39,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -4360,9 +4514,9 @@
    "ticker": "ABBV",
    "adj_eps_ok": 34,
    "merged_direct": 0,
-   "seconds": 597.4,
-   "cache_hits": 74,
-   "cache_downloads": 61,
+   "seconds": 477.6,
+   "cache_hits": 135,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 82 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 44 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4393,10 +4547,10 @@
   {
    "ticker": "MRK",
    "adj_eps_ok": 40,
-   "merged_direct": 41,
-   "seconds": 590.4,
-   "cache_hits": 35,
-   "cache_downloads": 46,
+   "merged_direct": 12,
+   "seconds": 174.9,
+   "cache_hits": 81,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 330 · 이름버림 260 · 단위버림 0 · 모호 0 · 남음 38 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpense', 'allocatedsharebasedcompensationexpensenetoftax'] · 본단위 ['USD']",
@@ -4413,9 +4567,9 @@
    ],
    "xbrl_rejected": 853,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 36,
-    "gaap_eps": 30,
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -4424,10 +4578,10 @@
   {
    "ticker": "PFE",
    "adj_eps_ok": 20,
-   "merged_direct": 44,
-   "seconds": 841.5,
-   "cache_hits": 45,
-   "cache_downloads": 56,
+   "merged_direct": 0,
+   "seconds": 630.1,
+   "cache_hits": 101,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 70 · 이름버림 36 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['sharebasedcompensation', 'stockissuedduringperiodvaluesharebasedcompensation'] · 본단위 ['USD']",
@@ -4447,9 +4601,9 @@
    ],
    "xbrl_rejected": 318,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 36,
-    "gaap_eps": 29,
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -4459,9 +4613,9 @@
    "ticker": "AMGN",
    "adj_eps_ok": 28,
    "merged_direct": 27,
-   "seconds": 135.0,
-   "cache_hits": 42,
-   "cache_downloads": 39,
+   "seconds": 461.6,
+   "cache_hits": 81,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 55 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4499,9 +4653,9 @@
    "ticker": "GILD",
    "adj_eps_ok": 35,
    "merged_direct": 22,
-   "seconds": 154.6,
-   "cache_hits": 49,
-   "cache_downloads": 44,
+   "seconds": 269.9,
+   "cache_hits": 93,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 55 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4535,10 +4689,10 @@
   {
    "ticker": "BMY",
    "adj_eps_ok": 37,
-   "merged_direct": 44,
-   "seconds": 464.8,
-   "cache_hits": 43,
-   "cache_downloads": 100,
+   "merged_direct": 3,
+   "seconds": 292.8,
+   "cache_hits": 143,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 2 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 2 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4558,10 +4712,10 @@
    ],
    "xbrl_rejected": 460,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 38,
-    "gaap_eps": 35,
-    "gross_profit": 18
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -4570,9 +4724,9 @@
    "ticker": "REGN",
    "adj_eps_ok": 38,
    "merged_direct": 0,
-   "seconds": 282.8,
-   "cache_hits": 34,
-   "cache_downloads": 39,
+   "seconds": 214.3,
+   "cache_hits": 73,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 53 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4603,10 +4757,10 @@
   {
    "ticker": "VRTX",
    "adj_eps_ok": 24,
-   "merged_direct": 28,
-   "seconds": 141.6,
-   "cache_hits": 41,
-   "cache_downloads": 52,
+   "merged_direct": 30,
+   "seconds": 116.1,
+   "cache_hits": 93,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 188 · 이름버림 0 · 단위버림 0 · 모호 7 · 남음 58 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4626,9 +4780,9 @@
    ],
    "xbrl_rejected": 1134,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 38,
-    "revenue": 2,
-    "gaap_eps": 1,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -4638,9 +4792,9 @@
    "ticker": "ISRG",
    "adj_eps_ok": 11,
    "merged_direct": 32,
-   "seconds": 83.0,
-   "cache_hits": 39,
-   "cache_downloads": 31,
+   "seconds": 38.8,
+   "cache_hits": 70,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 55 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4674,9 +4828,9 @@
    "ticker": "WMT",
    "adj_eps_ok": 26,
    "merged_direct": 20,
-   "seconds": 251.6,
-   "cache_hits": 58,
-   "cache_downloads": 34,
+   "seconds": 227.5,
+   "cache_hits": 92,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 104 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 54 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4708,9 +4862,9 @@
    "ticker": "COST",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 108.5,
-   "cache_hits": 33,
-   "cache_downloads": 60,
+   "seconds": 59.6,
+   "cache_hits": 93,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 180 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 61 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4743,9 +4897,9 @@
    "ticker": "PG",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 109.9,
-   "cache_hits": 52,
-   "cache_downloads": 65,
+   "seconds": 117.9,
+   "cache_hits": 117,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 230 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 66 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4778,9 +4932,9 @@
    "ticker": "KO",
    "adj_eps_ok": 1,
    "merged_direct": 33,
-   "seconds": 157.9,
-   "cache_hits": 53,
-   "cache_downloads": 59,
+   "seconds": 106.6,
+   "cache_hits": 112,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 102 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 54 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4811,9 +4965,9 @@
    "ticker": "PEP",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 61.0,
-   "cache_hits": 47,
-   "cache_downloads": 38,
+   "seconds": 33.7,
+   "cache_hits": 85,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 110 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 56 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4849,9 +5003,9 @@
    "ticker": "MCD",
    "adj_eps_ok": 9,
    "merged_direct": 0,
-   "seconds": 427.5,
-   "cache_hits": 56,
-   "cache_downloads": 68,
+   "seconds": 508.2,
+   "cache_hits": 124,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 184 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 66 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4881,9 +5035,9 @@
    "ticker": "SBUX",
    "adj_eps_ok": 42,
    "merged_direct": 35,
-   "seconds": 607.9,
-   "cache_hits": 69,
-   "cache_downloads": 62,
+   "seconds": 524.0,
+   "cache_hits": 131,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 167 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 62 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4916,10 +5070,10 @@
   {
    "ticker": "NKE",
    "adj_eps_ok": 0,
-   "merged_direct": 44,
-   "seconds": 520.2,
-   "cache_hits": 48,
-   "cache_downloads": 49,
+   "merged_direct": 0,
+   "seconds": 479.3,
+   "cache_hits": 97,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 183 · 이름버림 135 · 단위버림 0 · 모호 0 · 남음 27 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'employeeservicesharebasedcompensationnonvestedawardstotalcompensationcostnotyetrecognizedperiodforrecognition', 'employeeservicesharebasedcompensationtaxbenefitfromcompensationexpense'] · 본단위 ['USD']",
@@ -4939,10 +5093,10 @@
    ],
    "xbrl_rejected": 372,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 33,
-    "gaap_eps": 29,
-    "gross_profit": 39
+    "분기목록(영업이익 기준)": 37,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 2
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -4951,9 +5105,9 @@
    "ticker": "HD",
    "adj_eps_ok": 9,
    "merged_direct": 8,
-   "seconds": 165.0,
-   "cache_hits": 59,
-   "cache_downloads": 53,
+   "seconds": 38.0,
+   "cache_hits": 112,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 98 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 52 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -4989,9 +5143,9 @@
    "ticker": "LOW",
    "adj_eps_ok": 38,
    "merged_direct": 14,
-   "seconds": 149.6,
-   "cache_hits": 44,
-   "cache_downloads": 57,
+   "seconds": 42.5,
+   "cache_hits": 101,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 55 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 30 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5024,11 +5178,11 @@
   },
   {
    "ticker": "TGT",
-   "adj_eps_ok": 39,
-   "merged_direct": 2,
-   "seconds": 120.6,
-   "cache_hits": 57,
-   "cache_downloads": 51,
+   "adj_eps_ok": 40,
+   "merged_direct": 3,
+   "seconds": 71.2,
+   "cache_hits": 106,
+   "cache_downloads": 1,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 97 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 49 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5058,15 +5212,15 @@
     "gross_profit": 0
    },
    "시간초과": false,
-   "note": ""
+   "note": "실적 44건 확보 후 조기 종료"
   },
   {
    "ticker": "EL",
    "adj_eps_ok": 17,
-   "merged_direct": 20,
-   "seconds": 189.3,
-   "cache_hits": 61,
-   "cache_downloads": 48,
+   "merged_direct": 21,
+   "seconds": 104.8,
+   "cache_hits": 106,
+   "cache_downloads": 1,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 177 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 62 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5103,9 +5257,9 @@
    "ticker": "CAT",
    "adj_eps_ok": 0,
    "merged_direct": 17,
-   "seconds": 155.7,
-   "cache_hits": 33,
-   "cache_downloads": 45,
+   "seconds": 94.9,
+   "cache_hits": 78,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 110 · 이름버림 6 · 단위버림 0 · 모호 0 · 남음 55 · 본이름 ['operatingincomeloss', 'segmentreportinginformationoperatingincomeloss'] · 본단위 ['USD']",
@@ -5126,10 +5280,10 @@
    ],
    "xbrl_rejected": 985,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 39,
-    "revenue": 1,
-    "gaap_eps": 1,
-    "gross_profit": 1
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -5138,9 +5292,9 @@
    "ticker": "DE",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 188.6,
-   "cache_hits": 55,
-   "cache_downloads": 92,
+   "seconds": 72.1,
+   "cache_hits": 147,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 76 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 42 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5161,9 +5315,9 @@
    ],
    "xbrl_rejected": 321,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 27,
-    "revenue": 9,
-    "gaap_eps": 8,
+    "분기목록(영업이익 기준)": 36,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -5173,9 +5327,9 @@
    "ticker": "HON",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 136.2,
-   "cache_hits": 65,
-   "cache_downloads": 68,
+   "seconds": 51.9,
+   "cache_hits": 133,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 28 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5198,10 +5352,10 @@
    ],
    "xbrl_rejected": 230,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 21,
-    "revenue": 17,
-    "gaap_eps": 17,
-    "gross_profit": 18
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -5209,10 +5363,10 @@
   {
    "ticker": "GE",
    "adj_eps_ok": 31,
-   "merged_direct": 44,
-   "seconds": 126.3,
-   "cache_hits": 53,
-   "cache_downloads": 64,
+   "merged_direct": 1,
+   "seconds": 38.4,
+   "cache_hits": 117,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 22 · 이름버림 2 · 단위버림 0 · 모호 0 · 남음 13 · 본이름 ['disposalgroupincludingdiscontinuedoperationoperatingincomeloss', 'operatingincomeloss'] · 본단위 ['USD']",
@@ -5237,10 +5391,10 @@
    ],
    "xbrl_rejected": 365,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 39,
-    "gaap_eps": 25,
-    "gross_profit": 2
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -5249,9 +5403,9 @@
    "ticker": "UNP",
    "adj_eps_ok": 6,
    "merged_direct": 8,
-   "seconds": 118.6,
-   "cache_hits": 57,
-   "cache_downloads": 100,
+   "seconds": 31.8,
+   "cache_hits": 157,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 192 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 67 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5280,9 +5434,9 @@
    "ticker": "UPS",
    "adj_eps_ok": 32,
    "merged_direct": 33,
-   "seconds": 69.5,
-   "cache_hits": 40,
-   "cache_downloads": 33,
+   "seconds": 34.3,
+   "cache_hits": 73,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 192 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 67 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5315,9 +5469,9 @@
    "ticker": "FDX",
    "adj_eps_ok": 14,
    "merged_direct": 1,
-   "seconds": 72.1,
-   "cache_hits": 61,
-   "cache_downloads": 35,
+   "seconds": 35.8,
+   "cache_hits": 96,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 190 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 65 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5352,9 +5506,9 @@
    "ticker": "BA",
    "adj_eps_ok": 16,
    "merged_direct": 0,
-   "seconds": 145.7,
-   "cache_hits": 60,
-   "cache_downloads": 75,
+   "seconds": 30.0,
+   "cache_hits": 135,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 192 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 65 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5377,10 +5531,10 @@
    ],
    "xbrl_rejected": 779,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 36,
-    "revenue": 4,
-    "gaap_eps": 2,
-    "gross_profit": 2
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
    },
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
@@ -5389,9 +5543,9 @@
    "ticker": "T",
    "adj_eps_ok": 23,
    "merged_direct": 21,
-   "seconds": 114.3,
-   "cache_hits": 50,
-   "cache_downloads": 44,
+   "seconds": 52.9,
+   "cache_hits": 94,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 222 · 이름버림 7 · 단위버림 0 · 모호 3 · 남음 66 · 본이름 ['disposalgroupincludingdiscontinuedoperationoperatingincomeloss', 'operatingincomeloss'] · 본단위 ['USD']",
@@ -5410,9 +5564,9 @@
    ],
    "xbrl_rejected": 414,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 39,
-    "revenue": 1,
-    "gaap_eps": 1,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -5422,9 +5576,9 @@
    "ticker": "VZ",
    "adj_eps_ok": 29,
    "merged_direct": 11,
-   "seconds": 131.8,
-   "cache_hits": 67,
-   "cache_downloads": 56,
+   "seconds": 73.6,
+   "cache_hits": 123,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 210 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 65 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5455,9 +5609,9 @@
    "ticker": "TMUS",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 137.7,
-   "cache_hits": 92,
-   "cache_downloads": 71,
+   "seconds": 93.2,
+   "cache_hits": 163,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 194 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 59 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5488,9 +5642,9 @@
    "ticker": "CMCSA",
    "adj_eps_ok": 28,
    "merged_direct": 24,
-   "seconds": 117.9,
-   "cache_hits": 71,
-   "cache_downloads": 63,
+   "seconds": 33.0,
+   "cache_hits": 134,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 200 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 67 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5525,9 +5679,9 @@
    "ticker": "DIS",
    "adj_eps_ok": 7,
    "merged_direct": 0,
-   "seconds": 114.6,
-   "cache_hits": 54,
-   "cache_downloads": 48,
+   "seconds": 27.3,
+   "cache_hits": 102,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 77 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 33 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5557,10 +5711,10 @@
   {
    "ticker": "XOM",
    "adj_eps_ok": 1,
-   "merged_direct": 44,
-   "seconds": 121.4,
-   "cache_hits": 83,
-   "cache_downloads": 65,
+   "merged_direct": 0,
+   "seconds": 27.7,
+   "cache_hits": 148,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 13 · 이름버림 13 · 단위버림 0 · 모호 0 · 남음 0 · 본이름 ['adjustmentstoadditionalpaidincapitaltaxeffectfromsharebasedcompensation'] · 본단위 []",
@@ -5575,9 +5729,9 @@
    ],
    "xbrl_rejected": 224,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 37,
-    "gaap_eps": 29,
+    "분기목록(영업이익 기준)": 38,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -5586,10 +5740,10 @@
   {
    "ticker": "CVX",
    "adj_eps_ok": 15,
-   "merged_direct": 41,
-   "seconds": 85.7,
-   "cache_hits": 68,
-   "cache_downloads": 62,
+   "merged_direct": 0,
+   "seconds": 24.3,
+   "cache_hits": 130,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 28 · 이름버림 28 · 단위버림 0 · 모호 0 · 남음 0 · 본이름 ['excesstaxbenefitfromsharebasedcompensationoperatingactivities', 'proceedsfromissuanceofsharesunderincentiveandsharebasedcompensationplansincludingstockoptions'] · 본단위 []",
@@ -5607,9 +5761,9 @@
    ],
    "xbrl_rejected": 556,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 40,
-    "gaap_eps": 30,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -5618,10 +5772,10 @@
   {
    "ticker": "COP",
    "adj_eps_ok": 10,
-   "merged_direct": 25,
-   "seconds": 53.4,
-   "cache_hits": 51,
-   "cache_downloads": 50,
+   "merged_direct": 0,
+   "seconds": 29.6,
+   "cache_hits": 101,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 46 · 이름버림 46 · 단위버림 0 · 모호 0 · 남음 0 · 본이름 ['stockissuedduringperiodvaluesharebasedcompensation'] · 본단위 []",
@@ -5638,9 +5792,9 @@
    ],
    "xbrl_rejected": 522,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 40,
-    "gaap_eps": 30,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -5649,10 +5803,10 @@
   {
    "ticker": "SLB",
    "adj_eps_ok": 0,
-   "merged_direct": 4,
-   "seconds": 62.6,
-   "cache_hits": 58,
-   "cache_downloads": 54,
+   "merged_direct": 12,
+   "seconds": 34.3,
+   "cache_hits": 112,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 50 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 28 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
@@ -5673,9 +5827,9 @@
    ],
    "xbrl_rejected": 477,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 31,
-    "revenue": 9,
-    "gaap_eps": 7,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
@@ -5684,10 +5838,10 @@
   {
    "ticker": "OXY",
    "adj_eps_ok": 30,
-   "merged_direct": 44,
-   "seconds": 114.7,
-   "cache_hits": 72,
-   "cache_downloads": 74,
+   "merged_direct": 0,
+   "seconds": 29.8,
+   "cache_hits": 146,
+   "cache_downloads": 0,
    "first_error": "",
    "xbrl_calls": [
     "ShareBasedCompensation(3개월): 받음 48 · 이름버림 48 · 단위버림 0 · 모호 0 · 남음 0 · 본이름 ['excesstaxbenefitfromsharebasedcompensationfinancingactivities', 'sharebasedcompensationarrangementbysharebasedpaymentawardsharesissuedinperiod'] · 본단위 []",
@@ -5704,9 +5858,9 @@
    ],
    "xbrl_rejected": 336,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 0,
-    "revenue": 40,
-    "gaap_eps": 30,
+    "분기목록(영업이익 기준)": 40,
+    "revenue": 0,
+    "gaap_eps": 0,
     "gross_profit": 0
    },
    "시간초과": false,
