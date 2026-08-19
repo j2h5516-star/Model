@@ -183,7 +183,9 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
     #    귀합니다. 대신 실패를 로봇 기록에 남겨 조용히 넘어가지 않게 합니다.
     try:
         snap = json.loads(files[f"{cfg.MEASURE_DIR}/snapshot.json"])
-        ds = dataset.build(snap)
+        # 액면분할 환산 재료 (112차) — 디스크의 vendor.json 은 어제 것이라
+        # 새 분할은 하루 늦게 반영됩니다 (분할은 드물어 감수).
+        ds = dataset.build(snap, splits=dataset.load_splits())
         events, _skipped = measure_engine.collect_events(ds)
         # H10 (23차 등록) — 논갭 영업이익 단독 사건은 별도 목록으로
         op_events = measure_engine.collect_metric_events(ds, "op_income")

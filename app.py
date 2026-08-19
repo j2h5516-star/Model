@@ -609,7 +609,9 @@ def snapshot_key(snapshot: dict | None) -> str:
 # 몇 초씩 걸리기 때문입니다. 대신 `키`(스냅샷 이름표)로 갈아 끼웁니다.
 @_cached
 def cached_dataset(_snapshot: dict, 키: str) -> dict:
-    return dataset.build(_snapshot)
+    # 액면분할 환산 재료 (112차) — vendor.json 은 snapshot 과 같은 커밋으로
+    # 오므로 캐시 열쇠(snapshot saved_at)가 그대로 유효합니다.
+    return dataset.build(_snapshot, splits=dataset.load_splits())
 
 
 @_cached

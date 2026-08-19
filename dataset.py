@@ -13,6 +13,12 @@ dataset.py — 데이터 계층 (v3 4단계, 설계도.md ①)
     진실은 snapshot 하나여야 하고, 손질본 파일은 혼란의 씨앗입니다.
   · 값을 만들거나 고치지 않습니다 (창작 금지). 검사에서 탈락한 값은
     "없음"(None)으로 둡니다 — 없음이 틀림보다 안전합니다.
+    ⚠️ 단 하나의 예외 (112차): **액면분할 단위 환산.** 회사는 EPS 를 발표
+    당시 주식 수 기준으로 적고 주가·야후는 분할을 소급 반영하므로, 분할
+    전후의 주당 값은 **단위가 다른 숫자**입니다 (실물 SMCI 22.09 = 소급
+    2.20 × 10). 그대로 이으면 TTM 추세에 가짜 급락이 생깁니다. 공식 분할
+    기록이 있을 때만, 주당 칸만, 현재 주식 수 기준으로 나눕니다 — 값을
+    지어내는 것이 아니라 이미 쓰는 수정주가와 같은 단위 맞추기입니다.
   · TTM·신고점 같은 파생 계산은 하지 않습니다 (측정 장치의 일).
   · 인터넷에 접속하지 않습니다 (수집은 로봇만).
 
@@ -486,7 +492,69 @@ def _clean_prices(price_map: dict, notes: list[str]) -> dict:
     return cleaned
 
 
-def build(snapshot: dict) -> dict:
+
+def load_splits(path: str | None = None) -> dict:
+    """vendor.json 에서 공식 액면분할 기록을 읽습니다 (112차).
+
+    반환: {종목: [(분할일, 비율), ...]} — 기록이 없거나 파일이 없으면 빈 dict.
+    없는 것을 지어내지 않습니다. 로봇이 아직 splits 를 수집하지 않았다면
+    환산도 일어나지 않습니다 (예전과 완전히 같은 동작).
+    """
+    if path is None:
+        path = f"{cfg.MEASURE_DIR}/vendor.json"
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        return {}
+    out: dict = {}
+    for ticker, d in (data.get("tickers") or {}).items():
+        rows = []
+        for item in (d or {}).get("splits") or []:
+            date, ratio = item.get("date"), item.get("ratio")
+            if (_valid_date(date) and _finite_number(ratio)
+                    and ratio > 0 and abs(ratio - 1) > 1e-9):
+                rows.append((str(date)[:10], float(ratio)))
+        if rows:
+            out[ticker] = sorted(rows)
+    return out
+
+
+def _apply_splits(ticker: str, rows: list[dict], splits: list, notes: list[str]) -> None:
+    """주당 칸을 현재 주식 수 기준으로 환산합니다 (112차 — 단위 맞추기).
+
+    발표일이 분할일보다 앞이면 그 뒤의 모든 분할 비율을 곱한 값으로
+    나눕니다. 정분할(비율>1)은 값이 작아지고, 역분할(비율<1)은 커집니다 —
+    나누기 하나로 양쪽이 다 맞습니다.
+    주당 칸(_PER_SHARE_FIELDS)만 건드립니다. 매출·영업이익은 주식 수와
+    무관하므로 그대로 둡니다.
+    """
+    보정 = 0
+    for row in rows:
+        day = str(row.get("announced_date") or row.get("filing_date") or "")[:10]
+        if len(day) != 10:
+            continue
+        factor = 1.0
+        for split_day, ratio in splits:
+            if day < split_day:
+                factor *= ratio
+        if abs(factor - 1.0) <= 1e-9:
+            continue
+        touched = False
+        for field in _PER_SHARE_FIELDS:
+            value = row.get(field)
+            if isinstance(value, (int, float)):
+                row[field] = value / factor
+                touched = True
+        if touched:
+            보정 += 1
+    if 보정:
+        notes.append(
+            f"{ticker}: 액면분할 환산 — 공식 분할 {len(splits)}건, "
+            f"분기 {보정}개의 주당 칸을 현재 주식 수 기준으로 나눔"
+        )
+
+def build(snapshot: dict, splits: dict | None = None) -> dict:
     """snapshot 을 검사·정렬해 측정용 밥상을 차립니다.
 
     반환:
@@ -506,6 +574,13 @@ def build(snapshot: dict) -> dict:
     benchmark = snapshot.get("benchmark") or cfg.BENCHMARK
 
     quarters = _clean_quarters(snapshot.get("eps") or {}, notes)
+    # 액면분할 단위 환산 (112차) — 공식 기록이 있는 종목만.
+    # 검사(_clean_quarters) 뒤에 하는 이유: 상한 검사 등은 발표 당시
+    # 원문 값 기준이어야 하고, 환산은 그다음의 단위 맞추기이기 때문입니다.
+    if splits:
+        for ticker, rows in quarters.items():
+            if ticker in splits:
+                _apply_splits(ticker, rows, splits[ticker], notes)
     prices = _clean_prices(snapshot.get("prices") or {}, notes)
 
     if not prices.get(benchmark, {}).get("dates"):

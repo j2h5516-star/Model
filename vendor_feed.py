@@ -149,6 +149,33 @@ def announcements_from_frame(frame, 날짜뜻: str = "분기끝") -> list[dict]:
     return out
 
 
+
+def splits_from_series(series) -> list[dict]:
+    """액면분할 기록(yfinance `splits`)을 그대로 옮겨 적습니다 (112차).
+
+    왜 받나: 회사는 EPS 를 **발표 당시 주식 수** 기준으로 적고, 야후·주가는
+    분할을 소급 반영합니다. 111차 실측 — SMCI 22.09 = 야후 2.20 × 10.04.
+    강한 의심만 14종목(NVDA·AVGO·GOOGL·LRCX·NFLX 등)이라, 분할을 모르면
+    TTM 추세에 가짜 급락이 생깁니다.
+
+    손으로 배수를 역산하지 않고 **공식 기록**을 받습니다 (역산 금지).
+    값은 그대로 옮겨 적기만 하고, 비율 1(무의미)·숫자 아님은 버립니다.
+    """
+    out: list[dict] = []
+    if series is None:
+        return out
+    try:
+        items = list(series.items())
+    except Exception:
+        return out
+    for ts, ratio in items:
+        r = _number(ratio)
+        d = str(ts)[:10]
+        if r and r > 0 and abs(r - 1) > 1e-9 and len(d) == 10 and d[4] == "-":
+            out.append({"date": d, "ratio": r})
+    out.sort(key=lambda x: x["date"])
+    return out
+
 def fetch(ticker: str) -> dict:
     """한 종목의 분기표와 발표 기록을 받아 옵니다 (로봇 환경에서만 동작)."""
     import yfinance as yf
@@ -167,6 +194,9 @@ def fetch(ticker: str) -> dict:
     return {
         "quarters": quarters_from_frame(handle.quarterly_income_stmt),
         "announcements": announcements_from_frame(frame, 날짜뜻),
+        # 공식 액면분할 기록 (112차) — dataset 이 주당 칸을 현재 주식 수
+        # 기준으로 환산할 때 씁니다. 실패해도 나머지는 살립니다.
+        "splits": splits_from_series(getattr(handle, "splits", None)),
     }
 
 

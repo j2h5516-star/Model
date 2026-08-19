@@ -211,6 +211,22 @@ def test_아직_안_나온_발표는_담지_않는다():
     assert 행[1]["street_eps"] is None and 행[1]["street_estimate"] == 1.30
 
 
+def test_분할기록을_그대로_옮겨_적는다():
+    """공식 액면분할 기록 수집 (112차). 비율 1(무의미)·불량은 버립니다 —
+    손으로 배수를 역산하지 않고 공식 기록만 씁니다."""
+    import pandas as pd
+
+    series = pd.Series(
+        [10.0, 1.0, float("nan"), 0.125],
+        index=pd.to_datetime(["2024-10-01", "2023-01-01",
+                              "2022-01-01", "2021-08-02"]),
+    )
+    out = vf.splits_from_series(series)
+    assert out == [{"date": "2021-08-02", "ratio": 0.125},
+                   {"date": "2024-10-01", "ratio": 10.0}], out
+    assert vf.splits_from_series(None) == []
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

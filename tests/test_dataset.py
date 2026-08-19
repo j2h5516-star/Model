@@ -605,6 +605,86 @@ def test_real_snapshot_passes_all_invariants():
         assert all(c > 0 for c in series["close"]), f"{ticker} 0 이하 종가"
 
 
+def test_액면분할_환산_정분할():
+    """분할 전 주당 값은 나눠지고, 분할 후·주당 아닌 칸은 그대로 (112차).
+
+    실물 근거: SMCI 우리 22.09 = 야후 소급 2.20 × 10.04 (111차). 분할 전후를
+    그대로 이으면 TTM 추세에 가짜 급락이 생깁니다. 강한 의심만 14종목.
+    """
+    snap = {
+        "benchmark": "SPY",
+        "tickers": ["AA"],
+        "prices": {"SPY": {"dates": ["2024-01-02"], "close": [100.0]}},
+        "eps": {"AA": [
+            {"filing_date": "2024-03-31", "announced_date": "2024-05-01",
+             "adj_eps": 20.0, "gaap_eps": 18.0, "revenue": 5.0e9},   # 분할 전
+            {"filing_date": "2024-12-31", "announced_date": "2025-02-01",
+             "adj_eps": 2.1, "gaap_eps": 1.9, "revenue": 5.2e9},     # 분할 후
+        ]},
+    }
+    ds = dataset.build(snap, splits={"AA": [("2024-10-01", 10.0)]})
+    앞, 뒤 = ds["quarters"]["AA"]
+    assert abs(앞["adj_eps"] - 2.0) < 1e-9, "분할 전 조정 EPS 가 ÷10 되지 않았습니다"
+    assert abs(앞["gaap_eps"] - 1.8) < 1e-9
+    assert 앞["revenue"] == 5.0e9, "매출은 주식 수와 무관 — 건드리면 안 됩니다"
+    assert 뒤["adj_eps"] == 2.1, "분할 후 값을 건드렸습니다"
+    assert any("액면분할 환산" in n for n in ds["notes"]), "환산 내역이 notes 에 없습니다"
+
+
+def test_액면분할_환산_역분할과_겹분할():
+    """역분할(비율<1)은 값이 커지고, 분할 두 번은 비율이 곱해집니다."""
+    snap = {
+        "benchmark": "SPY",
+        "tickers": ["BB"],
+        "prices": {"SPY": {"dates": ["2024-01-02"], "close": [100.0]}},
+        "eps": {"BB": [
+            {"filing_date": "2019-03-31", "announced_date": "2019-05-01",
+             "adj_eps": 1.0},                                # 두 분할 모두 앞
+            {"filing_date": "2021-03-31", "announced_date": "2021-05-01",
+             "adj_eps": 1.0},                                # 역분할만 앞
+        ]},
+    }
+    # 2020: 5:1 정분할 · 2022: 1:8 역분할(비율 0.125)
+    ds = dataset.build(snap, splits={"BB": [("2020-06-01", 5.0),
+                                            ("2022-06-01", 0.125)]})
+    r1, r2 = ds["quarters"]["BB"]
+    assert abs(r1["adj_eps"] - 1.0 / (5.0 * 0.125)) < 1e-9, r1   # ÷0.625 = ×1.6
+    assert abs(r2["adj_eps"] - 1.0 / 0.125) < 1e-9, r2           # ×8
+
+
+def test_분할기록_없으면_예전과_완전히_같다():
+    """로봇이 아직 splits 를 안 모았으면 환산도 없어야 합니다 —
+    없는 것을 지어내지 않습니다."""
+    snap = {
+        "benchmark": "SPY",
+        "tickers": ["CC"],
+        "prices": {"SPY": {"dates": ["2024-01-02"], "close": [100.0]}},
+        "eps": {"CC": [{"filing_date": "2024-03-31", "adj_eps": 20.0}]},
+    }
+    with_none = dataset.build(snap)
+    with_empty = dataset.build(snap, splits={})
+    assert with_none["quarters"]["CC"][0]["adj_eps"] == 20.0
+    assert with_empty["quarters"]["CC"][0]["adj_eps"] == 20.0
+
+
+def test_load_splits_는_없거나_이상한_기록을_거른다():
+    import json as _json
+    import os as _os
+    tmp = "/tmp/claude-0/vendor_splits_test.json"
+    _json.dump({"tickers": {
+        "AA": {"splits": [{"date": "2024-10-01", "ratio": 10.0},
+                          {"date": "2020-06-01", "ratio": 5.0}]},
+        "BB": {"splits": [{"date": "이상함", "ratio": 10.0},   # 날짜 불량
+                          {"date": "2024-01-01", "ratio": 1.0},  # 무의미
+                          {"date": "2024-01-01", "ratio": -2}]},  # 불량
+        "CC": {},
+    }}, open(tmp, "w"))
+    out = dataset.load_splits(tmp)
+    assert out == {"AA": [("2020-06-01", 5.0), ("2024-10-01", 10.0)]}, out
+    assert dataset.load_splits("/tmp/claude-0/없는파일.json") == {}
+    _os.remove(tmp)
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
