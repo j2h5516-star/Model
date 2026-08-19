@@ -658,6 +658,44 @@ def breadth_verdict_lines(verdict: dict) -> list[str]:
     lines.append("· 따라서 위 순위는 **아직 매수 근거가 아닌 관찰**입니다.")
     return lines
 
+def health_lines(검진: dict | None) -> list[str]:
+    """수집물 건강검진(108차) 요약 줄 — 로봇 기록을 그대로 읽어 만듭니다.
+
+    화면 없이도 시험할 수 있도록 함수로 뺐습니다 (새 코드 경로는 실행을
+    증명한다 — 실행 불가능한 위치의 구제 코드가 루멘텀 전망을 무너뜨린
+    사건). 값을 만들지 않습니다 — 검진이 없으면 없다고 말합니다.
+    """
+    if not 검진:
+        return ["아직 없음 — 건강검진 장치(108차)가 반영된 다음 수집부터 "
+                "실립니다. 없는 것을 지어내지 않습니다."]
+    lines: list[str] = []
+    채움 = 검진.get("채움률") or {}
+    줄 = []
+    행 = 채움.get("행")
+    if 행 is not None:
+        줄.append(f"행 {행:,}개")
+    for 칸, 이름 in (("revenue", "매출"), ("adj_eps", "조정EPS"),
+                   ("gaap_eps", "GAAP EPS"), ("revenue_xbrl", "매출XBRL")):
+        r = 채움.get(칸) or {}
+        if r.get("비율") is not None:
+            줄.append(f"{이름} {r['비율']}%")
+    lines.append("채움률: " + " · ".join(줄))
+    이상 = 검진.get("이상값") or {}
+    이상줄 = [f"{이름} {(이상.get(칸) or {}).get('건수', '?')}건"
+            for 칸, 이름 in (("revenue", "매출"), ("op_income", "영업이익"))]
+    lines.append("자기 이력 1,000배 밖 이상값: " + " · ".join(이상줄)
+                 + " (버리지 않고 세기만 합니다)")
+    어제 = 검진.get("어제 대비")
+    if 어제 is None:
+        lines.append("어제 대비: 없음 — 어제 수집물이 없어 맞대지 못했습니다.")
+    else:
+        lines.append(f"어제 대비: 맞대본 분기 {어제.get('맞대본 분기', 0):,}개 중 "
+                     f"바뀐 칸 {어제.get('바뀐 칸', 0):,}개 · "
+                     f"새 분기 {어제.get('새 분기', 0):,}개 · "
+                     f"사라진 분기 {어제.get('사라진 분기', 0):,}개")
+    return lines
+
+
 def live_signal_rows(ds: dict, days: int = 90) -> list[dict]:
     """지금 채택 신호(H9·H10)가 켜진 종목 — 최근 days 일 발표 중.
 
@@ -753,6 +791,13 @@ def main():
                  "앞→뒤": f"{r['앞']:,.2f} → {r['뒤']:,.2f}",
                  "배수": f"{r['배수']:.1f}배"} for r in 튄칸
             ]), width="stretch", hide_index=True)
+
+        # 수집물 건강검진 (108차) — 로봇이 매일 세어 온 숫자를 그대로 보여
+        # 줍니다. 값을 바꾸지 않고 세기만 한 결과이며, 경보 문턱은 며칠치를
+        # 쌓아 정상 범위를 실측한 뒤 사전 등록합니다 (아직 등록 전).
+        st.markdown("**수집물 건강검진** (로봇이 매일 자동으로 셉니다)")
+        for 줄 in health_lines((log or {}).get("건강검진")):
+            st.caption(줄)
 
     # =====================================================================
     # 0. 최상단 메인 — 주도 교체 확인 신호 (H14, 38차 등록)
