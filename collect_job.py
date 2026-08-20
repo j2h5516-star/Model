@@ -201,6 +201,10 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         # H23 (116차 등록) — 깊은 게이지의 H5b. 100차 깊이 표를 보고 만든
         # 가설이라 판정 표본은 등록일 뒤의 새 발표만입니다.
         verdict["가설"].update(judge.judge_deep_gauge(events))
+        # H24 (121차 등록) — 장세 조건부 첫돌파. 띠(20~60%)를 탐색 표를
+        # 보고 골랐으므로 판정 표본은 등록일 뒤의 새 발표만입니다.
+        sector_model.attach_market_breadth(ds, events)
+        verdict["가설"].update(judge.judge_regime_breakout(events))
         verdict["가설"].update(judge.judge_completion_gap(
             sector_model.completion_events(ds),
             sector_model.H18_START_DAY, sector_model.H18_GAP_MIN,

@@ -193,6 +193,32 @@ def test_담아쓰기는_값을_바꾸지_않는다():
             sm._breadths_at(ds, 종목들2, day, 그릇), f"{이름2}: 묶음이 섞였습니다"
 
 
+
+
+# ---------------------------------------------------------------------------
+# 시장 전체 폭 부착 (121차 — H24 의 장세 게이지)
+# ---------------------------------------------------------------------------
+def test_시장폭은_발표일_직전_주의_값을_붙인다():
+    """발표 사건에는 발표일 **이전** 가장 가까운 주의 시장 폭이 붙어야 하고,
+    첫 주보다 앞선 발표는 None(없는 값은 만들지 않음)이어야 합니다."""
+    up = weekly_prices([100.0 + i for i in range(80)])      # 정배열 종목
+    down = weekly_prices([200.0 - i for i in range(80)])    # 역배열 종목
+    ds = fake_ds({"SPY": up, "A": up, "B": up, "C": down})
+
+    series = sm.market_breadth_series(ds)
+    assert series, "폭 시계열이 비었습니다"
+    last_day, last_val = series[-1]
+    assert abs(last_val - 66.7) < 0.1, f"3종목 중 2종목 정배열 → 66.7%: {last_val}"
+
+    events = [
+        {"announced": "2019-01-01"},              # 첫 주보다 앞 — None
+        {"announced": last_day},                  # 그 주 마지막 거래일 당일
+    ]
+    sm.attach_market_breadth(ds, events)
+    assert events[0]["장세폭"] is None
+    assert abs(events[1]["장세폭"] - last_val) < 1e-9
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

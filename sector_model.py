@@ -153,6 +153,30 @@ def breadth_series(ds: dict, members: list[str]) -> list[tuple[str, float]]:
     return out
 
 
+def market_breadth_series(ds: dict) -> list[tuple[str, float]]:
+    """**시장 전체** 정배열 폭 시계열 (121차 — H24 의 장세 게이지).
+
+    섹터가 아니라 기준지수를 뺀 전 종목으로 폭을 잽니다. 정배열 정의는
+    33차 등록(aligned_flags)을 그대로 씁니다 — 새 정의를 만들지 않습니다.
+    """
+    members = [t for t in ds["prices"] if t != ds["benchmark"]]
+    return breadth_series(ds, members)
+
+
+def attach_market_breadth(ds: dict, events: list[dict]) -> None:
+    """발표 사건마다 그 발표일 이전 가장 가까운 주의 시장 폭을 붙입니다.
+
+    (121차 등록) 키 이름은 "장세폭"(%). 발표일보다 앞선 주가 없으면
+    None — 없는 값은 만들지 않습니다 (헌법 1조).
+    """
+    series = market_breadth_series(ds)
+    days = [d for d, _ in series]
+    values = [v for _, v in series]
+    for event in events:
+        i = bisect.bisect_right(days, event["announced"]) - 1
+        event["장세폭"] = values[i] if i >= 0 else None
+
+
 def _forward_excess(prices: dict, spy: dict, day: str,
                     days: int = FORWARD_DAYS) -> float | None:
     """day 다음 거래일 진입 → days 거래일 뒤. SPY 대비 초과 %p.

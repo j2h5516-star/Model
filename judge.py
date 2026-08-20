@@ -308,6 +308,45 @@ def judge_deep_gauge(events: list[dict], start_day: str = H23_START_DAY) -> dict
     return {H23_NAME: entry}
 
 
+# ---------------------------------------------------------------------------
+# H24 (121차 등록) — 장세 조건부 첫돌파
+# ---------------------------------------------------------------------------
+# 헌법 0장의 질문은 원래 조건부("좋은 장세라는 조건 아래에서만")인데,
+# 지금까지 등록된 종목 가설은 전부 무조건부였습니다. 121차 탐색(2,326건)
+# 에서 첫돌파 적중률이 시장 정배열 폭에 따라 갈렸습니다 (기준선 13.6%):
+#
+#   폭 0~20% 8.2% (기준선 12.0%보다 나쁨) · 20~40% 15.7% · 40~60% 20.8%
+#
+# ⚠️ **띠 20~60% 는 그 표를 보고 골랐습니다.** 그래서 탐색 표본으로는
+#    판정하지 않습니다 — 등록일 뒤의 새 발표만 셉니다 (헌법 5조).
+#    탐색에서도 신뢰구간은 전부 겹쳤고 40~60% 칸은 강세장(2017·2020)
+#    집중이었음을 함께 적어 둡니다 — 유망함의 증거가 아니라 관찰입니다.
+H24_START_DAY = "2026-08-20"
+H24_NAME = "H24_장세조건부_첫돌파"
+H24_BAND = (20.0, 60.0)     # 시장 정배열 폭 띠 [하한, 상한)
+
+
+def judge_regime_breakout(events: list[dict],
+                          start_day: str = H24_START_DAY) -> dict:
+    """H24 판정 — 장세폭 20~60% 구간의 첫돌파 vs 같은 표본 전체.
+
+    표본: 조정 EPS 잣대 사건 중 장세폭을 판단할 수 있는 것.
+    신호: 그 표본 안에서 첫돌파(newhigh_streak==1)이면서 장세폭이 띠 안.
+    """
+    low, high = H24_BAND
+    usable = [e for e in events if _adj(e) and e.get("장세폭") is not None]
+    entry: dict = {"등록일": start_day, "장세폭_띠": [low, high]}
+    for label, pool in (
+        ("신규(판정)", [e for e in usable if e["announced"] > start_day]),
+        ("탐색표본(참고)", [e for e in usable if e["announced"] <= start_day]),
+    ):
+        signal = [e for e in pool
+                  if e["newhigh_streak"] == 1 and low <= e["장세폭"] < high]
+        entry[label] = _judge(signal, pool)
+    entry["판정"] = entry["신규(판정)"]["판정"]
+    return {H24_NAME: entry}
+
+
 def judge_completion_gap(events: list[dict], start_day: str,
                          gap_min: float) -> dict:
     """H18 판정 — 정배열 완성 사건 중 이격도가 문턱 이상인 군.
