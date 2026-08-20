@@ -625,6 +625,11 @@ def cached_current_breadth(_ds: dict, 키: str) -> list[dict]:
 
 
 @_cached
+def cached_market_breadth(_ds: dict, 키: str) -> list[tuple[str, float]]:
+    return sm.market_breadth_series(_ds)
+
+
+@_cached
 def cached_cycle_series(_ds: dict, members: tuple, base_day: str,
                         since: str, 키: str) -> list[dict]:
     return sm.cycle_series(_ds, list(members), base_day, since=since)
@@ -693,6 +698,49 @@ def health_lines(검진: dict | None) -> list[str]:
                      f"바뀐 칸 {어제.get('바뀐 칸', 0):,}개 · "
                      f"새 분기 {어제.get('새 분기', 0):,}개 · "
                      f"사라진 분기 {어제.get('사라진 분기', 0):,}개")
+    return lines
+
+
+def market_regime_lines(폭: float | None, 직전폭: float | None,
+                        verdict: dict | None) -> list[str]:
+    """시장 전체 정배열 폭(장세 게이지, 121차)의 정직화 줄.
+
+    지금 폭이 어느 구간인지와 함께 **그 구간의 과거 실측 적중률·기준선·
+    판정 상태**를 같이 적습니다 (헌법 3조 정직화). 수치는 121차 탐색
+    (2,326건)에서 복사했고 채택 근거가 아닙니다 — H24 판정은 등록일
+    (2026-08-20) 뒤의 새 발표로만 이뤄집니다.
+    """
+    if 폭 is None:
+        return ["시장 전체 정배열 폭: 판단 불가 (이력 부족) — 없는 값은 "
+                "만들지 않습니다."]
+    lines: list[str] = []
+    delta = "" if 직전폭 is None else f" · 지난주 대비 {폭 - 직전폭:+.0f}%p"
+    lines.append(f"시장 전체 정배열 폭: **{폭:.0f}%**{delta}")
+    if 폭 < 20.0:
+        lines.append(
+            "🟥 **약한 장세 (20% 미만)** — 과거 실측(121차 탐색): 이 구간의 "
+            "첫돌파 적중 **8.2%** (기준선 12.0%보다 낮음) · 큰 서프라이즈 "
+            "추격도 3.7%로 최저. **종목 신호를 믿을 근거가 없던 구간**입니다."
+        )
+    elif 폭 < 60.0:
+        lines.append(
+            "🟩 **살아 있는 장세 (20~60%)** — 과거 실측(121차 탐색): 이 "
+            "구간의 첫돌파 적중 **16.8%** (기준선 13.6%) · 다만 신뢰구간이 "
+            "겹쳐 아직 우위 증명은 아닙니다."
+        )
+    else:
+        lines.append(
+            "⬜ **60% 이상** — 과거 사건이 4건뿐이라 실측이 없습니다. "
+            "없는 것을 지어내지 않습니다."
+        )
+    h24 = ((verdict or {}).get("가설") or {}).get("H24_장세조건부_첫돌파")
+    if h24:
+        n = ((h24.get("신규(판정)") or {}).get("신호") or {}).get("n")
+        lines.append(f"H24(장세 조건부 첫돌파) 판정: **{h24.get('판정')}** "
+                     f"(등록 2026-08-20 뒤 새 표본 신호 n={n} — 쌓이는 중)")
+    else:
+        lines.append("H24(장세 조건부 첫돌파) 판정: 아직 없음 — 121차 등록이 "
+                     "반영된 다음 수집부터 실립니다.")
     return lines
 
 
@@ -853,6 +901,15 @@ def main():
         "52주선)인 종목의 비율입니다. 옆 숫자는 **그 구간이 과거에 1년 뒤 "
         "시장을 20%p 이상 이긴 비율**(34차 탐색값)입니다."
     )
+
+    # 시장 전체 장세 게이지 (121차) — 섹터가 아니라 전 종목의 정배열 폭.
+    # 종목 신호(첫돌파 등)를 읽기 전에 먼저 볼 조건입니다 (헌법 4조).
+    _시장 = cached_market_breadth(ds, 키)
+    _폭 = _시장[-1][1] if _시장 else None
+    _직전폭 = _시장[-2][1] if len(_시장) >= 2 else None
+    for 줄 in market_regime_lines(_폭, _직전폭, verdict):
+        st.markdown(줄)
+    st.divider()
 
     breadth_rows = cached_current_breadth(ds, 키)
     measured = [r for r in breadth_rows if r["폭"] is not None]
