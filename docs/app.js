@@ -16,6 +16,11 @@ const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g,
   (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
+/** 계기판 설명문에 쓰인 **굵게** 표시를 살려 줍니다 (글자 그대로 보이지 않게).
+ *  반드시 esc() 로 막은 **뒤에** 굵게만 되살립니다 — 남의 글자를 코드로
+ *  실행시키지 않기 위해서입니다. */
+const bold = (s) => esc(s).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+
 /** 숫자를 화면용 글자로 — 없으면 "—" (지어내지 않음) */
 function num(v, digits = 1, sign = false) {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
@@ -275,7 +280,7 @@ function 화면_검증() {
       (n=${h.신호n ?? "—"}) · 기준선 ${h.기준선율 === null ? "—" : num(h.기준선율) + "%"}
       ${h.등록일 ? ` · 등록 ${esc(h.등록일)}` : ""}
       ${h.탐색n ? `<br>탐색 표본(참고): ${num(h.탐색율)}% (n=${h.탐색n})` : ""}
-      ${h.설명 ? `<br>${esc(h.설명)}` : ""}</div></div>`).join("");
+      ${h.설명 ? `<br>${bold(h.설명)}` : ""}</div></div>`).join("");
 
   if (a.건강 && a.건강["채움률"]) {
     const c = a.건강["채움률"];
