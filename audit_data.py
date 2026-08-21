@@ -277,6 +277,8 @@ def one_line(quarters: dict) -> str:
 #   조사 결과를 화면에 찍고, 로봇에게 부탁할 원문 목록을 파일로 적습니다.
 # ---------------------------------------------------------------------------
 WANTED_PATH = "data/measure/wanted_raw.json"
+WANTED_LIMIT = 60      # 틀린 값(바깥 자·이웃 튐)에게 주는 자리
+HOLE_QUOTA = 15        # 잣대 구멍에게 **따로 떼어 두는** 자리 (135차, 아래 설명)
 
 
 def merge_wanted(*목록들: list[dict], limit: int = 60) -> list[dict]:
@@ -303,14 +305,25 @@ def merge_wanted(*목록들: list[dict], limit: int = 60) -> list[dict]:
 
 
 def write_wanted(quarters: dict, path: str = WANTED_PATH,
-                 extra: list[dict] | None = None) -> int:
+                 extra: list[dict] | None = None,
+                 tail: list[dict] | None = None) -> int:
     """로봇이 읽을 '원문 부탁 목록'을 파일로 적고, 건수를 돌려줍니다.
 
     extra 로 바깥 자(야후)와 어긋난 칸을 함께 넘기면 앞자리에 놓습니다.
     """
     import json
 
-    목록 = merge_wanted(extra or [], wanted_raw_filings(quarters))
+    # 순서 = 바깥 자 → 이웃과 튄 칸 → **맨 뒤에 잣대 구멍**(135차).
+    # 틀린 값이 먼저, 없는 값이 나중 (헌법 1조).
+    #
+    # ⚠️ 처음엔 그냥 맨 뒤에 붙였는데, 실데이터로 재 보니 **한 칸도 못
+    #    들어갔습니다** — 틀린 값 후보만 110건이라 60칸을 먼저 다 채웁니다.
+    #    그러면 이 배관은 영원히 안 도는 코드가 됩니다(134차에 고친 것과
+    #    똑같은 병). 그래서 구멍에게 **따로 자리 몇 칸**(HOLE_QUOTA)을
+    #    떼어 줍니다. 앞자리는 그대로 틀린 값이 가지므로 우선순위는
+    #    지켜지고, 배관은 실제로 돕니다.
+    앞 = merge_wanted(extra or [], wanted_raw_filings(quarters), limit=WANTED_LIMIT)
+    목록 = merge_wanted(앞, tail or [], limit=WANTED_LIMIT + HOLE_QUOTA)
     with open(path, "w", encoding="utf-8") as f:
         json.dump({
             "설명": ("'원문이 필요한 공시' 목록입니다. 세 곳에서 옵니다 — "
@@ -323,6 +336,75 @@ def write_wanted(quarters: dict, path: str = WANTED_PATH,
             "목록": 목록,
         }, f, ensure_ascii=False, indent=1)
     return len(목록)
+
+
+# 잣대 구멍 (135차) — **값이 아예 없는** 칸도 원문을 부탁합니다.
+#
+# 133~134차에 만든 재료 셋은 전부 "틀린 값"을 찾습니다(야후와 어긋남 ·
+# 월가와 갈림 · 이웃과 튐). 그런데 ZETA 를 보다가 네 번째 종류가 드러
+# 났습니다 — **파서가 아무 값도 못 읽어 칸이 빈 것**입니다. 틀린 값이
+# 아니라 없는 값이라 어느 그물에도 안 걸립니다.
+#
+#   실물 ZETA(잣대 조정 EBITDA): 2021-11 다음이 2024-09 — 그 사이 12개
+#   분기가 통째로 비어 있어 **델타를 잴 수 없습니다**(화면의 "—").
+#   전 종목 실측: 잣대가 있는 구간 **안쪽**의 빈 칸 408개
+#   (UCTT 23 · AMBA 23 · ROKU 21 · EL 19 · BA 18 · ZETA 12 …).
+#
+# 우선순위를 **맨 뒤**에 둡니다. 헌법 1조가 "없음은 안전하고 틀림은
+# 위험하다"고 못박았으므로, 틀린 값을 먼저 고치고 남는 자리에만 구멍을
+# 채웁니다. 틀린 값이 줄면 자연히 구멍 차례가 옵니다 — 사람이 순서를
+# 다시 정할 필요가 없습니다.
+_HOLE_PER_TICKER_MAX = 2      # 한 종목이 목록을 다 차지하지 않게
+
+
+def wanted_from_holes(quarters: dict, limit: int = 60) -> list[dict]:
+    """잣대 값이 **구간 안쪽에서 빈** 칸의 원문을 부탁합니다.
+
+    앞뒤 바깥(아직 상장 전·아직 발표 전)의 빈칸은 정상이므로 세지
+    않습니다 — 값이 있는 첫 분기와 마지막 분기 **사이**만 봅니다.
+    """
+    import measure_engine as _me
+
+    # ① 종목마다 구간 안쪽 빈 칸을 **전부** 셉니다 (자리는 아직 안 나눔)
+    모음: list[tuple[str, str, list[str]]] = []     # (종목, 잣대, 빈 날짜들)
+    for ticker in sorted(quarters):
+        rows = quarters.get(ticker) or []
+        잣대 = _me.yardstick_of(rows)
+        if not 잣대:
+            continue
+        있는 = [r for r in rows if r.get(잣대) is not None]
+        if len(있는) < 4:
+            continue
+        첫, 끝 = 있는[0].get("announced_date"), 있는[-1].get("announced_date")
+        if not 첫 or not 끝:
+            continue
+        빈칸 = [str(r["announced_date"])[:10] for r in rows
+                if r.get("announced_date") and r.get(잣대) is None
+                and 첫 < r["announced_date"] < 끝]
+        if 빈칸:
+            모음.append((ticker, 잣대, 빈칸))
+
+    # ② **구멍이 많은 종목부터**. 알파벳 순으로 자르면 앞 글자 종목만
+    #    영원히 서비스받고 UCTT·ZETA 는 차례가 오지 않습니다(이 목록은
+    #    날마다 똑같이 다시 만들어지므로 순서 편향이 굳어집니다).
+    모음.sort(key=lambda t: (-len(t[2]), t[0]))
+
+    out: list[dict] = []
+    for ticker, 잣대, 빈칸 in 모음:
+        for 날 in 빈칸[:_HOLE_PER_TICKER_MAX]:
+            out.append({
+                "종목": ticker,
+                "발표일": 날,
+                "칸": {"adj_eps": "조정 EPS", "adjusted_ebitda": "조정 EBITDA",
+                      "gaap_eps": "GAAP EPS"}.get(잣대, 잣대),
+                "값": None,
+                "배수": None,
+                "이유": f"잣대({잣대}) 칸이 비어 있음 — 파서가 못 읽은 것으로 "
+                      f"보임 (이 종목 빈 칸 {len(빈칸)}개)",
+            })
+        if len(out) >= limit:
+            break
+    return out[:limit]
 
 
 def refresh_wanted(quarters: dict, vendor: dict | None,
@@ -342,8 +424,10 @@ def refresh_wanted(quarters: dict, vendor: dict | None,
                   _vc.wanted_from_street(quarters, vendor)
         except Exception as exc:      # 부탁 목록이 실패해도 수집은 계속
             progress(f"⚠️ 부탁 목록 재료 실패: {type(exc).__name__}: {str(exc)[:120]}")
-    count = write_wanted(quarters, path=path, extra=바깥)
-    progress(f"원문 부탁 목록 {count}건 갱신 (바깥 자 재료 {len(바깥)}건)")
+    구멍 = wanted_from_holes(quarters)
+    count = write_wanted(quarters, path=path, extra=바깥, tail=구멍)
+    progress(f"원문 부탁 목록 {count}건 갱신 "
+             f"(바깥 자 재료 {len(바깥)}건 · 잣대 구멍 후보 {len(구멍)}건)")
     return count
 
 

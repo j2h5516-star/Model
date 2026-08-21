@@ -335,6 +335,124 @@ def test_부탁목록_갱신은_바깥자_재료를_앞에_두고_실패해도_�
     os.unlink(path)
 
 
+def _구멍있는종목(ticker="ZZ"):
+    """잣대(조정 EPS)가 **구간 안쪽에서** 두 칸 비어 있는 가상 종목.
+
+    2020~2022 12분기 중 3·4번째(2020-07, 2020-10)만 값이 없습니다.
+    맨 앞 한 칸과 맨 뒤 한 칸도 비워 두는데, 그쪽은 **상장 전·발표 전**과
+    모양이 같으므로 세면 안 됩니다.
+    """
+    날짜 = [f"20{y}-{m:02d}-15" for y in (20, 21, 22) for m in (1, 4, 7, 10)]
+    rows = []
+    for i, 날 in enumerate(날짜):
+        비었나 = i in (2, 3)
+        rows.append(분기(날[:7], announced_date=날,
+                        adj_eps=None if 비었나 else 1.0 + i * 0.1))
+    # 맨 앞·맨 뒤 바깥에 빈 칸을 하나씩 더 붙입니다 (세면 안 되는 칸)
+    앞 = 분기("2019-10", announced_date="2019-10-15")
+    뒤 = 분기("2023-01", announced_date="2023-01-15")
+    return {ticker: [앞] + rows + [뒤]}
+
+
+def test_잣대구멍은_구간_안쪽만_센다():
+    """(135차) 값이 아예 없는 칸도 원문을 부탁합니다 — 다만 **사이**만.
+
+    ZETA 는 조정 EBITDA 가 2021-11 다음 2024-09 까지 12분기 통째로 비어
+    델타를 못 잽니다. 그런데 앞뒤 **바깥**의 빈 칸(상장 전·아직 발표 전)은
+    정상이라, 그것까지 세면 부탁 목록이 쓸모없는 칸으로 가득 찹니다.
+    """
+    구멍 = audit_data.wanted_from_holes(_구멍있는종목())
+    assert len(구멍) == 2, f"구간 안쪽 빈 칸 2개여야 하는데 {len(구멍)}개: {구멍}"
+    날들 = sorted(r["발표일"] for r in 구멍)
+    assert 날들 == ["2020-07-15", "2020-10-15"], 날들
+    assert all(r["값"] is None for r in 구멍), "구멍은 값이 없어야 합니다"
+    assert all("비어" in r["이유"] for r in 구멍), 구멍
+
+
+def test_잣대구멍은_한_종목이_독차지하지_못한다():
+    """구멍이 많은 종목(UCTT 23 · AMBA 23) 하나가 60칸을 다 먹으면
+    다른 종목은 영원히 원문을 못 받습니다. 종목당 상한을 둡니다."""
+    날짜 = [f"{2020 + i // 4}-{(i % 4) * 3 + 1:02d}-15" for i in range(20)]
+    많은구멍 = {"XX": [
+        분기(날[:7], announced_date=날,
+            adj_eps=None if 5 <= i <= 9 else 1.0 + i * 0.1)
+        for i, 날 in enumerate(날짜)
+    ]}
+    # 잣대가 정해질 만큼(8분기 이상) 값이 있고, 사이에 구멍이 5개인 종목
+    assert sum(1 for r in 많은구멍["XX"] if r["adj_eps"] is not None) >= 8
+    구멍 = audit_data.wanted_from_holes(많은구멍)
+    assert len(구멍) <= audit_data._HOLE_PER_TICKER_MAX, \
+        f"한 종목이 {len(구멍)}건을 차지했습니다"
+
+
+def test_잣대구멍은_목록_맨_뒤에_놓인다():
+    """(135차) 헌법 1조 — "없음은 안전하고 틀림은 위험".
+    틀린 값(이웃과 튄 칸)을 먼저 고치고, 남는 자리에만 구멍을 채웁니다."""
+    import json
+    import tempfile
+
+    quarters = dict(_구멍있는종목("ZZ"))
+    앞선것 = [{"종목": "AA", "발표일": "2025-01-01", "칸": "adj_eps",
+             "값": 9.9, "배수": None, "이유": "바깥 자와 어긋남"}]
+    구멍 = audit_data.wanted_from_holes(quarters)
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        path = f.name
+    audit_data.write_wanted(quarters, path=path, extra=앞선것, tail=구멍)
+    with open(path, encoding="utf-8") as f:
+        목록 = json.load(f)["목록"]
+    os.unlink(path)
+    assert 목록[0]["종목"] == "AA", f"바깥 자 재료가 앞자리가 아닙니다: {목록[:2]}"
+    구멍자리 = [i for i, r in enumerate(목록) if r.get("값") is None
+              and "비어" in str(r.get("이유"))]
+    assert 구멍자리, f"구멍이 목록에 없습니다: {목록}"
+    앞것자리 = [i for i, r in enumerate(목록) if "비어" not in str(r.get("이유"))]
+    assert min(구멍자리) > max(앞것자리), \
+        f"구멍이 틀린 값보다 앞에 왔습니다: {목록}"
+
+
+def test_잣대구멍은_틀린값이_자리를_다_먹어도_들어간다():
+    """(135차) 실데이터로 재 보니 틀린 값 후보만 110건이라 60칸을 먼저
+    다 채웠고, 구멍은 **0건** 이었습니다 — 그러면 이 배관은 한 번도 안
+    도는 코드가 됩니다(134차에 고친 것과 같은 병). 따로 떼어 둔 자리가
+    실제로 작동하는지 봅니다."""
+    import json
+    import tempfile
+
+    quarters = dict(_구멍있는종목("ZZ"))
+    꽉찬앞 = [{"종목": f"T{i:02d}", "발표일": "2025-01-01", "칸": "adj_eps",
+             "값": 9.9, "배수": None, "이유": "바깥 자와 어긋남"}
+            for i in range(audit_data.WANTED_LIMIT + 20)]
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        path = f.name
+    audit_data.write_wanted(quarters, path=path, extra=꽉찬앞,
+                            tail=audit_data.wanted_from_holes(quarters))
+    with open(path, encoding="utf-8") as f:
+        목록 = json.load(f)["목록"]
+    os.unlink(path)
+    구멍 = [r for r in 목록 if "비어" in str(r.get("이유"))]
+    assert 구멍, "틀린 값이 자리를 다 먹어 구멍이 한 건도 못 들어갔습니다"
+    앞자리 = [r for r in 목록[:audit_data.WANTED_LIMIT]]
+    assert all("비어" not in str(r.get("이유")) for r in 앞자리), \
+        "앞자리(틀린 값 몫)를 구멍이 침범했습니다"
+
+
+def test_잣대구멍은_많이_빈_종목부터_부탁한다():
+    """이 목록은 날마다 똑같이 다시 만들어집니다. 알파벳 순으로 자르면
+    앞 글자 종목만 계속 서비스받고 UCTT·ZETA 는 영원히 차례가 안 옵니다."""
+    def 종목(빈칸들):
+        날짜 = [f"{2020 + i // 4}-{(i % 4) * 3 + 1:02d}-15" for i in range(20)]
+        return [분기(날[:7], announced_date=날,
+                    adj_eps=None if i in 빈칸들 else 1.0 + i * 0.1)
+                for i, 날 in enumerate(날짜)]
+
+    구멍 = audit_data.wanted_from_holes({
+        "AAA": 종목({5, 6}),                  # 구멍 2개인데 이름이 앞
+        "ZZZ": 종목({5, 6, 7, 8, 9}),         # 구멍 5개
+    })
+    assert 구멍[0]["종목"] == "ZZZ", \
+        f"구멍이 많은 종목이 먼저 와야 합니다: {[r['종목'] for r in 구멍]}"
+
+
 def test_로봇이_부탁목록을_매일_갱신한다():
     """(134차) 배선이 빠지면 부탁 목록이 **사람 손에만 매입니다** — 실제로
     4차 확장의 새 90종목이 한 건도 못 들어갔던 사고(133차)의 재발 방지."""
