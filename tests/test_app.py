@@ -672,6 +672,22 @@ def test_신호종목판은_최신완성이_먼저오고_새완성표시가_붙�
     assert rows[0]["테마"] == "AI-광통신네트워크"
 
 
+
+
+def test_로빈후드행은_알약과_새완성점을_정확히_단다():
+    """(131차) 종목 행 — 오른쪽 초록 알약에 +이격도%, 7일 안 완성만
+    초록 점, 이격도 없으면 — 로 정직하게."""
+    r = {"종목": "LITE", "묶음": "광통신", "테마": "AI-광통신네트워크",
+         "완성일": "2026-08-19", "이격도": 48.7, "델타": True, "새완성": True}
+    html = app.signal_row_html(r)
+    assert "+48.7%" in html and "rh-pill" in html
+    assert "rh-dot" in html and "델타상승" in html and "AI-광통신네트워크" in html
+    r2 = {"종목": "EXTR", "묶음": "하드웨어", "테마": None,
+          "완성일": "2026-06-26", "이격도": None, "델타": False, "새완성": False}
+    html2 = app.signal_row_html(r2)
+    assert "rh-dot" not in html2 and ">—<" in html2
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

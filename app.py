@@ -737,9 +737,46 @@ div[data-testid="stExpander"] summary {font-size: .92rem;}
 .mv-amber {color: #f59e0b;}
 .mv-badge {display: inline-block; font-size: .68rem; font-weight: 700;
     border-radius: 999px; padding: 1px 8px; margin-left: 6px;
-    background: rgba(34,197,94,.16); color: #22c55e;}
+    background: rgba(0,200,5,.16); color: #00C805;}
+h2 {border-left-color: #00C805 !important;}
+.mv-green {color: #00C805;}
+button[data-baseweb="tab"] {font-size: .95rem; font-weight: 700;}
+div[data-baseweb="tab-highlight"] {background-color: #00C805;}
+.rh-hero {margin: .2rem 0 0 0;}
+.rh-hero .v {font-size: 2.1rem; font-weight: 800; letter-spacing: -1px;
+    line-height: 1.1;}
+.rh-hero .s {font-size: .8rem; opacity: .75; margin-top: 2px;}
+.rh-row {display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 2px; border-bottom: 1px solid rgba(128,128,128,.15);}
+.rh-row .l .t {font-weight: 800; font-size: .98rem;}
+.rh-row .l .d {font-size: .72rem; opacity: .7; margin-top: 1px;}
+.rh-pill {min-width: 74px; text-align: center; font-weight: 700;
+    font-size: .86rem; border-radius: 10px; padding: 6px 10px;
+    background: #00C805; color: #fff;}
+.rh-pill.off {background: rgba(128,128,128,.25); color: inherit;}
+.rh-dot {display:inline-block; width:7px; height:7px; border-radius:50%;
+    background:#00C805; margin-left:6px; vertical-align:middle;}
 </style>
 """
+
+
+def signal_row_html(r: dict) -> str:
+    """이격도 30%+ 완성 종목 한 줄 — 로빈후드풍 행 (131차, 순수 함수).
+
+    왼쪽 = 종목·묶음·테마·완성일, 오른쪽 = 이격도 초록 알약.
+    새 완성(7일 안)은 종목 이름 옆 초록 점. 델타상승은 설명 줄에.
+    """
+    테마 = f" · {r['테마']}" if r.get("테마") else ""
+    델타 = " · 델타상승" if r.get("델타") is True else ""
+    점 = '<span class="rh-dot"></span>' if r.get("새완성") else ""
+    이격 = "—" if r.get("이격도") is None else f"+{r['이격도']}%"
+    return (
+        '<div class="rh-row">'
+        f'<div class="l"><div class="t">{r["종목"]}{점}</div>'
+        f'<div class="d">{r["묶음"]}{테마} · 완성 {r["완성일"]}{델타}</div></div>'
+        f'<div class="rh-pill">{이격}</div>'
+        '</div>'
+    )
 
 
 def summary_cards_html(폭: float | None, fired: list[dict],
@@ -1087,26 +1124,101 @@ def main():
                                    adopted_names(verdict) if verdict else []),
                 unsafe_allow_html=True)
 
+    tab_home, tab_market, tab_fund, tab_check = st.tabs(
+        ["🏠 주도", "📈 장세", "📊 실적", "🧾 검증"])
+
     # =====================================================================
     # 1. 주도 후보 — 확인 신호(늦지만 강함) + 관찰판(이르지만 약함)
     # =====================================================================
-    st.header("① 주도 후보")
-    st.caption(
-        "위쪽 **확인 신호** = 주가가 이미 돌아선(3개월 시장 대비 플러스) "
-        "묶음에서 정배열 폭 40%p↑·이익 델타 폭 50%p↑ 급등이 **동시에** 나온 "
-        "곳 — 늦지만 강한 확인. 아래쪽 **관찰판** = 최근 91일 정배열 완성이 "
-        "몰리는 묶음 — 이르지만 약한 관찰."
-    )
-    if fired:
-        for row in fired:
-            st.success(
-                f"🔥 **{row['묶음']}** — 확인 신호 켜짐  \n"
-                f"3개월 상대수익 {row['3개월상대']:+.1f}%p · "
-                f"정배열 폭 {row['직전정배열폭']:.0f}% → **{row['정배열폭']:.0f}%** · "
-                f"이익 델타 폭 {row['직전델타폭']:.0f}% → **{row['델타폭']:.0f}%**"
+    with tab_home:
+        # 히어로 — 로빈후드의 계좌 차트 자리에 "시장 정배열 폭" (사실 표시)
+        if _폭 is not None:
+            import altair as alt
+            _추세색 = "mv-green" if (_직전폭 is not None and _폭 >= _직전폭) else "mv-red"
+            _차이 = "" if _직전폭 is None else f" · 지난주 {(_폭-_직전폭):+.1f}%p"
+            st.markdown(
+                f'<div class="rh-hero"><div class="v {_추세색}">{_폭:.1f}%</div>'
+                f'<div class="s">시장 정배열 폭 (전 종목){_차이} — 아래 모든 신호를 읽는 배경</div></div>',
+                unsafe_allow_html=True,
             )
-            with st.expander(f"{row['묶음']} 구성 종목 보기"):
-                for m in group_member_rows(row["묶음"], _완성, _오늘):
+            _최근1년 = _시장[-52:]
+            st.altair_chart(
+                alt.Chart(pd.DataFrame(_최근1년, columns=["주", "폭"]))
+                .mark_line(color="#00C805", strokeWidth=2)
+                .encode(x=alt.X("주:T", axis=None),
+                        y=alt.Y("폭:Q", axis=None,
+                                scale=alt.Scale(zero=False)))
+                .properties(height=90),
+                use_container_width=True,
+            )
+        st.header("① 주도 후보")
+        st.caption(
+            "위쪽 **확인 신호** = 주가가 이미 돌아선(3개월 시장 대비 플러스) "
+            "묶음에서 정배열 폭 40%p↑·이익 델타 폭 50%p↑ 급등이 **동시에** 나온 "
+            "곳 — 늦지만 강한 확인. 아래쪽 **관찰판** = 최근 91일 정배열 완성이 "
+            "몰리는 묶음 — 이르지만 약한 관찰."
+        )
+        if fired:
+            for row in fired:
+                st.success(
+                    f"🔥 **{row['묶음']}** — 확인 신호 켜짐  \n"
+                    f"3개월 상대수익 {row['3개월상대']:+.1f}%p · "
+                    f"정배열 폭 {row['직전정배열폭']:.0f}% → **{row['정배열폭']:.0f}%** · "
+                    f"이익 델타 폭 {row['직전델타폭']:.0f}% → **{row['델타폭']:.0f}%**"
+                )
+                with st.expander(f"{row['묶음']} 구성 종목 보기"):
+                    for m in group_member_rows(row["묶음"], _완성, _오늘):
+                        꼬리 = ""
+                        if m["완성"]:
+                            꼬리 = f" — 완성 {m['완성']}"
+                            if m["이격도"] is not None:
+                                꼬리 += f" · 이격도 {m['이격도']}%"
+                            if m["신호"]:
+                                꼬리 += " · 🔥신호"
+                            if m["델타"] is True:
+                                꼬리 += " · 델타상승"
+                        st.markdown(f"· **{m['종목']}**{꼬리}")
+        else:
+            st.info("현재 확인 신호가 켜진 묶음이 없습니다.")
+
+        near = dedupe_confirmations(
+            [r for r in confirm_rows
+             if not r["확인"] and r["전제"] and (r["정배열확인"] or r["델타확인"])])
+        if near:
+            with st.expander(f"한 조건만 채운 묶음 {len(near)}개 (아직 확인 아님)"):
+                for row in near:
+                    missing = "정배열 미달" if not row["정배열확인"] else "델타 미달"
+                    st.markdown(
+                        f"· {row['묶음']} — {missing} "
+                        f"(정배열 {row['정배열폭']:.0f}% · 델타 {row['델타폭']:.0f}% · "
+                        f"3개월 {row['3개월상대']:+.0f}%p)"
+                    )
+
+        _h14_경고 = (
+            "**판정 상태 (정직화)** — H14: **미채택**  \n"
+            "과거 실측(38차): 이 신호가 켜진 20건은 1년 뒤 **주도 유지 70.0%** · "
+            "되돌림 25.0% · 상대수익 중앙 **+42.4%p** 였고, "
+            "주가만 오른 대조군 339건은 53.7% · 35.7% · +13.4%p 였습니다. "
+            "앞시기·뒤시기 모두 70%로 안정적이나, **표본 20건으로 구간이 넓어 "
+            "채택 기준(완전 분리)을 넘지 못했습니다.** 따라서 아직 매수 근거가 "
+            "아니라 관찰이며, 로봇이 표본을 쌓는 대로 자동 재판정합니다."
+        )
+        with st.expander("확인 신호의 과거 성적·판정 상태 (정직화)"):
+            st.warning(_h14_경고)
+
+        # 관찰판 (127차 — 이르지만 약한 관찰. ①로 이동, 129차)
+        st.markdown("**관찰판** — 최근 91일 정배열 완성이 몰리는 묶음 (판정 아님)")
+        _몰림 = [g for g in _묶음판 if g["완성"] >= 2]
+        if not _몰림:
+            st.markdown("최근 91일 안에 완성이 2개 이상 나온 묶음이 없습니다.")
+        for g in _몰림[:3]:
+            st.markdown(
+                f"· **{g['묶음']}** — 완성 {g['완성']}개"
+                f" (이격도30%+ {g['신호']}개 · 델타상승 {g['델타상승']}개)"
+                f" · 마지막 {g['마지막완성']}"
+            )
+            with st.expander(f"{g['묶음']} 구성 종목 보기"):
+                for m in group_member_rows(g["묶음"], _완성, _오늘):
                     꼬리 = ""
                     if m["완성"]:
                         꼬리 = f" — 완성 {m['완성']}"
@@ -1117,347 +1229,295 @@ def main():
                         if m["델타"] is True:
                             꼬리 += " · 델타상승"
                     st.markdown(f"· **{m['종목']}**{꼬리}")
-    else:
-        st.info("현재 확인 신호가 켜진 묶음이 없습니다.")
+        if len(_몰림) > 3:
+            with st.expander(f"나머지 묶음 {len(_몰림)-3}개 보기"):
+                for g in _몰림[3:]:
+                    st.markdown(
+                        f"· **{g['묶음']}** — 완성 {g['완성']}개"
+                        f" (이격도30%+ {g['신호']}개 · 델타상승 {g['델타상승']}개)"
+                        f" · 마지막 {g['마지막완성']}"
+                    )
+        _종목판 = [r for r in _종목판전체 if r["신호"]]
+        if _종목판:
+            st.markdown("**이격도 30%+ 완성 종목** — 최신 완성 순 (H18·H18b 신호, 탐색 참고):")
+            st.markdown("".join(signal_row_html(r) for r in _종목판[:5]),
+                        unsafe_allow_html=True)
+            if len(_종목판) > 5:
+                with st.expander(f"나머지 {len(_종목판)-5}개 보기"):
+                    st.markdown("".join(signal_row_html(r) for r in _종목판[5:]),
+                                unsafe_allow_html=True)
+            st.caption(
+                "과거 실측(126차): 이 신호의 1년 뒤 SPY+20%p **46.6%** (기준선 "
+                "27.5%) · 시장을 이긴 비율 59% — **채택 전 참고**이며 10건 중 "
+                "4건은 시장에 졌습니다."
+            )
+        else:
+            st.markdown("지금 이격도 30%+ 완성 종목 없음 — 없는 것은 없다고 말합니다.")
 
-    near = dedupe_confirmations(
-        [r for r in confirm_rows
-         if not r["확인"] and r["전제"] and (r["정배열확인"] or r["델타확인"])])
-    if near:
-        with st.expander(f"한 조건만 채운 묶음 {len(near)}개 (아직 확인 아님)"):
-            for row in near:
-                missing = "정배열 미달" if not row["정배열확인"] else "델타 미달"
+        _유지 = cached_aligned_now(ds, 키)
+        with st.expander(f"지금 주봉 정배열 유지 중인 종목 {len(_유지)}개 (이격도순)"):
+            st.caption(
+                "오래전 완성해 계속 달리는 종목은 위 관찰판(새 완성)에 안 "
+                "보입니다 — 여기서 봅니다. 여기 없는 종목은 지금 정배열이 "
+                "깨져 있다는 뜻입니다 (예: 조정 중인 MU·AMD)."
+            )
+            for r in _유지[:30]:
+                이격 = "—" if r["이격도"] is None else f"{r['이격도']}%"
+                st.markdown(f"· **{r['종목']}** ({r['묶음']}) · 이격도 {이격}")
+            if len(_유지) > 30:
+                st.caption(f"… 외 {len(_유지)-30}개")
+
+        # =====================================================================
+        # 2. 장세 (정배열 폭 모델, 33·34차 + 121차 시장 게이지)
+        # =====================================================================
+    with tab_market:
+        st.header("② 장세 — 시장·섹터 정배열 폭")
+        st.caption(
+            "각 섹터에서 **주가가 완전 정배열**(주봉 종가 > 4주 > 13주 > 26주 > "
+            "52주선)인 종목의 비율입니다. 옆 숫자는 **그 구간이 과거에 1년 뒤 "
+            "시장을 20%p 이상 이긴 비율**(34차 탐색값)입니다."
+        )
+
+        # 시장 전체 장세 게이지 (121차) — 값은 맨 위 요약에서 이미 계산됨.
+        for 줄 in market_regime_lines(_폭, _직전폭, verdict):
+            st.markdown(줄)
+        st.divider()
+
+        breadth_rows = cached_current_breadth(ds, 키)
+        measured = [r for r in breadth_rows if r["폭"] is not None]
+        if measured:
+            st.altair_chart(
+                sorted_bar_chart(
+                    [r["섹터"] for r in measured],
+                    [r["폭"] for r in measured],
+                    "정배열 폭 (%)",
+                    colors={r["섹터"]: ZONE_COLORS[breadth_zone(r["폭"])["zone"]]
+                            for r in measured},
+                ),
+                use_container_width=True,
+            )
+            st.caption(
+                "🟩 쌓이는 중(40~59%) — 과거 1년 폭등률 33.3%로 최고 · "
+                "🟥 정배열 완성(60%+) — 7.7%로 최저 · 🟦 초기 · ⬜ 약함"
+            )
+
+        with st.expander("섹터별 자세히 보기 (폭·상태·과거 실측)"):
+            for row in breadth_rows:
+                zone = breadth_zone(row["폭"])
+                if row["폭"] is None:
+                    st.markdown(f"**{row['섹터']}** ({row['종목수']}종목) — 판단 불가 (이력 부족)")
+                    continue
+                moved = ""
+                if row["직전폭"] is not None:
+                    delta = row["폭"] - row["직전폭"]
+                    moved = f" · 지난주 대비 {delta:+.0f}%p"
                 st.markdown(
-                    f"· {row['묶음']} — {missing} "
-                    f"(정배열 {row['정배열폭']:.0f}% · 델타 {row['델타폭']:.0f}% · "
-                    f"3개월 {row['3개월상대']:+.0f}%p)"
+                    f"**{row['섹터']}** {row['폭']:.0f}% ({row['종목수']}종목){moved}  \n"
+                    f"{row['상태']} — {zone['zone']} · 이 구간의 과거 1년 폭등률 "
+                    f"**{zone['rate']}%** (기준선 {breadth_baseline(verdict)}%)  \n"
+                    f"<span style='color:gray;font-size:0.85em'>{zone['note']}</span>",
+                    unsafe_allow_html=True,
+                )
+            st.warning("\n".join(breadth_verdict_lines(verdict)))
+
+        # =====================================================================
+        # 1-2. AI 사이클 추적 (37차) — 저장소 주인 관찰 국면의 실제 순서
+        # =====================================================================
+    with tab_fund:
+        with st.expander("사이클 추적 — 정배열·이익 델타·주가 (펼쳐 보기)"):
+            st.caption(
+                "AI 사이클 종목 묶음의 **정배열 폭**(주가가 정배열인 비율)과 "
+                "**이익 델타 폭**(직전 분기보다 이익이 는 비율), 그리고 "
+                "**상대수익**(2024년 말 기준 SPY 대비 누적)을 함께 봅니다. "
+                "세 선의 **순서**가 이 모델의 핵심 질문입니다."
+            )
+            ai_members, non_ai = sm.ai_members(ds)
+            ai_series = cached_cycle_series(ds, tuple(ai_members), "2024-12-31",
+                                            "2025-01-01", 키)
+            non_series = cached_cycle_series(ds, tuple(non_ai), "2024-12-31",
+                                             "2025-01-01", 키)
+            if ai_series:
+                import altair as alt
+                frames = []
+                for label, series in (("AI 정배열 폭", ai_series), ("AI 이익 델타 폭", ai_series)):
+                    key = "정배열폭" if "정배열" in label else "델타폭"
+                    frames += [{"월": r["월"][:7], "선": label, "값": r[key]} for r in series]
+                width_df = pd.DataFrame(frames)
+                st.altair_chart(
+                    alt.Chart(width_df).mark_line(point=True).encode(
+                        x=alt.X("월:N", title=None, axis=alt.Axis(labelAngle=-60)),
+                        y=alt.Y("값:Q", title="폭 (%)"),
+                        color=alt.Color("선:N", title=None,
+                                        scale=alt.Scale(range=["#2E9E5B", "#E0A030"]),
+                                        legend=alt.Legend(orient="top")),
+                    ).properties(height=230),
+                    use_container_width=True)
+                rel_df = pd.DataFrame(
+                    [{"월": r["월"][:7], "선": "AI 사이클", "값": r["상대수익"]}
+                     for r in ai_series if r["상대수익"] is not None]
+                    + [{"월": r["월"][:7], "선": "비AI", "값": r["상대수익"]}
+                       for r in non_series if r["상대수익"] is not None])
+                st.altair_chart(
+                    alt.Chart(rel_df).mark_line(point=True).encode(
+                        x=alt.X("월:N", title=None, axis=alt.Axis(labelAngle=-60)),
+                        y=alt.Y("값:Q", title="SPY 대비 누적 (%p)"),
+                        color=alt.Color("선:N", title=None,
+                                        scale=alt.Scale(range=["#C4553B", "#8A8F98"]),
+                                        legend=alt.Legend(orient="top")),
+                    ).properties(height=230),
+                    use_container_width=True)
+                low = min(ai_series, key=lambda r: r["정배열폭"])
+                st.info(
+                    f"**실측 순서 (37차)**: AI 정배열 폭 최저는 **{low['월'][:7]} "
+                    f"{low['정배열폭']}%** — 이익 델타 폭도 이 무렵 바닥이었고, "
+                    "**주가가 먼저 돌아선 뒤** 정배열과 델타가 뒤따랐습니다. "
+                    "'정배열·델타가 먼저, 주가가 나중'이 아니라 **반대 순서**입니다."
                 )
 
-    _h14_경고 = (
-        "**판정 상태 (정직화)** — H14: **미채택**  \n"
-        "과거 실측(38차): 이 신호가 켜진 20건은 1년 뒤 **주도 유지 70.0%** · "
-        "되돌림 25.0% · 상대수익 중앙 **+42.4%p** 였고, "
-        "주가만 오른 대조군 339건은 53.7% · 35.7% · +13.4%p 였습니다. "
-        "앞시기·뒤시기 모두 70%로 안정적이나, **표본 20건으로 구간이 넓어 "
-        "채택 기준(완전 분리)을 넘지 못했습니다.** 따라서 아직 매수 근거가 "
-        "아니라 관찰이며, 로봇이 표본을 쌓는 대로 자동 재판정합니다."
-    )
-    with st.expander("확인 신호의 과거 성적·판정 상태 (정직화)"):
-        st.warning(_h14_경고)
-
-    # 관찰판 (127차 — 이르지만 약한 관찰. ①로 이동, 129차)
-    st.markdown("**관찰판** — 최근 91일 정배열 완성이 몰리는 묶음 (판정 아님)")
-    _몰림 = [g for g in _묶음판 if g["완성"] >= 2]
-    if not _몰림:
-        st.markdown("최근 91일 안에 완성이 2개 이상 나온 묶음이 없습니다.")
-    for g in _몰림[:3]:
-        st.markdown(
-            f"· **{g['묶음']}** — 완성 {g['완성']}개"
-            f" (이격도30%+ {g['신호']}개 · 델타상승 {g['델타상승']}개)"
-            f" · 마지막 {g['마지막완성']}"
-        )
-        with st.expander(f"{g['묶음']} 구성 종목 보기"):
-            for m in group_member_rows(g["묶음"], _완성, _오늘):
-                꼬리 = ""
-                if m["완성"]:
-                    꼬리 = f" — 완성 {m['완성']}"
-                    if m["이격도"] is not None:
-                        꼬리 += f" · 이격도 {m['이격도']}%"
-                    if m["신호"]:
-                        꼬리 += " · 🔥신호"
-                    if m["델타"] is True:
-                        꼬리 += " · 델타상승"
-                st.markdown(f"· **{m['종목']}**{꼬리}")
-    if len(_몰림) > 3:
-        with st.expander(f"나머지 묶음 {len(_몰림)-3}개 보기"):
-            for g in _몰림[3:]:
+            # =====================================================================
+            # 2. 메인 — 채택된 신호
+            # =====================================================================
+    with tab_check:
+        st.header("③ 채택된 신호")
+        adopted = adopted_names(verdict) if is_v3 else []
+        if not is_v3:
+            st.warning("판정 파일이 v3 형식이 아닙니다 — 다음 로봇 수집 때 갱신됩니다.")
+        elif adopted:
+            st.success("채택: " + " · ".join(adopted))
+            for name, entry in (verdict.get("가설") or {}).items():
+                if entry.get("판정") != "채택":
+                    continue
+                judged = entry.get("신규(판정)") or {}
+                s, b = judged.get("신호") or {}, judged.get("기준선") or {}
                 st.markdown(
-                    f"· **{g['묶음']}** — 완성 {g['완성']}개"
-                    f" (이격도30%+ {g['신호']}개 · 델타상승 {g['델타상승']}개)"
-                    f" · 마지막 {g['마지막완성']}"
+                    f"**{HYPOTHESIS_LABELS.get(name, name)}**  \n"
+                    f"이 신호가 켜진 발표는 60거래일 뒤 시장을 20%p 이상 이긴 비율이 "
+                    f"**{s.get('rate')}%** (n={s.get('n')}), 아무 발표나 샀을 때는 "
+                    f"{b.get('rate')}% 였습니다.  \n"
+                    f"앞시기 {entry.get('신규_앞시기', {}).get('rate')}% · "
+                    f"뒤시기 {entry.get('신규_뒤시기', {}).get('rate')}%"
                 )
-    _종목판 = [r for r in _종목판전체 if r["신호"]]
-    if _종목판:
-        st.markdown("**이격도 30%+ 완성 종목** — 최신 완성 순 (H18·H18b 신호, 탐색 참고):")
-        def _신호줄(r):
-            배지 = ' <span class="mv-badge">NEW</span>' if r["새완성"] else ""
-            테마 = f" · {r['테마']}" if r.get("테마") else ""
-            return (f"· **{r['종목']}** ({r['묶음']}{테마}) {r['완성일']}"
-                    f" · 이격도 {r['이격도']}%"
-                    + (" · 델타상승" if r["델타"] is True else "") + 배지)
-        for r in _종목판[:5]:
-            st.markdown(_신호줄(r), unsafe_allow_html=True)
-        if len(_종목판) > 5:
-            with st.expander(f"나머지 {len(_종목판)-5}개 보기"):
-                for r in _종목판[5:]:
-                    st.markdown(_신호줄(r), unsafe_allow_html=True)
-        st.caption(
-            "과거 실측(126차): 이 신호의 1년 뒤 SPY+20%p **46.6%** (기준선 "
-            "27.5%) · 시장을 이긴 비율 59% — **채택 전 참고**이며 10건 중 "
-            "4건은 시장에 졌습니다."
-        )
-    else:
-        st.markdown("지금 이격도 30%+ 완성 종목 없음 — 없는 것은 없다고 말합니다.")
-
-    _유지 = cached_aligned_now(ds, 키)
-    with st.expander(f"지금 주봉 정배열 유지 중인 종목 {len(_유지)}개 (이격도순)"):
-        st.caption(
-            "오래전 완성해 계속 달리는 종목은 위 관찰판(새 완성)에 안 "
-            "보입니다 — 여기서 봅니다. 여기 없는 종목은 지금 정배열이 "
-            "깨져 있다는 뜻입니다 (예: 조정 중인 MU·AMD)."
-        )
-        for r in _유지[:30]:
-            이격 = "—" if r["이격도"] is None else f"{r['이격도']}%"
-            st.markdown(f"· **{r['종목']}** ({r['묶음']}) · 이격도 {이격}")
-        if len(_유지) > 30:
-            st.caption(f"… 외 {len(_유지)-30}개")
-
-    # =====================================================================
-    # 2. 장세 (정배열 폭 모델, 33·34차 + 121차 시장 게이지)
-    # =====================================================================
-    st.header("② 장세 — 시장·섹터 정배열 폭")
-    st.caption(
-        "각 섹터에서 **주가가 완전 정배열**(주봉 종가 > 4주 > 13주 > 26주 > "
-        "52주선)인 종목의 비율입니다. 옆 숫자는 **그 구간이 과거에 1년 뒤 "
-        "시장을 20%p 이상 이긴 비율**(34차 탐색값)입니다."
-    )
-
-    # 시장 전체 장세 게이지 (121차) — 값은 맨 위 요약에서 이미 계산됨.
-    for 줄 in market_regime_lines(_폭, _직전폭, verdict):
-        st.markdown(줄)
-    st.divider()
-
-    breadth_rows = cached_current_breadth(ds, 키)
-    measured = [r for r in breadth_rows if r["폭"] is not None]
-    if measured:
-        st.altair_chart(
-            sorted_bar_chart(
-                [r["섹터"] for r in measured],
-                [r["폭"] for r in measured],
-                "정배열 폭 (%)",
-                colors={r["섹터"]: ZONE_COLORS[breadth_zone(r["폭"])["zone"]]
-                        for r in measured},
-            ),
-            use_container_width=True,
-        )
-        st.caption(
-            "🟩 쌓이는 중(40~59%) — 과거 1년 폭등률 33.3%로 최고 · "
-            "🟥 정배열 완성(60%+) — 7.7%로 최저 · 🟦 초기 · ⬜ 약함"
-        )
-
-    with st.expander("섹터별 자세히 보기 (폭·상태·과거 실측)"):
-        for row in breadth_rows:
-            zone = breadth_zone(row["폭"])
-            if row["폭"] is None:
-                st.markdown(f"**{row['섹터']}** ({row['종목수']}종목) — 판단 불가 (이력 부족)")
-                continue
-            moved = ""
-            if row["직전폭"] is not None:
-                delta = row["폭"] - row["직전폭"]
-                moved = f" · 지난주 대비 {delta:+.0f}%p"
-            st.markdown(
-                f"**{row['섹터']}** {row['폭']:.0f}% ({row['종목수']}종목){moved}  \n"
-                f"{row['상태']} — {zone['zone']} · 이 구간의 과거 1년 폭등률 "
-                f"**{zone['rate']}%** (기준선 {breadth_baseline(verdict)}%)  \n"
-                f"<span style='color:gray;font-size:0.85em'>{zone['note']}</span>",
-                unsafe_allow_html=True,
-            )
-        st.warning("\n".join(breadth_verdict_lines(verdict)))
-
-    # =====================================================================
-    # 1-2. AI 사이클 추적 (37차) — 저장소 주인 관찰 국면의 실제 순서
-    # =====================================================================
-    with st.expander("사이클 추적 — 정배열·이익 델타·주가 (펼쳐 보기)"):
-        st.caption(
-            "AI 사이클 종목 묶음의 **정배열 폭**(주가가 정배열인 비율)과 "
-            "**이익 델타 폭**(직전 분기보다 이익이 는 비율), 그리고 "
-            "**상대수익**(2024년 말 기준 SPY 대비 누적)을 함께 봅니다. "
-            "세 선의 **순서**가 이 모델의 핵심 질문입니다."
-        )
-        ai_members, non_ai = sm.ai_members(ds)
-        ai_series = cached_cycle_series(ds, tuple(ai_members), "2024-12-31",
-                                        "2025-01-01", 키)
-        non_series = cached_cycle_series(ds, tuple(non_ai), "2024-12-31",
-                                         "2025-01-01", 키)
-        if ai_series:
-            import altair as alt
-            frames = []
-            for label, series in (("AI 정배열 폭", ai_series), ("AI 이익 델타 폭", ai_series)):
-                key = "정배열폭" if "정배열" in label else "델타폭"
-                frames += [{"월": r["월"][:7], "선": label, "값": r[key]} for r in series]
-            width_df = pd.DataFrame(frames)
-            st.altair_chart(
-                alt.Chart(width_df).mark_line(point=True).encode(
-                    x=alt.X("월:N", title=None, axis=alt.Axis(labelAngle=-60)),
-                    y=alt.Y("값:Q", title="폭 (%)"),
-                    color=alt.Color("선:N", title=None,
-                                    scale=alt.Scale(range=["#2E9E5B", "#E0A030"]),
-                                    legend=alt.Legend(orient="top")),
-                ).properties(height=230),
-                use_container_width=True)
-            rel_df = pd.DataFrame(
-                [{"월": r["월"][:7], "선": "AI 사이클", "값": r["상대수익"]}
-                 for r in ai_series if r["상대수익"] is not None]
-                + [{"월": r["월"][:7], "선": "비AI", "값": r["상대수익"]}
-                   for r in non_series if r["상대수익"] is not None])
-            st.altair_chart(
-                alt.Chart(rel_df).mark_line(point=True).encode(
-                    x=alt.X("월:N", title=None, axis=alt.Axis(labelAngle=-60)),
-                    y=alt.Y("값:Q", title="SPY 대비 누적 (%p)"),
-                    color=alt.Color("선:N", title=None,
-                                    scale=alt.Scale(range=["#C4553B", "#8A8F98"]),
-                                    legend=alt.Legend(orient="top")),
-                ).properties(height=230),
-                use_container_width=True)
-            low = min(ai_series, key=lambda r: r["정배열폭"])
-            st.info(
-                f"**실측 순서 (37차)**: AI 정배열 폭 최저는 **{low['월'][:7]} "
-                f"{low['정배열폭']}%** — 이익 델타 폭도 이 무렵 바닥이었고, "
-                "**주가가 먼저 돌아선 뒤** 정배열과 델타가 뒤따랐습니다. "
-                "'정배열·델타가 먼저, 주가가 나중'이 아니라 **반대 순서**입니다."
-            )
-
-        # =====================================================================
-        # 2. 메인 — 채택된 신호
-        # =====================================================================
-    st.header("③ 채택된 신호")
-    adopted = adopted_names(verdict) if is_v3 else []
-    if not is_v3:
-        st.warning("판정 파일이 v3 형식이 아닙니다 — 다음 로봇 수집 때 갱신됩니다.")
-    elif adopted:
-        st.success("채택: " + " · ".join(adopted))
-        for name, entry in (verdict.get("가설") or {}).items():
-            if entry.get("판정") != "채택":
-                continue
-            judged = entry.get("신규(판정)") or {}
-            s, b = judged.get("신호") or {}, judged.get("기준선") or {}
-            st.markdown(
-                f"**{HYPOTHESIS_LABELS.get(name, name)}**  \n"
-                f"이 신호가 켜진 발표는 60거래일 뒤 시장을 20%p 이상 이긴 비율이 "
-                f"**{s.get('rate')}%** (n={s.get('n')}), 아무 발표나 샀을 때는 "
-                f"{b.get('rate')}% 였습니다.  \n"
-                f"앞시기 {entry.get('신규_앞시기', {}).get('rate')}% · "
-                f"뒤시기 {entry.get('신규_뒤시기', {}).get('rate')}%"
-            )
-        live = live_signal_rows(ds)
-        st.markdown("**지금 이 신호가 켜진 종목** (최근 90일 발표)")
-        if not live:
-            st.caption("현재 없음 — 새 실적 발표를 기다립니다.")
+            live = live_signal_rows(ds)
+            st.markdown("**지금 이 신호가 켜진 종목** (최근 90일 발표)")
+            if not live:
+                st.caption("현재 없음 — 새 실적 발표를 기다립니다.")
+            else:
+                st.dataframe(pd.DataFrame(live), width="stretch", hide_index=True)
         else:
-            st.dataframe(pd.DataFrame(live), width="stretch", hide_index=True)
-    else:
-        st.info("채택된 신호 없음 — 어떤 상태도 매수 판단의 근거가 아닙니다.")
-    st.caption(
-        "⚠️ 채택 표본에는 그 가설을 찾아낸 탐색 종목이 섞여 있습니다. "
-        "완전한 독립 확인은 등록 이후 새 발표가 쌓여야 완성됩니다."
-    )
-
-    # =====================================================================
-    # 3. 섹터 한눈에 보기 (차트)
-    # =====================================================================
-    with st.expander("섹터 실적 한눈에 — 신기록 폭·서프라이즈·전망 (펼쳐 보기)"):
-
-        st.subheader("실적 신기록 폭")
-        st.caption("최근 발표한 종목 중 이익 신기록이 나온 비율 (관찰).")
-        gauge_rows = [r for r in sector_gauge_rows(ds) if r["게이지"] is not None]
-        if gauge_rows:
-            st.altair_chart(
-                sorted_bar_chart([r["섹터"] for r in gauge_rows],
-                                 [r["게이지"] for r in gauge_rows], "신기록 폭 (%)"),
-                use_container_width=True)
-
-        st.subheader("실적 서프라이즈 (컨센서스 대비)")
-        st.caption("최근 2분기 발표가 애널리스트 추정을 몇 % 넘겼는지 (중앙값, 관찰).")
-        sur_rows = surprise_sector_rows(surprise)
-        if sur_rows:
-            st.altair_chart(
-                sorted_bar_chart([r["섹터"] for r in sur_rows],
-                                 [r["중앙%"] for r in sur_rows],
-                                 "서프라이즈 중앙 (%)", positive_negative=True),
-                use_container_width=True)
-            st.caption("⚠️ 적자 근처 종목은 % 가 크게 튑니다 (분모가 0에 가까움).")
-        else:
-            st.caption("아직 서프라이즈 원장이 비어 있습니다.")
-
-        st.subheader("전망 스프레드 (가이던스 − 컨센서스)")
-        st.caption("회사가 시장 기대보다 높게 부를수록 큰 값 (다음 1분기, 관찰).")
-        spread_rows = sector_spread_rows(ds, consensus)
-        if spread_rows:
-            st.altair_chart(
-                sorted_bar_chart([r["섹터"] for r in spread_rows],
-                                 [r["스프레드중앙%"] for r in spread_rows],
-                                 "스프레드 중앙 (%)", positive_negative=True),
-                use_container_width=True)
-            for row in spread_rows:
-                if row["표본"] == "표본 부족":
-                    st.caption(f"⚠️ {row['섹터']}: {row['종목수']}종목뿐 — 표본 부족")
-        else:
-            st.caption("신선한 가이던스와 컨센서스가 함께 있는 종목이 아직 없습니다.")
-
-        # =====================================================================
-        # 4. 접기 — 미채택·판정 대기 신호 상세
-        # =====================================================================
-    with st.expander("⑥ 미채택·판정 대기 신호 — 무엇을 재봤고 왜 안 쓰는가"):
+            st.info("채택된 신호 없음 — 어떤 상태도 매수 판단의 근거가 아닙니다.")
         st.caption(
-            "아래는 사전 등록해 측정했으나 **채택 기준(신호 구간이 기준선 "
-            "구간과 완전히 갈라짐, n≥10)을 넘지 못한** 신호들입니다. "
-            "판단·점수·추천에 쓰지 않되, 버리지 않고 로봇이 계속 재판정합니다."
+            "⚠️ 채택 표본에는 그 가설을 찾아낸 탐색 종목이 섞여 있습니다. "
+            "완전한 독립 확인은 등록 이후 새 발표가 쌓여야 완성됩니다."
         )
-        for name, entry in (verdict.get("가설") or {}).items():
-            if entry.get("판정") == "채택":
-                continue
-            judged = entry.get("신규(판정)") or {}
-            s, b = judged.get("신호") or {}, judged.get("기준선") or {}
-            label = HYPOTHESIS_LABELS.get(name, name)
-            detail = HYPOTHESIS_DETAILS.get(name, "")
-            rate_text = signal_summary(entry, s, b)
+
+        # =====================================================================
+        # 3. 섹터 한눈에 보기 (차트)
+        # =====================================================================
+    with tab_fund:
+        with st.expander("섹터 실적 한눈에 — 신기록 폭·서프라이즈·전망 (펼쳐 보기)"):
+
+            st.subheader("실적 신기록 폭")
+            st.caption("최근 발표한 종목 중 이익 신기록이 나온 비율 (관찰).")
+            gauge_rows = [r for r in sector_gauge_rows(ds) if r["게이지"] is not None]
+            if gauge_rows:
+                st.altair_chart(
+                    sorted_bar_chart([r["섹터"] for r in gauge_rows],
+                                     [r["게이지"] for r in gauge_rows], "신기록 폭 (%)"),
+                    use_container_width=True)
+
+            st.subheader("실적 서프라이즈 (컨센서스 대비)")
+            st.caption("최근 2분기 발표가 애널리스트 추정을 몇 % 넘겼는지 (중앙값, 관찰).")
+            sur_rows = surprise_sector_rows(surprise)
+            if sur_rows:
+                st.altair_chart(
+                    sorted_bar_chart([r["섹터"] for r in sur_rows],
+                                     [r["중앙%"] for r in sur_rows],
+                                     "서프라이즈 중앙 (%)", positive_negative=True),
+                    use_container_width=True)
+                st.caption("⚠️ 적자 근처 종목은 % 가 크게 튑니다 (분모가 0에 가까움).")
+            else:
+                st.caption("아직 서프라이즈 원장이 비어 있습니다.")
+
+            st.subheader("전망 스프레드 (가이던스 − 컨센서스)")
+            st.caption("회사가 시장 기대보다 높게 부를수록 큰 값 (다음 1분기, 관찰).")
+            spread_rows = sector_spread_rows(ds, consensus)
+            if spread_rows:
+                st.altair_chart(
+                    sorted_bar_chart([r["섹터"] for r in spread_rows],
+                                     [r["스프레드중앙%"] for r in spread_rows],
+                                     "스프레드 중앙 (%)", positive_negative=True),
+                    use_container_width=True)
+                for row in spread_rows:
+                    if row["표본"] == "표본 부족":
+                        st.caption(f"⚠️ {row['섹터']}: {row['종목수']}종목뿐 — 표본 부족")
+            else:
+                st.caption("신선한 가이던스와 컨센서스가 함께 있는 종목이 아직 없습니다.")
+
+            # =====================================================================
+            # 4. 접기 — 미채택·판정 대기 신호 상세
+            # =====================================================================
+    with tab_check:
+        with st.expander("⑥ 미채택·판정 대기 신호 — 무엇을 재봤고 왜 안 쓰는가"):
+            st.caption(
+                "아래는 사전 등록해 측정했으나 **채택 기준(신호 구간이 기준선 "
+                "구간과 완전히 갈라짐, n≥10)을 넘지 못한** 신호들입니다. "
+                "판단·점수·추천에 쓰지 않되, 버리지 않고 로봇이 계속 재판정합니다."
+            )
+            for name, entry in (verdict.get("가설") or {}).items():
+                if entry.get("판정") == "채택":
+                    continue
+                judged = entry.get("신규(판정)") or {}
+                s, b = judged.get("신호") or {}, judged.get("기준선") or {}
+                label = HYPOTHESIS_LABELS.get(name, name)
+                detail = HYPOTHESIS_DETAILS.get(name, "")
+                rate_text = signal_summary(entry, s, b)
+                st.markdown(
+                    f"**{label}** — {entry.get('판정', '?')}  \n"
+                    f"{detail}  \n"
+                    f"<span style='color:gray;font-size:0.9em'>{rate_text}</span>",
+                    unsafe_allow_html=True,
+                )
+
+        # =====================================================================
+        # 5. 원자료·용어·한계
+        # =====================================================================
+        st.page_link("pages/1_원자료.py",
+                     label="원자료 보기 — 종목별 최근 발표·전 종목 상태 →")
+
+        with st.expander("용어 풀이"):
             st.markdown(
-                f"**{label}** — {entry.get('판정', '?')}  \n"
-                f"{detail}  \n"
-                f"<span style='color:gray;font-size:0.9em'>{rate_text}</span>",
-                unsafe_allow_html=True,
+                "- **완전 정배열** — 주봉 종가가 4·13·26·52주 이동평균 위에 있고, "
+                "그 이동평균들도 짧은 것부터 순서대로 위에 있는 상태\n"
+                "- **정배열 폭** — 그 섹터 종목 중 완전 정배열인 비율\n"
+                "- **TTM 조정 EPS** — 최근 4개 분기 조정 주당순이익 합 "
+                "(회사가 보도자료에 직접 발표한 숫자만)\n"
+                "- **첫 신기록** — TTM 이익이 과거 최고를 처음 넘은 발표\n"
+                "- **52주선 아래** — 주가가 자기 1년 평균 아래 (아직 안 오른 상태)\n"
+                "- **컨센서스** — 애널리스트들의 실적 추정 평균 (야후)\n"
+                "- **가이던스** — 회사가 직접 발표한 다음 분기 전망\n"
+                "- **서프라이즈** — 실제 실적이 컨센서스를 넘긴 정도\n"
+                "- **폭등** — 60거래일(1년 모델은 250거래일) 수익이 SPY보다 +20%p 이상\n"
+                "- **기준선** — 아무 때나 샀을 때의 같은 비율 (비교 대상)\n"
+                "- **n** — 표본 수 · **윌슨 구간** — 적중률의 신뢰 범위 "
+                "(표본이 적을수록 넓어져 과신을 막습니다)\n"
+                "- **채택/미채택/판정 불가** — 신호 구간이 기준선 구간과 완전히 "
+                "갈라지면 채택, 겹치면 미채택, 표본 10건 미만이면 판정 불가\n"
+                "- **H번호** — 사전 등록된 가설의 일련번호 (측정결과.md 와 잇는 꼬리표)\n"
+                "- **UTC** — 국제 표준시. 한국 시각보다 9시간 늦습니다"
             )
 
-    # =====================================================================
-    # 5. 원자료·용어·한계
-    # =====================================================================
-    st.page_link("pages/1_원자료.py",
-                 label="원자료 보기 — 종목별 최근 발표·전 종목 상태 →")
-
-    with st.expander("용어 풀이"):
-        st.markdown(
-            "- **완전 정배열** — 주봉 종가가 4·13·26·52주 이동평균 위에 있고, "
-            "그 이동평균들도 짧은 것부터 순서대로 위에 있는 상태\n"
-            "- **정배열 폭** — 그 섹터 종목 중 완전 정배열인 비율\n"
-            "- **TTM 조정 EPS** — 최근 4개 분기 조정 주당순이익 합 "
-            "(회사가 보도자료에 직접 발표한 숫자만)\n"
-            "- **첫 신기록** — TTM 이익이 과거 최고를 처음 넘은 발표\n"
-            "- **52주선 아래** — 주가가 자기 1년 평균 아래 (아직 안 오른 상태)\n"
-            "- **컨센서스** — 애널리스트들의 실적 추정 평균 (야후)\n"
-            "- **가이던스** — 회사가 직접 발표한 다음 분기 전망\n"
-            "- **서프라이즈** — 실제 실적이 컨센서스를 넘긴 정도\n"
-            "- **폭등** — 60거래일(1년 모델은 250거래일) 수익이 SPY보다 +20%p 이상\n"
-            "- **기준선** — 아무 때나 샀을 때의 같은 비율 (비교 대상)\n"
-            "- **n** — 표본 수 · **윌슨 구간** — 적중률의 신뢰 범위 "
-            "(표본이 적을수록 넓어져 과신을 막습니다)\n"
-            "- **채택/미채택/판정 불가** — 신호 구간이 기준선 구간과 완전히 "
-            "갈라지면 채택, 겹치면 미채택, 표본 10건 미만이면 판정 불가\n"
-            "- **H번호** — 사전 등록된 가설의 일련번호 (측정결과.md 와 잇는 꼬리표)\n"
-            "- **UTC** — 국제 표준시. 한국 시각보다 9시간 늦습니다"
-        )
-
-    with st.expander("한계 (감추지 않습니다)"):
-        st.markdown(
-            "- 채택되지 않은 신호는 판단·점수·추천에 쓰지 않습니다.\n"
-            "- 정배열 폭 모델의 과거 실측(34차)은 **탐색값**이라 채택 근거가 "
-            "아닙니다. H12 는 등록 이후 새 신호로만 판정합니다.\n"
-            "- 컨센서스·서프라이즈는 야후 제공값입니다. 서프라이즈 소급분은 "
-            "야후가 사후 보관한 기록이라 우리가 직접 박제한 원장과 구분해 둡니다.\n"
-            "- 조정 EPS 를 발표하지 않는 종목은 EBITDA·GAAP EPS 잣대로 넘어가거나 "
-            "'판단 불가'로 나옵니다 — 없는 값은 없음으로 둡니다.\n"
-            "- 같은 시기의 사건들은 같은 장세를 공유하므로 통계 구간이 실제보다 "
-            "좁게 나올 수 있습니다."
-        )
+        with st.expander("한계 (감추지 않습니다)"):
+            st.markdown(
+                "- 채택되지 않은 신호는 판단·점수·추천에 쓰지 않습니다.\n"
+                "- 정배열 폭 모델의 과거 실측(34차)은 **탐색값**이라 채택 근거가 "
+                "아닙니다. H12 는 등록 이후 새 신호로만 판정합니다.\n"
+                "- 컨센서스·서프라이즈는 야후 제공값입니다. 서프라이즈 소급분은 "
+                "야후가 사후 보관한 기록이라 우리가 직접 박제한 원장과 구분해 둡니다.\n"
+                "- 조정 EPS 를 발표하지 않는 종목은 EBITDA·GAAP EPS 잣대로 넘어가거나 "
+                "'판단 불가'로 나옵니다 — 없는 값은 없음으로 둡니다.\n"
+                "- 같은 시기의 사건들은 같은 장세를 공유하므로 통계 구간이 실제보다 "
+                "좁게 나올 수 있습니다."
+            )
 
 
 if __name__ == "__main__":
