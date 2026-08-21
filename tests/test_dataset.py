@@ -685,6 +685,101 @@ def test_load_splits_는_없거나_이상한_기록을_거른다():
     _os.remove(tmp)
 
 
+# ---------------------------------------------------------------------------
+# 발표일 되찾기 (137차) — 값은 있는데 날짜가 없어 통째로 빠지던 분기
+# ---------------------------------------------------------------------------
+def _발표일_스냅(rows):
+    return {
+        "benchmark": "SPY",
+        "tickers": ["AA"],
+        "prices": {"SPY": {"dates": ["2024-01-02"], "close": [100.0]}},
+        "eps": {"AA": rows},
+    }
+
+
+def test_발표일이_비면_바깥자_발표일로_채운다():
+    """실측: 9,466행 중 2,336행에 발표일이 없고, 그중 785행은 잣대 값이
+    멀쩡히 있었습니다. 측정은 발표일로 창을 잡으므로 그 분기들은 실적이
+    있는데도 한 번도 세어지지 않았습니다."""
+    snap = _발표일_스냅([{"filing_date": "2024-03-31", "adj_eps": 1.0}])
+    ds = dataset.build(snap, announcements={"AA": ["2024-04-25"]})
+    행 = ds["quarters"]["AA"][0]
+    assert 행["announced_date"] == "2024-04-25", 행
+    assert 행["_발표일출처"] == "야후", "채운 사실을 숨기면 안 됩니다"
+    assert any("발표일이 비어" in n for n in ds["notes"]), ds["notes"]
+
+
+def test_분기끝을_발표일로_쓰지_않는다():
+    """`filing_date` 는 접수일이 아니라 **분기 종료일**입니다. 둘 다 있는
+    7,130행으로 재 보니 발표는 분기끝보다 **중앙 30일** 뒤였습니다.
+    분기끝을 발표일로 쓰면 뉴스가 나오기 한 달 전에 사는 셈이 되어 모든
+    가설이 부풀려집니다 (108차 "값은 멀쩡한데 뜻이 틀렸다"의 재현)."""
+    snap = _발표일_스냅([{"filing_date": "2024-03-31", "adj_eps": 1.0}])
+    ds = dataset.build(snap, announcements={})      # 바깥 자 기록 없음
+    행 = ds["quarters"]["AA"][0]
+    assert not 행.get("announced_date"), \
+        f"분기끝을 발표일로 써 버렸습니다: {행.get('announced_date')}"
+
+
+def test_우리_발표일은_덮어쓰지_않는다():
+    """바깥 자와 우리가 다를 때(실측 256행) 우리 값을 덮으면 대조가
+    불가능해집니다. 빈 칸만 채웁니다."""
+    snap = _발표일_스냅([{"filing_date": "2024-03-31", "adj_eps": 1.0,
+                       "announced_date": "2024-04-20"}])
+    ds = dataset.build(snap, announcements={"AA": ["2024-04-25"]})
+    행 = ds["quarters"]["AA"][0]
+    assert 행["announced_date"] == "2024-04-20", 행
+    assert "_발표일출처" not in 행
+
+
+def test_창_밖이거나_후보가_여럿이면_채우지_않는다():
+    """창 0~75일은 실측 분포에서 골랐습니다(발표 지연 99% 58일 · 최대 117).
+    90일을 넘기면 **다음 분기 발표**가 창에 들어와 애매해집니다."""
+    snap = _발표일_스냅([{"filing_date": "2024-03-31", "adj_eps": 1.0}])
+    멀다 = dataset.build(snap, announcements={"AA": ["2024-07-30"]})   # 121일 뒤
+    assert not 멀다["quarters"]["AA"][0].get("announced_date")
+    여럿 = dataset.build(snap, announcements={"AA": ["2024-04-25", "2024-05-20"]})
+    assert not 여럿["quarters"]["AA"][0].get("announced_date"), \
+        "후보가 둘인데 하나를 골랐습니다 — 모르는 것은 모르는 채로 둡니다"
+
+
+def test_이미_쓰인_발표일은_다시_쓰지_않는다():
+    """회사는 한 날에 두 분기를 발표하지 않습니다. 같은 날이 두 행에
+    붙으면 둘 중 하나는 틀린 것입니다 — 가드가 없을 때 실제로 16건이
+    겹쳤습니다(137차 실측)."""
+    snap = _발표일_스냅([
+        {"filing_date": "2024-03-31", "adj_eps": 1.0,
+         "announced_date": "2024-05-10"},
+        {"filing_date": "2024-04-30", "adj_eps": 1.1},   # 창 안에 같은 날뿐
+    ])
+    ds = dataset.build(snap, announcements={"AA": ["2024-05-10"]})
+    둘째 = ds["quarters"]["AA"][1]
+    assert not 둘째.get("announced_date"), \
+        f"이미 쓰인 발표일을 또 붙였습니다: {둘째.get('announced_date')}"
+
+
+def test_load_announcements_는_뜻이_확인된_날짜만_읽는다():
+    """`날짜뜻` 이 "발표일" 인 기록만 씁니다 — 뜻이 다른 날짜를 발표일로
+    쓰는 것이 108차에 겪은 사고 그 자체입니다."""
+    import json as _json
+    tmp = "/tmp/claude-0/vendor_ann_test.json"
+    os.makedirs(os.path.dirname(tmp), exist_ok=True)
+    with open(tmp, "w", encoding="utf-8") as f:
+        _json.dump({"tickers": {
+            "AA": {"announcements": [
+                {"announced_date": "2024-04-25", "날짜뜻": "발표일"},
+                {"announced_date": "2024-03-31", "날짜뜻": "분기끝"},
+                {"announced_date": "2024-05-01"},                  # 뜻 없음
+                {"날짜뜻": "발표일"},                                # 날짜 없음
+            ]},
+            "BB": {"announcements": []},
+        }}, f, ensure_ascii=False)
+    읽음 = dataset.load_announcements(tmp)
+    assert 읽음 == {"AA": ["2024-04-25"]}, 읽음
+    assert dataset.load_announcements("/없는/파일.json") == {}
+
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

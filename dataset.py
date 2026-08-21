@@ -493,6 +493,111 @@ def _clean_prices(price_map: dict, notes: list[str]) -> dict:
 
 
 
+# 발표일 되찾기 (137차) — 값은 있는데 **날짜가 없어** 통째로 빠지던 분기
+# ---------------------------------------------------------------------------
+# 실측으로 드러난 손실: 전체 9,466행 중 **2,336행(24.7%)에 발표일이 없고**,
+# 그중 **785행은 잣대 값이 멀쩡히 들어 있습니다.** 측정은 발표일로 창을
+# 잡으므로, 이 785분기는 실적이 있는데도 한 번도 세어지지 않았습니다.
+#
+# ⚠️ **분기끝(filing_date)을 발표일로 쓰면 안 됩니다.** 이름이 헷갈리지만
+#    이 칸은 접수일이 아니라 **분기 종료일**입니다(vendor_compare 머리말도
+#    같은 말을 합니다). 둘 다 있는 7,130행으로 재 보니 발표는 분기끝보다
+#    **중앙 30일** 뒤였습니다(90% 39일 · 99% 58일 · 최대 117일 · 앞선 건 0건).
+#    분기끝을 발표일로 쓰면 **뉴스가 나오기 한 달 전에 사는 셈**이 되어
+#    모든 가설이 부풀려집니다. 이것이 108차에 적힌 "값은 멀쩡한데 **뜻**이
+#    틀렸다"의 정확한 재현입니다.
+#
+# 그래서 **바깥 자(야후)의 실제 발표일**로 채웁니다. 근거는 지어낸 것이
+# 아니라 잰 것입니다 — 우리 발표일이 **있는** 7,130행을 야후와 맞대 보니
+# **96.4%가 ±3일 안에서 일치**했습니다(6,874 대 256). 야후 발표일은
+# 시간축으로 쓸 만합니다.
+#
+# 규칙은 좁게 잡습니다:
+#   · 분기끝 뒤 **0~75일** 안에 야후 발표일이 **정확히 하나**일 때만 채운다
+#   · 우리 발표일이 이미 있으면 **절대 덮어쓰지 않는다** (대조용으로 남김)
+#   · 채운 행에는 `_발표일출처="야후"` 를 남긴다 — 숨기지 않는다
+#
+# 창 75일은 위 실측 분포에서 골랐습니다. 실행 출력(창별 성적):
+#     0~60일 → 딱 1개 2,226 · 애매 0      0~90일  → 2,229 · 애매 1
+#     0~75일 → 딱 1개 2,229 · 애매 0      0~120일 → 1,008 · 애매 1,222
+# 90일을 넘기면 **다음 분기 발표가 창 안으로 들어와** 애매해집니다.
+# 75일은 실제 지연의 99.5%를 덮으면서 애매한 건이 0인 자리입니다.
+ANNOUNCE_WINDOW_DAYS = 75
+
+
+def load_announcements(path: str | None = None) -> dict:
+    """vendor.json 에서 **발표일 기록만** 읽습니다 (137차).
+
+    반환: {종목: [발표일(YYYY-MM-DD), ...]} — 없으면 빈 dict.
+    `날짜뜻` 이 "발표일" 인 기록만 씁니다. 뜻이 다른 날짜를 발표일로
+    쓰는 것이 바로 108차에 겪은 사고이므로, 뜻을 확인하지 않은 날짜는
+    한 건도 담지 않습니다.
+    """
+    if path is None:
+        path = f"{cfg.MEASURE_DIR}/vendor.json"
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        return {}
+    out: dict = {}
+    for ticker, d in (data.get("tickers") or {}).items():
+        날들 = sorted({
+            str(a["announced_date"])[:10]
+            for a in (d or {}).get("announcements") or []
+            if a.get("날짜뜻") == "발표일" and a.get("announced_date")
+        })
+        if 날들:
+            out[ticker] = 날들
+    return out
+
+
+def _recover_announced(quarters: dict, 발표: dict, notes: list[str]) -> int:
+    """발표일이 빈 행을 바깥 자의 발표일로 채웁니다. 덮어쓰지 않습니다."""
+    from datetime import date as _date
+
+    채움 = 0
+    for ticker, rows in (quarters or {}).items():
+        날들 = 발표.get(ticker) or []
+        if not 날들:
+            continue
+        # 이미 쓰인 발표일은 다시 쓰지 않습니다 — 회사는 한 날에 두 분기를
+        # 발표하지 않으므로, 같은 날이 두 행에 붙으면 **둘 중 하나는
+        # 틀린 것**입니다. 어느 쪽이 틀렸는지 모르므로 새로 채우지 않고
+        # 비워 둡니다(없음은 안전하고 틀림은 위험 — 헌법 1조).
+        # 이 가드가 없으면 실제로 16건이 겹쳤습니다(137차 실측).
+        쓰인날 = {str(r["announced_date"])[:10] for r in rows
+                if r.get("announced_date")}
+        for row in rows:
+            if row.get("announced_date") or not _valid_date(row.get("filing_date")):
+                continue
+            try:
+                끝 = _date.fromisoformat(str(row["filing_date"])[:10])
+            except ValueError:
+                continue
+            후보 = []
+            for 날 in 날들:
+                try:
+                    사이 = (_date.fromisoformat(날) - 끝).days
+                except ValueError:
+                    continue
+                if 0 <= 사이 <= ANNOUNCE_WINDOW_DAYS and 날 not in 쓰인날:
+                    후보.append(날)
+            # 딱 하나일 때만 — 여럿이면 어느 것인지 모르므로 비워 둡니다
+            if len(후보) == 1:
+                row["announced_date"] = 후보[0]
+                row["_발표일출처"] = "야후"
+                쓰인날.add(후보[0])
+                채움 += 1
+    if 채움:
+        notes.append(
+            f"발표일이 비어 있던 {채움}행을 바깥 자(야후)의 발표일로 "
+            f"채웠습니다 — 분기끝 뒤 0~{ANNOUNCE_WINDOW_DAYS}일 안에 "
+            "발표 기록이 정확히 하나일 때만. 우리 값은 덮어쓰지 않습니다."
+        )
+    return 채움
+
+
 def load_splits(path: str | None = None) -> dict:
     """vendor.json 에서 공식 액면분할 기록을 읽습니다 (112차).
 
@@ -554,7 +659,8 @@ def _apply_splits(ticker: str, rows: list[dict], splits: list, notes: list[str])
             f"분기 {보정}개의 주당 칸을 현재 주식 수 기준으로 나눔"
         )
 
-def build(snapshot: dict, splits: dict | None = None) -> dict:
+def build(snapshot: dict, splits: dict | None = None,
+          announcements: dict | None = None) -> dict:
     """snapshot 을 검사·정렬해 측정용 밥상을 차립니다.
 
     반환:
@@ -574,6 +680,17 @@ def build(snapshot: dict, splits: dict | None = None) -> dict:
     benchmark = snapshot.get("benchmark") or cfg.BENCHMARK
 
     quarters = _clean_quarters(snapshot.get("eps") or {}, notes)
+    # 발표일 되찾기 (137차) — 분할 환산보다 **먼저** 합니다. 환산이
+    # 발표일을 보고 분할 시점을 가리기 때문입니다(_apply_splits).
+    #
+    # 기본값 None 은 "파일에서 읽어라"는 뜻입니다. 부르는 곳이 9군데라
+    # 인자를 넘겨야만 돌게 하면 화면과 로봇이 서로 다른 표본을 보게
+    # 됩니다 — 이 저장소가 실제로 겪은 종류의 사고입니다. 시험에서
+    # 끄고 싶으면 `announcements={}` 를 넘기면 됩니다.
+    if announcements is None:
+        announcements = load_announcements()
+    if announcements:
+        _recover_announced(quarters, announcements, notes)
     # 액면분할 단위 환산 (112차) — 공식 기록이 있는 종목만.
     # 검사(_clean_quarters) 뒤에 하는 이유: 상한 검사 등은 발표 당시
     # 원문 값 기준이어야 하고, 환산은 그다음의 단위 맞추기이기 때문입니다.
