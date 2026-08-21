@@ -635,6 +635,11 @@ def cached_completion_events(_ds: dict, 키: str) -> list[dict]:
 
 
 @_cached
+def cached_aligned_now(_ds: dict, 키: str) -> list[dict]:
+    return aligned_now_rows(_ds)
+
+
+@_cached
 def cached_cycle_series(_ds: dict, members: tuple, base_day: str,
                         since: str, 키: str) -> list[dict]:
     return sm.cycle_series(_ds, list(members), base_day, since=since)
@@ -706,6 +711,84 @@ def health_lines(검진: dict | None) -> list[str]:
     return lines
 
 
+MODERN_CSS = """
+<style>
+#MainMenu, footer {visibility: hidden;}
+.block-container {padding-top: 1.1rem; padding-bottom: 4rem; max-width: 46rem;}
+h1 {font-size: 1.4rem !important; letter-spacing: -0.4px; margin-bottom: .2rem;}
+h2 {font-size: 1.12rem !important; border-left: 4px solid #22c55e;
+    padding-left: 10px; margin-top: 1.4rem !important;}
+h3 {font-size: 1.0rem !important;}
+p, li {line-height: 1.55;}
+div[data-testid="stExpander"] {border-radius: 12px;
+    border: 1px solid rgba(128,128,128,.25); margin-bottom: .35rem;}
+div[data-testid="stExpander"] summary {font-size: .92rem;}
+[data-testid="stAlert"] {border-radius: 14px;}
+[data-testid="stCaptionContainer"] {opacity: .8;}
+.mv-grid {display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    margin: .3rem 0 .6rem 0;}
+.mv-card {border-radius: 14px; padding: 10px 12px;
+    background: rgba(128,128,128,.10);
+    border: 1px solid rgba(128,128,128,.18);}
+.mv-label {font-size: .72rem; opacity: .7; margin-bottom: 2px;}
+.mv-value {font-size: 1.02rem; font-weight: 700; line-height: 1.3;}
+.mv-sub {font-size: .74rem; opacity: .75; margin-top: 2px;}
+.mv-green {color: #22c55e;} .mv-red {color: #ef4444;}
+.mv-amber {color: #f59e0b;}
+.mv-badge {display: inline-block; font-size: .68rem; font-weight: 700;
+    border-radius: 999px; padding: 1px 8px; margin-left: 6px;
+    background: rgba(34,197,94,.16); color: #22c55e;}
+</style>
+"""
+
+
+def summary_cards_html(폭: float | None, fired: list[dict],
+                       watch: list[dict], 새완성: list[dict],
+                       adopted: list[str]) -> str:
+    """오늘 요약을 증권앱풍 2×2 카드로 (130차 — 순수 함수, 시험 가능).
+
+    없는 값은 만들지 않습니다 — 폭이 없으면 "판단 불가"라고 적습니다.
+    """
+    if 폭 is None:
+        장세값, 장세색, 장세설명 = "판단 불가", "", "이력 부족"
+    elif 폭 < 20:
+        장세값, 장세색, 장세설명 = f"{폭:.0f}%", "mv-red", "약한 장세 — 종목 신호 신뢰 낮음"
+    elif 폭 < 60:
+        장세값, 장세색, 장세설명 = f"{폭:.0f}%", "mv-green", "살아 있는 장세"
+    else:
+        장세값, 장세색, 장세설명 = f"{폭:.0f}%", "mv-amber", "과열권 — 표본 희소"
+
+    확인이름 = " · ".join(sorted({r["묶음"] for r in fired})) if fired else "없음"
+    확인색 = "mv-green" if fired else ""
+
+    몰림 = [g for g in watch if g.get("완성", 0) >= 2][:2]
+    몰림값 = (" · ".join(f"{g['묶음']} {g['완성']}" for g in 몰림)
+            if 몰림 else "없음")
+
+    새이름 = " · ".join(r["종목"] for r in 새완성[:4]) if 새완성 else "없음"
+    새색 = "mv-green" if 새완성 else ""
+
+    채택값 = " · ".join(adopted) if adopted else "없음"
+    채택설명 = "" if adopted else "모든 표시는 관찰 — 매수 근거 아님"
+
+    return (
+        '<div class="mv-grid">'
+        f'<div class="mv-card"><div class="mv-label">장세 · 시장 정배열 폭</div>'
+        f'<div class="mv-value {장세색}">{장세값}</div>'
+        f'<div class="mv-sub">{장세설명}</div></div>'
+        f'<div class="mv-card"><div class="mv-label">주도 교체 확인 신호</div>'
+        f'<div class="mv-value {확인색}">{확인이름}</div>'
+        f'<div class="mv-sub">늦지만 강한 확인</div></div>'
+        f'<div class="mv-card"><div class="mv-label">이번 주 새 완성</div>'
+        f'<div class="mv-value {새색}">{새이름}</div>'
+        f'<div class="mv-sub">7일 안 정배열 완성</div></div>'
+        f'<div class="mv-card"><div class="mv-label">채택된 신호 / 몰리는 묶음</div>'
+        f'<div class="mv-value">{채택값}</div>'
+        f'<div class="mv-sub">{몰림값}</div></div>'
+        '</div>'
+    )
+
+
 def dedupe_confirmations(rows: list[dict]) -> list[dict]:
     """같은 묶음이 섹터·테마 두 분류표에서 **같은 수치**로 겹치면 한 장만.
 
@@ -753,28 +836,32 @@ def group_member_rows(묶음: str, 완성사건: list[dict],
     return rows
 
 
-def today_summary_lines(폭: float | None, fired: list[dict],
-                        watch: list[dict], adopted: list[str]) -> list[str]:
-    """맨 위 '오늘 요약' — 화면 전체를 안 읽어도 되는 3~4줄 (129차)."""
-    lines: list[str] = []
-    if 폭 is None:
-        lines.append("장세: 시장 정배열 폭 판단 불가")
-    else:
-        상태 = "약한 장세" if 폭 < 20 else ("살아 있는 장세" if 폭 < 60 else "판단 유보(표본 희소)")
-        lines.append(f"장세: 시장 정배열 폭 **{폭:.0f}%** — {상태}")
-    if fired:
-        이름 = " · ".join(sorted({r["묶음"] for r in fired}))
-        lines.append(f"주도 교체 확인 신호 켜짐: **{이름}**")
-    else:
-        lines.append("주도 교체 확인 신호: 켜진 묶음 없음")
-    tops = [g for g in watch if g.get("완성", 0) >= 2][:2]
-    if tops:
-        lines.append("완성이 몰리는 묶음(이른 관찰): "
-                     + " · ".join(f"**{g['묶음']}** {g['완성']}개(신호 {g['신호']})"
-                                  for g in tops))
-    lines.append(("채택된 신호: " + " · ".join(adopted)) if adopted
-                 else "채택된 신호: 없음 — 아래 모든 표시는 관찰이지 매수 근거가 아닙니다")
-    return lines
+def aligned_now_rows(ds: dict) -> list[dict]:
+    """지금(마지막 주) 주봉 정배열을 **유지 중**인 종목 — 이격도순 (130차).
+
+    관찰판은 "최근 91일 새 완성"만 보므로, 오래전에 완성해 계속 달리는
+    종목(예: 한창때의 MU)은 안 보입니다. 이 목록이 그 빈틈을 메웁니다.
+    지금 정배열이 아니면(조정 중) 여기에도 없습니다 — 사실 그대로.
+    """
+    today = ds["prices"][ds["benchmark"]]["dates"][-1]
+    rows = []
+    for ticker in ds["tickers"]:
+        prices = ds["prices"].get(ticker)
+        if not prices or not prices.get("dates"):
+            continue
+        flags = sm.aligned_flags_chart(prices)
+        if not flags:
+            continue
+        last_week = max(flags)
+        if not flags[last_week]:
+            continue
+        gap = sm.gap_over_52w(prices, today)
+        rows.append({"종목": ticker,
+                     "묶음": cfg.GROUPS.get(ticker, "미분류"),
+                     "이격도": None if gap is None else round(gap, 1)})
+    rows.sort(key=lambda r: (r["이격도"] is None,
+                             -(r["이격도"] if r["이격도"] is not None else 0)))
+    return rows
 
 
 def recent_completion_rows(완성사건: list[dict], 기준일: str,
@@ -795,13 +882,19 @@ def recent_completion_rows(완성사건: list[dict], 기준일: str,
         rows.append({
             "종목": e["ticker"],
             "묶음": cfg.GROUPS.get(e["ticker"], "미분류"),
+            "테마": e.get("테마"),
             "완성일": e["day"],
             "이격도": None if gap is None else round(gap, 1),
             "델타": e.get("델타"),
             "신호": gap is not None and gap >= sm.H18_GAP_MIN,
+            # 새 완성 = 기준일에서 7일 안 (129차 주인 지적 — LITE 가
+            # 이격도순 정렬에 밀려 접기 속에 숨었던 사고의 수리)
+            "새완성": (date.fromisoformat(기준일)
+                     - date.fromisoformat(e["day"])).days <= 7,
         })
-    rows.sort(key=lambda r: (-(r["이격도"] if r["이격도"] is not None else -999),
-                             r["완성일"]))
+    rows.sort(key=lambda r: (r["완성일"],
+                             r["이격도"] if r["이격도"] is not None else -999),
+              reverse=True)
     return rows
 
 
@@ -987,11 +1080,12 @@ def main():
     _폭 = _시장[-1][1] if _시장 else None
     _직전폭 = _시장[-2][1] if len(_시장) >= 2 else None
     _묶음판 = leader_watch_rows(_완성, _오늘)
-    st.subheader("오늘 요약")
-    for 줄 in today_summary_lines(_폭, fired, _묶음판,
-                                 adopted_names(verdict) if verdict else []):
-        st.markdown(줄)
-    st.divider()
+    st.markdown(MODERN_CSS, unsafe_allow_html=True)
+    _종목판전체 = recent_completion_rows(_완성, _오늘)
+    _새완성 = [r for r in _종목판전체 if r["새완성"] and r["신호"]]
+    st.markdown(summary_cards_html(_폭, fired, _묶음판, _새완성,
+                                   adopted_names(verdict) if verdict else []),
+                unsafe_allow_html=True)
 
     # =====================================================================
     # 1. 주도 후보 — 확인 신호(늦지만 강함) + 관찰판(이르지만 약함)
@@ -1082,23 +1176,21 @@ def main():
                     f" (이격도30%+ {g['신호']}개 · 델타상승 {g['델타상승']}개)"
                     f" · 마지막 {g['마지막완성']}"
                 )
-    _종목판 = [r for r in recent_completion_rows(_완성, _오늘) if r["신호"]]
+    _종목판 = [r for r in _종목판전체 if r["신호"]]
     if _종목판:
-        st.markdown("**이격도 30%+ 완성 종목** (H18·H18b 신호 — 탐색 참고):")
+        st.markdown("**이격도 30%+ 완성 종목** — 최신 완성 순 (H18·H18b 신호, 탐색 참고):")
+        def _신호줄(r):
+            배지 = ' <span class="mv-badge">NEW</span>' if r["새완성"] else ""
+            테마 = f" · {r['테마']}" if r.get("테마") else ""
+            return (f"· **{r['종목']}** ({r['묶음']}{테마}) {r['완성일']}"
+                    f" · 이격도 {r['이격도']}%"
+                    + (" · 델타상승" if r["델타"] is True else "") + 배지)
         for r in _종목판[:5]:
-            st.markdown(
-                f"· **{r['종목']}** ({r['묶음']}) {r['완성일']}"
-                f" · 이격도 {r['이격도']}%"
-                + (" · 델타상승" if r["델타"] is True else "")
-            )
+            st.markdown(_신호줄(r), unsafe_allow_html=True)
         if len(_종목판) > 5:
             with st.expander(f"나머지 {len(_종목판)-5}개 보기"):
                 for r in _종목판[5:]:
-                    st.markdown(
-                        f"· **{r['종목']}** ({r['묶음']}) {r['완성일']}"
-                        f" · 이격도 {r['이격도']}%"
-                        + (" · 델타상승" if r["델타"] is True else "")
-                    )
+                    st.markdown(_신호줄(r), unsafe_allow_html=True)
         st.caption(
             "과거 실측(126차): 이 신호의 1년 뒤 SPY+20%p **46.6%** (기준선 "
             "27.5%) · 시장을 이긴 비율 59% — **채택 전 참고**이며 10건 중 "
@@ -1106,6 +1198,19 @@ def main():
         )
     else:
         st.markdown("지금 이격도 30%+ 완성 종목 없음 — 없는 것은 없다고 말합니다.")
+
+    _유지 = cached_aligned_now(ds, 키)
+    with st.expander(f"지금 주봉 정배열 유지 중인 종목 {len(_유지)}개 (이격도순)"):
+        st.caption(
+            "오래전 완성해 계속 달리는 종목은 위 관찰판(새 완성)에 안 "
+            "보입니다 — 여기서 봅니다. 여기 없는 종목은 지금 정배열이 "
+            "깨져 있다는 뜻입니다 (예: 조정 중인 MU·AMD)."
+        )
+        for r in _유지[:30]:
+            이격 = "—" if r["이격도"] is None else f"{r['이격도']}%"
+            st.markdown(f"· **{r['종목']}** ({r['묶음']}) · 이격도 {이격}")
+        if len(_유지) > 30:
+            st.caption(f"… 외 {len(_유지)-30}개")
 
     # =====================================================================
     # 2. 장세 (정배열 폭 모델, 33·34차 + 121차 시장 게이지)

@@ -643,16 +643,33 @@ def test_구성종목은_두_분류표를_합쳐_찾고_신호를_먼저_보여�
     assert rows[1]["종목"] == "PFE" and rows[1]["신호"] is False
 
 
-def test_오늘요약은_없으면_없다고_말한다():
-    줄들 = app.today_summary_lines(12.4, [], [], [])
-    글 = " ".join(줄들)
-    assert "12%" in 글 and "약한 장세" in 글
-    assert "켜진 묶음 없음" in 글 and "채택된 신호: 없음" in 글
-    줄들2 = app.today_summary_lines(
+def test_요약카드는_없으면_없다고_말하고_새완성을_올린다():
+    """(130차) 증권앱풍 요약 카드 — 값이 없으면 '없음', 약한 장세는 빨강,
+    이번 주 새 완성 종목이 이름으로 올라온다."""
+    html = app.summary_cards_html(12.4, [], [], [], [])
+    assert "12%" in html and "약한 장세" in html and "mv-red" in html
+    assert html.count("없음") >= 3
+    html2 = app.summary_cards_html(
         30.0, [{"묶음": "헬스케어"}],
-        [{"묶음": "구독SW", "완성": 7, "신호": 5}], ["H18"])
-    글2 = " ".join(줄들2)
-    assert "살아 있는 장세" in 글2 and "헬스케어" in 글2         and "구독SW" in 글2 and "채택된 신호: H18" in 글2
+        [{"묶음": "구독SW", "완성": 7, "신호": 5}],
+        [{"종목": "LITE"}, {"종목": "CRDO"}], ["H18"])
+    assert "살아 있는 장세" in html2 and "헬스케어" in html2
+    assert "LITE · CRDO" in html2 and "구독SW 7" in html2 and "H18" in html2
+
+
+def test_신호종목판은_최신완성이_먼저오고_새완성표시가_붙는다():
+    """(130차) LITE(8/19 완성)가 이격도순 정렬에 밀려 접기 속에 숨었던
+    사고의 수리 — 최신 완성이 앞이고, 7일 안 완성은 새완성 True."""
+    사건 = [
+        {"ticker": "EXTR", "day": "2026-06-26", "이격도": 64.7, "델타": False,
+         "테마": "AI-광통신네트워크"},
+        {"ticker": "LITE", "day": "2026-08-19", "이격도": 48.7, "델타": True,
+         "테마": "AI-광통신네트워크"},
+    ]
+    rows = app.recent_completion_rows(사건, "2026-08-19")
+    assert rows[0]["종목"] == "LITE", rows
+    assert rows[0]["새완성"] is True and rows[1]["새완성"] is False
+    assert rows[0]["테마"] == "AI-광통신네트워크"
 
 
 if __name__ == "__main__":
