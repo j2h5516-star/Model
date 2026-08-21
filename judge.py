@@ -83,6 +83,71 @@ def wilson_interval(hits: int, total: int, z: float = 1.96) -> tuple[float, floa
     return (max(0.0, centre - margin) * 100.0, min(1.0, centre + margin) * 100.0)
 
 
+# 채택까지 얼마나 남았나 (139차) — **새 기준이 아니라 기존 기준의 산수**
+# ---------------------------------------------------------------------------
+# 등록된 채택 기준은 "신호 윌슨 하한 > 기준선 상한". 하한은 표본이 늘면
+# 올라가므로, **지금 폭등률이 그대로 유지된다면** 몇 개를 더 모아야
+# 넘는지를 그냥 계산할 수 있습니다.
+#
+# 이 계산이 드러낸 것 (2026-08-21 판정 파일 실측):
+#   표본이 있는 11개 가설 중 **10개는 폭등률이 기준선 상한보다 낮습니다.**
+#   즉 표본을 아무리 모아도 하한이 그 위로 못 올라갑니다 — 기다린다고
+#   되는 것이 아닙니다. 유일한 예외가 H11b(섹터 정배열폭 80)로,
+#   27.0% vs 기준선 상한 24.9% · 지금 n=100 → **n≈1,684 필요**.
+#
+# ⚠️ "불가능"은 **영원히**가 아니라 **지금 실측된 폭등률이 그대로라면**
+#    이라는 뜻입니다. 표본이 쌓이면 폭등률 자체가 움직일 수 있습니다.
+#    없는 것을 단정하지 않기 위해 문구를 이렇게 씁니다.
+_NEEDED_MAX_N = 500_000        # 이보다 커지면 "현실적으로 불가능"으로 봅니다
+
+
+def needed_sample(rate: float | None, baseline_high: float | None,
+                  start_n: int = 10) -> int | None:
+    """지금 폭등률이 유지될 때 채택 기준을 넘는 **최소 표본 수**.
+
+    돌려주는 값:
+      · None — 폭등률이 기준선 상한 이하라 **표본으로는 못 넘음**
+      · 양수 — 그만큼 모으면 넘음
+      · -1   — 50만을 모아도 못 넘음 (사실상 불가능)
+    """
+    if rate is None or baseline_high is None or rate <= baseline_high:
+        return None
+    n = max(int(start_n), 10)
+    while n <= _NEEDED_MAX_N:
+        low, _ = wilson_interval(round(rate / 100.0 * n), n)
+        if low > baseline_high:
+            return n
+        n = int(n * 1.1) + 1
+    return -1
+
+
+def adoption_distance(verdict: dict | None) -> list[dict]:
+    """가설마다 '채택까지 얼마나 남았나'를 한 줄씩. 값을 만들지 않습니다."""
+    out: list[dict] = []
+    for 이름, d in sorted((verdict or {}).get("가설", {}).items()):
+        신규 = (d or {}).get("신규(판정)") or {}
+        신호, 기준 = 신규.get("신호") or {}, 신규.get("기준선") or {}
+        n, rate = 신호.get("n"), 신호.get("rate")
+        하한 = (신호.get("ci") or [None, None])[0]
+        상한 = (기준.get("ci") or [None, None])[1]
+        if not n:
+            out.append({"가설": 이름, "n": 0, "상태": "표본 없음",
+                        "필요표본": None})
+            continue
+        필요 = needed_sample(rate, 상한, n)
+        if 하한 is not None and 상한 is not None and 하한 > 상한:
+            상태 = "이미 채택 기준을 넘음"
+        elif 필요 is None:
+            상태 = "지금 폭등률로는 표본을 더 모아도 못 넘음"
+        elif 필요 < 0:
+            상태 = "표본 50만으로도 못 넘음"
+        else:
+            상태 = f"표본 {필요:,}개 필요 (지금의 {필요 / n:.1f}배)"
+        out.append({"가설": 이름, "n": n, "폭등률": rate, "하한": 하한,
+                    "기준선상한": 상한, "필요표본": 필요, "상태": 상태})
+    return out
+
+
 def _stats(group: list[dict]) -> dict:
     n = len(group)
     hits = sum(1 for e in group if e["excess"] >= me.SURGE_PP)

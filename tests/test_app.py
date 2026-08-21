@@ -712,6 +712,29 @@ def test_로빈후드행은_알약과_새완성점을_정확히_단다():
     assert "rh-dot" not in html2 and ">—<" in html2
 
 
+def test_채택거리_줄은_막힌_가설을_숨기지_않는다():
+    """(139차) 주인의 "언제부터 포착 가능한가"에 대한 답입니다. 실측은
+    표본이 쌓인 11개 중 10개가 **표본을 더 모아도 못 넘는** 상태였습니다.
+    좋은 소식만 적고 이 사실을 빼면 정직화 위반입니다."""
+    verdict = {"가설": {
+        "H_막힘": {"신규(판정)": {"신호": {"n": 200, "rate": 5.0, "ci": [2.7, 9.0]},
+                              "기준선": {"n": 900, "rate": 11.0, "ci": [9.0, 13.3]}}},
+        "H_가능": {"신규(판정)": {"신호": {"n": 100, "rate": 27.0, "ci": [19.3, 36.4]},
+                              "기준선": {"n": 900, "rate": 22.0, "ci": [19.4, 24.9]}}},
+        "H_없음": {"신규(판정)": {"신호": {"n": 0, "rate": None, "ci": [0, 0]},
+                              "기준선": {"n": 0, "rate": None, "ci": [0, 0]}}},
+    }}
+    글 = " ".join(app.adoption_distance_lines(verdict))
+    assert "못 넘음: **1개**" in 글, 글
+    assert "넘을 수 있음: **1개**" in 글, 글
+    assert "H_가능" in 글, "넘을 수 있는 가설의 이름과 필요 표본이 없습니다"
+    # "영원히 불가능"으로 단정하지 않는다 (없는 것을 단정하지 않기)
+    assert "그대로라면" in 글, 글
+    # 판정 파일이 없으면 지어내지 않는다
+    assert "지어내지 않습니다" in " ".join(app.adoption_distance_lines(None))
+
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
