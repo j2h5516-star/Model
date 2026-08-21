@@ -214,9 +214,14 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         vendor_compare.attach_street_surprise(
             events, vendor_feed.load(f"{cfg.MEASURE_DIR}/vendor.json"))
         verdict["가설"].update(judge.judge_momentum_beat(events))
+        completions = sector_model.completion_events(ds)
         verdict["가설"].update(judge.judge_completion_gap(
-            sector_model.completion_events(ds),
-            sector_model.H18_START_DAY, sector_model.H18_GAP_MIN,
+            completions, sector_model.H18_START_DAY, sector_model.H18_GAP_MIN,
+        ))
+        # H18b (126차 등록) — 같은 신호, 표적만 1년(초과250). 주인 지적
+        # ("완성은 1~2년 지속")을 126차 백테스트로 확인하고 등록했습니다.
+        verdict["가설"].update(judge.judge_completion_gap_1y(
+            completions, sector_model.H18B_START_DAY, sector_model.H18_GAP_MIN,
         ))
         # H19·H20·H21 (44차 등록) — 주도섹터 판정·전환·분기점.
         # 45차 확정 분류(config.GROUPS)로 매일 다시 셉니다. 표본이 국면

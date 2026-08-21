@@ -333,6 +333,7 @@ def yardstick_of_safe(ds: dict, ticker: str) -> str | None:
 # 모두 잽니다. 장치가 하나여야 셋을 같은 잣대로 비교할 수 있습니다.
 H18_GAP_MIN = 30.0          # H18 신호 문턱 — 완성 시점 52주선 이격도 30% 이상
 H18_START_DAY = "2026-08-15"   # 이 날 **뒤**의 완성만 H18 판정 표본 (원칙 5)
+H18B_START_DAY = "2026-08-21"  # H18b(1년 표적, 126차) — 이 날 뒤의 완성만
 SHORT_FORWARD_DAYS = 60     # 측정 기본형 창 (전략.md 고정값)
 
 

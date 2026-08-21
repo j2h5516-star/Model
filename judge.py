@@ -429,6 +429,60 @@ def judge_completion_gap(events: list[dict], start_day: str,
     return {H18_NAME: out}
 
 
+# ---------------------------------------------------------------------------
+# H18b (126차 등록) — 완성 이격도 30%+, 표적을 **1년**으로
+# ---------------------------------------------------------------------------
+# 주인 지적(2026-08-21): "완성이 되면 최소 1년은 지속 상승하는데 왜 60거래일
+# 로만 재는가." 126차 백테스트(창 완료 1,785건)로 다시 재니 주장이 실측과
+# 맞았다 — 1년(250거래일) SPY+20%p 기준:
+#
+#   기준선(모든 완성) 27.5% [25.4, 29.6] · 중앙값 −3.0%p
+#   이격도 30%+       46.6% [41.3, 51.9] · 중앙값 +12.5%p · +50%p 도달 30.0%
+#   앞/뒤 시기 50.0%/43.2% · 전 연도 분포 · 2022 약세장에도 39%
+#
+# 신호·문턱은 H18(43차)과 동일하고 **표적만** 초과250 ≥ 20%p(33차 H11 의
+# 1년 문턱을 그대로 씀 — 새 숫자를 만들지 않는다)로 바꾼 판이다.
+# ⚠️ 이 백테스트는 탐색이므로 판정은 H18 과 같은 등록일 뒤의 새 완성만
+#    센다. 1년 창이 성숙해야 하므로 첫 판정 표본은 빨라야 2027년 하반기.
+H18B_NAME = "H18b_완성이격도_1년"
+H18B_SURGE_PP = 20.0        # 33차 등록의 1년 폭등 문턱 그대로
+
+
+def judge_completion_gap_1y(events: list[dict], start_day: str,
+                            gap_min: float) -> dict:
+    """H18b 판정 — H18 과 같은 신호, 표적만 1년(초과250)."""
+    usable = [e for e in events
+              if e.get("초과250") is not None and e.get("이격도") is not None]
+    out: dict = {}
+    for label, pool in (
+        ("신규(판정)", [e for e in usable if e["day"] > start_day]),
+        ("탐색표본(참고)", [e for e in usable if e["day"] <= start_day]),
+    ):
+        signal = [e for e in pool if e["이격도"] >= gap_min]
+
+        def _1y_stats(group):
+            n = len(group)
+            hits = sum(1 for e in group if e["초과250"] >= H18B_SURGE_PP)
+            low, high = wilson_interval(hits, n)
+            return {"n": n,
+                    "rate": round(hits / n * 100.0, 1) if n else None,
+                    "ci": [round(low, 1), round(high, 1)]}
+
+        signal_stats = _1y_stats(signal)
+        base_stats = _1y_stats(pool)
+        if signal_stats["n"] < MIN_SIGNAL_N:
+            verdict = "판정 불가"
+        elif signal_stats["ci"][0] > base_stats["ci"][1]:
+            verdict = "채택"
+        else:
+            verdict = "미채택"
+        out[label] = {"신호": signal_stats, "기준선": base_stats,
+                      "판정": verdict}
+    out["판정"] = out["신규(판정)"]["판정"]
+    out["등록일"] = start_day
+    return {H18B_NAME: out}
+
+
 # H19·H20·H21 (44차 등록): 주도섹터 판정 · 전환 · 분기점.
 # 사건 단위가 "국면"이라 표본이 매우 작습니다. 44차에서 **미리 적은 대로**
 # n≥10 에 오래 못 미칠 것이므로, 여기서는 억지 결론을 내지 않고
