@@ -60,11 +60,17 @@ jobs:
           SEC_IDENTITY: ${{ secrets.SEC_IDENTITY }}
         run: python collect_job.py
 
+      # 웹앱(GitHub Pages)용 데이터 (132차) — 수집·판정이 끝난 뒤 만듭니다.
+      # 실패해도 그날 **수집 커밋은 막지 않습니다** (데이터가 더 귀합니다).
+      - name: 웹앱 데이터 만들기
+        continue-on-error: true
+        run: python web_build.py
+
       - name: 변경분 커밋
         run: |
           git config user.name "수집 로봇"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/measure
+          git add data/measure docs/data
           if git diff --cached --quiet; then
             echo "변경 없음 — 커밋 생략"
           else
@@ -87,13 +93,15 @@ jobs:
               if git push origin "HEAD:$BRANCH"; then break; fi
               [ "$attempt" = 3 ] && { echo "3회 실패"; exit 1; }
               echo "push 거부 — 최신 $BRANCH 위에 수집분 재커밋 ($attempt/3)"
-              rm -rf /tmp/collected_backup
+              rm -rf /tmp/collected_backup /tmp/web_backup
               cp -r data/measure /tmp/collected_backup
+              [ -d docs/data ] && cp -r docs/data /tmp/web_backup
               git fetch origin "$BRANCH"
               git reset --hard "origin/$BRANCH"
-              rm -rf data/measure
+              rm -rf data/measure docs/data
               mv /tmp/collected_backup data/measure
-              git add data/measure
+              [ -d /tmp/web_backup ] && mkdir -p docs && mv /tmp/web_backup docs/data
+              git add data/measure docs/data
               git commit -m "자동 수집 — $(date -u +%Y-%m-%d) (충돌 재커밋)"
             done
           fi

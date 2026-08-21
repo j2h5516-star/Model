@@ -125,6 +125,38 @@ def test_발견종목은_유니버스_안에_있고_판정에서_빠진다():
     assert len(cfg.MEASURE_DISCOVERY_TICKERS) == 29
 
 
+
+
+# ---------------------------------------------------------------------------
+# 웹앱 배선 (132차) — 로봇이 매일 웹앱 데이터를 만들고 커밋하는가
+# ---------------------------------------------------------------------------
+def test_로봇이_웹앱_데이터를_만들고_커밋한다():
+    """배선이 빠지면 웹앱은 **조용히 옛 데이터로 굳습니다** — 화면은 멀쩡해
+    보이는데 며칠 전 숫자를 보여 주는 최악의 고장입니다. 그래서 못박습니다."""
+    path = os.path.join(ROOT, ".github", "workflows", "collect.yml")
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    assert "python web_build.py" in text, "웹앱 데이터 만들기 단계가 없습니다"
+    assert "git add data/measure docs/data" in text, \
+        "커밋 대상에 docs/data 가 빠졌습니다"
+    # 충돌 재커밋 경로에서도 웹앱 데이터를 지키는가 (2026-08-14 사고의 교훈)
+    재커밋 = text.split("push 거부")[-1]   # 마지막 조각 = 실제 재커밋 코드
+    assert "web_backup" in 재커밋, "충돌 재커밋 때 웹앱 데이터를 잃습니다"
+
+
+def test_웹앱_화면_파일이_그대로_있다():
+    """index/style/app.js 중 하나만 빠져도 화면이 통째로 죽습니다."""
+    for name in ("index.html", "style.css", "app.js", "manifest.json"):
+        p = os.path.join(ROOT, "docs", name)
+        assert os.path.exists(p), f"docs/{name} 이 없습니다"
+    with open(os.path.join(ROOT, "docs", "app.js"), encoding="utf-8") as f:
+        js = f.read()
+    assert "data/app.json" in js, "웹앱이 데이터 경로를 잃었습니다"
+    # 외부 인터넷에서 무엇을 받아오면 안 됩니다 (오프라인·차단 환경 대비)
+    assert "http://" not in js and "https://" not in js, \
+        "웹앱이 바깥 주소를 부릅니다 — 자기 파일만 읽어야 합니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

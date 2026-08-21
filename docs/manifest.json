@@ -1,0 +1,9 @@
+{
+  "name": "상승 섹터 포착",
+  "short_name": "섹터포착",
+  "start_url": "./index.html#/home",
+  "display": "standalone",
+  "background_color": "#0b0e11",
+  "theme_color": "#0b0e11",
+  "lang": "ko"
+}

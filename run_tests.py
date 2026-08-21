@@ -36,6 +36,7 @@ TEST_FILES = [
     "tests/test_judge.py",       # 자동 판정 (v3 5단계 — 채택 기준 적용)
     "tests/test_model_verify.py",    # 모델 전체 점검기 (128차 — 누락 안전망)
     "tests/test_app.py",         # 계기판 도우미 (v3 6단계 — 정직화 표시)
+    "tests/test_web_build.py",   # 웹앱 데이터 빌더 (132차 — null 정직·판정 옮겨 적기)
 ]
 
 if __name__ == "__main__":
