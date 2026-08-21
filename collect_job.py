@@ -127,7 +127,35 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
     sf.set_collect_budget(budget)
     progress(f"8-K 훑기 시간 예산: {budget}분" if budget else "8-K 훑기 시간 예산: 없음")
 
+    # 수집 벽시계를 잽니다 (142차) — 일꾼 수를 올릴 때마다 "빨라졌나"를
+    # 짐작으로 말하지 않기 위해서입니다(91·98·106차 규칙: 짐작 전에 계기).
+    # 종목별 seconds 는 이미 있지만 그 합은 **일꾼이 나눠 쓰기 전의 일감**
+    # 이라 벽시계가 아닙니다. 둘을 함께 남겨야 병렬이 실제로 먹혔는지
+    # 알 수 있습니다.
+    수집시작 = time.monotonic()
     reports = collect_fundamentals(tickers, progress)
+    수집벽시계 = round(time.monotonic() - 수집시작, 1)
+    일감합 = round(sum(r.get("seconds") or 0 for r in reports), 1)
+    내려받기 = sum(r.get("cache_downloads") or 0 for r in reports)
+    수집계기 = {
+        "일꾼": cfg.COLLECT_WORKERS,
+        "코어": os.cpu_count(),
+        "벽시계_분": round(수집벽시계 / 60.0, 1),
+        "일감합_분": round(일감합 / 60.0, 1),
+        # 일감합 ÷ 벽시계 = 실제로 몇 명분이 겹쳐 돌았나. 일꾼 수에
+        # 가까우면 병렬이 먹힌 것이고, 1에 가까우면 서로 밀어낸 것입니다.
+        "겹침배수": round(일감합 / 수집벽시계, 2) if 수집벽시계 else None,
+        "내려받기": 내려받기,
+        # SEC 허용치는 초당 10건. 이 값이 거기 가까워지면 일꾼을 더 올리면
+        # 안 됩니다 (v1 사고: 속도 무제한 → 403).
+        "초당요청": round(내려받기 / 수집벽시계, 2) if 수집벽시계 else None,
+    }
+    progress(
+        f"⏱ 수집 계기 — 일꾼 {수집계기['일꾼']} · 코어 {수집계기['코어']} · "
+        f"벽시계 {수집계기['벽시계_분']}분 · 일감합 {수집계기['일감합_분']}분 · "
+        f"겹침 {수집계기['겹침배수']}배 · 초당 {수집계기['초당요청']}요청"
+        f"(SEC 허용 10)"
+    )
     시간초과 = [r["ticker"] for r in reports if r.get("시간초과")]
     if 시간초과:
         progress(
@@ -321,6 +349,8 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
     log = {
         "ran_at": datetime.now(timezone.utc).isoformat(),
         "tickers": len(tickers),
+        # 수집 계기 (142차) — 일꾼을 올릴 때 "빨라졌나"를 재는 자리
+        "수집계기": 수집계기,
         "summary": summary,
         "verdict": verdict_note,
         "consensus": consensus_note,
