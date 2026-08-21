@@ -1,0 +1,53 @@
+# 잣대값 파싱 실패 원문 — HCA 2023-07-10
+# 출처: https://www.sec.gov/Archives/edgar/data/860730/000119312523184269/d522417d8k.htm
+
+EX-99.1
+
+  Exhibit 99.1 
+ 
+
+                    FOR IMMEDIATE RELEASE
+INVESTOR CONTACT:   MEDIA CONTACT:       
+Frank Morgan        Harlow Sumerford     
+615-344-2688        615-344-1851         
+ HCA HEALTHCARE REPORTS DATA SECURITY INCIDENT 
+ NASHVILLE, Tenn., July 10, 2023 – HCA Healthcare, Inc. (NYSE:HCA) recently discovered that a list of certain information with respect to some of its patients was made available by an unknown and unauthorized party on an online forum. The list includes: 
+ 
+
+•   Patient name, city, state, and zip code;
+--------------------------------------------
+ 
+
+•   Patient email, telephone number, date of birth, gender; and
+---------------------------------------------------------------
+ 
+
+•   Patient service date, location and next appointment date.
+-------------------------------------------------------------
+ HCA Healthcare has confirmed that the list contains information used for email messages, such as reminders that patients may wish to schedule an appointment and education on healthcare programs and services. 
+ Importantly, the list does not include: 
+ 
+
+•   Clinical information, such as treatment, diagnosis, or condition;
+---------------------------------------------------------------------
+ 
+
+•   Payment information, such as credit card or account numbers;
+----------------------------------------------------------------
+ 
+
+•   Sensitive information, such as passwords, driver’s license or social security numbers.
+------------------------------------------------------------------------------------------
+ This appears to be a theft from an external storage location exclusively used to automate the formatting of email messages. There has been no disruption to the care and services HCA Healthcare provides to patients and communities. This incident has not caused any disruption to the day-to-day operations of HCA Healthcare. Based on the information known at this time, the company does not believe the incident will materially impact its business, operations or financial results. 
+ HCA Healthcare reported this event to law enforcement and retained third-party forensic and threat intelligence advisors. While our investigation is ongoing, the company has not identified evidence of any malicious activity on HCA Healthcare networks or systems related to this incident. The company disabled user access to the storage location as an immediate containment measure and plans to contact any impacted patients to provide additional information and support, in accordance with its legal and regulatory obligations, and will offer credit monitoring and identity protection services, where appropriate. 
+ HCA Healthcare believes the privacy of its patients is a vital part of its mission and remains committed to maintaining the security of their personal information. HCA Healthcare has created a dedicated webpage at hcahealthcare.com/privacyupdate to keep its patients informed. 
+
+
+ About HCA Healthcare 
+ Nashville-based HCA Healthcare is one of the nation’s leading providers of healthcare services comprising 180 hospitals and approximately 2,300 ambulatory sites of care, including surgery centers, freestanding ERs, urgent care centers, and physician clinics, in 20 states and the United Kingdom. With its founding in 1968, HCA Healthcare created a new model for hospital care in the United States, using combined resources to strengthen hospitals, deliver patient-focused care and improve the practice of medicine. HCA Healthcare has conducted a number of clinical studies, including one that demonstrated that full-term delivery is healthier than early elective delivery of babies and another that identified a clinical protocol that can reduce bloodstream infections in ICU patients by 44%. HCA Healthcare is a learning health system that uses its more than 37 million annual patient encounters to advance science, improve patient care and save lives. 
+ ### 
+ Cautionary Note Regarding Forward-Looking Statements 
+ This press release contains forward-looking statements within the meaning of the federal securities laws, which involve risks and uncertainties. Forward-looking statements include all statements that do not relate solely to historical or current facts. Forward-looking statements can be identified by the use of words like “may,” “believe,” “will,” “expect,” “project,” “estimate,” “anticipate,” “plan,” “initiative” or “continue.” These forward-looking statements are based on our current plans and expectations and are subject to a number of known and unknown uncertainties and risks, many of which are beyond our control, which could significantly affect current plans and expectations and our future financial position and results of operations. 
+ The risks and uncertainties in connection with such forward-looking statements related to the cybersecurity incident include, but are not limited to, the occurrence of any event, change or other circumstances relating to the scope of the incident; the nature, type and amount of data accessed; any future operational interruptions; the Company’s ability to assess and remedy the incident; the Company’s steps to minimize unauthorized access into its information systems; incremental expenses associated with the Company’s on-going assessment of the incident; the nature and scope of any claims, litigation or regulatory proceedings that may be brought against the Company or other affected parties as a result of the incident; the availability of insurance coverage; and other legal, reputational and financial risks resulting from this or other cybersecurity incidents and the potential impact of this incident on our revenues, operating expenses, and operating results. 
+ All references to “Company,” “HCA” and “HCA Healthcare” as used throughout this document refer to HCA Healthcare, Inc. and its affiliates. 
+

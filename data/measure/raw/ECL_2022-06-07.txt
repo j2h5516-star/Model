@@ -1,0 +1,1345 @@
+# 잣대값 파싱 실패 원문 — ECL 2022-06-07
+# 출처: https://www.sec.gov/Archives/edgar/data/31462/000155837022009755/ecl-20220607x8k.htm
+
+Exhibit 99.1
+
+           Christophe Beck            
+Chairman &amp; Chief Executive Officer
+                  1                   
+--------------------------------------
+
+                                                     CAUTIONARY STATEMENT                                                    
+                                                           Forward                                                           
+                                                              -                                                              
+                                                     Looking Information                                                     
+This communication contains forward looking statements as that term is defined in the Private Securities Litigation Reform Ac
+                                                              t                                                              
+                                                    of 1995. These forward                                                   
+                                                              -                                                              
+                                                      looking statements                                                     
+                                 include, but are not limited to, statements regarding COVID                                 
+                                                              -                                                              
+                             19 pandemic trends, global economic recovery, supply chain disruptio                            
+                                                              ns                                                             
+                                                             and                                                             
+                                                      delivered product                                                      
+                                                        cost inflation                                                       
+                                               , and our financial and business                                              
+ performance and prospects, including sales, earnings, surcharge and structural pricing actions, innovation and new business.
+                                                             The                                                             
+                              se statements are based on the current expectations of management.                             
+     There are a number of risks and uncertainties that could cause actual results to differ materially from the forward     
+                                                              -                                                              
+                                                         looking stat                                                        
+                          ements. In particular, with respect to the pandemic, numerous factors will                         
+ determine the extent of the impact on our business, including the severity of the disease, the duration of the outbreak, the
+                                                             acc                                                             
+                      eptance, distribution and efficacy of vaccines, the likelihood of a resurgence of                      
+the outbreak, including as a result of emerging variants, actions that may be taken by governmental authorities intended to m
+                                                             ini                                                             
+                            mize the spread of the pandemic, including vaccination mandates, or to                           
+                                  stimulate the economy, and other unintended consequences.                                  
+                  Additional risks and uncertainties are set forth under Item 1A of our most recent Form 10                  
+                                                              -                                                              
+                                            K, and our other public filings with t                                           
+                          he Securities and Exchange Commission (“SEC”), and include the effects and                         
+                                                    duration of the COVID                                                    
+                                                              -                                                              
+                                  19 pandemic, including the impact of vaccination mandates;                                 
+                         difficulty in procuring raw materials or fluctuations in raw material costs;                        
+                                     the vitality of the markets we serve; the impact of                                     
+                                        economic factors such as the worldwide economy                                       
+, capital flows, interest rates, foreign currency risk, and reduced sales and earnings in our international operations result
+                                                             ing                                                             
+                                                 from the weakening of local                                                 
+                                              currencies versus the U.S. dollar                                              
+; information technology infrastructure failures or breaches in data security; our ability to attract, retain and develop hig
+                                                             h c                                                             
+                                      aliber management talent to lead our business and                                      
+            successfully execute organizational change and changing labor market dynamics in the wake of the COVID           
+                                                              -                                                              
+                                                         19 pandemic                                                         
+                                   ; exposure to global economic, political and legal risks                                  
+                                                 related to our international                                                
+                                        operations, including the impact of sanctions                                        
+                                                              or                                                             
+                 other actions taken by the U.S. or other countries, and retaliatory measures taken by Russia                
+                                                              in                                                             
+                                     response, in connection with the conflict in Ukraine                                    
+                                                         ; and other                                                         
+uncertainties or risks reported from time to time in our reports to the SEC. In light of these risks, uncertainties and facto
+                                                             rs,                                                             
+                                                         the forward                                                         
+                                                              -                                                              
+                               looking events discussed in this communication may not occur. We                              
+                                 caution that undue reliance should not be placed on forward                                 
+                                                              -                                                              
+                             looking statements, which speak only as of the date made. Ecolab doe                            
+                               s not undertake, and expressly disclaims, any duty to update any                              
+                                                           forward                                                           
+                                                              -                                                              
+                                        looking statement, except as required by law.                                        
+                                                             Non                                                             
+                                                              -                                                              
+                                                  GAAP Financial Information                                                 
+This presentation includes Company information that does not conform to generally accepted accounting principles (GAAP). Mana
+                                                             gem                                                             
+                                             ent believes that a presentation of                                             
+this information is meaningful to investors because it provides insight with respect to ongoing operating results of the Comp
+                                                             any                                                             
+                        and allows investors to better evaluate the financial results of the Company.                        
+These measures should not be viewed as an alternative to GAAP measures of performance. Furthermore, these measures may not be
+                                                              co                                                             
+                                 nsistent with similar measures provided by other companies.                                 
+                                          Reconciliations of certain historical non                                          
+                                                              -                                                              
+                         GAAP financial measures to GAAP financial measures are included in the “Non                         
+                                                              -                                                              
+                                                          GAAP Finan                                                         
+                                cial Measures” section of this presentation. We do not provide                               
+                                                   reconciliations for non                                                   
+                                                              -                                                              
+                                                 GAAP estimates on a forward                                                 
+                                                              -                                                              
+                         looking basis (including those contained in this presentation) when we are u                        
+                            nable to provide a meaningful or accurate calculation or estimation of                           
+reconciling items and the information is not available without unreasonable effort. This is due to the inherent difficulty of
+                                                              fo                                                             
+                       recasting the timing and amount of various items that have not yet occurred, are                      
+out of our control and/or cannot be reasonably predicted, and that would impact reported earnings per share, and the most dir
+                                                             ect                                                             
+                                                    ly comparable forward                                                    
+                                                              -                                                              
+                                         looking GAAP financial measures to adjusted                                         
+ earnings per share. For the same reasons, we are unable to address the probable significance of the unavailable information.
+                                                           Industry                                                          
+                                                             and                                                             
+                                                            Market                                                           
+                                                         Information                                                         
+                                                           Industry                                                          
+                                                             and                                                             
+                                                            market                                                           
+                                                         information,                                                        
+                                                          including                                                          
+                                                            market                                                           
+                                                            share                                                            
+                                                            data,                                                            
+                                                          contained                                                          
+                                                              in                                                             
+                                                             this                                                            
+                                                        communication                                                        
+                                                             are                                                             
+                                                            based                                                            
+                                                              on                                                             
+                                                         management’s                                                        
+                                                           current                                                           
+                                                          estimates                                                          
+                                                              of                                                             
+                                                          potential                                                          
+                                                        opportunities                                                        
+                                                              of                                                             
+                                                            Ecolab                                                           
+                                                              ..                                                             
+                                                            These                                                            
+                                                          estimates                                                          
+                                                             have                                                            
+                                                             been                                                            
+                                                             made                                                            
+                                                              in                                                             
+                                                             good                                                            
+                                                            faith                                                            
+                                                            based                                                            
+                                                              on                                                             
+                                                         management’s                                                        
+                                                          knowledge                                                          
+                                                             and,                                                            
+                                                              in                                                             
+                                                             some                                                            
+                                                            cases,                                                           
+                                                             upon                                                            
+                                                           industry                                                          
+                                                           surveys                                                           
+                                                             and                                                             
+                                                            other                                                            
+                                                           publicly                                                          
+                                                          available                                                          
+                                                         information                                                         
+                                                              ..                                                             
+                                                             You                                                             
+                                                             are                                                             
+                                                          cautioned                                                          
+                                                             not                                                             
+                                                              to                                                             
+                                                             give                                                            
+                                                            undue                                                            
+                                                            weight                                                           
+                                                              to                                                             
+                                                             such                                                            
+                                                          estimates,                                                         
+                                                             and                                                             
+                                                              we                                                             
+                                                             have                                                            
+                                                             not                                                             
+                                                           verified                                                          
+                                                             the                                                             
+                                                           accuracy                                                          
+                                                              or                                                             
+                                                         completeness                                                        
+                                                              of                                                             
+                                                            these                                                            
+                                                          estimates                                                          
+                                                             and                                                             
+                                                         information                                                         
+                                                             from                                                            
+                                                         independent                                                         
+                                                           sources                                                           
+                                                              ..                                                             
+                                                          Trademarks                                                         
+                                                             and                                                             
+                                                            Logos                                                            
+                                                            Ecolab                                                           
+                                                             and                                                             
+                                                             its                                                             
+                                                            other                                                            
+                                                          trademarks                                                         
+                                                             and                                                             
+                                                            logos                                                            
+                                                          contained                                                          
+                                                              in                                                             
+                                                             this                                                            
+                                                        communication                                                        
+                                                             are                                                             
+                                                             the                                                             
+                                                           property                                                          
+                                                              of                                                             
+                                                            Ecolab                                                           
+                                                             USA                                                             
+                                                             Inc                                                             
+                                                              ..                                                             
+                                                              or                                                             
+                                                             its                                                             
+                                                          affiliates                                                         
+                                                              ..                                                             
+                                                          Trademarks                                                         
+                                                             and                                                             
+                                                            logos                                                            
+                                                              of                                                             
+                                                            other                                                            
+                                                          companies                                                          
+                                                          appearing                                                          
+                                                              in                                                             
+                                                             this                                                            
+                                                        communication                                                        
+                                                             are                                                             
+                                                             the                                                             
+                                                           property                                                          
+                                                              of                                                             
+                                                            their                                                            
+                                                          respective                                                         
+                                                            owners                                                           
+                                                              ..                                                             
+                                                             All                                                             
+                                                            rights                                                           
+                                                           reserved                                                          
+                                                              ..                                                             
+                                                              2                                                              
+-----------------------------------------------------------------------------------------------------------------------------
+
+                     3                     
+UNIQUELY POSITIONED TO DELIVER WHAT MATTERS
+                    SAFE                   
+                    FOOD                   
+                    NET                    
+                    ZERO                   
+                   WATER                   
+                  HEALTHY                  
+                ENVIRONMENTS               
+                   CLEAN                   
+                  CLIMATE                  
+-------------------------------------------
+
+                   4                    
+                CLIMATE                 
+              3.6 million               
+          metric tons of GHGs           
+                 AVOID                  
+                 CLEAN                  
+               60 billion               
+                 hands                  
+                 HEALTH                 
+                  FOOD                  
+              1.4 billion               
+                 people                 
+                  FEED                  
+              215 billion               
+            gallons of water            
+                  SAVE                  
+                 WATER                  
+AS THE GLOBAL LEADER, IN 2021 WE HELPED:
+   GROWING FAST BY GROWING OUR IMPACT   
+----------------------------------------
+
+                                                            $0.00                                                            
+                                                            $1.00                                                            
+                                                            $2.00                                                            
+                                                            $3.00                                                            
+                                                            $4.00                                                            
+                                                            $5.00                                                            
+                                                            $6.00                                                            
+                                                             2000                                                            
+                                                             2001                                                            
+                                                             2002                                                            
+                                                             2003                                                            
+                                                             2004                                                            
+                                                             2005                                                            
+                                                             2006                                                            
+                                                             2007                                                            
+                                                             2008                                                            
+                                                             2009                                                            
+                                                             2010                                                            
+                                                             2011                                                            
+                                                             2012                                                            
+                                                             2013                                                            
+                                                             2014                                                            
+                                                             2015                                                            
+                                                             2016                                                            
+                                                             2017                                                            
+                                                             2018                                                            
+                                                             2019                                                            
+                                                             2020                                                            
+                                                             2021                                                            
+                                                              5                                                              
+                                                            2021+                                                            
+                                                             Pre                                                             
+                                                              -                                                              
+                                                            COVID                                                            
+                                                              15                                                             
+                                                              -                                                              
+                                                         year Double                                                         
+                                                              -                                                              
+                                                        Digit EPS CAGR                                                       
+                                                             2004                                                            
+                                                              -                                                              
+                                                             2019                                                            
+                                                           15 years                                                          
+                                                              :                                                              
+                                                             +11%                                                            
+                                                           10 years                                                          
+                                                              :                                                              
+                                                             +10%                                                            
+                                                           5 years                                                           
+                                                              :                                                              
+                                                             +12%                                                            
+                                                         STRONG LONG                                                         
+                                                              -                                                              
+                                                    TERM HISTORY OF GROWTH                                                   
+                                            EPS (Adjusted, Continuing Operations)                                            
+                                                             9/11                                                            
+                                                          Financial                                                          
+                                                            Crisis                                                           
+                                                         Euro Crisis                                                         
+Represents Adjusted EPS, excluding the estimated impact of the Upstream business when it was not accounted for as discontinue
+                                                             d o                                                             
+                                                      perations, so 2012                                                     
+                                                              -                                                              
+                                        2016 may not be comparable to the period 2017                                        
+                                                              -                                                              
+                        2019, when the Upstream business was accounted for as discontinued operations                        
+-----------------------------------------------------------------------------------------------------------------------------
+
+                                            WILL OVERCOME COVID AND INFLATION TOO                                            
+                                                              6                                                              
+                                                            $0.00                                                            
+                                                            $1.00                                                            
+                                                            $2.00                                                            
+                                                            $3.00                                                            
+                                                            $4.00                                                            
+                                                            $5.00                                                            
+                                                            $6.00                                                            
+                                                             2000                                                            
+                                                             2001                                                            
+                                                             2002                                                            
+                                                             2003                                                            
+                                                             2004                                                            
+                                                             2005                                                            
+                                                             2006                                                            
+                                                             2007                                                            
+                                                             2008                                                            
+                                                             2009                                                            
+                                                             2010                                                            
+                                                             2011                                                            
+                                                             2012                                                            
+                                                             2013                                                            
+                                                             2014                                                            
+                                                             2015                                                            
+                                                             2016                                                            
+                                                             2017                                                            
+                                                             2018                                                            
+                                                             2019                                                            
+                                                             2020                                                            
+                                                             2021                                                            
+                                            EPS (Adjusted, Continuing Operations)                                            
+Represents Adjusted EPS, excluding the estimated impact of the Upstream business when it was not accounted for as discontinue
+                                                             d o                                                             
+                                                      perations, so 2012                                                     
+                                                              -                                                              
+                                        2016 may not be comparable to the period 2017                                        
+                                                              -                                                              
+                        2019, when the Upstream business was accounted for as discontinued operations                        
+                                                            COVID                                                            
+                                                              -                                                              
+                                                              19                                                             
+                                                          Inflation                                                          
+                                                     Doing what’s right,                                                     
+                                                        the right way                                                        
+                                                            COVID:                                                           
+                                                              •                                                              
+                                                   Focused on Institutional                                                  
+                                                              •                                                              
+                                                    Maintained global team                                                   
+                                                          Inflation:                                                         
+                                                              •                                                              
+                                                  Priced to offset over time                                                 
+                                                              •                                                              
+                                                   Ensured seamless supply                                                   
+-----------------------------------------------------------------------------------------------------------------------------
+
+           7            
+STRONG RECOVERY UNDERWAY
+           6%           
+           4%           
+           -            
+           7%           
+           5%           
+           6            
+           -            
+           8%           
+          12%           
+          12%           
+           -            
+          21%           
+          17%           
+          15%           
+     Organic Sales      
+        Adj. EPS        
+          2018          
+          2019          
+          2020          
+          2021          
+          Long          
+           -            
+          term          
+        Ambition        
+           18           
+           %            
+           3%           
+           -            
+          27%           
+           -            
+           9%           
+------------------------
+
+           8            
+           6%           
+           4%           
+           -            
+           7%           
+           5%           
+           6            
+           -            
+           8%           
+          12%           
+          12%           
+           -            
+          21%           
+          17%           
+          15%           
+     Organic Sales      
+        Adj. EPS        
+          2018          
+          2019          
+          2020          
+          2021          
+          Long          
+           -            
+          term          
+        Ambition        
+         Sales          
+      20% of sales      
+     INSTITUTIONAL      
+        DIVISION        
+      80% of sales      
+       ALL OTHER        
+       BUSINESSES       
+           18           
+           %            
+           3%           
+           OI           
+           OI           
+         Sales          
+           -            
+          27%           
+           -            
+          94%           
+STRONG RECOVERY UNDERWAY
+------------------------
+
+                                 9                                 
+                 OVERCOMING UNPRECEDENTED INFLATION                
+                             Internal:                             
+                               Strong                              
+                             underlying                            
+                           growth drivers                          
+                                 ▪                                 
+New business, structural pricing, energy surcharge, innovation, and
+             productivity driven by digital automation             
+                             External:                             
+                            Substantial                            
+                                 d                                 
+                       elivered product cost                       
+                             inflation                             
+                                 ▪                                 
+                                2021                               
+                                 -                                 
+            2022: Overcoming &gt;$1 billion of inflation           
+-------------------------------------------------------------------
+
+                 10                
+OVERCOMING UNPRECEDENTED INFLATION…
+                2020               
+                2021               
+               2022F               
+   Structural Pricing / Surcharge  
+  Delivered Product Cost Inflation 
+                 $B                
+        &gt;$1B of Inflation       
+                +10%               
+                +25%               
+-----------------------------------
+
+               11               
+  …WITH STRONG PRICING ACTIONS  
+              2020              
+              2021              
+             2022F              
+ Structural Pricing / Surcharge 
+Delivered Product Cost Inflation
+               $B               
+      &gt;$1B of Inflation      
+           Temporary            
+             Energy             
+           Surcharge            
+          Accelerated           
+           Structural           
+            Pricing             
+--------------------------------
+
+                    12                   
+                SURCHARGE                
+    IMPLEMENTATION TAKES TIME TO FULLY   
+OFFSET INCREMENTAL DELIVERED PRODUCT COST
+                  April                  
+                   May                   
+                   June                  
+                Surcharge                
+         Incremental DPC Headwind        
+                    $M                   
+-----------------------------------------
+
+                                              13                                              
+                                     2022 CURRENT OUTLOOK                                     
+                                          Continued                                           
+                                            strong                                            
+                                            double                                            
+                                              -                                               
+                                  digit organic sales growth                                  
+                                              ▪                                               
+               Fueled by pricing, market recovery, new business and innovation                
+                                Gross margin pressure to peak                                 
+                                            in 2Q                                             
+                                              ▪                                               
+Structural pricing and surcharge expected to deliver sequential gross margin improvement in 3Q
+                           2Q to be seen as a “transition” quarter                            
+                              as the surcharge gets implemented                               
+                                              ▪                                               
+                          3 full months of incremental energy costs                           
+                                              ▪                                               
+           Only 1+ month of full surcharge benefit as it builds through the quarter           
+                                     2Q adj. diluted EPS                                      
+                                   expected to get close to                                   
+                                             90%                                              
+                                        of last year’s                                        
+                                            $1.22                                             
+                                              ▪                                               
+                                             Year                                             
+                                              -                                               
+                                              on                                              
+                                              -                                               
+       year delivered product cost inflation expected to reach 30%+, up from 25% in 1Q        
+                                              ▪                                               
+  Strong structural pricing, with additional surcharge benefit building later in the quarter  
+                                              ▪                                               
+          Pricing plus surcharge expected to offset inflation as we exit the quarter          
+                Adj. EPS growth expected to accelerate through the second half                
+                                         , assuming:                                          
+                                              ▪                                               
+                              Demand and economy remain healthy                               
+                                              ▪                                               
+                                 The rate of inflation eases                                  
+----------------------------------------------------------------------------------------------
+
+                 14                
+                2005               
+                2006               
+                2007               
+                2008               
+                2009               
+                2010               
+                2011               
+                2012               
+                2013               
+                2014               
+                2015               
+                2016               
+                2017               
+                2018               
+                2019               
+                2020               
+                2021               
+               2022F               
+              Pricing              
+  Delivered Product Cost Inflation 
+                 $B                
+              &gt; 25%             
+                 2%                
+                 2%                
+                 2%                
+                 2%                
+                 3%                
+                0.5                
+                 %                 
+                 2%                
+                 2%                
+                 1%                
+                 1%                
+                 1%                
+                 1%                
+                 1%                
+                 2%                
+                 3%                
+                 2%                
+                 2%                
+                ~10%               
+            RETURNS FOR            
+             CUSTOMERS             
+A LONG HISTORY OF SUSTAINED PRICING
+-----------------------------------
+
+               15               
+              2005              
+              2006              
+              2007              
+              2008              
+              2009              
+              2010              
+              2011              
+              2012              
+              2013              
+              2014              
+              2015              
+              2016              
+              2017              
+              2018              
+              2019              
+              2020              
+              2021              
+             2022F              
+            Pricing             
+Delivered Product Cost Inflation
+               $B               
+            &gt; 25%            
+               2%               
+               2%               
+               2%               
+               2%               
+               3%               
+              0.5               
+               %                
+               2%               
+               2%               
+               1%               
+               1%               
+               1%               
+               1%               
+               1%               
+               2%               
+               3%               
+               2%               
+               2%               
+              ~10%              
+          RETURNS FOR           
+           CUSTOMERS            
+  DEMONSTRATING EARNINGS POWER  
+--------------------------------
+
+                                   Huge and expanding                                   
+                                $152B market opportunity                                
+                                           ▪                                            
+                             Investing further in new, high                             
+                                           -                                            
+                                   growth businesses                                    
+                                  Sustained by strong                                   
+                                 macro business drivers                                 
+                                           ▪                                            
+                     Infection prevention, water and sustainability                     
+                                        Powerful                                        
+                               customer value proposition                               
+                                           ▪                                            
+                                          eROI                                          
+                                           –                                            
+                         best results at the lowest total costs                         
+                                           ▪                                            
+                 Delivered personally at 3 million locations worldwide                  
+                                     Strengthening                                      
+                                 competitive advantages                                 
+                                           ▪                                            
+Global expertise, breakthrough innovation, sales team effectiveness, digital &amp; cloud
+                                          WELL                                          
+                                           -                                            
+                              POSITIONED TO DELIVER DOUBLE                              
+                                           -                                            
+                                    DIGIT EPS GROWTH                                    
+                                AS INFLATION NORMALIZES                                 
+                              POSITIONED FOR STRONG, LONG                               
+                                           -                                            
+                                      TERM GROWTH                                       
+                                           16                                           
+----------------------------------------------------------------------------------------
+
+                                                 CONSISTENT, RELIABLE, DOUBLE                                                
+                                                              -                                                              
+                                                       DIGIT EPS GROWTH                                                      
+                                                              17                                                             
+                                                            $0.00                                                            
+                                                            $1.00                                                            
+                                                            $2.00                                                            
+                                                            $3.00                                                            
+                                                            $4.00                                                            
+                                                            $5.00                                                            
+                                                            $6.00                                                            
+                                                             2000                                                            
+                                                             2001                                                            
+                                                             2002                                                            
+                                                             2003                                                            
+                                                             2004                                                            
+                                                             2005                                                            
+                                                             2006                                                            
+                                                             2007                                                            
+                                                             2008                                                            
+                                                             2009                                                            
+                                                             2010                                                            
+                                                             2011                                                            
+                                                             2012                                                            
+                                                             2013                                                            
+                                                             2014                                                            
+                                                             2015                                                            
+                                                             2016                                                            
+                                                             2017                                                            
+                                                             2018                                                            
+                                                             2019                                                            
+                                                             2020                                                            
+                                                             2021                                                            
+                                                            2022+                                                            
+                                            EPS (Adjusted, Continuing Operations)                                            
+Represents Adjusted EPS, excluding the estimated impact of the Upstream business when it was not accounted for as discontinue
+                                                             d o                                                             
+                                                      perations, so 2012                                                     
+                                                              -                                                              
+                                        2016 may not be comparable to the period 2017                                        
+                                                              -                                                              
+                        2019, when the Upstream business was accounted for as discontinued operations                        
+                                                         SALES GROWTH                                                        
+                                                              6                                                              
+                                                              -                                                              
+                                                              8%                                                             
+                                                             15%                                                             
+                                                          EPS GROWTH                                                         
+                                                             LONG                                                            
+                                                              -                                                              
+                                                             TERM                                                            
+                                                          OBJECTIVES                                                         
+-----------------------------------------------------------------------------------------------------------------------------
+
+           18          
+           18          
+HUGE MARKET OPPORTUNITY
+ATTRACTIVE MACRO TRENDS
+           ®           
+-----------------------
+
+                    19                   
+  LEADER IN HIGHLY FRAGMENTED, LARGE AND 
+              GROWING MARKET             
+                    0                    
+                    20                   
+                    40                   
+                    60                   
+                    80                   
+                   100                   
+                   120                   
+                   140                   
+                   160                   
+                   1995                  
+                   2000                  
+                   2005                  
+                   2010                  
+                   2015                  
+                   2020                  
+                   2021                  
+   MARKET OPPORTUNITY GROWTH SINCE 1995  
+                  $152B                  
+                   $57B                  
+                   $39B                  
+                   $32B                  
+                   $18B                  
+                  Ecolab                 
+                  $106B                  
+                    8%                   
+                  $135B                  
+               ECOLAB SALES              
+                  2021:                  
+               $13 BILLION               
+                  Ecolab                 
+               Competitors               
+Market data reflects current estimates of
+         potential opportunities         
+                    $0                   
+                  $2,000                 
+                  $4,000                 
+                  $6,000                 
+                  $8,000                 
+                 $10,000                 
+                 $12,000                 
+                 $14,000                 
+                  $152B                  
+-----------------------------------------
+
+                    20                   
+  WITH MAJOR OPPORTUNITIES IN EVERY END  
+                    -                    
+                  MARKET                 
+                $ MILLIONS               
+Market data reflects current estimates of
+         potential opportunities         
+                    $0                   
+                  $5,000                 
+                 $10,000                 
+                 $15,000                 
+                 $20,000                 
+                 $25,000                 
+                 $30,000                 
+            Building Services            
+                  Other                  
+               Food Retail               
+              Ed./Government             
+         High Tech/Manufacturing         
+                 Lodging                 
+                  Paper                  
+                  Pharma                 
+               Health Care               
+             Heavy Industries            
+               Food Service              
+           Food &amp; Beverage           
+-----------------------------------------
+
+                   SERVING MAJOR GLOBAL COMPANIES                   
+                                 21                                 
+Largest customer &lt;2% of sales | Top 10 customers &lt;10% of sales
+--------------------------------------------------------------------
+
+             CAPTURING GROWTH TRENDS: PEOPLE HEALTH             
+                               22                               
+                           PANDEMICS                            
+                       HOSPITAL ACQUIRED                        
+                           INFECTIONS                           
+                          FOOD SAFETY                           
+                         ANIMAL HEALTH                          
+PREVENTING INFECTIONS BY HELPING PROVIDE SAFE OUTCOMES IN A SAFE
+                          ENVIRONMENT                           
+----------------------------------------------------------------
+
+ CAPTURING GROWTH TRENDS: PLANET HEALTH
+                   23                  
+            WATER SCARCITY:            
+        56% SUPPLY / DEMAND GAP        
+            CLIMATE CHANGE:            
+                   5                   
+                   -                   
+              6ºC BY 2100              
+             WATER QUALITY:            
+            1/5 UNDRINKABLE            
+               WATER + CO              
+                   2                   
+               EMISSIONS:              
+          25% DRIVEN BY WATER          
+                  NET                  
+                  ZERO                 
+                   0                   
+UNIQUELY POSITIONED TO DELIVER NET ZERO
+---------------------------------------
+
+         CAPTURING GROWTH TRENDS: BUSINESS HEALTH         
+                            24                            
+                   Carbon negative and                    
+                  water positive by 2030                  
+                  Zero emissions by 2040                  
+              100% renewable energy by 2035               
+            25% reduction in emissions by 2025            
+            Net positive water impact by 2050             
+               100% of packaging recyclable               
+                   or reusable by 2025                    
+                     34% reduction in                     
+                 carbon emissions by 2025                 
+            30% reduction in carbon intensity,            
+         15% reduction in water intensity by 2025         
+                  Carbon neutral by 2050                  
+          Freshwater only for human consumption           
+               Cut carbon, water and waste                
+                footprints in half by 2030                
+                Net zero emissions by 2039                
+               25% recycled plastic by 2025               
+HELPING CUSTOMERS DELIVER ON THEIR SUSTAINABILITY PROMISES
+----------------------------------------------------------
+
+                    25                   
+             GROWTH STRATEGY:            
+  CIRCLE THE CUSTOMER, CIRCLE THE GLOBE  
+                2021 SALES               
+                                        
+                    C                    
+            orporate accounts            
+                                        
+              New offerings              
+                                        
+                 New end                 
+                    -                    
+                 markets                 
+Market data reflects current estimates of
+         potential opportunities         
+                2021 SALES               
+                  UNSOLD                 
+                CUSTOMERS                
+                   $83B                  
+                   $56B                  
+                   $13B                  
+                  $152B                  
+                   GROW                  
+               MARKET SHARE              
+                  DRIVE                  
+               PENETRATION               
+                                        
+           End to end solutions          
+                                        
+                 Proof o                 
+                f outcome                
+                                        
+               eROI &gt;25%              
+                 EXISTING                
+                CUSTOMERS                
+-----------------------------------------
+
+     26    
+     26    
+HOW WE GROW
+     ®     
+-----------
+
+                        27                       
+   COMMON GROWTH PLATFORM, DEDICATED EXPERTISE   
+     Business Model and Operating Principles     
+         Innovation and Digital Platforms        
+             90%+ consumable revenue             
+                   FOODSERVICE/                  
+                   HOSPITALITY                   
+               FOOD &amp; BEVERAGE               
+                    PROCESSING                   
+                   HEALTHCARE/                   
+                  LIFE SCIENCES                  
+                   INDUSTRIAL/                   
+                    COMMERCIAL                   
+                  WATER SERVICES                 
+Hygiene, Infection Prevention and Water Treatment
+-------------------------------------------------
+
+       LEVERAGING ENTERPRISE TECHNOLOGIES       
+                   Chemistry                    
+                     ECOLAB                     
+                       3D                       
+                       TM                       
+                   : Digital                    
+                   Technology                   
+                Innovating best                 
+                       -                        
+                       in                       
+                       -                        
+class solutions from our advantaged technologies
+    Leveraging deep enterprise capabilities     
+     Antimicrobials, Water, Hygiene, Solids     
+               Dispensing, Clean                
+                       -                        
+                       in                       
+                       -                        
+                 place, Sensors                 
+                      Real                      
+                       -                        
+        time data, predictive, connected        
+                       28                       
+------------------------------------------------
+
+          HOW WE DRIVE VALUE         
+                  –                  
+      ENSURING THE BEST OUTCOMES     
+                  29                 
+           BEST RESULTS AT           
+          LOWEST TOTAL COST          
+(Reduced water, energy, waste impact)
+             BREAKTHROUGH            
+              TECHNOLOGY             
+                  ON                 
+                  -                  
+                 SITE                
+              EXPERTISE              
+                GLOBAL               
+                 KNOW                
+                  -                  
+                 HOW                 
+              PREDICTIVE             
+               INSIGHTS              
+-------------------------------------
+
+             SMALL COST            
+                 –                 
+      MAJOR CUSTOMER BENEFITS      
+                 30                
+               Labor               
+               Asset               
+             Protection            
+            Water &amp;            
+               Energy              
+               Other               
+ Specific customer application cost
+Ecolab’s customer value proposition
+                                  
+ The best results at every location
+                                  
+    Lower total operating costs    
+                                  
+    Minimal environmental impact   
+                                  
+   Dramatic sustainability story   
+                                  
+  Exceptional customer experience  
+-----------------------------------
+
+                    31                    
+              ANNUAL SAVINGS              
+                 INSIGHT                  
+                    ▪                     
+   Measurement of global water strategy   
+                    ▪                     
+    Consistency &amp; standardization     
+                    ▪                     
+Continuous improvement &amp; TCO reduction
+                INNOVATION                
+   Our comprehensive solutions include:   
+                    ▪                     
+         Holistic water strategy          
+                    ▪                     
+                   Real                   
+                    -                     
+     time digital insights delivered      
+                enterprise                
+                    -                     
+                   wide                   
+                    ▪                     
+   Optimized cooling treatment programs   
+             for water reuse              
+       DELIVERING MEASURABLE IMPACT       
+               AND OUTCOMES               
+     CASE STUDY: DATA CENTER PROVIDER     
+                SOLUTIONS                 
+                    ▪                     
+         Water Flow Intelligence          
+                    ▪                     
+                3D TRASAR                 
+                    ™                     
+                Technology                
+                    ▪                     
+                Powered by                
+                 ECOLAB3D                 
+                    ™                     
+                30 Million                
+                 Gallons                  
+                17 Million                
+                   kWh                    
+                  12,000                  
+               Metric tons                
+                $8 Million                
+                  &gt;60                  
+                    %                     
+------------------------------------------
+
+      32      
+      32      
+SUSTAINABILITY
+    LEADER    
+      ®       
+--------------
+
+                    33                    
+                    15                    
+                    th                    
+               Consecutive                
+                   Year                   
+          2021 Climate and Water          
+          A Lists &amp; Supplier          
+             Leadership List              
+              2022 World and              
+          North America Indices           
+                    6                     
+                    th                    
+               Consecutive                
+                   Year                   
+                    #3                    
+   Driving exponential operational and    
+sustainability results with our customers 
+          THROUGH OUR CUSTOMERS           
+  Embodying corporate responsibility and  
+   sustainability in our own operations   
+          IN OUR OWN OPERATIONS           
+THE WORLD’S TRUSTED SUSTAINABILITY COMPANY
+------------------------------------------
+
+                  WATER                  
+          DIVERSITY, EQUITY, AND         
+                INCLUSION                
+                  SAFETY                 
+                    40                   
+                    %                    
+    reduction in overall water impact    
+                   50%                   
+             reduction in CO             
+                    2                    
+                    e                    
+               35% and 25%               
+management level gender and ethnic/racial
+         diversity, respectively         
+                GOAL ZERO                
+                    62                   
+                    %                    
+                 Progress                
+               toward goal               
+                   56%                   
+                 Progress                
+               toward goal               
+                   74%                   
+                 Progress                
+               toward goal               
+                   44%                   
+                   39%                   
+                Reduction                
+                Reduction                
+                 in Total                
+                Recordable               
+               Injury Rate               
+                  (TRIR)                 
+                  since                  
+              2013, globally             
+               in Lost Time              
+               Injury Rate               
+               (LTIR) since              
+              2016 in North              
+                 America                 
+        As of 2021, we delivered:        
+                 CLIMATE                 
+               2030 goals:               
+               2021 Target               
+DELIVERED SAFE AND SUSTAINABLE OPERATIONS
+                    34                   
+-----------------------------------------
+
+             300 BILLION              
+        gallons of water saved        
+              6 MILLION               
+         metric tonnes of CO          
+                  2                   
+              e avoided               
+              2 BILLION               
+         people provided high         
+                  -                   
+        quality and safe food         
+              90 BILLION              
+            hands cleaned             
+      As of 2021, we delivered:       
+                  35                  
+                WATER                 
+                 FOOD                 
+                HEALTH                
+               CLIMATE                
+             2030 goals:              
+DELIVERED MAJOR GLOBAL CUSTOMER IMPACT
+                 60%                  
+               Progress               
+             toward goal              
+                 70%                  
+               Progress               
+             toward goal              
+                 67%                  
+               Progress               
+             toward goal              
+                 72%                  
+               Progress               
+             toward goal              
+             2021 Target              
+--------------------------------------
+
+       36       
+       36       
+STRONG FINANCIAL
+    POSITION    
+       ®        
+----------------
+
+         CONSISTENT FINANCIAL OBJECTIVES          
+                        37                        
+                   SALES GROWTH                   
+          ~2x net debt / adjusted EBITDA          
+                     LEVERAGE                     
+                        1.                        
+      Grow dividend in line with EPS growth       
+                        2.                        
+                   Acquisitions                   
+                        3.                        
+                 Share repurchase                 
+            FREE CASH FLOW CONVERSION             
+            FREE CASH FLOW PRIORITIES             
+                       +15%                       
+POSITIONED TO DRIVE SUSTAINABLE, PROFITABLE GROWTH
+                       90%                        
+                        -                         
+                   100% of cash                   
+                 from operations                  
+                    EPS GROWTH                    
+                        +6                        
+                        -                         
+                        8%                        
+--------------------------------------------------
+
+               $0.3               
+               $0.5               
+               $0.9               
+               $1.3               
+               $1.7               
+               $2.1               
+               $2.6               
+               $3.2               
+               $3.7               
+               $4.3               
+               $0.2               
+               $0.5               
+               $1.0               
+               $1.7               
+               $2.5               
+               $3.1               
+               $3.6               
+               $4.0               
+               $4.1               
+               $4.2               
+               $0.0               
+               $1.0               
+               $2.0               
+               $3.0               
+               $4.0               
+               $5.0               
+               $6.0               
+               $7.0               
+               $8.0               
+               $9.0               
+               2012               
+               2013               
+               2014               
+               2015               
+               2016               
+               2017               
+               2018               
+               2019               
+               2020               
+               2021               
+      Common Dividends Paid       
+        Shares Repurchased        
+  CASH RETURNED TO SHAREHOLDERS   
+                38                
+~$9B Cumulative Cash Returned 2012
+                -                 
+               2021               
+          Total Returns           
+               2012               
+                -                 
+               2021               
+              $4.2B               
+        SHARES REPURCHASED        
+              $4.3B               
+           DIVIDENDS TO           
+           SHAREHOLDERS           
+           ($ Billions)           
+          Increased cash          
+           dividend for           
+                30                
+           consecutive            
+              years               
+----------------------------------
+
+                                              ECOLAB SUMMARY                                             
+                                                    39                                                   
+                          STRONG BUSINESS MODEL FOR CONSISTENT, SUPERIOR GROWTH                          
+                                                                                                        
+                                  GLOBAL LEADER WITH SMALL SHARE OF $152                                 
+                                                    +                                                    
+                                            B, GROWING MARKET                                            
+                                     $139+ Billion Remains to be Sold                                    
+                                                                                                        
+                        SERVING FUNDAMENTAL, GLOBAL AND INCREASINGLY COMPLEX LONG                        
+                                                    -                                                    
+                                                TERM NEEDS                                               
+                           Water, Food Safety, Infection Prevention, Sustainab                           
+                                                  ility                                                  
+                                                                                                        
+                                  POWERFUL, PROVEN STRATEGY TO DRIVE TOP                                 
+                                                    -                                                    
+                                               LINE GROWTH                                               
+                                           Circle the Customer                                           
+                                                    –                                                    
+                              Circle the Globe, High Consumable Revenue Mix                              
+                                                                                                        
+                                  MULTIPLE OPPORTUNITIES FOR NEW GROWTH                                  
+                        Geographic and Market Expansion, Emerging Businesses, Bolt                       
+                                                    -                                                    
+                                                on M&amp;A                                               
+                                                                                                        
+                               SIGNIFICANT MARGIN IMPROVEMENT WORK UNDERWAY                              
+                                        Pricing, Leverage, Digital                                       
+                                                    ,                                                    
+                                            Process Efficiency                                           
+                                                                                                        
+                                    SUBSTANTIAL COMPETITIVE ADVANTAGE                                    
+Scale, Global Reach, Product Technology, Corporate Accounts, Sales/Service Force, Field Technology, Brand
+                                    Name, Data and Actionable Insights                                   
+                                                                                                        
+                        STRONG AND CONSISTENT FINANCIALS, FREE CASH FLOW, RETURNS                        
+---------------------------------------------------------------------------------------------------------
+
+  SUPPLEMENTAL NON  
+         -          
+GAAP RECONCILIATIONS
+         40         
+--------------------
