@@ -296,6 +296,55 @@ def test_merge_wanted_respects_the_limit():
     assert len(audit_data.merge_wanted(많이, limit=7)) == 7
 
 
+
+
+def test_부탁목록_갱신은_바깥자_재료를_앞에_두고_실패해도_안멈춘다():
+    """(134차) 로봇이 매일 부르는 자리. 야후 재료가 있으면 그 칸이 앞에
+    오고, 재료 만들기가 실패해도 목록 자체는 적혀야 합니다 — 수집이
+    부탁 목록 때문에 멈추면 안 됩니다."""
+    import json
+    import tempfile
+
+    quarters = {"AA": [
+        {"announced_date": f"2025-0{i}-01", "period_label": f"25/0{i}",
+         "adj_eps": 1.0, "revenue": 1000.0} for i in range(1, 5)
+    ]}
+    vendor = {"tickers": {"AA": {"announcements": [
+        {"announced_date": "2025-01-01", "날짜뜻": "발표일",
+         "street_eps": 9.99, "street_estimate": 9.99},
+    ]}}}
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        path = f.name
+    n = audit_data.refresh_wanted(quarters, vendor, path=path,
+                                  progress=lambda *a: None)
+    assert n >= 1, "목록이 비었습니다"
+    with open(path, encoding="utf-8") as f:
+        목록 = json.load(f)["목록"]
+    assert any(r["종목"] == "AA" for r in 목록), 목록
+
+    # 야후 파일이 깨져 있어도 (재료 실패) 목록은 적힌다
+    말 = []
+    n2 = audit_data.refresh_wanted(quarters, {"tickers": "깨짐"}, path=path,
+                                   progress=말.append)
+    assert n2 >= 0, "재료 실패가 갱신을 멈췄습니다"
+    assert any("실패" in m for m in 말), 말
+
+    # 재료가 아예 없어도(None) 조용히 목록만 적는다
+    audit_data.refresh_wanted(quarters, None, path=path,
+                              progress=lambda *a: None)
+    os.unlink(path)
+
+
+def test_로봇이_부탁목록을_매일_갱신한다():
+    """(134차) 배선이 빠지면 부탁 목록이 **사람 손에만 매입니다** — 실제로
+    4차 확장의 새 90종목이 한 건도 못 들어갔던 사고(133차)의 재발 방지."""
+    root = os.path.join(os.path.dirname(__file__), "..")
+    with open(os.path.join(root, "collect_job.py"), encoding="utf-8") as f:
+        text = f.read()
+    assert "audit_data.refresh_wanted(" in text, \
+        "로봇이 부탁 목록을 갱신하지 않습니다"
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

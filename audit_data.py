@@ -325,6 +325,28 @@ def write_wanted(quarters: dict, path: str = WANTED_PATH,
     return len(목록)
 
 
+def refresh_wanted(quarters: dict, vendor: dict | None,
+                   path: str = WANTED_PATH, progress=print) -> int:
+    """부탁 목록을 다시 적습니다 — **로봇이 매일 부르는 자리** (134차).
+
+    115차에 만든 배관은 사람이 audit_data.py 를 직접 돌릴 때만 돌았습니다.
+    그래서 4차 확장(250종목)으로 들어온 새 90종목의 오염 공시가 **한 건도
+    목록에 못 들어갔습니다**(133차 감사에서 실측: 새 종목 0건). 같은 코드를
+    로봇도 부를 수 있게 함수로 뺐습니다 — 규칙은 하나도 바꾸지 않았습니다.
+    """
+    바깥: list[dict] = []
+    if vendor:
+        try:
+            import vendor_compare as _vc
+            바깥 = _vc.wanted_from_mismatch(quarters, vendor) + \
+                  _vc.wanted_from_street(quarters, vendor)
+        except Exception as exc:      # 부탁 목록이 실패해도 수집은 계속
+            progress(f"⚠️ 부탁 목록 재료 실패: {type(exc).__name__}: {str(exc)[:120]}")
+    count = write_wanted(quarters, path=path, extra=바깥)
+    progress(f"원문 부탁 목록 {count}건 갱신 (바깥 자 재료 {len(바깥)}건)")
+    return count
+
+
 if __name__ == "__main__":
     import dataset
 

@@ -214,6 +214,17 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         vendor_compare.attach_street_surprise(
             events, vendor_feed.load(f"{cfg.MEASURE_DIR}/vendor.json"))
         verdict["가설"].update(judge.judge_momentum_beat(events))
+        # 원문 부탁 목록 갱신 (134차) — 115차 배관이 사람 손에만 매여 있어
+        # 새 90종목의 오염 공시가 한 건도 못 들어갔습니다(133차 실측).
+        # 이제 로봇이 매일 다시 적고, **다음 런이 그 원문을 담아 옵니다.**
+        try:
+            import audit_data
+            audit_data.refresh_wanted(
+                ds["quarters"],
+                vendor_feed.load(f"{cfg.MEASURE_DIR}/vendor.json"),
+                progress=progress)
+        except Exception as exc:
+            progress(f"⚠️ 부탁 목록 갱신 실패: {type(exc).__name__}: {str(exc)[:120]}")
         completions = sector_model.completion_events(ds)
         verdict["가설"].update(judge.judge_completion_gap(
             completions, sector_model.H18_START_DAY, sector_model.H18_GAP_MIN,
