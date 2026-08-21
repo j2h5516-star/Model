@@ -780,6 +780,46 @@ def test_load_announcements_는_뜻이_확인된_날짜만_읽는다():
 
 
 
+def test_분기끝에서_너무_가깝거나_먼_발표일은_버린다():
+    """(138차) 우리가 읽은 발표일 7,130행 중 236행이 바깥 자와 어긋났고,
+    어긋날 때는 **우리 쪽이 틀린 경우가 훨씬 많았습니다**(상식 범위 안:
+    우리 146/236 · 야후 216/236). 실적과 무관한 8-K 를 집은 것으로
+    보입니다. 창을 잘못된 날에서 시작하면 그 사건의 수익률은 다른 기간을
+    잰 숫자가 되어 모든 가설에 잡음으로 들어갑니다."""
+    for 발표, 설명 in (("2024-04-02", "분기끝 2일 뒤 — 결산 전"),
+                     ("2024-07-20", "분기끝 111일 뒤 — 다음 분기 지남")):
+        snap = _발표일_스냅([{"filing_date": "2024-03-31", "adj_eps": 1.0,
+                           "announced_date": 발표}])
+        ds = dataset.build(snap, announcements={})
+        assert not ds["quarters"]["AA"][0].get("announced_date"), \
+            f"{설명} 인데 그대로 뒀습니다"
+        assert any("상식 범위" in n for n in ds["notes"]), ds["notes"]
+
+
+def test_상식_범위_안의_발표일은_건드리지_않는다():
+    """범위 10~70일은 **바깥 자가 확인해 준 6,874행**의 분포에서 골랐습니다
+    (0.5% = 10일 · 중앙 30일 · 99.5% = 58일). 평범한 발표를 버리면
+    표본만 줄고 얻는 것이 없습니다."""
+    snap = _발표일_스냅([{"filing_date": "2024-03-31", "adj_eps": 1.0,
+                       "announced_date": "2024-04-30"}])      # 30일 뒤
+    ds = dataset.build(snap, announcements={})
+    assert ds["quarters"]["AA"][0]["announced_date"] == "2024-04-30"
+    assert not any("상식 범위" in n for n in ds["notes"]), ds["notes"]
+
+
+def test_버린_발표일은_바깥자_기록으로_되채워진다():
+    """버리기만 하면 표본이 줄 뿐입니다. 버린 자리를 137차 되찾기가 채워야
+    비로소 **수리**가 됩니다. 실행 출력: 128행을 버려 122행이 되채워지고
+    6행만 날짜 없이 남았으며, 어긋나던 90행이 바로잡혔습니다."""
+    snap = _발표일_스냅([{"filing_date": "2024-03-31", "adj_eps": 1.0,
+                       "announced_date": "2024-07-20"}])      # 111일 — 버려짐
+    ds = dataset.build(snap, announcements={"AA": ["2024-04-25"]})
+    행 = ds["quarters"]["AA"][0]
+    assert 행["announced_date"] == "2024-04-25", f"되채우지 못했습니다: {행}"
+    assert 행["_발표일출처"] == "야후"
+
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

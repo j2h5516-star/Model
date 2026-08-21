@@ -55,6 +55,13 @@ import config as cfg
 #   못 잡습니다. 그건 파서의 소수점 규칙(1차 방어)이 막습니다.
 PER_SHARE_ABS_LIMIT = 100.0
 
+# 발표일 상식 범위 (138차) — 분기끝 뒤 며칠 사이여야 실적 발표인가.
+# 바깥 자가 확인해 준 6,874행의 실측 분포에서 골랐습니다
+# (0.5% = 10일 · 50% = 30일 · 99.5% = 58일 · 99.9% = 62일).
+# 자세한 근거와 실행 출력은 _drop_implausible_announced 설명에 있습니다.
+ANNOUNCE_LAG_MIN = 10
+ANNOUNCE_LAG_MAX = 70
+
 # 분기 행에서 통행시키는 칸 (measure_store.EPS_FIELDS + 가이던스 3칸)
 _NUMBER_FIELDS = ("revenue", "op_income", "adj_eps", "adjusted_ebitda",
                   "gaap_eps", "gross_margin_pct",
@@ -215,6 +222,9 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
         _drop_cumulative_values(ticker, kept, notes)
         _drop_parse_debris(ticker, kept, notes)
         _drop_same_day_siblings(ticker, kept, notes)
+        # 발표일 상식 검사는 **형제 행 규칙들 뒤에** — 그 규칙들이
+        # 발표일로 행을 묶어 보기 때문입니다 (아래 함수 설명 참조).
+        _drop_implausible_announced(ticker, kept, notes)
         for row in kept:
             row.pop("_raw_revenue", None)      # 내부용 표시는 밖으로 내보내지 않습니다
         cleaned[ticker] = kept
@@ -422,6 +432,56 @@ def _drop_same_day_siblings(ticker: str, rows: list[dict],
             )
             for field in dropped:
                 row[field] = None
+
+
+def _drop_implausible_announced(ticker: str, rows: list[dict],
+                                notes: list[str]) -> None:
+    """분기끝에서 너무 가깝거나 먼 발표일을 없음 처리합니다 (138차).
+
+    실측으로 드러난 문제: 우리가 읽은 발표일 7,130행 중 **236행(3.3%)이
+    바깥 자(야후)와 어긋납니다**(중앙 20일 차이). 어느 쪽이 맞나? 그
+    236행의 '분기끝 → 발표일' 지연을 견줬습니다:
+
+        우리 날짜: 중앙 17일 · 상식 범위 안 146/236
+        야후 날짜: 중앙 31일 · 상식 범위 안 216/236
+
+    어긋날 때는 **우리 쪽이 틀린 경우가 훨씬 많습니다**(실적과 무관한
+    8-K 를 집은 것으로 보입니다). 실물 STRL 24 Q2: 우리 2024-09-18
+    (80일) vs 야후 2024-08-05(36일).
+
+    창을 잘못된 날에서 시작하면 그 사건의 수익률은 **다른 기간을 잰
+    숫자**가 되어 모든 가설에 잡음으로 들어갑니다.
+
+    범위 10~70일은 **바깥 자가 확인해 준 6,874행**의 분포에서 골랐습니다
+    (0.5% = 10일 · 50% = 30일 · 99.5% = 58일 · 99.9% = 62일).
+    70일은 99.9%에 여유 8일을 둔 자리입니다.
+
+    ⚠️ **형제 행 규칙들보다 뒤에 돌아야 합니다.** 잔해 판정과 같은 날
+    발표 판정은 **발표일로 행을 묶어** 봅니다. 여기서 날짜를 먼저
+    지우면 그 그물들이 눈이 멀어 잔해가 살아남습니다 — 138차에 실제로
+    시험 2개가 빨간 불로 알려 줬습니다.
+
+    여기서는 **버리기만** 합니다(창작 금지). 버린 자리는 발표일 되찾기
+    (137차)가 바깥 자 기록으로 채우되, 후보가 정확히 하나일 때만
+    채웁니다. 실행 출력: 128행을 버려 122행이 되채워지고 6행만 날짜
+    없이 남습니다 — 그 대가로 **바깥 자와 어긋나던 90행(236 → 146)이
+    바로잡힙니다.**
+    """
+    for row in rows:
+        발표 = row.get("announced_date")
+        if not 발표 or not _valid_date(row.get("filing_date")):
+            continue
+        지연 = (datetime.strptime(str(발표)[:10], "%Y-%m-%d")
+               - datetime.strptime(str(row["filing_date"])[:10], "%Y-%m-%d")).days
+        if not (ANNOUNCE_LAG_MIN <= 지연 <= ANNOUNCE_LAG_MAX):
+            notes.append(
+                f"{ticker} {row.get('period_label', '?')}: "
+                f"발표일 {str(발표)[:10]} 은 분기끝({str(row['filing_date'])[:10]})"
+                f"에서 {지연}일 — 상식 범위"
+                f"({ANNOUNCE_LAG_MIN}~{ANNOUNCE_LAG_MAX}일) 밖이라 없음 처리 "
+                "(바깥 자 기록이 있으면 되채웁니다)"
+            )
+            row["announced_date"] = None
 
 
 def _drop_parse_debris(ticker: str, rows: list[dict], notes: list[str]) -> None:
