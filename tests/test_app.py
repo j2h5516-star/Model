@@ -585,6 +585,29 @@ def test_장세게이지_산장세는_우위미증명을_같이_적는다():
         assert 조각 in 글, f"{조각} 가 화면 줄에 없습니다: {줄들}"
 
 
+
+
+def test_관찰판은_최근창만_세고_이격도없음은_신호가_아니다():
+    """(127차) 관찰판은 기준일에서 91일 안의 완성만 세고, 이격도를 못 잰
+    완성은 신호로 치지 않으며, 묶음 집계는 신호 수 → 완성 수 순입니다."""
+    사건 = [
+        {"ticker": "NVDA", "day": "2026-08-01", "이격도": 45.0, "델타": True},
+        {"ticker": "AMD",  "day": "2026-07-01", "이격도": 12.0, "델타": False},
+        {"ticker": "MU",   "day": "2026-06-01", "이격도": None, "델타": True},
+        {"ticker": "JPM",  "day": "2025-01-01", "이격도": 99.0, "델타": True},  # 옛날 — 제외
+    ]
+    rows = app.recent_completion_rows(사건, "2026-08-19")
+    assert [r["종목"] for r in rows] == ["NVDA", "AMD", "MU"], rows
+    assert rows[0]["신호"] is True and rows[1]["신호"] is False
+    assert rows[2]["신호"] is False, "이격도 없음이 신호로 잡혔습니다"
+
+    묶음 = app.leader_watch_rows(사건, "2026-08-19")
+    top = 묶음[0]
+    assert top["묶음"] == "기기 OEM 반도체", 묶음   # NVDA·AMD 같은 묶음
+    assert top["완성"] == 2 and top["신호"] == 1 and top["델타상승"] == 1
+    assert top["마지막완성"] == "2026-08-01"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

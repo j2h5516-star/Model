@@ -630,6 +630,11 @@ def cached_market_breadth(_ds: dict, 키: str) -> list[tuple[str, float]]:
 
 
 @_cached
+def cached_completion_events(_ds: dict, 키: str) -> list[dict]:
+    return sm.completion_events(_ds)
+
+
+@_cached
 def cached_cycle_series(_ds: dict, members: tuple, base_day: str,
                         since: str, 키: str) -> list[dict]:
     return sm.cycle_series(_ds, list(members), base_day, since=since)
@@ -699,6 +704,59 @@ def health_lines(검진: dict | None) -> list[str]:
                      f"새 분기 {어제.get('새 분기', 0):,}개 · "
                      f"사라진 분기 {어제.get('사라진 분기', 0):,}개")
     return lines
+
+
+def recent_completion_rows(완성사건: list[dict], 기준일: str,
+                           days: int = 91) -> list[dict]:
+    """최근 days 일 안의 정배열 완성 종목 (127차 — 주도 후보 관찰판).
+
+    판정이 아니라 **사실의 나열**입니다. 이격도 내림차순이고, 이격도
+    30%+ 는 H18/H18b 신호 표시를 답니다. 이격도를 못 잰 완성은 신호로
+    치지 않습니다 — 없는 값은 만들지 않습니다.
+    """
+    from datetime import timedelta
+    cut = (date.fromisoformat(기준일) - timedelta(days=days)).isoformat()
+    rows = []
+    for e in 완성사건:
+        if e["day"] < cut:
+            continue
+        gap = e.get("이격도")
+        rows.append({
+            "종목": e["ticker"],
+            "묶음": cfg.GROUPS.get(e["ticker"], "미분류"),
+            "완성일": e["day"],
+            "이격도": None if gap is None else round(gap, 1),
+            "델타": e.get("델타"),
+            "신호": gap is not None and gap >= sm.H18_GAP_MIN,
+        })
+    rows.sort(key=lambda r: (-(r["이격도"] if r["이격도"] is not None else -999),
+                             r["완성일"]))
+    return rows
+
+
+def leader_watch_rows(완성사건: list[dict], 기준일: str,
+                      days: int = 91) -> list[dict]:
+    """묶음별 최근 완성 집계 (127차 — 주도 후보 관찰판, 판정 아님).
+
+    같은 묶음에서 완성이 무리로 나오면 주도 **후보**로 볼 수 있다는
+    관찰 요령을 세어 주는 판입니다. 125차 실측에서 무리 자체는 적중률을
+    못 올렸으므로, 순서를 매길 뿐 점수·추천을 만들지 않습니다.
+    """
+    rows = recent_completion_rows(완성사건, 기준일, days)
+    묶음별: dict[str, dict] = {}
+    for r in rows:
+        g = 묶음별.setdefault(r["묶음"], {"묶음": r["묶음"], "완성": 0,
+                                       "신호": 0, "델타상승": 0,
+                                       "마지막완성": r["완성일"]})
+        g["완성"] += 1
+        if r["신호"]:
+            g["신호"] += 1
+        if r["델타"] is True:
+            g["델타상승"] += 1
+        g["마지막완성"] = max(g["마지막완성"], r["완성일"])
+    out = sorted(묶음별.values(),
+                 key=lambda g: (-g["신호"], -g["완성"], g["묶음"]))
+    return out
 
 
 def market_regime_lines(폭: float | None, 직전폭: float | None,
@@ -909,6 +967,39 @@ def main():
     _직전폭 = _시장[-2][1] if len(_시장) >= 2 else None
     for 줄 in market_regime_lines(_폭, _직전폭, verdict):
         st.markdown(줄)
+    st.divider()
+
+    # 주도 후보 관찰판 (127차) — 판정이 아니라 최근 완성 사실의 집계.
+    # "26년 말 정식 판정 전에도 포착은 계속 돼야 한다"는 주인 요청의 이행.
+    st.markdown("**주도 후보 관찰판** — 최근 91일 정배열 완성 집계 (판정 아님)")
+    _완성 = cached_completion_events(ds, 키)
+    _오늘 = ds["prices"][ds["benchmark"]]["dates"][-1]
+    _묶음판 = [g for g in leader_watch_rows(_완성, _오늘) if g["완성"] >= 2]
+    if not _묶음판:
+        st.markdown("최근 91일 안에 완성이 2개 이상 나온 묶음이 없습니다.")
+    for g in _묶음판[:6]:
+        st.markdown(
+            f"· **{g['묶음']}** — 완성 {g['완성']}개"
+            f" (이격도30%+ {g['신호']}개 · 델타상승 {g['델타상승']}개)"
+            f" · 마지막 {g['마지막완성']}"
+        )
+    _종목판 = [r for r in recent_completion_rows(_완성, _오늘) if r["신호"]]
+    if _종목판:
+        st.markdown("이격도 30%+ 완성 종목 (H18·H18b 신호 — 탐색 참고):")
+        for r in _종목판[:8]:
+            st.markdown(
+                f"· **{r['종목']}** ({r['묶음']}) {r['완성일']}"
+                f" · 이격도 {r['이격도']}%"
+                + (" · 델타상승" if r["델타"] is True else "")
+            )
+        st.caption(
+            "이 신호의 과거 실측(126차 백테스트): 1년 뒤 SPY+20%p 46.6% · "
+            "기준선 27.5% · 시장을 이긴 비율 59%. **채택 전 참고입니다** — "
+            "정식 판정은 등록일 뒤 새 완성으로만 하며(H18 이르면 11월, "
+            "H18b 2027 하반기), 10건 중 4건은 시장에 졌습니다."
+        )
+    else:
+        st.markdown("지금 이격도 30%+ 완성 종목 없음 — 없는 것은 없다고 말합니다.")
     st.divider()
 
     breadth_rows = cached_current_breadth(ds, 키)
