@@ -118,39 +118,64 @@ def changed_cells(before: dict, after: dict, limit: int = 8) -> dict:
 
 
 def outliers(eps: dict, fields=("revenue", "op_income")) -> dict:
-    """자기 이력에서 크게 벗어난 값 — **그럴듯한 쓰레기**를 드러냅니다.
+    """자기 이력에서 **자릿수**가 벗어난 값 — 그럴듯한 쓰레기를 드러냅니다.
 
     106차에 BAC 매출이 **8달러**(그 종목 중앙값 220억)로 들어와 있었는데,
     8달러는 그 자체로는 아무 검사에도 안 걸리는 "말이 되는" 숫자였습니다.
     한 종목 안에서 자기 이력과 맞대야만 드러납니다.
 
     ⚠️ **버리지 않습니다.** 개수와 예시만 남깁니다.
+
+    ⚠️ **부호 결함 수리 (136차)** — 처음 판은 `값 ÷ 중앙값` 을 그대로
+    봤습니다. 그러면 **적자 분기가 전부 걸립니다** (음수 ÷ 양수 = 음수,
+    음수는 언제나 하한보다 작으므로). 실측: 영업이익 경보 1,112칸 중
+    **524칸이 그냥 적자**였습니다 — 진짜 값인데 쓰레기로 세고 있었던
+    것입니다. 오경보가 절반이면 계기를 아무도 안 믿게 되고, 그러면
+    **진짜 결함이 소음에 묻힙니다** (헌법 6조 — 신호보다 장치를 먼저
+    의심). 그래서 **크기(절댓값)끼리만** 견줍니다. 적자냐 흑자냐는
+    자릿수 문제가 아닙니다.
     """
     out: dict = {}
     for field in fields:
         걸림 = []
         for t, rows in (eps or {}).items():
-            vals = [r[field] for r in rows
-                    if isinstance(r.get(field), (int, float))]
-            if len(vals) < OUTLIER_MIN_HISTORY:
+            크기들 = [abs(r[field]) for r in rows
+                     if isinstance(r.get(field), (int, float))]
+            if len(크기들) < OUTLIER_MIN_HISTORY:
                 continue
-            중앙 = median(vals)
+            중앙 = median(크기들)          # 절댓값의 중앙값 — 부호는 안 봅니다
             if not 중앙 or 중앙 <= 0:
                 continue
             for r in rows:
                 v = r.get(field)
                 if not isinstance(v, (int, float)):
                     continue
-                비 = v / 중앙
+                비 = abs(v) / 중앙
                 if 비 < 1.0 / OUTLIER_FOLD or 비 > OUTLIER_FOLD:
                     걸림.append({
                         "종목": t,
                         "발표일": r.get("announced_date"),
                         "값": v,
                         "그 종목 중앙값": 중앙,
+                        "모양": ("정확히 0" if v == 0 else
+                               "이력보다 1000배 이상 큼" if 비 > OUTLIER_FOLD else
+                               "이력보다 1000배 이상 작음"),
                     })
         걸림.sort(key=lambda x: abs(x["값"]))
-        out[field] = {"건수": len(걸림), "예시": 걸림[:5]}
+        쪼갬: dict[str, int] = {}
+        for c in 걸림:
+            쪼갬[c["모양"]] = 쪼갬.get(c["모양"], 0) + 1
+        out[field] = {
+            "건수": len(걸림),
+            # **모양별로 쪼개 적습니다** (136차). 총 건수만으로는 무엇이
+            # 망가졌는지 알 수 없었습니다. 쪼개 보니 영업이익 666칸의
+            # 정체가 드러났습니다 — 한 종목 안에서 어떤 분기는 달러,
+            # 어떤 분기는 천/백만 단위인 **단위 혼선**이었습니다
+            # (MU 694 ↔ 17.4억 · TTMI 68,209 ↔ 54.8억, 93종목).
+            "모양별": 쪼갬,
+            "종목수": len({c["종목"] for c in 걸림}),
+            "예시": 걸림[:5],
+        }
     return out
 
 

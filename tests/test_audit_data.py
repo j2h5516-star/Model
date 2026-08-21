@@ -453,6 +453,79 @@ def test_잣대구멍은_많이_빈_종목부터_부탁한다():
         f"구멍이 많은 종목이 먼저 와야 합니다: {[r['종목'] for r in 구멍]}"
 
 
+def _단위섞인종목(ticker="HD"):
+    """매출이 대부분 달러인데 한 분기만 **백만 단위**로 들어온 종목.
+
+    실물 HD 2026-08-18 — 가장 최근 분기 매출이 47,861(백만 단위)로
+    들어와 화면에 4만 달러로 떴습니다. 다른 분기는 4.1조입니다.
+    """
+    rows = [분기(f"2025-{m:02d}", announced_date=f"2025-{m:02d}-15",
+                revenue=4.0e10 + m, op_income=6.0e9)
+            for m in range(1, 10)]
+    rows.append(분기("2025-11", announced_date="2025-11-15",
+                    revenue=47861.0, op_income=7017.0))
+    return {ticker: rows}
+
+
+def test_자릿수_어긋난_칸의_원문을_부탁한다():
+    """(136차) 손질을 통과했는데도 단위가 다른 칸은 화면에 틀린 숫자로
+    뜹니다. 고치려면 그 보도자료 표의 단위 머리글을 봐야 합니다."""
+    후보 = audit_data.wanted_from_scale(_단위섞인종목())
+    날들 = {r["발표일"] for r in 후보}
+    assert 날들 == {"2025-11-15"}, f"어긋난 분기만 골라야 합니다: {후보}"
+    assert all("자릿수가 다름" in r["이유"] for r in 후보), 후보
+
+
+def test_자릿수_검사도_그냥_적자를_걸지_않는다():
+    """부호 결함은 건강검진에서 실측으로 잡았습니다(524칸 오경보).
+    같은 함정을 이 검사에서 되풀이하지 않는지 봅니다."""
+    rows = [분기(f"2025-{m:02d}", announced_date=f"2025-{m:02d}-15",
+                revenue=4.0e10, op_income=6.0e9) for m in range(1, 10)]
+    rows.append(분기("2025-11", announced_date="2025-11-15",
+                    revenue=4.0e10, op_income=-5.5e9))     # 평범한 적자
+    assert audit_data.wanted_from_scale({"AA": rows}) == [], \
+        "평범한 적자를 자릿수 어긋남으로 셌습니다"
+
+
+def test_자릿수_재료도_제_몫을_받는다():
+    """(136차) 135차에 실측한 함정 — 앞 재료가 자리를 다 먹으면 뒤
+    재료의 배관은 영원히 안 돕니다. 재료마다 몫을 먼저 떼어 둡니다."""
+    import json
+    import tempfile
+
+    quarters = {**_단위섞인종목("HD"), **_구멍있는종목("ZZ")}
+    꽉찬앞 = [{"종목": f"T{i:02d}", "발표일": "2025-01-01", "칸": "adj_eps",
+             "값": 9.9, "배수": None, "이유": "바깥 자와 어긋남"}
+            for i in range(audit_data.WANTED_LIMIT + 30)]
+    def 읽기(path):
+        with open(path, encoding="utf-8") as f:
+            목록 = json.load(f)["목록"]
+        return ([r for r in 목록 if "자릿수가 다름" in str(r.get("이유"))],
+                [r for r in 목록 if "비어" in str(r.get("이유"))])
+
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        path = f.name
+
+    # ① **로봇이 부르는 자리**가 두 재료를 실제로 넘기는가 (배선 증명).
+    #    이 확인 없이 손으로 만든 tail 만 보면, 배선이 빠져도 시험은
+    #    초록으로 남습니다 — 136차에 돌연변이로 실제로 들켰습니다.
+    audit_data.refresh_wanted(quarters, None, path=path,
+                              progress=lambda *a: None)
+    자릿수, 구멍 = 읽기(path)
+    assert 자릿수, "로봇 갱신에 자릿수 재료가 배선되지 않았습니다"
+    assert 구멍, "로봇 갱신에 구멍 재료가 배선되지 않았습니다"
+
+    # ② 앞자리(틀린 값 몫)를 꽉 채워도 두 재료가 제 몫을 받는가
+    audit_data.write_wanted(
+        quarters, path=path, extra=꽉찬앞,
+        tail=(audit_data.wanted_from_scale(quarters)[:audit_data.SCALE_QUOTA]
+              + audit_data.wanted_from_holes(quarters)[:audit_data.HOLE_QUOTA]))
+    자릿수, 구멍 = 읽기(path)
+    os.unlink(path)
+    assert 자릿수, "앞자리가 꽉 차자 자릿수 재료가 밀려났습니다"
+    assert 구멍, "앞자리가 꽉 차자 구멍 재료가 밀려났습니다"
+
+
 def test_로봇이_부탁목록을_매일_갱신한다():
     """(134차) 배선이 빠지면 부탁 목록이 **사람 손에만 매입니다** — 실제로
     4차 확장의 새 90종목이 한 건도 못 들어갔던 사고(133차)의 재발 방지."""

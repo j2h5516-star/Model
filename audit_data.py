@@ -322,8 +322,11 @@ def write_wanted(quarters: dict, path: str = WANTED_PATH,
     #    똑같은 병). 그래서 구멍에게 **따로 자리 몇 칸**(HOLE_QUOTA)을
     #    떼어 줍니다. 앞자리는 그대로 틀린 값이 가지므로 우선순위는
     #    지켜지고, 배관은 실제로 돕니다.
+    #
+    # tail 은 이미 재료별로 제 몫만큼 잘라서 들어옵니다(refresh_wanted 참조).
     앞 = merge_wanted(extra or [], wanted_raw_filings(quarters), limit=WANTED_LIMIT)
-    목록 = merge_wanted(앞, tail or [], limit=WANTED_LIMIT + HOLE_QUOTA)
+    목록 = merge_wanted(앞, tail or [],
+                      limit=WANTED_LIMIT + SCALE_QUOTA + HOLE_QUOTA)
     with open(path, "w", encoding="utf-8") as f:
         json.dump({
             "설명": ("'원문이 필요한 공시' 목록입니다. 세 곳에서 옵니다 — "
@@ -407,6 +410,79 @@ def wanted_from_holes(quarters: dict, limit: int = 60) -> list[dict]:
     return out[:limit]
 
 
+# 자릿수 어긋남 (136차) — **손질을 통과했는데도** 단위가 다른 칸.
+#
+# 136차에 건강검진의 부호 결함을 고치고 나서, 남은 경보를 모양별로
+# 쪼개 봤더니 정체가 드러났습니다 — 쓰레기가 아니라 **단위 혼선**입니다.
+# 한 종목 안에서 어떤 분기는 달러, 어떤 분기는 천/백만 단위입니다.
+#
+#   실물 MU 영업이익: 694 ↔ 17.4억 (백만 단위 분기가 섞임)
+#   실물 TTMI:        68,209 ↔ 54.8억 (천 단위 분기가 섞임)
+#   실물 HD 매출 2026-08-18: 47,861 ↔ 4.1조 (**가장 최근 분기**가 백만 단위)
+#   영업이익 666칸 · 93종목 / 매출 25칸
+#
+# 손질(dataset)이 상당수를 이미 지웁니다(마진이 상식 밖이면 없음 처리).
+# 그래도 **통과해 남는 칸**이 있고, 그 칸은 화면에 틀린 숫자로 뜹니다.
+# 고치려면 그 보도자료 표의 단위 머리글을 봐야 하므로 원문을 부탁합니다.
+# **여기서도 값은 고치지 않습니다** — 환산 규칙을 원문 없이 지어내면
+# 66·73차의 실수를 되풀이합니다.
+SCALE_FOLD = 1000.0           # 이력 중앙값의 몇 배부터 자릿수 어긋남으로 볼까
+SCALE_MIN_HISTORY = 8
+_SCALE_PER_TICKER_MAX = 2
+SCALE_QUOTA = 10              # 부탁 목록에서 이 재료에 떼어 주는 자리
+
+
+def wanted_from_scale(quarters: dict, limit: int = 40) -> list[dict]:
+    """손질을 통과했는데도 자기 이력과 **자릿수**가 어긋난 칸.
+
+    크기(절댓값)끼리만 견줍니다 — 적자는 자릿수 문제가 아닙니다
+    (건강검진의 부호 결함과 같은 함정, 136차).
+    """
+    from statistics import median
+
+    모음: list[tuple[str, int, list[dict]]] = []
+    for ticker in sorted(quarters):
+        rows = quarters.get(ticker) or []
+        걸린: list[dict] = []
+        for field in ("revenue", "op_income"):
+            크기들 = [abs(r[field]) for r in rows
+                     if isinstance(r.get(field), (int, float))]
+            if len(크기들) < SCALE_MIN_HISTORY:
+                continue
+            중앙 = median(크기들)
+            if not 중앙 or 중앙 <= 0:
+                continue
+            for r in rows:
+                v = r.get(field)
+                날 = r.get("announced_date")
+                if not isinstance(v, (int, float)) or not 날 or v == 0:
+                    continue
+                비 = abs(v) / 중앙
+                if 비 > SCALE_FOLD or 비 < 1.0 / SCALE_FOLD:
+                    걸린.append({
+                        "종목": ticker,
+                        "발표일": str(날)[:10],
+                        "칸": {"revenue": "매출",
+                              "op_income": "영업이익"}.get(field, field),
+                        "값": v,
+                        "배수": round(비, 1) if 비 > 1 else round(1.0 / 비, 1),
+                        "이유": f"{field} {v:,.0f} 가 이 종목 이력 중앙값 "
+                              f"{중앙:,.0f} 과 자릿수가 다름 — 보도자료 표의 "
+                              f"단위(천·백만)를 못 읽은 것으로 보임",
+                    })
+        if 걸린:
+            모음.append((ticker, len(걸린), 걸린))
+
+    # 많이 어긋난 종목부터 (135차 구멍과 같은 이유 — 알파벳 순은 편향)
+    모음.sort(key=lambda t: (-t[1], t[0]))
+    out: list[dict] = []
+    for _ticker, _n, 걸린 in 모음:
+        out.extend(걸린[:_SCALE_PER_TICKER_MAX])
+        if len(out) >= limit:
+            break
+    return out[:limit]
+
+
 def refresh_wanted(quarters: dict, vendor: dict | None,
                    path: str = WANTED_PATH, progress=print) -> int:
     """부탁 목록을 다시 적습니다 — **로봇이 매일 부르는 자리** (134차).
@@ -424,10 +500,15 @@ def refresh_wanted(quarters: dict, vendor: dict | None,
                   _vc.wanted_from_street(quarters, vendor)
         except Exception as exc:      # 부탁 목록이 실패해도 수집은 계속
             progress(f"⚠️ 부탁 목록 재료 실패: {type(exc).__name__}: {str(exc)[:120]}")
-    구멍 = wanted_from_holes(quarters)
-    count = write_wanted(quarters, path=path, extra=바깥, tail=구멍)
+    # 재료마다 **제 몫만큼 먼저 잘라서** 넘깁니다. 안 그러면 앞 재료가
+    # 뒤 재료의 자리를 먹어 뒤쪽 배관이 영원히 안 돕니다 (135차에 실측한
+    # 함정 — 구멍이 0건이었습니다).
+    자릿수 = wanted_from_scale(quarters)[:SCALE_QUOTA]
+    구멍 = wanted_from_holes(quarters)[:HOLE_QUOTA]
+    count = write_wanted(quarters, path=path, extra=바깥, tail=자릿수 + 구멍)
     progress(f"원문 부탁 목록 {count}건 갱신 "
-             f"(바깥 자 재료 {len(바깥)}건 · 잣대 구멍 후보 {len(구멍)}건)")
+             f"(바깥 자 재료 {len(바깥)}건 · 자릿수 어긋남 {len(자릿수)}건 · "
+             f"잣대 구멍 후보 {len(구멍)}건)")
     return count
 
 

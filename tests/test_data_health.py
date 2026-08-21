@@ -46,6 +46,46 @@ def test_그럴듯한_쓰레기를_자기_이력으로_잡는다():
     assert o["revenue"]["예시"][0]["종목"] == "BANK"
 
 
+def test_그냥_적자는_쓰레기로_세지_않는다():
+    """(136차 부호 결함) 처음 판은 `값 ÷ 중앙값` 을 그대로 봤습니다.
+    음수 ÷ 양수 = 음수라 **적자 분기가 전부** 하한 아래로 떨어졌습니다.
+    실측: 영업이익 경보 1,112칸 중 **524칸이 그냥 적자**. 오경보가 절반
+    이면 계기를 아무도 안 믿게 되고, 진짜 결함이 소음에 묻힙니다."""
+    흑자 = [{"op_income": 1.0e8, "announced_date": f"2025-0{i}-01"}
+           for i in range(1, 9)]
+    적자 = {"op_income": -9.0e7, "announced_date": "2025-09-01"}
+    o = dh.outliers({"AA": 흑자 + [적자]}, fields=("op_income",))
+    assert o["op_income"]["건수"] == 0, \
+        f"평범한 적자를 쓰레기로 셌습니다: {o['op_income']}"
+
+
+def test_적자라도_자릿수가_무너지면_잡는다():
+    """부호를 무시한다고 해서 눈이 멀면 안 됩니다 — **크기**가 무너진
+    값은 음수여도 잡아야 합니다 (실물 WDC 매출 -1달러)."""
+    정상 = [{"revenue": 3.8e9, "announced_date": f"2025-0{i}-01"}
+           for i in range(1, 9)]
+    무너짐 = {"revenue": -1.0, "announced_date": "2025-09-01"}
+    o = dh.outliers({"WDC": 정상 + [무너짐]}, fields=("revenue",))
+    assert o["revenue"]["건수"] == 1, o["revenue"]
+    assert o["revenue"]["예시"][0]["값"] == -1.0
+
+
+def test_이상값을_모양별로_쪼개_적는다():
+    """(136차) 총 건수만으로는 무엇이 망가졌는지 알 수 없었습니다.
+    쪼개 보고서야 영업이익 666칸의 정체가 **단위 혼선**임이 드러났습니다."""
+    정상 = [{"op_income": 1.0e8, "announced_date": f"2025-0{i}-01"}
+           for i in range(1, 9)]
+    섞임 = [{"op_income": 100.0, "announced_date": "2025-09-01"},   # 백만 단위
+           {"op_income": 5.0e12, "announced_date": "2025-10-01"},  # 너무 큼
+           {"op_income": 0.0, "announced_date": "2025-11-01"}]     # 정확히 0
+    o = dh.outliers({"AA": 정상 + 섞임}, fields=("op_income",))["op_income"]
+    assert o["건수"] == 3, o
+    assert o["모양별"]["이력보다 1000배 이상 작음"] == 1, o["모양별"]
+    assert o["모양별"]["이력보다 1000배 이상 큼"] == 1, o["모양별"]
+    assert o["모양별"]["정확히 0"] == 1, o["모양별"]
+    assert o["종목수"] == 1, o
+
+
 def test_이력이_짧으면_세지_않는다():
     """중앙값이 의미 없을 만큼 이력이 짧으면 억지로 판정하지 않습니다
     (없는 것은 없는 채로)."""
