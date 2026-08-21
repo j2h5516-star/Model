@@ -735,6 +735,21 @@ def test_채택거리_줄은_막힌_가설을_숨기지_않는다():
 
 
 
+def test_표본이_0인_가설의_시점도_화면에_적는다():
+    """(140차) 표본이 0인 가설은 139차 계산이 아무 말도 못 합니다. 화면이
+    침묵하면 주인은 "왜 계속 표본 없음인가"를 알 길이 없습니다. 규칙에서
+    바로 나오는 하한선(등록일 + 창)을 적습니다."""
+    import judge
+    빈판정 = {"가설": {이름: {"신규(판정)": {"신호": {"n": 0}}}
+                    for 이름 in judge.hypothesis_clock()}}
+    글 = " ".join(app.adoption_distance_lines(빈판정))
+    assert "언제부터 생기나" in 글, 글
+    assert judge.H18B_NAME in 글, "1년 창 가설이 화면에 없습니다"
+    assert "2027" in 글, "1년 창인데 내년 날짜가 안 보입니다: " + 글
+    assert "예측이 아니라" in 글, "하한선임을 밝히지 않았습니다"
+
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

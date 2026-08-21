@@ -470,6 +470,49 @@ def test_이미_넘은_가설은_그렇게_말한다():
 
 
 
+def test_표본이_0인_가설의_첫_표본_가능일은_등록일_더하기_창():
+    """(140차) 등록된 23개 중 12개는 아직 표본이 0입니다. 139차의 계산은
+    그 가설들에 대해 아무 말도 못 합니다. 그런데 첫 표본이 나올 수 있는
+    가장 이른 날은 산수로 정해져 있습니다 — 사전 등록 규율상 **등록일
+    뒤의 새 신호만** 세고, 표적을 재려면 **창이 끝나야** 하기 때문입니다.
+
+    특히 1년 창인 H18b(2026-08-21 등록)는 **2027년 하반기 전에는 첫
+    표본조차 없습니다.** 화면이 이 사실을 말하지 않으면 주인은 "왜 계속
+    표본 없음인가"를 알 길이 없습니다."""
+    빈판정 = {"가설": {이름: {"신규(판정)": {"신호": {"n": 0}}}
+                    for 이름 in judge.hypothesis_clock()}}
+    행 = {r["가설"]: r for r in judge.first_verdict_floor(빈판정)}
+    assert judge.H18B_NAME in 행, 행
+    r = 행[judge.H18B_NAME]
+    assert r["창_거래일"] == judge._TRADING_DAYS_PER_YEAR, r
+    assert r["가장이른날"] > "2027-06", f"1년 창인데 너무 이릅니다: {r}"
+    # 60거래일 가설은 석 달쯤 뒤
+    짧은 = 행[judge.H24_NAME]
+    assert "2026-11" in 짧은["가장이른날"], 짧은
+    assert 짧은["등록일"] == judge.H24_START_DAY
+
+
+def test_이미_표본이_있는_가설은_첫_표본_예상에_넣지_않는다():
+    """표본이 이미 있으면 '언제부터 생기나'는 무의미합니다 — 그건
+    139차의 '얼마나 더 필요한가'가 답할 몫입니다."""
+    이름 = judge.H24_NAME
+    있음 = {"가설": {이름: {"신규(판정)": {"신호": {"n": 42}}}}}
+    assert 이름 not in {r["가설"] for r in judge.first_verdict_floor(있음)}
+
+
+def test_등록일을_모르는_가설은_날짜를_지어내지_않는다():
+    """등록일 상수를 못 찾은 가설(H19·H21)은 **말하지 않습니다** —
+    날짜를 지어내는 것보다 말하지 않는 편이 안전합니다 (헌법 1조)."""
+    시계 = judge.hypothesis_clock()
+    assert judge.H19_NAME not in 시계, "등록일 상수가 없는데 표에 넣었습니다"
+    assert judge.H21_NAME not in 시계
+    빈 = {"가설": {judge.H19_NAME: {"신규(판정)": {"신호": {"n": 0}}}}}
+    이름들 = {r["가설"] for r in judge.first_verdict_floor(빈)}
+    assert judge.H19_NAME not in 이름들, "등록일을 모르는데 날짜를 말했습니다"
+    assert judge.H21_NAME not in 이름들
+
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

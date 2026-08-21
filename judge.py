@@ -148,6 +148,90 @@ def adoption_distance(verdict: dict | None) -> list[dict]:
     return out
 
 
+# 첫 판정이 언제쯤 가능한가 (140차) — 등록일 + 창이 성숙하는 시간
+# ---------------------------------------------------------------------------
+# 139차가 "표본이 쌓인 가설"에 대해 채택까지 남은 표본을 계산했습니다.
+# 그런데 등록된 23개 중 **12개는 아직 표본이 0개**입니다. 그 가설들에
+# 대해서는 139차의 계산이 아무 말도 못 합니다.
+#
+# 이유는 산수로 정해져 있습니다. 사전 등록 규율(헌법 2조)상 **등록일
+# 뒤의 새 신호만** 판정 표본이 되고, 표적을 재려면 그 신호의 **창이
+# 끝나야** 합니다. 그러니 첫 표본이 나올 수 있는 가장 이른 날은
+#
+#     등록일 + 창 길이(거래일)
+#
+# 입니다. 이보다 이르게는 **어떤 일이 있어도** 표본이 생기지 않습니다.
+# 이것은 예측이 아니라 규칙에서 바로 나오는 하한선입니다.
+#
+# 특히 1년 창을 쓰는 H18b 는 2026-08-21 등록이므로 **2027년 하반기
+# 전에는 첫 표본조차 없습니다.** 화면이 이 사실을 말하지 않으면 주인은
+# "왜 계속 표본 없음인가"를 알 길이 없습니다.
+_TRADING_DAYS_PER_YEAR = 252
+
+
+def _calendar_days(trading_days: int) -> int:
+    """거래일 수를 달력 날짜 수로 어림합니다 (주 5일 → 7일)."""
+    return int(round(trading_days * 7.0 / 5.0))
+
+
+def hypothesis_clock() -> dict[str, tuple[str, int]]:
+    """가설 이름 → (등록일, 표적 창의 거래일 수).
+
+    등록일 상수는 **각 모듈에 있는 것을 그대로 읽습니다** — 여기에 날짜를
+    다시 적어 두면 한쪽만 고쳐져 화면이 거짓말을 하게 됩니다(101차에
+    화면에 박힌 옛 숫자가 거짓이 된 사고와 같은 병).
+    """
+    import leadership as _ld
+    import sector_model as _sm
+
+    표: dict[str, tuple[str, int]] = {
+        H22_LEVELS[0][0]: (H22_START_DAY, me.WINDOW_TRADING_DAYS),
+        H23_NAME: (H23_START_DAY, me.WINDOW_TRADING_DAYS),
+        H24_NAME: (H24_START_DAY, me.WINDOW_TRADING_DAYS),
+        H25_NAME: (H25_START_DAY, me.WINDOW_TRADING_DAYS),
+        H25B_NAME: (H25_START_DAY, me.WINDOW_TRADING_DAYS),
+        H18_NAME: (_sm.H18_START_DAY, me.WINDOW_TRADING_DAYS),
+        # H18b 만 1년 창입니다 (126차 — 주인 지적으로 표적만 바꾼 판)
+        H18B_NAME: (_sm.H18B_START_DAY, _TRADING_DAYS_PER_YEAR),
+        H19B_NAME: (_ld.H19B_START_DAY, me.WINDOW_TRADING_DAYS),
+        H20_NAME: (_ld.H22_START_DAY, me.WINDOW_TRADING_DAYS),
+    }
+    for 이름, _수준 in H22_LEVELS[1:]:
+        표[이름] = (H22_START_DAY, me.WINDOW_TRADING_DAYS)
+    return 표
+
+
+def first_verdict_floor(verdict: dict | None = None) -> list[dict]:
+    """표본이 아직 없는 가설의 **첫 표본 가능 시점 하한**.
+
+    돌려주는 각 줄: 가설 · 등록일 · 창(거래일) · 가장 이른 날 · 설명.
+    등록일 상수를 못 찾은 가설은 **말하지 않습니다** — 날짜를 지어내는
+    것보다 말하지 않는 편이 안전합니다(헌법 1조).
+    """
+    from datetime import date, timedelta
+
+    시계 = hypothesis_clock()
+    가설표 = (verdict or {}).get("가설") or {}
+    out: list[dict] = []
+    for 이름, (등록일, 창) in sorted(시계.items()):
+        n = (((가설표.get(이름) or {}).get("신규(판정)") or {})
+             .get("신호") or {}).get("n") or 0
+        if n:
+            continue                      # 이미 표본이 있으면 139차 계산의 몫
+        try:
+            바닥 = (date.fromisoformat(등록일)
+                  + timedelta(days=_calendar_days(창))).isoformat()
+        except ValueError:
+            continue
+        out.append({
+            "가설": 이름, "등록일": 등록일, "창_거래일": 창, "가장이른날": 바닥,
+            "설명": (f"{등록일} 등록 · 표적 창 {창}거래일 → 첫 표본은 "
+                   f"빨라야 **{바닥}**"),
+        })
+    out.sort(key=lambda r: r["가장이른날"])
+    return out
+
+
 def _stats(group: list[dict]) -> dict:
     n = len(group)
     hits = sum(1 for e in group if e["excess"] >= me.SURGE_PP)
