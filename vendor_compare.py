@@ -288,6 +288,49 @@ STREET_EPS_TOLERANCE = 0.015
 # 2% 안이면 연간값 오염으로 표시합니다 (FDX·AXP 는 0.1% 차였습니다).
 ANNUAL_SHAPE_REL = 0.02
 
+# 서프라이즈율의 분모 바닥 (124차 — H25). 추정치가 이보다 작으면 몇 센트
+# 차이가 수백 %로 부풀므로 서프율을 만들지 않습니다 (없음이 안전).
+SURPRISE_MIN_EST = 0.10
+
+
+def attach_street_surprise(events: list[dict], vendor: dict) -> None:
+    """발표 사건마다 월가 서프라이즈율(%)을 "서프율" 키로 붙입니다.
+
+    (124차 — H25 의 재료.) 서프율 = (실제 − 추정) / |추정| × 100.
+      · 실제 = street_eps · 추정 = street_estimate (야후 보관값 그대로)
+      · 짝짓기는 날짜뜻 "발표일" 기록만, ±STREET_MATCH_DAYS 일 안의
+        가장 가까운 것 하나 (street_mismatch 와 같은 관례)
+      · 추정 |값| < SURPRISE_MIN_EST 이거나 짝이 없으면 None
+    """
+    tickers = (vendor or {}).get("tickers", {}) or {}
+    index: dict[str, list[dict]] = {}
+    for tk in {e["ticker"] for e in events}:
+        rows = [
+            a for a in (tickers.get(tk) or {}).get("announcements", [])
+            if a.get("날짜뜻") == "발표일"
+            and a.get("street_estimate") is not None
+            and a.get("street_eps") is not None
+        ]
+        rows.sort(key=lambda a: a["announced_date"])
+        index[tk] = rows
+    for event in events:
+        event["서프율"] = None
+        d0 = _day(event["announced"])
+        if d0 is None:
+            continue
+        best = None
+        best_gap = STREET_MATCH_DAYS + 1
+        for a in index.get(event["ticker"], []):
+            da = _day(a["announced_date"])
+            if da is None:
+                continue
+            gap = abs((da - d0).days)
+            if gap <= STREET_MATCH_DAYS and gap < best_gap:
+                best, best_gap = a, gap
+        if best is not None and abs(best["street_estimate"]) >= SURPRISE_MIN_EST:
+            est, act = best["street_estimate"], best["street_eps"]
+            event["서프율"] = round((act - est) / abs(est) * 100.0, 1)
+
 
 def street_mismatch(quarters: dict, vendor: dict) -> list[dict]:
     """회사 조정 EPS 와 월가 발표 EPS 가 크게 갈린 칸을 셉니다.

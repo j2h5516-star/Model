@@ -240,6 +240,40 @@ def excess_return(prices: dict, spy: dict, announce: str):
     return stock_pct - spy_pct, (entry_date, exit_date)
 
 
+def backward_excess(prices: dict, spy: dict, day: str,
+                    days: int = 60) -> float | None:
+    """발표일 **이전** days 거래일 동안의 SPY 대비 초과수익 (%p).
+
+    (124차 — H25 의 "미리 달려온 폭" 측정.) 측정 창이 발표일에 끝나고
+    결과 창(excess_return)은 발표일 다음 거래일에 시작하므로 둘은 겹치지
+    않습니다. 이력이 days 거래일보다 짧으면 None — 없는 값은 만들지
+    않습니다.
+    """
+    j = bisect.bisect_right(prices["dates"], str(day)[:10]) - 1
+    i = j - days
+    if j < 0 or i < 0:
+        return None
+    start, end = prices["dates"][i], prices["dates"][j]
+    stock_pct = (prices["close"][j] / prices["close"][i] - 1.0) * 100.0
+    si = bisect.bisect_right(spy["dates"], start) - 1
+    sj = bisect.bisect_right(spy["dates"], end) - 1
+    if si < 0 or sj <= si:
+        return None
+    spy_pct = (spy["close"][sj] / spy["close"][si] - 1.0) * 100.0
+    return stock_pct - spy_pct
+
+
+def attach_runup(ds: dict, events: list[dict], days: int = 60) -> None:
+    """발표 사건마다 발표 전 days 거래일의 초과수익을 "런업" 키로 붙입니다."""
+    spy = ds["prices"][ds["benchmark"]]
+    for event in events:
+        prices = ds["prices"].get(event["ticker"])
+        event["런업"] = (
+            backward_excess(prices, spy, event["announced"], days)
+            if prices else None
+        )
+
+
 # ---------------------------------------------------------------------------
 # 위층 — 실적 폭 게이지 (주간 격자, 그 시점까지의 데이터만)
 # ---------------------------------------------------------------------------

@@ -34,6 +34,7 @@ import market_data as md
 import measure_engine
 import measure_store
 import consensus_feed
+import vendor_compare
 import vendor_feed
 import sec_fundamentals as sf
 import leadership
@@ -205,6 +206,14 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         # 보고 골랐으므로 판정 표본은 등록일 뒤의 새 발표만입니다.
         sector_model.attach_market_breadth(ds, events)
         verdict["가설"].update(judge.judge_regime_breakout(events))
+        # H25·H25b (124차 등록) — 런업(사전 60거래일 초과수익)과 월가
+        # 서프라이즈. 문턱을 탐색 표를 보고 골랐으므로 판정 표본은
+        # 등록일 뒤의 새 발표만입니다. 서프라이즈 재료는 디스크의
+        # vendor.json(어제 것 — 분할과 같은 하루 늦음, 감수)에서 읽습니다.
+        measure_engine.attach_runup(ds, events)
+        vendor_compare.attach_street_surprise(
+            events, vendor_feed.load(f"{cfg.MEASURE_DIR}/vendor.json"))
+        verdict["가설"].update(judge.judge_momentum_beat(events))
         verdict["가설"].update(judge.judge_completion_gap(
             sector_model.completion_events(ds),
             sector_model.H18_START_DAY, sector_model.H18_GAP_MIN,

@@ -347,6 +347,57 @@ def judge_regime_breakout(events: list[dict],
     return {H24_NAME: entry}
 
 
+# ---------------------------------------------------------------------------
+# H25·H25b (124차 등록) — 미리 달려온 종목의 큰 서프라이즈 / 상대 모멘텀
+# ---------------------------------------------------------------------------
+# 124차 탐색(월가 추정 연결 2,187건)에서 서프라이즈 **크기 자체는** 60거래일
+# 결과를 가르지 못했습니다(모든 크기 칸에서 하락 비율 ~50%). 결과를 가른
+# 것은 **발표 전에 이미 시장 대비 강했는가**였고, 방향은 "이미 반영됨 →
+# 하락" 가설의 반대였습니다 (기준선 11.0% [9.8, 12.4]):
+#
+#   · 큰 상회(15%↑) ∧ 사전 60거래일 초과수익 +20%p↑ : 24.0% [16.8, 33.1]
+#     — 앞/뒤 시기 23.1%/25.0%로 안정, 적중 25건이 21개 종목에 분산
+#   · 사전 초과수익 +20%p↑ 단독 : 20.3% [15.7, 25.9] — 단 앞시기 14.4%로 약함
+#
+# ⚠️ **문턱 15%·20%p 는 탐색 표를 보고 골랐습니다.** 그래서 탐색 표본으로는
+#    판정하지 않습니다 — 등록일 뒤의 새 발표만 셉니다 (헌법 5조).
+H25_START_DAY = "2026-08-21"
+H25_NAME = "H25_런업_큰상회"
+H25B_NAME = "H25b_런업단독"
+H25_SURPRISE_MIN = 15.0     # 서프율 문턱 (%)
+H25_RUNUP_MIN = 20.0        # 사전 60거래일 초과수익 문턱 (%p)
+
+
+def judge_momentum_beat(events: list[dict],
+                        start_day: str = H25_START_DAY) -> dict:
+    """H25·H25b 판정 — 미리 달려온 종목(런업)의 발표 vs 같은 표본 전체.
+
+    H25  표본: 조정 EPS 사건 중 런업·서프율 둘 다 판단 가능한 것.
+    H25b 표본: 조정 EPS 사건 중 런업 판단 가능한 것 (서프율 불요).
+    """
+    out: dict = {}
+    specs = (
+        (H25_NAME,
+         lambda e: e.get("런업") is not None and e.get("서프율") is not None,
+         lambda e: e["런업"] >= H25_RUNUP_MIN and e["서프율"] >= H25_SURPRISE_MIN),
+        (H25B_NAME,
+         lambda e: e.get("런업") is not None,
+         lambda e: e["런업"] >= H25_RUNUP_MIN),
+    )
+    for name, judgeable, condition in specs:
+        usable = [e for e in events if _adj(e) and judgeable(e)]
+        entry: dict = {"등록일": start_day,
+                       "문턱": {"런업": H25_RUNUP_MIN, "서프율": H25_SURPRISE_MIN}}
+        for label, pool in (
+            ("신규(판정)", [e for e in usable if e["announced"] > start_day]),
+            ("탐색표본(참고)", [e for e in usable if e["announced"] <= start_day]),
+        ):
+            entry[label] = _judge([e for e in pool if condition(e)], pool)
+        entry["판정"] = entry["신규(판정)"]["판정"]
+        out[name] = entry
+    return out
+
+
 def judge_completion_gap(events: list[dict], start_day: str,
                          gap_min: float) -> dict:
     """H18 판정 — 정배열 완성 사건 중 이격도가 문턱 이상인 군.

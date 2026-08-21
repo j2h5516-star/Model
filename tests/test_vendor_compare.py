@@ -385,6 +385,34 @@ def test_street_wanted_respects_the_per_ticker_cap():
     assert sum(1 for r in 부탁 if r["종목"] == "BBB") == 1
 
 
+
+
+def test_서프율은_발표일_기록만_짝짓고_작은_추정은_버린다():
+    """(124차) 서프율 = (실제-추정)/|추정|. 날짜뜻 "분기끝" 기록과
+    ±3일 밖 기록은 짝이 아니고, |추정|<0.10 이면 몇 센트가 수백 %로
+    부풀므로 None 이어야 합니다."""
+    vendor = {"tickers": {"AA": {"announcements": [
+        {"announced_date": "2026-05-02", "날짜뜻": "발표일",
+         "street_eps": 1.20, "street_estimate": 1.00},
+        {"announced_date": "2026-02-01", "날짜뜻": "분기끝",
+         "street_eps": 9.99, "street_estimate": 1.00},
+    ]}, "BB": {"announcements": [
+        {"announced_date": "2026-05-01", "날짜뜻": "발표일",
+         "street_eps": 0.05, "street_estimate": 0.02},
+    ]}}}
+    events = [
+        {"ticker": "AA", "announced": "2026-05-01"},   # ±3일 안 → +20%
+        {"ticker": "AA", "announced": "2026-02-01"},   # 분기끝뿐 → None
+        {"ticker": "BB", "announced": "2026-05-01"},   # 추정 0.02 → None
+        {"ticker": "CC", "announced": "2026-05-01"},   # 기록 없음 → None
+    ]
+    vc.attach_street_surprise(events, vendor)
+    assert events[0]["서프율"] == 20.0, events[0]
+    assert events[1]["서프율"] is None, "분기끝 기록이 짝지어졌습니다"
+    assert events[2]["서프율"] is None, "작은 추정의 서프율을 만들었습니다"
+    assert events[3]["서프율"] is None
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

@@ -428,6 +428,31 @@ def test_collect_events_carry_h5b_깊은():
     assert events and all("h5b_깊은" in e for e in events)
 
 
+
+
+def test_런업은_발표_전_구간이고_이력이_짧으면_None():
+    """(124차) 런업 = 발표 전 60거래일 SPY 대비 초과수익. 결과 창과
+    겹치지 않아야 하고(발표일에 끝남), 이력이 짧으면 None 입니다."""
+    from datetime import date, timedelta
+    day0 = date(2024, 1, 1)
+    dates = []
+    d = day0
+    while len(dates) < 130:
+        if d.weekday() < 5:
+            dates.append(d.isoformat())
+        d += timedelta(days=1)
+    # 종목: 앞 70일 100 고정, 그 뒤 매일 +1 — SPY: 내내 100 고정
+    closes = [100.0]*70 + [100.0 + i for i in range(1, 61)]
+    prices = {"dates": dates, "close": closes}
+    spy = {"dates": dates, "close": [100.0]*130}
+    last = dates[-1]
+    got = me.backward_excess(prices, spy, last, days=60)
+    want = (closes[-1]/closes[-61] - 1.0) * 100.0
+    assert got is not None and abs(got - want) < 1e-9, (got, want)
+    assert me.backward_excess(prices, spy, dates[30], days=60) is None, \
+        "이력 부족인데 값을 만들었습니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
