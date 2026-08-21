@@ -608,6 +608,53 @@ def test_관찰판은_최근창만_세고_이격도없음은_신호가_아니다
     assert top["마지막완성"] == "2026-08-01"
 
 
+
+
+def test_같은묶음_같은수치_확인카드는_한장으로_합친다():
+    """(129차) 헬스케어가 (섹터)·(테마) 두 분류표에서 같은 구성원·같은
+    수치로 겹치면 한 장만 남기고, 수치가 다르면 둘 다 남깁니다."""
+    rows = [
+        {"묶음": "헬스케어", "종류": "섹터", "정배열폭": 67.0, "델타폭": 78.0,
+         "3개월상대": 14.6, "확인": True},
+        {"묶음": "헬스케어", "종류": "테마", "정배열폭": 67.0, "델타폭": 78.0,
+         "3개월상대": 14.6, "확인": True},
+        {"묶음": "AI-광통신", "종류": "테마", "정배열폭": 50.0, "델타폭": 60.0,
+         "3개월상대": 9.0, "확인": True},
+        {"묶음": "AI-광통신", "종류": "섹터", "정배열폭": 40.0, "델타폭": 60.0,
+         "3개월상대": 9.0, "확인": True},          # 수치 다름 — 남아야 함
+    ]
+    out = app.dedupe_confirmations(rows)
+    이름들 = [(r["묶음"], r.get("종류")) for r in out]
+    assert len(out) == 3, 이름들
+    assert out[0]["종류"] == "섹터·테마 동일"
+
+
+def test_구성종목은_두_분류표를_합쳐_찾고_신호를_먼저_보여준다():
+    """(129차) '헬스케어 어떤 종목인지'의 답 — SECTORS·GROUPS 양쪽에서
+    구성원을 찾고, 최근 완성·이격도 30%+ 신호 종목이 앞에 옵니다."""
+    완성 = [
+        {"ticker": "LLY", "day": "2026-08-01", "이격도": 45.0, "델타": True},
+        {"ticker": "PFE", "day": "2026-07-01", "이격도": 10.0, "델타": False},
+    ]
+    rows = app.group_member_rows("헬스케어", 완성, "2026-08-19")
+    종목들 = [r["종목"] for r in rows]
+    assert "LLY" in 종목들 and "PFE" in 종목들 and "UNH" in 종목들, 종목들[:5]
+    assert rows[0]["종목"] == "LLY" and rows[0]["신호"] is True
+    assert rows[1]["종목"] == "PFE" and rows[1]["신호"] is False
+
+
+def test_오늘요약은_없으면_없다고_말한다():
+    줄들 = app.today_summary_lines(12.4, [], [], [])
+    글 = " ".join(줄들)
+    assert "12%" in 글 and "약한 장세" in 글
+    assert "켜진 묶음 없음" in 글 and "채택된 신호: 없음" in 글
+    줄들2 = app.today_summary_lines(
+        30.0, [{"묶음": "헬스케어"}],
+        [{"묶음": "구독SW", "완성": 7, "신호": 5}], ["H18"])
+    글2 = " ".join(줄들2)
+    assert "살아 있는 장세" in 글2 and "헬스케어" in 글2         and "구독SW" in 글2 and "채택된 신호: H18" in 글2
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
