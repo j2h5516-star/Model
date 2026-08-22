@@ -579,19 +579,34 @@ def test_H26은_시간분할을_함께_보고한다():
         assert 칸 in 결과, f"{칸} 가 없습니다: {list(결과)}"
 
 
-def test_새_종목_목록은_현_유니버스와_겹치지_않는다():
-    """H26 표본이 탐색 종목과 겹치면 검증이 성립하지 않습니다. 목록이
-    채워질 때(5차 확장) 이 시험이 겹침을 막습니다."""
+def test_새_종목_목록은_탐색_종목과_겹치지_않는다():
+    """H26 표본이 탐색 종목과 겹치면 표본 외 검증이 성립하지 않습니다.
+
+    ⚠️ 이 시험의 첫 판은 **동어반복이었습니다**(149차에 발견): 전체
+    목록에서 새 목록을 빼고 비교했으니 무슨 값을 넣어도 통과했습니다.
+    지금은 **구조**를 씁니다 — config 가 `TICKERS = TICKERS + _V5_NEW`
+    로 새 종목을 **뒤에 붙이므로**, 앞쪽 조각이 확장 전 유니버스입니다.
+    그 조각에 새 종목이 하나라도 있으면 빨간 불입니다."""
     import config as cfg
-    겹침 = [t for t in getattr(cfg, "UNIVERSE_V5_NEW", ()) if t in _옛유니버스()]
+    새 = list(getattr(cfg, "UNIVERSE_V5_NEW", ()))
+    if not 새:
+        return                                  # 확장 전에는 검사할 것이 없음
+    앞 = cfg.TICKERS[:len(cfg.TICKERS) - len(새)]
+    assert cfg.TICKERS[len(앞):] == 새, \
+        "새 종목이 목록 맨 뒤에 붙어 있지 않습니다 — 이 시험의 전제가 깨졌습니다"
+    겹침 = sorted(set(새) & set(앞))
     assert not 겹침, f"탐색에 쓴 종목이 새 종목 목록에 있습니다: {겹침}"
 
 
-def _옛유니버스():
-    """5차 확장 **전**의 250종목 — 지금 TICKERS 에서 새 목록을 뺀 것."""
+def test_새_종목_수가_결론을_낼_만큼_되는가():
+    """144차 계산: 새 종목이 130개 미만이면 H26 이 영영 '판정 불가'에
+    머뭅니다(하한이 기준선 상한을 못 넘음). 확장을 해 놓고 답을 못 얻는
+    일을 막는 난간입니다."""
     import config as cfg
-    새 = set(getattr(cfg, "UNIVERSE_V5_NEW", ()))
-    return [t for t in cfg.TICKERS if t not in 새]
+    새 = getattr(cfg, "UNIVERSE_V5_NEW", ())
+    if 새:
+        assert len(새) >= 130, \
+            f"새 종목 {len(새)}개로는 H26 결론이 안 납니다 (144차 계산: 130개 이상)"
 
 
 
