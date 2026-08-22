@@ -145,7 +145,11 @@ def test_every_ticker_has_a_theme():
 
 
 def test_every_ticker_has_a_sector():
-    """유니버스 79종목 전부에 섹터가 있어야 합니다 (빠지면 화면에 미분류)."""
+    """유니버스 **전 종목**에 섹터가 있어야 합니다 (빠지면 화면에 미분류).
+
+    종목 수는 확장할 때마다 바뀌므로 숫자를 적지 않습니다 — 79 라고
+    적혀 있던 것이 401 이 되도록 아무도 못 고쳤습니다(150차-E).
+    """
     import config as cfg
     missing = [t for t in cfg.TICKERS if t not in cfg.SECTORS]
     extra = [t for t in cfg.SECTORS if t not in cfg.TICKERS]

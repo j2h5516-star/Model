@@ -94,6 +94,73 @@ def test_파일쓰기는_실제로_읽을_수_있는_JSON_이다():
             assert json.load(f)["종목"] == "AA"
 
 
+def test_데이터가_마른_새_종목이_화면을_깨뜨리지_않는다():
+    """(150차-E) 유니버스를 250 → 401 로 늘렸다. 새 종목 151개는 내일
+    처음 수집되는데, 그중에는 **분기가 몇 개 없거나 주가가 짧은** 종목이
+    반드시 섞인다. 거기서 화면 만들기가 죽으면 그날 하루를 통째로 잃는다.
+
+    실제로 일어날 여섯 가지 마른 상태를 만들어 통과하는지 본다.
+    값을 지어내지 않고 **없으면 없다고** 나와야 한다.
+    """
+    import dataset
+
+    # SPY 격자: 3년치 주 단위면 52주선까지 잰다
+    from datetime import date, timedelta
+    d = date(2023, 1, 6)
+    날들, 종가 = [], []
+    for i in range(160):
+        날들.append(d.isoformat())
+        종가.append(100.0 + i)
+        d += timedelta(days=7)
+
+    def eps행(n):
+        return [{"filing_date": f"20{23 + i // 4}-{1 + i % 4 * 3:02d}-15",
+                 "announced_date": f"20{23 + i // 4}-{2 + i % 4 * 3:02d}-15",
+                 "period_label": f"Q{i}", "revenue": 1e9, "op_income": 1e8,
+                 "adj_eps": 1.0 + i * 0.1, "adjusted_ebitda": None,
+                 "gaap_eps": 0.9 + i * 0.1, "gross_margin_pct": 50.0,
+                 "gaap_eps_xbrl": None, "revenue_xbrl": None,
+                 "gross_margin_pct_xbrl": None}
+                for i in range(n)]
+
+    상태 = [("빈종목", 0, 0), ("한분기", 1, 0), ("주가없음", 20, 0),
+          ("주가1일", 20, 1), ("주가짧음", 20, 5), ("정상새것", 20, 160)]
+    snap = {"benchmark": "SPY", "tickers": ["SPY"],
+            "eps": {"SPY": []},
+            "prices": {"SPY": {"dates": 날들, "close": 종가}}}
+    for 이름, q, p in 상태:
+        snap["tickers"].append(이름)
+        snap["eps"][이름] = eps행(q)
+        if p:
+            snap["prices"][이름] = {"dates": 날들[-p:], "close": 종가[-p:]}
+
+    ds = dataset.build(snap)
+    payload = wb.build_payload(ds, None, {"ran_at": "시험"})
+
+    # 죽지 않는 것만으로는 모자랍니다 — 없는 값이 0 으로 둔갑하면 안 됩니다.
+    assert isinstance(payload["신호종목"], list)
+    assert payload["잣대차이"]["종목수"] >= 0
+    assert payload["가설"] == [], "판정 파일이 없는데 가설을 지어냈습니다"
+
+    # 주가가 없거나 너무 짧은 종목은 정배열을 **판단하지 않아야** 합니다
+    유지 = {r["종목"] for r in payload["정배열유지"]}
+    for 이름 in ("빈종목", "한분기", "주가없음", "주가1일", "주가짧음"):
+        assert 이름 not in 유지, f"{이름} 은 판단할 수 없는데 정배열로 셌습니다"
+
+    # 종목별 파일도 만들어져야 합니다 (여기서 죽으면 종목 탭이 빕니다)
+    import sector_model as sm
+    완성 = sm.completion_events(ds)
+    for 이름, _, _ in 상태:
+        한종목 = wb.build_ticker(ds, 이름, 완성)
+        assert 한종목["종목"] == 이름
+        # 못 잰 값은 null 이어야 합니다 — 0 으로 둔갑하면 거짓말입니다
+        if 이름 in ("빈종목", "한분기"):
+            assert 한종목["잣대"] is None, 한종목
+            assert 한종목["실적"] == [], 한종목
+        if 이름 in ("주가없음",):
+            assert 한종목["이격도"] is None and 한종목["주봉"] == [], 한종목
+
+
 def test_채택까지_남은_거리가_웹앱에도_실린다():
     """(150차-C) 139·140차에 만든 "채택까지 얼마나 남았나"가 **계기판에만**
     있었습니다. 주인은 휴대폰만 쓰므로 정작 보는 화면(웹앱)에는 이 정직화
