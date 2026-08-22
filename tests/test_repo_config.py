@@ -144,6 +144,52 @@ def test_로봇이_웹앱_데이터를_만들고_커밋한다():
     assert "web_backup" in 재커밋, "충돌 재커밋 때 웹앱 데이터를 잃습니다"
 
 
+def test_시간예산이_워크플로_한도보다_넉넉히_작다():
+    """(150차-G) 예산이 깃허브 한도를 넘으면 런이 **일하는 중에 죽습니다**
+    — 그날 수집이 통째로 버려집니다(94차에 적은 "표본을 늘리려다 있던
+    표본을 깎는 최악").
+
+    예산은 8-K 훑기 구간만 재고, 그 뒤에 주가 수집·판정·웹앱 빌더가
+    더 붙습니다. 그래서 한도가 예산보다 **넉넉히** 커야 합니다.
+    """
+    import re
+    import config as cfg
+    path = os.path.join(ROOT, ".github", "workflows", "collect.yml")
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    m = re.search(r"^\s*timeout-minutes:\s*(\d+)", text, re.M)
+    assert m, "워크플로에 timeout-minutes 가 없습니다"
+    한도 = int(m.group(1))
+    예산 = cfg.COLLECT_BUDGET_MINUTES
+    assert 예산 < 한도, (
+        f"시간 예산 {예산}분이 워크플로 한도 {한도}분 이상입니다 — "
+        "런이 일하는 중에 잘립니다")
+    여유 = 한도 - 예산
+    assert 여유 >= 60, (
+        f"예산 {예산}분과 한도 {한도}분의 여유가 {여유}분뿐입니다 — "
+        "8-K 훑기 뒤에 주가·판정·웹앱 빌더가 더 걸립니다 "
+        "(08-22 실측: 훑기 뒤 단계에 약 20분)")
+
+
+def test_워크플로_주석이_일꾼수를_거꾸로_말하지_않는다():
+    """(150차-G) 워크플로 주석이 일꾼을 3 으로 못박고 있었는데 **코드는
+    이미 6** 이었습니다. 142차에 올리고 148차에 초당 0.28요청(허용 10의
+    3%)으로 안전을 확인했는데 주석만 반대로 말하고 있었습니다.
+
+    주석이 코드와 반대면 다음 사람이 그 주석을 믿고 되돌립니다.
+    """
+    import re
+    import config as cfg
+    path = os.path.join(ROOT, ".github", "workflows", "collect.yml")
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    # "일꾼 수는 N 그대로" 처럼 지금 값을 못박는 문구가 있다면 실제와 맞아야
+    for m in re.finditer(r"일꾼 수는\s*(\d+)\s*(?:개\s*)?그대로", text):
+        assert int(m.group(1)) == cfg.COLLECT_WORKERS, (
+            f"워크플로 주석은 일꾼 {m.group(1)}이라 하는데 "
+            f"config 는 {cfg.COLLECT_WORKERS} 입니다")
+
+
 def test_웹앱_화면_파일이_그대로_있다():
     """index/style/app.js 중 하나만 빠져도 화면이 통째로 죽습니다."""
     for name in ("index.html", "style.css", "app.js", "manifest.json"):
