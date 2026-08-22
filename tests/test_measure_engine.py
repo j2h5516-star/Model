@@ -453,6 +453,35 @@ def test_런업은_발표_전_구간이고_이력이_짧으면_None():
         "이력 부족인데 값을 만들었습니다"
 
 
+def test_사건에_125일_창이_붙고_60일과_다르다():
+    """(143차 H26) 창 길이를 바꿔도 **기존 60일 값은 한 칸도 안 바뀌어야**
+    하고, 125일 값은 실제로 125거래일을 재야 합니다.
+
+    141차 탐색에서 125일에서만 채택 기준을 넘었으므로, 이 창 길이가
+    조용히 다른 값으로 바뀌면 H26 은 **다른 가설이 되어 버립니다.**
+    """
+    import measure_engine as me
+
+    # 200거래일: 60일까지는 종목과 SPY가 똑같이 오르고(초과 0),
+    # 그 뒤부터 종목만 더 오릅니다 → 60일 초과 ≈ 0, 125일 초과 > 0
+    날 = [f"2020-{(i // 21) + 1:02d}-{(i % 21) + 1:02d}" for i in range(200)]
+    스파이 = [100.0 * (1.0 + 0.001 * i) for i in range(200)]
+    종목 = list(스파이[:70])                      # 70일까지는 SPY 와 똑같이
+    종목 += [스파이[69] * (1.0 + 0.01 * (i - 69)) for i in range(70, 200)]
+    prices = {"dates": 날, "close": 종목}
+    spy = {"dates": 날, "close": 스파이}
+    발표 = 날[0]
+    초과60, _ = me.excess_return(prices, spy, 발표)
+    초과125, _ = me.excess_return(prices, spy, 발표, days=me.H26_WINDOW_DAYS)
+    assert abs(초과60) < 0.001, f"60일 초과가 0이 아닙니다: {초과60}"
+    assert 초과125 > 10.0, f"125일 초과가 안 잡힙니다: {초과125}"
+    # 창 길이 자체를 못박습니다 — 141차 탐색이 이 길이에서만 분리됐습니다
+    assert me.H26_WINDOW_DAYS == 125, me.H26_WINDOW_DAYS
+    # 기본값(days 없음)은 등록된 60거래일 그대로여야 합니다
+    assert me.WINDOW_TRADING_DAYS == 60
+
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

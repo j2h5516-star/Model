@@ -44,6 +44,7 @@ def expected_hypotheses() -> list[str]:
     names.append(judge.H23_NAME)
     names.append(judge.H24_NAME)
     names += [judge.H25_NAME, judge.H25B_NAME]
+    names.append(judge.H26_NAME)
     return names
 
 

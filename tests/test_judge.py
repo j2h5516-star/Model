@@ -513,6 +513,88 @@ def test_등록일을_모르는_가설은_날짜를_지어내지_않는다():
 
 
 
+# ---------------------------------------------------------------------------
+# H26 (143차 사전 등록) — 첫 돌파 · 125거래일 · 새 종목으로만 판정
+# ---------------------------------------------------------------------------
+def _h26_사건(ticker, 첫돌파, 초과125, day="2020-01-15"):
+    return {"ticker": ticker, "잣대": "adj_eps", "announced": day, "day": day,
+            "newhigh_streak": 1 if 첫돌파 else 0, "초과125": 초과125,
+            "excess": 0.0}
+
+
+def test_H26은_새_종목_목록이_비면_판정하지_않는다():
+    """확장 전에는 판정 표본이 없습니다. 탐색에 쓴 250종목으로 판정하면
+    그것은 검증이 아니라 탐색 표본 재사용입니다 (헌법 5조)."""
+    사건 = [_h26_사건("OLD", True, 50.0) for _ in range(30)]
+    결과 = judge.judge_newhigh_125(사건, ())
+    assert 결과["판정"] == "판정 불가", 결과
+    assert "비어" in 결과.get("사유", ""), 결과
+
+
+def test_H26은_탐색에_쓴_종목을_표본에_넣지_않는다():
+    """새 종목 목록에 없는 종목의 사건은 **한 건도** 세면 안 됩니다."""
+    사건 = ([_h26_사건("OLD", True, 99.0) for _ in range(50)]
+          + [_h26_사건("NEW", True, 1.0) for _ in range(12)]
+          + [_h26_사건("NEW", False, 1.0) for _ in range(20)])
+    결과 = judge.judge_newhigh_125(사건, ("NEW",))
+    assert 결과["신규(판정)"]["신호"]["n"] == 12, 결과["신규(판정)"]
+    assert 결과["신규(판정)"]["기준선"]["n"] == 32, 결과["신규(판정)"]
+    # 탐색 종목(OLD)의 높은 초과수익이 섞였다면 폭등률이 훨씬 높았을 것
+    assert 결과["신규(판정)"]["신호"]["rate"] == 0.0, 결과["신규(판정)"]
+
+
+def test_H26은_창이_안_끝난_사건을_세지_않는다():
+    """125일 창은 60일보다 길어 최근 사건은 아직 안 끝납니다(우측검열).
+    그 칸은 None 이고, 없는 것을 0으로 세면 폭등률이 낮게 왜곡됩니다."""
+    사건 = ([_h26_사건("NEW", True, None) for _ in range(40)]
+          + [_h26_사건("NEW", True, 50.0) for _ in range(12)]
+          + [_h26_사건("NEW", False, 0.0) for _ in range(20)])
+    결과 = judge.judge_newhigh_125(사건, ("NEW",))
+    assert 결과["신규(판정)"]["신호"]["n"] == 12, 결과["신규(판정)"]
+    assert 결과["신규(판정)"]["신호"]["rate"] == 100.0, 결과["신규(판정)"]
+
+
+def test_H26은_등록된_채택_기준을_그대로_쓴다():
+    """새 가설이라고 문턱을 무르게 하면 안 됩니다 — 하한 > 상한, n≥10."""
+    # 신호가 기준선보다 확실히 높은 경우 → 채택
+    좋음 = ([_h26_사건("NEW", True, 50.0) for _ in range(40)]
+          + [_h26_사건("NEW", False, 0.0) for _ in range(200)])
+    assert judge.judge_newhigh_125(좋음, ("NEW",))["판정"] == "채택"
+    # 신호가 기준선과 겹치면 → 미채택
+    비슷 = ([_h26_사건("NEW", True, 50.0) for _ in range(15)]
+          + [_h26_사건("NEW", False, 50.0) for _ in range(15)])
+    assert judge.judge_newhigh_125(비슷, ("NEW",))["판정"] == "미채택"
+    # 표본이 10 미만이면 → 판정 불가 (억지로 결론 내지 않는다)
+    적음 = ([_h26_사건("NEW", True, 50.0) for _ in range(5)]
+          + [_h26_사건("NEW", False, 0.0) for _ in range(30)])
+    assert judge.judge_newhigh_125(적음, ("NEW",))["판정"] == "판정 불가"
+
+
+def test_H26은_시간분할을_함께_보고한다():
+    """강세장 구간만의 우위는 믿지 않습니다 (헌법 4조)."""
+    사건 = ([_h26_사건("NEW", True, 50.0, f"2018-0{i%9+1}-01") for i in range(20)]
+          + [_h26_사건("NEW", False, 0.0, f"2023-0{i%9+1}-01") for i in range(20)])
+    결과 = judge.judge_newhigh_125(사건, ("NEW",))
+    for 칸 in ("신규_앞시기", "신규_뒤시기", "기준선_앞시기", "기준선_뒤시기"):
+        assert 칸 in 결과, f"{칸} 가 없습니다: {list(결과)}"
+
+
+def test_새_종목_목록은_현_유니버스와_겹치지_않는다():
+    """H26 표본이 탐색 종목과 겹치면 검증이 성립하지 않습니다. 목록이
+    채워질 때(5차 확장) 이 시험이 겹침을 막습니다."""
+    import config as cfg
+    겹침 = [t for t in getattr(cfg, "UNIVERSE_V5_NEW", ()) if t in _옛유니버스()]
+    assert not 겹침, f"탐색에 쓴 종목이 새 종목 목록에 있습니다: {겹침}"
+
+
+def _옛유니버스():
+    """5차 확장 **전**의 250종목 — 지금 TICKERS 에서 새 목록을 뺀 것."""
+    import config as cfg
+    새 = set(getattr(cfg, "UNIVERSE_V5_NEW", ()))
+    return [t for t in cfg.TICKERS if t not in 새]
+
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

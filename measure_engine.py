@@ -28,6 +28,15 @@ from statistics import median
 
 # --- 사전 등록 상수 (측정결과.md 11차 — 옮겨 적음, 여기서 고치지 않는다) ---
 WINDOW_TRADING_DAYS = 60     # 보유 창
+
+# H26 (143차 등록) — 125거래일(약 6개월) 창.
+# 141차 탐색에서 창 길이를 훑어 보니 조정 EPS 신고점 **첫 돌파**가
+# 125일에서만 채택 기준을 넘었습니다(25.8% 하한 21.1 vs 기준 17.4%
+# 상한 18.4). 60일·250일에서는 안 넘습니다 — 창이 길어지면 기준선도
+# 같이 올라가기 때문입니다(60일 10.0% → 250일 25.8%).
+# ⚠️ 탐색은 채택 근거가 아니므로(헌법 5조), 이 창으로는 **탐색에 쓰지
+#    않은 새 종목**만 판정합니다. 자세한 규칙은 judge.H26_* 에 있습니다.
+H26_WINDOW_DAYS = 125
 SURGE_PP = 20.0              # 폭등 = SPY 대비 +20%p
 SURGE_AUX_PP = 30.0          # 보조 정의
 SPACING_MIN_DAYS = 55        # 연속 분기로 인정할 최소 간격
@@ -210,25 +219,35 @@ def yardstick_of(rows: list[dict]) -> str | None:
 # ---------------------------------------------------------------------------
 # 수익률 창 — 발표 다음 거래일 진입, 60거래일, SPY 대비
 # ---------------------------------------------------------------------------
-def window_return(dates: list[str], closes: list[float], announce: str):
-    """(수익률%, 진입일, 청산일). 못 재면 (None, 이유, None)."""
+def window_return(dates: list[str], closes: list[float], announce: str,
+                  days: int | None = None):
+    """(수익률%, 진입일, 청산일). 못 재면 (None, 이유, None).
+
+    days 를 주면 그 길이의 창으로 잽니다. 기본값(None)은 등록된
+    기본형 60거래일 — **기존 가설의 표본을 한 칸도 바꾸지 않기 위해**
+    기본 동작을 그대로 둡니다 (143차).
+    """
     entry = bisect.bisect_right(dates, str(announce)[:10])   # 발표일 **다음** 거래일
     if entry >= len(dates):
         return None, "진입일없음", None
     # 주가 이력이 발표보다 늦게 시작하면 "다음 거래일"이 몇 달 뒤가 됩니다
     if (_to_date(dates[entry]) - _to_date(announce)).days > ENTRY_MAX_GAP_DAYS:
         return None, "주가시작전", None
-    exit_ = entry + WINDOW_TRADING_DAYS
+    exit_ = entry + (WINDOW_TRADING_DAYS if days is None else int(days))
     if exit_ >= len(dates):
         return None, "우측검열", None    # 창이 아직 안 끝남 — 세지 않는다
     pct = (closes[exit_] / closes[entry] - 1.0) * 100.0
     return pct, dates[entry], dates[exit_]
 
 
-def excess_return(prices: dict, spy: dict, announce: str):
-    """종목 수익 − 같은 구간 SPY 수익 (%p). 못 재면 (None, 이유)."""
+def excess_return(prices: dict, spy: dict, announce: str,
+                  days: int | None = None):
+    """종목 수익 − 같은 구간 SPY 수익 (%p). 못 재면 (None, 이유).
+
+    days 를 주면 그 길이의 창으로 잽니다 (기본은 등록된 60거래일).
+    """
     stock_pct, entry_date, exit_date = window_return(
-        prices["dates"], prices["close"], announce
+        prices["dates"], prices["close"], announce, days=days
     )
     if stock_pct is None:
         return None, entry_date              # entry_date 자리에 이유
@@ -455,6 +474,12 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
                     # H22·H22b (109차 등록) — 신고점을 직전 정점 대비 몇 % 넘었나
                     "신고점폭": state.get("신고점폭"),
                     "excess": excess,
+                    # H26 (143차 등록) — 125거래일 창. **기존 excess(60일)는
+                    # 한 칸도 안 바뀝니다.** 창이 더 길어 최근 사건은 아직
+                    # 안 끝나 None 이 됩니다(우측검열) — 지어내지 않습니다.
+                    "초과125": excess_return(
+                        prices, spy, state["announced"],
+                        days=H26_WINDOW_DAYS)[0],
                 }
             )
     events.sort(key=lambda e: e["announced"])

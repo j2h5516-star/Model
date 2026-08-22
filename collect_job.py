@@ -242,6 +242,11 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         vendor_compare.attach_street_surprise(
             events, vendor_feed.load(f"{cfg.MEASURE_DIR}/vendor.json"))
         verdict["가설"].update(judge.judge_momentum_beat(events))
+        # H26 (143차 등록) — 창 125거래일 첫 돌파를 **탐색에 쓰지 않은 새
+        # 종목**으로만 판정합니다. 목록이 비어 있으면(확장 전) 판정하지
+        # 않고 그 사실을 적습니다 — 없는 것을 지어내지 않습니다.
+        verdict["가설"][judge.H26_NAME] = judge.judge_newhigh_125(
+            events, getattr(cfg, "UNIVERSE_V5_NEW", ()))
         # 원문 부탁 목록 갱신 (134차) — 115차 배관이 사람 손에만 매여 있어
         # 새 90종목의 오염 공시가 한 건도 못 들어갔습니다(133차 실측).
         # 이제 로봇이 매일 다시 적고, **다음 런이 그 원문을 담아 옵니다.**
