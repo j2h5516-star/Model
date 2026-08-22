@@ -980,16 +980,33 @@ def recent_completion_rows(완성사건: list[dict], 기준일: str,
                            days: int = 91) -> list[dict]:
     """최근 days 일 안의 정배열 완성 종목 (127차 — 주도 후보 관찰판).
 
-    판정이 아니라 **사실의 나열**입니다. 이격도 내림차순이고, 이격도
-    30%+ 는 H18/H18b 신호 표시를 답니다. 이격도를 못 잰 완성은 신호로
-    치지 않습니다 — 없는 값은 만들지 않습니다.
+    판정이 아니라 **사실의 나열**입니다. 이격도 30%+ 는 H18/H18b 신호
+    표시를 답니다. 이격도를 못 잰 완성은 신호로 치지 않습니다 — 없는
+    값은 만들지 않습니다.
+
+    **한 종목은 한 줄만**(150차). 정배열이 깨졌다 다시 붙기를 반복하면
+    같은 종목이 여러 번 완성합니다. 그것을 그대로 세면 관찰판이
+    "여러 종목이 몰렸다"고 잘못 말합니다 — 실데이터에서 '광고 플랫폼'
+    묶음이 **제타 한 종목뿐인데 완성 2개**로 올라 있었습니다. 종목당
+    **가장 최근 완성**만 남깁니다.
+
+    **차례**(150차) — ① 새 완성(7일 안)이 먼저 ② 그 안에서 이격도 높은
+    순. 129차에 최신 완성이 이격도순에 밀려 접기 속에 숨은 사고를 고치며
+    완성일순으로 바꿨는데, 이번엔 반대 사고가 났습니다 — 제타가 이격도
+    50.7%(20개 중 4위)인데 완성일이 8일 전이라 6번째로 밀려 접기 속에
+    들어갔습니다. 두 사고를 한꺼번에 막는 차례입니다.
     """
     from datetime import timedelta
     cut = (date.fromisoformat(기준일) - timedelta(days=days)).isoformat()
-    rows = []
+    최근: dict[str, dict] = {}          # 종목 → 가장 최근 완성 사건
     for e in 완성사건:
         if e["day"] < cut:
             continue
+        앞 = 최근.get(e["ticker"])
+        if 앞 is None or e["day"] > 앞["day"]:
+            최근[e["ticker"]] = e
+    rows = []
+    for e in 최근.values():
         gap = e.get("이격도")
         rows.append({
             "종목": e["ticker"],
@@ -1004,8 +1021,9 @@ def recent_completion_rows(완성사건: list[dict], 기준일: str,
             "새완성": (date.fromisoformat(기준일)
                      - date.fromisoformat(e["day"])).days <= 7,
         })
-    rows.sort(key=lambda r: (r["완성일"],
-                             r["이격도"] if r["이격도"] is not None else -999),
+    rows.sort(key=lambda r: (r["새완성"],
+                             r["이격도"] if r["이격도"] is not None else -999,
+                             r["완성일"]),
               reverse=True)
     return rows
 
@@ -1320,13 +1338,20 @@ def main():
                     )
         _종목판 = [r for r in _종목판전체 if r["신호"]]
         if _종목판:
-            st.markdown("**이격도 30%+ 완성 종목** — 최신 완성 순 (H18·H18b 신호, 탐색 참고):")
-            st.markdown("".join(signal_row_html(r) for r in _종목판[:5]),
+            st.markdown("**이격도 30%+ 완성 종목** — 새 완성 먼저, "
+                        "그다음 이격도순 (H18·H18b 신호, 탐색 참고):")
+            # 5칸이던 것을 8칸으로 (150차). 제타가 6번째라 딱 한 칸
+            # 차이로 접혀 있었습니다 — 주인이 "왜 화면에 없지"라고
+            # 물은 것이 이것입니다. 모바일 412px 에서 8줄까지는 한
+            # 화면에 무리 없이 들어갑니다.
+            _펼침 = 8
+            st.markdown("".join(signal_row_html(r) for r in _종목판[:_펼침]),
                         unsafe_allow_html=True)
-            if len(_종목판) > 5:
-                with st.expander(f"나머지 {len(_종목판)-5}개 보기"):
-                    st.markdown("".join(signal_row_html(r) for r in _종목판[5:]),
-                                unsafe_allow_html=True)
+            if len(_종목판) > _펼침:
+                with st.expander(f"나머지 {len(_종목판)-_펼침}개 보기"):
+                    st.markdown(
+                        "".join(signal_row_html(r) for r in _종목판[_펼침:]),
+                        unsafe_allow_html=True)
             st.caption(
                 "과거 실측(126차): 이 신호의 1년 뒤 SPY+20%p **46.6%** (기준선 "
                 "27.5%) · 시장을 이긴 비율 59% — **채택 전 참고**이며 10건 중 "

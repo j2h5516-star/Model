@@ -94,6 +94,40 @@ def test_파일쓰기는_실제로_읽을_수_있는_JSON_이다():
             assert json.load(f)["종목"] == "AA"
 
 
+def test_종목의_신호는_가장_최근_완성으로_판단한다():
+    """(150차) 주인 지적 — "제타는 정배열인데 왜 화면에 없지?"
+
+    실측한 결함: 웹앱의 ZETA 가 **신호 False** 로 나가고 있었습니다.
+    이격도 49.4%에 08-14 완성의 이격도가 50.7%인데도 그랬습니다.
+    `{r["종목"]: r for r in recent_completion_rows(...)}` 이 한 종목당
+    한 줄을 **가정**했는데 실제로는 여러 줄이 와서, 뒤에 온 **낡은**
+    완성(06-26, 이격도 3.2%)이 최신 완성을 덮어썼습니다.
+
+    화면에 신호를 띄울 때 낡은 값을 쓰면 정직화 원칙이 깨집니다.
+    """
+    import app
+
+    완성사건 = [
+        {"ticker": "ZETA", "day": "2026-06-26", "이격도": 3.2,
+         "델타": False, "초과60": None, "초과250": None},
+        {"ticker": "ZETA", "day": "2026-08-14", "이격도": 50.7,
+         "델타": True, "초과60": None, "초과250": None},
+    ]
+    최근 = {r["종목"]: r
+          for r in app.recent_completion_rows(완성사건, "2026-08-21")}
+    assert 최근["ZETA"]["신호"] is True, (
+        "낡은 완성이 최신 완성을 덮어 신호가 꺼졌습니다: "
+        f"{최근['ZETA']}")
+    assert 최근["ZETA"]["완성일"] == "2026-08-14", 최근["ZETA"]
+
+    # 이 줄이 실제로 웹앱 배선에 쓰이는지 (배선이 빠지면 시험이 헛돕니다)
+    root = os.path.join(os.path.dirname(__file__), "..")
+    with open(os.path.join(root, "web_build.py"), encoding="utf-8") as f:
+        text = f.read()
+    assert 'app.recent_completion_rows(' in text, \
+        "웹앱이 계기판과 같은 함수를 쓰지 않습니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
