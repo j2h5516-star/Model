@@ -526,6 +526,99 @@ def test_자릿수_재료도_제_몫을_받는다():
     assert 구멍, "앞자리가 꽉 차자 구멍 재료가 밀려났습니다"
 
 
+def _연간값모양_종목(티커: str, 시작: int = 1) -> tuple[dict, dict]:
+    """월가 4분기 합을 분기 칸에 넣어 버린 종목 하나를 만듭니다.
+
+    150차에 실데이터에서 39건 발견한 모양입니다 — 회사가 '올해 누적'을
+    적은 표를 우리가 '이번 분기'로 읽은 것. 산술로 확정되는 우리 결함이라
+    원문 부탁 1순위입니다.
+    """
+    날짜 = [f"20{20 + 시작 % 5}-0{1 + i}-15" for i in range(4)]
+    발표 = [{"announced_date": d, "날짜뜻": "발표일", "street_eps": 1.0}
+          for d in 날짜]
+    # 마지막 분기만 우리 값이 4분기 합(4.0)으로 들어가 있습니다.
+    행 = [{"announced_date": d, "adj_eps": 1.0} for d in 날짜[:3]]
+    행.append({"announced_date": 날짜[3], "adj_eps": 4.0})
+    return {티커: 행}, {티커: {"announcements": 발표}}
+
+
+def test_월가_갈린칸_재료도_제_몫을_받는다():
+    """(150차) 실측: 연간값 모양 칸이 39건인데 재료가 20건만 내놓아
+    19건이 목록에 **닿지도 못했습니다**. 135차에 구멍에게 배운 것과
+    같은 병(앞 재료가 자리를 먹음)이라 같은 약(재료별 몫)을 씁니다.
+
+    손으로 만든 재료가 아니라 **로봇이 부르는 자리가 적어 낸 파일**을
+    봅니다 — 배선이 빠져도 초록으로 남는 시험을 세 번 만들었습니다.
+    """
+    import json
+    import tempfile
+
+    quarters: dict = {}
+    vendor_t: dict = {}
+    for i in range(25):                      # 25종목 × 연간값 모양 1건
+        q, v = _연간값모양_종목(f"AA{i:02d}", 시작=i)
+        quarters.update(q)
+        vendor_t.update(v)
+    vendor = {"tickers": vendor_t}
+
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        path = f.name
+    audit_data.refresh_wanted(quarters, vendor, path=path,
+                              progress=lambda *a: None)
+    with open(path, encoding="utf-8") as f:
+        목록 = json.load(f)["목록"]
+    os.unlink(path)
+
+    연간모양 = [r for r in 목록 if "연간값 모양" in str(r.get("이유"))]
+    assert len(연간모양) == 25, (
+        f"연간값 모양 25건 중 {len(연간모양)}건만 목록에 들어왔습니다 — "
+        f"월가 재료의 몫(STREET_QUOTA={audit_data.STREET_QUOTA})이 모자랍니다")
+
+
+def test_이웃튐_재료는_제_몫만_먹는다():
+    """(150차) 실측: 이웃 튐 재료 60건이 앞자리를 먹어 뒤 재료가
+    굶었습니다. 이 재료도 몫을 정해 둡니다 — 상한이 없으면 다른
+    재료의 배관이 다시 멈춥니다."""
+    import json
+    import tempfile
+
+    # 이웃과 크게 튀는 칸을 몫보다 훨씬 많이 만듭니다.
+    # ⚠️ 튀는 칸은 **가운데**에 두어야 합니다 — spike_cells 는 앞뒤 이웃이
+    #    둘 다 있는 칸만 봅니다. 처음엔 맨 끝에 두어 재료가 0건이 나왔고,
+    #    시험은 "0 ≤ 몫"으로 **헛돌았습니다**(돌연변이에 안 걸렸습니다).
+    quarters = {}
+    for i in range(audit_data.NEIGHBOR_QUOTA + 20):
+        티 = f"NB{i:02d}"
+        행 = []
+        for j in range(12):
+            값 = 1.0 if j != 5 else 99.0        # 가운데 한 칸만 크게 튐
+            행.append({"announced_date": f"20{20 + j % 5}-0{1 + j % 9}-10",
+                       "period_end": f"20{20 + j % 5}-0{1 + j % 9}-30",
+                       "period_label": f"{j}분기",
+                       "adj_eps": 값})
+        quarters[티] = 행
+
+    # ① 재료가 몫보다 실제로 많이 나오는가 (헛도는 시험 방지)
+    재료 = audit_data.wanted_raw_filings(quarters)
+    assert len(재료) > audit_data.NEIGHBOR_QUOTA, (
+        f"재료가 {len(재료)}건뿐이라 몫({audit_data.NEIGHBOR_QUOTA})을 "
+        "넘지 못합니다 — 이 시험은 아무것도 확인하지 못합니다")
+
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        path = f.name
+    audit_data.refresh_wanted(quarters, None, path=path,
+                              progress=lambda *a: None)
+    with open(path, encoding="utf-8") as f:
+        목록 = json.load(f)["목록"]
+    os.unlink(path)
+
+    # ② 그런데도 목록에는 제 몫만 실리는가
+    이웃튐 = [r for r in 목록 if "이웃" in str(r.get("이유"))]
+    assert len(이웃튐) <= audit_data.NEIGHBOR_QUOTA, (
+        f"이웃 튐이 {len(이웃튐)}건 실렸습니다 — 제 몫"
+        f"({audit_data.NEIGHBOR_QUOTA})을 넘어 다른 재료의 자리를 먹습니다")
+
+
 def test_로봇이_부탁목록을_매일_갱신한다():
     """(134차) 배선이 빠지면 부탁 목록이 **사람 손에만 매입니다** — 실제로
     4차 확장의 새 90종목이 한 건도 못 들어갔던 사고(133차)의 재발 방지."""

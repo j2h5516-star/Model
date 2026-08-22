@@ -277,8 +277,23 @@ def one_line(quarters: dict) -> str:
 #   조사 결과를 화면에 찍고, 로봇에게 부탁할 원문 목록을 파일로 적습니다.
 # ---------------------------------------------------------------------------
 WANTED_PATH = "data/measure/wanted_raw.json"
-WANTED_LIMIT = 60      # 틀린 값(바깥 자·이웃 튐)에게 주는 자리
+WANTED_LIMIT = 95      # 틀린 값(바깥 자·월가·이웃 튐)에게 주는 자리 (150차: 60→95)
 HOLE_QUOTA = 15        # 잣대 구멍에게 **따로 떼어 두는** 자리 (135차, 아래 설명)
+
+# 150차 — 재료별 몫. 실측해 보니 "월가와 갈린 칸" 재료가 **자기 몫에서
+# 이미 잘려** 있었습니다:
+#   · 월가 4분기 합과 2% 안에 드는 칸(= 연간값을 분기값 칸에 넣은 것,
+#     산술로 확정된 **우리 결함**)이 39건인데, 재료가 20건만 내놓아
+#     19건이 목록에 닿지도 못했습니다.
+#   · 그 20건은 다시 앞자리 60칸을 먹어, 이웃 튐 재료 60건 중 11건만
+#     실렸습니다.
+# 135차에 구멍에게 배운 것과 같은 병이라 같은 약을 씁니다 — 재료마다
+# **제 몫을 먼저 떼어** 놓습니다. 원문 부탁은 로봇이 이미 내려받은 글을
+# 저장만 하는 것이라(sec_fundamentals._is_wanted_raw) 접속이 늘지 않고,
+# 늘어나는 것은 저장 용량뿐입니다(건당 약 34KB).
+MISMATCH_QUOTA = 30    # 바깥 자(야후)와 어긋난 칸
+STREET_QUOTA = 40      # 월가 발표 EPS 와 갈린 조정 EPS 칸 (연간값 모양이 앞)
+NEIGHBOR_QUOTA = 25    # 이웃 분기와 어긋난 칸(우리끼리 비교)
 
 
 def merge_wanted(*목록들: list[dict], limit: int = 60) -> list[dict]:
@@ -324,7 +339,11 @@ def write_wanted(quarters: dict, path: str = WANTED_PATH,
     #    지켜지고, 배관은 실제로 돕니다.
     #
     # tail 은 이미 재료별로 제 몫만큼 잘라서 들어옵니다(refresh_wanted 참조).
-    앞 = merge_wanted(extra or [], wanted_raw_filings(quarters), limit=WANTED_LIMIT)
+    # 이웃 튐도 **제 몫만큼 잘라서** 넣습니다 (150차). 안 자르면 앞 재료가
+    # 남은 자리를 다 먹거나, 반대로 이웃 튐이 뒤 재료를 굶깁니다.
+    앞 = merge_wanted(extra or [],
+                     wanted_raw_filings(quarters)[:NEIGHBOR_QUOTA],
+                     limit=WANTED_LIMIT)
     목록 = merge_wanted(앞, tail or [],
                       limit=WANTED_LIMIT + SCALE_QUOTA + HOLE_QUOTA)
     with open(path, "w", encoding="utf-8") as f:
@@ -496,8 +515,10 @@ def refresh_wanted(quarters: dict, vendor: dict | None,
     if vendor:
         try:
             import vendor_compare as _vc
-            바깥 = _vc.wanted_from_mismatch(quarters, vendor) + \
-                  _vc.wanted_from_street(quarters, vendor)
+            바깥 = _vc.wanted_from_mismatch(
+                       quarters, vendor, limit=MISMATCH_QUOTA) + \
+                  _vc.wanted_from_street(
+                       quarters, vendor, limit=STREET_QUOTA)
         except Exception as exc:      # 부탁 목록이 실패해도 수집은 계속
             progress(f"⚠️ 부탁 목록 재료 실패: {type(exc).__name__}: {str(exc)[:120]}")
     # 재료마다 **제 몫만큼 먼저 잘라서** 넘깁니다. 안 그러면 앞 재료가
