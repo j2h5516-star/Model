@@ -73,12 +73,17 @@ def hypothesis_rows(verdict: dict | None) -> list[dict]:
     """판정 파일을 화면용 줄로 — 판정을 만들지 않고 옮겨 적기만 합니다."""
     if not verdict or "가설" not in verdict:
         return []
+    # 채택까지 남은 거리 (139·140차). 계기판에만 있고 **웹앱에는 없었습니다**
+    # — 주인은 휴대폰만 쓰므로 이 정직화 정보가 정작 보는 화면에 안 닿고
+    #   있었습니다(150차-C 실측). 계기판과 같은 함수를 씁니다.
+    거리 = {d["가설"]: d for d in judge.adoption_distance(verdict)}
     rows = []
     for name, entry in (verdict.get("가설") or {}).items():
         judged = entry.get("신규(판정)") or {}
         signal = judged.get("신호") or {}
         base = judged.get("기준선") or {}
         탐색 = (entry.get("탐색표본(참고)") or {}).get("신호") or {}
+        d = 거리.get(name) or {}
         rows.append({
             "이름": name,
             "라벨": app.HYPOTHESIS_LABELS.get(name, name),
@@ -90,6 +95,9 @@ def hypothesis_rows(verdict: dict | None) -> list[dict]:
             "기준선율": base.get("rate"),
             "탐색n": 탐색.get("n"),
             "탐색율": 탐색.get("rate"),
+            # 판정을 만들지 않습니다 — 이미 계산된 거리를 옮겨 적을 뿐입니다.
+            "채택거리": d.get("상태"),
+            "필요표본": d.get("필요표본"),
         })
     순서 = {"채택": 0, "미채택": 2, "판정 불가": 1}
     rows.sort(key=lambda r: (순서.get(r["판정"], 3), r["이름"]))
