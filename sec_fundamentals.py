@@ -1795,7 +1795,11 @@ def new_report(ticker: str) -> dict:
         "xbrl_quarters": 0,        # XBRL로 만든 분기 수
         "merged_direct": 0,        # 8-K 값으로 덮어쓴 분기 수
         "cache_hits": 0,           # 원문 캐시에서 읽은 공시 수 (26차 증분 수집)
-        "cache_downloads": 0,      # SEC에서 새로 내려받은 공시 수
+        "cache_downloads": 0,      # SEC에서 새로 내려받아 **텍스트를 얻은** 수
+        # 아래 셋은 145차 — 보이지 않던 접속을 드러내기 위해 추가
+        "fetch_attempts": 0,       # SEC 접속을 **시도한** 총 횟수(빈 결과 포함)
+        "negative_cached": 0,      # "실적 문서 아님"으로 새로 기억한 공시 수
+        "negative_hits": 0,        # 그 기억 덕에 다시 안 받은 공시 수
         "text_source": "",         # 텍스트를 어디서 얻었나 (보도자료/첨부/본문)
         "first_error": "",         # 첫 예외 (화면 요약용)
         "all_errors": [],          # 그 뒤의 예외들 — 첫 것만 보면 진짜 실패를 놓칩니다
@@ -2258,11 +2262,46 @@ def _earnings_text_cached(
                 if payload.get("v") == cfg.RAW8K_CACHE_VERSION:
                     if report is not None:
                         report["cache_hits"] = report.get("cache_hits", 0) + 1
+                        if not payload.get("text"):
+                            # 음성 캐시 적중 — 이 공시는 실적 문서가 아니라고
+                            # 이미 확인했습니다. 다시 받지 않습니다 (145차).
+                            report["negative_hits"] = \
+                                report.get("negative_hits", 0) + 1
                     return payload["text"], payload["source"], payload["had_exhibit"]
             except Exception:
                 pass    # 깨진 캐시는 무시하고 새로 받습니다
 
+    # 실제 SEC 접속 횟수 (145차) — **성공만 세면 안 됩니다.**
+    # 예전에는 텍스트를 얻었을 때만 cache_downloads 를 올렸습니다. 그래서
+    # "받아 봤는데 실적 문서가 아니어서 빈 결과"인 공시는 **한 건도 안
+    # 세어졌습니다.** 실측: V(비자)는 내려받기 0건으로 기록됐는데 905초가
+    # 걸렸습니다 — 보이지 않는 접속이 그만큼 있었다는 뜻입니다.
+    # 이 칸이 있어야 SEC 요청 속도를 제대로 잽니다(일꾼 수 판단의 근거).
+    if report is not None:
+        report["fetch_attempts"] = report.get("fetch_attempts", 0) + 1
+    에러전 = len((report or {}).get("all_errors") or [])
     text, source, had_exhibit = _earnings_text(filing, report)
+    에러후 = len((report or {}).get("all_errors") or [])
+
+    # 음성 캐시 (145차) — **에러 없이** 비어 있던 공시는 "실적 문서가 아님"
+    # 으로 기억해 다음 런에서 다시 받지 않습니다.
+    #
+    # ⚠️ 원래 빈 결과를 캐시하지 않은 이유는 "일시적 망 실패가 '텍스트
+    #    없음'으로 영구 박제되는 것"을 막기 위해서였습니다. 그 걱정은
+    #    그대로 옳으므로, **예외가 한 건이라도 났으면 캐시하지 않습니다.**
+    #    받아 보긴 했는데 실적 보도자료가 안 붙은 8-K(인사·배당·계약 공시)
+    #    만 기억합니다. 판단이 바뀌면 RAW8K_CACHE_VERSION 을 올려 무효화.
+    if accession and not text and 에러후 == 에러전:
+        try:
+            with open(_raw8k_cache_path(ticker, accession), "w",
+                      encoding="utf-8") as f:
+                json.dump({"v": cfg.RAW8K_CACHE_VERSION, "text": "",
+                           "source": "실적문서아님", "had_exhibit": False},
+                          f, ensure_ascii=False)
+        except OSError:
+            pass
+        if report is not None:
+            report["negative_cached"] = report.get("negative_cached", 0) + 1
 
     if accession and text:
         try:

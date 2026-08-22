@@ -137,6 +137,11 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
     수집벽시계 = round(time.monotonic() - 수집시작, 1)
     일감합 = round(sum(r.get("seconds") or 0 for r in reports), 1)
     내려받기 = sum(r.get("cache_downloads") or 0 for r in reports)
+    # 접속 **시도** 총합 (145차) — 요청 속도는 이 값으로 재야 맞습니다.
+    # 내려받기만 세면 "받아 봤는데 빈 결과"인 접속이 통째로 빠집니다.
+    시도 = sum(r.get("fetch_attempts") or 0 for r in reports)
+    음성기억 = sum(r.get("negative_cached") or 0 for r in reports)
+    음성적중 = sum(r.get("negative_hits") or 0 for r in reports)
     수집계기 = {
         "일꾼": cfg.COLLECT_WORKERS,
         "코어": os.cpu_count(),
@@ -148,13 +153,20 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         "내려받기": 내려받기,
         # SEC 허용치는 초당 10건. 이 값이 거기 가까워지면 일꾼을 더 올리면
         # 안 됩니다 (v1 사고: 속도 무제한 → 403).
-        "초당요청": round(내려받기 / 수집벽시계, 2) if 수집벽시계 else None,
+        # ⚠️ 초당요청은 **시도**로 잽니다(145차). 내려받기로 재면 실제보다
+        #    낮게 나와 일꾼 수를 잘못 판단합니다.
+        "접속시도": 시도,
+        "초당요청": round(시도 / 수집벽시계, 2) if 수집벽시계 else None,
+        "초당요청_내려받기만": round(내려받기 / 수집벽시계, 2) if 수집벽시계 else None,
+        "음성기억": 음성기억,
+        "음성적중": 음성적중,
     }
     progress(
         f"⏱ 수집 계기 — 일꾼 {수집계기['일꾼']} · 코어 {수집계기['코어']} · "
         f"벽시계 {수집계기['벽시계_분']}분 · 일감합 {수집계기['일감합_분']}분 · "
         f"겹침 {수집계기['겹침배수']}배 · 초당 {수집계기['초당요청']}요청"
-        f"(SEC 허용 10)"
+        f"(SEC 허용 10) · 접속 시도 {시도} · "
+        f"실적문서아님 기억 {음성기억}·적중 {음성적중}"
     )
     시간초과 = [r["ticker"] for r in reports if r.get("시간초과")]
     if 시간초과:
@@ -373,6 +385,10 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
                 "seconds": r.get("seconds"),
                 "cache_hits": r.get("cache_hits", 0),
                 "cache_downloads": r.get("cache_downloads", 0),
+                # 145차 — 보이지 않던 SEC 접속을 드러내는 칸들
+                "fetch_attempts": r.get("fetch_attempts", 0),
+                "negative_cached": r.get("negative_cached", 0),
+                "negative_hits": r.get("negative_hits", 0),
                 "first_error": r.get("first_error", ""),
                 # 91차 — XBRL 조회가 **조용히 0 건**을 돌려주는 자리를 찾기
                 # 위한 계기. GAAP EPS 가 스냅샷에 한 건도 안 들어와 있는데

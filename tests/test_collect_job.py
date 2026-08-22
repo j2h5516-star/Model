@@ -159,11 +159,35 @@ def test_raw8k_cache_serves_second_read(tmp_dir="/tmp/claude-0/raw8k_test"):
         assert calls["n"] == 1, calls          # 두 번째는 캐시에서
         assert report["cache_hits"] == 1 and report["cache_downloads"] == 1, report
 
+        # ── 빈 결과 두 갈래 (145차) ────────────────────────────────
+        # ⓐ **예외가 났고** 비었다 → 일시적 망 실패일 수 있으므로 기억하지
+        #    않고 매번 다시 시도합니다 (원래 걱정 그대로 유지).
+        def fake_empty_error(filing, report=None):
+            calls["n"] += 1
+            sf._record_error(report, "시험", RuntimeError("망 실패"))
+            return "", "", False
+
+        sf._earnings_text = fake_empty_error
+        깨짐 = _FakeFiling("0001-23-000099")
+        보고 = sf.new_report("TT")
+        sf._earnings_text_cached("TT", 깨짐, 보고)
+        sf._earnings_text_cached("TT", 깨짐, 보고)
+        assert calls["n"] == 3, f"망 실패를 영구 박제했습니다: {calls}"
+
+        # ⓑ **예외 없이** 비었다 → 실적 문서가 아닌 8-K(인사·배당·계약).
+        #    다시 받아도 결과가 같으므로 기억해 접속을 줄입니다.
+        #    실측 근거: 비자(V)는 내려받기 0건인데 905초가 걸렸습니다 —
+        #    보이지 않는 접속이 그만큼 있었다는 뜻입니다.
         sf._earnings_text = fake_empty
-        empty = _FakeFiling("0001-23-000099")
-        sf._earnings_text_cached("TT", empty)
-        sf._earnings_text_cached("TT", empty)
-        assert calls["n"] == 3, calls          # 빈 결과는 매번 다시 시도
+        아님 = _FakeFiling("0001-23-000123")
+        보고2 = sf.new_report("TT")
+        sf._earnings_text_cached("TT", 아님, 보고2)
+        sf._earnings_text_cached("TT", 아님, 보고2)
+        assert calls["n"] == 4, f"실적 문서 아님을 기억하지 못했습니다: {calls}"
+        assert 보고2["negative_cached"] == 1, 보고2
+        assert 보고2["negative_hits"] == 1, 보고2
+        assert 보고2["cache_downloads"] == 0, "빈 결과를 내려받기로 세면 안 됩니다"
+        assert 보고2["fetch_attempts"] == 1, 보고2
     finally:
         sf._earnings_text = original_fetch
         cfg.RAW8K_CACHE_DIR = original_dir
@@ -432,6 +456,60 @@ def test_겹침배수_계산이_맞다():
     1에 가까우면 서로 밀어낸 것입니다 — 이 숫자로 다음 판단을 합니다."""
     일감합, 벽시계 = 600.0, 200.0
     assert round(일감합 / 벽시계, 2) == 3.0
+
+
+
+# ---------------------------------------------------------------------------
+# 보이지 않던 SEC 접속 (145차) — 성공만 세고 있었다
+# ---------------------------------------------------------------------------
+def test_접속_시도를_성공만이_아니라_전부_센다():
+    """실측: 비자(V)는 **내려받기 0건**으로 기록됐는데 905초가 걸렸습니다.
+    캐시 적중은 141건뿐이라 파싱으로는 설명이 안 됩니다(파싱은 건당 53ms).
+
+    원인: 받아 봤는데 실적 문서가 아니어서 **빈 결과**인 공시는
+    cache_downloads 를 올리지 않았습니다 — 접속은 했는데 한 건도 안
+    세어졌습니다. 그러면 SEC 요청 속도가 실제보다 낮게 보이고, 그 숫자로
+    일꾼 수를 정하면 위험합니다(v1 사고: 속도 무제한 → 403)."""
+    root = os.path.join(os.path.dirname(__file__), "..")
+    with open(os.path.join(root, "sec_fundamentals.py"), encoding="utf-8") as f:
+        코드 = f.read()
+    자리 = 코드.index('report["fetch_attempts"] = report.get("fetch_attempts", 0) + 1')
+    호출 = 코드.index("text, source, had_exhibit = _earnings_text(filing, report)")
+    assert 자리 < 호출, "접속 시도를 실제 접속 **전에** 세야 합니다"
+    with open(os.path.join(root, "collect_job.py"), encoding="utf-8") as f:
+        로봇 = f.read()
+    assert '"초당요청": round(시도 / 수집벽시계' in 로봇, \
+        "요청 속도를 내려받기가 아니라 **시도**로 재야 합니다"
+
+
+def test_음성캐시는_예외가_났으면_기억하지_않는다():
+    """빈 결과를 캐시하지 않던 원래 이유는 옳습니다 — **일시적 망 실패가
+    '이 공시엔 텍스트 없음'으로 영구 박제**되는 것을 막기 위해서입니다.
+
+    그래서 예외가 한 건이라도 났으면 기억하지 않고, 받아 보긴 했는데
+    실적 보도자료가 안 붙은 8-K(인사·배당·계약 공시)만 기억합니다."""
+    root = os.path.join(os.path.dirname(__file__), "..")
+    with open(os.path.join(root, "sec_fundamentals.py"), encoding="utf-8") as f:
+        코드 = f.read()
+    assert "if accession and not text and 에러후 == 에러전:" in 코드, \
+        "예외가 났을 때도 음성 캐시를 남기고 있습니다"
+    # 캐시 판을 올리면 그 기억이 통째로 무효화되어야 합니다
+    앞 = 코드.index("if accession and not text and 에러후 == 에러전:")
+    뒤 = 코드.index("if accession and text:", 앞)
+    assert "cfg.RAW8K_CACHE_VERSION" in 코드[앞:뒤], \
+        "음성 캐시에 판 번호가 없어 무효화할 수 없습니다"
+
+
+def test_음성캐시_적중은_따로_센다():
+    """기억이 실제로 쓰이는지(= 접속을 줄였는지) 봐야 효과를 압니다."""
+    root = os.path.join(os.path.dirname(__file__), "..")
+    with open(os.path.join(root, "sec_fundamentals.py"), encoding="utf-8") as f:
+        코드 = f.read()
+    assert 'report["negative_hits"]' in 코드, "음성 캐시 적중을 안 셉니다"
+    with open(os.path.join(root, "collect_job.py"), encoding="utf-8") as f:
+        로봇 = f.read()
+    for 칸 in ('"음성기억"', '"음성적중"', '"접속시도"'):
+        assert 칸 in 로봇, f"로봇 기록에 {칸} 가 없습니다"
 
 
 
