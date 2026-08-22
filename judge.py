@@ -319,6 +319,49 @@ def judge_newhigh_125(events: list[dict],
 
 
 
+# H26 표본 계획 (144차) — **몇 종목을 더해야 결론이 나나**
+# ---------------------------------------------------------------------------
+# H26 은 새 종목으로만 판정하므로, 새 종목이 적으면 표본이 모자라 영영
+# "판정 불가"에 머뭅니다. 그러면 확장을 해 놓고도 답을 못 얻습니다.
+# 그래서 **확장 전에** 필요한 종목 수를 계산합니다.
+#
+# ⚠️ 이 계산은 **탐색 참고**입니다(헌법 5조). 141차 탐색에서 나온 비율
+#    (신호 25.8% · 기준 17.4%)이 새 종목에서도 그대로 나온다는 **가정**에
+#    기댑니다. 그 가정이 틀리면(= 탐색이 우연이었다면) 어떤 표본 크기로도
+#    분리되지 않습니다 — 그것이 바로 이 검증이 답하려는 질문입니다.
+#    그러므로 이 숫자는 **계획용**이며, 판정에는 한 칸도 쓰지 않습니다.
+def sample_plan(events: list[dict], new_counts=(50, 100, 130, 150, 200),
+                p_signal: float = 25.8, p_base: float = 17.4) -> list[dict]:
+    """새 종목 수별로 예상 표본과 분리 여부를 돌려줍니다 (탐색 참고).
+
+    밀도(종목당 사건 수)는 **지금 가진 탐색 데이터**에서 잽니다 — 새
+    종목이 그와 비슷한 이력 길이를 가진다는 가정입니다.
+    """
+    pool = [e for e in events
+            if e.get("잣대") == "adj_eps" and e.get("초과125") is not None]
+    잣대종목 = {e["ticker"] for e in pool}
+    if not 잣대종목:
+        return []
+    신호수 = sum(1 for e in pool if e.get("newhigh_streak") == 1)
+    전체종목 = len({e["ticker"] for e in events}) or len(잣대종목)
+    잣대비율 = len(잣대종목) / 전체종목
+    신호밀도 = 신호수 / len(잣대종목)
+    기준밀도 = len(pool) / len(잣대종목)
+    out = []
+    for 새 in new_counts:
+        n_sig = round(새 * 잣대비율 * 신호밀도)
+        n_base = round(새 * 잣대비율 * 기준밀도)
+        낮, _ = wilson_interval(round(p_signal / 100.0 * n_sig), n_sig)
+        _, 높 = wilson_interval(round(p_base / 100.0 * n_base), n_base)
+        out.append({
+            "새종목": 새, "예상_신호n": n_sig, "예상_기준n": n_base,
+            "예상_하한": round(낮, 1), "예상_상한": round(높, 1),
+            "분리": 낮 > 높,
+        })
+    return out
+
+
+
 def _stats(group: list[dict]) -> dict:
     n = len(group)
     hits = sum(1 for e in group if e["excess"] >= me.SURGE_PP)
