@@ -111,13 +111,18 @@ def _capture_report() -> list[str]:
             out.append(f"시장 정배열 폭 {폭:.0f}% — H24 띠({띠[0]:.0f}~"
                        f"{띠[1]:.0f}%) {'안' if 안 else '밖'}")
 
+        # ⚠️ 여기서 세는 코드를 **따로 적으면 안 됩니다** (150차-F).
+        #    원래는 사건 목록을 직접 걸러 셌는데, 150차-B 에서 계기판이
+        #    "한 종목 한 줄"로 바뀌자 이 점검기만 옛 숫자(89건)를 말하고
+        #    앱은 새 숫자(78종목)를 말했습니다. 같은 저장소의 두 도구가
+        #    "관찰판"이라는 같은 말로 다른 수를 대는 상태였습니다.
+        #    계기판과 **같은 함수**를 부르면 어긋날 수가 없습니다.
+        import app
         완성 = sm.completion_events(ds)
-        cut = (date.fromisoformat(오늘) - timedelta(days=91)).isoformat()
-        최근 = [e for e in 완성 if e["day"] >= cut]
-        신호 = [e for e in 최근 if e.get("이격도") is not None
-               and e["이격도"] >= sm.H18_GAP_MIN]
-        out.append(f"관찰판: 최근 91일 완성 {len(최근)}건 · "
-                   f"이격도30%+ {len(신호)}건 (기준일 {오늘})")
+        행 = app.recent_completion_rows(완성, 오늘)
+        신호 = [r for r in 행 if r["신호"]]
+        out.append(f"관찰판: 최근 91일 완성 {len(행)}종목 · "
+                   f"이격도30%+ {len(신호)}종목 (기준일 {오늘})")
     except Exception as exc:
         out.append(f"⚠️ 포착 점검 실패: {type(exc).__name__}: {str(exc)[:120]}")
     return out
