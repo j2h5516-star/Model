@@ -180,6 +180,9 @@ def build_payload(ds: dict, verdict: dict | None, log: dict | None) -> dict:
         "완성전체": 종목판,
         "정배열유지": app.aligned_now_rows(ds),
         "섹터폭": 섹터폭,
+        # 같은 앱 안의 두 "정배열"이 갈리는 종목 (150차-D) — 화면이
+        # 서로 다른 말을 하는 것처럼 보이던 것을 설명하기 위한 사실.
+        "잣대차이": app.gauge_gap_rows(ds),
         "가설": hypothesis_rows(verdict),
         "건강": (log or {}).get("건강검진"),
         "실측": {

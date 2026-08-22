@@ -696,6 +696,65 @@ def test_신호종목판은_최신완성이_먼저오고_새완성표시가_붙�
     assert rows[0]["테마"] == "AI-광통신네트워크"
 
 
+def test_두_정배열_잣대가_갈리는_종목을_센다():
+    """(150차-D) 같은 앱 안에 "정배열"이 두 뜻으로 쓰입니다 — 일부러
+    그렇게 두었습니다(33차·39차 따로 등록).
+
+      · 폭  = 이평선 배열 **+ 주봉 종가 > 4주선**
+      · 완성 = 이평선 **배열만**
+
+    코드 주석에는 39차부터 적혀 있었지만 화면에는 한 글자도 없어서,
+    "반도체장비 폭 0%"와 "TER·ONTO 완성"이 서로 모순처럼 보였습니다.
+    이 함수는 지금 갈리는 종목을 세어 화면이 설명할 수 있게 합니다.
+    """
+    import sector_model as sm
+
+    def 주가(closes):
+        # 넉넉한 주 수를 만들어 52주선까지 잽니다 (하루 = 한 주 격자로 충분)
+        from datetime import date, timedelta
+        d = date(2020, 1, 6)
+        dates = []
+        for _ in closes:
+            dates.append(d.isoformat())
+            d += timedelta(days=7)
+        return {"dates": dates, "close": list(closes)}
+
+    # 꾸준히 올라 이평선이 정렬된 뒤, 마지막 주만 살짝 눌린 종목
+    오름 = [100.0 + i * 2.0 for i in range(120)]
+    눌림 = 주가(오름[:-1] + [오름[-2] - 25.0])
+    # 눌리지 않고 계속 오른 종목
+    그대로 = 주가(오름)
+
+    ds = {"benchmark": "SPY",
+          "tickers": ["눌린", "정상"],
+          "prices": {"눌린": 눌림, "정상": 그대로,
+                     "SPY": 그대로}}
+
+    # 먼저 전제를 확인합니다 — 전제가 깨지면 이 시험은 헛돕니다
+    assert sm.aligned_flags_chart(눌림)[max(sm.aligned_flags_chart(눌림))] is True, \
+        "눌린 종목이 완성 잣대로도 정배열이 아닙니다 — 시험 데이터가 잘못됐습니다"
+    assert sm.aligned_flags(눌림)[max(sm.aligned_flags(눌림))] is False, \
+        "눌린 종목이 폭 잣대로도 정배열입니다 — 시험 데이터가 잘못됐습니다"
+
+    got = app.gauge_gap_rows(ds)
+    assert got["종목들"] == ["눌린"], got
+    assert got["종목수"] == 1, got
+
+
+def test_장세화면이_두_잣대의_차이를_말한다():
+    """(150차-D) 셈만 하고 화면이 안 적으면 주인은 여전히 두 탭이
+    모순된다고 봅니다 — 값이 담기는 것과 그려지는 것을 둘 다 봅니다."""
+    root = os.path.join(os.path.dirname(__file__), "..")
+    with open(os.path.join(root, "web_build.py"), encoding="utf-8") as f:
+        assert "app.gauge_gap_rows(" in f.read(), \
+            "웹앱 데이터에 잣대 차이가 담기지 않습니다"
+    with open(os.path.join(root, "docs", "app.js"), encoding="utf-8") as f:
+        js = f.read()
+    assert "잣대차이" in js, "장세 화면이 잣대 차이를 그리지 않습니다"
+    for 조각 in ("서로 다른 잣대", "주봉 종가", "틀린 것이 아닙니다"):
+        assert 조각 in js, f"화면 설명에 '{조각}' 가 없습니다"
+
+
 def test_한_종목은_관찰판에_한_줄만_나온다():
     """(150차) 정배열이 깨졌다 다시 붙기를 반복하면 같은 종목이 여러 번
     완성합니다. 그것을 그대로 세면 관찰판이 '여러 종목이 몰렸다'고

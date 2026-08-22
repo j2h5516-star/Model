@@ -948,6 +948,37 @@ def group_member_rows(묶음: str, 완성사건: list[dict],
     return rows
 
 
+def gauge_gap_rows(ds: dict) -> dict:
+    """두 '정배열' 잣대가 지금 갈리는 종목 (150차-D).
+
+    같은 앱 안에 "정배열"이라는 말이 두 번 나오는데 **뜻이 다릅니다** —
+    일부러 그렇게 두었습니다. 한쪽에 맞추면 사전 등록이 무너집니다.
+
+      · 폭  (33차 등록, `aligned_flags`)       — 이평선 배열 **+ 주봉 종가 > 4주선**
+      · 완성(39차 등록, `aligned_flags_chart`) — 이평선 **배열만**
+
+    그래서 차트로는 정배열인데 주가가 살짝 눌린 종목은 완성에는 세어지고
+    폭에는 안 세어집니다. 코드 주석에는 39차부터 적혀 있었지만 **화면에는
+    한 글자도 없어서**, 주인이 보기에 두 탭이 서로 다른 말을 하는 것처럼
+    보였습니다(실측: 반도체장비 폭 0% ↔ 홈 화면 TER·ONTO 완성).
+
+    값을 만들지 않습니다 — 지금 갈리는 종목을 세어 적을 뿐입니다.
+    """
+    갈린 = []
+    for ticker in ds.get("tickers") or []:
+        prices = (ds.get("prices") or {}).get(ticker)
+        if not prices or not prices.get("dates"):
+            continue
+        폭깃발 = sm.aligned_flags(prices)
+        완성깃발 = sm.aligned_flags_chart(prices)
+        if not 폭깃발 or not 완성깃발:
+            continue
+        if 완성깃발[max(완성깃발)] and not 폭깃발[max(폭깃발)]:
+            갈린.append(ticker)
+    갈린.sort()
+    return {"종목수": len(갈린), "종목들": 갈린}
+
+
 def aligned_now_rows(ds: dict) -> list[dict]:
     """지금(마지막 주) 주봉 정배열을 **유지 중**인 종목 — 이격도순 (130차).
 
