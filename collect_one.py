@@ -174,6 +174,8 @@ def 단위진단(ticker: str, progress=print) -> dict:
 
     본것 = 0
     사례: list[dict] = []
+    매출사례: list[dict] = []
+    매출요약: dict[str, int] = {}
     요약 = {"매출만 단위 찾음": 0, "둘 다 찾음": 0, "둘 다 못 찾음": 0,
            "영업이익만 찾음": 0, "표기가 문서에 아예 없음": 0}
     for 이름 in sorted(os.listdir(폴더)):
@@ -189,9 +191,31 @@ def 단위진단(ticker: str, progress=print) -> dict:
         본것 += 1
         rev위치 = 라벨위치(text, sf.LABELS_REVENUE)
         op위치 = 라벨위치(text, sf.LABELS_NONGAAP_OP_INCOME)
+        rev단위 = sf._detect_table_unit(text, rev위치) if rev위치 is not None else None
+
+        # **매출만 따로** 셉니다 (150차-AC). 예전에는 논갭 영업이익 라벨이
+        # 없으면 그 문서를 통째로 건너뛰었습니다. 그래서 **은행처럼 논갭을
+        # 발표하지 않는 회사는 한 건도 안 보였습니다** — GS 200건 전부.
+        # 실물: GS 분기 매출이 15,520(실제 155억)으로 들어와 있는데,
+        # 매출이 어느 단위로 읽혔는지 볼 계기가 아예 없었습니다.
+        if rev위치 is not None:
+            매출요약["매출 라벨 있음"] = 매출요약.get("매출 라벨 있음", 0) + 1
+            표 = f"매출 단위 ×{rev단위:,}" if rev단위 and rev단위 > 1 else "매출 단위 못 찾음"
+            매출요약[표] = 매출요약.get(표, 0) + 1
+            if len(매출사례) < 4 and (not rev단위 or rev단위 == 1):
+                가까운말R, 거리R = 가장가까운단위(text, rev위치)
+                매출사례.append({
+                    "문서": 이름,
+                    "매출_단위배수": rev단위,
+                    "가장가까운표기": 가까운말R,
+                    "그 표기까지_글자수": 거리R,
+                    "창_밖인가": (거리R > 3000) if 거리R is not None else None,
+                    "매출_둘레": text[max(0, rev위치 - 80):rev위치 + 180]
+                                .replace("\n", " ")[:240],
+                })
+
         if op위치 is None:
             continue
-        rev단위 = sf._detect_table_unit(text, rev위치) if rev위치 is not None else None
         op단위 = sf._detect_table_unit(text, op위치)
         가까운말, 거리 = 가장가까운단위(text, op위치)
 
@@ -236,8 +260,11 @@ def 단위진단(ticker: str, progress=print) -> dict:
 
     progress(f"[단위진단] 원문 {본것}건 — " +
              " · ".join(f"{k} {v}" for k, v in 요약.items() if v))
+    progress("[단위진단·매출] " + (" · ".join(f"{k} {v}" for k, v in 매출요약.items())
+                                or "매출 라벨이 있는 문서가 없습니다"))
     맞댐 = xbrl_대_보도자료(ticker, progress=progress)
-    return {"본 문서": 본것, "요약": 요약, "사례": 사례, "XBRL맞댐": 맞댐}
+    return {"본 문서": 본것, "요약": 요약, "사례": 사례,
+            "매출요약": 매출요약, "매출사례": 매출사례, "XBRL맞댐": 맞댐}
 
 
 def xbrl_대_보도자료(ticker: str, progress=print) -> dict:
