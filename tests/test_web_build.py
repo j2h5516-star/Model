@@ -286,6 +286,81 @@ def test_델타_흐름이_종목화면에_실린다():
         f"'이익이 0'으로 읽힙니다: {몸통[:200]}")
 
 
+def test_끊긴_구간을_건너뛴_폭에_표시를_단다():
+    """(150차-P) 주인이 CRDO 에서 "폭 3700%"를 봤습니다.
+
+    직전 정점 0.09(2024-05-29)와 지금 3.42(2026-06-01) 사이 **2년의 TTM 이
+    전부 없어서**, 여러 분기에 걸쳐 오른 것이 한 번에 뛴 것처럼 계산된
+    값입니다. 산수는 맞지만 그대로 읽으면 거짓입니다 — 인수인계 4장 7번
+    "끊긴 이력을 이어붙이지 마라"와 같은 병입니다.
+
+    ⚠️ `신고점폭` **계산은 고치지 않습니다** — H22·H22b 의 사전 등록된
+    신호값입니다(헌법 8조). 화면 표시만 답니다.
+    """
+    import dataset
+    import sector_model as sm
+    from datetime import date, timedelta
+
+    d = date(2023, 1, 6); 날들, 종가 = [], []
+    for i in range(200):
+        날들.append(d.isoformat()); 종가.append(100.0 + i); d += timedelta(days=7)
+
+    행 = []
+    나 = date(2023, 2, 15)
+    # 앞: 또박또박 8분기 (정점을 만든다)
+    for i in range(8):
+        행.append({"filing_date": (나 - timedelta(days=31)).isoformat(),
+                   "announced_date": 나.isoformat(),
+                   "period_end": (나 - timedelta(days=31)).isoformat(),
+                   "period_label": f"A{i}", "revenue": 1e9 + i, "op_income": 1e8,
+                   "adj_eps": 1.0, "adjusted_ebitda": None, "gaap_eps": 1.0,
+                   "gross_margin_pct": 50.0, "gaap_eps_xbrl": None,
+                   "revenue_xbrl": None, "gross_margin_pct_xbrl": None})
+        나 += timedelta(days=91)
+    # 여기서 **두 해를 건너뛴다** (분기가 통째로 빠진 모양)
+    나 += timedelta(days=730)
+    # ⚠️ 값을 5.0 → 6.0 처럼 급하게 올리면 **YTD 오염 검사가 지웁니다**
+    #    ("직전 4분기 합과 거의 같고 중앙값의 N배" → 누적값으로 보고 버림).
+    #    한 칸이 지워지면 구간이 또 쪼개져 TTM 이 아예 안 생깁니다.
+    #    두 번 걸렸습니다 — 앞 구간 값이 너무 작으면 끊김 뒤 "직전 4분기
+    #    합"이 새 값과 비슷해져 또 걸립니다. 앞 1.0 · 뒤 2.0~2.8 로 둡니다.
+    for i in range(5):
+        행.append({"filing_date": (나 - timedelta(days=31)).isoformat(),
+                   "announced_date": 나.isoformat(),
+                   "period_end": (나 - timedelta(days=31)).isoformat(),
+                   "period_label": f"B{i}", "revenue": 2e9 + i, "op_income": 2e8,
+                   "adj_eps": 2.0 + i * 0.2, "adjusted_ebitda": None,
+                   "gaap_eps": 2.0 + i * 0.2,
+                   "gross_margin_pct": 50.0, "gaap_eps_xbrl": None,
+                   "revenue_xbrl": None, "gross_margin_pct_xbrl": None})
+        나 += timedelta(days=91)
+
+    snap = {"benchmark": "SPY", "tickers": ["SPY", "GAP"],
+            "eps": {"SPY": [], "GAP": 행},
+            "prices": {"SPY": {"dates": 날들, "close": 종가},
+                       "GAP": {"dates": 날들, "close": 종가}}}
+    ds = dataset.build(snap)
+    한종목 = wb.build_ticker(ds, "GAP", sm.completion_events(ds))
+
+    폭있는 = [s for s in 한종목["실적"] if s["신고점폭"] is not None]
+    assert 폭있는, "신고점폭이 하나도 안 잡혔습니다 — 시험 데이터가 잘못됐습니다"
+    assert any(s["끊김너머"] for s in 폭있는), (
+        f"끊긴 구간을 건너뛴 폭에 표시가 안 붙었습니다: {폭있는}")
+
+    # 분기가 통째로 빠진 자리를 화면 자료가 알고 있는가
+    구간 = 한종목["빠진구간"]
+    assert 구간, "빠진 분기 구간을 못 찾았습니다"
+    assert any(g["일수"] > 400 for g in 구간), 구간
+
+    root = os.path.join(os.path.dirname(__file__), "..")
+    with open(os.path.join(root, "docs", "app.js"), encoding="utf-8") as f:
+        js = f.read()
+    # 글자만 있으면 헛돕니다(150차-J·L) — **표에 실제로 붙는지** 봅니다
+    assert "s.끊김너머 ?" in js, "표가 끊김 표시를 조건으로 안 씁니다"
+    assert "d.빠진구간" in js, "화면이 빠진 분기를 말하지 않습니다"
+    assert "빠진 구간을 건너뛰어" in js, "설명 문구가 없습니다"
+
+
 def test_값이_올라도_성장이_꺾이면_둔화로_표시한다():
     """(150차-M, 주인 지적) "1-10-20 이면 올라갔다 내려가야지 — 10배에서
     2배가 된 거니까."

@@ -219,15 +219,43 @@ def build_ticker(ds: dict, ticker: str, 완성사건: list[dict]) -> dict:
     최근 = {r["종목"]: r for r in app.recent_completion_rows(
         완성사건, ds["prices"][ds["benchmark"]]["dates"][-1])}
 
+    # ⚠️ 신고점폭이 **끊긴 구간을 건너뛰어** 계산됐는지 표시합니다(150차-P).
+    #
+    # 주인이 CRDO 에서 "폭 3700%"를 봤습니다. 직전 정점 0.09(2024-05-29)와
+    # 지금 3.42(2026-06-01) 사이 **2년의 TTM 이 전부 없어서**, 점진적으로
+    # 오른 것이 한 번에 뛴 것처럼 계산된 값입니다. 산수는 맞지만 **한
+    # 분기에 그만큼 뛴 것으로 읽히면 거짓**입니다.
+    #
+    # 인수인계 4장 7번이 금지한 "끊긴 이력을 이어붙이기"와 같은 병입니다.
+    # 전 유니버스 실측: 폭이 계산된 2,124칸 중 **89칸**이 이 모양입니다.
+    #
+    # 계산은 **고치지 않습니다** — `신고점폭`은 H22·H22b 의 사전 등록된
+    # 신호값입니다. 표시만 답니다(헌법 8조: 결과를 보고 규칙을 고치지 말 것).
     실적 = []
+    앞ttm = None
     for s in states[-24:]:
+        폭 = s["신고점폭"]
         실적.append({
             "발표일": s["announced"],
             "ttm": _round(s["ttm"], 3),
             "신고점": bool(s["new_high"]),
             "첫돌파": s["newhigh_streak"] == 1,
-            "신고점폭": _round(s["신고점폭"], 1),
+            "신고점폭": _round(폭, 1),
+            # 직전 발표에 TTM 이 없었으면 = 끊긴 구간을 건너뛴 폭
+            "끊김너머": bool(폭 is not None and 앞ttm is None),
         })
+        앞ttm = s["ttm"]
+
+    # 분기가 **통째로 빠진** 자리 — 화면에는 그냥 없어서 안 보입니다(150차-P).
+    # 발표일 간격이 정상(약 91일)의 1.4배를 넘으면 사이에 분기가 빠진 것.
+    빠진구간 = []
+    _날 = [str(r["announced_date"])[:10] for r in quarters
+          if r.get("announced_date")]
+    for i in range(1, len(_날)):
+        _간격 = (date.fromisoformat(_날[i]) - date.fromisoformat(_날[i - 1])).days
+        if _간격 > 130:
+            빠진구간.append({"앞": _날[i - 1], "뒤": _날[i], "일수": _간격,
+                          "빠진분기": max(1, round(_간격 / 91) - 1)})
 
     # 델타 흐름 (150차-L, 주인 요청) — 잣대 분기값이 직전 분기보다 올랐나.
     # **TTM 과 다른 것을 잰다**: 델타는 분기 대 분기, TTM 은 네 분기 합이라
@@ -295,6 +323,7 @@ def build_ticker(ds: dict, ticker: str, 완성사건: list[dict]) -> dict:
         "완성이력": 이력,
         "델타흐름": 델타흐름,
         "실적": 실적,
+        "빠진구간": 빠진구간,
     }
 
 
