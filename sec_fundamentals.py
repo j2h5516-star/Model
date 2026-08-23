@@ -76,6 +76,27 @@ _UNIT_PATTERNS = [
     # 입니다. 괄호가 **단위 낱말로 시작하면** 그것은 단위 선언입니다.
     (re.compile(r"\(\s*\$\s*([MBK])\s*\)"), None),
     (re.compile(rf"\(\s*\$?\s*{_SCALE_WORDS}\b", re.I), None),
+    # 150차-AF — 위의 것들은 전부 **괄호**를 요구합니다. 그런데 단위를
+    # 괄호 없이 **표 머리 한 줄로** 적는 회사가 많습니다. 실물 GS:
+    #
+    #     Segment Net Revenues (unaudited)
+    #     $ in millions                     ← 괄호가 없다
+    #     ...
+    #     Net revenues            12,738
+    #
+    # 그래서 GS 매출이 127억이 아니라 **12,738 달러**로 들어왔습니다
+    # (150차-AC 에서 화면 경보로만 표시하고 못 고쳤던 그 값입니다).
+    #
+    # 저장소 원문 1,443건 실측:
+    #   "$ in millions" 꼴 (괄호 없음)   194곳 / 21종목 (GS·FITB·DIS·DE·KEY…)
+    #   줄머리 맨 "In millions" 꼴       181곳 / 14종목 (HPE·EOG·LOW·HD·CVS…)
+    #
+    # 둘째 것을 **줄머리로 한정**한 이유: 문장 한가운데의 "in millions" 는
+    # 서술문("costs in millions of dollars")일 수 있지만, 줄이 그 말로
+    # 시작하면 그것은 표 머리입니다. 실측으로 걸린 서로 다른 줄 51가지가
+    # 전부 단위 선언이었고 서술문은 한 건도 없었습니다.
+    (re.compile(rf"\$\s*in\s+{_SCALE_WORDS}\b", re.I), None),
+    (re.compile(rf"^[ \t]*in\s+{_SCALE_WORDS}\b", re.I | re.M), None),
 ]
 # 잡아낸 낱말 → 배수 (약자 M·B·K 포함 — 87차)
 _SCALE_MULTIPLIER = {
@@ -580,6 +601,26 @@ _WHOLE_REVENUE_RE = re.compile(
 )
 
 LABELS_REVENUE = [
+    # 150차-AF — **"Total net revenues" 를 맨 앞에 둡니다.**
+    #
+    # 은행·증권사는 부문 표를 먼저 싣고 합계를 뒤에 놓습니다. 실물 GS:
+    #     Net revenues        12,738   ← Global Banking & Markets 부문
+    #     Net revenues         4,078   ← Asset & Wealth Management 부문
+    #     Net revenues           411   ← Platform Solutions 부문
+    #     Total net revenues  $17,227  ← 진짜 전체 매출
+    # 이름과 값 사이가 전부 공백뿐이라 거리가 똑같이 0 이고, 그러면
+    # **먼저 나온 것**이 이깁니다 — 즉 맨 위 부문이 전체 매출 자리에
+    # 들어갔습니다(GS 매출이 172억이 아니라 127억).
+    #
+    # 종전 맨 앞 이름 "total revenues" 는 사이에 "net" 이 끼어 있어
+    # "Total net revenues" 에 안 걸립니다. 그 한 낱말 때문에 놓쳤습니다.
+    # 원문 1,443건 실측 — "Total net revenues" 215곳/17종목(SCHW·GS·EXTR·
+    # ROKU·PYPL·JPM…), "Total net sales" 53곳/11종목(GNRC·HD·PG·CL…).
+    #
+    # 이름을 더 좁게 적은 쪽이 언제나 더 확실합니다. 거리가 같을 때
+    # 문서 순서로 이기게 두지 말고, **더 좁은 이름을 먼저** 묻습니다.
+    r"total\s+net\s+revenues?",
+    r"total\s+net\s+sales",
     r"total\s+revenues?",
     r"net\s+revenues?",
     r"^\s*revenues?\b",

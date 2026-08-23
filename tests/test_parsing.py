@@ -515,6 +515,51 @@ def test_unit_written_into_the_label_is_recognised():
         assert sf._detect_table_unit(text, len(text)) == expected, header
 
 
+def test_unit_declared_without_parentheses_is_recognised():
+    """단위를 **괄호 없이 표 머리 한 줄**로 적는 형식도 알아봐야 합니다.
+
+    실물 (150차-AF, GS):
+        Segment Net Revenues (unaudited)
+        $ in millions                     ← 괄호가 없다
+        ...
+        Net revenues            12,738
+    이 표기를 못 알아봐서 GS 매출이 127억이 아니라 **12,738 달러**로
+    들어왔습니다. 150차-AC 에서 "고칠 수 없다"고 화면 경보로만 띄웠던
+    그 값입니다.
+
+    저장소 원문 1,443건 실측 — "$ in millions" 꼴 194곳/21종목,
+    줄머리 맨 "In millions" 꼴 181곳/14종목.
+    """
+    cases = {
+        "$ in millions": 1_000_000,
+        "$ in thousands": 1_000,
+        "In millions": 1_000_000,
+        "In millions, except per share amounts": 1_000_000,
+        "in thousands": 1_000,
+        "In Millions, Except Per Share and Percentage Data": 1_000_000,
+    }
+    for header, expected in cases.items():
+        text = header + "\nNon-GAAP operating income   250,000\n"
+        assert sf._detect_table_unit(text, len(text)) == expected, header
+
+
+def test_bare_in_millions_counts_only_at_the_start_of_a_line():
+    """줄 **한가운데**의 "in millions" 는 단위 선언이 아니라 서술문입니다.
+
+    이 방어막이 없으면 "reported costs in millions of dollars" 같은
+    문장이 표 머리로 오인돼, 그 뒤 숫자가 100만 배로 부풀어 오릅니다.
+    줄머리로 한정한 근거는 실측입니다 — 걸린 서로 다른 줄 51가지가
+    전부 표 머리였고 서술문은 한 건도 없었습니다.
+    """
+    문장 = "The company reported costs in millions of dollars last year."
+    text = 문장 + "\nNon-GAAP operating income   250,000\n"
+    assert sf._detect_table_unit(text, len(text)) == 1
+
+    # 달러 기호가 붙은 "$ in millions" 는 줄 한가운데라도 단위 선언입니다
+    text2 = "Segment results $ in millions\nNon-GAAP operating income   250,000\n"
+    assert sf._detect_table_unit(text2, len(text2)) == 1_000_000
+
+
 def test_share_count_unit_is_not_treated_as_a_money_unit():
     """"Shares (M)" 는 **주식 수**의 단위지 금액의 단위가 아닙니다.
 
@@ -587,6 +632,33 @@ def test_total_and_net_revenue_are_still_read():
     for 이름 in ("Total revenue", "Net revenues", "Net sales", "Revenue"):
         글 = f"(in thousands)\n{이름}      $ 500,000\n"
         assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 500_000_000, 이름
+
+
+def test_segment_rows_do_not_beat_the_total_row_in_a_bank_table():
+    """부문 표에서 **합계 줄**을 골라야 합니다 (150차-AF, 실물 GS·AMZN).
+
+    은행·증권사는 부문을 먼저 싣고 합계를 뒤에 놓습니다. 이름과 값 사이가
+    전부 공백이라 거리가 똑같이 0 이고, 그러면 **먼저 나온 것**이 이깁니다 —
+    맨 위 부문이 전체 매출 자리에 들어갔습니다.
+
+    실물 GS 2026년 1분기: 저장된 매출이 부문값 12,738 이었고 진짜 전체는
+    17,227 입니다. AMZN 도 같은 이유로 728·20,576 같은 값이 들어와 있었습니다
+    (참값 1,556억·1,677억).
+    """
+    글 = (
+        "$ in millions\n"
+        "Net revenues                    12,738\n"
+        "Net revenues                     4,078\n"
+        "Total net revenues             $17,227\n"
+    )
+    assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 17_227_000_000
+
+    글2 = (
+        "(in millions)\n"
+        "Net product sales               60,000\n"
+        "Total net sales                155,667\n"
+    )
+    assert sf.find_labeled_value(글2, sf.LABELS_REVENUE) == 155_667_000_000
 
 
 def test_annual_figures_are_not_read_as_quarterly():
