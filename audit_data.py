@@ -279,6 +279,10 @@ def one_line(quarters: dict) -> str:
 WANTED_PATH = "data/measure/wanted_raw.json"
 WANTED_LIMIT = 95      # 틀린 값(바깥 자·월가·이웃 튐)에게 주는 자리 (150차: 60→95)
 HOLE_QUOTA = 15        # 잣대 구멍에게 **따로 떼어 두는** 자리 (135차, 아래 설명)
+FRESH_HOLE_QUOTA = 12  # 그중 **최신 구멍**에게 다시 떼어 두는 자리 (150차-K)
+                       # — "구멍 많은 종목부터"로만 뽑으니 15칸이 전부
+                       #   2017~2021년 것이었고 최근 1년 구멍은 0건이었습니다.
+                       #   최신 구멍은 지금의 TTM·판정을 막으므로 더 급합니다.
 
 # 150차 — 재료별 몫. 실측해 보니 "월가와 갈린 칸" 재료가 **자기 몫에서
 # 이미 잘려** 있었습니다:
@@ -345,7 +349,8 @@ def write_wanted(quarters: dict, path: str = WANTED_PATH,
                      wanted_raw_filings(quarters)[:NEIGHBOR_QUOTA],
                      limit=WANTED_LIMIT)
     목록 = merge_wanted(앞, tail or [],
-                      limit=WANTED_LIMIT + SCALE_QUOTA + HOLE_QUOTA)
+                      limit=(WANTED_LIMIT + SCALE_QUOTA
+                             + FRESH_HOLE_QUOTA + HOLE_QUOTA))
     with open(path, "w", encoding="utf-8") as f:
         json.dump({
             "설명": ("'원문이 필요한 공시' 목록입니다. 세 곳에서 옵니다 — "
@@ -379,11 +384,25 @@ def write_wanted(quarters: dict, path: str = WANTED_PATH,
 _HOLE_PER_TICKER_MAX = 2      # 한 종목이 목록을 다 차지하지 않게
 
 
-def wanted_from_holes(quarters: dict, limit: int = 60) -> list[dict]:
+def wanted_from_holes(quarters: dict, limit: int = 60,
+                      newest_first: bool = False) -> list[dict]:
     """잣대 값이 **구간 안쪽에서 빈** 칸의 원문을 부탁합니다.
 
     앞뒤 바깥(아직 상장 전·아직 발표 전)의 빈칸은 정상이므로 세지
     않습니다 — 값이 있는 첫 분기와 마지막 분기 **사이**만 봅니다.
+
+    `newest_first=True` 면 **최신 구멍부터** 고릅니다 (150차-K).
+    왜 따로 필요한가 — 기본 규칙("구멍 많은 종목부터")으로 15칸을
+    채워 보니 **전부 2017~2021년 것**이었고 최근 1년 구멍은 0건이었습니다.
+    최신 구멍은 영원히 차례가 안 옵니다. 그런데 최신 구멍이 더 급합니다:
+
+      · 한 분기가 비면 그 분기가 들어가는 **TTM 네 칸이 전부 막힙니다**
+        — 즉 지금 화면의 실적 이력과 **지금 판정**을 막습니다.
+      · 2018년 구멍은 이미 끝난 측정에만 걸립니다.
+
+    실물: 주인이 화면 맨 위에서 보는 신호 1·2위 LITE·ZETA 의 최신
+    분기가 비어 있는데(LITE 25Q4·26Q4 · ZETA 24Q4·25Q1), 구멍이
+    1~2개뿐이라 순위에서 밀려 부탁 목록에 **한 건도 못 들어갔습니다**.
     """
     import measure_engine as _me
 
@@ -400,16 +419,32 @@ def wanted_from_holes(quarters: dict, limit: int = 60) -> list[dict]:
         첫, 끝 = 있는[0].get("announced_date"), 있는[-1].get("announced_date")
         if not 첫 or not 끝:
             continue
+        # ⚠️ 원래는 `첫 < 날 < 끝` 이었습니다 — **값이 있는 마지막 분기
+        #    뒤**의 빈칸을 "아직 발표 전"으로 보고 뺐습니다. 그런데
+        #    **발표일이 있는 행은 이미 발표된 것**입니다. 못 읽었을 뿐입니다.
+        #    실측(150차-K): 그렇게 가려진 꼬리 구멍이 **197건 · 29종목**이고,
+        #    최신 15건이 전부 2026년 7~8월 — 즉 **가장 최근 분기**였습니다.
+        #    가장 최근 분기가 비면 지금의 TTM·신고점·첫돌파가 통째로 막힙니다.
+        #    (주인이 화면에서 LITE 26Q4 가 "—"인 것을 보고 물어 발견.)
+        #    앞쪽 바깥(값이 처음 나오기 전)은 그대로 뺍니다 — 상장 전이거나
+        #    그 지표를 아직 안 내던 때라 정상입니다.
         빈칸 = [str(r["announced_date"])[:10] for r in rows
                 if r.get("announced_date") and r.get(잣대) is None
-                and 첫 < r["announced_date"] < 끝]
+                and 첫 < r["announced_date"]]
         if 빈칸:
             모음.append((ticker, 잣대, 빈칸))
 
     # ② **구멍이 많은 종목부터**. 알파벳 순으로 자르면 앞 글자 종목만
     #    영원히 서비스받고 UCTT·ZETA 는 차례가 오지 않습니다(이 목록은
     #    날마다 똑같이 다시 만들어지므로 순서 편향이 굳어집니다).
-    모음.sort(key=lambda t: (-len(t[2]), t[0]))
+    #    다만 이 규칙만으로는 **최신 구멍이 영원히 밀립니다** — 그래서
+    #    newest_first 갈래를 따로 둡니다(150차-K, 위 설명).
+    if newest_first:
+        # 종목별로 **가장 최근 구멍**을 대표로 삼아 늘어놓습니다.
+        모음.sort(key=lambda t: (max(t[2]), t[0]), reverse=True)
+        모음 = [(티, 잣, sorted(빈, reverse=True)) for 티, 잣, 빈 in 모음]
+    else:
+        모음.sort(key=lambda t: (-len(t[2]), t[0]))
 
     out: list[dict] = []
     for ticker, 잣대, 빈칸 in 모음:
@@ -525,11 +560,15 @@ def refresh_wanted(quarters: dict, vendor: dict | None,
     # 뒤 재료의 자리를 먹어 뒤쪽 배관이 영원히 안 돕니다 (135차에 실측한
     # 함정 — 구멍이 0건이었습니다).
     자릿수 = wanted_from_scale(quarters)[:SCALE_QUOTA]
+    # 최신 구멍을 **먼저** 놓습니다 (150차-K). merge_wanted 가 (종목,발표일)
+    # 로 겹침을 지우므로 아래 '구멍'과 중복돼도 한 번만 실립니다.
+    신선구멍 = wanted_from_holes(quarters, newest_first=True)[:FRESH_HOLE_QUOTA]
     구멍 = wanted_from_holes(quarters)[:HOLE_QUOTA]
-    count = write_wanted(quarters, path=path, extra=바깥, tail=자릿수 + 구멍)
+    count = write_wanted(quarters, path=path,
+                         extra=바깥, tail=자릿수 + 신선구멍 + 구멍)
     progress(f"원문 부탁 목록 {count}건 갱신 "
              f"(바깥 자 재료 {len(바깥)}건 · 자릿수 어긋남 {len(자릿수)}건 · "
-             f"잣대 구멍 후보 {len(구멍)}건)")
+             f"최신 구멍 {len(신선구멍)}건 · 잣대 구멍 후보 {len(구멍)}건)")
     return count
 
 

@@ -619,6 +619,90 @@ def test_이웃튐_재료는_제_몫만_먹는다():
         f"({audit_data.NEIGHBOR_QUOTA})을 넘어 다른 재료의 자리를 먹습니다")
 
 
+def _꼬리구멍종목(티커: str) -> dict:
+    """마지막에 값이 있는 분기 **뒤에** 발표는 했는데 못 읽은 칸이 있는 종목.
+
+    150차-K 에 실측한 모양 — LITE 26Q4(2026-08-11)가 이랬습니다.
+    """
+    행 = []
+    for i in range(12):                       # 값이 있는 12분기
+        행.append({"announced_date": f"20{23 + i // 4}-{1 + i % 4 * 3:02d}-15",
+                   "period_end": f"20{23 + i // 4}-{2 + i % 4 * 3:02d}-28",
+                   "period_label": f"Q{i}", "adj_eps": 1.0 + i * 0.1})
+    # 그 뒤에 **발표일은 있는데 값이 없는** 최신 분기 하나
+    행.append({"announced_date": "2026-08-11", "period_end": "2026-06-30",
+               "period_label": "최신", "adj_eps": None})
+    return {티커: 행}
+
+
+def test_마지막_값_뒤의_구멍도_센다():
+    """(150차-K) 주인이 화면에서 "실적이 왜 —지?"라고 물어 드러난 결함.
+
+    원래 그물은 `첫 < 날 < 끝` 만 봐서, **값이 있는 마지막 분기 뒤**의
+    빈칸을 "아직 발표 전"으로 보고 뺐습니다. 그런데 **발표일이 있는 행은
+    이미 발표된 것**입니다 — 못 읽었을 뿐입니다.
+
+    실측: 그렇게 가려진 꼬리 구멍이 197건·29종목이고 최신 15건이 전부
+    2026년 7~8월이었습니다. **가장 최근 분기**가 비면 지금의 TTM·신고점·
+    첫돌파가 통째로 막힙니다.
+    """
+    quarters = _꼬리구멍종목("TAIL")
+    후보 = audit_data.wanted_from_holes(quarters, limit=100)
+    날짜들 = {r["발표일"] for r in 후보 if r["종목"] == "TAIL"}
+    assert "2026-08-11" in 날짜들, (
+        f"마지막 값 뒤의 구멍을 못 셉니다 — 가장 최근 분기가 영원히 "
+        f"부탁 목록에 못 듭니다: {sorted(날짜들)}")
+
+
+def test_첫_값_앞의_빈칸은_여전히_안_센다():
+    """(150차-K) 꼬리를 열어 주되 **앞쪽은 그대로 닫아 둡니다** — 상장 전
+    이거나 그 지표를 아직 안 내던 때라 빈 것이 정상입니다."""
+    행 = [{"announced_date": "2020-02-15", "period_label": "옛날",
+          "adj_eps": None}]                    # 값이 나오기 **전**
+    행 += _꼬리구멍종목("X")["X"]
+    후보 = audit_data.wanted_from_holes({"HEAD": 행}, limit=100)
+    날짜들 = {r["발표일"] for r in 후보}
+    assert "2020-02-15" not in 날짜들, (
+        f"첫 값 앞의 빈칸까지 셉니다 — 상장 전은 정상입니다: {sorted(날짜들)}")
+
+
+def test_최신_구멍이_제_몫을_받는다():
+    """(150차-K) "구멍 많은 종목부터"로만 뽑으니 실데이터 15칸이 **전부
+    2017~2021년 것**이었고 최근 1년 구멍은 **0건**이었습니다. 최신 구멍은
+    영원히 차례가 안 옵니다 — 그런데 지금 판정을 막는 것은 최신 쪽입니다.
+
+    손으로 만든 재료가 아니라 **로봇이 부르는 자리가 적어 낸 파일**을
+    봅니다(135·136차에 배운 배선 증명).
+    """
+    import json
+    import tempfile
+
+    quarters = {}
+    # 옛날 구멍이 많은 종목들 — 몫이 없으면 이들이 자리를 다 먹습니다
+    for i in range(20):
+        행 = []
+        for j in range(20):
+            값 = None if 2 <= j <= 11 else 1.0 + j
+            행.append({"announced_date": f"20{17 + j // 4}-{1 + j % 4 * 3:02d}-15",
+                       "period_label": f"Q{j}", "adj_eps": 값})
+        quarters[f"OLD{i:02d}"] = 행
+    quarters.update(_꼬리구멍종목("FRESH"))     # 최신 구멍 하나짜리 종목
+
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        path = f.name
+    audit_data.refresh_wanted(quarters, None, path=path,
+                              progress=lambda *a: None)
+    with open(path, encoding="utf-8") as f:
+        목록 = json.load(f)["목록"]
+    os.unlink(path)
+
+    구멍 = [r for r in 목록 if "비어" in str(r.get("이유"))]
+    assert 구멍, "구멍 재료가 통째로 빠졌습니다"
+    assert any(r["종목"] == "FRESH" for r in 구멍), (
+        "최신 구멍이 옛날 구멍에 밀려 목록에 못 들었습니다: "
+        f"{sorted({r['종목'] for r in 구멍})}")
+
+
 def test_로봇이_부탁목록을_매일_갱신한다():
     """(134차) 배선이 빠지면 부탁 목록이 **사람 손에만 매입니다** — 실제로
     4차 확장의 새 90종목이 한 건도 못 들어갔던 사고(133차)의 재발 방지."""
