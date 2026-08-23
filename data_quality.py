@@ -337,26 +337,49 @@ def fiscal_quarter_of(quarter: dict) -> tuple[int, int] | None:
     "인덱스로 4칸 뒤"는 분기가 하나만 빠져도 완전히 어긋납니다
     (실제로 ZETA 예시에서 +20%/+25% 여야 할 값이 +108%/-40% 로 망가졌습니다).
 
-    분기 이름("25 Q3")이 있으면 그것을, 없으면 기간종료일의 월로 추정합니다.
-    """
-    label = str(quarter.get("period_label") or "")
+    **기간종료일을 먼저 봅니다. 분기 이름은 못 믿습니다** (150차-T).
 
-    # "25 Q3" / "FY25 Q3" 형태
-    match = re.search(r"(\d{2,4})\s*Q([1-4])", label, re.I)
+    예전에는 이름("25 Q3")을 먼저 믿었습니다. 실데이터를 세어 보니
+    **652칸(8.8%)·122종목의 이름이 그 종목 안에서조차 어긋났습니다.**
+    이름은 보도자료 본문에서 글자로 뽑는데(`extract_period_label`),
+    본문이 직전 분기·작년 같은 분기를 함께 말하면 엉뚱한 것을 집습니다.
+    실물:
+
+        SLB  '20 Q4' 라는 이름이 붙은 행 **4개** —
+             기간끝 2021-03-31 · 2021-06-30 · 2021-09-30 · 2021-12-31
+        INTC '18 Q2' 라는 이름이 붙은 행 **3개** —
+             기간끝 2018-03-31 · 2018-06-30 · 2018-12-29
+
+    이 함수를 쓰는 두 곳은 **분기 번호로 묶기만** 합니다(계절성 판정 ·
+    이상값의 '같은 분기 평소'). 묶는 데 필요한 것은 "같은 분기끼리 같은
+    번호, 다른 분기끼리 다른 번호"뿐입니다. 기간종료일의 월은 그것을
+    **언제나** 지킵니다. 회계연도가 달력과 어긋나는 회사(예: CRDO 는
+    4월 결산이라 회계 Q3 이 1월에 끝남)도 **어긋난 폭이 일정**하므로
+    묶음은 그대로 맞습니다.
+
+    이름은 화면 표시용으로 남겨 둡니다 — 지우지 않습니다. 다만
+    **계산에는 쓰지 않습니다**(헌법 1조: 검사에서 탈락한 값은 고치지 말고
+    버린다).
+
+    기간종료일이 아예 없을 때만 이름으로 돌아갑니다.
+    """
+    # ① 기간종료일 (XBRL 이 준 구조값 — 글자로 뽑은 것이 아니라 믿을 수 있음)
+    date_text = str(quarter.get("period_end") or quarter.get("filing_date") or "")
+    match = re.search(r"(\d{4})-(\d{2})", date_text)
+    if match:
+        year, month = int(match.group(1)), int(match.group(2))
+        return (year, (month - 1) // 3 + 1)
+
+    # ② 기간종료일이 없을 때만 이름으로
+    label = str(quarter.get("period_label") or "")
+    match = re.search(r"^(\d{2})/(\d{2})", label)          # "25/09" 형태
+    if match:
+        return (2000 + int(match.group(1)), (int(match.group(2)) - 1) // 3 + 1)
+    match = re.search(r"(\d{2,4})\s*Q([1-4])", label, re.I)  # "25 Q3" 형태
     if match:
         year = int(match.group(1))
         return (year + 2000 if year < 100 else year, int(match.group(2)))
-
-    # "25/09" 형태이거나 이름이 없으면 기간종료일의 월로 회계분기를 추정합니다
-    date_text = str(quarter.get("period_end") or quarter.get("filing_date") or "")
-    match = re.search(r"(\d{4})-(\d{2})", date_text)
-    if not match:
-        match = re.search(r"^(\d{2})/(\d{2})", label)
-        if match:
-            return (2000 + int(match.group(1)), (int(match.group(2)) - 1) // 3 + 1)
-        return None
-    year, month = int(match.group(1)), int(match.group(2))
-    return (year, (month - 1) // 3 + 1)
+    return None
 
 
 def detect_seasonality(quarters: list[dict]) -> dict:

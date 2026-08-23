@@ -316,6 +316,38 @@ def test_seasonal_business_is_detected():
     assert dq.detect_seasonality(steady)["seasonal"] is False
 
 
+def test_분기번호는_이름이_아니라_기간끝으로_정한다():
+    """(150차-T) 분기 **이름**은 못 믿습니다 — 기간종료일이 먼저입니다.
+
+    이름은 보도자료 본문에서 글자로 뽑습니다. 본문이 직전 분기나 작년
+    같은 분기를 함께 말하면 엉뚱한 것을 집습니다. 실데이터에서
+    **652칸(8.8%)·122종목**이 그 종목 안에서조차 어긋나 있었습니다:
+
+        SLB  '20 Q4' 라는 이름의 행 4개 — 기간끝 2021-03/06/09/12
+        INTC '18 Q2' 라는 이름의 행 3개 — 기간끝 2018-03/06/12
+
+    이 함수는 '같은 분기끼리 묶기'에만 쓰이므로, 이름이 겹치면 서로 다른
+    네 분기가 한 묶음이 되어 계절성·이상값 판정이 통째로 어긋납니다.
+    """
+    # 이름은 거짓말을 하고, 기간끝은 사실을 말하는 행
+    거짓 = {"period_label": "20 Q4", "filing_date": "2021-06-30"}
+    assert dq.fiscal_quarter_of(거짓) == (2021, 2), (
+        "이름('20 Q4')을 믿었습니다 — 기간끝 2021-06-30 은 2분기입니다: "
+        f"{dq.fiscal_quarter_of(거짓)}")
+
+    # SLB 실물 — 네 행이 **서로 다른** 번호를 받아야 합니다
+    slb = [{"period_label": "20 Q4", "filing_date": d}
+           for d in ("2021-03-31", "2021-06-30", "2021-09-30", "2021-12-31")]
+    번호 = [dq.fiscal_quarter_of(q) for q in slb]
+    assert len(set(번호)) == 4, f"네 분기가 한 묶음이 됐습니다: {번호}"
+
+    # 기간끝이 아예 없을 때만 이름으로 돌아갑니다 (없는 값을 만들지 않음)
+    assert dq.fiscal_quarter_of({"period_label": "25 Q3"}) == (2025, 3)
+    assert dq.fiscal_quarter_of({"period_label": "25/09"}) == (2025, 3)
+    assert dq.fiscal_quarter_of({}) is None
+    assert dq.fiscal_quarter_of({"period_label": "아무 말"}) is None
+
+
 def test_one_off_spike_is_flagged():
     """한 분기만 유별나게 튄 곳(일회성 이익·인수합병)을 찾아야 함"""
     quarters = [
