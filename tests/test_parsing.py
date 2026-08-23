@@ -1052,6 +1052,123 @@ def test_plain_margin_sentence_still_reads():
         assert got == 답, (문장, got)
 
 
+
+# ---------------------------------------------------------------------------
+# 뼈대 가운데 구멍 메우기 (150차-Q) — 주인이 "실적이 왜 빈칸이지?"라고 물어 드러남
+# ---------------------------------------------------------------------------
+def _구멍뼈대():
+    """XBRL 뼈대 가운데(2024-07-31)가 빠진 모양 — 실물 CRDO 와 같은 꼴."""
+    return [
+        {"filing_date": "2024-04-30", "period_label": "Q1", "revenue": 1e8,
+         "op_income": 1e7, "source": "xbrl"},
+        # 2024-07-31 없음  ← 구멍
+        {"filing_date": "2024-10-31", "period_label": "Q3", "revenue": 1.2e8,
+         "op_income": 1.2e7, "source": "xbrl"},
+        {"filing_date": "2025-01-31", "period_label": "Q4", "revenue": 1.3e8,
+         "op_income": 1.3e7, "source": "xbrl"},
+    ]
+
+
+def _구멍발표(**바꿀것):
+    행 = {"filing_date": "2024-09-03", "period_label": "Q2발표",
+         "revenue": 1.1e8, "adj_eps": 0.5, "op_income": 1.1e7,
+         "source": cfg.SRC_DIRECT}
+    행.update(바꿀것)
+    return [행]
+
+
+def test_뼈대_가운데_구멍을_보도자료로_메운다():
+    """(150차-Q) 보도자료는 **기존 XBRL 행을 덮어쓰거나 마지막 분기 뒤로
+    승격**할 수만 있었습니다. 뼈대 가운데가 비면 덮어쓸 행도 없고 승격
+    대상도 아니라 **통째로 버려졌습니다.**
+
+    실데이터: 발표일이 130일 넘게 벌어진 170건 중 **156건(61종목)**이
+    이 "한 분기 빠짐" 모양입니다.
+    """
+    out = sf.merge_quarters(_구멍뼈대(), _구멍발표(), {})
+    메움 = [r for r in out if r.get("구멍메움")]
+    assert len(메움) == 1, f"구멍을 못 메웠습니다: {[r['filing_date'] for r in out]}"
+    assert 메움[0]["filing_date"] == "2024-07-31", 메움[0]
+    assert 메움[0]["announced_date"] == "2024-09-03", 메움[0]
+    assert 메움[0]["adj_eps"] == 0.5, 메움[0]
+    assert [r["filing_date"] for r in out] == sorted(r["filing_date"] for r in out)
+
+
+def test_구멍분기_발표가_앞_분기를_덮어쓰지_않는다():
+    """(150차-Q) **값이 사라지는 것보다 나쁜 일**을 막습니다.
+
+    뼈대에 구멍이 있으면 "가장 가까운 분기가 임자" 규칙이 듣지 않습니다 —
+    임자가 될 행 자체가 없어서 **앞 분기가 그 8-K 를 가져가 자기 숫자를
+    덮어씁니다.** 실측:
+
+        앞끝 04-30 · 구멍 07-31 · 뒤 10-31
+        발표 08-14(앞끝+106일) → 앞 분기(04-30)를 덮어씀 ⛔
+        발표 08-28(앞끝+120일) → 앞 분기를 덮어씀 ⛔
+
+    앞 분기 숫자가 통째로 틀려지므로 값이 없는 것보다 나쁩니다.
+    """
+    for 발표 in ("2024-08-14", "2024-08-20", "2024-08-28"):
+        out = sf.merge_quarters(_구멍뼈대(), _구멍발표(filing_date=발표), {})
+        앞분기 = next(r for r in out if r["filing_date"] == "2024-04-30")
+        assert 앞분기.get("adj_eps") != 0.5, (
+            f"발표 {발표} 가 앞 분기(2024-04-30)를 덮어썼습니다: {앞분기}")
+        assert [r for r in out if r.get("구멍메움")], (
+            f"발표 {발표} 가 구멍으로도 안 들어갔습니다 — 통째로 버려집니다")
+
+
+def test_정상_발표는_그대로_짝지어진다():
+    """(150차-Q) 가로채기를 막다가 **멀쩡한 짝짓기까지 막으면** 더 나쁩니다.
+    분기끝 뒤 34일에 나온 정상 발표는 그 분기에 그대로 붙어야 합니다."""
+    정상 = [{"filing_date": "2024-06-03", "period_label": "정상",
+            "revenue": 1.05e8, "adj_eps": 0.4, "op_income": 1.05e7,
+            "source": cfg.SRC_DIRECT}]
+    out = sf.merge_quarters(_구멍뼈대(), 정상, {})
+    붙은 = [r for r in out if r.get("adj_eps") == 0.4]
+    assert len(붙은) == 1 and 붙은[0]["filing_date"] == "2024-04-30", 붙은
+    assert not 붙은[0].get("구멍메움"), "정상 발표를 구멍으로 끼웠습니다"
+
+
+def test_이익숫자가_없는_예비공지는_안_끼운다():
+    """(9차 감사) 예비 매출 공지가 분기를 차지해 진짜 발표를 밀어낸
+    사고(CRDO 26Q3, 조정 EPS $1.07 소실)의 재발 방지."""
+    out = sf.merge_quarters(
+        _구멍뼈대(),
+        _구멍발표(adj_eps=None, op_income=None, adjusted_ebitda=None), {})
+    assert not [r for r in out if r.get("구멍메움")], \
+        "이익 숫자가 없는 공지를 분기로 만들었습니다"
+
+
+def test_분기끝을_모르면_아무것도_안_한다():
+    """앞뒤 XBRL 행이 **정확히 두 분기**(150~215일)일 때만 중간을 분기끝으로
+    봅니다. 애매하면 지어내지 않습니다(헌법 1조)."""
+    먼뼈대 = [
+        {"filing_date": "2024-04-30", "period_label": "Q1", "revenue": 1e8,
+         "op_income": 1e7, "source": "xbrl"},
+        {"filing_date": "2025-04-30", "period_label": "먼뒤", "revenue": 1e8,
+         "op_income": 1e7, "source": "xbrl"},          # 365일 — 두 분기 아님
+    ]
+    out = sf.merge_quarters(먼뼈대, _구멍발표(), {})
+    assert not [r for r in out if r.get("구멍메움")], \
+        "두 분기 간격이 아닌데 분기끝을 지어냈습니다"
+
+
+def test_발표가_분기끝에_너무_붙으면_안_끼운다():
+    """발표는 분기끝 뒤 10~70일이 상식입니다(138차 등록). 5일이면
+    그 분기 발표가 아닐 수 있습니다."""
+    out = sf.merge_quarters(_구멍뼈대(), _구멍발표(filing_date="2024-08-05"), {})
+    assert not [r for r in out if r.get("구멍메움")], "상식 밖 발표를 끼웠습니다"
+
+
+def test_구멍이_없으면_아무것도_안_끼운다():
+    """멀쩡한 뼈대에 행을 더하면 **이중 계상**이 됩니다."""
+    정상 = _구멍뼈대()
+    정상.insert(1, {"filing_date": "2024-07-31", "period_label": "Q2",
+                  "revenue": 1.1e8, "op_income": 1.1e7, "source": "xbrl"})
+    out = sf.merge_quarters(정상, _구멍발표(), {})
+    assert not [r for r in out if r.get("구멍메움")], "멀쩡한 뼈대에 행을 더했습니다"
+    assert len(out) == 4, [r["filing_date"] for r in out]
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

@@ -3055,6 +3055,13 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
     row["announced_date"] = press.get("filing_date", "")
 
 
+# 150차-Q — 분기 발표는 보통 분기끝 뒤 10~70일입니다(138차 등록).
+# 100일이 넘으면 "이 분기 발표"로 보기 어렵습니다. 뼈대에 구멍이 있을 때
+# 앞 분기가 뒷 분기 8-K 를 가져가 자기 숫자를 덮어쓰는 것을 막는 문턱입니다.
+_NEXT_QUARTER_TAKEN_DAYS = 100
+_QUARTER_DAYS = 91
+
+
 def merge_quarters(
     xbrl_quarters: list[dict],
     press_quarters: list[dict],
@@ -3170,6 +3177,32 @@ def merge_quarters(
             if stolen:
                 continue
 
+            # ⚠️ **뼈대에 구멍이 있으면 "가장 가까운 분기가 임자" 규칙이
+            #    듣지 않습니다** (150차-Q). 임자가 될 행 자체가 없기 때문에
+            #    앞 분기가 그 8-K 를 가져가 **자기 숫자를 덮어씁니다.**
+            #
+            #    실측한 모양 — 앞끝 04-30 · 구멍 07-31 · 뒤 10-31 일 때:
+            #      발표 08-14(앞끝+106일) → 앞 분기(04-30)를 덮어씀 ⛔
+            #      발표 08-28(앞끝+120일) → 앞 분기를 덮어씀 ⛔
+            #      발표 09-03(앞끝+126일) → 창 밖이라 버려짐(→ 아래서 구멍 메움)
+            #
+            #    값이 **사라지는 것보다 나쁩니다** — 엉뚱한 분기에 들어가
+            #    앞 분기 숫자가 통째로 틀려집니다.
+            #
+            #    분기 발표는 보통 분기끝 뒤 10~70일입니다(138차 등록).
+            #    그보다 훨씬 늦은(=한 분기 넘게 지난) 8-K 가 이 행을
+            #    차지하려 하면, **다음 분기 자리가 비어 있는지** 봅니다.
+            #    비어 있으면 이건 그 빈 분기의 발표이므로 가져가지 않습니다.
+            if gap > _NEXT_QUARTER_TAKEN_DAYS:
+                다음끝 = period_date + timedelta(days=_QUARTER_DAYS)
+                다음행있음 = any(
+                    d is not None and abs((d - 다음끝).days) <= 45
+                    for d in (_to_date(o.get("filing_date", "")) for o in merged)
+                    if d is not None
+                )
+                if not 다음행있음:
+                    continue      # 다음 분기가 비었다 — 그 분기의 발표다
+
             if best_rank is None or (rank, gap) < (best_rank, best_gap):
                 best_index, best_gap, best_rank = index, gap, rank
 
@@ -3246,6 +3279,85 @@ def merge_quarters(
         used_press.add(index)
 
     merged.sort(key=lambda r: r.get("filing_date", ""))
+
+    # --- 뼈대 **가운데 구멍** 메우기 (150차-Q) -------------------------------
+    #
+    # 여기까지 오면 보도자료가 할 수 있는 일은 둘뿐이었습니다 — 기존 XBRL
+    # 행을 덮어쓰거나, **마지막 분기 뒤로** 승격하거나. 그래서 XBRL 뼈대
+    # **가운데**에 분기가 빠져 있으면 그 분기의 8-K 는 덮어쓸 행도 없고
+    # 승격 대상도 아니라 **통째로 버려졌습니다.**
+    #
+    # 실행으로 재현한 모양(150차-Q):
+    #   XBRL  04-30 · (07-31 없음) · 10-31 · 01-31
+    #   보도  09-03 발표 조정EPS 0.5   →  합친 결과 3행, 0.5 는 사라짐
+    #
+    # 실데이터 규모: 발표일이 130일 넘게 벌어진 170건 중 **156건(61종목)**이
+    # "한 분기 빠짐" 모양입니다. 주인이 CRDO 에서 "실적이 왜 빈칸이지?"라고
+    # 물어 드러났습니다.
+    #
+    # ⚠️ **분기끝을 지어내지 않습니다.** 앞뒤 XBRL 행이 **정확히 두 분기**
+    #    (약 182일) 떨어져 있을 때만, 그 중간을 분기끝으로 봅니다 — 이건
+    #    추정이 아니라 분기 달력이 정하는 자리입니다. 간격이 애매하면
+    #    (150일 미만·215일 초과) **아무것도 하지 않습니다**(헌법 1조).
+    #
+    # ⚠️ 이익 숫자를 실은 발표만 끼웁니다. 예비 매출 공지가 분기를 차지해
+    #    진짜 발표를 밀어낸 사고(9차 감사 CRDO 26Q3)의 재발 방지입니다.
+    끼운날: list = []
+    for index in sorted(
+        range(len(press_quarters)),
+        key=lambda i: press_quarters[i].get("filing_date", ""),
+    ):
+        if index in used_press:
+            continue
+        press = press_quarters[index]
+        press_date = _to_date(press.get("filing_date", ""))
+        if press_date is None:
+            continue
+        # 이익 숫자가 없으면 실적 발표가 아닐 수 있습니다 — 끼우지 않습니다
+        if (press.get("adj_eps") is None and press.get("op_income") is None
+                and press.get("adjusted_ebitda") is None):
+            continue
+        # 이 발표를 감싸는 **이웃한 두 XBRL 행**을 찾습니다
+        앞행 = 뒤행 = None
+        for row in merged:
+            d = _to_date(row.get("filing_date", ""))
+            if d is None:
+                continue
+            if d < press_date and (앞행 is None
+                                   or d > _to_date(앞행["filing_date"])):
+                앞행 = row
+            if d > press_date and (뒤행 is None
+                                   or d < _to_date(뒤행["filing_date"])):
+                뒤행 = row
+        if 앞행 is None or 뒤행 is None:
+            continue                      # 가운데가 아니면 여기 일이 아님
+        앞끝 = _to_date(앞행["filing_date"])
+        뒤끝 = _to_date(뒤행["filing_date"])
+        사이 = (뒤끝 - 앞끝).days
+        if not (150 <= 사이 <= 215):
+            continue                      # 두 분기 간격이 아니면 모르는 것
+        빠진끝 = 앞끝 + timedelta(days=사이 // 2)
+        # 발표는 분기끝 뒤 상식 범위(10~70일) 안이어야 합니다
+        지연 = (press_date - 빠진끝).days
+        if not (10 <= 지연 <= 70):
+            continue
+        # 이미 끼운 것·기존 행과 너무 붙으면 같은 분기의 두 번째 발표입니다
+        if any(abs((press_date - d).days) < 60 for d in 끼운날):
+            continue
+        if any(abs((빠진끝 - _to_date(r.get("filing_date", "")) ).days) < 45
+               for r in merged if _to_date(r.get("filing_date", "")) is not None):
+            continue
+        새행 = dict(press)
+        새행["filing_date"] = 빠진끝.isoformat()
+        새행["announced_date"] = press.get("filing_date", "")
+        새행["구멍메움"] = True            # 어디서 왔는지 남깁니다
+        merged.append(새행)
+        끼운날.append(press_date)
+        used_press.add(index)
+    if 끼운날:
+        merged.sort(key=lambda r: r.get("filing_date", ""))
+        if report is not None:
+            report["hole_filled"] = len(끼운날)
 
     # 짝을 못 찾은 8-K가 있으면 진단에 남깁니다 (짝짓기 실패 원인 추적용)
     if report is not None:
