@@ -1,0 +1,533 @@
+# 잣대값 파싱 실패 원문 — WOLF 2021-11-17
+# 출처: https://www.sec.gov/Archives/edgar/data/895419/000089541921000142/wolfspeed-20211117.htm
+
+exhibit99_1111721
+
+    <img height="768" src="exhibit99_1111721001.jpg" title="slide1" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. N O V E M B E R 1 7 , 2 0 2 1 Wolfspeed Investor Day 
+
+
+
+ <img height="768" src="exhibit99_1111721002.jpg" title="slide2" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. T Y L E R G R O N B A C H , V P O F I N V E S T O R R E L A T I O N S Welcome 
+
+
+
+ <img height="768" src="exhibit99_1111721003.jpg" title="slide3" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 3 FORWARD-LOOKING STATEMENTS AND NON-GAAP MEASURES Note on Forward-Looking Statements This presentation includes forward-looking statements about Wolfspeed’s business outlook, future financial results and targets, product markets, plans and objectives for future operations, and product development programs and goals. These statements are subject to risks and uncertainties, both known and unknown, that may cause actual results to differ materially, as discussed in our most recent annual report and other reports filed with the U.S. Securities and Exchange Commission (SEC). Important factors that could cause actual results to differ materially include risks relating to the ongoing COVID-19 pandemic, including the risk of new and different government restrictions that limit our ability to do business, the risk of infection in our workforce and subsequent impact on our ability to conduct business, the risk that our supply chain, including our contract manufacturers, or customer demand may be negatively impacted, the risk posed by vaccine resistance and the emergence of fast-spreading variants, the risk that the COVID-19 pandemic will lead to a global recession and the potential for costs associated with our operations during current and future years to be greater than we anticipate as a result of all of these factors; the risk that we may not obtain sufficient orders to achieve our targeted revenues; the risk that the markets for our products will not develop as we expect, including the adoption of our products by EV manufacturers; the risk that our device pipeline will not convert into orders and revenue at the rates that we have assumed or historically experienced; price competition in key markets; the risk that we may experience production difficulties that preclude us from shipping sufficient quantities to meet customer orders or that result in higher production costs, lower yields and lower margins; our ability to lower costs; the risk that our results will suffer if we are unable to balance fluctuations in customer demand and capacity, including bringing on additional capacity on a timely basis to meet customer demand; the risk that longer manufacturing lead times may cause customers to fulfill their orders with a competitor's products instead; product mix; risks associated with the ramp-up of production of our new products, and our entry into new business channels different from those in which we have historically operated; risks associated with our factory optimization plan and construction of a new device fabrication or materials manufacturing facilities, including design and construction delays and cost overruns, issues in installing and qualifying new equipment and ramping production, poor production process yields and quality control, and potential increases to our restructuring costs; the risk that we or our channel partners are not able to develop and expand customer bases and accurately anticipate demand from end customers, which can result in increased inventory and reduced orders as we experience wide fluctuations in supply and demand; the risk that the economic and political uncertainty caused by the tariffs imposed by the United States on Chinese goods, and corresponding Chinese tariffs and currency devaluation in response, may negatively impact demand for our products; risks related to international sales and purchases; ongoing uncertainty in global economic conditions, infrastructure development or customer demand that could negatively affect product demand, collectability of receivables and other related matters as consumers and businesses may defer purchases or payments, or default on payments; risks resulting from the concentration of our business among few customers, including the risk that customers may reduce or cancel orders or fail to honor purchase commitments; the risk that our investments may experience periods of significant market value and interest rate volatility causing us to recognize fair value losses on our investment; the risk posed by managing an increasingly complex supply chain that has the ability to supply a sufficient quantity of raw materials, components and finished products with the required specifications and quality; the risk we may be required to record a significant charge to earnings if our remaining goodwill or amortizable assets become impaired; risks relating to confidential information theft or misuse, including through cyber-attacks, cyber intrusion or ransomware; our ability to complete development and commercialization of products under development; the rapid development of new technology and competing products that may impair demand or render our products obsolete; the potential lack of customer acceptance for our products; risks associated with ongoing litigation; the risk that customers do not maintain their favorable perception of our brand and products, resulting in lower demand for our products; the risk that our products fail to perform or fail to meet customer requirements or expectations, resulting in significant additional costs; risks associated with strategic transactions, including the possibility that we may not realize the full purchase price contemplated in connection with the sale of our former LED Products or Lighting Products business units; and other factors discussed in our filings with the SEC, including our report on Form 10-K for the fiscal year ended June 27, 2021, and subsequent reports filed with the SEC. The forward-looking statements in this presentation were baaed on management’s analysis of information available at the time the presentation was prepared and on assumptions deemed reasonable by management. Our industry and business is constantly evolving, and Wolfspeed undertakes no obligation to update such forward-looking statements to reflect new information, future events, subsequent developments or otherwise, except as may be required by applicable U.S. federal securities laws and regulations. Note on Non-GAAP Measures This presentation includes certain non-GAAP financial measures and targets. Wolfspeed’s management evaluates results and makes operating decisions using both GAAP and non-GAAP measures included in this presentation. Non-GAAP measures exclude certain costs, charges and expenses which are included in GAAP measures. By including these non-GAAP measures, management intends to provide investors with additional information to further analyze the Company’s performance, core results and underlying trends. Non-GAAP measures are not prepared in accordance with GAAP and non-GAAP measures should be considered a supplement to, and not a substitute for, financial measures prepared in accordance with GAAP. Investors and potential investors are encouraged to review the reconciliations of non-GAAP financial measures to their most directly comparable GAAP measures attached to this presentation. Please see the Appendix at the end of this presentation. 
+
+
+
+ <img height="768" src="exhibit99_1111721004.jpg" title="slide4" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 4 AGENDA 1 2 3 4 STRATEGIC OVERVIEW Gregg Lowe – President & CEO TECHNOLOGY OVERVIEW John Palmour - CTO WOLFSPEED BUSINESS REVIEW Jay Cameron - SVP & GM, Power Gerhard Wolf – SVP & GM, RF Power Cengiz Balkas – SVP & GM, Materials BREAK 5 6 7 8 9 CUSTOMER FIRESIDE CHAT Moderated by Kenric Miller – VP, Global Sales & Marketing, Automotive PIPELINE DEVELOPMENT - COMPONENTS Thomas Wessel – SVP, Global Sales & Marketing CAPACITY UPDATE Rex Felton – SVP, Fab Operations LONG-TERM OUTLOOK Neill Reynolds – EVP & CFO QUESTION & ANSWER SESSION 
+
+
+
+ <img height="768" src="exhibit99_1111721005.jpg" title="slide5" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. G R E G G L O W E | P R E S I D E N T & C E O Strategic Overview 
+
+
+
+ <img height="768" src="exhibit99_1111721006.jpg" title="slide6" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 6 $221 $526 FY2017 FY2021 WOLFSPEED AT A GLANCE Company Overview Current Device Pipeline $18B+ $1B+ Net Investment Over Last 8 Quarters Design-In Awards in FY2021 ~$2.9B Materials LTAs ~$1.3B+ Number of Design-Ins in FY2021 ~1,100 Market Cap ~$16B IP Position Substantial Silicon Carbide Provider Largest Founded 1987 Employees ~3,500 Leadership 30+ Years Source: Company Filings; Market Data as of October 2021 | (1) Fiscal year end in June Wolfspeed Revenue (M)(1) Recent Highlights Device SAM by 2026 ~$9B 
+
+
+
+ <img height="768" src="exhibit99_1111721007.jpg" title="slide7" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 7 SINCE WE LAST MET The industry has been hit by several near-term headwinds…. 2020 2021 March: May: September: March: Global pandemic hits all parts of the world May: Demand begins to pick up as world adjusts to new normal September: Continued trade tensions between the U.S. and China Industry-wide supply chain lags as demand strengthens Mounting concern regarding inflationary pressure and rising prices Continuation of a challenging inflationary environment coupled with decreased labor supply August: Semiconductor chip shortage becomes acutely felt 
+
+
+
+ <img height="768" src="exhibit99_1111721008.jpg" title="slide8" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 8 SINCE WE LAST MET …but we’ve still managed to transform into a global semiconductor powerhouse March: Completed Sale of LED Business August: October: Listed on the NYSE under the ticker ‘WOLF’ Formally Changed Name to Wolfspeed Announced Strategic Partnership with GM Secured a Record ~$2.9B of Design- ins During FY21 2020 2021 March: Quickly Adapted to the New COVID-19 Operating Environment June: Announced Strategic Partnership with the Yutong Group April: Announced $575M Convertible Senior Notes Offering February: Completed $500M ATM Equity Offering 
+
+
+
+ <img height="768" src="exhibit99_1111721009.jpg" title="slide9" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 9 I TOOK A BIKE RIDE RECENTLY… … here’s what I learned. 
+
+
+
+ <img height="768" src="exhibit99_1111721010.jpg" title="slide10" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 10 WOLFSPEED IS AT AN INFLECTION POINT Key milestones on our transformation Cree is Renamed Wolfspeed Strategic Refocus on Wolfspeed Acquired Infineon’s RF Business Sale of Lighting Business Sale of LED Business Pipeline Grows to ~$15B $1B+ Investment in MVF Fab Announces ~$2.9B Design-ins, ~$1.3B LTAs Transform Ramp Pipeline Grows to $18B+ 2017 2018 2019 2020 2021 2022+ 
+
+
+
+ <img height="768" src="exhibit99_1111721011.jpg" title="slide11" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 11 1Silicon GaN-SiC THE NEXT GENERATION IN POWER SEMICONDUCTORS WILL BE DRIVEN BY SILICON CARBIDE TECHNOLOGY Silicon Silicon Carbide SiC Inverters | OBCs are: RF Power Density Comparison vs. Silicon • Lighter • Smaller • More efficient, 5% - 10% increase in vehicle range GaN-Silicon Carbide in 5G enables: • Increased capacity and coverage • 2X more users per tower • More than 10X increase in data Power Source: Company estimates 
+
+
+
+ <img height="768" src="exhibit99_1111721012.jpg" title="slide12" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 12 800V bus Silicon Carbide MOSFET solution to 400V bus Si IGBT solution 13 : 1ENERGY SAVED ON ENERGY INVESTED (ESOI) FOR AN EV SEDAN APPLICATION Source: Biophysical Economics Institute Report SILICON CARBIDE IS UNLOCKING A NEW ERA OF ENERGY EFFICIENCY 
+
+
+
+ <img height="768" src="exhibit99_1111721013.jpg" title="slide13" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 13 ACCELERATING EV ADOPTION DRIVING $330B+ INVESTMENT Global OEMs and Corporates have made significant commitments to EVs Aims to have 40% of global volume electric by 2030, plans to spend >$30B on EVs Committed to 30 new EVs by 2025; plans to spend $35B on EV product development Expects EVs to represent half of vehicle sales by 2030, followed by nearly all in 2040 Expects 50% of its global sales to consist of fully electric vehicles by 2030 Plans to spend over €40B on EVs by 2030 Plans to become a fully electric vehicle company by 2030 Targets 40% of US sales to be electric by 2030; expects all new Nissan vehicles to be electric by early 2030s Announced Model S and Model X extended ranges with SiC power electronics Deploying 100k custom all electric delivery vehicles by 2030; plan to be net-zero carbon by 2040 All electric; 150K in annual production capacity with plans to expand capacity 
+
+
+
+ <img height="768" src="exhibit99_1111721014.jpg" title="slide14" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 14 AUTOMOTIVE OUTLOOK FROM 2019 – SPLIT BETWEEN PHEV & BEV The Battery Is Ready to Power the World FEB. 5, 2021 Study Expects More EVs Than ICE Vehicles Will Be Sold By 2033 JULY 6, 2021 Experts Predicted All Cars Would Be Hybrid by 2020. Why Were They Wrong? SEPT. 1, 2021 Ford Will Build 4 Factories in a Big Electric Vehicle Push SEPT. 27, 2021 VW Group Doubles EV Deliveries in Q3 as New Models Land OCT. 18, 2021 GM, Volkswagen Say Goodbye to Hybrid Vehicles AUG. 12, 2019 Volvo Plans to Sell Only Electric Cars by 2030 MARCH 3, 2021 From Cree Investor Day 2019 
+
+
+
+ <img height="768" src="exhibit99_1111721015.jpg" title="slide15" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 15 7.5kW bi-directional DC-DC Vertical take off and landing vehicleRack mounter server power supply for cloud provider EV charger Scalable charger Portable power supply Tropospheric scatter communications Air conditioning motor drive Robotic arm Off board charger system for industrial trucks SILICON CARBIDE GAINING MOMENTUM ACROSS A WIDE RANGE OF INDUSTRIAL APPLICATIONS Wolfspeed’s value proposition spans several different applications 
+
+
+
+ <img height="768" src="exhibit99_1111721016.jpg" title="slide16" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 16 ATTRACTIVE MARKETS WITH AMPLE RUNWAY TO SUPPORT RAPID GROWTH Serviceable Market Opportunity (M) Source: Yole and Company estimates $4,300M $6,800M $8,900M 2022 2024 2026 Power RF • Auto devices account for 50% of the opportunity, with a 30% CAGR • As device cost decreases, Industrial markets expand, creating a $40B+ opportunity $700M $1,250M $1,700M 2022 2024 2026 • Demand is expected to outstrip capacity • Overall supply will continue to increase, but nominal impact on overall market share as 150mm to 200mm transition continues to reduce overall wafer cost Devices Materials 
+
+
+
+ <img height="768" src="exhibit99_1111721017.jpg" title="slide17" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 17 SUPPLY HAS BECOME A KEY ISSUE Global Chip Shortage ‘Is Far From Over’ as Wait Times Get Longer OCT. 28, 2021 The global chip shortage is continuing to wreak havoc for the car giants OCT. 28, 2021 SEPT. 23, 2021 
+
+
+
+ <img height="768" src="exhibit99_1111721018.jpg" title="slide18" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 18 MARCH 2020 – MOHAWK VALLEY 
+
+
+
+ <img height="768" src="exhibit99_1111721019.jpg" title="slide19" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 19 OCTOBER 2021 
+
+
+
+ <img height="768" src="exhibit99_1111721020.jpg" title="slide20" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 20 MATERIALS EXPANSION IN NORTH CAROLINA 
+
+
+
+ <img height="768" src="exhibit99_1111721021.jpg" title="slide21" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 21 BUILDING A WORLD-CLASS, CUSTOMER-CENTRIC ORGANIZATION TO SUPPORT A MULTI-DECADE GROWTH OPPORTUNITY Attracting talent at every level from large-scale semiconductor companies to support biggest device shift in the analog market in decades University partnerships in NC and NY are supporting burgeoning Internship program and cultivating leadership pipeline 350+ years of semiconductor leadership experience across key areas including manufacturing excellence, automotive and finance Building on 30+ year heritage of Silicon Carbide leadership to engineer a more sustainable future and a new era in energy efficiency 
+
+
+
+ <img height="768" src="exhibit99_1111721022.jpg" title="slide22" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 22 WHY WE WIN - FOCUSED ON STEEPENING DEMAND CURVE FOR SILICON CARBIDE SOLUTIONS Expanding leading market position with strong barriers to entry while driving the market transition to Silicon Carbide Executing on growth plans to create a global semiconductor powerhouse Growing and diversified $18B+ pipeline supported by secular trends in attractive end markets Investing in capacity and people to support multi- decade growth opportunity 
+
+
+
+ <img height="768" src="exhibit99_1111721023.jpg" title="slide23" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 23 
+
+
+
+ <img height="768" src="exhibit99_1111721024.jpg" title="slide24" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 24 We harness the power of Silicon Carbide to change the world for the better 
+
+
+
+ <img height="768" src="exhibit99_1111721025.jpg" title="slide25" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. J O H N P A L M O U R | C T O Technology Overview 
+
+
+
+ <img height="768" src="exhibit99_1111721026.jpg" title="slide26" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 26 AGENDA 1 2 3 MOSFET DEVELOPMENT 650 V family and 1200 V Gen 3+ MODULES FOR INVERTERS Power module demonstration 200mm SUBSTRATES 200mm bulk growth update DOES SiC SAVE ENERGY? Joint study with BPEI on ESOI CONCLUSIONS 4 5 
+
+
+
+ <img height="768" src="exhibit99_1111721027.jpg" title="slide27" width="1365"/> C U R R E N T S T A T U S O F 2 0 0 m m S U B S T R A T E S 
+
+
+
+ <img height="768" src="exhibit99_1111721028.jpg" title="slide28" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 28 INCREASED DIE COUNT ADVANTAGE OF MOVING TO 200mm SiC WAFERS 150mm 200mm # whole die 448 845 % edge die 14 7 produce more devices from a single wafer 32 mm2 die enhanced productivity and efficiency 
+
+
+
+ <img height="768" src="exhibit99_1111721029.jpg" title="slide29" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 29 200mm Substrate – Micropipe Density • 2.03 micropipes/cm2 – Lattice Plane Radius Curvature • >75 meters 200mm Epiwafer – Radial Doping • Navg = 3.2 x1015 cm-3 • /mean = 1.9 % – Epitaxial Thickness • mean = 8.3 microns • /mean = 2.2 % FIRST ANNOUNCEMENT OF 200mm IN 2015 
+
+
+
+ <img height="768" src="exhibit99_1111721030.jpg" title="slide30" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 30 CROSS POLARIZATION (XPOL) IMAGE OF A 200mm WAFER FROM DEC 2019 Cross-polarizer image highlights crystalline structural imperfections 
+
+
+
+ <img height="768" src="exhibit99_1111721031.jpg" title="slide31" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 31 200mm QUALITY IMPROVEMENT STATUS – HIGH CONTRAST XPOL Cross-polarized image shows very good structural quality Basal Plane Dislocation Density (BPDs) = 309 /cm2 Threading Screw Dislocation Density (TSDs) = 289 /cm2 Best Dislocation Densities 
+
+
+
+ <img height="768" src="exhibit99_1111721032.jpg" title="slide32" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 32 200mm – SURFACE QUALITY AFTER CHEMO-MECHANICAL POLISH (CMP) 5x5 mm Die Yield = 96.1% 2x2 mm Die Yield = 99.2% Total Defects = 66 Projected Yield (Material Defects Only) Surface scan shows excellent CMP process and surface quality 
+
+
+
+ <img height="768" src="exhibit99_1111721033.jpg" title="slide33" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 33 FULLY FABBED 200mm MOSFET WAFER FROM SUNY POLY PILOT LINE 
+
+
+
+ <img height="768" src="exhibit99_1111721034.jpg" title="slide34" width="1365"/> L A T E S T S i C M O S F E T D E V E L O P M E N T S : - 6 5 0 V M O S F E T F A M I L Y - G E N 3 + 1 2 0 0 V M O S F E T s 
+
+
+
+ <img height="768" src="exhibit99_1111721035.jpg" title="slide35" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 35 WOLFSPEED C3M 650V SiC DISCRETE POWER MOSFETS TO-247-4L (K) TO-263-7L (J) TO-247-3L (D) TARGET TOPOLOGIES Available Packages BRIDGELESS TOTEM-POLE AC/DC TOPOLOGY BI-DIRECTIONAL DC/DC (CLLC) TOPOLOGY Rds(on) (25°C) Voltage Package 15mΩ 650V TO-247-4L, TO-247-3L 25mΩ 650V TO-247-4L, TO-247-3L 45mΩ 650V TO-247-4L, TO-247-3L 60mΩ 650V TO-247-4L, TO-247-3L, TO-263-7L 120mΩ 650V TO-247-4L, TO-247-3L, TO-263-7L • Server/Telecom power supplies • Automotive Battery Chargers (OBC) • Consumer Electronics • Energy storage systems (ESS) • Automotive battery chargers (OBC) • Industrial Power Supplies 
+
+
+
+ <img height="768" src="exhibit99_1111721036.jpg" title="slide36" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 36 INDUSTRY-LEADING PERFORMANCE: SiC VS SiC Competitor A Competitor B Competitor CWolfspeed 1.6 1.5 1.4 1.3 1.2 1.1 1.0 0.9 -50 -25 0 25 50 75 100 125 150 175 Normalized RDS(on) vs. Temperature Source: Company and competitor data sheets 
+
+
+
+ <img height="768" src="exhibit99_1111721037.jpg" title="slide37" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 37 SYSTEM EFFICIENCY: SYNCHRONOUS DC/DC BOOST CONVERTER Wolfspeed 650V SiC MOSFET vs Competition in a Sync. Boost Converter Wolfspeed Gen 3 650 V MOSFET SiC Competition Wolfspeed 650V MOSFET has both lower switching loss and lower conduction loss 97.8% 98.0% 98.2% 98.4% 98.6% 98.8% 99.0% 99.2% E ff ic ie n cy ( % ) Power (W) 0 1000 2000 3000 4000 5000 Test Platform Buck/Boost Board – Sync. Boost Mode Sync Conditions 60 kHz, 5kW VIN = 200 VDC VOUT = 400 VDC 
+
+
+
+ <img height="768" src="exhibit99_1111721038.jpg" title="slide38" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 38 SYSTEM EFFICIENCY: POWER LOSS vs OUTPUT POWER SiC Competition Wolfspeed 650V SiC Test Platform Buck/Boost Board – Sync. Boost Mode Sync Conditions 60 kHz, 5kW VIN = 200 VDC VOUT = 400 VDC 0 20 40 60 80 100% 120 140 P o w e r L o ss ( W ) Total Power (W) 467 1142 1810 2473 3125 3761 4387 5008 20W 7.1W 
+
+
+
+ <img height="768" src="exhibit99_1111721039.jpg" title="slide39" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 39 HEX CELL FOR INCREASED CHANNEL DENSITY IMPLEMENTED ON 650V GEN 3 • Hex cell originally implemented on C3D and E3D 650V MOSFETs • Reduced Rds-on by 16% compared to a striped layout • Gate oxide identical to all Gen 3 products – All lifetime data on Gen is valid for Gen 3+ Hex Cell Performance 650V Gen 3 • Rdson-spec. = 2.3 mW-cm2 • Minimum Vbr > 700V 1200V Gen 3+ • Rdson-spec. = 2.7 mW-cm2 • Minimum Vbr > 1400V 12 m N+ contac t N+ boundary N+ boundary JFET JFET 6 m Linear Unit Cell in Gen 3 6 m JFET N+ contact N+ contact N+ boundary 9.2 m Hexagonal Unit Cell 
+
+
+
+ <img height="768" src="exhibit99_1111721040.jpg" title="slide40" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 40 HEX CELL FOR INCREASED CHANNEL DENSITY IMPLEMENTED ON 1200V GEN 3+ Hex Cell Performance 650V Gen 3 • Rdson-spec. = 2.3 mW-cm2 • Minimum Vbr > 700V 1200V Gen 3+ • Rdson-spec. = 2.7 mW-cm2 • Minimum Vbr > 1400V 12 m N+ contac t N+ boundary N+ boundary JFET JFET 6 m Linear Unit Cell in Gen 3 6 m JFET N+ contact N+ contact N+ boundary 9.2 m Hexagonal Unit Cell • Hex cell originally implemented on C3D and E3D 650V MOSFETs • Reduced Rds-on by 16% compared to a striped layout • Gate oxide identical to all Gen 3 products – All lifetime data on Gen is valid for Gen 3+ 
+
+
+
+ <img height="768" src="exhibit99_1111721041.jpg" title="slide41" width="1365"/> S i C P O W E R M O D U L E C A P A B I L I T I E S 
+
+
+
+ <img height="768" src="exhibit99_1111721042.jpg" title="slide42" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 42 SiC POWER SOLUTIONS Medium- to High-Power Solutions Complete the Design Continuum Wolfspeed WolfPACK™ Family 1 kW 10 kW 50 kW 100 kW 600 kW Module Design Goals - Maximize power density - Simplify layout and assembly - Enable scalable systems / platforms - Minimize costs of labor and system components - Highest reliability and maintenance - Complete 650V/900V/1200V/1700V - >50 products in different package and Rdson - Auto grade and Industrial grade Discrete Design Goals - Maximize topology flexibility - Enable multi-source capability - Minimize total BOM cost Discrete Product Portfolio 
+
+
+
+ <img height="768" src="exhibit99_1111721043.jpg" title="slide43" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 43 XM3 DUAL INVERTER SYSTEM • Compact metal enclosure only 8.6 L and 9.7 kg • Dimensions: 204 x 267.5 x 157.5 mm • Output terminals enable application flexibility • Phase outputs can be used as dual inverter or paralleled for higher output current Dual Inverter 375A per phase Single Inverter 750A per phase 
+
+
+
+ <img height="768" src="exhibit99_1111721044.jpg" title="slide44" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 44 INCREDIBLE POWER DENSITY ALLOWED WITH THE XM3 MODULE Competitor CRD300DA12E-XM3 CRD600DA12E-XM3 Semiconductor Si IGBT SiC SiC Type Single Inverter Single Inverter Dual Inverter Output Power 250 kW 300 kW 624 kW Volume 12.6 L 9.3 L 8.6 L Power Density 19.8 kW/L 32.2 kW/L 72.5 kW/L 3.6X Si 
+
+
+
+ <img height="768" src="exhibit99_1111721045.jpg" title="slide45" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 45 INCREDIBLE POWER DENSITY ALLOWED WITH THE XM3 MODULE How big is 8.6 liters? A regulation soccer ball is 5.8 liters 
+
+
+
+ <img height="768" src="exhibit99_1111721046.jpg" title="slide46" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 46 WOLFSPEED’S STRONG PATENT POSITION 2,939 issued and pending worldwide patents Materials Issued (360) Materials Pending (52) RF Issued (1015) RF Pending (300) Power Issued (984) Power Pending (228) POWER (1,212) RF (1,315) MATERIALS (412) 
+
+
+
+ <img height="768" src="exhibit99_1111721047.jpg" title="slide47" width="1365"/> D O S I L I C O N C A R B I D E M O S F E T S A C T U A L L Y S A V E E N E R G Y O V E R A L L ? E S O I – E N E R G Y S A V E D O N E N E R G Y I N V E S T E D A S M E T R I C 
+
+
+
+ <img height="768" src="exhibit99_1111721048.jpg" title="slide48" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 48 Sources of Embedded Energy Percentage of Embedded Energy ACCOUNTED FOR ALL ENERGY REQUIRED TO MAKE SiC MOSFETS Electricity: Accounted for all electricity required to grow SiC boules, wafer them, polish, grow epitaxy and do cleanroom fabrication Embodied Energy: All raw materials, chemicals & consumables. How far did they travel? What method of travel? Natural Gas: Used to control cleanroom humidity and burn-off effluents Tools and Machinery Transport: Weight of Process Equipment, distance traveled, and years of expected operation, divided by wafers per year of output 78.2% 18.1% 3.7% <0.1% 
+
+
+
+ <img height="768" src="exhibit99_1111721049.jpg" title="slide49" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 49 ESOI – EV SEDAN APPLICATION RETURN ON EXTRA ENERGY Increasing bus voltage from 400V to 800V: • reduces total chip area (assumption is by 20%) • reduces marginal energy investment by ~1 GJ • increases ESOI by 85% *Taxi / Uber scenario increases lifetime miles from 200k to 500k 400V Si IGBT to 800V SiC MOSFET 13:1 400V Si IGBT to 400V SiC MOSFET 7:1 800V SiC MOSFET Taxi/Uber Scenario* 24:1 
+
+
+
+ <img height="768" src="exhibit99_1111721050.jpg" title="slide50" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 50 ENERGY SAVED PER CAR USING SILICON CARBIDE *Assumes US average residential electricity price: $0.1371/kWh Lifetime GHG emissions reduced by 690 kg CO2,eq, equal to the CO2 in 77 gallons of gasoline Equivalent of 5.5 barrels of oil saved per sedan Owners save over $233* of electricity In 2030, if 35M BEVs use Silicon Carbide, the lifetime savings for that 1 model year would be: Equivalent of 192M barrels of oil $8.2B of electricity Lifetime GHG emissions equivalent to 2.7B gallons of gasoline 
+
+
+
+ <img height="768" src="exhibit99_1111721051.jpg" title="slide51" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 51 THE ESOI FOR SiC MOSFETS IS EVEN MORE DRAMATIC FOR INDUSTRIAL APPLICATIONS ESOI FOR 50 kW PV SYSTEM WITH SiC STRING INVERTER Phoenix, AZ 77:1 +1,078 kWh/yr Albany, NY 55:1 +738 kWh/yr Beijing 63:1 +862 kWh/yr Shenzhen 59:1 +797 kWh/yr 
+
+
+
+ <img height="768" src="exhibit99_1111721052.jpg" title="slide52" width="1365"/> © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 52 WHY WE WIN – TECHNOLOGY 200mm wafers show very good structural quality with minimum birefringent contrast over the entire 200mm wafer For 1200V Gen 3+ devices, Hex gives a 16% reduction in Rds(on) to 2.7 mW-cm2 • Future Gens will not only drive down Rds(on), but also focus on how to deliver more usable amps to maximize the benefit of SiC 200mm BPD Densities as low as 309 /cm2, and TSD Densities as low as 289 /cm2 Hex cell planar MOSFETs are very competitive at 650V Power Modules optimized for SiC allow unprecedented power densities 72.5 kW/L SiC does indeed save a very significant amount of energy over Si IGBT incumbent, even though it requires more “embedded energy” to make the SiC MOSFETs 
+
+
+
+ <img height="768" src="exhibit99_1111721053.jpg" title="slide53" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 53 We harness the power of Silicon Carbide to change the world for the better 
+
+
+
+ <img height="768" src="exhibit99_1111721054.jpg" title="slide54" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. J A Y C A M E R O N | S V P & G M , P O W E R Power 
+
+
+
+ <img height="768" src="exhibit99_1111721055.jpg" title="slide55" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 55 WOLFSPEED POWER DEVICE OPPORTUNITY • Battery Electric Vehicle (BEV) ramp • Energy efficiency requirements in Industrial • Power density and solution size in Industrial & Energy • Electric vehicle charging infrastructure momentum • New applications enabled by Silicon Carbide Growth Drivers for Wolfspeed Power Devices Growth Drivers for Silicon Carbide TAM Flexible business model in automotive (products, supply chain) • Products: chips, modules, discrete devices • Customer engagement: Automaker, Tier 1, and Tier 2 Strength of sales channel • Focused accounts with Wolfspeed sales team • Broad reach with Arrow Electronics • Digital engagement platforms and content Capacity Advance investment gives confidence in future supply Device technology Enabling system level performance and reliability Materials technology and manufacturing leadership Ecosystem, reference design, and tools focus 2022 2024 2026 Power Device Market Forecast (M) Automotive Industrial & Energy $2,200M $4,200M $6,000M Source: Company estimates 
+
+
+
+ <img height="768" src="exhibit99_1111721056.jpg" title="slide56" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 56 POWER DEVICE PORTFOLIO Power ModulesPower Die ProductsDiscrete Power Devices Broad applications across Automotive and Industrial & Energy Devices in chip form for customers with internal packaging capability Modules for high power applications in Automotive and Industrial & Energy Portfolio Characteristics • Broadest portfolio • Broadest customer base • “Low power” applications • Standard plastic packages Portfolio Characteristics • Targeted customers: module makers & Automotive OEM/Tier 1s • “High power” applications Portfolio Characteristics • Broad portfolio • Broad customer base • Standard and Silicon Carbide optimized footprints • “High power” applications 
+
+
+
+ <img height="768" src="exhibit99_1111721057.jpg" title="slide57" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 57 WOLFSPEED POWER DEVICE OPPORTUNITY: INDUSTRIAL & ENERGY • Electric vehicle fast charging infrastructure • Energy efficiency standards & operating cost reductions via less wasted electricity • Renewable energy market growth • Smaller and lighter industrial system trends Growth Drivers for Industrial & Energy Industrial & Energy Market Meaningful size $1.4B in 2026 Applications Power supplies and motor drivers Existing market grows & converts from silicon New markets enabled by Silicon Carbide Highly fragmented • Thousands of customers • Hundreds of products • Dozens of applications Long production cycles 2022 2024 2026 Industrial & Energy Market Forecast (M) $600M $1,000M $1,400M Source: Company estimates 
+
+
+
+ <img height="768" src="exhibit99_1111721058.jpg" title="slide58" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 58 POWERFUL SECULAR TRENDS DRIVING GROWTH OPPORTUNITIES IN INDUSTRIAL & ENERGY DEVICES Market Segment Trend Air Conditioners Efficiency standards, smaller systems Trains Improving operating economics Test & Measurement Automotive electrification Heating & Welding Smaller, more portable solutions Aerospace Electric vertical takeoff and landing (eVTOL), reduced weight, range emphasis Motion & Motor Drive Efficiency standards, system size reduction Enterprise Power Efficiency standards, operating cost reduction Power Supplies Efficiency and system size improvements In d u st ri a l 
+
+
+
+ <img height="768" src="exhibit99_1111721059.jpg" title="slide59" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 59 Market Segment Trend Solar Higher voltage, paired with storage, increased share of energy production Energy Storage Paired with solar, surge and backup capability, scalable implementations Smart Grid DC microgrid, solid state transformer, on premise storage solutions Fast Chargers Charging time reduction, business model variants, vehicle-to-anything (V2x), scalable solutions POWERFUL SECULAR TRENDS DRIVING GROWTH OPPORTUNITIES IN INDUSTRIAL & ENERGY DEVICES E n e rg y 
+
+
+
+ <img height="768" src="exhibit99_1111721060.jpg" title="slide60" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 60 SILICON CARBIDE WINS IN INDUSTRIAL & ENERGY Sales channel matched to opportunity – Wolfspeed for focus accounts – Arrow Electronics for breadth and scale – Digital platforms for maximum reach Broad portfolio on unified technology platforms – Discrete, Module, and Die Products – MOSFET and Schottky Diode Technology Systems and applications expertise – Power supply and motor drive circuits – Models, demo boards, and reference designs Higher efficiency – Meet stringent energy standards – Improved operating costs – Simplified cooling system design Higher power density – Smaller and lighter systems – Increased portability Higher voltage – More powerful systems Silicon Carbide Advantages Why Wolfspeed Wins 
+
+
+
+ <img height="768" src="exhibit99_1111721061.jpg" title="slide61" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 61 WOLFSPEED POWER DEVICE OPPORTUNITY: AUTOMOTIVE • Automakers transition aggressively from internal combustion engine (ICE) to battery electric vehicle (BEV) • Electric vehicles switch from silicon to Silicon Carbide • Silicon Carbide benefits both 400V & 800V architectures • Silicon Carbide provides value from premium to economy vehicles Growth Drivers for Automotive Opportunities Automotive Market Market trends • Favorable regulatory environment for electric vehicles • BEV market share outlook increases, hybrid outlook diminishes • Fast charging ecosystem investment is increasing Technology trends • Range from battery (kilometers per kWh) emphasis • 800V architectures preferred for faster charging • Bi-directional charging grows for Vehicle- to-Anything (V2x) Automotive OEM trends • Large investments in battery technology & manufacturing • Semiconductor shortages driving need for new engagement model 2022 2024 2026 Automotive Market Forecast (M) $1,600M $3,200M $4,600M Source: Company estimates 
+
+
+
+ <img height="768" src="exhibit99_1111721062.jpg" title="slide62" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 62 Silicon Carbide Fundamental Advantages Higher efficiency Range, cooling system Higher power density Size, weight, industrial design Higher voltage Faster charging, lower losses SILICON CARBIDE WINS IN AUTOMOTIVE Automakers Consumer Needs Regulatory & Environmental Supply Chain Capability • Eliminate range anxiety • Faster charging times • Battery costs & capital efficiency • Smaller/lighter inverters • Reduced solution cost vs silicon • 800V architectures • Effectiveness of battery investments • More amps per wafer of capacity • Carbon fleet regulations • Consumer consciousness Performance & Technology – Comprehensive Silicon Carbide expertise & intellectual property › Crystal growth, epitaxy, device architecture, packaging, and system – Design emphasis on system level results – Strong roadmap for future enhancements Quality & Reliability – Automotive expertise in quality and manufacturing – Comprehensive understanding of reliability drivers Manufacturing Scale – $1B+ capex investment – Mohawk Valley ramp and continued Materials factory expansion – Automated 200mm wafer fab supplied with Wolfspeed 200mm substrates Silicon Carbide Advantages Why Wolfspeed Wins 
+
+
+
+ <img height="768" src="exhibit99_1111721063.jpg" title="slide63" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 63 Months to Vehicle Production 36 24New fab construction decision Add tools to existing fab Volume shipments 36 24 12 048 WOLFSPEED ASSURANCE OF SUPPLY PROGRAM: A SUPPLY CHAIN SOLUTION • Silicon Carbide is a critical technology in the BEV architecture, with a more complex supply chain • Addresses future supply challenge by applying today’s lessons to EV programs • Strategy matches to automaker investments in battery technology and manufacturing SOLUTION: WOLFSPEED ASSURANCE OF SUPPLY PROGRAM (AOSP) • Wolfspeed: Improved visibility allows intelligent capital allocation in a dynamic growth market • Automakers: Secured supply for critical devices Wolfspeed AoSP aligns Wolfspeed and automaker interests:Wolfspeed AoSP Fundamental Principles: Traditional automotive industry sourcing mechanics commit orders inside one year Capacity planning decisions made 1-4 years in advance, require large capital outlays for construction and tools Mismatched timelines creates risk for manufacturers and automakers 
+
+
+
+ <img height="768" src="exhibit99_1111721064.jpg" title="slide64" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 64 WHY WE WIN - POWER Market conditions for Silicon Carbide adoption are favorable across Automotive and Industrial & Energy Industrial & Energy brings breadth and diversity to our customer base and revenue profile The electric vehicle transition in automotive creates a large opportunity for Silicon Carbide The combination of our technology, manufacturing, and sales strategy positions us to deliver consistent long- term growth inside our three target markets 
+
+
+
+ <img height="768" src="exhibit99_1111721065.jpg" title="slide65" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 65 We harness the power of Silicon Carbide to change the world for the better 
+
+
+
+ <img height="768" src="exhibit99_1111721066.jpg" title="slide66" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. G E R H A R D W O L F | S V P & G M , R F P O W E R RF Power 
+
+
+
+ <img height="768" src="exhibit99_1111721067.jpg" title="slide67" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 67 COMMUNICATION INFRASTRUCTURE INDUSTRY TRENDS – CONNECTIVITY EVERYWHERE & EXPLOSIVE GROWTH IN DATA TRAFFIC Significance of 5G network Forecasted worldwide mobile data traffic 0 50 100 150 200 250 300 2020 2021 2022 2023 2024 2025 2026 G B /m o n th Central & Eastern Europe India, Nepal, Bhutan Latin America Middle East & Africa North America North East Asia South East Asia & Oceania Western Europe +26% +23% +22% +29% +28% +29% Typical 5G Ecosystem • Data rates (up to 20Gb/s) • Low latency (<1ms) • More connections/base-station (~1 million/km2) Forecasted worldwide mobile data traffic per device measured in GB/month per phone (Source: Ericsson mobility report, June 2021) • Explosive growth in 5G data traffic • Data driven by 5G ecosystem, connectivity everywhere • Fusion of both Macro & mMIMO technology 
+
+
+
+ <img height="768" src="exhibit99_1111721068.jpg" title="slide68" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 68 AEROSPACE & DEFENSE INDUSTRY TRENDS – RADAR SYSTEMS MIGRATING TO PHASED ARRAY ANTENNAS (Multiple electronically scanned beams) Phased Array Antenna Modern radar systems are moving from rotating antennas to electronically scanned active arrays for improved performance (Single Mechanically scanned beam) Rotating Antenna • Single target track • Update rate limited to mechanical RPMs • Centralized transmitter, single point of failure • Multi-target track • Near-instantaneous update rate • One PA/element → graceful degradation 
+
+
+
+ <img height="768" src="exhibit99_1111721069.jpg" title="slide69" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 69 RF DEVICE MARKET EXPANDING TO $2.9B 2022 2024 2026 RF Device Market (M) $2,100M $2,400M $2,900M High efficiency and power density motivates GaN adoption Drivers 5G revolution driven by significant rise in data rate and bandwidth requirements High-performance next generation aerospace and defense systems Improved performance, higher efficiency commercial and industrial equipment GaN-on-SiC forecasted to be vast majority of RF device market in 5 years Source: Company estimates 
+
+
+
+ <img height="768" src="exhibit99_1111721070.jpg" title="slide70" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 70 WHY GALLIUM NITRIDE-ON-SILICON CARBIDE? Customer Benefits ✓ High efficiency solutions → Lower power consumption ✓ High power density → Compact solutions ✓ High thermal conductivity → Savings on cooling cost ✓ High reliability → Savings on maintenance cost ✓ High bandwidth → Broadband solutions Efficiency Power Density Si GaN-SiC Advantages of GaN-on-SiC over Si Power Density Thermal Conductivity GaAs GaN-SiC Advantages of GaN-on-SiC over GaAs 
+
+
+
+ <img height="768" src="exhibit99_1111721071.jpg" title="slide71" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 71 GAN APPLICATIONS & ADVANTAGES IN COMMUNICATIONS INFRASTRUCTURE Up to 87% less power/Mb More than 10x increase in data 87% 10x 4 x MIMO (4 x 60W Radio) 64 x mMIMO (64 x 3W Radio) Typical MIMO implementation example • High power density of GaN-on-SiC PAs enable compact solutions • High efficiency of GaN-on-SiC supports smaller housing SOLUTION: GaN-on-SiC BASED 5G SYSTEMAPPLICATIONS AND DRIVERS • Compact systems • Increased frequency bandwidth • Lower carbon footprint • Lower cost/bit/second for the operator 
+
+
+
+ <img height="768" src="exhibit99_1111721072.jpg" title="slide72" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 72 • Lower power consumption with higher performance • Smaller, lighter equipment 0 200 400 600 Up to 6X more Output Power Up to 20% more efficient per Output Power Amp 20% SOLUTION: X-Band PHASED ARRAY RADARAPPLICATIONS AND DRIVERS • GaN-on-SiC versus GaAs Transmit Module Amplifier Comparison Up to 60% More Radar Detection Range 60% GAN-ON-SIC IMPROVES SYSTEM PERFORMANCE ACROSS MULTIPLE APPLICATIONS Satcom Weather Radar Test and Measurement Broadcast Air Traffic Control Mil Aero Industrial RF Heating Source: Company estimates 
+
+
+
+ <img height="768" src="exhibit99_1111721073.jpg" title="slide73" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 73 RF POWER BUSINESS STRATEGY Drive value with vertical integration and technology leadership Support Communication Infrastructure customers with focused product and worldwide application Serve Aerospace and Defense markets with select distribution partnerships 
+
+
+
+ <img height="768" src="exhibit99_1111721074.jpg" title="slide74" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 74 WHY WE WIN – RF POWER 800+ BILLION FIELD HOURS Failure-in-time rates lower than Si MORE THAN 50 MILLION DEVICES Successfully fielded to date MORE THAN 15 YEARS Of commercial GaN HEMT production experience ACCREDITED AS A CATEGORY 1A TRUSTED FOUNDRY By the U.S. Department of Defense 
+
+
+
+ <img height="768" src="exhibit99_1111721075.jpg" title="slide75" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 75 We harness the power of Silicon Carbide to change the world for the better 
+
+
+
+ <img height="768" src="exhibit99_1111721076.jpg" title="slide76" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. C E N G I Z B A L K A S | S V P & G M , M A T E R I A L S Materials 
+
+
+
+ <img height="768" src="exhibit99_1111721077.jpg" title="slide77" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 77 WOLFSPEED MATERIALS: MISSION Accelerate the industry conversion from silicon to Silicon Carbide in power and RF semiconductors by being the preferred and trusted supplier of Silicon Carbide and GaN materials 
+
+
+
+ <img height="768" src="exhibit99_1111721078.jpg" title="slide78" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 78 MATERIALS STRATEGY: INTACT AND UNCHANGED Maintain leading global market share Expand capacity to accelerate industry transition from silicon to Silicon Carbide Use scale to drive innovation, quality and cost reduction improvements 
+
+
+
+ <img height="768" src="exhibit99_1111721079.jpg" title="slide79" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 79 SILICON CARBIDE MATERIALS MARKET EXPANDING TO $1B+ BY 2024 2022 2024 2026 Power RF 2.5x $1,700M $700M Source: YOLE and company estimates Drivers Value proposition validated in applications that are driving significant growth EV applications driving significant volume in power wafer market Significant adoption in broad industrial power market applications Telecom/5G commercial growth with major RF players Epitaxial services markets growing as every bare wafer requires epitaxy $1,200M 
+
+
+
+ <img height="768" src="exhibit99_1111721080.jpg" title="slide80" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 80 • Wolfspeed has long-term stable market share of >60% • Wolfspeed recognized as a technology leader in the industry • Wolfspeed is leading supplier to world’s largest power semiconductor IDMs • Wolfspeed continues to add Materials capacity to maintain market leadership MARKET LEADERSHIP Wolfspeed is the premiere Silicon Carbide wafer supplier with leading-edge technology 62%14% 13% 5% 4% 2% SiC Wafer Market Share Wolfspeed II-VI SiCrystal SK Siltron TankeBlue Others Source: YOLE and company estimates 
+
+
+
+ <img height="768" src="exhibit99_1111721081.jpg" title="slide81" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 81 WINNING IN MATERIALS – KEY DEALS ANNOUNCED Wolfspeed wafers are driving the transition in the power semiconductor industry from silicon to Silicon Carbide $1.3B in long-term wafer supply agreements Multi-year agreements Binding two-way commitment to purchase and to supply Capacity reservation deposit mechanism to ensure supply Access to long term pricing roadmap Pre-negotiated upside flexibility Built-in development programs and Others 
+
+
+
+ <img height="768" src="exhibit99_1111721082.jpg" title="slide82" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 82 SCALE AND CYCLES OF LEARNING Value Safety Large Diameter 30+ years Internal and External Feedback Customer Service Commitment High Quality Low Defectivity Intellectual Property Surface Finish Volume Automation Quality Repeatability 400+ Years of Team Experience Long-Term Agreements 
+
+
+
+ <img height="768" src="exhibit99_1111721083.jpg" title="slide83" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 83 FROM DEMONSTRATION TO FULL MANUFACTURING FOR SILICON CARBIDE WAFERS TAKES YEARS Demonstration • Initial specifications • Initial POR • Refine specifications • Refine POR • Quality demonstration Definition • Stable POR • Commercially available Ramp • Productivity improvements • Volume output Production Wafer demonstration to full production stability is around 5 years Customer acceptance and ramp highly dependent on device fabs coming online Lifetime of individual wafer diameter usually around a decade Monitoring market transition timeline through close customer engagements 
+
+
+
+ <img height="768" src="exhibit99_1111721084.jpg" title="slide84" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 84 MATERIALS PRODUCT PORTFOLIO Wolfspeed is the only commercial provider of a full suite of Silicon Carbide and GaN materials Power Materials • 150mm Silicon Carbide N-type wafers • 150mm Silicon Carbide epitaxy • 150mm thin device epitaxy (≤30µm) • 150mm thick device epitaxy (>30µm) • Customer-defined MOSFET and SBD structures RF Materials • 150mm HPSI Silicon Carbide wafers • 150mm GaN-based HEMT epitaxy • 100mm HPSI Silicon Carbide wafers • 100mm GaN-based HEMT epitaxy 
+
+
+
+ <img height="768" src="exhibit99_1111721085.jpg" title="slide85" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 85 SILICON CARBIDE EPITAXY Epitaxy Process – critical for device design, performance, and quality Silicon Carbide substrate Growing Silicon Carbide Silicon Carbide epiwafer Multiple commercial reactor platforms are available Horizontal Hot Wall Planetary Warm Wall Vertical Warm Wall High device yields require good thickness and doping uniformity with high crystal quality Wolfspeed has expertise in multiple reactor platforms and processes High volume manufacturing on 150mm 150mm epitaxial wafer volume has increased 7x since 2017 
+
+
+
+ <img height="768" src="exhibit99_1111721086.jpg" title="slide86" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 86 LEADING VOLUME SUPPLIER: BY THE NUMBERS Over the past 10 years, Wolfspeed has manufactured >615 million cm2 of Silicon Carbide wafers –More than 15 acres –Nearly 12 football fields –1 millionth 150mm power wafer made! Over the past 5 years, Wolfspeed has shipped >2.5 million µm of Silicon Carbide epitaxy –2.5 meters (8.34 ft) –Depth of an average swimming pool –1 epi layer is 1 human hair thick 
+
+
+
+ <img height="768" src="exhibit99_1111721087.jpg" title="slide87" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 87 WHY WE WIN - MATERIALS World class R&D and operations team focused solely on Silicon Carbide and GaN materials Investing in R&D and scale to drive industry transition at a rapid pace Absolute commitment to quality serving demanding applications Driving business to continuously create value for our customers 
+
+
+
+ <img height="768" src="exhibit99_1111721088.jpg" title="slide88" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 88 We harness the power of Silicon Carbide to change the world for the better 
+
+
+
+ <img height="768" src="exhibit99_1111721089.jpg" title="slide89" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. M O D E R A T E D B Y K E N R I C M I L L E R | V P , G L O B A L S A L E S & M A R K E T I N G , A U T O M O T I V E Customer Fireside Chat with ZF 
+
+
+
+ <img height="768" src="exhibit99_1111721090.jpg" title="slide90" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. T H O M A S W E S S E L | S V P , G L O B A L S A L E S & M A R K E T I N G Pipeline Development - Components 
+
+
+
+ <img height="768" src="exhibit99_1111721091.jpg" title="slide91" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 91 CURRENT PIPELINE > $18B 2022 2023 2024 2025 2026 2027 AUTO NON-AUTO $ M IL LI O N S Auto represents >70% of the pipeline Non-Auto represents close to 60% of the pipeline FY22-24 
+
+
+
+ <img height="768" src="exhibit99_1111721092.jpg" title="slide92" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 92 AUTOMOTIVE INDUSTRIAL & ENERGY RF Beg FY20 Beg FY21 Beg FY22 Beg FY20 Beg FY21 Beg FY22 AUTOMOTIVE INDUSTRIAL & ENERGY RF PIPELINE DEVELOPMENT BY SEGMENT ~75% CAGR ~65% CAGR ~10% CAGR $ M IL LI O N S $ M IL LI O N S RF recovering from Geopolitical impact in CIFR, aided by ~30% growth in A&D Radar and Military Comms Auto grew 3x in this period with increasing inverter needs of Automotive OEMs Industrial & Energy > 2.5x driven by Off-Board Charging, Cloud Server Power Supply, HVAC, Motor and Motion Control and Renewable Energy 
+
+
+
+ <img height="768" src="exhibit99_1111721093.jpg" title="slide93" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 93 * FY21 DESIGN IN DETAILS *ELR=Estimated Lifetime Revenue 
+
+
+
+ <img height="768" src="exhibit99_1111721094.jpg" title="slide94" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 94 DIRECT DISTRIBUTION Pipeline # of Projects (excl Verticals) DIRECT DISTRIBUTION Pipeline $ (excl Verticals) Pipeline Development (excl Verticals) CHANNEL PIPELINE 2022 2023 2024 2025 2026 2027 DIRECT DISTRIBUTION $ M IL LI O N S Excluding our vertical segments (Auto & Communication Infrastructure), the channel accounts for ~70% of our pipeline value and close to 90% of the project count Close to 1,000 projects identified each quarter 
+
+
+
+ <img height="768" src="exhibit99_1111721095.jpg" title="slide95" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 95 FY21 DESIGN IN - REVENUE PROFILE $0.00 $50.00 $100.00 $150.00 $200.00 $250.00 $300.00 $350.00 $400.00 $450.00 $500.00 2022 2023 2024 2025 2026 2027 2028 2029 2030 2031 RF Ind & Energy Automotive Automotive - Time to revenue 2x compared to non-Auto $ M IL LI O N S 
+
+
+
+ <img height="768" src="exhibit99_1111721096.jpg" title="slide96" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 96 Why We Win – Pipeline Development, Components Auto opportunities proliferating across all major OEMs Strong growth across all major segments Contribution from all geographies Global Distribution Partner allows us to cover a diverse customer base globally High confidence of pipeline to revenue conversion to achieve corporate objectives of • ~$1.5B in FY24 • ~$2.1B in FY26 
+
+
+
+ <img height="768" src="exhibit99_1111721097.jpg" title="slide97" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 97 We harness the power of Silicon Carbide to change the world for the better 
+
+
+
+ <img height="768" src="exhibit99_1111721098.jpg" title="slide98" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. R E X F E L T O N | S V P , F A B O P E R A T I O N S Capacity Update 
+
+
+
+ <img height="768" src="exhibit99_1111721099.jpg" title="slide99" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 99 Global Operations Vision: Cutting Down the Nets in FY24 Safe, Right, Fast Mentality ~$1.5B Revenue, 50%+¹ Gross Margin Nimble and Agile. Leverage operations performance for fast turn protos OnePack Culture: Make it Personal and Win Reaching for Perfection and Catching Excellence VISION AND PASSION TO WIN SUPPORTED BY ONEPACK CULTURE OnePack Culture ¹Excludes ~2% to 3% impact of corporate items 
+
+
+
+ <img height="768" src="exhibit99_1111721100.jpg" title="slide100" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 100 WORLD CLASS OPERATING SYSTEM Cost CPP, Productivity, MOOI RTP → Durham Transfers Durham →MV Safety First Pause, 100% Accountability, Daily Safety Moment Operational Excellence 5S, Lot Location, WIP Transfer and Dispatch, Line Management, Manual Task Reduction Structured Problem Solving 4C, 3X5 Why, Engineering 5S Tool Stability Critical Tool Ao, % Charts OOC, Rework Reduction, Holds Reduction Target Zero Dispo Guidelines, Detection Methods, Sampling and Inspection, Risk Reduction Safety First, Quality Mindset, Relentless Execution | 5S Foundation CT + OTD Moves, Turn Ratio, Prototype CT Quality Yield Top 10 by Tech Drive to Zero Actions Process Yield People Development & Career Roadmap DEI 
+
+
+
+ <img height="768" src="exhibit99_1111721101.jpg" title="slide101" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 101 GLOBAL OPERATIONS - MANUFACTURING HIGH LEVEL STRATEGY Short Term: Expansion of Power capabilities in Durham while transitioning to Mohawk Valley 200mm fab Long Term: Strong focus on operational improvements to achieve world class manufacturing performance in all wafer fabs Short Term: Expansion of capacity on Durham campus for initial growth of 200mm 2023/2024: Expand Power Materials and Epi growth into non-production Durham spaces Long Term: Explore next site options to create future growth and risk mitigation strategy in 2+ years Materials and Epi Wafer Fab 
+
+
+
+ <img height="768" src="exhibit99_1111721102.jpg" title="slide102" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 102 SILICON CARBIDE SUBSTRATE CAPACITY FY2022 FY2024 FY2026 Silicon Carbide Substrate Capacity (sq. cm.) Represents both 150mm and 200mm capacity 200mm established, well positioned to support MVF expansion Ongoing customer demands for both power and RF substrates are driving 150mm volumes into the future Materials to grow from 167k sq. ft. to 242k sq. ft. over the next 2 years 
+
+
+
+ <img height="768" src="exhibit99_1111721103.jpg" title="slide103" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 103 MATERIALS EXPANSION Existing Footprint Future Footprint 
+
+
+
+ <img height="768" src="exhibit99_1111721104.jpg" title="slide104" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 104 WOLFSPEED SIC MOSFET – BARE DIE MANUFACTURING LOCATIONS NORTH CAROLINA WAFER FABS RTP Fab: 1,495m2 3028 E Cornwallis Road Durham, NC MFT and Schottky, 150mm RF, 100mm DUR Fab: 4,950m2 4600 Silicon Drive Durham, NC MFT and Schottky, 150mm RF, 150mm NEW YORK WAFER FAB MVF fab: 14,100m2 Technology Drive Marcy, NY Production quals Q3 FY22 MFT and Schottky, 200mm World’s First 200mm SiC Fab 
+
+
+
+ <img height="768" src="exhibit99_1111721105.jpg" title="slide105" width="1365"/> 105 NC FAB - NEW LEADERSHIP AND CALL TO ACTION IN FY22 FOCUS ON UTILIZATION OF KEY TOOLS Established a key tool list 7X24 Focus (all modules / shifts) on performance of identified tools Prioritize Key Tool Downs over other Equipment Downs STRATEGIC LINE MANAGEMENT Established run plans for bottleneck toolsets and inspections WIP Transfer Improvement – Transfer app released for Durham <-> RTP 7X24 Focus (all modules / shifts) on moves performance ENHANCED ENGAGEMENT Empowered supervisors and leads to make strategic decisions Stronger interaction between MFG, ENG, and Equipment resources The reality of “one fab” is taking place Small Win Acknowledgments EARLY RETURNS ARE ENCOURAGING Significantly improved cycle time Higher wafer output Structured problem solving driven yield improvements Engaged and highly energized team 
+
+
+
+ <img height="768" src="exhibit99_1111721106.jpg" title="slide106" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 106 POWER MOSFET SUPPLY – MVF RAMP COGS Impact 2021 2022 2024 2026 Wolfspeed Power Wafer Capacity • Fab in final stages of facilities fit out with first learning cycles to be started by end of year and production starts by June 2022 • SUNY pilot line pivotal for 200mm yield learning; will enable a fast track to MVF process qualifications and product quals • Yields well ahead of similar 150mm products in Durham Drivers & Assumptions FY22 Durham 150mm Yield Benefit Scale Benefits Automation (Labor/CT) FY24 MVF 150mm Eq 
+
+
+
+ <img height="768" src="exhibit99_1111721107.jpg" title="slide107" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 107 MOHAWK VALLEY FAB: CONSTRUCTION UPDATE Fab Class 100 cleanroom on Level 3 is complete and meets environmental requirements (temperature, humidity, air exchanges, and particles) Tool installation for initial ramp phase well underway Class 10000 cleanroom on Level 2 also complete and initial tool installation has begun (Thinning, Plating, Test) Automated material handler system installation nearly 90% complete Central Utility Building (CUB) CUB build complete and handed over to Wolfspeed Mechanical systems providing air, water, and exhaust to fab complete Bulk gases onsite to support startup activities 
+
+
+
+ <img height="768" src="exhibit99_1111721108.jpg" title="slide108" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 108 https://teams.microsoft.com/_#/files/Systems%20Automation?threadId=19%3Aa279766ed2034d958a86ebd36b6883ee%40thread.sky pe&ctx=channel&context=MVL%2520AMHS%2520Videos&rootfolder=%252Fsites%252FNFStartup%252FShared%2520Documents%25 2FSystems%2520Automation%252FFiles%252Fvideos%252FMVL%2520AMHS%2520Videos MOHAWK VALLEY FAB: AUTOMATION 
+
+
+
+ <img height="768" src="exhibit99_1111721109.jpg" title="slide109" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 109 Invested in the resources to drive significant yield and cycle-time improvements over the next 3 years % C h u te Y ie ld MOSFET Chute Yield C T in D a y s MOSFET Cycle Time Key Operational Investments • Hired experienced silicon industry leaders • Implementing factory automation and yield/big data software • Purchasing latest tool sets to leverage industry capability and to drive cycle-time excellence • Investing in: – New generation of Automated Inspection Tools – In-line tool capabilities such as Fault Detection • Committing to Advanced SPC Software and disciplines • Training in latest Automotive standards • Driving initiatives with Organization-wide Ops Excellence focus DRIVING SIC MANUFACTURING COST STRUCTURE 
+
+
+
+ <img height="768" src="exhibit99_1111721110.jpg" title="slide110" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 110 • Wolfspeed’s Leadership in RF WHY WE WIN – CAPACITY Operational footprint strategy maximizes revenue and gross margin OnePack culture supporting operations excellence, automotive quality and productivity Game changing automation and scalability that is bending the cost curve Invested to drive significant yield and cycle-time improvements over the next 3 years 
+
+
+
+ <img height="768" src="exhibit99_1111721111.jpg" title="slide111" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 111 We harness the power of Silicon Carbide to change the world for the better 
+
+
+
+ <img height="768" src="exhibit99_1111721112.jpg" title="slide112" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. N E I L L R E Y N O L D S | E V P & C F O Long-Term Outlook 
+
+
+
+ <img height="768" src="exhibit99_1111721113.jpg" title="slide113" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 113 KEY FINANCIAL HIGHLIGHTS & TAKEAWAYS Business and portfolio is focused and work continues FY2026 outlook reflects high growth, high margin, strong cash flows Three stages to achieve our target model: Transform, Ramp, Execute Investments increase scale and expand margins; strengthening leadership position Demand curve steepening; pipeline opportunities expanding; continuing to capture design-ins 
+
+
+
+ <img height="768" src="exhibit99_1111721114.jpg" title="slide114" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 114 Automotive Device Opportunity in FY2026 Inverter OBC DC/DC MARKET IS RAPIDLY GROWING - UNIQUELY POSITIONED TO CAPTURE SHARE FY2022 FY2024 FY2026 Device Market Outlook (M) Industrial & Energy RF Automotive $6,600M $8,900M • Total Device market growing with a 20% CAGR • Automotive is the fastest growing market with a 30% CAGR between FY22 - FY26, with EV adoption rates reaching 15% • In FY26, Inverters will continue to be largest portion of Automotive market at >80% • Industrial & Energy expected to increase with a 24% CAGR between FY22 - FY26 • RF anticipated to increase with an 8% CAGR between FY22 - FY26 Drivers & Assumptions Data based on third-party and Company internal assumptions $4,300M 
+
+
+
+ <img height="768" src="exhibit99_1111721115.jpg" title="slide115" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 115 WOLFSPEED REVENUE GROWING FASTER THAN THE MARKET • Revenue driven by strength across all product lines led by devices • Devices expected to capture increasing share of revenue between FY24 - FY26 • Device revenue driven by strong demand for automotive, as well as growing demand for Industrial & Energy and 5G/A&D FY2021 FY2024 FY2026 Revenue Outlook (M) Materials Devices $526M ~$1,500M ~$2,100M+ Drivers & Assumptions30%+ CAGR 
+
+
+
+ <img height="768" src="exhibit99_1111721116.jpg" title="slide116" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 116 FY2019 - 2021 FY2022 - 2023 FY2024 FY2026+ GLOBAL SEMICONDUCTOR POWERHOUSE; WELL-POSITIONED TO CAPITALIZE ON INCREASING DEMAND FOR EVs, INDUSTRIAL AND 5G Inflection Point Accelerated Growth $4.5B+ design-ins announced through Q1 FY22 $1B+ CapEx investment Significant capacity expansion Investment in R&D and Sales BEV Inflection point Charging Infrastructure buildout Continued 5G deployment Industrial & Energy SiC adoption Broad Adoption~$0.5B $0.7B - $1B¹ ~$1.5B ~$2.1B+ ¹Reflects the consensus of analyst estimates for these periods Modest Growth Ramp ExecuteTransform Accelerated BEV adoption Widespread 5G usage Further penetration in Industrial & Energy Scaled business at target model 
+
+
+
+ <img height="768" src="exhibit99_1111721117.jpg" title="slide117" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 117 MOHAWK VALLEY SCALE, 200mm DIAMETER CHANGE, AND IMPROVING YIELDS TO DRIVE GROSS MARGIN PERFORMANCE FY2022 - 2023 FY2024-2025 FY2026+ Gross Margin (Non-GAAP)¹ Optimize Durham Transition Durham -> MVF Expand MVF Mid 30% - 40%+ ~50%² 50% - 54% • Gross margin transition between FY22 and FY24 supported by 200mm transition from Durham to MVF • MVF to have 50% lower processing costs; greater than 50% CT improvement; 20 to 30 points improved yields than Durham • Production at MVF on track to begin in calendar year 2022 • Expect to improve our execution at Durham over the next 4 to 6 quarters • $80M³ of start up costs in FY22, winds down in FY23 Drivers & Assumptions ¹See Appendix for a reconciliation of these non-GAAP measures to the most directly comparable GAAP measure; ²Excludes ~2% to 3% impact of corporate items; ³Excluded from non-GAAP results 
+
+
+
+ <img height="768" src="exhibit99_1111721118.jpg" title="slide118" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 118 CLEAR PATH TO GROSS MARGIN EXPANSION ¹Excludes ~2% to 3% impact of corporate items. See Appendix for a reconciliation of these non-GAAP measures to the most directly comparable GAAP measure Mid 30%s 50%-54% 50%¹ FY22 Optimize Durham Wafer Diameter Change Power: MVF Cost/Scale/Yields FY24 Continued Performance FY26 Drivers & Assumptions New leadership in Durham fab driving operational excellence enabling improved performance Benefits realized of shift to 200mm for Power and moving RF power from 100mm to 150mm MVF cost/scale/yield improvements realized – world’s largest 200mm Silicon Carbide fab 
+
+
+
+ <img height="768" src="exhibit99_1111721119.jpg" title="slide119" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 119 REVENUE EXPANSION PROVIDES OPERATING LEVERAGE AS INVESTMENT PAYBACKS REALIZED • Investments in R&D and S&M continues to increase through FY26 • Increased operational efficiency via digital transformation and optimized SG&A • Improving operational scale and efficiency result in normalized OpEx investments starting in FY24 FY2021 FY2022 FY2023 FY2024 FY2025 FY2026 OPEX % of Revenue (Non-GAAP)¹ OPEX % of Revenue (Non-GAAP) 60% ~24% +36% pts operating efficiency Drivers & Assumptions ¹See Appendix for a reconciliation of these non-GAAP measures to the most directly comparable GAAP measure. 
+
+
+
+ <img height="768" src="exhibit99_1111721120.jpg" title="slide120" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 120 CAPITAL AND CASH FLOW FY2021 FY2022 FY2023 FY2024 FY2025 FY2026 FY2021 FY2022 FY2023 FY2024 FY2025 FY2026 FREE CASH FLOW¹ Peak Investment Period CAPEX Drivers & Assumptions FY21 and FY22 represents peak investment period to support capacity expansion, steps down as NYS reimbursement of $500M and investments normalize Investment generates $1.5B+ in revenue and incremental gross margin; $1B of convertible debt trading above the conversion premium Accelerating demand curve resulted in pull forward of future CapEx • Expanding capacity at Durham • Decision to open MVF at 200mm 20%+ $475M $566M ¹See Appendix for a reconciliation of these non-GAAP measures to the most directly comparable GAAP measure. 
+
+
+
+ <img height="768" src="exhibit99_1111721121.jpg" title="slide121" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 121 FY2024 FY2026 Revenue $1.5B $2.1B CAGR vs 2021 40%+ 30%+ GM% (Non-GAAP)1,2 ~50% 50-54% OPEX% (Non-GAAP)¹ ~25% 23-25% EBIT % (Non-GAAP)¹ ~25% 25-30% FCF % (Non-GAAP)¹ ~15% ~20%+ WOLFSPEED TARGET OPERATING MODEL Drivers & Assumptions • Positioned to capitalize in key growth areas following significant period of investment • Transition to MVF markedly improves gross margin trajectory • Powerful secular trends and operating scale driving revenue expansion and entry into new markets for Power and RF • Deep domain expertise in Silicon Carbide bolsters our leadership position ¹See Appendix for a reconciliation of these non-GAAP measures to the most directly comparable GAAP measure; ²Excludes ~2% to 3% impact of corporate items 
+
+
+
+ <img height="768" src="exhibit99_1111721122.jpg" title="slide122" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 122 WHY WE WIN - SUCCESSFULLY TRANSFORMED INTO A LEADING GLOBAL SEMICONDUCTOR POWERHOUSE Invested $1B+ to cement our position as a global leader in Silicon Carbide production Invested $1B+ in the last two years to cement our position as a global leader in Silicon Carbide production Multi-decade growth opportunity within both devices and materials Market leader in terms of knowledge and capacity, backed by 30 years of experience in the technology space Outlook reflects high growth, high margin, and strong cash flows 
+
+
+
+ <img height="768" src="exhibit99_1111721123.jpg" title="slide123" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 123 We harness the power of Silicon Carbide to change the world for the better 
+
+
+
+ <img height="768" src="exhibit99_1111721124.jpg" title="slide124" width="1365"/> Q U E S T I O N & A N S W E R S E S S I O N 
+
+
+
+ <img height="768" src="exhibit99_1111721125.jpg" title="slide125" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 125 1 2 3 4 5 C O N V E R S A T I O N K I O S K S Our People Technology Leadership Automotive Trends Capacity Expansion Device Pipeline, Industrial & Distribution Margaret Chadwick Tamara Pearce John Palmour Jay Cameron Jim Milligan Lisa Fritz Kenric Miller Ole Gerkensmeyer Thomas Wessel Steven Fera Guy Moxey Rick Madormo Angelo Cancian Rex Felton Missy Stigall Michael Daly John Edmond Wolfgang Büchele (CEO Exyte) 
+
+
+
+ <img height="768" src="exhibit99_1111721126.jpg" title="slide126" width="1365"/> A P P E N D I X 
+
+
+
+ <img height="768" src="exhibit99_1111721127.jpg" title="slide127" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 127 NON-GAAP RECONCILIATION: GROSS MARGIN % FY2022-FY2023 FY2024-FY2025 FY2026+ GAAP Gross Margin% Low 30s to 40%+ ~49% 49%-53% Adjustments: Stock-based compensation 2% 1% 1% Non-GAAP Gross Margin% Mid 30s to 40%+ ~50% 50%-54% FY2022 FY2024 FY2026 GAAP Gross Margin% Low 30s 49% 49%-53% Adjustments: Stock-based compensation 2% 1% 1% Non-GAAP Gross Margin% Mid 30s 50% 50%-54% 
+
+
+
+ <img height="768" src="exhibit99_1111721128.jpg" title="slide128" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 128 NON-GAAP RECONCILIATION: OPERATING EXPENSE % OF REVENUE ($M) FY2021 FY2026 GAAP OPEX % 91% ~28% Adjustments: Stock-based compensation 7% 3% Amortization or impairment of acquisition-related intangibles 3% 1% Abandonment of long-lived assets 14% 0% Factory optimization restructuring and start-up costs 3% 0% Project, transformation and transaction costs 2% 0% Severance and other restructuring 1% 0% Transition service agreement costs 1% 0% Non-GAAP OPEX% 60% ~24% ($M) FY2024 FY2026 GAAP OPEX % ~31% ~27-29% Adjustments: Stock-based compensation expense 4% 3% Amortization or impairment of acquisition-related intangibles 1% 1% Project, transformation and transaction costs 1% 0% Non-GAAP OPEX% ~25% ~23-25% 
+
+
+
+ <img height="768" src="exhibit99_1111721129.jpg" title="slide129" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 129 NON-GAAP RECONCILIATION: EBIT ($M) FY2024 FY2026 GAAP Net Income ~$559 $297 - $402 Adjustments: Stock-Based Compensation COGS $15 $21 OPEX $60 $63 Total Stock-Based Compensation $75 $84 Amortization or impairment of acquisition-related intangibles $15 $21 Accretion on convertible notes, net of capitalized interest $29 $26 Net Interest Expense (Income) $3 $3 Income Tax Expense (Benefit) ($306) $94 Adjusted EBIT$ ~$375 $525 - $630 Adjusted EBIT% ~25% 25% - 30% FY2024 Income Tax Benefit driven by a forecasted release of the U.S. valuation allowance 
+
+
+
+ <img height="768" src="exhibit99_1111721130.jpg" title="slide130" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 130 RECONCILIATION: FREE CASH FLOW ($M) FY2024 FY2026 Cash Provided by Operating Activities $475 $720 Purchases of PP&E and Patents, Net of Reimbursements ($250) ($300) Free Cash Flow ~$225 ~$420 Free Cash Flow% of Revenue ~15% ~20%+ 
+
+
+
+ <img height="768" src="exhibit99_1111721131.jpg" title="slide131" width="1365"/> WOLFSPEED CONFIDENTIAL & PROPRIETARY © 2021 Wolfspeed, Inc. All rights reserved. Wolfspeed® and the Wolfstreak logo are registered trademarks and the Wolfspeed logo is a trademark of Wolfspeed, Inc. 131 Wolfspeed excludes the following items from one or more of its non-GAAP measures when applicable: • Stock-based compensation expense. This expense consists of expenses for stock options, restricted stock, performance stock awards and employee stock purchases through its Employee Stock Purchase Program. Wolfspeed excludes stock-based compensation expenses from its non-GAAP measures because they are non-cash expenses that Wolfspeed does not believe are reflective of ongoing operating results. • Amortization or impairment of acquisition-related intangibles. Wolfspeed incurs amortization or impairment of acquisition-related intangibles in connection with acquisitions. Wolfspeed excludes these items because they arise from Wolfspeed's prior acquisitions and have no direct correlation to the ongoing operating results of Wolfspeed's business. • Abandonment of long-lived assets. In the fourth quarter of fiscal 2021, Wolfspeed modified its long-range plan regarding a portion of its Durham, North Carolina campus. As a result, Wolfspeed decided it will no longer complete the construction of certain buildings on the Durham campus. The carrying value of the abandoned assets has been reduced to an estimated salvage value. Wolfspeed does not believe this expense is reflective of ongoing operating results. • Factory optimization restructuring. In May 2019, the Company started a significant, multi-year factory optimization plan to be anchored by a state-of-the-art, automated 200mm Silicon Carbide device fabrication facility. In September 2019, the Company announced the intent to build the new fabrication facility in Marcy, New York to complement the factory expansion underway at its U.S. campus headquarters in Durham, North Carolina. As part of the plan, the Company will incur restructuring costs associated with the movement of equipment as well as disposals on certain long-lived assets. Because these charges relate to assets which had been retired prior to the end of their estimated useful lives, Wolfspeed does not believe these costs are reflective of ongoing operating results. Similarly, Wolfspeed does not consider the realized net losses on sale of assets relating to the restructuring to be reflective of ongoing operating results. • Factory optimization start-up costs. As part of the factory optimization plan, the Company has incurred and will incur start-up costs. Wolfspeed does not believe these costs are reflective of ongoing operating results. In fiscal 2022, these costs will include an estimated $80.0 million of start-up and pre-production related costs associated with the Company ramping production at its new device fabrication facility in Marcy, New York. • Severance and other restructuring. These costs relate to the Company's realignment of certain resources as part of the Company's transition to a more focused semiconductor company. Wolfspeed does not believe these costs are reflective of ongoing operating results. • Project, transformation and transaction costs. The Company has incurred professional services fees and other costs associated with completed and potential acquisitions and divestitures, as well as internal transformation programs focused on optimizing the Company's administrative processes. Wolfspeed excludes these items because Wolfspeed believes they are not reflective of the ongoing operating results of Wolfspeed's business. • Transition service agreement costs. As a result of the sale of the Lighting Products business unit, the Company is providing certain information technology services under a transition services agreement which will not be reimbursed. Wolfspeed excludes the costs of these services because Wolfspeed believes they are not reflective of the ongoing operating results of Wolfspeed's business. • Accretion on convertible notes, net of capitalized interest. The issuance of the Company's convertible senior notes in August 2018 and April 2020 results in interest accretion on the convertible notes' issue costs and discount. Wolfspeed considers these items as either limited in term or having no impact on the Company's cash flows, and therefore has excluded such items to facilitate a review of current operating performance and comparisons to the Company's past operating performance. NON-GAAP ADJUSTMENTS 
+
+
+
+ <img height="768" src="exhibit99_1111721132.jpg" title="slide132" width="1365"/> THANK YOU 
+
+
+

@@ -1,0 +1,221 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — NVDA 2019-11-14
+# 출처: https://www.sec.gov/Archives/edgar/data/1045810/000104581019000168/form8-kq3fy20.htm
+
+Exhibit
+
+
+FOR IMMEDIATE RELEASE:
+NVIDIA Announces Financial Results for Third Quarter Fiscal 2020
+SANTA CLARA, Calif.-Nov. 14, 2019- NVIDIA (NASDAQ: NVDA) today reported revenue for the third quarter ended Oct. 27, 2019, of $3.01 billion compared with $3.18 billion a year earlier and $2.58 billion in the previous quarter.
+GAAP earnings per diluted share for the quarter were $1.45, compared with $1.97 a year ago and $0.90 in the previous quarter. Non-GAAP earnings per diluted share were $1.78, compared with $1.84 a year earlier and $1.24 in the previous quarter.
+“Our gaming business and demand from hyperscale customers powered Q3’s results,“ said Jensen Huang, founder and CEO of NVIDIA. “The realism of computer graphics is taking a giant leap forward with NVIDIA RTX. 
+“This quarter, we have laid the foundation for where AI will ultimately make the greatest impact.  We extended our reach beyond the cloud, to the edge, where GPU-accelerated 5G, AI and IoT will revolutionize the world’s largest industries. We see strong data center growth ahead, driven by the rise of conversational AI and inference.”
+NVIDIA will pay its next quarterly cash dividend of $0.16 per share on Dec. 20, 2019, to all shareholders of record on Nov. 29, 2019. 
+The company will return to repurchasing its stock after closing the acquisition of Mellanox Technologies, Ltd. Although discussions with the European Union and China regulatory bodies are progressing and closing the acquisition is possible by the end of this calendar year, the company believes the closing will likely occur in the early part of calendar 2020. 
+Q3 Fiscal 2020 Summary
+
+GAAP                                                                                                       
+($ in millions, except earnings per share)      Q3 FY20      Q2 FY20      Q3 FY19          Q/Q   Y/Y       
+Revenue                                          $3,014       $2,579       $3,181       Up 17%   Down 5%   
+Gross margin                                 63.6     %   59.8     %   60.4     %   Up 380 bps   Up 320 bps
+Operating expenses                                 $989         $970         $863        Up 2%   Up 15%    
+Operating income                                   $927         $571       $1,058       Up 62%   Down 12%  
+Net income                                         $899         $552       $1,230       Up 63%   Down 27%  
+Diluted earnings per share                        $1.45        $0.90        $1.97       Up 61%   Down 26%  
+
+Non-GAAP                                                                                                   
+($ in millions, except earnings per share)      Q3 FY20      Q2 FY20      Q3 FY19          Q/Q   Y/Y       
+Revenue                                          $3,014       $2,579       $3,181       Up 17%   Down 5%   
+Gross margin                                 64.1     %   60.1     %   61.0     %   Up 400 bps   Up 310 bps
+Operating expenses                                 $774         $749         $730        Up 3%   Up 6%     
+Operating income                                 $1,156         $802       $1,210       Up 44%   Down 4%   
+Net income                                       $1,103         $762       $1,151       Up 45%   Down 4%   
+Diluted earnings per share                        $1.78        $1.24        $1.84       Up 44%   Down 3%   
+NVIDIA’s outlook for the fourth quarter of fiscal 2020 does not include any contribution from the pending acquisition of Mellanox and is as follows:
+
+•   Revenue is expected to be $2.95 billion, plus or minus 2 percent. Strong sequential growth is expected in Data Center, offset by a seasonal decline in GeForce® notebook GPUs and SoC modules for gaming platforms.
+
+•   GAAP and non-GAAP gross margins are expected to be 64.1 percent and 64.5 percent, respectively, plus or minus 50 basis points.
+
+•   GAAP and non-GAAP operating expenses are expected to be approximately $1.02 billion and $805 million, respectively.
+
+•   GAAP and non-GAAP other income and expense are both expected to be income of approximately $25 million.
+
+•   GAAP and non-GAAP tax rates are both expected to be 9 percent, plus or minus 1 percent, excluding any discrete items. GAAP discrete items include excess tax benefits or deficiencies related to stock-based compensation, which are expected to generate variability on a quarter by quarter basis.
+Highlights 
+Since the end of the second quarter of fiscal 2020, NVIDIA has achieved progress in these areas:
+Gaming
+
+•   Announced with Microsoft that Minecraft, the world’s most popular computer game, will feature ray tracing.
+
+•   Announced SUPER versions of GeForce GTX™ GPUs with GeForce GTX 1650 SUPER, and GeForce GTX 1660 SUPER, successor to GeForce GTX 1060, the world’s best-selling GPU.
+
+•   Introduced the RTX Broadcast Engine, which uses the AI capabilities of GeForce RTX GPUs to enable virtual greenscreens, filters and AR effects in livestreaming.
+
+•   Announced two new models of the SHIELD TV streaming media player, which bring unmatched levels of home entertainment, gaming and AI capabilities to the living room.
+
+•   Expanded the reach of GeForce NOW™ game streaming, with the service announced by Taiwan Mobile and Russia’s Rostelcom with GFN.ru, which joined Korea’s LG U+ and Japan’s SoftBank.
+Data Center 
+
+•   Launched the NVIDIA® EGX Intelligent Edge Computing Platform to bring accelerated AI to retail, manufacturing, telecommunications, logistics and other industries, with Walmart, BMW, NTT East, Procter &amp; Gamble and Samsung Electronics among early adopters.
+
+•   Collaborated with Microsoft to provide an optimized hybrid-cloud platform combining Microsoft Azure software with NVIDIA EGX powered by NVIDIA T4 GPUs to address edge-computing demand.
+
+•   Entered the 5G telecom market, enabling telcos to build high-performing, efficient, virtualized 5G radio access networks using GPUs, in collaboration with Ericsson.
+
+•   Announced a collaboration with Red Hat to deliver software-defined 5G RAN using Red Hat OpenShift and GPU-accelerated servers.
+
+•   Won the first inference benchmark, MLPerf Inference 0.5, measuring AI workload performance in data centers and at the edge.
+
+•   Partnered with VMware to accelerate VMware Cloud on AWS using NVIDIA T4 GPUs and introduced the new NVIDIA vComputeServer software for enterprises to run AI workloads on GPU servers in virtualized environments.
+
+•   Announced that the United States Postal Service will use NVIDIA AI technology to improve its package data-processing efficiency.
+Professional Visualization
+
+•   Announced that more than 40 creative and design applications, including three from Adobe -- Adobe Dimension, Substance Alchemist and Premiere Pro -- are now accelerated by RTX ray tracing.
+Edge Computing
+
+•   Introduced Jetson Xavier™ NX, the world’s smallest, most powerful AI supercomputer for robotic and embedded computing devices at the edge.
+CFO Commentary
+Commentary on the quarter by Colette Kress, NVIDIA’s executive vice president and chief financial officer, is available at http://investor.nvidia.com/.
+Conference Call and Webcast Information
+NVIDIA will conduct a conference call with analysts and investors to discuss its third quarter fiscal 2020 financial results and current financial prospects today at 2:30 p.m. Pacific time (5:30 p.m. Eastern time). A live webcast (listen-only mode) of the conference call will be accessible at NVIDIA’s investor relations website, http://investor.nvidia.com. The webcast will be recorded and available for replay until NVIDIA’s conference call to discuss its financial results for its fourth quarter of fiscal 2020.
+Non-GAAP Measures
+To supplement NVIDIA’s Condensed Consolidated Statements of Income and Condensed Consolidated Balance Sheets presented in accordance with GAAP, the company uses non-GAAP measures of certain components of financial performance. These non-GAAP measures include non-GAAP gross profit, non-GAAP gross margin, non-GAAP operating expenses, non-GAAP income from operations, non-GAAP other income (expense), non-GAAP income tax expense, non-GAAP net income, non-GAAP net income, or earnings, per diluted share, non-GAAP diluted shares, and free cash flow. In order for NVIDIA’s investors to be better able to compare its current results with those of previous periods, the company has shown a reconciliation of GAAP to non-GAAP financial measures. These reconciliations adjust the related GAAP financial measures to exclude stock-based compensation expense, legal settlement costs, restructuring and other, acquisition-related and other costs, gains and losses from non-affiliated investments, interest expense related to amortization of debt discount, and the associated tax impact of these items, where applicable. Free cash flow is calculated as GAAP net cash provided by operating activities less purchase of property and equipment and intangible assets. NVIDIA believes the presentation of its non-GAAP financial measures enhances the user’s overall understanding of the company’s historical financial performance. The presentation of the company’s non-GAAP financial measures is not meant to be considered in isolation or as a substitute for the company’s financial results prepared in accordance with GAAP, and the company’s non-GAAP measures may be different from non-GAAP measures used by other companies.
+About NVIDIA
+NVIDIA’s (NASDAQ: NVDA) invention of the GPU in 1999 sparked the growth of the PC gaming market, redefined modern computer graphics and revolutionized parallel computing. More recently, GPU deep learning ignited modern AI ¯ the next era of computing ¯ with the GPU acting as the brain of computers, robots and self-driving cars that can perceive and understand the world. More information at http://nvidianews.nvidia.com/.
+###
+For further information, contact:
+
+Simona Jankowski        Robert Sherbin          
+Investor Relations      Corporate Communications
+NVIDIA Corporation      NVIDIA Corporation      
+sjankowski@nvidia.com   rsherbin@nvidia.com     
+Certain statements in this press release including, but not limited to, statements as to: the realism of computer graphics taking a giant leap forward with NVIDIA RTX; the foundation we believe we have laid for where AI will ultimately make the greatest impact; the extension of our reach beyond the cloud, to the edge, where GPU-accelerated 5G, AI, and IoT will revolutionize the world’s largest industries; strong data center growth ahead, driven by the rise of conversational AI and inference; NVIDIA returning to repurchasing its stock after closing the acquisition of Mellanox; the status of the regulatory approval process and the timing of closing for the Mellanox acquisition; NVIDIA’s financial outlook for the fourth quarter of fiscal 2020; our expectation of strong sequential growth in Data Center, offset by a seasonal decline in GeForce notebook and SoC modules for gaming platforms, in the fourth quarter of fiscal 2020; NVIDIA’s expected tax rates for the fourth quarter of fiscal 2020; NVIDIA’s expectation to generate variability from excess tax benefits or deficiencies; Minecraft featuring ray tracing; and the benefits and impact of the RTX Broadcast Engine, two new models of SHIELD TV, the NVIDIA EGX Intelligent Edge Computing Platform, NVIDIA’s entry into the 5G telecom market, NVIDIA’s partnership with VMware, the NVIDIA vComputeServer software, and the United States Postal Service’s use of NVIDIA AI technology are forward-looking statements that are subject to risks and uncertainties that could cause results to be materially different than expectations. Important factors that could cause actual results to differ materially include: global economic conditions; our reliance on third parties to manufacture, assemble, package and test our products; the impact of technological development and competition; development of new products and technologies or enhancements to our existing product and technologies; market acceptance of our products or our partners’ products; design, manufacturing or software defects; changes in consumer preferences or demands; changes in industry standards and interfaces; unexpected loss of performance of our products or technologies when integrated into systems; as well as other factors detailed from time to time in the most recent reports NVIDIA files with the Securities and Exchange Commission, or SEC, including, but not limited to, its annual report on Form 10-K and quarterly reports on Form 10-Q. Copies of reports filed with the SEC are posted on the company’s website and are available from NVIDIA without charge. These forward-looking statements are not guarantees of future performance and speak only as of the date hereof, and, except as required by law, NVIDIA disclaims any obligation to update these forward-looking statements to reflect future events or circumstances.
+© 2019 NVIDIA Corporation. All rights reserved. NVIDIA, the NVIDIA logo, GeForce, GeForce GTX, GeForce NOW, Jetson Xavier, NVIDIA RTX, and NVIDIA SHIELD are trademarks and/or registered trademarks of NVIDIA Corporation in the U.S. and/or other countries. Other company and product names may be trademarks of the respective companies with which they are associated. Features, pricing, availability, and specifications are subject to change without notice.
+NVIDIA CORPORATION 
+CONDENSED CONSOLIDATED STATEMENTS OF INCOME
+(In millions, except per share data)
+(Unaudited)
+ 
+                                                                                             Three Months Ended                            Nine Months Ended
+                                                                             October 27,            October 28,           October 27,            October 28,
+                                          2019                                                             2018                  2019                   2018
+Revenue                                                                     $3,014                 $3,181                $7,813                 $9,511      
+Cost of revenue                                                              1,098                  1,260                 3,060                  3,547      
+Gross profit                                                                 1,916                  1,921                 4,753                  5,964      
+Operating expenses                                                                                                                                          
+                     Research and development                                  712                    605                 2,091                  1,729      
+                     Sales, general and administrative                         277                    258                   806                    725      
+                                          Total operating expenses             989                    863                 2,897                  2,454      
+Income from operations                                                         927                  1,058                 1,856                  3,510      
+                     Interest income                                            45                     37                   137                     94      
+                     Interest expense                                          (13     )              (15     )             (39     )              (44     )
+                     Other, net                                                  —                      1                     —                     12      
+                                          Total other income (expense)          32                     23                    98                     62      
+Income before income tax                                                       959                  1,081                 1,954                  3,572      
+Income tax expense (benefit)                                                    60                   (149     )             109                     (3     )
+Net income                                                                    $899                 $1,230                $1,845                 $3,575      
+Net income per share:                                                                                                                                       
+                     Basic                                                   $1.47                  $2.02                 $3.03                  $5.88      
+                     Diluted                                                 $1.45                  $1.97                 $2.99                  $5.71      
+Weighted average shares used in per share computation:                                                                                                      
+                     Basic                                                     610                    609                   609                    608      
+                     Diluted                                                   618                    625                   617                    626      
+
+NVIDIA CORPORATION                                                                                                                  
+CONDENSED CONSOLIDATED BALANCE SHEETS                                                                                               
+(In millions)                                                                                                                       
+(Unaudited)                                                                                                                         
+                                                                                                 October 27,             January 27,
+                                                                                                        2019                    2019
+ASSETS                                                                                                                              
+Current assets:                                                                                                                     
+               Cash, cash equivalents and marketable securities                                 $9,769                  $7,422      
+               Accounts receivable, net                                                          1,455                   1,424      
+               Inventories                                                                       1,047                   1,575      
+               Prepaid expenses and other current assets                                           149                     136      
+                                          Total current assets                                  12,420                  10,557      
+Property and equipment, net                                                                      1,517                   1,404      
+Operating lease assets                                                                             527                       —      
+Goodwill                                                                                           618                     618      
+Intangible assets, net                                                                              43                      45      
+Deferred income tax assets                                                                         569                     560      
+Other assets                                                                                       116                     108      
+                                          Total assets                                         $15,810                 $13,292      
+LIABILITIES AND SHAREHOLDERS' EQUITY                                                                                                
+Current liabilities:                                                                                                                
+               Accounts payable                                                                   $591                    $511      
+               Accrued and other current liabilities                                               884                     818      
+                                          Total current liabilities                              1,475                   1,329      
+Long-term debt                                                                                   1,990                   1,988      
+Long-term operating lease liabilities                                                              469                       —      
+Other long-term liabilities                                                                        662                     633      
+                                          Total liabilities                                      4,596                   3,950      
+Shareholders' equity                                                                            11,214                   9,342      
+                                          Total liabilities and shareholders' equity           $15,810                 $13,292      
+
+                  NVIDIA CORPORATION                                                                                                                                                              
+                  RECONCILIATION OF GAAP TO NON-GAAP FINANCIAL MEASURES                                                                                                                           
+                  (In millions, except per share data)                                                                                                                                            
+                  (Unaudited)                                                                                                                                                                     
+                                                                                                                                  Three Months Ended                             Nine Months Ended
+                                                                                            October 27,              July 28,            October 28,            October 27,            October 28,
+                                                                                                   2019                  2019                   2018                   2019                   2018
+GAAP gross profit                                                                          $1,916                 $1,541                $1,921                 $4,753                 $5,964      
+GAAP gross margin                                                                            63.6     %             59.8    %             60.4     %             60.8     %             62.7     %
+                  Stock-based compensation expense (A)                                         15                      8                     5                     27                     21      
+                  Legal settlement costs                                                        —                      2                    14                     11                     14      
+Non-GAAP gross profit                                                                      $1,931                 $1,551                $1,940                 $4,791                 $5,999      
+Non-GAAP gross margin                                                                        64.1     %             60.1    %             61.0     %             61.3     %             63.1     %
+GAAP operating expenses                                                                      $989                   $970                  $863                 $2,897                 $2,454      
+                  Stock-based compensation expense (A)                                       (208     )             (216    )             (135     )             (597     )             (379     )
+                  Acquisition-related and other costs                                          (7     )               (5    )               (1     )              (22     )               (5     )
+                  Legal settlement costs                                                        —                      —                    (1     )               (2     )               (3     )
+                  Restructuring and other                                                       —                      —                     4                      —                      4      
+Non-GAAP operating expenses                                                                  $774                   $749                  $730                 $2,276                 $2,071      
+GAAP income from operations                                                                  $927                   $571                $1,058                 $1,856                 $3,510      
+                  Total impact of non-GAAP adjustments to income from operations              229                    231                   152                    659                    418      
+Non-GAAP income from operations                                                            $1,156                   $802                $1,210                 $2,515                 $3,928      
+GAAP other income (expense)                                                                   $32                    $35                   $23                    $98                    $62      
+                  Losses (Gains) from non-affiliated investments                                —                      —                    (2     )                1                    (11     )
+                  Interest expense related to amortization of debt discount                     1                      —                     —                      1                      1      
+Non-GAAP other income (expense)                                                               $33                    $35                   $21                   $100                    $52      
+GAAP net income                                                                              $899                   $552                $1,230                 $1,845                 $3,575      
+                  Total pre-tax impact of non-GAAP adjustments                                230                    231                   150                    660                    409      
+                  Income tax impact of non-GAAP adjustments (B)                               (26     )              (21    )              (91     )              (97     )             (199     )
+                  Tax benefit from income tax reform                                            —                      —                  (138     )                —                   (138     )
+Non-GAAP net income                                                                        $1,103                   $762                $1,151                 $2,408                 $3,647      
+
+                                                                                                                                            Three Months Ended                            Nine Months Ended
+                                                                                                          October 27,           July 28,           October 28,           October 27,            October 28,
+                                                                                                                 2019               2019                  2018                  2019                   2018
+Diluted net income per share                                                                                                                                                                               
+                                       GAAP                                                               $1.45               $0.90                $1.97                 $2.99                  $5.71      
+                                       Non-GAAP                                                           $1.78               $1.24                $1.84                 $3.90                  $5.83      
+Weighted average shares used in diluted net income per share computation                                    618                 616                  625                   617                    626      
+GAAP net cash provided by operating activities                                                           $1,640                $936                 $487                $3,296                 $2,845      
+                                       Purchase of property and equipment and intangible assets            (104     )          (113    )            (150     )            (344     )             (397     )
+Free cash flow                                                                                           $1,536                $823                 $337                $2,952                 $2,448      
+
+(A) Stock-based compensation consists of the following:                                                                                                                                                                                                                 
+                                                          Three Months Ended                                                                                                                                                                           Nine Months Ended
+                                                          October 27,                                 July 28,                                                       October 28,                                 October 27,                                 October 28,
+                                               2019                                        2019                                        2018                                                                             2019                                        2018
+           Cost of revenue                                $15                                         $8                                                           $5                                         $27                                         $21           
+           Research and development                       $141                                        $145                                                        $88                                        $400                                        $237           
+           Sales, general and administrative              $67                                         $71                                                         $47                                        $197                                        $142           
+(B) Income tax impact of non-GAAP adjustments, including the recognition of excess tax benefits or deficiencies related to stock-based compensation under GAAP accounting standard (ASU 2016-09).                                                                       
+
+NVIDIA CORPORATION                                                                                                               
+RECONCILIATION OF GAAP TO NON-GAAP OUTLOOK                                                                                       
+                                                                                                                Q4 FY2020 Outlook
+GAAP gross margin                                            64.1                                                               %
+                Impact of stock-based compensation expense   0.4                                                                %
+Non-GAAP gross margin                                        64.5                                                               %
+                                                                                                                Q4 FY2020 Outlook
+                                                                                                                    (In millions)
+GAAP operating expenses                                                                                          $1,015          
+                Stock-based compensation expense, acquisition-related costs, and other costs                       (210         )
+Non-GAAP operating expenses                                                                                        $805          
+

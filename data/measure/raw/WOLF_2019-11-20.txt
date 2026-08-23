@@ -1,0 +1,521 @@
+# 잣대값 파싱 실패 원문 — WOLF 2019-11-20
+# 출처: https://www.sec.gov/Archives/edgar/data/895419/000089541919000103/a8kform11202019.htm
+
+investorday112019
+
+    <img height="768" src="investorday112019001.jpg" title="slide1" width="1365"/> Cree Investor Day November 20, 2019 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019002.jpg" title="slide2" width="1365"/>  Forward-Looking Statements & Non-GAAP Measures Note on Forward-Looking Statements This presentation includes forward-looking statements about Cree’s business outlook, future financial results and targets, product markets, plans and objectives for future operations, and product development programs and goals. These statements are subject to risks and uncertainties, both known and unknown, that may cause actual results to differ materially, as discussed in our most recent annual report and other reports filed with the U.S. Securities and Exchange Commission. Important factors that could cause actual results to differ materially include the risk that the economic and political uncertainty caused by the ongoing trade dispute between the United States and China may negatively impact demand for our products; risks related to international sales and purchases generally; the risk that we may not obtain sufficient orders to achieve our targeted revenues; price competition in key markets; the risk that we may experience production or ramp-up difficulties that preclude us from shipping sufficient quantities to meet customer orders or that result in higher production costs and lower margins; our ability to lower costs; the risk that our results will suffer if we are unable to balance fluctuations in customer demand and capacity, including bringing on additional capacity on a timely basis to meet customer demand; product mix; risks associated with our factory optimization plan and construction of a new fabrication facility, including design and construction delays and cost overruns, issues in installing and qualifying new equipment and ramping production, poor production process yields and quality control, and potential increases to our restructuring costs; risks resulting from the concentration of our business among few customers, including the risk that customers may reduce or cancel orders or fail to honor purchase commitments; the risk posed by managing an increasingly complex supply chain that has the ability to supply a sufficient quantity of raw materials, component parts and finished products with the required specifications and quality; risks relating to confidential information theft or misuse, including through cyber-attacks or cyber intrusion; our ability to complete development and commercialization of products under development, such as our pipeline of Wolfspeed products and improved LED chips and LED components; the rapid development of new technology and competing products that may impair demand or render our products obsolete; the potential lack of customer acceptance for our products; risks associated with acquisitions, divestitures, joint ventures or investments generally; risks associated with ongoing litigation; the risk that our products fail to perform or fail to meet customer requirements or expectations, resulting in significant additional costs or lower demand for our products; and other factors discussed in our filings with the Securities and Exchange Commission (SEC), including our report on Form 10-K for the fiscal year ended June 30, 2019, and subsequent reports filed with the SEC. The forward-looking statements in this presentation were based on management’s analysis of information available at the time the presentation was prepared and on assumptions deemed reasonable by management. Our industry and business is constantly evolving, and Cree undertakes no obligation to update such forward-looking statements to reflect new information, future events, subsequent developments or otherwise, except as may be required by applicable U.S. federal securities laws and regulations. Note Regarding Non-GAAP Financial Measures This presentation includes certain non-GAAP financial measures and targets. Cree's management evaluates results and makes operating decisions using both GAAP and non-GAAP measures included in this presentation. Non-GAAP results exclude certain costs, charges and expenses which are included in GAAP results. By including these non-GAAP measures, management intends to provide investors with additional information to further analyze the Company's performance, core results and underlying trends. Non-GAAP results are not prepared in accordance with GAAP and non-GAAP information should be considered a supplement to, and not a substitute for, financial statements prepared in accordance with GAAP. Investors and potential investors are encouraged to review the reconciliation of non-GAAP financial measures to their most directly comparable GAAP measures attached to this presentation. Please see the Appendix at the end of this presentation. 2 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019003.jpg" title="slide3" width="1365"/> Strategic Overview Gregg Lowe President & Chief Executive Officer Cree Investor Day 2019 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019004.jpg" title="slide4" width="1365"/>  Today’s Agenda Strategic Overview Gregg Lowe - President & Chief Executive Officer Silicon Carbide 101 John Palmour – Chief Technology Officer Wolfspeed Overview Cengiz Balkas – Senior Vice President and General Manager, Wolfspeed Jay Cameron – Vice President and General Manager, Wolfspeed Power Automotive Opportunity Kenric Miller – Automotive, Vice President Global Sales & Marketing Opportunity Pipeline Thomas Wessel – Senior Vice President, Global Sales and Marketing Break & Demos Tobias Keller Customer Perspective ABB Vice President of Product Development, Semiconductors Rick McFarland – Senior Vice President, Global Operations Global Operations & Quality Lisa Fritz – Vice President, Global Quality LED Overview Claude Demby – Senior Vice President and General Manager, LED Financial Overview Neill Reynolds – Chief Financial Officer Question & Answer Session 4 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019005.jpg" title="slide5" width="1365"/>  Our Transformation Journey We communicated several key imperatives at our last Investor Day Wolfspeed LED Lighting Build a powerhouse Focus where our best-in-class Fix the business semiconductor company technology and application- focused on silicon carbide and optimized solutions are gallium nitride (GaN) differentiated and valued 5 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019006.jpg" title="slide6" width="1365"/>  Our Transformation Journey Since then, we have made significant progress on our transformation journey… 2018 2019 February: Announced Transformative Plan at 2018 January: Announced Long-Term Silicon Carbide Investor Day Wafer Supply Agreement with STMicro Announced Sale of Lighting Business to Announced Long-Term Silicon Carbide March: IDEAL INDUSTRIES Wafer Supply Agreement with Infineon Announced $1 billion investment in May: March: Acquired Infineon RF Power Business Silicon Carbide capacity expansion Selected as Silicon Carbide Partner for Announced Long-Term Silicon Carbide the Volkswagen Group FAST Program October: Wafer Supply Agreement with leading semiconductor company Announced Long-Term Silicon Carbide August: Wafer Supply Agreement with ON Semi 6 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019007.jpg" title="slide7" width="1365"/>  Our Transformation Journey …Despite several near-term industry headwinds 2018 2019 April: Ban on sales to ZTE for breaching terms Ban on U.S. companies’ shipments of sanctions settlement May: to Huawei announced May: China U.S. Trade War commences with June: Changes in EV incentives take first round of tariffs effect in China August: Second round of China U.S. tariffs September: Slowdown in 5G deployment due to announced limited availability of handsets 7 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019008.jpg" title="slide8" width="1365"/>  Momentum Continues with Recent Announcements In the last 70 days, announced a number of key partnerships underscoring the growth opportunities across the business Leverage silicon carbide Establish world’s largest semiconductors to Create highly efficient silicon carbide device enable faster, smaller, electric drivetrains for manufacturing facility for lighter and more EVs with silicon carbide lower net CAPEX with NY powerful systems for EVs solutions Partnership Deliver silicon carbide auto and industrial solutions, including Expansion of an existing power grid, train and multi-year, long-term traction and e-mobility silicon carbide wafer sectors supply agreement 8 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019009.jpg" title="slide9" width="1365"/>  Silicon Carbide vs. Silicon The next generation in power semiconductors will be driven by silicon carbide technology Silicon Carbide vs. Silicon Silicon Carbide Solar Inverters and On-Board Chargers are: 10 • Lighter 9 • Smaller • More efficient GaN-Silicon Carbide Based 5G 3 Systems enable: • Increased capacity and coverage 1 • 2X more users per tower • More than 10X increase in data Switching Efficiency Power Density Silicon Carbide Silicon 9 Source: Cree estimates CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019010.jpg" title="slide10" width="1365"/>  Key Applications of Silicon Carbide and GaN The superior performance of silicon carbide is powering new sectors and reviving established ones Industrial & Energy Electric Vehicles RF Infrastructure On-board and off-board charging GaN on silicon carbide Silicon carbide power devices systems convert power faster and semiconductors are releasing increase efficiency, shrink system with greater efficiency with engineers and designers from the size and reduce heat dissipation, Wolfspeed Silicon Carbide devices restraints of silicon with allowing businesses to make the unprecedented power and efficiency most out of every kilowatt-hour of electricity and every square meter of floor space 10 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019011.jpg" title="slide11" width="1365"/>  EV Adoption Continues to Accelerate Global OEMs have announced more than $300 billion of EV investments Announces Model S and Announces $11B to Announces $25B Targets 15-25% EV Model X extended ranges introduce 40 EVs by 2023 Investment to build EV production by 2025; with silicon carbide versions of all 300 investing $11B power electronics vehicles by 2030 Nissan to invest $9B in Announces all-electric, Announces every new Committed to 25 new China in Race for EV zero emissions future model will run at least EVs by 2025 dominance with 20 vehicles by 2023 part on electric power in 2019 11 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019012.jpg" title="slide12" width="1365"/>  Key Drivers of EV Adoption Benefits to both consumers and OEMs are driving the opportunity for rapid EV adoption Emission Range Regulations Key Drivers EV Adoption Performance Charge Time Incentives 12 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019013.jpg" title="slide13" width="1365"/>  EU CO2 Emission Standards – BEVs Offer a Solution The EU CO2 standards will dramatically alter the European car market in the coming years Illustrative example: 160 10x increase in 130 g/km Hybrid/Electric Cars 140 120 g/km 95 g/km 2 2 100 81 g/km CO 80 10% Hybrid / 60 25% Electric 59 g/km 40 Gasoline / 20 65% Diesel 0 2015 2021 2025 2030 13 Source: International Council on Clean TransportationCREE Jan.CONFIDENTIAL 2019 & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019014.jpg" title="slide14" width="1365"/>  Growing and Diversified Pipeline The shift to silicon carbide has led to a growing and diversified pipeline of device opportunities Industrial & Energy Recent Wins Infrastructure Automotive Partnership to utilize silicon carbide semiconductor device technology to enable more efficient and powerful electronic systems for future electric vehicles Expands on existing partnership to create $9B industry-leading, highly efficient electric drivelines Lighting Pipeline Partnership to deliver automotive and industrial solutions including power grid, train and traction and e-mobility sectors Aerospace & Defense Communication 14 InfrastructureCREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019015.jpg" title="slide15" width="1365"/>  Winning in Materials – Key Deals Announced Our wafers are driving the transition in the power semiconductor industry from silicon to silicon carbide Customer #4 $500+ Million $100+ Million $85+ Million $85 Million In addition to many other large contract wins in Materials 15 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019016.jpg" title="slide16" width="1365"/>  Expanding Leading Materials Position Maintaining leadership position with silicon carbide materials substrate and epi capacity expansion 16 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019017.jpg" title="slide17" width="1365"/>  State-of-the-Art Wafer Fab Highly automated and automotive-qualified facility with additional future capacity at lower net cost than previously announced 17 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019018.jpg" title="slide18" width="1365"/>  Why We Win Well-positioned to benefit from significant and growing opportunities in silicon carbide Executing well against our Growing and diversified pipeline transformational strategy to supported by secular trends in become a powerhouse attractive end markets including semiconductor company focused EV, 5G and Industrial on silicon carbide and GaN Investing to expand capacity to Expanding our leading position support substantial growth with strong barriers to entry during opportunities in silicon carbide the market transformation from materials and devices silicon to silicon carbide 18 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019019.jpg" title="slide19" width="1365"/>  Why We Win Well-positioned to benefit from significant and growing opportunities in silicon carbide Executing well against our Growing and diversified pipeline transformational strategy to supported by secular trends in become a powerhouse attractive end markets including semiconductor company focused EV, 5G and Industrial on silicon carbide and GaN 30 YEARS of Experience and Investing to expand capacity to Substantial IP Position Expanding our leading position support substantial growth with strong barriers to entry during opportunities in silicon carbide the market transformation from materials and devices silicon to silicon carbide 19 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019020.jpg" title="slide20" width="1365"/> CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019021.jpg" title="slide21" width="1365"/> Silicon Carbide 101 John Palmour Chief Technology Officer Cree Investor Day 2019 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019022.jpg" title="slide22" width="1365"/>  Key Questions We’ll Address Today What is Wide Bandgap and why is it important? Why is silicon carbide so difficult to grow? How are cycles of learning the KEY to making cost and quality improvements in Silicon Carbide crystal growth? Why does Cree’s 30 years of experience uniquely position us in this market? 22 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019023.jpg" title="slide23" width="1365"/>  Covalent Bonding in Semiconductors A covalent bond involves the C sharing of electron pairs between atoms Shared Electrons Silicon and Carbon each share four electrons – creating very C Si C strong covalent bonds This bond strength is key to band gap, electric breakdown, and thermal C conductivity 23 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019024.jpg" title="slide24" width="1365"/>  Band Diagrams of Common Semiconductors Wide bandgap semiconductors allow devices to operate at much higher voltages and temperatures, making them ideal for next-generation applications Empty Empty Empty Empty Key for power & RF: Wide bandgap yields a 10 X higher electric 1.1 eV 1.4 eV E = 3.2 eV E = 3.36 eV g g breakdown field Filled Filled Filled Filled Silicon GaAs 4H-Silicon GaN Carbide Common Semiconductors Wide Bandgap Semiconductors 24 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019025.jpg" title="slide25" width="1365"/>  GaN High Electron Mobility Transistor (HEMT) V = -3V Typ.* Ground G Vd for GaAsGaN is is about about 150V! 15V Gate Width (e.g. 1mm) Source Drain Gate Basic 1mm GaN HEMT Unit Cell AlGaN Electron flow Insulating GaN AlN Buffer Layer Semi-insulating silicon carbide substrate GaN power density is 5-8 W/mm of gate periphery Si LDMOS or GaAs RF power density is 0.5-1 W/mm 25 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019026.jpg" title="slide26" width="1365"/>  Advantages of Wide Bandgap (GaN on Silicon Carbide) Properties High thermal conductivity High breakdown voltage is of the silicon carbide the key for wide bandgap substrate enables high microwave devices power densities in terms of W/mm2 of die area • High voltage gives higher power density in terms of • Ultimate power level from W/mm of FET gate any microwave device is periphery limited by thermal dissipation 26 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019027.jpg" title="slide27" width="1365"/>  Higher Substrate Thermal Conductivity Gives Higher W/mm2 Pitch with silicon substrate Pitch with silicon carbide substrate 27 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019028.jpg" title="slide28" width="1365"/>  MOSFETs in Silicon and Silicon Carbide for 1000V Higher electric breakdown of silicon carbide than silicon allows silicon carbide power devices to have much thinner more heavily doped blocking layers Silicon Silicon Carbide 10 mm thick 1x1016 cm-3 The drain region dominates the total resistance 100 mm thick Low doped 1x1015 cm-3 drain layer Drain region resistance is determined by blocking layer thickness and doping Silicon Carbide resistance is <100X lower that of Silicon! 28 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019029.jpg" title="slide29" width="1365"/>  High Electric Breakdown Field Allows Very Low on-Resistance in SiC Lower is better is Lower 29 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019030.jpg" title="slide30" width="1365"/>  High Electric Breakdown Field Allows Very Low on-Resistance in SiC The lower the on-resistance, the lower the power loss Lower is better is Lower 30 Source: Cree estimates CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019031.jpg" title="slide31" width="1365"/>  Silicon Carbide Offers Much Lower Losses Than Silicon Silicon carbide MOSFETs offer significantly lower losses than Si IGBTs at both 400V and 800V 400V 800V Inverter-level Loss Comparison: Inverter-level Loss Comparison: Silicon vs. Silicon Carbide Silicon vs. Silicon Carbide (same voltage and switching frequency) (same voltage and switching frequency) 120% 120% (baseline – set to 100%) 100% 100% 80% 80% 60% 60% 48% 38% 43% 59% 30% 33% 40% 45% 40% 29% 35% 20% Total Inverter Losses [%] [%] Losses Inverter Total Total Inverter Losses [%] [%] Losses Inverter Total 20% 0% 0% 75 140 240 400 100 200 300 400 500 Phase Current [Amps rms] Phase Current [Amps rms] Silicon Silicon Carbide 31 Source: Delphi CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019032.jpg" title="slide32" width="1365"/>  Higher Efficiency of Silicon Carbide Silicon carbide inverters are the key to driving inverter loss reduction % inverter loss comparison % EPA City Cycle % EPA Hwy Cycle 10 ~9.1% 10 ~ 77% inv. loss ~ 85% inv. loss 8 reduction 8 reduction Using Cree’s technology, Ford tested the comparison of inverter losses 6 6 during city and highway cycles 4 4 ~ 2.12% ~2.29% 2 2 ~0.34% Compared to silicon, silicon carbide 0 0 reduces inverter losses by ~78% in Si IGBT SiC MOSFET Si IGBT SiC MOSFET electric-only drive mode for EPA 90 kW electric motor used for evaluation metro-highway cycle Enables 5-10% further range for same battery size OR 5-10% reduction in battery cost for same range 32 Ref. M. Su, et al, WiPDA 2016 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019033.jpg" title="slide33" width="1365"/>  How To Make Silicon Carbide – Video 33 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019034.jpg" title="slide34" width="1365"/>  Silicon Carbide Does Not Occur In Nature Without Other-Worldly Help Canyon Diablo, Arizona 34 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019035.jpg" title="slide35" width="1365"/>  SiC Maturation for Commercial Applications – Crystal Growth Silicon liquid-phase growth Silicon carbide vapor-phase growth How Hot? 5000 C : surface of sun 2500 C : Silicon carbide growth 1730 C : molten lava 1414 C : molten silicon http://what-when-how.com • Silicon is pulled from molten silicon • Silicon carbide does not melt (sublimes) • Seed is very small, necking reduces defects • Must use large seed • Rapid crystal expansion • Limited crystal expansion • Process temperature ~1500C • Process temperature ~2500C Cree designs and builds ALL growers in-house 35 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019036.jpg" title="slide36" width="1365"/>  SiC Polytypes On this (0001) plane, all polytypes have the same structure Stacking sequence for different SiC polytypes in the {1120} plane 36 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019037.jpg" title="slide37" width="1365"/>  SiC Polytypes On this (0001) plane, all polytypes have the same structure (0001) (1120) plane (1100) But they stack differently in the 3rd dimension Stacking sequence for different SiC polytypes in the {1120} plane 37 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019038.jpg" title="slide38" width="1365"/>  SiC Polytypes – More Than 200 Different Crystal Structures! 38 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019039.jpg" title="slide39" width="1365"/>  SiC Polytypes – More Than 200 Different Crystal Structures! Only useable polytype for Silicon Carbide Power 39 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019040.jpg" title="slide40" width="1365"/>  Capacity Driven Advantage in Materials Development Our scale in development capacity accelerates R&D and production improvements Starting Seed High Quality Growth • do not add new defects • reduce existing defects Improved Seed High Quality Silicon Carbide Wafers High Quality Crystals Slice and Surface Prep 40 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019041.jpg" title="slide41" width="1365"/>  What If Conditions Are Wrong? What If Process Shifts? A beautiful mess! 41 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019042.jpg" title="slide42" width="1365"/>  Top Silicon Carbide Suppliers Cree is the market leader in producing silicon carbide today… 62% 38% Cree Rest of World 42 Source: Yole Power SiC Report 2018 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019043.jpg" title="slide43" width="1365"/>  Top Silicon Carbide Suppliers Cree is the market leader in producing silicon carbide today……and for the last 22 years 96.5% 3.5% Cree Rest of World 43 Source: Cree estimates CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019044.jpg" title="slide44" width="1365"/>  Why We Win: Silicon Carbide Silicon Carbide and Gallium Nitride are ideal materials for Silicon carbide is extremely power and RF applications difficult to grow with high due to high power density quality Cree has by far the most Cree has a tremendous head experience and learning in start over competitors in terms manufacturing of silicon of high volume production of carbide crystals silicon carbide boules 44 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019045.jpg" title="slide45" width="1365"/> CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019046.jpg" title="slide46" width="1365"/> Wolfspeed Overview Cengiz Balkas Senior Vice President and General Manager, Wolfspeed Cree Investor Day 2019 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019047.jpg" title="slide47" width="1365"/>  Our Transformation Path Creating a powerhouse semiconductor company focused on silicon carbide and GaN Capitalize on large, multi-decade growth opportunities in Electric Vehicles, Energy, Communications Infrastructure, Industrial and Aerospace and Defense Invest to expand scale and to accelerate growth of Materials, Power Devices and GaN RF Devices where Cree has a distinct advantage Establish a high growth business with strong gross margins and good fall through to the bottom line 47 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019048.jpg" title="slide48" width="1365"/>  Strong Revenue Performance Our focus on fast growing end markets has significantly increased our revenue over the last 4 years Wolfspeed Revenue ($M) $538 $329 Automotive Communications $221 $176 Energy Industrial FY16 FY17 FY18 FY19 48 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019049.jpg" title="slide49" width="1365"/>  Moving Into The Mainstream Clear and proven value propositions with strong focus on silicon carbide and GaN Substantial growth in opportunity pipeline across all addressable markets Material business supporting industry transition with global scale First phase of capacity investments in place to expand device businesses Global technology leadership with market’s broadest, most field-tested portfolio 49 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019050.jpg" title="slide50" width="1365"/>  Materials Business Strategy Maintain leading global Expand capacity to Use scale to drive market share accelerate industry innovation, quality and transition from silicon to cost reduction silicon carbide improvements 50 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019051.jpg" title="slide51" width="1365"/>  Materials Market Opportunity Silicon carbide materials market expanding to more than $1 billion by 2024 $1.1B Drivers SAM 2024 Value proposition validated in applications that are driving significant growth EV applications driving significant volume steps in power wafer market Significant adoption in broad industrial market applications Electric Telecom/5G commercial growth with $121M Vehicles major RF players Worldwide Silicon Carbide N-type Wafer Epitaxial services market is growing as Materials Revenue 2018 every bare wafer requires epitaxy (Source: YOLE estimates 2019) (Source: YOLE and company estimates) 51 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019052.jpg" title="slide52" width="1365"/>  Materials Capacity Expansion 30x Increase in materials Materials production mega factory 1x Q1 FY2017 FY2024 Existing building Next phase in Durham ready of expansion for deployment 52 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019053.jpg" title="slide53" width="1365"/>  Expanding Silicon Carbide Epitaxy Business Epitaxy Process Over 4x Increase in Epi Units units Silicon carbide Growing silicon Silicon carbide substrate carbide epiwafer Gas Injector 2018 2019 2020 Epitaxy defines device performance and quality Highly customized systems for quality and throughput With quality and cost reductions improvements Wafers volumes are ramping significantly 53 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019054.jpg" title="slide54" width="1365"/>  Extended and Expanded Agreement with STMicro We are accelerating the industry transition to silicon carbide January 2019 • Cree and STMicro Announce Multi-Year Silicon Carbide Wafer Supply Agreement • Agreement value >$250M for 150mm Power substrates and epitaxy November 2019 • Cree and STMicro Double Existing Silicon Carbide Wafer Supply Agreement • Agreement value >$500M for 150mm Power substrates and epitaxy • Extends existing multi-year agreement 54 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019055.jpg" title="slide55" width="1365"/>  RF Business Strategy Drive value with vertical Support Communication Serve Aerospace and integration and Infrastructure customers Defense markets with technology leadership with focused product and select distribution worldwide application partnerships 55 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019056.jpg" title="slide56" width="1365"/>  Complete Vertical Integration Serving GaN RF Market With the acquisition of Infineon’s RF business in March 2018, we have significantly expanded our team and capabilities Application Product & Capabilities Centers and IP Business Materials Technology (system, Customer Portfolio technology, Scale Portfolio Access application) Pre- Limited Limited Limited Limited acquisition Today 56 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019057.jpg" title="slide57" width="1365"/>  RF Business On Track Despite Short-Term Uncertainty Despite near-term headwinds, we are winning in the market and positioned well for long-term growth Challenges and uncertainty due to ongoing global trade tensions Over $200 billion of investments announced for 5G deployments GaN applications and adoption increasing in all markets with SAM now at $2 billion Our technology leadership will continue through near term challenges 57 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019058.jpg" title="slide58" width="1365"/>  RF Device Market Opportunity GaN RF device market expanding to $2 billion in 5 years Drivers $2B SAM: Year 2024 5G revolution driven by exponential rise in data rate and bandwidth requirements High-performance next generation $645M aerospace and defense systems GaN RF Device Revenue 2018 Improved performance, Higher efficiency commercial and industrial equipment • High efficiency and power density motivates GaN adaptation • GaN forecasted to be vast majority of RF device market in 5 years 58 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019059.jpg" title="slide59" width="1365"/>  GaN Drivers GaN adoption continues in Communication Infrastructure APPLICATIONS AND DRIVERS SOLUTION: GaN BASED 5G SYSTEM • Explosive growth in mobile data • Compact systems • Faster Down/Up Link speeds with lower latency • Increased frequency bandwidth • More capacity for more user equipment • Lower carbon footprint • Connectivity anywhere 1+ Gbps • Lower cost/bit/second for the operator MarketbyTechnologyShare 16x GaN 10x 300+ Mbps Technology LDMOS Technology 87% 63+ Mbps Data Rates Data <0.5 Mbps N/A Up to 87% More than 10x Up to 16x increase less power/Mb increase in data in HD video users 1G 2G 3G 4G-LTE 5G 59 Source: Cree estimates CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019060.jpg" title="slide60" width="1365"/>  GaN Drivers GaN improves system performance across multiple applications APPLICATIONS AND DRIVERS SOLUTION • Lower Power Consumption with higher performance A 25W GaN Solid State Power Amplifier provides • Smaller, lighter Equipment better value than a 4kW magnetron transmitter with >60x longer operating life Satcom Weather Test and Radar Measurement 73% 15% 83% Broadcast Air Traffic Control Up to 73% Up to 15% Up to 83% Less Less System Lower System Cost Power Consumption Weight Mil Aero Industrial RF Heating 60 Source: Cree estimates CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019061.jpg" title="slide61" width="1365"/>  Power Business Strategy Convert high voltage Expand leadership Invest in R&D, sales and (>600V) power market to position in Automotive marketing to gain scale silicon carbide through and increase revenue focused ecosystem and diversity with Industrial distribution partnerships and Energy 61 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019062.jpg" title="slide62" width="1365"/>  Silicon Carbide Power Device Market Opportunity The automotive and industrial & energy end markets are driving rapid acceleration $5B Drivers SAM 2024 System level cost benefits and increased range accelerate EV adoption Efficient power supplies and motor drives Fast charging stations for electric vehicles Increasing renewable generation Cost effective energy storage $420M 2018 Worldwide Silicon Carbide Revenue 62 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019063.jpg" title="slide63" width="1365"/>  Industrial and Energy – Market Opportunity Strategy and approach • Increase revenue diversity through industrial and energy • Engage a fragmented market through a larger sales team and a focused channel strategy • Accelerate adoption through ecosystem development with industry partners Applications • Wide array of applications including, fast charging, solar, energy storage, and uninterruptible power supplies Value propositions • Higher efficiency, smaller and lighter solutions, higher power density, cooler system temperatures • Strong connection to end system performance levels and end user benefits 63 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019064.jpg" title="slide64" width="1365"/>  Automotive – Market Opportunity Strategy and approach • Drive enabling scale and cost reductions • Engage through die, component and module products Applications • Powertrain • On board chargers • Primary power converter Value propositions • Powertrain efficiency improves over silicon, enabling longer range or smaller battery • On board charging solutions become smaller and 6.6kW OBC 150kW Inverter Reference Design charge more efficiently • Higher voltages enable faster charging 64 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019065.jpg" title="slide65" width="1365"/>  Fast Charging – Market Opportunity Silicon carbide enables fast charging for electric vehicles Fast Charger Deployments Current fast chargers can add 75 miles of range in five minutes 3.5 • Worldwide fast charger deployments predicted to be 3.3M units in 2024 • Silicon carbide will capture a portion of this market share 3.0 • Content per charger will vary based on charger capability (100kW to 300kW) • Significant silicon carbide content per charger 2.5 2.0 Millions 1.5 1.0 0.5 0.0 2020 2021 2022 2023 2024 Source: Grand View Research, 2019 65 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019066.jpg" title="slide66" width="1365"/>  Why We Win: Wolfspeed Driving the industry transition Expanding serviceable markets from silicon to silicon carbide and pipeline opportunities across and GaN all business lines Building a world-class Investing to create organization with the scale and substantial scale necessary industry experience to create a to serve the market semiconductor powerhouse 66 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019067.jpg" title="slide67" width="1365"/> CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019068.jpg" title="slide68" width="1365"/> Automotive Opportunity Jay Cameron Vice President and General Manager, Wolfspeed Power Kenric Miller Automotive, Vice President Global Sales & Marketing Cree Investor Day 2019 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019069.jpg" title="slide69" width="1365"/>  Key Messages Significant market shift from silicon to silicon carbide for battery electric vehicles Automotive Power Growth enabled by three dynamics: • Automotive industry recognizes silicon carbide value proposition at system level • Silicon carbide enables more range and faster charging • Increasing capacity assures enough silicon carbide to accommodate demand Technology advantage and scale enable us to win 69 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019070.jpg" title="slide70" width="1365"/>  Expanding BEV Market – Picking Up Momentum Strong growth opportunity as emission standards drive significant shift to battery electric vehicles 20% 41% 39% 2030 7% 27% 66% 2025 0.5% 11% 88% 2020 2% 98% 2015 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100% BEVs Other EVs Pure ICE Source: Yole and Cree estimates Note: EV: Electric Vehicle; BEV: Battery Electric Vehicle; ICE: Internal Combustion Engine 70 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019071.jpg" title="slide71" width="1365"/>  OEM Shift from Silicon to Silicon Carbide Unique market transformation being driven by lower costs, faster charging and better performance Do you plan to use silicon carbide in your inverter by 2025? Yes No No Probable As of As of As of August Yes August August 2017 2018 2019 No Probable Yes 71 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019072.jpg" title="slide72" width="1365"/>  Driving Cost Savings in Electric Vehicles The shift from silicon to silicon carbide delivers cost savings for OEMs Battery Electric Vehicle ~5.0% - 10% Silicon Carbide Battery Savings (80kWh battery x $102/kwh battery cost) ~$400 - $800 Space / Weight Savings (battery & inverter) $++ Cooling Requirements Savings $++ Silicon Carbide Cuts 800V Incremental Cost of Using Silicon Carbide ~$200 Inverter Losses 40  70% Savings per car: >$200 – $600 At 100K vehicles, OEM saves: $20M – $60M 72 Source: Cree estimates CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019073.jpg" title="slide73" width="1365"/>  Customers Benefit from Silicon Carbide Silicon carbide is the driving force behind more range and faster charging New Tesla drive unit has silicon carbide power electronics New Models S and X can now use Tesla 2019 Tesla Model X 3rd generation Superchargers, which deliver charges up to 50% faster Battery capacity is unchanged 3rd generation Supercharger 73 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019074.jpg" title="slide74" width="1365"/>  Investing $720M Over Five Years to Expand Silicon Carbide Capacity Capacity announcement drove strong response from our customers and addressed major concerns regarding the shift from silicon to silicon carbide Increase in Output Delivering >30x >25% increase in silicon carbide more output compared to the wafer fabrication New previously planned facility >350,000 SQ FT >30x fabrication facility increase in silicon carbide state-of-the-art materials production automotive-qualified production 200 mm facility in Marcy, NY capable 74 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019075.jpg" title="slide75" width="1365"/>  Investing $720M Over Five Years to Expand Silicon Carbide Capacity Capacity announcement drove strong response from our customers and addressed major concerns regarding the shift from silicon to silicon carbide “Congratulations on the capacity increase.” – Tier One Auto CEO “It's very exciting to know that Cree is driving a 30x increase in production capacity. We look forward to working with Cree to bring Silicon Carbide to EV market.” – Power Module Company CEO “Cree is quickly taking a commanding position in Silicon Carbide and we couldn’t be happier. Congrats!” Car Company VP Global Supply 75 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019076.jpg" title="slide76" width="1365"/>  Automotive Pipeline Growth Opportunity Automotive is expected to be the driving force of Power revenue We’ve Added Automotive Represents $2.6B ~45% In the Last Twelve Months Of Total Opportunity Pipeline 76 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019077.jpg" title="slide77" width="1365"/>  Why We Win in Automotive Silicon carbide defeats silicon Cree wins silicon carbide • Higher cost offset by increased battery • The right strategy: savings - Focused on automotive silicon • Increased advantage with lower cost carbide power needs cooling system and space savings • Great products that combine: - Best large die technology • Provides longer range for city cars - High power density with • More efficiency for highway cars robustness • Overall efficiency gain: 5% to 10% • Reduced risk from choosing Cree: - Silicon carbide expertise - Reliability and quality advantage - Capacity expansion plan 77 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019078.jpg" title="slide78" width="1365"/> CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019079.jpg" title="slide79" width="1365"/>  Customer Perspective Tobias Keller ABB Vice President of Product Development, Semiconductors 79 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019080.jpg" title="slide80" width="1365"/> CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019081.jpg" title="slide81" width="1365"/> Opportunity Pipeline Thomas Wessel Senior Vice President, Global Sales & Marketing Cree Investor Day 2019 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019082.jpg" title="slide82" width="1365"/>  Key Messages Pipeline spans across multiple industries where our technologies enable future capabilities Strong development of our Opportunity Pipeline and the key drivers Focused sales organization and channel partnerships to extended our geographic and market coverage 82 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019083.jpg" title="slide83" width="1365"/>  Cree Wolfspeed Focus Segments Our Silicon Carbide and GaN solutions enable next generation technology in fast evolving markets Automotive Communication Infrastructure Aerospace & Defense Industrial Energy Lighting 83 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019084.jpg" title="slide84" width="1365"/>  Device Pipeline Opportunity Development $9B $2.9B $2.5B $1B $1.2B Device Pipeline New Auto / New oppy in New LED New Oppy Opportunity CIFR oppy Geographic opportunities with Arrow today Sales Territories Last 12 months 84 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019085.jpg" title="slide85" width="1365"/>  Focused Sales & Marketing Organization Over the last eighteen months we’ve established a sales and marketing team well equipped to win in the global market Added 1000 years 3x FAE team 9x Wolfspeed Semiconductor Technical Support Geo Sales Sales Experience Broad Market Coverage $9B 50% 82% Automotive & CIFR Of Broad Market of Hires are Dedicated Global Teams Opportunity with Arrow Customer Facing 85 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019086.jpg" title="slide86" width="1365"/>  Design Cycle – Automotive Case Study The execution of a design win is an extensive process from start to finish Pipeline Profile Supplier Design & Selection Qualification Process 2 – 4 Years Year 1 Year 2 Year 3 Year 4 Year 5 Year 6 Year 7 Identification Commitment SOP NBO DIN DWIN 86 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019087.jpg" title="slide87" width="1365"/>  Automotive Pipeline Profile – Next 255 Projects Our automotive pipeline increases dramatically through 2025 as silicon carbide adoption rapidly accelerates 2020 2021 2022 2023 2024 2025 87 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019088.jpg" title="slide88" width="1365"/>  Cree Wolfspeed Opportunity Pipeline Industrial & Energy Infrastructure EV Charging Motor Drive Power Supplies Transportation Solar Automotive Wind Inverter Distribution &Transportation $9B OBC Opportunity Pipeline DC/DC LIGHTING Lighting In/Outdoor Specialty Communication Display Infrastructure Macro Base Station Aerospace & Defense Massive MIMO Radar NB IoT SatCom Milcom 88 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019089.jpg" title="slide89" width="1365"/>  Cree Wolfspeed Opportunity Pipeline $9B Opportunity Pipeline ~ 50% decided in 6 to 18 months 89 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019090.jpg" title="slide90" width="1365"/>  Why We Win: Pipeline Capitalizing on the Creating GaN on silicon electrification of the carbide technology to enable drivetrain and a clear silicon next generation communication carbide value proposition standards Establishing a focused sales & marketing Expanding capacity to scale organization and Arrow for future growth partnerships to win in a global market 90 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019091.jpg" title="slide91" width="1365"/> CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019092.jpg" title="slide92" width="1365"/> Global Operations & Quality Rick McFarland SVP Global Operations Lisa Fritz VP Global Quality Cree Investor Day 2019 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019093.jpg" title="slide93" width="1365"/>  Key Messages Highly automated New York wafer fab has ability to efficiently respond to demand increases while achieving a competitive wafer cost Maintaining capacity leadership position with materials substrate and epi expansion by repurposing existing Durham building Continuing to execute growth strategy while focusing on automotive quality culture, investing in tools and processes 93 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019094.jpg" title="slide94" width="1365"/>  Investing $720M Over Five Years to Expand Silicon Carbide Capacity Creating an East Coast silicon carbide corridor with new wafer fab and mega materials factories Increase in Output Delivering >30x >25% increase in silicon carbide more output compared to the wafer fabrication New previously planned facility >350,000 SQ FT >30x fabrication facility increase in silicon carbide state-of-the-art materials production automotive-qualified production 200 mm facility in Marcy, NY capable 94 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019095.jpg" title="slide95" width="1365"/>  Wafer Fab Strategy Driving device capacity expansion through a highly automated, more efficient facility Wafer Fab Capacity Silicon Carbide vs. Silicon Learning Curve Silicon Silicon carbide – Rapid Carbide pace of growth Cost Si – several cycles, low Silicon single digit growth Cycles of learning RTP Fab Durham Fab Mohawk Valley Fab Size 99k sq ft 115k sq ft • We are in the early stages of high-scale volume Wafer diameter 100 – 150 mm 150 – 200 mm silicon carbide manufacturing Tool Layout Bay and Chase Ballroom • Costs will further decline as we move through Automation Manual Automated additional cycles of learning 95 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019096.jpg" title="slide96" width="1365"/>  Materials and Epi Strategy • Today the Silicon Carbide Substrate and Epi business share a facility with the Durham Fab • Once Mohawk Valley is fully operational, Materials will use the whole facility Durham Buildings 1/5/8 With Mohawk Valley, our Wafer Fab shell in Durham is available for repurposing As demand increases, can more than double our footprint with existing building shell Durham Building 21 96 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019097.jpg" title="slide97" width="1365"/>  Capacity Expansion Plans to Meet Demand We are well positioned to ramp capacity as demand for silicon carbide expands When fully equipped, our fab could supply silicon carbide to 5.5M BEV, ~5% of worldwide auto sales When fully equipped, our Materials factory could supply silicon carbide to 22M BEV, ~20% of worldwide auto sales 5 year planning profile aligns with expected demand • Equipment capex will be modulated as demand is realized • 2024 outlook will require <50% of our long-term capacity Expansion beyond 4-wall capacity will require 1 to 3 years to execute • Well within customer ramp visibility 97 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019098.jpg" title="slide98" width="1365"/>  Quality Strategy Update Lisa Fritz 98 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019099.jpg" title="slide99" width="1365"/>  Cree Quality Focus Our strategy to integrate our people, systems and culture is driving our competitive advantage Build out experienced Invest in scaling quality Advance automotive quality engineering management systems culture through key teams and processes quality initiatives 99 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019100.jpg" title="slide100" width="1365"/>  Silicon Carbide Automotive Quality – A Corporate Culture Leading the industry transformation and defining the roadmap for silicon carbide quality Advancing • Leading silicon carbide engagement in industry standards Industry Standards organizations (JEDEC, AEC, ECPE) Enhancing Cree’s • Automotive certified business and factories Commitment to • Manufacturing, supplier, and customer quality teams Quality • Industry standard qualifications and metrics • Compliance and continual improvement Implementing Key • Quality management system investment Quality Initiatives • Zero defect strategies • Supplier assessments and development • Customer satisfaction 100 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019101.jpg" title="slide101" width="1365"/>  Building Our Quality Culture Delivering on customer expectations through key quality initiatives CULTURE • High quality product at ATTITUDE optimized cost • Increased customer • Proactive mindset satisfaction BEHAVIOR • Enable zero defects • Active engagement PROCESSES in risk mitigation • Meet automotive & SYSTEMS expectations • Quality management systems and factory automation 101 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019102.jpg" title="slide102" width="1365"/>  Why We Win: Operations Executing expansion strategy to Reducing total cost through efficiently respond to materials improved efficiencies and scale and wafer fab demand Investing in our people, Implementing zero defect processes and systems in strategies to further our order to achieve scale automotive quality culture 102 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019103.jpg" title="slide103" width="1365"/> CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019104.jpg" title="slide104" width="1365"/> LED Overview Claude Demby Senior Vice President and General Manager, LED Cree Investor Day 2019 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019105.jpg" title="slide105" width="1365"/>  Industry Leading Market Position We have established the industry’s strongest LED brand Leading Position in Strong Track Record of Global Creating a Resilient Attractive Markets Product Innovation Business Model • Best-in-class, high-power • 1,650 patents issued and 250 • Silicon carbide to sapphire technology patents pending substrate conversion • Broad portfolio of specific, • Highly focused R&D-centric strategy • Transitioning to OpEx lean, application-optimized solutions • Core elemental technologies to drive CapEx light model performance across categories • Global customer and distribution network with over 1,000 customers Cree is the Industry’s Strongest LED Brand 105 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019106.jpg" title="slide106" width="1365"/>  Focus on Attractive Markets Driving towards high-margin end markets with best-in-class application–optimized technology solutions • Leveraging our leadership in HP General Lighting to expand into HP General Lighting Automotive Automotive, Specialty and Video Screen end-markets • Ability to solve complex system level challenges drives high customer retention rates Specialty Video Screens Silicon Carbide to Sapphire Conversion – Strategic Enabler 106 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019107.jpg" title="slide107" width="1365"/>  LED Path Forward Creating a resilient LED business through innovation on sapphire substrate and transition to fabless model Sales Gross Margin Mid 30%s ~$0.6B $0.5B 28% 19% FY19 FY24 FY19 1Q’20 FY24 Fab Transition Key Takeaways: • Improve profitability through silicon carbide to sapphire conversion • Drive average cost lower as we move transition to a fabless model FY19 FY24 Cree Fab Fab Light • Creating a resilient LED business with more (Insourced) (Outsourced) silicon carbide capacity for Wolfspeed SiC SA (Cree Fab) SA (Outsourced Fab) Avg. Wafer Cost 107 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019108.jpg" title="slide108" width="1365"/>  Why We Win: LED Achieve gross margin expansion and modest growth, supported by OpEx lean, CapEx light business model Focus on attractive markets where our best-in-class technology and solutions are differentiated and valued Improve profitability through the conversion of silicon carbide to sapphire substrate Create a more resilient business by transitioning to a fabless model over time 108 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019109.jpg" title="slide109" width="1365"/> CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019110.jpg" title="slide110" width="1365"/> Financial Overview Neill Reynolds Chief Financial Officer Cree Investor Day 2019 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019111.jpg" title="slide111" width="1365"/>  Key Messages Our transformation is accelerating; business is refocused and our work continues Three stages to achieve our target model: Transform, Ramp, Execute The 2024 target model results in high growth, high margin, strong cash flows Growth accelerates beyond 2024 as we continue to invest for longer-term growth For modeling purposes, we have significantly judged down China revenue 111 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019112.jpg" title="slide112" width="1365"/>  Cree Transformation: Recent Accomplishments Significant momentum in our transformation journey since our last Investor Day $9B 4 ~$1B Current device pipeline silicon carbide device Materials LTAs partnerships announced $720M 2 6 New additions to the Net investment in capacity M&A transactions completed expansion announced leadership team 112 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019113.jpg" title="slide113" width="1365"/>  Cree Transformation Roadmap Transforming Cree into a powerhouse semiconductor company Summary Lighting 24% 30% Portfolio • Re-focused business on highest growth segment LED 36% Transition • Divested Lighting, re-investing proceeds into Wolfspeed 70% (% of GM$) Wolfspeed 40% • Focused LED on higher value segments, fabless model 4Q’FY18 4Q’FY19 ~$7B Wolfspeed • Significant market growth (BEV, 5G), accelerates >FY2024 Silicon • Silicon carbide market will grow faster than silicon Device ~$3B • Materials benefits for most non-Cree device business SAM* Silicon 80%+ Carbide <50% FY2019 FY2024 ~$2.1B • Wolfspeed growth rate at 30%+ in FY2024, LED modest growth • Assumes more muted China with upside opportunity Target ~$1.1B Revenue • Wolfspeed GM% 50%-54%, LED mid-30%s Model >20% EBIT% 8% • EBIT >20% of revenue and FCF ~20% of revenue FY2019 FY2024 113 *Device market data (excluding Materials) basedCREE CONFIDENTIAL on Yole & Cree& PROPRIETARY Internal assumptions© 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019114.jpg" title="slide114" width="1365"/>  Revenue Outlook Wolfspeed growth driven by electric vehicle adoption rate with larger opportunity beyond FY2024 Drivers & Assumptions Wolfspeed ~$1.5B • Modest BEV ramp to ~5% of vehicles by FY2024 Revenue • 5G roll out expansion • BEV charging stations, Industrial applications $538M • Materials LTAs support silicon carbide proliferation FY2019 FY2024 Drivers & Assumptions LED $542M ~$0.6B • Low- to mid-single digit growth rate Revenue • Recovery post-2020 market/channel reset • Continue to focus on high-value end markets FY2019 FY2024 114 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019115.jpg" title="slide115" width="1365"/>  Wolfspeed – Phases of Revenue Growth Our growth reaches an inflection point as electric vehicle deployments commence $1.5B+ Accelerated Growth $0.5B-$0.7B Inflection Point Modest Growth FY2019 - 2021 FY2022 - 2023 FY2024+ Transform Ramp Execute  Device design wins  BEV adoption  Accelerated BEV adoption  Materials LTAs  Charging Infrastructure  Widespread 5G usage  Invest in R&D / Sales  5G deployment  Further penetration in  Capacity expansion  Industrial & Energy Industrial & Energy Battery Electric Vehicle (BEV) 115 Long-Term Agreements (LTA) CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019116.jpg" title="slide116" width="1365"/>  Gross Margin Outlook (Non-GAAP) Substantial cost reduction programs and scale from fab capacity support gross margin expansion Wolfspeed Drivers & Assumptions 50%-54% GM% 46% • Materials cost reductions on track • Fab costs improve with Mohawk Valley Fab • LTAs pricing locked in with solid visibility • Device wins providing more clarity on outlook 1Q’FY20 FY2024 Mid-30%s Drivers & Assumptions LED GM% 19% • Near term margins impacted by lower utilization • Outsource materials and production over 2 years • Continue to focus on high-value end markets 1Q’FY20 FY2024 116 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019117.jpg" title="slide117" width="1365"/>  OPEX Optimization Enhancing our cost structure to drive scale and efficiency as we grow OPEX % of Revenue 35% Realigning OPEX Spend +13% pts operating • R&D investment to support new products SG&A 18% efficiency 22% • Expanding Sales & Marketing reach 9% • Modernizing digital capabilities & systems R&D 17% • Investing for operational scale, efficiency 13% • Standardizing and streamlining SG&A 1Q’FY20 FY21 FY22 FY23 FY24 117 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019118.jpg" title="slide118" width="1365"/>  Capacity Expansion & Cash Flow Strong balance sheet supports capacity expansion; profit growth drives significant cash flows CAPEX FREE CASH FLOW $0.4B $0.2B $0.05B FY20 FY21 FY22 FY23 FY24 FY19 FY20 FY21 FY22 FY23 FY24 • Significant net $720M CAPEX investment in capacity expansion from ‘20-‘24 • Strong balance sheet: net cash position, >$900m cash & investments, $575m convert due 2023 • Operating model delivers significant cash conversion 118 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019119.jpg" title="slide119" width="1365"/>  Cree Target Operating Model Building a high growth, high margin, and significant cash generating business Target Model Overview FY2019 FY2024 • Wolfspeed BEV Adoption to ~5%, 5G roll out • Growth continues to accelerate beyond FY2024 Revenue $1.1B $2.1B • Wolfspeed GM% 50-54% Wolfspeed 46% 30%+ • OPEX scaled for growth Growth Rate (organic) • Invest for scale with net $720m capacity expansion GM% 37% 44%-47% • FCF at ~20% (Non-GAAP) OPEX% 29% ~22% (Non-GAAP) Areas to watch EBIT $88M $0.5B • China has been judged down, but still well % 8% 22%-25% positioned • Potential for further LTA and device FCF $49M ~$0.4B announcements 5% ~20% % • Factory transitions and new product introductions 119 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019120.jpg" title="slide120" width="1365"/>  Why We Win Transforming Cree into a powerhouse semiconductor company Multi-decade long growth Substantial opportunity in both opportunity that accelerates up materials and devices to and beyond FY2024 Leadership position with over 30 Target model produces years in silicon carbide positions substantial growth, high margins us well and significant cash flow 120 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019121.jpg" title="slide121" width="1365"/> CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019122.jpg" title="slide122" width="1365"/> Closing Remarks Gregg Lowe President & Chief Executive Officer Cree Investor Day 2019 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019123.jpg" title="slide123" width="1365"/>  Why We Win Well-positioned to benefit from significant and growing opportunities in silicon carbide Executing well against our Growing and diversified pipeline transformational strategy to supported by secular trends in become a powerhouse attractive end markets including semiconductor company focused EV, 5G and Industrial on silicon carbide and GaN 30 YEARS of Experience and Investing to expand capacity to Substantial IP Position Expanding our leading position support substantial growth with strong barriers to entry during opportunities in silicon carbide the market transformation from materials and devices silicon to silicon carbide 123 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019124.jpg" title="slide124" width="1365"/>  Question & Answer Session 124 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019125.jpg" title="slide125" width="1365"/> CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019126.jpg" title="slide126" width="1365"/>  Appendix 126 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019127.jpg" title="slide127" width="1365"/>  Appendix – Non-GAAP Measures Reconciliation – Q1’20 Non-GAAP Gross Margin Reconciliation FY20Q1 Non-GAAP Operating Expense & Operating Loss Reconciliation FY20Q1 Revenue $242.8 Revenue $ 242.8 GAAP Gross Profit $74.2 Operating expense, GAAP to Non-GAAP GAAP Gross Margin % 30.6% Cost of revenue, net (GAAP) 168.6 Less: Stock-based compensation expense (2.2) Adjustment: Cost of revenue, net (non-GAAP) 166.4 Stock-based compensation expense 2.2 Non-GAAP Gross Profit $76.4 Research and development (GAAP) 43.7 Non-GAAP Gross Margin % 31.5% Less: Stock-based compensation expense (2.4) Research and development (non-GAAP) 41.3 Sales, general and administrative (GAAP) 57.6 Less: Stock-based compensation expense (12.3) Less: Factory optimization restructuring (1.2) Less: Severance and other restructuring (0.8) Less: Project, transformation and transaction costs (2.6) Less: Factory optimization start-up costs (1.4) Less: Non-restructuring related executive severance (1.2) Less: Transition service agreement costs (3.0) Sales, general and administrative (non-GAAP) 35.1 Other operating expenses (GAAP) 11.8 Less: Amortization or impairment of acquisition related intangibles (3.6) Less: Asset impairment (0.2) Other operating expenses (non-GAAP) 8.0 GAAP Operating expense $ 281.7 Non-GAAP Operating expense $ 250.8 GAAP Operating loss $ (38.9) GAAP Operating margin -16.0% Non-GAAP Operating loss $ (8.0) Non-GAAP Operating margin -3.3% 127 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019128.jpg" title="slide128" width="1365"/>  Appendix – Non-GAAP Measures Reconciliation – FY19 Non-GAAP Gross Margin Reconciliation FY19 Non-GAAP Operating Expense & Operating Income (Loss) Reconciliation FY19 EBIT Reconciliation FY19 Revenue $1,080.0 Revenue $ 1,080.0 Revenue $1,080.0 GAAP Gross Profit $391.0 Operating expense, GAAP to Non-GAAP GAAP Income (loss) before income taxes ($45.2) GAAP Gross Margin % 36.2% Cost of revenue, net (GAAP) 689.0 Less: Stock-based compensation expense (8.8) Adjustments: Less: Project and transaction costs (2.7) Adjustments: Stock-based compensation expense 8.8 Cost of revenue, net (non-GAAP) 677.5 Amortization or impairment of acquisition related intangibles 15.6 Project and transaction costs 2.7 Accretion on Convertible Notes 18.3 Non-GAAP Gross Profit $402.5 Research and development (GAAP) 157.9 Interest (6.3) Non-GAAP Gross Margin % 37.3% Less: Stock-based compensation expense (7.7) Stock-based compensation expense 49.6 Research and development (non-GAAP) 150.2 Corporate business restructuring 2.6 Sales restructuring 1.6 Sales, general and administrative (GAAP) 200.7 Factory optimization restructuring 4.1 Less: Stock-based compensation expense (33.1) Project and transaction costs 19.6 Less: Factory optimization restructuring (4.1) Executive severance 1.3 Less: Corporate business restructuring (2.6) Factory optimization start-up costs 1.5 Less: Sales restructuring (1.6) Transition service agreement costs 3.0 Less: Project, transformation and transaction costs (16.9) Asset impairment 4.3 Less: Factory optimization start-up costs (1.5) Net change in fair value of the Lextar Investment 17.5 Free Cash Flow FY19 Less: Executive severance (1.3) Revenue $1,080.0 Less: Transition service agreement costs (3.0) Adjustment Total 132.7 Sales, general and administrative (non-GAAP) 136.6 EBIT $87.5 Net cash provided by operating activities of continuing operations $202.3 EBIT % 8.1% Less: PP&E spending ($142.4) Other operating expenses (GAAP) 48.3 Less: Patents spending ($10.6) Less: Amortization or impairment of acquisition related intangibles (15.6) Total free cash flow $49.3 Less: Asset impairment (4.3) Free cash flow as a % of revenue 4.6% Other operating expenses (non-GAAP) 28.4 GAAP Operating expense $ 1,095.9 Non-GAAP Operating expense $ 992.7 GAAP Operating loss $ (15.9) GAAP Operating margin -1.5% Non-GAAP Operating income $ 87.3 Non-GAAP Operating margin 8.1% 128 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+
+ <img height="768" src="investorday112019129.jpg" title="slide129" width="1365"/>  Appendix -- Non-GAAP Measures Reconciliation Cree excludes the following items from one or more of its non-GAAP measures when applicable: • Stock-based compensation expense. This expense consists of expenses for stock options, restricted stock, performance stock awards and employee stock purchases through its ESPP. Cree excludes stock-based compensation expenses from its non-GAAP measures because they are non-cash expenses that Cree does not believe are reflective of ongoing operating results. • Amortization or impairment of acquisition-related intangibles. Cree incurs amortization or impairment of acquisition-related intangibles in connection with acquisitions. Cree excludes these items because they arise from Cree's prior acquisitions and have no direct correlation to the ongoing operating results of Cree's business. • Factory optimization restructuring. In May 2019, the Company started a significant, multi-year factory optimization plan ("factory optimization plan") to be anchored by a state-of-the-art, automated 200mm silicon carbide fabrication facility. In September 2019, the Company announced the intent to build the new fabrication facility in Marcy, New York to complement the factory expansion underway at its U.S. campus headquarters in Durham, North Carolina. As part of the plan, the Company will incur restructuring costs associated with the movement of equipment as well as disposals on certain long-lived assets. Because these charges relate to assets which had been retired prior to the end of their estimated useful lives, Cree does not believe these costs are reflective of ongoing operating results. Similarly, Cree does not consider the realized losses on sale of assets relating to the restructuring to be reflective of ongoing operating results. • Project, transformation and transaction costs. The Company has incurred professional services fees associated with acquisitions and divestitures, as well as for internal transformation programs designed to improve its operating margins and change the manner in which business is conducted. Cree excludes these items because Cree believes they are not reflective of the ongoing operating results of Cree's business. • Factory optimization start-up costs. The Company has incurred and will incur start-up costs as part of the factory optimization plan. Cree does not believe these costs are reflective of ongoing operating results. • Non-restructuring related executive severance. The Company has incurred costs in conjunction with the termination of key executive personnel. Cree excludes these items because Cree believes they have no direct correlation to the ongoing operating results of Cree's business. • Transition service agreement costs. As a result of the sale of the Lighting Products business unit, the Company is providing certain IT services under a transition services agreement which will not be reimbursed. Cree excludes the costs of these services because Cree believes they are not reflective of the ongoing operating results of Cree's business. • Asset impairment. The Company incurred impairment charges in conjunction with the factory optimization plan. Cree excludes these items because Cree believes they are not reflective of the ongoing operating results of Cree's business. • Net changes in fair value of our Lextar investment. The Company's common stock ownership investment in Lextar Electronics Corporation is accounted for utilizing the fair value option. As such, changes in fair value are recognized in income, including fluctuations due to the exchange rate between the New Taiwan Dollar and the United States Dollar. Cree excludes the impact of these gains or losses from its non-GAAP measures because they are non-cash impacts that Cree does not believe are reflective of ongoing operating results. Additionally, Cree excludes the impact of dividends received on its Lextar investment as Cree does not believe it is reflective of ongoing operating results. • Accretion on convertible notes. In August 2018, the Company issued $575 million in convertible notes resulting in interest accretion on the convertible notes' issue costs and discount. Management considers these items as either limited in term or having no impact on the Company's cash flows, and therefore has excluded such items to facilitate a review of current operating performance and comparisons to our past operating performance. • Income tax adjustment. This amount reconciles GAAP tax expense (benefit) to a calculated non-GAAP tax expense (benefit) utilizing a non-GAAP tax rate. The non-GAAP tax rate estimates an appropriate tax rate if the listed non-GAAP items were excluded. This reconciling item adjusts non-GAAP net (loss) income to the amount it would be if the calculated non-GAAP tax rate was applied to non-GAAP (loss) income before taxes. 129 CREE CONFIDENTIAL & PROPRIETARY © 2019 Cree, Inc. All rights reserved. Cree®, the Cree logo, Wolfspeed®, and the Wolfspeed logo are registered trademarks of Cree, Inc.
+
+
+

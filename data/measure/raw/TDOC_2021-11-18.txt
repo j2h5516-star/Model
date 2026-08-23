@@ -1,0 +1,1567 @@
+# 잣대값 파싱 실패 원문 — TDOC 2021-11-18
+# 출처: https://www.sec.gov/Archives/edgar/data/1477449/000110465921140947/tm2133227d1_8k.htm
+
+Exhibit 99.1
+
+
+
+
+           This presentation contains, and our officers may make, “forward-looking” statements that are based on our management’s beliefs and assumptions and on information currently            
+      available to management. These forward-looking statements include, without limitation, information concerning possible or assumed future results of operations, including descriptions      
+of our business plan and strategies. These statements often include words such as ‘‘anticipate,’’ ‘‘expect,’’ ‘‘suggest,’’ ‘‘plan,’’ ‘‘believe,’’ ‘‘intend,’’ ‘‘estimate,’’ ‘‘target,’’ “outlook,”
+                                          ‘‘project,’’ ‘‘should,’’ ‘‘could,’’ ‘‘would,’’ ‘‘may,’’ ‘‘will,’’ ‘‘forecast,’’ and other similar expressions.                                          
+          Forward-looking statements involve known and unknown risks, uncertainties, and other factors that may cause our actual results, performance, or achievements to be materially           
+        different from any future results, performance, or achievements expressed or implied by the forward-looking statements. These statements are based on certain assumptions that we         
+         have made in light of our experience in the industry and our perception of historical trends, current conditions, expected future developments, and other factors we believe are         
+        appropriate under the circumstances as of the date hereof. These and other important factors may cause our actual results, performance, or achievements to differ materially from         
+        those expressed or implied by these forward-looking statements. Such risks and other factors that may impact management’s beliefs and assumptions are more particularly described         
+            in our filings with the U.S. Securities and Exchange Commission (the “SEC”), including under “Item 1A.—Risk Factors” in our Annual Report on Form 10-K for the year ended             
+         December 31, 2020, and under similar headings in our subsequently filed Quarterly Reports on Form 10-Q, and could cause our results to differ materially from those expressed in         
+            forward-looking statements. As a result, we cannot guarantee future results, outcomes, levels of activity, performance, developments, or achievements, and there can be no            
+     assurance that our expectations, intentions, anticipations, beliefs, or projections will result or be achieved or accomplished. The forward-looking statements in this presentation are      
+       made only as of the date hereof. Except as required by law, we assume no obligation to update these forward-looking statements, or to update the reasons actual results could differ       
+                                  materially from those anticipated in the forward-looking statements, even if new information becomes available in the future.                                   
+      This presentation also contains estimates and other statistical data made by independent parties and by us relating to market size and growth and other data about our industry. This       
+                                     data involves a number of assumptions and limitations, and you are cautioned not to give undue weight to such estimates.                                     
+           This presentation may include certain non-GAAP financial measures as defined by SEC rules. We believe that the presentation of such non-GAAP financial measures enhances an            
+          investor's understanding of our financial performance. We use certain non-GAAP financial measures for business planning purposes and in measuring our performance relative to           
+           that of our competitors. For additional information regarding these non-GAAP financial measures, including reconciliations to the most directly comparable financial measure           
+            calculated according to GAAP, refer to the appendix to this presentation. We have not reconciled Adjusted EBITDA guidance to U.S. GAAP net income (loss) because we do not            
+       provide guidance on the individual reconciling items between Adjusted EBITDA and U.S. GAAP net income (loss) as a result of the uncertainty regarding, and the potential variability       
+      of, the individual reconciling items, the effect of which may be significant. Accordingly, a reconciliation of the non-GAAP financial measure guidance to the corresponding U.S. GAAP       
+                                                                      measure is not available without unreasonable effort.                                                                       
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Our Vision for Whole-Person Care Jason Gorevic
+       Commercial Strategy Kelly Bliss        
+  Delivering Whole-Person Care Dan Trencher   
+           Pulling It All Together:           
+    The Integrated Experience Donna Boyer     
+Product and Platform Enablement Claus Jensen, 
+                     PhD                      
+                   Q&amp;A                    
+ BetterHelp’s Playbook for Growth Alon Matas  
+           Winning With Consumers:            
+         The Forefront of Engagement          
+                   Stephany                   
+                  Verstraete                  
+        Financial Outlook Mala Murthy         
+         Closing Remarks and Q&amp;A          
+----------------------------------------------
+
+     Our Vision for    
+   Whole-Person Care   
+     Jason Gorevic     
+           4           
+Chief Executive Officer
+-----------------------
+
+Member Story
+------------
+
+  Virtual care industry leader in scale, 
+      clinical breadth and outcomes      
+Differentiated combination of digital and
+    physician-led services and assets    
+     Industry’s only complete whole-     
+        person virtual care suite        
+      Multi-channel network: leading     
+     brand across payer + provider +     
+        DTC, with global footprint       
+    Durable business model with strong   
+          financial performance          
+   Uniquely positioned to deliver data-  
+   driven stepped care, creating better  
+          outcomes at lower cost         
+-----------------------------------------
+
+transforming the healthcare experience
+             OUR MISSION              
+                  7                   
+--------------------------------------
+
+        WHO WE ARE        
+   The global leader in   
+whole-person virtual care,
+--------------------------
+
+                                    9                                     
+         1. Includes U.S. paid members and visit fee only access          
+                     2. Teladoc Health Medical Group                      
+                  3. Includes Platform Enabled Sessions                   
+4. Reflects net promoter score across Teladoc Health products and services
+                                   76M                                    
+                                 Members1                                 
+                                   12K+                                   
+                                 Clients                                  
+                                   60+                                    
+                                   NPS4                                   
+                                   10K                                    
+                                Providers2                                
+                                   18M+                                   
+                    Estimated 2021 Visits / Sessions3                     
+                                    #1                                    
+                             In App Downloads                             
+                                    #1                                    
+                                 JD Power                                 
+                                   800K                                   
+                            Connected Devices                             
+                                    2B                                    
+                               Data Points                                
+                                    5K                                    
+                                Employees                                 
+--------------------------------------------------------------------------
+
+Sources: Piper Sandler Dec 2020 Consumer Survey; KLAS Telehealth Performance 2020 report, McKinsey report, Teladoc company research
+                         1. Telehealth claims volumes, compared to pre-Covid-19 levels (February 2020 = 1)                         
+                                                      Market increasingly sees                                                     
+                                                  virtual care as a first step for                                                 
+                                                             healthcare                                                            
+                                                       Consumers and clients                                                       
+                                                      demand that virtual care                                                     
+                                                    rises to the level of other                                                    
+                                                             services…                                                             
+                                                     …which requires a seamless                                                    
+                                                       virtual care platform                                                       
+                                                     delivering broad spectrum                                                     
+                                                        of coordinated care                                                        
+                                                              services                                                             
+                                                                38X                                                                
+                                                        growth in telehealth                                                       
+                                                     usage since pre-pandemic1                                                     
+                                                   of consumers say telehealth is                                                  
+                                                 equal to or better than in-person                                                 
+                                                    of consumers say they would                                                    
+                                                be interested in a virtual plan 60%                                                
+                                                                82%                                                                
+-----------------------------------------------------------------------------------------------------------------------------------
+
+            Chronic Care           
+            Primary Care           
+           Mental Health           
+              Medicaid             
+              Medicare             
+            Dermatology            
+           Hospital &amp;          
+      Health System Text-based     
+         Mental Health Care        
+       DTC Broker/SMB Market       
+                B2B                
+    Mental Health Care Caregiver   
+           Expert Medical          
+              Services             
+               Device              
+            Integration            
+            Global Care            
+           International           
+            DTC Partner            
+           Mental Health           
+             Navigator             
+               Back-               
+                care               
+             ML-Powered            
+          Demand Planning          
+              Chronic              
+              Disease              
+               Health              
+             Assistant             
+             Pediatrics            
+               Canada              
+               United              
+              Kingdom              
+               France              
+            High Acuity            
+            Telemedicine           
+             Nutrition             
+            Lab Testing            
+          Virtual Medical          
+                Care               
+             Text/Chat             
+          General Medical          
+             Site-based            
+            Telemedicine           
+       Referrals / Navigation      
+              2015 IPO             
+           Market creator          
+            2016 to 2020           
+Building the base and strong growth
+          2021 and beyond          
+     Driving whole-person care     
+     Stepped Care Mental Health    
+    Diabetes &amp; Hypertension    
+                CKD                
+            AI/ML Nudges           
+        Device Integrations        
+         Consultant Connect        
+         International DTC         
+               WHOLE-              
+               PERSON              
+                CARE               
+              STRATEGY             
+            Chronic Care           
+        Virtual Medical Care       
+         Mental Health Care        
+             Primary360            
+-----------------------------------
+
+            Evolution of            
+Products WHOLE-PERSON POINT SOLUTION
+            Evolution of            
+           Business Model           
+          FEE FOR SERVICE           
+          VALUE/RISK BASED          
+              PARTNER               
+               VENDOR               
+            Evolution of            
+       Customer Relationship        
+         AUDIO/VIDEO VISITS         
+   INTEGRATED ECOSYSTEM PLATFORM    
+            Evolution of            
+   Technology &amp; Connectivity    
+               Today                
+              Tomorrow              
+             Yesterday              
+------------------------------------
+
+                         Virtual Care                        
+                         Competition                         
+                            Today                            
+                         Evolution of                        
+                           Products                          
+                            WHOLE                            
+                              -                              
+                            PERSON                           
+                        POINT SOLUTION                       
+                         Evolution of                        
+                        Business Model                       
+               FEE FOR SERVICE VALUE/RISK BASED              
+                           PARTNER                           
+                            VENDOR                           
+                         Evolution of                        
+                    Customer Relationship                    
+AUDIO/VIDEO VISITS INTEGRATED ECOSYSTEM PLATFORM Evolution of
+                Technology &amp; Connectivity                
+                            Today                            
+                          Yesterday                          
+                           Tomorrow                          
+-------------------------------------------------------------
+
+ Teladoc Health’s approach to
+  whole-person virtual care  
+addresses the shortcomings of
+the physical delivery system.
+-----------------------------
+
+                            I have a                            
+                            fever of                            
+                             101.3                              
+                            I need a                            
+                         referral to a                          
+                 cardiologist I want to easily                  
+                        connect with my                         
+                         doctor online                          
+                           My doctor                            
+                         told me to get                         
+                          surgery—do I                          
+                            need it?                            
+                        I want a better                         
+                         way to access                          
+                          primary care                          
+                         I want to lose                         
+                        weight and have                         
+                          more energy                           
+                          My BP is out                          
+                         of control… I                          
+                  need help Stepped Care Model                  
+Whole-Person Care that is Personalized, Convenient and Connected
+                               15                               
+                      I am stressed about                       
+                        my relationship                         
+----------------------------------------------------------------
+
+                   • Relationship-based, personalized                   
+                            and longitudinal                            
+                      • Better consumer experience                      
+             • Broad, integrated suite of virtual solutions             
+               • Connected with physical delivery system                
+                       • Highly scalable platform                       
+                   • Continuous monitoring, frequent                    
+                  interactions and actionable insights                  
+• Underpinned by robust data and analytics Distribution &amp; engagement
+                  Clinical expertise &amp; experiences                  
+                     Technology &amp; data at scale                     
+                              Chronic Care                              
+                          Virtual Medical Care                          
+                           Mental Health Care                           
+                                 WHOLE-                                 
+                                 PERSON                                 
+                                  CARE                                  
+                                STRATEGY                                
+                     Accessed via multiple on-ramps                     
+------------------------------------------------------------------------
+
+          Tech Enabled          
+          Ops at Scale          
+        Integrated Tech         
+            Platform            
+         Data Science,          
+          AI, Constant          
+            Learning            
+         Surround Sound         
+           Engagement           
+           Innovative           
+          Care Models           
+          Value Added           
+            Services            
+        Client Provider         
+           Enablement           
+            Teladoc             
+            Medical             
+             Group              
+       Powered by unified       
+      technology, data and      
+     platform capabilities      
+    Multiple entry points to    
+  ecosystem via complementary   
+and integrated clinical services
+   Extensive Teladoc network    
+     and last mile physical     
+      service partnerships      
+       enable smart care        
+       extensions DIGITAL       
+             FRONT              
+              DOOR              
+--------------------------------
+
+Note: Competitor information represents assessment by Teladoc management based on internal analysis and estimates &amp; other industry data.
+                                                              Our Moat Teladoc                                                              
+                                                                   Health                                                                   
+                                                                   Video                                                                    
+                                                                Conferencing                                                                
+                                                                 Platforms                                                                  
+                                                                   CCM/MH                                                                   
+                                                                   Point                                                                    
+                                                                 Solutions                                                                  
+                                                                Traditional                                                                 
+                                                                 Telehealth                                                                 
+                                                                    Big                                                                     
+                                                                    Tech                                                                    
+                                                                   Hybrid                                                                   
+                                                                    VPC                                                                     
+                                                                  Players                                                                   
+                                                                  National                                                                  
+                                                                   Health                                                                   
+                                                                   Plans                                                                    
+                                                             Clinical Expertise                                                             
+                                                             &amp; Experiences                                                              
+                                                     One-to-many care delivery model ​                                                      
+                                                        Whole-Person clinical scope                                                         
+                                                 Best-in-class engagement, behavior change                                                  
+                                                                 Tech &amp;                                                                 
+                                                                    Data                                                                    
+                                                       Data and data science at scale                                                       
+                                                    Purpose built virtual care platform                                                     
+                                                             Distribution &amp;                                                             
+                                                                 Engagement                                                                 
+                                                 Global leader across distribution channels                                                 
+                                                      Leading, trusted consumer brands                                                      
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                     TDOC 2021E Revenue                                                    
+                                                McKinsey 2021 Market Revenue                                               
+                                              TDOC Total Estimated Serviceable                                             
+                                                  Addressable Market (SAM)                                                 
+                                                           TAM /                                                           
+                                                        Total Health                                                       
+                                                       Spending = 7%                                                       
+                                                          Total US                                                         
+                                                         healthcare                                                        
+                                                          spending                                                         
+                                                           $3.8T                                                           
+                                                    Total US Healthcare                                                    
+                                                          Spending                                                         
+Sources: Company management estimates; McKinsey Telehealth: A quarter trillion-dollar post-COVID-19 reality? July 2021; CMS
+                                                        $5.5B $5.5B                                                        
+                                                           $2.0B                                                           
+                                                           $261B                                                           
+                                                           $140B                                                           
+                                                      TDOC INCREMENTAL                                                     
+                                                      PRIMARY CARE TAM                                                     
+                                                           $121B                                                           
+                                                          EXISTING                                                         
+                                                          TDOC TAM                                                         
+---------------------------------------------------------------------------------------------------------------------------
+
+          Total           
+          Market          
+       New Members        
+  Increased Revenue Per   
+          Member          
+POWERED BY DIFFERENTIATING
+ ASSETS AND CAPABILITIES… 
+           New            
+         Clients          
+       Covered Life       
+       Penetration        
+        at Clients        
+         Product          
+       Penetration        
+        Engagement        
+       / Enrollment       
+       Distribution       
+     &amp; Engagement     
+ Clinical Expertise &amp; 
+       Experiences        
+  Technology &amp; Data   
+         at Scale         
+--------------------------
+
+Note: Non-member covered lives for CCM/mS based on overlap analysis of CCM/mS membership and membership of other Teladoc programs, and typical eligibility and enrollment rates for CCM/mS programs
+                                                                                    Source: AIS, Health Affairs                                                                                    
+                                                    2021 estimated Teladoc covered lives vs. estimated 298M total U.S. insured lives (millions)                                                    
+                                                                                   • Teladoc paid and visit-fee-                                                                                   
+                                                                                      only members total ~76M                                                                                      
+                                                                                           insured lives                                                                                           
+                                                                                     • Additional ~16M insured                                                                                     
+                                                                                     lives in populations with                                                                                     
+                                                                                    access to Chronic Condition                                                                                    
+                                                                                      Management (CCM) and/or                                                                                      
+                                                                                      myStrength (mS) but not                                                                                      
+                                                                                       other Teladoc programs                                                                                      
+                                                                                     • ~63M additional lives in                                                                                    
+                                                                                   existing clients not currently                                                                                  
+                                                                                      covered for any Teladoc                                                                                      
+                                                                                              programs                                                                                             
+                                                                                                 76                                                                                                
+                                                                                                 16                                                                                                
+                                                                                                 63                                                                                                
+                                                                                                 92                                                                                                
+                                                                                                 51                                                                                                
+                                                                                                92M                                                                                                
+                                                                                          ~31% of insured                                                                                          
+                                                                                         lives in the U.S.                                                                                         
+                                                                                          have access to a                                                                                         
+                                                                                            TDOC product                                                                                           
+                                                                                     Current Teladoc “members”                                                                                     
+                                                                                      Lives offered CCM/mS but                                                                                     
+                                                                                            not enrolled                                                                                           
+                                                                                     Potential new populations                                                                                     
+                                                                                      within existing clients                                                                                      
+                                                                                     Managed Care Organization                                                                                     
+                                                                                    (MCO) lives outside existing                                                                                   
+                                                                                              clients                                                                                              
+                                                                                    Medicare &amp; Medicaid Fee-                                                                                   
+                                                                                      for-Service (FFS) lives                                                                                      
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                                                                                                           Notes:                                                                                                                                           
+                                                                               Abbreviations: CCM – Chronic Condition Management, D – Diabetes, PD – Prediabetes, HTN – Hypertension, WM – Weight Management                                                                                
+“Total eligible participants” determination: Total eligible based on expected clinical prevalence of underlying mental health needs for myStrength Complete, prevalence of targeted chronic conditions for CCM, and expected % of individuals without strong PCP relationship for Primary360
+                                              “Average total revenue per participating member per month determination: Expected total subscription and visit revenue denominated by total members participating in / enrolling in the product                                               
+                                                                                                                                   Range of total revenue                                                                                                                                   
+                                                                                                                                  per participating member                                                                                                                                  
+                                                                                                                                         per month                                                                                                                                          
+                                                                                                                              $25-$40 $30-$40 $50-$110 $30-$65                                                                                                                              
+                                                                                                        Total revenue implied if 100% participation across 92M members $75B – $137B                                                                                                         
+                                                                                                   Total revenue per member per month if 100% participation across 92M members $68 – $123                                                                                                   
+                                                                                                                                             75                                                                                                                                             
+                                                                                                                                           51 47                                                                                                                                            
+                                                                                                                                             19                                                                                                                                             
+                                                                                                                                             0                                                                                                                                              
+                                                                                                                                             20                                                                                                                                             
+                                                                                                                                             40                                                                                                                                             
+                                                                                                                                             60                                                                                                                                             
+                                                                                                                                             80                                                                                                                                             
+                                                                                                                                            100                                                                                                                                             
+                                                                                                                Primary360 myStrength Complete CCM - D, PD, or HTN CCM - WM                                                                                                                 
+                                                                                                                                      (excl. D-PD-HTN)                                                                                                                                      
+                                                                                                                       Total Potential Participants (Lives, Millions)                                                                                                                       
+                                                                                                                 Estimated 92M lives with access to a Teladoc product today                                                                                                                 
+                                                                                                                                            92M                                                                                                                                             
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Includes all global other B2B2C telemedicine services and telemedicine software and hardware licensing for providers
+                    2. Excludes myStrength Complete and other legacy Livongo mental health products                    
+                                                   % of 2021 expected                                                  
+                                                        revenue                                                        
+                                                    Target 2021-2024                                                   
+                                                          CAGR                                                         
+                               Virtual medical care (including primary care)1 ~35% 10-20%                              
+                                      Mental health care (B2B and DTC) ~40% 30-40%                                     
+                                          Chronic condition care2 ~25% 25-35%                                          
+                                               CONSOLIDATED GROWTH 25-30%                                              
+-----------------------------------------------------------------------------------------------------------------------
+
+       Multiple levers to deliver       
+         sustainable, long-term         
+            growth and value            
+            creation via our            
+            integrated model            
+24 Teladoc Health, Inc Investor Day 2021
+            Target 2021-2024            
+          Revenue CAGR 25-30%           
+          FY 2022 Preliminary           
+         Revenue Outlook ~$2.6B         
+                FY 2024                 
+         Revenue Target &gt;$4B         
+----------------------------------------
+
+     25     
+Opportunity 
+   Vision   
+  Strategy  
+Capabilities
+------------
+
+    Commercial Strategy     
+             26             
+        Kelly Bliss         
+President, U.S. Group Health
+----------------------------
+
+        CHANNEL PARTNERS B2B DIRECT CHANNEL DTC CHANNEL         
+                          Health plans                          
+                        &amp; government                        
+                        Global insurers                         
+   &amp; financial services Employers Hospitals &amp; health    
+                            systems                             
+                           Direct to                            
+                            consumer                            
+                         • Self Insured                         
+                        • Fully Insured                         
+                             • ACO                              
+                      • Government Markets                      
+                       (U.S. and Global)                        
+                  • Life, P&amp;C, disability,                  
+                        group, specialty                        
+                  • All sizes, all industries                   
+                         • Fortune 500                          
+                             • SMB                              
+                        • Health systems                        
+                          • Providers                           
+                             • IDNs                             
+                          • BetterHelp                          
+                 • Partnerships with Telefonica                 
+                   (Spain) and Vivo (Brazil)                    
+&gt;100 &gt;150 &gt;50% &gt;11,000 Category leading virtual care
+                     products for consumers                     
+                          U.S. health                           
+                          plan clients                          
+                     global insurers &amp;                      
+                       financial services                       
+                             firms                              
+                           of Fortune                           
+                              500                               
+                              care                              
+                           locations                            
+----------------------------------------------------------------
+
+                                                                               80%                                                                                
+                                                                       of Employers believe                                                                       
+                                                                     virtual care will have a                                                                     
+                                                                      significant impact on                                                                       
+                                                                     how care is delivered in                                                                     
+                                                                            the future                                                                            
+Sources: Business Group on Health. 2021 Large Employers’ Health Care Strategy and Plan Design Survey. August 2020; Teladoc Health Client Satisfaction Survey, 2021
+                                                                               99%                                                                                
+                                                                      of Employers intend to                                                                      
+                                                                       maintain or increase                                                                       
+                                                                          their level of                                                                          
+                                                                      investment in virtual                                                                       
+                                                                     care in the coming year                                                                      
+                                                                               80%                                                                                
+                                                                       of our Clients view                                                                        
+                                                                        us as a strategic                                                                         
+                                                                       partner vs. a vendor                                                                       
+                                                                               20%                                                                                
+                                                                      of our Clients believe                                                                      
+                                                                        they have a well-                                                                         
+                                                                       defined virtual care                                                                       
+                                                                             strategy                                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                     INCREASING VALUE OF VIRTUAL CARE                                    
+  Early stages of developing virtual care strategy; testing use and viability of solutions and providers 
+                         Virtual care seen as a benefit to drive differentiation                         
+                                                    D                                                    
+                                                 eveloped                                                
+                                               virtual care                                              
+                    strategy that recognizes differentiation and cost savings benefits                   
+                                             Offers a Virtual                                            
+                                                    -                                                    
+                                                  First                                                  
+                                                  Health                                                 
+                                               option with                                               
+                        embedded virtual medical care that connects virtual and in                       
+                                                    -                                                    
+                                               person care                                               
+                                                 Virtual                                                 
+                                                    -                                                    
+                                             First is core to                                            
+benefits strategy with widespread adoption and utilization of seamlessly integrated products and services
+                                      INCREASING LEVELS OF MATURITY                                      
+---------------------------------------------------------------------------------------------------------
+
+Omni-Channel Sales Acceleration
+-------------------------------
+
+       Clients Migrating       
+      from Point Solutions     
+     to Strategic Partners     
+        Market-Defining        
+          Partnerships         
+       Cross-Sell Thesis       
+      from Livongo Merger      
+         Being Realized        
+Omni-Channel Sales Acceleration
+-------------------------------
+
+                          Gen Med Suite Chronic Condition                           
+                  Management Suite Mental Health Care Primary Care                  
+                                  Commercial Fully                                  
+                                      Insured                                       
+                                     Commercial                                     
+                                   Administrative                                   
+                                   Services Only                                    
+                                 Medicare Advantage                                 
+                                  Managed Medicaid                                  
+                                 Lines of Business                                  
+                                      Products                                      
+Illustrative Coverage Map for an Existing Health Plan Partner Three opportunities to
+                             achieve deeper penetration                             
+                             within existing customers                              
+                               Add Lines of Business                                
+                          Sell additional products within                           
+                             existing Lines of Business                             
+                           Grow utilization via best-in-                            
+                                class engagement and                                
+                               enrollment mechanisms                                
+                                 &gt; 50% &gt; 50%                                  
+                        &gt; 50% &lt; 50% &gt; 50% &lt; 50%                         
+                                      &gt; 50%                                      
+                                      &lt; 50%                                      
+                          Omni-Channel Sales Acceleration                           
+------------------------------------------------------------------------------------
+
+            Health Plan            
+              Carriers             
+           Fully Insured           
+            ACA Exchange           
+              Benefit              
+            Consultants            
+             Direct to             
+              Employer             
+     • Partner with health plan    
+       carriers to make P360       
+      available to self-funded     
+        employers nationally       
+• Assisting Exchange partners offer
+new “Virtual-First” Benefit Designs
+   to attract members on the ACA   
+              exchange             
+   • Distribution agreements and   
+ partnerships with leading Benefit 
+  Consultants for unique Employer  
+          focused offering         
+  • Selling standardized model to  
+   large/mid market self-insured   
+              employer             
+  • Unique features: claims-based  
+    targeting, dedicated account   
+    management, custom reporting   
+  Omni-Channel Sales Acceleration  
+-----------------------------------
+
+           1. For Diabetes            
+Partnership expansion across products 
+        46,000 eligible lives         
+                 2019                 
+            Launched with             
+     Livongo’s Diabetes solution      
+                 2021                 
+  Added General Medical, Nutrition,   
+Dermatology, Mental Health and Expert 
+           Medical Opinions           
+                 2020                 
+    Supplemented with Hypertension    
+       and Diabetes Prevention        
+     Chronic Condition solutions      
+                 2022                 
+       Launching Primary360 and       
+     additional Chronic Condition     
+               bundles                
+              Enrollment              
+                 31%                  
+              Client NPS              
+                 +71                  
+       Medical Cost Reduction1        
+                 19%                  
+ ($91 Per Consumer Per Month Savings) 
+             Diabetes ROI             
+                 1.9x                 
+     Expert Medical Opinions ROI      
+              $1.25 : $1              
+Case Study: Leading National Retailer 
+Whole-Person Multi-Product Penetration
+--------------------------------------
+
+                                    Single Condition Account (Equivalent                                   
+                                  Enrollment Rates) Multi-Product Account                                  
+                                                     6%                                                    
+                                                  Diabetes                                                 
+                                              Eligibility 44%                                              
+                                           Across Co-morbidities                                           
+                                       $70 Per Participant Per Month                                       
+                                                (PPPM) $951                                                
+                                      ~ $130K Annual Recurring Revenue                                     
+                                               (ARR) ~ $527K                                               
+1. Pricing for Diabetes focused Chronic Care bundle; includes Mental Health and Weight Management solutions
+    Illustrative economics on Single Chronic Condition and Multi-Product Chronic Condition relationships   
+                                      (Employer with 10,000 employees)                                     
+                 4.1x more Revenue from Multi-Product vs. Single Condition for illustrative                
+                           Chronic Condition-Mental Health Care integrated bundle                          
+                                   Whole-Person Multi-Product Penetration                                  
+-----------------------------------------------------------------------------------------------------------
+
+        Broad Product        
+ Portfolio Scale Strong Track
+            Record           
+        Best-in-Class        
+          Analytics          
+     Breadth and depth of    
+virtual medical care, chronic
+ care and mental health care 
+ solutions equipped to drive 
+    value-aligned outcomes   
+  Strong toehold into value- 
+ based lines of business via 
+   large footprint provides  
+    competitive advantage    
+ Size and strength of balance
+  sheet allows us to take on 
+ outcome-focused contracts at
+    scale vs. competitors    
+ Proven clinical quality and 
+    medical cost outcomes    
+  Unparalleled experience in 
+  Telehealth (20 years) and  
+      Chronic Condition      
+     Management (8 years)    
+    Largest cohort in CCM    
+  (725k+) with 237.3M Blood  
+ Glucose checks, 12.7M Blood 
+ Pressure readings and 20.8M 
+       Weight readings       
+   Enables segmentation and  
+   personalization to drive  
+           results           
+ Combination of clinical data
+  linked to claims data for  
+       unique insights       
+    Multiple peer-reviewed   
+ publications on results and 
+           outcomes          
+   Value-Based Arrangements  
+-----------------------------
+
+                        INCREMENTAL REVENUE POTENTIAL                        
+                             Unlocks New Markets                             
+                       Increases addressable market via                      
+                    greater access to channels and deeper                    
+                  penetration of existing lines of business                  
+                             Grows Membership and                            
+                               Revenue per User                              
+                    Expansion as products are tailored to                    
+                    members’ care needs and risk profiles                    
+                                Extends Market                               
+                                  Leadership                                 
+                           Widens category lead by                           
+                        demonstrating new paradigm of                        
+                      virtual care that is value-aligned                     
+   Fee for Service Pay for Performance Partial Capitation Capitated Whole-   
+                                 Person Care                                 
+                       Enrollment-based fees / access +                      
+                                  visit fees                                 
+                        Enhanced subscription model +                        
+                              outcome-based fees                             
+                        Percentage of fees at risk for                       
+                       chronic care and virtual medical                      
+                                     care                                    
+                        Capitated payments for virtual                       
+                       medical care, chronic condition                       
+                         management and mental health                        
+                                care services                                
+                                   LOW HIGH                                  
+                    Value-aligned for clients and members                    
+Uniquely suited to deliver as market moves towards outcome-based arrangements
+                           Value-Based Arrangements                          
+-----------------------------------------------------------------------------
+
+Clients Recognize the Value of Teladoc Health
+---------------------------------------------
+
+  Proven global  
+presence at scale
+  C-Suite level  
+    strategic    
+   partnerships  
+  industry-wide  
+   Demonstrated  
+   results for   
+     clients     
+    Commercial   
+     agility     
+   Operational   
+  excellence and 
+    integrity    
+      Growth     
+        39       
+-----------------
+
+                               Key                               
+                            Takeaways                            
+• Global, multi-channel distribution network and client footprint
+          position Teladoc to capture market whitespace          
+ • Proven ability to drive outcomes and cost savings positions us
+    to succeed in value-aligned arrangements, add new members    
+                  and expand revenue per member                  
+ • Confident in our ability to continue to lead the market as the
+    healthcare system evolves towards virtual-first and Whole-   
+                        Person strategies                        
+                                40                               
+-----------------------------------------------------------------
+
+                Delivering               
+            Whole-Person Care            
+               Dan Trencher              
+                    41                   
+Senior Vice President, Corporate Strategy
+-----------------------------------------
+
+    Chronic Care    
+Virtual Medical Care
+ Mental Health Care 
+    WHOLE-PERSON    
+        CARE        
+      STRATEGY      
+--------------------
+
+Sources: IBIS World Primary Care Doctors Industry in the US,2021; , KFF, Teladoc Health Commercial Claims Analysis, Annals of Family Medicine
+ 1. Calculated $160B TAM = $250B Total US Primary Care Spend x 80% Virtualizable x 80% of working age adults without strong PCP relationship 
+                                                                    $250B                                                                    
+                                                                    $160B                                                                    
+                                                                     $20B                                                                    
+                                                              Total U.S. Primary                                                             
+                                                                  Care Spend                                                                 
+                                                                 TDOC Primary                                                                
+                                                                  Care TAM1                                                                  
+                                                                 TDOC General                                                                
+                                                                 Medical TAM                                                                 
+                                                                  4 out of 5                                                                 
+                                                       working age adults do not have a                                                      
+                                                        strong relationship with a PCP                                                       
+                                                                    20-25%                                                                   
+                                                      potential savings if all Americans                                                     
+                                                        had primary care relationship                                                        
+                                                                  1 out of 4                                                                 
+                                                          working age adults do not                                                          
+                                                                  have a PCP                                                                 
+                                                                   Virtual                                                                   
+                                                                   Medical                                                                   
+                                                                     Care                                                                    
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+                   Unified, whole-person                   
+                         experience                        
+             One virtual front door for a full             
+               spectrum of needs - wellness,               
+                condition management, mental               
+              health care, specialty care and              
+                           beyond                          
+                    Dedicated care team                    
+               A dedicated support team —PCP,              
+               RN, MA, surrounds each member               
+             with a ‘virtual practice’ to keep             
+                      member on track                      
+                  Longitudinal care plans                  
+         A personalized care plan that flexes over         
+          time, engages members in a longitudinal          
+             relationship with their care team             
+             Continuous guidance &amp; support             
+    24/7 access, ongoing guidance, unlimited messaging,    
+        reminders and health nudges empowers members       
+                   and keeps them engaged                  
+                Navigation and coordination                
+                with high-quality providers                
+        Concierge-level service connects members to        
+in-network, high-quality specialty providers and additional
+                          programs                         
+                      Integrated data                      
+                        enables care                       
+                   continuity — virtually                  
+                       and in-person                       
+            Data integration with Teladoc Health           
+                 programs, devices, claims,                
+              community providers and existing             
+                  client services creates                  
+             comprehensive, actionable patient             
+                           views.                          
+                     Last mile services                    
+        Set of devices, digital tools and healthcare       
+          services that enable physical care to be         
+               conveniently delivered at home              
+                          Virtual                          
+                          Medical                          
+                            Care                           
+-----------------------------------------------------------
+
+           Utilize combination of           
+            in-home services and            
+             brick &amp; mortar             
+         partnerships (e.g., retail         
+            clinics) to deliver:            
+                   Vitals                   
+     Measure, monitor and record blood      
+   pressure and heart rate from the home    
+                    Labs                    
+ At-home test kits and phlebotomy services  
+               Prescriptions                
+Home delivery, mail order and retail options
+                Vaccinations                
+       At-home common vaccinations +        
+             via retail clinics             
+          Imaging &amp; Screenings          
+       Preventive screenings through        
+              trusted partners              
+                    Home                    
+                    Lab                     
+                  Pharmacy                  
+                   Office                   
+                   Clinic                   
+                  Virtual                   
+                  Medical                   
+                    Care                    
+--------------------------------------------
+
+Percentages represent primary care patients who can benefit from indicated service, based on management analysis of single year of population claims data
+                                                                         Primary                                                                         
+                                                                           Care                                                                          
+                                                                         Patients                                                                        
+                                                                     General Medical                                                                     
+                                                                    Chronic Conditions                                                                   
+                                                                    Mental Health Care                                                                   
+                                                                        Nutrition                                                                        
+                                                                 Expert Medical Services                                                                 
+                                                                       Dermatology                                                                       
+                                                                           59%                                                                           
+                                                                           33%                                                                           
+                                                                           31%                                                                           
+                                                                           24%                                                                           
+                                                                           27%                                                                           
+                                                                           30%                                                                           
+                                                                         Virtual                                                                         
+                                                                         Medical                                                                         
+                                                                           Care                                                                          
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+              Source: internal company analysis              
+1. Includes high blood pressure, depression and tobacco usage
+                          &lt;1 Week                         
+                    for new patient visits                   
+                          nationwide                         
+                             ~25%                            
+           of those with Diabetes and Hypertension           
+                    were newly diagnosed1                    
+                             10+                             
+                    care team interactions                   
+                            a year                           
+                           &gt;50%                           
+              of participants have used at least             
+                  one other Teladoc service                  
+                           &gt;95%                           
+                     member satisfaction                     
+                             90%+                            
+                   clinical performance on                   
+                  preventive screenings and                  
+                   follow-ups (Depression,                   
+                        Tobacco, BMI)                        
+                           Virtual                           
+                           Medical                           
+                             Care                            
+-------------------------------------------------------------
+
+                                                           TEXT-BASED TRADITIONAL                                                           
+                                                          PURE-PLAY HYBRID Teladoc                                                          
+                                                            On-Demand Care Needs                                                            
+                                                       High Quality Longitudinal Care                                                       
+                                                 In-Network Referrals and Coordinated Care                                                  
+                                                Highly Scalable Across Any Client Footprint                                                 
+                                                       Clinical Mental Health Support                                                       
+                                                   Robust Digital Chronic Condition Mgmt.                                                   
+                                              Network of Top Specialists for Clinical Support                                               
+                                                All-in-one Member Facing Platform Providing                                                 
+                                                        Superior Consumer Experience                                                        
+                                                                  Virtual                                                                   
+                                                                  Medical                                                                   
+                                                                    Care                                                                    
+Note: Competitor information represents assessment by Teladoc management based on internal analysis and estimates &amp; other industry data.
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+Mental Health Care: 
+Delivering a Winning
+Model for Enterprise
+      Clients       
+         49         
+--------------------
+
+                                                          #1                                                         
+                                                      Driver of                                                      
+                                                     Disability5                                                     
+                                                         $1T+                                                        
+                                                   Global Economic                                                   
+                                                 Productivity Impact4                                                
+                                                       receive                                                       
+                                                       no care2                                                      
+                                               Addressable U.S. Virtual                                              
+                                                  Mental Health TAM                                                  
+                                                      Diabetes +                                                     
+                                                    Hypertension +                                                   
+                                                    Mental Health                                                    
+                                                         22x                                                         
+                                                      No Chronic                                                     
+                                                      Conditions                                                     
+                                                          6x                                                         
+                                                       Diabetes                                                      
+                                                          5x                                                         
+                                                        Mental                                                       
+                                                        Health                                                       
+                                                    Annual Direct                                                    
+                                              Medical Costs Per Person3                                              
+                                                         6-7x                                                        
+                                                    12x Inpatient                                                    
+                                                   Hospitalizations                                                  
+                                                    Office Visits                                                    
+                                                    Indirect Costs                                                   
+                                           1. Company management estimates                                           
+2. WHO: https://www.who.int/teams/mental-health-and-substance-use/promotion-prevention/mental-health-in-the-workplace
+                                             3. Internal company analysis                                            
+                             4. https://www.nimh.nih.gov/health/statistics/mental-illness                            
+                    5. https://www.cdc.gov/genomics/resources/diseases/mental.htm - for ages 15-44                   
+                                                        Mental                                                       
+                                                        Health                                                       
+                                                         Care                                                        
+---------------------------------------------------------------------------------------------------------------------
+
+                         Intelligent personalization drives stepped care                         
+                         Full spectrum of mental health care covers needs                        
+                                     across entire population                                    
+                                             Iterate                                             
+                                                3                                                
+                                              Assess                                             
+                                                1                                                
+                                               Plan                                              
+                                                2                                                
+                                             Primary                                             
+                                               Care                                              
+                                           Chronic Care                                          
+                                       Virtual Medical Care                                      
+                                        Mental Health Care                                       
+                                              WHOLE-                                             
+                                              PERSON                                             
+                                               CARE                                              
+                                             STRATEGY                                            
+of consumers prefer a single unified experience for management of mental and physical health1 78%
+                            1. Teladoc Mental Health Survey, May 2021                            
+                                              Mental                                             
+                                              Health                                             
+                                               Care                                              
+-------------------------------------------------------------------------------------------------
+
+                   Structured digital courses                   
+                  Recommended digital content                   
+        In-the-moment tools (including crisis referrals)        
+                        Digital Programs                        
+                          Telecoaching                          
+                        Crisis outreach                         
+                      Engagement guidance                       
+                          Remote Care                           
+                             Remote                             
+                         Licensed Care                          
+                         Telepsychiatry                         
+                          Teletherapy                           
+                   Lower clinical visit costs                   
+                         Greater access                         
+                       Visit replacement                        
+                          ER Avoidance                          
+                           Engagement                           
+                        Visit avoidance                         
+                        Preventive care                         
+                          CLIENT VALUE                          
+                     Employee Productivity                      
+                             Mental                             
+                             Health                             
+                              Care                              
+                              34%                               
+1. Teladoc analysis of patient reported symptoms after 4th visit
+----------------------------------------------------------------
+
+     Transforming     
+ Chronic Care Through 
+    an Integrated     
+Data-Driven Experience
+          53          
+----------------------
+
+         Source for chart: Internal company analysis data         
+1. CDC - https://www.cdc.gov/chronicdisease/tools/infographics.htm
+                   2. Internal company analysis                   
+          6 of 10 $47B 40% Americans living with two or           
+                     more chronic conditions1                     
+                          TAM from only                           
+                    Diabetes and Hypertension                     
+                      Americans with chronic                      
+                           conditions1                            
+                           DYSLIPIDEMIA                           
+                           HYPERTENSION                           
+                             DIABETES                             
+                           PREDIABETES                            
+                              WEIGHT                              
+                              MENTAL                              
+                        HEALTH Annual cost                        
+                            per person                            
+                          3 2 Number of                           
+                           conditions 0                           
+                                No                                
+                            conditions                            
+                           Hypertension                           
+                               only                               
+                             Diabetes                             
+                               only                               
+                          Prediabetes +                           
+                          Mental Health                           
+                            Diabetes +                            
+                           Hypertension                           
+                            Diabetes +                            
+                          Hypertension +                          
+                          Mental Health                           
+                       $1,600 $4,700 $6,600                       
+                          $9,100 $10,300                          
+                             $18,100                              
+                             $34,800                              
+                           Prediabetes                            
+                               only                               
+                                1                                 
+                             Chronic                              
+                               Care                               
+                                2                                 
+------------------------------------------------------------------
+
+           1. Offered through myStrength Complete programs           
+                               Diabetes                              
+                               solution                              
+                             Prediabetes                             
+                               solution                              
+                            Cardiovascular                           
+                               solution                              
+                          Target population                          
+                          (anchor condition)                         
+People with diabetes People with prediabetes People with hypertension
+                           Additional areas                          
+                              of support                             
+                         (based on individual                        
+                             member need)                            
+                            • Hypertension                           
+                            • Dyslipidemia                           
+                         • Weight Management                         
+                           • Mental Health1                          
+                            • Hypertension                           
+                            • Dyslipidemia                           
+                         • Weight Management                         
+                           • Mental Health1                          
+                            • Dyslipidemia                           
+                         • Weight Management                         
+                           • Mental Health1                          
+                           Differentiators                           
+                           Effortless Data                           
+                              Collection                             
+                      Apps and cellular devices                      
+                        per conditions covered                       
+                         Personalized Health                         
+                               Signals                               
+                     Lifestyle change, medication                    
+                     adherence, emotional support                    
+                            Human-Centered                           
+                               Approach                              
+                     Digital, expert coaching and                    
+                     physician support adapts to                     
+                             Member needs                            
+                         Proven Outcomes and                         
+                                 ROI                                 
+                    Measurable sustained clinical                    
+                        improvements, claims,                        
+                               savings                               
+                               Chronic                               
+                                 Care                                
+---------------------------------------------------------------------
+
+                   Medical adherence                   
+                   Behavior tracking                   
+                       Biometrics                      
+                   Remote Monitoring                   
+                     Acute outreach                    
+                      Telecoaching                     
+                Nudges and action plans                
+                        Coaching                       
+                     Licensed Care                     
+                   Specialty referral                  
+                Medication optimization                
+                    Care navigation                    
+                    Increase access                    
+                   Improve condition                   
+                       management                      
+                      ER Avoidance                     
+                Optimize utilization of                
+                     licensed care                     
+                       Engagement                      
+                 Population management                 
+                    Self-management                    
+                       Education                       
+                      CLIENT VALUE                     
+                          $87                          
+                        Chronic                        
+                          Care                         
+                  Labs and screenings                  
+                          $195                         
+Source: Internal company analysis of client claims data
+-------------------------------------------------------
+
+                     Chronic                      
+                       Care                       
+Product Innovation New Conditions Expanded Markets
+                  and Use Cases                   
+       • Chronic Care Complete stepped care       
+                      model                       
+         • Continuous Glucose Monitoring          
+                   integration                    
+              • Labs, Rx management               
+                • Device expansion                
+              • Gaps in Care / HEDIS              
+                 • Continuous RPM                 
+               • CKD, Heart Failure               
+        • Potential new conditions – e.g.         
+                      o MSK                       
+                  o Respiratory                   
+                     o Cancer                     
+       • Hospitals &amp; Health Systems for       
+        Chronic Patient Management, Post-         
+              Acute, Hospital @ Home              
+        • International / National Health         
+                     Systems                      
+--------------------------------------------------
+
+    • Three key components of our Whole-Person strategy –    
+      Virtual Medical Care, Chronic Care Management and      
+                      Mental Health Care                     
+• Each addresses large markets with differentiated offerings,
+   is underpinned by data, data science and personalization  
+              and drives proven outcomes and ROI             
+ • Medical conditions do not occur in isolation – our broad, 
+  integrated solutions reinforce each other to drive broader 
+                          engagement                         
+  • Teladoc is the only company that can deliver integrated  
+       primary care across the care continuum at scale       
+                             Key                             
+                          Takeaways                          
+                              58                             
+-------------------------------------------------------------
+
+Pulling It All Together:
+     The Integrated     
+       Experience       
+      Donna Boyer       
+           59           
+ Chief Product Officer  
+------------------------
+
+• Bringing together Virtual Medical Care, Mental Health Care
+     and Chronic Care in one easy, integrated consumer      
+                         experience                         
+     • Data science and behavioral science are woven in     
+     throughout the experience to create a personalized     
+    experience that drives relevancy, trust and ongoing     
+                         engagement                         
+    • Within this Whole-Person experience, stepped care     
+matches members to the right intervention at the right time,
+whether it’s digital content, remote monitoring, coaching or
+                       licensed care                        
+                            Key                             
+                         Takeaways                          
+                             60                             
+------------------------------------------------------------
+
+  Product and Platform  
+       Enablement       
+   Claus Jensen, PhD    
+           61           
+Chief Innovation Officer
+------------------------
+
+To solve a new category of problem,
+          we uniquely fuse         
+                 •                 
+                 •                 
+                 •                 
+                 •                 
+             Behavioral            
+              Science              
+              Clinical             
+              Science              
+             Logistics             
+              Science              
+             Technology            
+              Science              
+-----------------------------------
+
+         Behavioral         
+          Science           
+          Clinical          
+          Science           
+         Logistics          
+          Science           
+         Technology         
+          Science           
+We have an unparalleled team
+ delivering on this promise 
+----------------------------
+
+                       Rx Data                        
+               Clinical &amp; Coaching                
+                     Interactions                     
+                    Self-Reported                     
+                     Health Data                      
+                        Claims                        
+                         Data                         
+                     Non-Clinical                     
+                     Interactions                     
+                     Public Data                      
+                      Exchanges                       
+                       Lifetime                       
+                       Clinical                       
+                        Truth                         
+                     Lab Results                      
+                   Eligibility Data                   
+                        Device                        
+                       readings                       
+           The scale and scope of the data            
+✓ &gt;2 billion health &amp; engagement data points of
+            which &gt;60% are proprietary             
+   ✓ Thousands of digital and virtual interactions    
+               for a single individual                
+            The complexity of the problem             
+    ✓ Connect every data point without being given    
+              a definitive individual ID              
+        ✓ Apply deep clinical and data science        
+           expertise to understand the data           
+       ✓ Synthesize clinically meaningful data        
+         interpretations for decision support         
+                       Clinical                       
+                       Science                        
+------------------------------------------------------
+
+                           (Very Rich)                            
+                           Diverse Data                           
+                             Sources                              
+                            Actionable                            
+                             Insight                              
+                            Measurable                            
+                             Outcomes                             
+                            Member and                            
+                            Clinician                             
+                            Decisions                             
+                  Applied Health Signal Examples                  
+Referral to Mental Health or Chronic Condition Management program 
+   Sophisticated matching of patients and appropriate providers   
+           Referral to expert (Teladoc Health network)            
+Propensity to take a specific action (including step-care level to
+                             propose)                             
+   Research target: likely magnitude of positive health impact    
+      Research target: predicted risk of a chronic condition      
+     22 Million Nudges + 1 Million Clinical Signals delivered     
+                     Lifetime Clinical Truth                      
+                            Behavioral                            
+                             Science                              
+------------------------------------------------------------------
+
+              Clinician              
+                Health               
+               Consumer              
+                Client               
+              Global ID              
+             Data Fabric             
+     Differentiated value through    
+• Selective solutions clients want to
+                 buy                 
+ • Integrated capabilities care teams
+                 need                
+ • Services and experiences consumers
+             want to use             
+              Technology             
+               Science               
+-------------------------------------
+
+                    Clients                    
+                 Teladoc Health                
+             (&amp; Partner) Assets            
+                    Members                    
+                    Clinical                   
+                    Services                   
+                   Technology                  
+                    Services                   
+          Access and freedom of choice         
+                 Client Assets                 
+           Powered by Teladoc Health           
+     Products and eligibility (per client)     
+    Integration, APIs and SDKs (per client)    
+        Referral management (per client)       
+        Monitoring devices (per person)        
+      Family and care givers (per person)      
+Appointments, medications and labs (per person)
+                   Care Teams                  
+   Credentialing and licensing (per network)   
+       Queue management (per visit type)       
+    Hardware device management (per locale)    
+                   Logistics                   
+                    Science                    
+-----------------------------------------------
+
+           Changing           
+      Consumer Behavior       
+      Managing Clinical       
+      Resources at Scale      
+          Addressing          
+       “The Last Mile”        
+• Unified Consumer experience 
+   • Chronic Conditions and   
+    Mental Health Complete    
+         • Primary360         
+    • Analytically driven     
+          engagement          
+    • Virtual waiting room    
+          management          
+  • Device fleet management   
+ • Analytically driven triage 
+• Integrated provider networks
+ • Expert access and steerage 
+• Unified Clinician experience
+   • Lab and Med Management   
+ • Remote patient monitoring  
+  • At-home care integration  
+           Examples           
+------------------------------
+
+                           Accelerate Value-Based Whole-Person Care                           
+                   • Expansion of value-based deal execution and management                   
+    • Maintaining clinical program quality and expanding clinical product differentiation     
+• Expand integrated provider network capabilities that enable client providers on our platform
+                             Create Unique Value in Primary Care                              
+                               • P360 products and capabilities                               
+            • Screenings and Specialty Care Access as integral parts of care plans            
+                 •‘Last-mile’ integration, remote monitoring and at-home care                 
+                                 Deploy Integration Platforms                                 
+                           • Consumer Global ID and Global Profile                            
+                           • Omni-channel integrated consumer apps                            
+                  • Unified Data Fabric driving data integration and sharing                  
+                            Create seamless member experiences and                            
+                                         data-sharing                                         
+                          Build a unique primary care platform that                           
+                           drives referrals and holistic care plans                           
+                           Extend clinical &amp; logistical science                           
+                                 differentiation and efficacy                                 
+                           Unlock new and under-penetrated markets                            
+                               Expand Total Addressable Market                                
+                      • International deployment of CCM and MH products                       
+                    • Medicare Advantage adaption of products (multi-year)                    
+                        • Health Systems as member enrollment channels                        
+----------------------------------------------------------------------------------------------
+
+                                   Virtual Medical                                    
+     Care General Medical virtual visits Primary360 Full ‘last-mile’ integration      
+                                    Mental Health                                     
+Care Mental health care virtual visits MyStrength Complete Chronic and Mental Complete
+                      Chronic Care Individual chronic condition                       
+                                       programs                                       
+                             Step-care chronic condition                              
+                        management Chronic and Mental Complete                        
+                                       PHASE 3                                        
+                                 NextGen Whole-Person                                 
+                                       PHASE 2                                        
+                                 Market Acceleration                                  
+                                       PHASE 1                                        
+                                      Early Days                                      
+                       Value per person increasing dramatically                       
+--------------------------------------------------------------------------------------
+
+• The right vision and approach to define and deliver the “next
+                normal” whole-person care model                
+  • Best fully integrated team across the five sciences needed 
+   • Already well down the path to a single fully integrated   
+                    platform and experience                    
+   • Uniquely positioned to deliver cohesively the different   
+    capabilities desired by health plans, employers, health    
+               systems, clinicians and consumers               
+           • Best at-scale logistics in virtual care           
+         • We know how to execute and make it all real         
+   • We will continue to lead, driving opportunity and growth  
+                              Key                              
+                           Takeaways                           
+                               71                              
+---------------------------------------------------------------
+
+Q&amp;A
+   72  
+-------
+
+     BetterHelp’s    
+ Playbook for Growth 
+      Alon Matas     
+President, BetterHelp
+          73         
+---------------------
+
+Monthly paying consumers is number of consumers who paid for therapy in a month, shown here by EOY figures. Therapists providing services is the number of licensed therapists who provided services through the platform in a calendar year timeframe.
+                                                                   Competitors’ data is derived from public disclosures, credit card payments data sources, and Company’s estimates.                                                                   
+                                                                                                          Monthly Consumers Paying for Therapy                                                                                                         
+                                                                                                                           -                                                                                                                           
+                                                                                                                         50,000                                                                                                                        
+                                                                                                                        100,000                                                                                                                        
+                                                                                                                        150,000                                                                                                                        
+                                                                                                                        200,000                                                                                                                        
+                                                                                                                        250,000                                                                                                                        
+                                                                                                                        300,000                                                                                                                        
+                                                                                                                        350,000                                                                                                                        
+                                                                                                                        400,000                                                                                                                        
+                                                                                                              2017 2018 2019 2020 2021 (E)                                                                                                             
+                                                                                                                     Competitor #1                                                                                                                     
+                                                                                                                     Competitor #2                                                                                                                     
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                                                                                           0                                                                                                                           
+                                                                                                                         5,000                                                                                                                         
+                                                                                                                         10,000                                                                                                                        
+                                                                                                                         15,000                                                                                                                        
+                                                                                                                         20,000                                                                                                                        
+                                                                                                                         25,000                                                                                                                        
+                                                                                                                     Competitor #1                                                                                                                     
+                                                                                                                     Competitor #2                                                                                                                     
+                                                                                     Monthly Consumers Paying for Therapy Therapists Who Provided Services in 2021                                                                                     
+                                                                                                                           -                                                                                                                           
+                                                                                                                         50,000                                                                                                                        
+                                                                                                                        100,000                                                                                                                        
+                                                                                                                        150,000                                                                                                                        
+                                                                                                                        200,000                                                                                                                        
+                                                                                                                        250,000                                                                                                                        
+                                                                                                                        300,000                                                                                                                        
+                                                                                                                        350,000                                                                                                                        
+                                                                                                                        400,000                                                                                                                        
+                                                                                                              2017 2018 2019 2020 2021 (E)                                                                                                             
+                                                                                                                     Competitor #1                                                                                                             

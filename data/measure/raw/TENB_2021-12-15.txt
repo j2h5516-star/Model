@@ -1,0 +1,293 @@
+# 잣대값 파싱 실패 원문 — TENB 2021-12-15
+# 출처: https://www.sec.gov/Archives/edgar/data/1660280/000166028021000178/tenb-20211215.htm
+
+tenableinvestordaypresen
+
+    <img height="768" src="tenableinvestordaypresen001.jpg" title="slide1" width="1365"/> Tenable Investor Day December 15, 2021 
+
+
+
+ <img height="768" src="tenableinvestordaypresen002.jpg" title="slide2" width="1365"/> Topics and Speakers Business Update by Amit Yoran, Chief Executive Officer Product Review by Nico Popp, Chief Product Officer Go-To-Market overview by Mark Thurmond, Chief Operating Officer and Dave Feringa, Senior Vice President Worldwide Sales Financial Overview and Outlook by Steve Vintz, Chief Financial Officer Investor Q&A 2 
+
+
+
+ <img height="768" src="tenableinvestordaypresen003.jpg" title="slide3" width="1365"/> Forward-Looking Statements This presentation includes forward-looking statements. All statements contained in this presentation other than statements of historical facts, including statements regarding our future results of operations and financial position, our business strategy and plans and our objectives for future operations, are forward-looking statements. The words “anticipate,” believe,” “continue,” “estimate,” “expect,” “intend,” “may,” “will” and similar expressions are intended to identify forward-looking statements. We have based these forward-looking statements on our current expectations and projections about future events and financial trends that we believe may affect our financial condition, results of operations, business strategy, short-term and long-term business operations and objectives and financial needs. These forward-looking statements are subject to a number of risks, uncertainties and assumptions. These risks and uncertainties are detailed in the sections titled "Risk Factors" and "Management's Discussion and Analysis of Financial Condition and Results of Operations" in our Quarterly Report on Form 10-Q filed with the SEC on November 3, 2021 and other filings that we make from time to time with the SEC, which are available on the SEC's website at sec.gov. Moreover, we operate in a very competitive and rapidly changing environment. New risks emerge from time to time. It is not possible for our management to predict all risks, nor can we assess the impact of all factors on our business or the extent to which any factor, or combination of factors, may cause actual results to differ materially from those contained in any forward-looking statements we may make. Such risks and uncertainties may be amplified by the COVID-19 pandemic and its potential impact on our business and the global economy. In light of these risks, uncertainties and assumptions, the future events and trends discussed in this presentation may not occur and actual results could differ materially and adversely from those anticipated or implied in any forward-looking statements we make. This presentation contains projected financial information. Such projected financial information constitutes forward-looking information and should not be relied upon as necessarily being indicative of future results. The assumptions and estimates underlying such financial forecast information are inherently uncertain and are subject to a wide variety of significant business, economic, competitive, and other risks and uncertainties as described above. Actual results may differ materially from the results contemplated by the financial forecast information contained herein, and the inclusion of such information in this presentation should not be regarded as a representation by any person that the results reflected in such forecasts will be achieved. You should not rely on forward-looking statements as predictions of future events. Although we believe that the expectations reflected in the forward-looking statements are reasonable, we cannot guarantee future results, levels of activity, performance, achievements or events and circumstances reflected in the forward-looking statements will occur. Neither we, nor any other person, are under any duty to update any of these forward-looking statements after the date of this presentation to conform these statements to actual results or revised expectations, except as required by law. You should, therefore, not rely on these forward-looking statements as representing our views as of any date subsequent to the date of this presentation. Moreover, except as required by law, neither we nor any other person assumes responsibility for the accuracy and completeness of the forward-looking statements contained in this presentation. This presentation also contains estimates and other statistical data made by independent parties and by us relating to market size and growth and other data about our industry. This data involves a number of assumptions and limitations, and you are cautioned not to give undue weight to such estimates. Neither we nor any other person makes any representation as to the accuracy or completeness of such data or undertakes any obligation to update such data after the date of this presentation. In addition, projections, assumptions and estimates of our future performance and the future performance of the markets in which we operate are necessarily subject to a high degree of uncertainty and risk. By receiving this presentation you acknowledge that you will be solely responsible for your own assessment of the market and our market position and that you will conduct your own analysis and be solely responsible for forming your own view of the potential future performance of our business. This presentation includes non-GAAP financial measures which have certain limitations and should not be considered in isolation, or as alternatives to or substitutes for, financial measures determined in accordance with GAAP. The non-GAAP measures as defined by us may not be comparable to similar non-GAAP measures presented by other companies. Our presentation of such measures, which may include adjustments to exclude unusual or non-recurring items, should not be construed as an inference that our future results will be unaffected by these or other unusual or non-recurring items. See the GAAP to Non-GAAP Reconciliation section for a reconciliation of these non-GAAP financial measures to the most directly comparable GAAP financial measures. All third-party trademarks, including names, logos and brands, referenced by us in this presentation are property of their respective owners. All references to third-party trademarks are for identification purposes only. Such use should not be construed as an endorsement of our products or services. 3 
+
+
+
+ <img height="768" src="tenableinvestordaypresen004.jpg" title="slide4" width="1365"/> December 2021 Business and Strategy Update 
+
+
+
+ <img height="768" src="tenableinvestordaypresen005.jpg" title="slide5" width="1365"/> Amit Yoran Chairman and Chief Executive Officer 5 
+
+
+
+ <img height="768" src="tenableinvestordaypresen006.jpg" title="slide6" width="1365"/> Key Milestones Since IPO 6 Grew CCB & Revenue at over 25% CAGR* Achieved FCF+ earlier than forecasted at IPO Growth and Profitability Recognized leader In Vulnerability Management Increased coverage in Modern Infrastructure Developed Unified Exposure Platform Extended Leadership Customer growth 35K+ customers Significant Global footprint Surpassing $600M CCB* Scale *Includes FY 2021E which takes the midpoint of the Q4 estimate plus Q1-Q3 actuals 
+
+
+
+ <img height="768" src="tenableinvestordaypresen007.jpg" title="slide7" width="1365"/> Key Milestones since IPO ● #1 in market share¹ and over 20 years experience with best-of-breed strategy ● Largest customer base at 35,000+ customers in VM including 2.5M+ cumulative unique Nessus downloads ● 20-plus percent greater coverage of CVEs than our competitors² and test our products to six-sigma accuracy ● Added ~ 360 new enterprise platform customers on average per quarter from Q1’18 to Q3’21 Tenable is an Industry and Mark t Share Leader in Vulnerability Management 7 VM identifies, classifies, prioritizes and mitigates misconfigurations that can be exploited across an environment Source: Please see endnotes listed on slide 18 
+
+
+
+ <img height="768" src="tenableinvestordaypresen008.jpg" title="slide8" width="1365"/> Tenable is an Industry and Market Share Leader in Vulnerability Management Cont’d ✔ Gartner Peer Insights Choice for Vulnerability Assessment 2020³ for 3yrs in a row ✔ Recognized as a leader by Frost & Sullivan in the firm’s Frost Radar™: Global Vulnerability Management Market, 2021 report⁴ ✔ Ranked #1 by IDC in market share in the Worldwide Vulnerability Management market¹ ✔ Named a leader in the Forrester Wave: Vulnerability Risk Management, Q4 2019⁵ Source: Please see endnotes listed on slide 188 
+
+
+
+ <img height="768" src="tenableinvestordaypresen009.jpg" title="slide9" width="1365"/> Log4jShell Response ● Released checks within 24hrs ● Checks work across product lines ● 1-3 vulnerable systems per second ● Already generating checks for vulnerable applications ● Primary customer response tool 9 
+
+
+
+ <img height="768" src="tenableinvestordaypresen010.jpg" title="slide10" width="1365"/> Use of Tech is Expanding Containers OT Cloud Virtual Machines Identity Services BYOD / WFH DESKTOPS LAPTOPS SERVERS Use of Tech is Exploding in Modern Infrastructure Web/API 10 
+
+
+
+ <img height="768" src="tenableinvestordaypresen011.jpg" title="slide11" width="1365"/> Recent Breaches Highlight the Complexity of Modern Infrastructure World’s Biggest Meat Producer, JBS, Hacked In Organized Attack Microsoft says a group of cyber attackers tied to China hit its Exchange email servers On March 2, Microsoft said there were vulnerabilities in its Exchange Server mail and calendar software for corporate and government data centers. The vulnerabilities go back 10 years, and have been exploited by Chinese hackers at least since January Massive SolarWinds hack has big businesses on high alert Security researchers have discovered three more vulnerabilities in SolarWinds products, including a critical remote code execution bug 11 
+
+
+
+ <img height="768" src="tenableinvestordaypresen012.jpg" title="slide12" width="1365"/> ● Unified risk-based product for OT & IT converged environments ● Comprehensive active/passive capability & deep situational awareness ● Tenable named a leader in the Forrester Wave for ICS Security Solutions⁶ Extending Expertise to Operational Technology 12 Sources: Please see endnotes listed on slide 18 
+
+
+
+ <img height="768" src="tenableinvestordaypresen013.jpg" title="slide13" width="1365"/> ● Purpose built AD security product created to disrupt one of the most common attack paths ● Identity/access as a vulnerability has been overlooked until now ● Expertise in securing AD environments coupled with a deep understanding of IT ● Gartner named Tenable as an Active Directory Defense vendor⁷ Extending Expertise into Active Directory 13 “The complexity of the directory-based identity services platform used by 90% of enterprises around the world, coupled with the need for at least two different teams to collaborate to properly secure it and the constantly changing nature of its configuration, make it a difficult attack surface to protect.” - EMA⁸ Sources: Please see endnotes listed on slide 18 
+
+
+
+ <img height="768" src="tenableinvestordaypresen014.jpg" title="slide14" width="1365"/> Key Milestones since IPOExpanding Cloud Capabil ties Tenable.CS 14 Sources: Please see endnotes listed on slide 18 ● Bringing security of and in the cloud for full visibility ● Assessing security posture of the cloud before it is configured ● System of action instead of system of record ● Gartner named Tenable as a CNAPP vendor⁹ “By 2023, more than 50% of enterprises that adopted cloud-native services will leverage cloud security platforms that are tightly integrated with security operations products.”⁹ - Gartner Left (Development) Right (Run-time) Infrastructure As Code Terra Web/API Kubernetes Posture Management CSPMContainer Security Frictionless Assessment and Virtual Machines Microsegmentation and Protection CLOUD SECURITY FUNCTIONS Source Code Analysis/ SCA 
+
+
+
+ <img height="768" src="tenableinvestordaypresen015.jpg" title="slide15" width="1365"/> Tenable Strategy: From VM to the New Exposure Platform Tenable.ep Unified Cyber Exposure Platform Other data inputs Vulnerability Management (T.IO/T.SC) Active Directory/ Identity (T.AD) Infrastructure as Code (T.CS) KSPM & CSPM Exposure (T.CS) OT Security (T.OT) Web/API Security (T.WAS) AppSec (SAST) Supply Chain (SCA) Attack Surface Mgmt Third Party Risk MgmtAPI Scanning Bring your own data… 15 
+
+
+
+ <img height="768" src="tenableinvestordaypresen016.jpg" title="slide16" width="1365"/> Vulnerability Management $5B ICS/OT $2B Cloud/ Container $10B Application $3B Identity $5B Cyber Exposure $25B Tenable Total Addressable Market Sources: Represents 2025 forecasts based on a blended view of recent forecasts from IDC, Gartner and Tenable assumptions.16 
+
+
+
+ <img height="768" src="tenableinvestordaypresen017.jpg" title="slide17" width="1365"/> Unified Exposure Platform Active Directory / Identities IT Operational Technology Cloud / Container Analytics Web Application UNIFIED EXPOSURE PLATFORM 17 
+
+
+
+ <img height="768" src="tenableinvestordaypresen018.jpg" title="slide18" width="1365"/> Endnotes Slides 7&8: 1. “IDC, Worldwide Device Vulnerability Management Market Shares, 2019: Finding the Transitional Elements Between Device Assessment Scanning and Risk-Based Remediation (doc # US46284720, May 2020),” 2. Principled Technologies Report: Comparing vulnerability and security configuration assessment coverage of leading VM vendors, October 2019 3. Gartner Peer Insights Customers’ Choice constitute the subjective opinions of individual end-user reviews, ratings, and data applied against a documented methodology; they neither represent the views of, nor constitute an endorsement by, Gartner or its affiliates. The Gartner Peer Insights Customers’ Choice badge is a trademark and service mark of Gartner, Inc., and/or its affiliates, and is used herein with permission. All rights reserved. Gartner Peer Insights Customers’ Choice constitute the subjective opinions of individual end-user reviews, ratings, and data applied against a documented methodology; they neither represent the views of, nor constitute an endorsement by, Gartner or its affiliates. 4. Frost Radar™: Global Vulnerability Management Market, 2021 report 5. The Forrester Wave™ is copyrighted by Forrester Research, Inc. Forrester and Forrester Wave™ are trademarks of Forrester Research, Inc. The Forrester Wave™ is a graphical representation of Forrester’s call on a market and is plotted using a detailed spreadsheet with exposed scores, weightings, and comments. Forrester does not endorse any vendor, product, or service depicted in the Forrester Wave™. Information is based on best available resources. Opinions reflect judgment at the time and are subject to change. Slide 12: 6. The Forrester Wave™ is copyrighted by Forrester Research, Inc. Forrester and Forrester Wave™ are trademarks of Forrester Research, Inc. The Forrester Wave™ is a graphical representation of Forrester’s call on a market and is plotted using a detailed spreadsheet with exposed scores, weightings, and comments. Forrester does not endorse any vendor, product, or service depicted in the Forrester Wave™. Information is based on best available resources. Opinions reflect judgment at the time and are subject to change. Slide 13: 7. Gartner: Emerging Technologies and Trends Impact Radar: Security, By Analyst(s): Ruggero Contu, Mark Driver, Lawrence Pingree, Elizabeth Kim, John A. Wheeler, Swati Rakheja, Nat Smith, Mark Wah, Dave Messett, Shawn Eftink, Bill Ray, 12 October 2021 8. EMA: The Rise of Active Directory Exploits: ls it Time to Sound the Alarm? - September 2021 EMA Research Report By Paula Musich Slide 14: 9. Gartner: Emerging Technologies: Future of Cloud-Native Security Operations, By Analyst(s): Mark Wah, Charlie Winckless, November 17, 2021 Slide 15: 10. Represents 2025 forecasts based on a blended view of recent forecasts from IDC, Gartner and Tenable assumptions 
+
+
+
+ <img height="768" src="tenableinvestordaypresen019.jpg" title="slide19" width="1365"/> December 2021 Product Review 
+
+
+
+ <img height="768" src="tenableinvestordaypresen020.jpg" title="slide20" width="1365"/> Key Milestones since IPO 20 Nico Popp Chief Product Officer 
+
+
+
+ <img height="768" src="tenableinvestordaypresen021.jpg" title="slide21" width="1365"/> Product Update: Supporting Our Long-Term Growth Strategy 21 Three Synergetic Opportunities Ever Extending Attack Surface “Extending Tenable VM Everywhere” “Shifting Cloud Security to the Left” “Transforming Into a Cyber Data & Analytics Platform” Cloud Native Digital Transformation Vendor Consolidation & The Rise of Platforms 
+
+
+
+ <img height="768" src="tenableinvestordaypresen022.jpg" title="slide22" width="1365"/>  Ever Expanding Digital Attack Surface “VM Everywhere” (Access, Configuration & Software Vulnerabilities across EVERYTHING) 
+
+
+
+ <img height="768" src="tenableinvestordaypresen023.jpg" title="slide23" width="1365"/> “How Secure Are we?” Still Powerful. More Difficult. CISO Challenge: The Digital Attack Surface Keeps Expanding 23 More Complexity: More attacks, more point solutions, more vendors, more integrations... Infrastructure as Code “Is my cloud infrastructure secure?” Public Cloud Security “Are my containers & workloads securely configured?” Digital Identity “Do I have the right access permissions?” Left (Development) Right (Run-time) Modern attack surface Modern Exposures Traditional On-prem IT “Are my on-prem systems hardened against ransomware?” WFH “What is the security hygiene of my remote workforce?” OT & Critical Infrastructure “How vulnerable are my industrial control systems?” 
+
+
+
+ <img height="768" src="tenableinvestordaypresen024.jpg" title="slide24" width="1365"/> Risk-Based Vulnerability Mgmt. 24 Attack Surface Access Vulnerabilities Digital ID Infrastructure Configuration Vulnerabilities Public Cloud Software Vulnerabilities Growth Flywheel: Surface expansion drives asset expansion Permission to Move Across the Attack Surface? Same Core Competency: “A Vuln is a Vuln is a Vuln…” Simple Solution: “VM” Across the Expanded Attack Surface WFHPrivate IT Infrastructure OT Infrastructure 
+
+
+
+ <img height="768" src="tenableinvestordaypresen025.jpg" title="slide25" width="1365"/> VM Everywhere Attack Surface Access Vulnerabilities Digital ID Infrastructure Configuration Vulnerabilities Public Cloud Software Vulnerabilities OT Infrastructure Best of Breed Approach (10M+ agents, network, FA, APIs, IaC scanners…) Trusted Brand (35,000+ customers, more than half of F500, 30%+ of G2000) Leading Content & Research (65K CVEs, 135K+ plug-ins) 25 Why Do We Win? WFHPrivate IT Infrastructure 
+
+
+
+ <img height="768" src="tenableinvestordaypresen026.jpg" title="slide26" width="1365"/> • AD infrastructure at the heart of modern attacks (ransomware) • Top notch tech & research • Power of integrations (attack paths to marry traditional VM and AD) 26 “VM Everywhere”: OT & AD Individual Momentum & Strength • Renewed focus on critical infrastructure cybersecurity • Product leadership • “Better together” industry forces (convergence of IT & OT) 
+
+
+
+ <img height="768" src="tenableinvestordaypresen027.jpg" title="slide27" width="1365"/> VM Everywhere Attack Surface Access Vulnerabilities Digital ID Infrastructure Configuration Vulnerabilities Public Cloud Software Vulnerabilities OT Infrastructure 27 Left and Right: “VM Everywhere” Has a Long Growth Runway • Open source & 3rd party software • API security • Code security Left (Development) • External attack surface mgmt. • SaaS security posture mgmt. • Third party risk mgmt. Right (Run-time) WFHPrivate IT Infrastructure Only the end of the beginning… 
+
+
+
+ <img height="768" src="tenableinvestordaypresen028.jpg" title="slide28" width="1365"/> From Code to Cloud The Shift-Left Cloud Security Opportunity 
+
+
+
+ <img height="768" src="tenableinvestordaypresen029.jpg" title="slide29" width="1365"/> Problem: Digital Transformation & the Rise of Cloud Native Applications ● Security flaws can no longer be found late in prod ● Runtime SecOps is powerless as their changes get overridden by dev-driven updates ● Security lacks app context to make decisions The next generation of cloud applications is disrupting the first generation of cloud security solutions 3. High Rate of Change 1. New Architectures 2. New Deployment Model Conclusion: New Approach to Security Required 
+
+
+
+ <img height="768" src="tenableinvestordaypresen030.jpg" title="slide30" width="1365"/> So, we seized this moment of disruption To create a modern Cloud Native Security offering ● Expected Early 22’ Launch ● Accurics IaC security and runtime CSPM ● Tenable Container Security and Frictionless Assessment + IaC Security & ConSec Build-Time: Code Repos & CI/CD Integration KSPM, ConSec & Drift Monitoring Runtimes: Kubernetes & Containers CSPM, FA & Drift Monitoring Runtimes: Workloads, & Serverless IO Integrated Management Opportunity: Cloud Native Security Solution 
+
+
+
+ <img height="768" src="tenableinvestordaypresen031.jpg" title="slide31" width="1365"/> 31 • All assets & findings, all clouds, within one unified workspace & remediation workflow • Cross-Sell: the tool Tenable customers already have, already know, and already love • One modern “VM” program for the hybrid enterprise Creating GTM Leverage: Integration, Integration, Integration... Tenable.io: Integrated Management Across All Clouds (Private & Public) Public Cloud Private Cloud WFH Traditional Enterprise Infrastructure Runtime Scanning Kube8 Scanning IaC & Gold IMG Scanning FA Scanning Nessus Agent Scanning Network- based Scanning Frictionless scan CSPM Scan CRD Scan CSPM Scan Gold Image Scan CSPM Scan Lumin Analytics Integrated Vulnerability Management Runtime workloads Runtime Containers Build-time Code Repos 
+
+
+
+ <img height="768" src="tenableinvestordaypresen032.jpg" title="slide32" width="1365"/> There is one more thing… 
+
+
+
+ <img height="768" src="tenableinvestordaypresen033.jpg" title="slide33" width="1365"/> 33 • No agent to deploy. No agent to activate. No performance overhead • Highly scalable. Optimized beyond “snapshot scanning” • Launch is expected to follow Tenable.cs in H1 2022 Beyond Frictionless Assessment Creating Technology Leverage: The Latest Innovation from Tenable AGENTS 
+
+
+
+ <img height="768" src="tenableinvestordaypresen034.jpg" title="slide34" width="1365"/> The Next Horizon Tenable as a Unified Exposure Platform 
+
+
+
+ <img height="768" src="tenableinvestordaypresen035.jpg" title="slide35" width="1365"/> ● Exposure risk across entire attack surface is a compelling product value-proposition ● Product bundle has a very attractive ROI ● CISOs are looking to consolidate around a few trusted vendors Tenable Exposure Platform Today: Successful Growth Engine T.IO T.OT AD WAS LUMIN CloudSec IT 35 
+
+
+
+ <img height="768" src="tenableinvestordaypresen036.jpg" title="slide36" width="1365"/> The New, Unified Exposure Platform: Creating a “Better Together” Tenable.EP: Cyber Exposure Data & Analytics Platform CISO Risk Analytics: Exposure Card, SLAs, Trends & Benchmarks (assessment & remediation) Practitioner Risk Analytics: Risk-Based Prioritization & Attack Pathway Assessment (Expanded Lumin) Shift-Left AppSec (SAST) Supply Chain (SCA) External Attack Surface Mgmt. Third Party Risk Mgmt.API Scanning External Data Bring your own data… Vulnerability Management (T.IO/T.SC) Active Directory / Identity (T.AD) Infrastructure as Code (T.CS) KSPM & CSPM Exposure (T.CS) OT Security (T.OT) Web/API Security (T.WAS) Tenable Products TODAY 36 
+
+
+
+ <img height="768" src="tenableinvestordaypresen037.jpg" title="slide37" width="1365"/> Joe @ WFH.com Bonus Points: Privileged Access to Another Domain (through unprotected VPN vulnerability and AD domain Trust relationship) AD: Trust Relationship Across Domains Critical Industrial Infrastructure Three data sets - two catastrophic breach pathways detected! +OT Data Set: Shows pathways to compromise the entire control network New Analytics: Attack Pathways, Context & Breach Prediction Ransomware malware CVE IO: CVE-2021-1566 Authorized Access for Remote User Group My Very Critical Windows Server AD: Domain Admin Elevation Store Credentials AD: Remote User Group Member Bad Guy @ Organized Crime Phish to spread ransomware Two data sets - One major breach pathway detected! AD DOMAIN CONTROLLER IO: VPN services with no MFA 37 
+
+
+
+ <img height="768" src="tenableinvestordaypresen038.jpg" title="slide38" width="1365"/> From “VM” Everywhere to Unified Platform New security insights – Stronger together – From proactive to predictive New EP with AD, CS, OT, AD-based attack pathways Mid 22’ Enhanced analytics across entire portfolio VM, including cloud pathways Early 22’ Late 22’ Targeted external data enrichment Note: Timelines are expected only as of the date of this presentation 
+
+
+
+ <img height="768" src="tenableinvestordaypresen039.jpg" title="slide39" width="1365"/> Conclusion: Three Opportunities. One Transformation UNIFIED EXPOSURE PLATFORM T.IO T.OT AD WAS LUMIN CloudSec IT ● “VM Everywhere”: Ever expanding attack surface continues to drive growth ● ”Shift-Left CNAPP”: Rise of cloud native apps opens door to tenable shift-left cloud security ● "Tenable as a Unified Platform”: Exposure data & cloud analytics create a transformational product & GTM opportunity T.OT T.IO AD WAS LUMIN CloudSec IT .SC 
+
+
+
+ <img height="768" src="tenableinvestordaypresen040.jpg" title="slide40" width="1365"/> December 2021 Go To Market Update 
+
+
+
+ <img height="768" src="tenableinvestordaypresen041.jpg" title="slide41" width="1365"/> Key Milestones since IPO 41 Mark Thurmond Chief Operating Officer 
+
+
+
+ <img height="768" src="tenableinvestordaypresen042.jpg" title="slide42" width="1365"/> Go-to-Market Strategy Platforms Unify Buying Decisions Nessus Upgrade World-Class Customer Retention New Logo Acquisition Expansion of Existing Customers 42 
+
+
+
+ <img height="768" src="tenableinvestordaypresen043.jpg" title="slide43" width="1365"/> Why We Win ▪ Technology, Technology, Technology ▪ Large and loyal install base and strong Nessus brand ▪ Highly trained (Core & Specialized),  metric-driven global sales force ▪ Recognized as a leader in VM and OT ▪ 100% commitment to the channel with 1,900+ partners ▪ Significant presence in Public Sector ▪ Enterprise Experience (Professional Services, Technical Support, Partner ecosystem, Customer Success) Well Positioned for Success! 
+
+
+
+ <img height="768" src="tenableinvestordaypresen044.jpg" title="slide44" width="1365"/> FOCUS AREAS & GROWTH DRIVERS Add Sales Capacity (Core & Specialized) and Generate Higher Sales Productivity Leverage Large Existing Customer Base to Drive Incremental Use Cases and Expansion Maintain High Customer Renewal Rates Leverage Partner Ecosystem to Expand our Sales, Services and Geo Coverage Compensation Plans Driving Alignment with Corporate Goals 1 2 3 4 5 Focus Areas & Growth Drivers 44 
+
+
+
+ <img height="768" src="tenableinvestordaypresen045.jpg" title="slide45" width="1365"/> Global Presence and Massive Ecosystem COLOMBI A SLOVAKIA ● 35,000+ Customers ● Presence in 35 Countries ● Business in over 160 Countries ● 1,900+ Partner Organizations ● 300+ MSSPs added in FY21 ○ Fast-growing route to market 45 
+
+
+
+ <img height="768" src="tenableinvestordaypresen046.jpg" title="slide46" width="1365"/> Global Customer Segmentation Enterprise Commercial Velocity/E-Commerce Marketing and Sales Development > 3,500 employees (Field Sales to Large Customers) 500-3,500 employees (Inside Sales to Mid-Market Customers) < 500 employees (Unaided to Small Customers) CSM / PS / Cha nn el 46 
+
+
+
+ <img height="768" src="tenableinvestordaypresen047.jpg" title="slide47" width="1365"/> MSSP Partnerships ➔ 8 of top 10 MSSPs¹ ➔ 7 of top 10 SI’s² ➔ Rapid Growth Area ➔ New Route to Market Driving Geo and Commercial Growth Technology Ecosystem ➔ Splunk, ServiceNow, IBM, GCP, etc. ➔ AWS Advanced Technology Partner - Triple digit transaction growth ➔ Hundreds of Integrations ➔ Influenced sales > 20% YTD 100% Partner Commitment ➔ 1900+ Partners ➔ Channel In ~40% New Enterprise YTD (Ent) ➔ Partner Breadth Strategy - Assure Program ➔ 8000+ Product Certifications Tech Alliances Channel MSSP Massive Partner Ecosystem 47 1. Gartner: Market Share: Managed Security Services, Worldwide, 2020, By Analyst(s): Krishnendu Bal, Mark Wah, Shawn Eftink, 20 April 2021 2. Gartner: Market Share: Security Consulting Services, Worldwide, 2020, By Analyst(s): Elizabeth Kim, 6 April 2021 
+
+
+
+ <img height="768" src="tenableinvestordaypresen048.jpg" title="slide48" width="1365"/> Key Milestones since IPO 48 Dave Feringa Senior Vice President Worldwide Sales 
+
+
+
+ <img height="768" src="tenableinvestordaypresen049.jpg" title="slide49" width="1365"/> VM Executives Buyer Evolution CISO VM EXECUTIVES Operational Technology Active DirectoryCloud Security 49 
+
+
+
+ <img height="768" src="tenableinvestordaypresen050.jpg" title="slide50" width="1365"/> Customer Success: Canadian Manufacturing Conglomerate What Solutions Did They Buy? ➔ Expanded their Tenable.SC environment ➔ Tenable.OT for key industrial locations ➔ Tenable.AD to reduce risk Why Tenable? ➔ Only vendor to provide unified visibility of OT and IT environment ➔ Tenable.AD helps prevent lateral movement in case of a breach to multiple subsidiaries ➔ They have been a happy customer Total Annual Contract Value: $1M Background: ➔ Existing Tenable.sc customer concerned about recent attacks in Manufacturing and Energy Business Objectives: ➔ Secure manufacturing assets as plant shutdown could be costly ➔ Have greater risk visibility across IT and Industrial Security assets ➔ Prevent what happened in Colonial Pipeline breach Who is the Buyer?: ➔ Executive buyer: CISO ➔ Influencers: Plant Managers, Active Directory Team, IT Leadership, Vulnerability Management Team 50 
+
+
+
+ <img height="768" src="tenableinvestordaypresen051.jpg" title="slide51" width="1365"/> Customer Success: Financial Institution in the US Background: ➔ Rapidly Growing Bank Using Multiple Vendors for Risk Based VM Business Objectives: ➔ Reduce Risk by consolidating multiple RBVM requirements with one vendor who could scale ➔ Improve operational efficiency as they grow ➔ Tight integrations with Splunk and ServiceNow ➔ Predictable cost model for future growth Who is The Buyer: CISO, VP Security Strategy What Tenable Solutions? Tenable.EP Why Tenable? ➔ Only solution to provide a complete RBVM solution. They consolidated 3 vendors to 1 ➔ Lumin improves VM assessment and remediation, prioritizes business unit resources ➔ EP provides predictable cost model for assets, including future solutions (WAS is NEXT) ➔ Quote: “Their requirements document looked like our data sheet for Tenable.EP” ➔ A Trusted Partner brought us this opportunity and had tight executive relationships we leveraged Total Annual Contract Value: $200K ACV 51 
+
+
+
+ <img height="768" src="tenableinvestordaypresen052.jpg" title="slide52" width="1365"/> Background: ➔ Federal Agency using multiple vendors for VM Business Objectives: ➔ Single vendor to increase visibility into advanced threats ➔ Flexibility for On-Prem solution with a FedRamped cloud offering ➔ Critical integration with Splunk, CyberArk and ServiceNow ➔ Global Support Who is the Buyer?: ➔ Executive buyers: Branch Chief, CISO, Vulnerability Management Team Customer Success: Large US Federal Agency What Solutions Did They Buy? ➔ Tenable.sc for On Prem locations, FedRamped Tenable.io for Cloud ➔ Have opportunities for Active Directory as a next step Why Tenable? ➔ Only vendor to meet their On Prem and FedRamp requirements ➔ VPR allows them to prioritize resources to efficiently remediate most critical vulnerability ➔ Proven Integrations with Splunk, CyberArk and ServiceNow ➔ Global support and brand reputation with Federal community Total Annual Contract Value: $2.3M 52 
+
+
+
+ <img height="768" src="tenableinvestordaypresen053.jpg" title="slide53" width="1365"/> Why we’re excited Product Innovation Deepening Strategic Partnership Expansion Of Salesforce / Global Reach 53 
+
+
+
+ <img height="768" src="tenableinvestordaypresen054.jpg" title="slide54" width="1365"/> December 2021 Financial Overview & Outlook 
+
+
+
+ <img height="768" src="tenableinvestordaypresen055.jpg" title="slide55" width="1365"/> 30% Key Milestones since IPO 55 Stephen Vintz Chief Financial Officer 
+
+
+
+ <img height="768" src="tenableinvestordaypresen056.jpg" title="slide56" width="1365"/> 30% Past, Present and Future Well positioned for sustained 20%+ long-term growth and business model leverage Evolving the portfolio to address high-growth opportunities in Exposure Solutions Path to $1+ billion in revenues resulting in Rule of 50+ 56 In 13 quarters as a public company, have established ourselves a leader in Traditional VM 
+
+
+
+ <img height="768" src="tenableinvestordaypresen057.jpg" title="slide57" width="1365"/> 30% Top Line Metrics That Inform Our Progress Dollar-based Net Expansion Rate Why?: Leverage Customer Base New Enterprise & Six-Figure Customers Why?: Enterprise scale Calculated Current Billings Why?: Leading Indicator 57 
+
+
+
+ <img height="768" src="tenableinvestordaypresen058.jpg" title="slide58" width="1365"/> 30% Performance Since IPO Note: 2021E based on mid-point of Guidance (1) Source: IDC, “Worldwide SIEM, Vulnerability Management, Policy and Compliance, and AIRO-Enabling Technologies Market Share, 2020: Tested, Adapted, and proven During COVID-19” - June 2021 (2) Non-GAAP Income from operations (3) Reflects non-GAAP measures and refer to Appendix for the definitions of non-GAAP financial measures and reconciliation from GAAP measures to the non-GAAP measures uFCF Margin (%)(3) Calculated Current Billings ($M)(3) +23% +26% CAGR $236 $604 -5% Win the VM Market Cloud 50% of new Q3’21 sales #1 Market Share in Vulnerability Management(1) Grow Cloud presence Deliver growth & profitability FCF+ earlier than forecasted at IPO Revenue ($M) +30% CAGR $188 $536 Non-GAAP Operating Margin (%)(3) 18% -17% 9% +26% $47M $90M uFCF 58 (2) -$32M (2) -$9M uFCF 
+
+
+
+ <img height="768" src="tenableinvestordaypresen059.jpg" title="slide59" width="1365"/> 30% Growth in Customer Base and Deal Size Since IPO Note: Six-Figure customers are those with an LTM ARR > $100K 25K 307 995 Active customers includes Nessus and Enterprise Platform customers Added ~ 360 new Enterprise Platform customers on average per quarter from Q1’18 to Q3’21 1.5X 35K+ Active Customers 59 Six-Figure Customers 3X 
+
+
+
+ <img height="768" src="tenableinvestordaypresen060.jpg" title="slide60" width="1365"/> 30% Operational Technology Active Directory Cloud Security Exposure Solutions Tenable.ep Tomorrow Evolving Portfolio to Address Broadening Attack Surface Traditional VM Nessus® Tenable.sc™ Tenable.io® Web Application Security Container Security Lumin Frictionless Assessment Tenable.ep Today 60 Ubiquitous brand and on-ramp to Exposure Solutions Foundation for Exposure Solutions 
+
+
+
+ <img height="768" src="tenableinvestordaypresen061.jpg" title="slide61" width="1365"/> 30% Expanding Product Portfolio Driving Diversification & Growth Source: Calculated Current Billings, new and renewal Note: (1) 5% reflects Nessus Cloud, the predecessor to Tenable.io Exposure Solutions ● Exposure Platform ○ Tenable.io ○ Web Application Security ○ Container Security ○ Frictionless Assessment ○ Lumin ● Operational Technology ● Active Directory ● Cloud Security Traditional VM ● Tenable.sc ● Nessus ● PCI Growing 10%+ YoY 61 5%(1) 40% 95% 60% Growing 50%+ YoY 
+
+
+
+ <img height="768" src="tenableinvestordaypresen062.jpg" title="slide62" width="1365"/> 30% 62 M&A Strategy Accelerates Product Roadmap and Expands TAM Purchase Price $78M $98M $160M Date Acquired Dec 2019 April 2021 October 2021 >$10M >$10M NM 2021E CCBProduct Description Operational Technology Active Directory Cloud Note: 2021E based on mid-point of Guidance 
+
+
+
+ <img height="768" src="tenableinvestordaypresen063.jpg" title="slide63" width="1365"/> 30% Growth Strategy 63 Expand relationships with existing customers Invest in sales capacity including internationally Lead with and broaden Exposure Platform Mergers & Acquisitions 
+
+
+
+ <img height="768" src="tenableinvestordaypresen064.jpg" title="slide64" width="1365"/> 30% Path to $1 Billion in Revenue $1.1B+ 20%+ CAGR Note: 2021E mid-point of revenue guidance Dollar-based net expansion rate based on LTM Expansion Sales New Sales $188m $267m $355m $440m $536m 64 Growth Algorithm: 1. 95% of revenue is recurring 2. Expansion sales from more asset coverage and broader portfolio (110%+ dollar-based net expansion) 3. New sales via increase in sales capacity / productivity and channel leverage 
+
+
+
+ <img height="768" src="tenableinvestordaypresen065.jpg" title="slide65" width="1365"/> 30% Demonstrating Operating Leverage Non-GAAP Measures 2019 2020 2021E Long-term target model @ IPO Updated long-term target model Gross Margin 84% 84% 82% 77-80% 77-80% S&M % of Revenue 60% 46% 44% 35-40% 30-35% R&D % of Revenue 22% 20% 18% 12-15% 12-15% G&A % of Revenue 14% 12% 11% 6-8% 5-7% Operating Margin -12% 6% 9% 20%+ 25%+ uFCF Margin -9% 10% 17% 25%+ 30%+ Notes: 2021E reflects mid-point of Guidance Refer to Appendix for the definitions of non-GAAP financial measures and reconciliation from GAAP measures to the non-GAAP measures65 Targeting Rule of 50%+ 
+
+
+
+ <img height="768" src="tenableinvestordaypresen066.jpg" title="slide66" width="1365"/> 30% 20%+ growth on path to $1B Exposure solutions creates expansionary TAM Leveraging sizable customer base and global distribution capability In Summary 66 Targeting Rule Of 50%+ 
+
+
+
+ <img height="768" src="tenableinvestordaypresen067.jpg" title="slide67" width="1365"/> 30% Appendix 67 
+
+
+
+ <img height="768" src="tenableinvestordaypresen068.jpg" title="slide68" width="1365"/> 30% Non-GAAP Reconciliations 68 
+
+
+
+ <img height="768" src="tenableinvestordaypresen069.jpg" title="slide69" width="1365"/> 30% Non-GAAP Reconciliations (continued) 69 
+
+
+
+ <img height="768" src="tenableinvestordaypresen070.jpg" title="slide70" width="1365"/> 30% Non-GAAP Reconciliations (continued) 70 
+
+
+
+ <img height="768" src="tenableinvestordaypresen071.jpg" title="slide71" width="1365"/> 30% Non-GAAP Reconciliations (continued) 71 
+
+
+
+ <img height="768" src="tenableinvestordaypresen072.jpg" title="slide72" width="1365"/> 30% Non-GAAP Reconciliations (continued) 72 
+
+
+

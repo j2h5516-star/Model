@@ -1,0 +1,293 @@
+# 잣대값 파싱 실패 원문 — TENB 2026-05-21
+# 출처: https://www.sec.gov/Archives/edgar/data/1660280/000166028026000030/tenb-20260521.htm
+
+tenbinvestorday052126
+
+    <img height="768" src="tenbinvestorday052126001.jpg" title="slide1" width="1365"/> Tenable Steve Vintz Co-Chief Executive Officer Mark Thurmond Co-Chief Executive Officer Investor Day 
+
+
+
+ <img height="768" src="tenbinvestorday052126002.jpg" title="slide2" width="1365"/> Forward Looking Statements This presentation includes forward-looking statements. All statements contained in this presentation other than statements of historical fact, including statements regarding our future results of operations and financial position, business strategy and plans and our objectives for future operations, are forward-looking statements. The words "anticipate," "believe," "continue," "estimate," "expect," "intend," "may," "will" and similar expressions are intended to identify forward-looking statements. We have based these forward-looking statements on our current expectations and projections about future events and financial trends that we believe may affect our financial condition, results of operations, business strategy, short-term and long-term business operations and objectives and financial needs. These forward looking statements are subject to a number of assumptions and risks and uncertainties, many of which involve factors or circumstances that are beyond our control. These risks and uncertainties are detailed in the sections titled "Risk Factors" and "Management's Discussion and Analysis of Financial Condition and Results of Operations" in our Annual Report on Form 10-K for the year ended December 31, 2025, and other filings that we make from time to time with the SEC. Moreover, we operate in a very competitive and rapidly changing environment. New risks emerge from time to time. It is not possible for our management to predict all risks, nor can we assess the impact of all factors on our business or the extent to which any factor, or combination of factors, may cause actual results to differ materially from those contained in any forward-looking statements we may make. This presentation contains projected financial information. Such projected financial information constitutes forward-looking information and should not be relied upon as necessarily being indicative of future results. The assumptions and estimates underlying such financial forecast information are inherently uncertain and are subject to a wide variety of significant business, economic, competitive, and other risks and uncertainties as described above. Actual results may differ materially from the results contemplated by the financial forecast information contained herein, and the inclusion of such information in this presentation should not be regarded as a representation by any person that the results reflected in such forecasts will be achieved. Except as required by law, we are under no obligation to update these forward-looking statements after the date of this presentation to conform these statements to actual results or revised expectations. You should, therefore, not rely on these forward-looking statements as representing our views as of any date subsequent to the date of this presentation. This presentation also contains estimates and other statistical data made by independent parties and by us relating to market size and growth and other data about our industry. This data involves a number of assumptions and limitations, and you are cautioned not to give undue weight to such estimates. We make no representation or warranty as to the accuracy or completeness of such data and undertake no obligation to update such data after the date of this presentation. In addition, projections, assumptions and estimates of our future performance and the future performance of the markets in which we operate are necessarily subject to a high degree of uncertainty and risk. By receiving this presentation you acknowledge that you will be solely responsible for your own assessment of the market and our market position and that you will conduct your own analysis and be solely responsible for forming your own view of the potential future performance of our business. This presentation includes non-GAAP financial measures which have certain limitations and should not be considered in isolation, or as alternatives to or substitutes for, financial measures determined in accordance with GAAP. The non-GAAP measures as defined by us may not be comparable to similar non-GAAP measures presented by other companies. Our presentation of such measures, which may include adjustments to exclude unusual or non-recurring items, should not be construed as an inference that our future results will be unaffected by these or other unusual or non-recurring items. See the GAAP to Non-GAAP Reconciliation section for a reconciliation of these non-GAAP financial measures to the most directly comparable GAAP financial measures. Any information in this presentation on unreleased services or features is intended to outline our general product direction and should not be relied upon in making a purchasing decision. They are intended for informational purposes only and may not be incorporated into any contract. The development, release, and timing of any features or functionality described for our products remains at our sole discretion. All third-party trademarks, including names, logos and brands, referenced by us in this presentation are property of their respective owners. These references are made solely for identification purposes and should not be construed as an endorsement of our products or services. 
+
+
+
+ <img height="768" src="tenbinvestorday052126003.jpg" title="slide3" width="1365"/> Tenable Cybersecurity market expected to grow from $300B in 26 to $400B in 29 with the AI security market accounting for for ~$75B $1B+ LTM Revenue $232M LTM Operating Income Tenable One New Business 95% Recurring Revenue Financials 40%+ 2,000+ >$100K ACV CustomersEnterprise Customer growth 35%+ Customers Revenue Today 
+
+
+
+ <img height="768" src="tenbinvestorday052126004.jpg" title="slide4" width="1365"/> 5 The assumption The volume of exposures would remain within the bounds of what a security team could absorb. For two decades, cybersecurity ran on one loop. Find Fix Reduce risk 
+
+
+
+ <img height="768" src="tenbinvestorday052126005.jpg" title="slide5" width="1365"/> Tenable evolution 
+
+
+
+ <img height="768" src="tenbinvestorday052126006.jpg" title="slide6" width="1365"/> ● AI accelerates software development and deployment ● Every new AI system embedded is a new entry point ● Attack surface expanding faster than teams can track ● Frontier models find vulnerabilities in minutes, not months ● Attackers gain the same capability simultaneously ● Discovery that was impossible yesterday is trivial today More exposures being created More exposures being discovered Both forces are operating at once across a larger, more interconnected attack surface than ever before. 
+
+
+
+ <img height="768" src="tenbinvestorday052126007.jpg" title="slide7" width="1365"/> 771 > 1.6 Days to exploit Average time from disclosure to active exploitation - 2021 vs. today 500+ Zero-days found by Opus 4.6 Discovered autonomously in open- source code Thousands Vulnerabilities found by Mythos Discovered in weeks following the April 2026 launch of Mythos Preview 99% Remain unpatched Vendor disclosure processes were not built for AI-scale discovery volumes 
+
+
+
+ <img height="768" src="tenbinvestorday052126008.jpg" title="slide8" width="1365"/> 9 When volume becomes infinite More findings. More noise. Less clarity. 60% of breaches last year exploited a vulnerability the organization already had a patch for. The problem is not finding what's wrong. It's acting on it fast enough. 
+
+
+
+ <img height="768" src="tenbinvestorday052126009.jpg" title="slide9" width="1365"/> Vulnerability Discovery “What code vulnerabilities exist in a piece of code” 1. Asset Discovery “What is in your enterprise?” Discovery Alone Does Not Reduce Risk 4. Remediation “Help me fix it” 2. Assessment “What issues exist in your org?” 3. Prioritization “What issues actually matter?” 5. Validation “Did it actually get fixed?” Exposure ManagementLatest Frontier Models 
+
+
+
+ <img height="768" src="tenbinvestorday052126010.jpg" title="slide10" width="1365"/> Knowing isn’t enough. Taking action is the gap. 11 
+
+
+
+ <img height="768" src="tenbinvestorday052126011.jpg" title="slide11" width="1365"/> A system of action. 
+
+
+
+ <img height="768" src="tenbinvestorday052126012.jpg" title="slide12" width="1365"/> LAYER 3 · Action Tenable Hexa AI Agentic Engine LAYER 2 · Insight Exposure Data Fabric LAYER 1 · Visibility Surfaces and Signals D A T A F LO W 
+
+
+
+ <img height="768" src="tenbinvestorday052126013.jpg" title="slide13" width="1365"/> 300+ Data Integrations Tenable Sensors Threat Intelligence AI Systems & Models LAYER 1 · VISIBILITY Sensors & Signals 
+
+
+
+ <img height="768" src="tenbinvestorday052126014.jpg" title="slide14" width="1365"/> ANALYZE ENRICHCORRELATE VERIFY EXPLOITABILITY SCORE RISK MAP RELATIONSHIPS LAYER 2 · Insight Exposure Data Fabric 
+
+
+
+ <img height="768" src="tenbinvestorday052126015.jpg" title="slide15" width="1365"/> LAYER 2 · Action Tenable Hexa AI Agentic Engine The remediation continuum. Manual Security teams execute remediation manually. Human-led remediation Assisted Humans and AI coordinate remediation workflows. Hybrid remediation Autonomous AI-driven systems execute remediation automatically. Machine-led remediation 
+
+
+
+ <img height="768" src="tenbinvestorday052126016.jpg" title="slide16" width="1365"/> + + 
+
+
+
+ <img height="768" src="tenbinvestorday052126017.jpg" title="slide17" width="1365"/> How AI Is reshaping the attack surface Vlad Korsunsky Chief Technology Officer 
+
+
+
+ <img height="768" src="tenbinvestorday052126018.jpg" title="slide18" width="1365"/> What will define cyber risk in 2027? 19 AI as a threat multiplier 
+
+
+
+ <img height="768" src="tenbinvestorday052126019.jpg" title="slide19" width="1365"/> 20 % % AI as a threat multiplier Geopolitical escalations, targeting critical infrastructure Source: World Economic Forum 
+
+
+
+ <img height="768" src="tenbinvestorday052126020.jpg" title="slide20" width="1365"/> Time to exploit Source: Mandiant M-Trends Report 2025 
+
+
+
+ <img height="768" src="tenbinvestorday052126021.jpg" title="slide21" width="1365"/> What changed? 
+
+
+
+ <img height="768" src="tenbinvestorday052126022.jpg" title="slide22" width="1365"/> What changed? 
+
+
+
+ <img height="768" src="tenbinvestorday052126023.jpg" title="slide23" width="1365"/> What changed? AI Labs are not the adversary 
+
+
+
+ <img height="768" src="tenbinvestorday052126024.jpg" title="slide24" width="1365"/> The Tenable blueprint ● Vulnerability volume exponential increase. ● AI as an attack surface. ● Agentic economy TAM Expanded opportunity ● AI adoption. ● AI agents as first-class devs in development. ● AI acceleration squads. Velocity AI-native company Transforming Tenable into an AI-native company. MOAT Platform architecture Layer 3: Tenable Hexa AI Agentic Engine Layer 1: Surfaces and Signals Layer 2: Exposure Data Fabric 
+
+
+
+ <img height="768" src="tenbinvestorday052126025.jpg" title="slide25" width="1365"/> MOAT Platform architecture The defender's edge in the AI era is not the model. It's the data, the context, the harness, and the guardrails you build around it. The Tenable blueprint Layer 3: Tenable Hexa AI Agentic Engine Layer 1: Surfaces and Signals Layer 2: Exposure Data Fabric 
+
+
+
+ <img height="768" src="tenbinvestorday052126026.jpg" title="slide26" width="1365"/> Velocity AI-native company ● AI adoption. ● AI agents as first-class devs in development. ● AI acceleration squads. Transforming Tenable into an AI-native company. The Tenable blueprint 
+
+
+
+ <img height="768" src="tenbinvestorday052126027.jpg" title="slide27" width="1365"/> % Global R&D AI adoption The companies that capitalize are the ones that change how teams operate, not just what tools they buy. Scaffolding & accountability - AI-fluency - From R&D to Finance Adoption AI acceleration squads - Cross-functional teams operating on a startup cadence - Aggressively closing the gap between experimentation and running the company on AI Structure AI-native R&D frontier - AI as new user - Headless design - Operating at the same frontier as big tech leaders - Partner with AI Labs engineers Strategy AI-native development 
+
+
+
+ <img height="768" src="tenbinvestorday052126028.jpg" title="slide28" width="1365"/> We have put the structure in place to uplevel the entire team AI-native transformation 
+
+
+
+ <img height="768" src="tenbinvestorday052126029.jpg" title="slide29" width="1365"/> Avg commits / week Frequency of individual contributions Velocity Avg merged PRs / week Validated features landed in production Throughput Avg time to merge Cycle time from open to close (Hours) Efficiency Non-AI AI-Native x1.7 Non-AI AI-Native Non-AI AI-Native 40% FASTER AI-native productivity gains x2.2 
+
+
+
+ <img height="768" src="tenbinvestorday052126030.jpg" title="slide30" width="1365"/> Every product company Build Support Enterprise functions Sell 
+
+
+
+ <img height="768" src="tenbinvestorday052126031.jpg" title="slide31" width="1365"/> Product creation cycle Find the correct problem and solution Discover Design Make it usable for end users Specify Define what is required Architect Set boundaries and standards for engineers Develop Produce source code and tests Verify Ensure it runs as intended. Document Document how to use and fix GTM Price, market, prepare field Release Package and ship Sell Sell and roll- out Operate Monitor and maintain 
+
+
+
+ <img height="768" src="tenbinvestorday052126032.jpg" title="slide32" width="1365"/> Paradigm shift: Agentic Execution + Human Oversight Humans AND Agents Hardness & Guardrails 
+
+
+
+ <img height="768" src="tenbinvestorday052126033.jpg" title="slide33" width="1365"/> Mythos-class capability proliferation Agentic table stakes Regulatory divide Agentic economy Contextual value ● Vulnerability volume exponential increase ● AI as an attack surface ● Agentic economy TAM Expanded opportunity The Tenable blueprint 
+
+
+
+ <img height="768" src="tenbinvestorday052126034.jpg" title="slide34" width="1365"/> From detection to preemption How Tenable’s got your back Eric Doerr Chief Product Officer 
+
+
+
+ <img height="768" src="tenbinvestorday052126035.jpg" title="slide35" width="1365"/> Humans can’t outrun machines. The defender’s job is now preemption- fix it before they exploit it.” - me (+Claude) “ 
+
+
+
+ <img height="768" src="tenbinvestorday052126036.jpg" title="slide36" width="1365"/> Productivity rising Visibility falling # CISO’s visibility of AI in the EnterpriseAI = Fastest adoption in history 
+
+
+
+ <img height="768" src="tenbinvestorday052126037.jpg" title="slide37" width="1365"/> 01 Continuous discovery 1.7T real-world findings 113B new findings / month 457M shadow AI findings (30 days) 
+
+
+
+ <img height="768" src="tenbinvestorday052126038.jpg" title="slide38" width="1365"/> 39Sources, CrowdStrike, 2026 Verizon DBIR Prioritize what matters of CVEs matter to you %%. findings non CVEs / breaches non CVE 02 Exposure Data Fabric ANALYZE ENRICHCORRELATE VERIFY EXPLOITABILITY SCORE RISK MAP RELATIONSHIPS 
+
+
+
+ <img height="768" src="tenbinvestorday052126039.jpg" title="slide39" width="1365"/> 40Sources, CrowdStrike, 2026 Verizon DBIR 03 Orchestrate the fix - Today Manual of must-patch KEVs fixed in 2025 % days to patch before Tenable Hexa AI 
+
+
+
+ <img height="768" src="tenbinvestorday052126040.jpg" title="slide40" width="1365"/> 41Sources, CrowdStrike, 2026 Verizon DBIR 03 With Tenable Hexa AI Agentic Fixing of must- patch KEVs Patching Hexa Agentic Engine ORCHESTRATION VALIDATIONREMEDIATIONWORKFLOWS Tenable Built-in, Third-Party and Customer-built agents Auto Auto Resolves non-CVE exposures for you 
+
+
+
+ <img height="768" src="tenbinvestorday052126041.jpg" title="slide41" width="1365"/> D A T A F LO W Exposure Data Fabric ANALYZE ENRICHCORRELATE VERIFY EXPLOITABILITY SCORE RISK MAP RELATIONSHIPS Hexa Agentic Engine ORCHESTRATION VALIDATIONREMEDIATIONWORKFLOWS Tenable Built-in, Third-Party and Customer-built agents Tenable Sensors IDENTITY Threat Intelligence300+ Data Integrations ZERO DAY RESEARCH ATTACKER TACTICS INDUSTRY CONTEXT FIX GUIDANCE CLOUD IT / DEVICE WEB APPS AI ATTACK SURFACE OT / IoT AI Systems & Models Surfaces and Signals COMPLETE EXPOSURE VISIBILITY ATTACK PATH VISUALIZATIONS PREDICTIVE RISK PRIORITIZATION AUTOMATED REMEDIATION BUSINESS-ALIGNED RISK METRICS 
+
+
+
+ <img height="768" src="tenbinvestorday052126042.jpg" title="slide42" width="1365"/> 43 DEMO From 10K findings to 1 attack path 
+
+
+
+ <img height="768" src="tenbinvestorday052126043.jpg" title="slide43" width="1365"/> 44 DEMO Hexa AI makes super humans 
+
+
+
+ <img height="768" src="tenbinvestorday052126044.jpg" title="slide44" width="1365"/> Tenable Hexa AI fixes exposure for you 45 DEMO 
+
+
+
+ <img height="768" src="tenbinvestorday052126045.jpg" title="slide45" width="1365"/> Tenable Hexa AI Breaks attack paths for you 46 DEMO 
+
+
+
+ <img height="768" src="tenbinvestorday052126046.jpg" title="slide46" width="1365"/> Your exposure ends here. 
+
+
+
+ <img height="768" src="tenbinvestorday052126047.jpg" title="slide47" width="1365"/> Customer Panel 
+
+
+
+ <img height="768" src="tenbinvestorday052126048.jpg" title="slide48" width="1365"/> Durable growth at scale Dino DiMarino Chief Revenue Officer 
+
+
+
+ <img height="768" src="tenbinvestorday052126049.jpg" title="slide49" width="1365"/> Global Presence at Scale 40K+ 8K+Customers across 160 Countries 100% Channel Sales Motion with 8,200 Partners across the globe ~30% 2K+One third Tenable One penetration Large and XL Customer Footprint with 2,000+ >$100 k+ Customers 
+
+
+
+ <img height="768" src="tenbinvestorday052126050.jpg" title="slide50" width="1365"/> High-Velocity, Unaided • Channel Led • No Touch Nessus High Velocity Engine • Digital Marketing Focused Global GTM Motion 500-5,000 employees (Mid-Market Customers) < 500 employees (Unaided) Enterprise Commercial Velocity / E-Commerce Marketing and Sales Development Cu st om er S uc ce ss / P ro Se rv / C ha nn el Enterprise Sales Motion • TM Led / Partner supported • CIO-CISO Targeted Sales Campaigns • Larger ASPs / Complex selling process • Driving net expansion Inside Selling Motion • Partner Leverage • High Volume • Remote Sales Org > 5,000 employees (Field Sales to Large Customers) Note: Percentages allocated per new bookings in 2025. Customer count as of April 2026. 
+
+
+
+ <img height="768" src="tenbinvestorday052126051.jpg" title="slide51" width="1365"/> Channel ● 8,000+ Partners across the Globe ● Assure World Program with Delivery Certification ● Partner Guardians SE Program MSSP and GSI’s ● 9 of top 10 MSSPs and 7 of top 10 SIs ● IBM; Deloitte; Accenture; PWC; Dell ● MSSP Portal - Auto Provisioning Tech Alliance ● Anthropic, Open AI ● AWS, Splunk/Cisco, Mastercard/Recorded Future ● 300+ Integrations(1); 180+ Partners World Class Partner Ecosystem 100% Channel-Led Motion Delivering Reach and Scale across all Geos 
+
+
+
+ <img height="768" src="tenbinvestorday052126052.jpg" title="slide52" width="1365"/> Tenable GTM going native on AI 53 
+
+
+
+ <img height="768" src="tenbinvestorday052126053.jpg" title="slide53" width="1365"/> 54 Enablement Agentic deal coaching, real-time competitive battlecards, and automated playbooks that ensure every rep performs like a top-tier expert Demand Gen Streamlined Click to Chat for rapid engagement, Signal-based account targeting and autonomous sourcing that identifies high-intent accounts Customer Engagement Hexa AI for customer demos, AI customer call analysis, Automated RFP response, AI for account research and custom content Post-Sales Proactive Risk Alerts, AI workflow Orchestration, AI enabled account planning, support volume deflection (how too vs break fix) GTM Operations GTM activity and forecast/deal inspection leveraging AI (Clari AI), Market forensics to understand “heating and cooling” across geos and accounts, AI native, contract redlining to ensure rapid customer engagement 
+
+
+
+ <img height="768" src="tenbinvestorday052126054.jpg" title="slide54" width="1365"/> Tenable One Pricing, Packaging and the Customer Journey 55 
+
+
+
+ <img height="768" src="tenbinvestorday052126055.jpg" title="slide55" width="1365"/> Domain expansion Domain expansion Low-Friction VM to EM On- Ramp Built-In Expansion Engine 'All domain access' accelerates capability adoption, license flexibility and provides a path for tier progression and domain expansion. Creates a natural land-and-expand motion. Standalone products serve as entry points to the Foundation and Advanced packages. Offer a clear growth path from standalone to platform. VM Siloed Security EM Foundation EM Advanced VM Siloed Security EM Foundation 
+
+
+
+ <img height="768" src="tenbinvestorday052126056.jpg" title="slide56" width="1365"/> Multiple on ramps. One powerful platform No matter where you start, every path leads to Tenable One. ● Nessus ● Vulnerability Management ● Point Solutions Upgrade with Tenable ● VM Competitors ● Single domain security vendors ● Large platform players Displace Competitors ● AI Security ● Cloud Security ● OT Security ● Identity Security Expand with new use cases 
+
+
+
+ <img height="768" src="tenbinvestorday052126057.jpg" title="slide57" width="1365"/> Major Telecommunications Company The Challenge Long term vulnerability management customer needed to accommodate growth through acquisitions, extend visibility, and unify tools and data. 7x increase in ARR since initial land. Top 5 Telecom 90K Employees Global Enterprise Phase Core VM Tenable VM Tenable WAS Phase Identity, Cloud & Attack Surface Tenable VM Tenable WAS Tenable Identity Exposure Tenable Cloud Security Tenable ASM Phase EM Platform Consolidation Tenable One VM WAS OT Identity Cloud ASM "We needed a single, consolidated platform that could cover every corner of our enterprise." — Sr. Director of Readiness & Proactive Security 
+
+
+
+ <img height="768" src="tenbinvestorday052126058.jpg" title="slide58" width="1365"/> Focus Areas Migrate and Expand VM Base to Tenable One Deliver GTM Speed, Scale and Efficiency with AI and Automation Land with Tenable One 
+
+
+
+ <img height="768" src="tenbinvestorday052126059.jpg" title="slide59" width="1365"/> Update Matt Brown Chief Financial Officer Financial 
+
+
+
+ <img height="768" src="tenbinvestorday052126060.jpg" title="slide60" width="1365"/> 61 Tenable in 2021 Tenable Today 
+
+
+
+ <img height="768" src="tenbinvestorday052126061.jpg" title="slide61" width="1365"/> Financial Performance Note: All of the financial measures included above, with the exception of revenue, are non-GAAP financial measures. See Appendix for definitions of non-GAAP financial measures and a reconciliation from GAAP measures to the non-GAAP measures, where applicable. +38% CAGR +1460 basis points Operating Income 9.4% 24.0% +25% CAGR +940 basis points Unlevered Free Cash Flow 17.6% 27.0% $ in millions +15% CAGR Revenue 
+
+
+
+ <img height="768" src="tenbinvestorday052126062.jpg" title="slide62" width="1365"/> D A T A F LO W Exposure Data Fabric ANALYZE ENRICHCORRELATE VERIFY EXPLOITABILITY SCORE RISK MAP RELATIONSHIPS Tenable Hexa AI Agentic Engine ORCHESTRATION VALIDATIONREMEDIATIONWORKFLOWS Tenable Built-in, Third-Party and Customer-built agents Tenable Sensors IDENTITY Threat Intelligence300+ Data Integrations ZERO DAY RESEARCH ATTACKER TACTICS INDUSTRY CONTEXT FIX GUIDANCE CLOUD IT / DEVICE WEB APPS AI ATTACK SURFACE OT / IoT AI Systems & Models Surfaces and Signals COMPLETE EXPOSURE VISIBILITY ATTACK PATH VISUALIZATIONS PREDICTIVE RISK PRIORITIZATION AUTOMATED REMEDIATION BUSINESS-ALIGNED RISK METRICS 
+
+
+
+ <img height="768" src="tenbinvestorday052126063.jpg" title="slide63" width="1365"/> Domain expansion Domain expansion Low-Friction VM On-Ramp Built-In Expansion Engine 'All domain access' accelerates capability adoption and provides a path for tier progression and domain expansion. Creates a natural land-and-expand motion. Standalone products serve as entry points to the Foundation and Advanced packages. Offer a clear growth path from standalone to platform. VM Siloed Security EM Foundation EM Advanced VM Siloed Security EM Foundatio n +6% vs. VM +60% vs. VM 
+
+
+
+ <img height="768" src="tenbinvestorday052126064.jpg" title="slide64" width="1365"/> Tenable One 2x-3x higher ACV than non-platform Benefits of Tenable One Tenable One Revenue Growth: Mid-Teens Higher ACV Attractive Uplift ~60% price uplift to Tenable One Advanced over standalone VM; more when considering asset expansion Longer Contract Duration Tenable One average contract duration ~10% longer than non- platform Expansion Opportunity Average expansion more than double compared to non-platform Competitive Differentiation Win rates consistently higher with Tenable One 
+
+
+
+ <img height="768" src="tenbinvestorday052126065.jpg" title="slide65" width="1365"/> Today Exiting 2029 2026 Revenue Growth Algorithm 66 Tenable One Platform Mid-Teens Growth Non-Platform Mid-Single Digit Growth FY 2029 targets do not constitute formal financial guidance. Total Revenue Growth: High-Single Digit 2029 Total Revenue Growth: High-Single Digit / Low-Double Digit 
+
+
+
+ <img height="768" src="tenbinvestorday052126066.jpg" title="slide66" width="1365"/> Cloud cost optimization, zero- marginal-cost asset scalingProfitability Strategy Go-to-Market Efficiencies Steady Gross Margins AI-powered prospecting, automated quoting Administrative Efficiencies AI-driven data entry and queries, automated workflows Investing for Growth Investment in sales capacity, development in Tenable One Product Development Acceleration AI-accelerated code and feature development + ~1.5 points of operating margin each year 
+
+
+
+ <img height="768" src="tenbinvestorday052126067.jpg" title="slide67" width="1365"/> Capital Allocation Uses of Cash Diluted Shares Outstanding Note: Unlevered free cash flow is a non-GAAP financial measure. See Appendix for definitions of non-GAAP financial measures and a reconciliation from GAAP measures to the non-GAAP measures, where applicable. (1) $ in millions In millions (1) Dotted line represents amounts authorized but not yet purchased as of Q1’2026 
+
+
+
+ <img height="768" src="tenbinvestorday052126068.jpg" title="slide68" width="1365"/> FY 2026 Guide (Midpoint) Exiting FY 2029 Revenue Growth High-Single-Digit High-Single / Low-Double-Digit Gross margin ~82.0% 81.5% - 82.5% Sales and marketing ~32.5% 29.0% - 31.0% Research and development ~17.0% 16.0% - 17.0% General and administrative ~8.5% 7.0% - 8.0% Operating margin 24.0% 28% Unlevered free cash flow margin 27.0% 31% FY 2026 Guide (Midpoint) “Rule of 40” Mid-Term Financial Targets Note: All of the financial measures included above, with the exception of revenue, are non-GAAP financial measures. See Appendix for definitions of non-GAAP financial measures and a reconciliation from GAAP measures to the non-GAAP measures, where applicable. FY 2029 targets do not constitute formal financial guidance. 
+
+
+
+ <img height="768" src="tenbinvestorday052126069.jpg" title="slide69" width="1365"/> Q&A 
+
+
+
+ <img height="768" src="tenbinvestorday052126070.jpg" title="slide70" width="1365"/> Appendix 
+
+
+
+ <img height="768" src="tenbinvestorday052126071.jpg" title="slide71" width="1365"/> Appendix Non-GAAP Financial Measures Non-GAAP Income from Operations and Non-GAAP Operating Margin Non-GAAP income from operations and non-GAAP operating margin are defined as GAAP income from operations and GAAP operating margin, excluding stock-based compensation expense, acquisition-related expenses, restructuring expenses, costs related to the intra-entity asset transfers resulting from the internal restructuring of legal entities, and amortization of acquired intangible assets. Acquisition-related expenses include transaction and integration expenses, as well as costs related to the intercompany transfer of acquired intellectual property. Restructuring expenses include non-ordinary course severance, employee related benefits, and other charges to reorganize business operations. Unlevered Free Cash Flow Unlevered free cash flow is defined as net cash provided by operating activities less purchases of property and equipment and capitalized software development costs, plus cash paid for interest and other financing costs. We believe unlevered free cash flow is useful as a liquidity measure as it measures our ability to generate cash that is available to invest in our business and meet our current debt obligations and future financing needs. However, given our debt obligations, non-cancelable commitments and other contractual obligations, unlevered free cash flow does not represent residual cash flow available for discretionary expenses. 
+
+
+
+ <img height="768" src="tenbinvestorday052126072.jpg" title="slide72" width="1365"/> GAAP to Non-GAAP Reconciliations Unlevered Free Cash Flow: 2021 2023 2024 2025 2026E* Net cash provided by operating activities $ 96,765 $ 149,855 $ 217,476 $ 266,750 $ 285,100 Purchases of property and equipment (3,887) (1,704) (4,247) (12,102) (11,500) Capitalized software development costs (2,674) (7,052) (6,451) (4,474) (7,600) Cash paid for interest and other financing costs 4,978 34,323 30,977 26,841 24,000 Unlevered free cash flow $ 95,182 $ 175,422 $ 237,755 $ 277,015 $ 290,000 Non-GAAP Income from Operations: 2021 2026E* Income (loss) from operations $ (41,768) $ 42,300 Stock-based compensation 79,405 183,300 Acquisition-related expenses 6,901 — Restructuring — 4,500 Amortization of acquired intangible assets 6,447 26,900 Non-GAAP income from operations $ 50,985 $ 257,000 *2026E amounts are based on the midpoint for the year ending December 31, 2026 forecast amounts from the Q1 2026 Earnings Release. As a result, actual adjustments and GAAP results may differ materially. Reconciliation of the forecasted non-GAAP measures to the most directly comparable GAAP measures for 2026 gross margin and sales and marketing expense, research and development expense and general and administrative expense, all as a percentage of revenue as well as forecasted 2029 measures are not provided as it cannot be prepared without unreasonable effort. 
+
+
+

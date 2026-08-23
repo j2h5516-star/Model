@@ -1,0 +1,237 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — NVDA 2016-11-10
+# 출처: https://www.sec.gov/Archives/edgar/data/1045810/000104581016000343/form8-kq3fy17.htm
+
+Exhibit
+
+
+FOR IMMEDIATE RELEASE:
+NVIDIA Announces Financial Results for Third Quarter Fiscal 2017
+
+•   Record revenue of $2.00 billion, up 54 percent from a year ago.
+
+•   Record GAAP EPS of $0.83, up 89 percent from a year ago, and non-GAAP EPS of $0.94, up 104 percent from a year ago.
+
+•   Record GAAP gross margin at 59.0 percent and non-GAAP gross margin at 59.2 percent.
+
+•   Quarterly cash dividend raised 22 percent to $0.14 per share. Company to return $1.25 billion to shareholders in fiscal 2018.
+SANTA CLARA, Calif.-Nov. 10, 2016-NVIDIA (NASDAQ: NVDA) today reported revenue for the third quarter ended October 30, 2016, of $2.00 billion, up 54 percent from $1.30 billion a year earlier, and up 40 percent from $1.43 billion in the previous quarter.
+GAAP earnings per diluted share for the quarter were $0.83, up 89 percent from $0.44 a year ago and up 102 percent from $0.41 in the previous quarter. Non-GAAP earnings per diluted share were $0.94, up 104 percent from $0.46 a year earlier and up 77 percent from $0.53 in the previous quarter.
+
+“We had a breakout quarter - record revenue, record margins and record earnings were driven by strength across all product lines,” said Jen-Hsun Huang, founder and chief executive officer, NVIDIA. “Our new Pascal GPUs are fully ramped and enjoying great success in gaming, VR, self-driving cars and datacenter AI computing.
+“We have invested years of work and billions of dollars to advance deep learning. Our GPU deep learning platform runs every AI framework, and is available in cloud services from Amazon, IBM, Microsoft and Alibaba, and in servers from every OEM. GPU deep learning has sparked a wave of innovations that will usher in the next era of computing,” he said.
+Capital Return
+During the first nine months of fiscal 2017, NVIDIA paid $509 million in share repurchases and $185 million in cash dividends. As a result, the company has returned an aggregate of $694 million to shareholders in the first nine months of the fiscal year. The company intends to return $1.0 billion to shareholders in fiscal 2017. 
+For fiscal 2018, NVIDIA intends to return $1.25 billion to shareholders through ongoing quarterly cash dividends and share repurchases. The company’s board of directors has authorized an additional $2.00 billion under the company’s stock repurchase program for a total of $2.96 billion available through the end of December 2020.
+The company announced a 22 percent increase in its quarterly cash dividend to $0.14 per share from $0.115 per share, to be paid with its next quarterly cash dividend on December 19, 2016, to all shareholders of record on November 28, 2016.
+Q3 FY2017 Summary
+GAAP                                                                                             
+($ in millions except earnings per share)   Q3 FY17   Q2 FY17   Q3 FY16   Q/Q          Y/Y       
+Revenue                                      $2,004    $1,428    $1,305   Up 40 %      Up 54 %   
+Gross margin                                  59.0%     57.9%     56.3%   Up 110 bps   Up 270 bps
+Operating expenses                             $544      $509      $489   Up 7 %       Up 11 %   
+Operating income                               $639      $317      $245   Up 102 %     Up 161 %  
+Net income*                                    $542      $261      $246   Up 108 %     Up 120 %  
+Diluted earnings per share*                   $0.83     $0.41     $0.44   Up 102 %     Up 89 %   
+
+Non-GAAP                                                                                         
+($ in millions except earnings per share)   Q3 FY17   Q2 FY17   Q3 FY16   Q/Q          Y/Y       
+Revenue                                      $2,004    $1,428    $1,305   Up 40 %      Up 54 %   
+Gross margin                                  59.2%     58.1%     56.5%   Up 110 bps   Up 270 bps
+Operating expenses                             $478      $448      $430   Up 7 %       Up 11 %   
+Operating income                               $708      $382      $308   Up 85 %      Up 130 %  
+Net income                                     $570      $313      $255   Up 82 %      Up 124 %  
+Diluted earnings per share                    $0.94     $0.53     $0.46   Up 77 %      Up 104 %  
+* In the third quarter of fiscal 2017, NVIDIA adopted a new accounting standard (ASU 2016-09), which requires adjustments to be reflected beginning in fiscal 2017, including all fiscal quarters within the year. The primary impact of adoption was the recognition of excess tax benefits in the provision for income taxes rather than paid-in capital on the balance sheet. Adoption of the new standard resulted in a GAAP diluted earnings per share benefit of $0.02 and $0.01 for the first and second quarters of fiscal 2017, respectively.
+NVIDIA’s outlook for the fourth quarter of fiscal 2017 is as follows:
+
+•   Revenue is expected to be $2.10 billion, plus or minus two percent.
+
+•   GAAP and non-GAAP gross margins are expected to be 59.0 percent and 59.2 percent, respectively, plus or minus 50 basis points.
+
+•   GAAP operating expenses are expected to be approximately $572 million. Non-GAAP operating expenses are expected to be approximately $500 million.
+
+•   GAAP and non-GAAP tax rates for the fourth quarter of fiscal 2017 are both expected to be 20 percent, plus or minus one percent.
+
+•   Capital expenditures are expected to be approximately $45 million to $55 million.
+Third Quarter Fiscal 2017 Highlights
+Gaming:
+
+•   Announced that NVIDIA® gaming technology will power the Nintendo Switch home gaming system.
+
+•   Expanded its line of Pascal™ GPUs with GeForce® GTX 1050 and GTX 1050 Ti, letting new gamers discover the joy of GeForce PC gaming.
+
+•   Introduced GeForce GTX 1080, 1070 and 1060 for notebooks, giving gamers a state-of-the-art gaming platform in beautifully designed notebooks.
+Datacenter:
+
+•   Expanded the GPU Technology Conference with a world tour of eight cities that broadened its reach this year to 18,000 developers, researchers, scientists and others.
+
+•   Launched Tesla® P40 and P4 GPUs, and the NVIDIA TensorRT deep learning inferencing framework. These expand NVIDIA’s deep learning platform beyond training to speed up AI inferencing production workloads in hyperscale datacenters.
+
+•   Began shipping the NVIDIA DGX-1™ AI supercomputer to research organizations, including OpenAI, Germany’s DFKI and Switzerland’s ITSIA; to universities, including Stanford, New York University and UC Berkeley; and to multinationals, such as SAP.
+
+•   Announced a collaboration with Japan’s FANUC to implement AI to increase robotics productivity and bring new capabilities to automated factories.
+Automotive:
+
+•   Announced that its NVIDIA DRIVE™ PX 2 platform will power a new AutoPilot system in all of Tesla Motors’ factory produced vehicles - the Model S, Model X and upcoming Model 3.
+
+•   Unveiled its next-generation Tegra® processor, codenamed Xavier, an AI supercomputer on a chip for self-driving cars.
+
+•   Partnered with China’s Baidu to develop a self-driving, artificially intelligent car and mapping system.
+
+•   Announced an AI partnership with Europe’s TomTom to create a cloud-to-car mapping system for self-driving cars using NVIDIA DRIVE PX 2.
+CFO Commentary
+Commentary on the quarter by Colette Kress, NVIDIA’s executive vice president and chief financial officer, is available at http://investor.nvidia.com/. 
+Conference Call and Webcast Information
+NVIDIA will conduct a conference call with analysts and investors to discuss its third quarter fiscal 2017 financial results and current financial prospects today at 2 p.m. Pacific time (5 p.m. Eastern time). To listen to the conference call, dial (877) 223-3864 in the United States or (574) 990-1377 internationally, and provide the following conference ID: 945 459 89. A live webcast (listen-only mode) of the conference call will be accessible at NVIDIA’s investor relations website, http://investor.nvidia.com, and at www.streetevents.com. The webcast will be recorded and available for replay until the company’s conference call to discuss its financial results for its fourth quarter and fiscal year 2017.
+Non-GAAP Measures
+To supplement NVIDIA’s Condensed Consolidated Statements of Income and Condensed Consolidated Balance Sheets presented in accordance with GAAP, the company uses non-GAAP measures of certain components of financial performance. These non-GAAP measures include non-GAAP gross profit, non-GAAP gross margin, non-GAAP operating expenses, non-GAAP income from operations, non-GAAP other income (expense), net, non-GAAP income tax expense, non-GAAP net income, non-GAAP net income, or earnings, per diluted share, non-GAAP diluted shares, and free cash flow. In order for NVIDIA’s investors to be better able to compare its current results with those of previous periods, the company has shown a reconciliation of GAAP to non-GAAP financial measures. These reconciliations adjust the related GAAP financial measures to exclude stock-based compensation expense, legal settlement costs, product warranty charge, acquisition-related costs, contributions, restructuring and other charges, gains from non-affiliated investments, interest expense related to amortization of debt discount, loss on early debt conversions, and the associated tax impact of these items, where applicable. Weighted average shares used in the non-GAAP diluted net income per share computation includes the anti-dilution impact of the company’s Note Hedge. Free cash flow is calculated as GAAP net cash provided by operating activities less purchases of property and equipment and intangible assets. NVIDIA believes the presentation of its non-GAAP financial measures enhances the user’s overall understanding of the company’s historical financial performance. The presentation of the company’s non-GAAP financial measures is not meant to be considered in isolation or as a substitute for the company’s financial results prepared in accordance with GAAP, and its non-GAAP measures may be different from non-GAAP measures used by other companies.
+Keep Current on NVIDIA
+Subscribe to the NVIDIA blog, follow us on Facebook, Google+, Twitter, LinkedIn and Instagram, and view NVIDIA videos on YouTube and images on Flickr.
+About NVIDIA
+NVIDIA (NASDAQ: NVDA) is the AI computing company. Its invention of the GPU in 1999 sparked the growth of the PC gaming market, redefined modern computer graphics and revolutionized parallel computing. More recently, GPU deep learning ignited modern AI - the next era of computing - with the GPU acting as the brain of computers, robots and self-driving cars that can perceive and understand the world. More information at http://nvidianews.nvidia.com/. 
+###
+For further information, contact:
+
+Arnab Chanda         Robert Sherbin          
+Investor Relations   Corporate Communications
+NVIDIA Corporation   NVIDIA Corporation      
+(408) 566-6616       (408) 566-5150          
+achanda@nvidia.com   rsherbin@nvidia.com     
+Certain statements in this press release including, but not limited to statements as to: strength across all product lines; Pascal GPUs enjoying great success; the availability of the company’s GPU deep learning platform; the impact of GPU deep learning; the company’s intended capital return for fiscal 2017 and fiscal 2018; the company’s next quarterly cash dividend; the company’s financial outlook for the fourth quarter of fiscal 2017; the company’s tax rates for the fourth quarter of fiscal 2017; and the impact and benefits of NVIDIA gaming technology, GeForce GTX GPUs, Tesla P40 and P4 GPUs, TensorRT, the collaboration with FANUC, DRIVE PX 2, the partnership with Baidu and the AI partnership with TomTom are forward-looking statements that are subject to risks and uncertainties that could cause results to be materially different than expectations. Important factors that could cause actual results to differ materially include: global economic conditions; our reliance on third parties to manufacture, assemble, package and test our products; the impact of technological development and competition; development of new products and technologies or enhancements to our existing product and technologies; market acceptance of our products or our partners’ products; design, manufacturing or software defects; changes in consumer preferences or demands; changes in industry standards and interfaces; unexpected loss of performance of our products or technologies when integrated into systems; as well as other factors detailed from time to time in the reports NVIDIA files with the Securities and Exchange Commission, or SEC, including its Form 10-Q for the fiscal period ended July 31, 2016. Copies of reports filed with the SEC are posted on the company’s website and are available from NVIDIA without charge. These forward-looking statements are not guarantees of future performance and speak only as of the date hereof, and, except as required by law, NVIDIA disclaims any obligation to update these forward-looking statements to reflect future events or circumstances. 
+© 2016 NVIDIA Corporation. All rights reserved. NVIDIA, the NVIDIA logo, GeForce, Tegra, Tesla, NVIDIA DGX-1, NVIDIA DRIVE, and Pascal are trademarks and/or registered trademarks of NVIDIA Corporation in the U.S. and/or other countries. Other company and product names may be trademarks of the respective companies with which they are associated. Features, pricing, availability, and specifications are subject to change without notice.
+
+NVIDIA CORPORATION 
+CONDENSED CONSOLIDATED STATEMENTS OF INCOME
+(In millions, except per share data)
+(Unaudited)
+ 
+                                                                             Three Months Ended                            Nine Months Ended
+                                                             October 30,            October 25,           October 30,            October 25,
+2016                                                                                       2015                  2016                   2015
+Revenue                                                     $2,004                 $1,305                $4,737                 $3,609      
+Cost of revenue                                                821                    571                 1,977                  1,589      
+Gross profit                                                 1,183                    734                 2,760                  2,020      
+Operating expenses                                                                                                                          
+Research and development                                       373                    329                 1,069                    987      
+Sales, general and administrative                              171                    152                   487                    441      
+Restructuring and other charges                                  —                      8                     3                     97      
+Total operating expenses                                       544                    489                 1,559                  1,525      
+Income from operations                                         639                    245                 1,201                    495      
+Interest income                                                 14                      9                    37                     28      
+Interest expense                                               (16     )              (12     )             (39     )              (35     )
+Other income (expense), net                                    (16     )                3                   (19     )                1      
+Income before income tax expense                               621                    245                 1,180                    489      
+Income tax expense (benefit)                                    79                     (1     )             168                     83      
+Net income                                                    $542                   $246                $1,012                   $406      
+Net income per share:                                                                                                                       
+Basic                                                        $1.01                  $0.45                 $1.89                  $0.75      
+Diluted                                                      $0.83                  $0.44                 $1.59                  $0.72      
+Weighted average shares used in per share computation:                                                                                      
+Basic                                                          538                    542                   536                    544      
+Diluted                                                        653                    565                   636                    563      
+
+NVIDIA CORPORATION                                                                                                                                                                      
+CONDENSED CONSOLIDATED BALANCE SHEETS                                                                                                                                                   
+(In millions)                                                                                                                                                                           
+(Unaudited)                                                                                                                                                                             
+                                                                                                                                     October 30,                             January 31,
+                                                                                                                                            2016                                    2016
+ASSETS                                                                                                                                                                                  
+Current assets:                                                                                                                                                                         
+                      Cash, cash equivalents and marketable securities                                                          $6,671                                  $5,037          
+                      Accounts receivable, net                                                                                     833                                     505          
+                      Inventories                                                                                                  679                                     418          
+                      Prepaid expenses and other current assets                                                                    124                                      93          
+                      Total current assets                                                                                       8,307                                   6,053          
+Property and equipment, net                                                                                                        503                                     466          
+Goodwill                                                                                                                           618                                     618          
+Intangible assets, net                                                                                                             120                                     166          
+Other assets                                                                                                                        64                                      67          
+                      Total assets                                                                                              $9,612                                  $7,370          
+LIABILITIES, CONVERTIBLE DEBT CONVERSION OBLIGATION AND SHAREHOLDERS' EQUITY                                                                                                            
+Current liabilities:                                                                                                                                                                    
+                      Accounts payable                                                                                            $523                                    $296          
+                      Accrued and other current liabilities                                                                        507                                     642          
+                      Convertible short-term debt                                                                                1,011                                   1,413          
+                      Total current liabilities                                                                                  2,041                                   2,351          
+Long-term debt                                                                                                                   1,982                                       —          
+Other long-term liabilities                                                                                                        213                                     453          
+Capital lease obligations, long-term                                                                                                 7                                      10          
+                      Total liabilities                                                                                          4,243                                   2,814          
+Convertible debt conversion obligation                                                                                              45                                      87          
+Shareholders' equity                                                                                                             5,324                                   4,469          
+                      Total liabilities, convertible debt conversion obligation and shareholders' equity                        $9,612                                  $7,370          
+
+NVIDIA CORPORATION                                                                                                                                                            
+RECONCILIATION OF GAAP TO NON-GAAP FINANCIAL MEASURES                                                                                                                         
+(In millions, except per share data)                                                                                                                                          
+(Unaudited)                                                                                                                                                                   
+                                                                                                              Three Months Ended                             Nine Months Ended
+                                                                          October 30,            July 31,            October 25,            October 30,            October 25,
+                                                                                 2016                2016                   2015                   2016                   2015
+GAAP gross profit                                                        $1,183                 $826                  $734                 $2,760                 $2,020      
+GAAP gross margin                                                          59.0     %           57.9    %             56.3     %             58.3     %             56.0     %
+Stock-based compensation expense (A)                                          3                    4                     4                     11                     10      
+Legal settlement costs (B)                                                    —                    —                     —                     10                      —      
+Product warranty charge (C)                                                   —                    —                     —                      —                     15      
+Non-GAAP gross profit                                                    $1,186                 $830                  $738                 $2,781                 $2,045      
+Non-GAAP gross margin                                                      59.2     %           58.1    %             56.5     %             58.7     %             56.7     %
+GAAP operating expenses                                                    $544                 $509                  $489                 $1,559                 $1,525      
+Stock-based compensation expense (A)                                        (62     )            (54    )              (47     )             (166     )             (134     )
+Legal settlement costs (B)                                                    —                    —                     —                     (6     )                —      
+Acquisition-related costs (D)                                                (4     )             (4    )               (4     )              (12     )              (18     )
+Contributions                                                                 —                   (1    )                —                     (4     )                —      
+Restructuring and other charges                                               —                   (2    )               (8     )               (3     )              (97     )
+Non-GAAP operating expenses                                                $478                 $448                  $430                 $1,368                 $1,276      
+GAAP income from operations                                                $639                 $317                  $245                 $1,201                   $495      
+Total impact of non-GAAP adjustments to income from operations               69                   65                    63                    211                    274      
+Non-GAAP income from operations                                            $708                 $382                  $308                 $1,412                   $769      
+GAAP other income (expense), net                                           $(18     )             $—                    $—                   $(21     )              $(6     )
+Gains from non-affiliated investments                                         —                    —                    (4     )               (3     )               (4     )
+Interest expense related to amortization of debt discount                     6                    7                     7                     20                     21      
+Loss on early debt conversions                                               15                    —                     —                     15                      —      
+Non-GAAP other income (expense), net                                         $3                   $7                    $3                    $11                    $11      
+GAAP net income*                                                           $542                 $261                  $246                 $1,012                   $406      
+Total pre-tax impact of non-GAAP adjustments                                 90                   72                    66                    243                    291      
+Income tax impact of non-GAAP adjustments                                   (62     )            (20    )              (57     )             (108     )              (65     )
+Non-GAAP net income                                                        $570                 $313                  $255                 $1,147                   $632      
+
+                                                                                                                     Three Months Ended                            Nine Months Ended
+                                                                                   October 30,           July 31,           October 25,           October 30,            October 25,
+                                                                                          2016               2016                  2015                  2016                   2015
+Diluted net income per share                                                                                                                                                        
+GAAP*                                                                              $0.83               $0.41                $0.44                 $1.59                  $0.72      
+Non-GAAP                                                                           $0.94               $0.53                $0.46                 $1.93                  $1.13      
+Weighted average shares used in diluted net income per share computation                                                                                                            
+GAAP*                                                                                653                 634                  565                   636                    563      
+Anti-dilution impact from note hedge (E)                                             (45     )           (43    )             (10     )             (42     )               (6     )
+Non-GAAP                                                                             608                 591                  555                   594                    557      
+GAAP net cash provided by operating activities*                                     $432                $201                 $255                  $951                   $664      
+Purchase of property and equipment and intangible assets                             (38     )           (33    )             (16     )            (125     )              (71     )
+Free cash flow                                                                      $394                $168                 $239                  $826                   $593      
+* In third quarter of fiscal 2017, NVIDIA adopted an accounting standard (ASU 2016-09), which requires adjustments to be reflected beginning in fiscal 2017, including all fiscal quarters within the year.
+
+(A) Excludes stock-based compensation as follows:                                                                                                                                                                                                                                                                                                                                    
+                                                     Three Months Ended                                                                                                                                                                                          Nine Months Ended                                                                                                   
+                                                     October 30,                                                         July 31,                                                            October 25,                                                         October 30,                                                         October 25,                                     
+                                    2016                                                                2016                                                                2015                                                                2016                                                                2015                                                             
+Cost of revenue                                      $3                                                                  $4                                                                  $4                                                                  $11                                                                 $10                                             
+Research and development                             $35                                                                 $30                                                                 $28                                                                 $95                                                                 $82                                             
+Sales, general and administrative                    $27                                                                 $24                                                                 $19                                                                 $71                                                                 $53                                             
+(B) Legal settlement with Advanced Silicon Technologies LLC and other settlement related costs.                                                                                                                                                                                                                                                                                      
+(C) Represents warranty charge associated with a product recall.                                                                                                                                                                                                                                                                                                                     
+(D) Consists of amortization of acquisition-related intangible assets, transaction costs, compensation charges, and other credits related to acquisitions.                                                                                                                                                                                                                           
+(E) Represents the number of shares that would be delivered upon conversion of the currently outstanding 1.00% Convertible Senior Notes Due 2018. Under GAAP, shares delivered in hedge transactions are not considered offsetting shares in the fully diluted share calculation until actually delivered.                                                                           
+
+NVIDIA CORPORATION                                                                                                                  
+RECONCILIATION OF GAAP TO NON-GAAP OUTLOOK                                                                                          
+                                                                                                                   Q4 FY2017 Outlook
+GAAP gross margin                                                                                                     59.0         %
+                Impact of stock-based compensation expense                                                             0.2         %
+Non-GAAP gross margin                                                                                                 59.2         %
+                                                                                                                   Q4 FY2017 Outlook
+                                                                                                                       (In millions)
+GAAP operating expenses                                                                                               $572          
+                Stock-based compensation expense, acquisition-related costs, and other costs                           (72         )
+Non-GAAP operating expenses                                                                                           $500          
+
