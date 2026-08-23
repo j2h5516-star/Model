@@ -80,6 +80,83 @@ def test_검색이_자료있는_종목_전부를_훑는다():
         "못찾음판이 검색 결과에 배선되지 않았습니다"
 
 
+def test_수집이_실제로_분기를_돌려준다():
+    """(150차-S) **이 시험이 없어서 한 번도 안 되는 코드를 커밋했습니다.**
+
+    무슨 일이 있었나: `collect_job.collect_fundamentals()` 가 분기 자료를
+    돌려준다고 **짐작하고** 썼습니다. 그 함수는 진단 보고만 돌려주고
+    분기는 버립니다. 그래서 워크플로가 언제나 "분기 0개 → 실패"로
+    끝났습니다. 실제로 깃허브에서 돌려 보고서야 알았습니다.
+
+    그때 있던 시험들은 **입력 검사·글자 있나**만 봤지 수집 함수를
+    **한 번도 부르지 않았습니다.** 여기서 실제로 부릅니다 — SEC 는
+    안 두드리고 가짜로 갈아끼워서.
+    """
+    import config as cfg
+    import market_data as md
+    import sec_fundamentals as sf
+    import fixtures as fx
+
+    분기 = fx.make_quarters([10, 12, 14, 16, 18, 21, 25, 30, 36, 43, 52, 62])
+    for i, q in enumerate(분기):
+        q["adj_eps"] = 0.10 + 0.02 * i
+        q["announced_date"] = q["filing_date"]
+    주가 = fx.trending_daily(900)
+
+    옛것 = (sf.get_fundamentals, sf._ensure_identity, md.fetch_daily_data)
+    try:
+        sf._ensure_identity = lambda *a, **k: None
+        sf.get_fundamentals = lambda t, *a, **k: (분기, {})
+        md.fetch_daily_data = lambda ts, *a, **k: (
+            {t: 주가 for t in ts}, [])
+        수집 = co.한종목_수집("ZZTEST", progress=lambda *a: None)
+    finally:
+        sf.get_fundamentals, sf._ensure_identity, md.fetch_daily_data = 옛것
+
+    assert 수집["eps"], "분기를 하나도 못 받았습니다 — 수집 경로가 끊겼습니다"
+    assert len(수집["eps"]) == len(분기), \
+        f"분기 {len(분기)}개를 넣었는데 {len(수집['eps'])}개가 나왔습니다"
+    assert "adj_eps" in 수집["eps"][0], \
+        f"판정 표본과 칸 이름이 다릅니다: {sorted(수집['eps'][0])[:6]}"
+
+    # 주가는 **판정 표본과 같은 모양**이어야 dataset 이 읽습니다
+    for t in ("ZZTEST", cfg.BENCHMARK):
+        p = 수집["prices"].get(t)
+        assert isinstance(p, dict) and p.get("dates") and p.get("close"), \
+            f"{t} 주가 모양이 판정 표본과 다릅니다: {type(p).__name__}"
+    assert 수집["성공"] is True, 수집["말"]
+
+    # 그리고 이 수집물로 **화면 자료가 실제로 만들어져야** 합니다
+    화면 = co.화면자료_만들기(수집, progress=lambda *a: None)
+    assert 화면 is not None, "수집은 됐는데 화면 자료를 못 만들었습니다"
+    assert 화면.get("요청수집") is True and 화면.get("안내"), 화면.keys()
+
+
+def test_요청수집_파일이_깃에_올라간다():
+    """(150차-S) 파일을 만들고도 `.gitignore` 에 걸려 **사라졌습니다.**
+
+    실행 로그 그대로: `The following paths are ignored by one of your
+    .gitignore files: data/lookup` → `변경 없음 — 커밋 생략`.
+    만들어도 저장소에 안 올라가면 주인 휴대폰에는 영원히 안 뜹니다.
+    """
+    import subprocess
+
+    for 경로 in ("data/lookup/ZZTEST.json", "docs/data/t/ZZTEST.json"):
+        r = subprocess.run(["git", "check-ignore", "-q", 경로],
+                           cwd=ROOT, capture_output=True)
+        assert r.returncode != 0, (
+            f"{경로} 가 .gitignore 에 걸려 커밋되지 않습니다 — "
+            "워크플로가 만들고도 버립니다")
+
+    wf = os.path.join(ROOT, ".github", "workflows", "collect_one.yml")
+    with open(wf, encoding="utf-8") as f:
+        글 = f.read()
+    커밋줄 = " ".join(l for l in 글.splitlines()
+                   if l.strip().startswith("git add"))
+    for 폴더 in ("data/lookup", "docs/data/t"):
+        assert 폴더 in 커밋줄, f"워크플로가 {폴더} 를 커밋하지 않습니다"
+
+
 def test_워크플로가_실제로_스크립트를_부른다():
     wf = os.path.join(ROOT, ".github", "workflows", "collect_one.yml")
     with open(wf, encoding="utf-8") as f:

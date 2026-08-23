@@ -61,28 +61,51 @@ def 한종목_수집(ticker: str, progress=print) -> dict:
     돌려주는 것: {"종목", "eps", "prices", "성공", "말"}
     실패해도 **예외를 던지지 않습니다** — 워크플로가 조용히 죽으면
     주인은 왜 안 나오는지 모릅니다. 실패 사실을 그대로 담아 돌려줍니다.
+
+    ⚠️ **매일 도는 로봇과 똑같은 길로 만듭니다** (150차-S 에 크게 데었음).
+    처음엔 `collect_job.collect_fundamentals()` 를 불렀는데, 그 함수는
+    **진단 보고만** 돌려주고 분기 자료는 버립니다. 그래서 이 자리가
+    언제나 "분기 0개"였고 **한 번도 성공한 적이 없었습니다.** 로봇은
+    `sec_fundamentals.get_fundamentals()` → `measure_store.eps_rows()` 로
+    갑니다. 여기도 같은 길을 씁니다 — 다른 길을 내면 또 갈라집니다.
     """
-    import collect_job as cj
     import config as cfg
     import market_data as md
+    import measure_store as ms
+    import sec_fundamentals as sf
 
     t0 = time.time()
-    보고 = cj.collect_fundamentals([ticker], progress=progress)
-    eps = (보고[0] or {}).get("quarters") or [] if 보고 else []
-    오류 = (보고[0] or {}).get("first_error") if 보고 else "수집 실패"
+    sf._ensure_identity()          # SEC 는 신원 없는 요청을 막습니다(403)
+    오류 = None
+    quarters: list[dict] = []
+    try:
+        quarters, 보고 = sf.get_fundamentals(ticker, use_cache=False)
+        오류 = (보고 or {}).get("first_error")
+    except Exception as exc:       # 한 종목 때문에 워크플로가 죽지 않게
+        오류 = f"{type(exc).__name__}: {str(exc)[:160]}"
+    # 로봇이 판정 표본을 만들 때 쓰는 것과 **같은 변환**입니다
+    eps = ms.eps_rows(quarters)
 
     daily, _실패 = md.fetch_daily_data([ticker, cfg.BENCHMARK])
+    # 판정 표본과 **같은 모양**으로 옮겨 적습니다 — 날짜·종가 목록.
+    # 받아 온 표를 그대로 넘기면 dataset.build 가 못 읽습니다(150차-S).
+    prices = {t: ms.price_rows(daily.get(t))
+              for t in (ticker, cfg.BENCHMARK)}
     걸린 = time.time() - t0
 
-    성공 = bool(eps) and ticker in daily
+    주가있음 = bool(prices.get(ticker, {}).get("dates"))
+    기준지수있음 = bool(prices.get(cfg.BENCHMARK, {}).get("dates"))
+    성공 = bool(eps) and 주가있음 and 기준지수있음
     말 = []
     if not eps:
         말.append(f"실적을 못 읽었습니다{(' — ' + str(오류)[:80]) if 오류 else ''}")
-    if ticker not in daily:
+    if not 주가있음:
         말.append("주가를 못 받았습니다 (상장 폐지·코드 오타일 수 있습니다)")
-    progress(f"{ticker}: 분기 {len(eps)}개 · 주가 {'있음' if ticker in daily else '없음'}"
-             f" · {걸린:.1f}초")
-    return {"종목": ticker, "eps": eps, "prices": daily,
+    if not 기준지수있음:
+        말.append(f"기준지수({cfg.BENCHMARK}) 주가를 못 받아 견줄 수가 없습니다")
+    progress(f"{ticker}: 분기 {len(eps)}개 · 주가 {'있음' if 주가있음 else '없음'}"
+             f" · 기준지수 {'있음' if 기준지수있음 else '없음'} · {걸린:.1f}초")
+    return {"종목": ticker, "eps": eps, "prices": prices,
             "성공": 성공, "말": " / ".join(말), "초": round(걸린, 1)}
 
 

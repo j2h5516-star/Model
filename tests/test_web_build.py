@@ -499,6 +499,62 @@ def test_종목의_신호는_가장_최근_완성으로_판단한다():
         "웹앱이 계기판과 같은 함수를 쓰지 않습니다"
 
 
+def test_웹앱_경로는_전부_상대경로다():
+    """웹앱은 `/Model/` **하위**에 배포됩니다 — 절대경로를 쓰면 404 입니다.
+
+    왜 시험으로 막는가 (150차-R):
+      주소는 `https://j2h5516-star.github.io/Model/` 입니다. 사이트 뿌리가
+      아니라 **한 칸 아래**입니다. 그래서 `/data/app.json` 처럼 슬래시로
+      시작하는 경로를 쓰면 브라우저가 `github.io/data/app.json` 을 찾아
+      **아무것도 안 나옵니다.** 지금은 전부 상대경로지만, 누가 나중에
+      절대경로를 하나만 넣어도 화면이 통째로 빕니다.
+
+      개발 환경은 `github.io` 가 조직 정책으로 막혀 있어(403) **세션이
+      사이트를 직접 열어 확인할 수 없습니다.** 사람이 못 보는 자리는
+      기계가 막아야 합니다.
+
+    허용하는 것: `"/"`(구분자) · `/>`(SVG 닫기) · `//`(프로토콜 생략) ·
+    `#/home`(해시 주소) · `data:`·`https:` 로 시작하는 것.
+    막는 것: 슬래시 **하나**로 시작해 글자·숫자가 이어지는 경로.
+    """
+    import re
+
+    root = os.path.join(os.path.dirname(__file__), "..", "docs")
+    # 슬래시 하나 + 글자/숫자 — 이것만이 "사이트 뿌리부터"라는 뜻입니다
+    문자열속 = re.compile(r"""["'`]/(?![/])[A-Za-z0-9_.-]""")
+    태그속 = re.compile(r"""\b(?:src|href)\s*=\s*["']/(?![/])""")
+
+    걸린 = []
+    for 이름 in ("index.html", "app.js", "manifest.json", "style.css"):
+        p = os.path.join(root, 이름)
+        if not os.path.exists(p):
+            continue
+        with open(p, encoding="utf-8") as f:
+            글 = f.read()
+        패턴 = (태그속,) if 이름.endswith(".html") else (문자열속,)
+        for pat in 패턴:
+            for m in pat.finditer(글):
+                줄 = 글.count("\n", 0, m.start()) + 1
+                걸린.append(f"{이름}:{줄} {글[m.start():m.start() + 40]!r}")
+
+    assert not 걸린, (
+        "절대경로가 있습니다 — `/Model/` 하위 배포에서 404 가 납니다:\n  "
+        + "\n  ".join(걸린))
+
+
+def test_웹앱_주소가_문서에_적혀_있다():
+    """주인이 휴대폰으로 들어갈 주소는 문서에 있어야 합니다 (150차-R).
+
+    세션들이 "Pages 를 켜세요"를 여러 회차에 걸쳐 되풀이했습니다 —
+    이미 켜져 있었는데도. 주소가 적혀 있으면 그 넘겨짚기가 안 나옵니다.
+    """
+    root = os.path.join(os.path.dirname(__file__), "..")
+    with open(os.path.join(root, "인수인계.md"), encoding="utf-8") as f:
+        글 = f.read()
+    assert "j2h5516-star.github.io/Model" in 글, \
+        "인수인계.md 에 웹앱 주소가 없습니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
