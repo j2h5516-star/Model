@@ -260,26 +260,73 @@ def test_실행스위치_뒤에_갇힌_시험이_없다():
       아닌, 예전부터 잠들어 있던 것이었습니다 (150차-V).
 
     사람이 조심해서 될 일이 아닙니다. 기계가 막습니다.
+
+    ⚠️ **이 검사 자체에도 결함이 있었습니다** (150차-AE). 처음에는
+    `글.find('if __name__ ==')` 로 스위치를 찾았는데, 그 글자가 바로 이
+    설명글 안에도 들어 있어서 **설명글을 스위치로 착각**했습니다. 그래서
+    이 함수 뒤에 시험을 하나 더 넣자 가짜 경보가 떴습니다.
+    지금은 **줄 맨 앞에서 시작하는 것**만 스위치로 봅니다 — 설명글 안의
+    인용은 들여쓰기가 있어 걸리지 않습니다.
     """
     import re
 
     d = os.path.join(ROOT, "tests")
     갇힘 = []
+    # 줄 **맨 앞**(들여쓰기 없음)에서 시작하는 것만 진짜 실행 스위치입니다
+    스위치 = re.compile(r"^if __name__ ==", re.M)
     for f in sorted(os.listdir(d)):
         if not (f.startswith("test_") and f.endswith(".py")):
             continue
         with open(os.path.join(d, f), encoding="utf-8") as fh:
             글 = fh.read()
-        i = 글.find('if __name__ ==')
-        if i < 0:
+        m = 스위치.search(글)
+        if m is None:
             갇힘.append(f"{f}: 실행 스위치가 아예 없습니다")
             continue
+        i = m.start()
         뒤 = re.findall(r"^def (test_\w+)", 글[i:], re.M)
         if 뒤:
             갇힘.append(f"{f}: 스위치 뒤에 {len(뒤)}개 — {뒤}")
     assert not 갇힘, (
         "실행 스위치 **뒤**에 적혀 한 번도 돌지 않는 시험이 있습니다. "
         "그 블록을 파일 맨 끝으로 옮기세요:\n  " + "\n  ".join(갇힘))
+
+
+def test_공시원문_캐시는_시간초과에도_저장된다():
+    """(150차-AE) **스스로 못 빠져나오는 덫**이었습니다.
+
+    2026-08-23 런이 300분 한도에 걸려 취소되자, `actions/cache@v4` 의
+    저장 단계가 통째로 건너뛰어졌습니다(그 액션은 성공했을 때만
+    저장합니다). 그래서 4시간 26분 동안 받은 새 151종목 공시 원문이
+    전부 버려졌습니다. 다음 날도 캐시가 비어 있으니 똑같이 4시간 반이
+    걸리고 또 취소됩니다 — 영원히 반복됩니다.
+
+    그래서 복원(restore)과 저장(save)을 나누고, 저장에 always 조건을
+    답니다. 이 한 줄이 덫을 끊습니다.
+    """
+    import re
+    path = os.path.join(ROOT, ".github", "workflows", "collect.yml")
+    with open(path, encoding="utf-8") as f:
+        글 = f.read()
+
+    assert "actions/cache/restore@v4" in 글, "캐시 복원 단계가 없습니다"
+    assert "actions/cache/save@v4" in 글, (
+        "캐시 **저장** 단계가 없습니다 — 시간 초과 시 받은 원문이 버려집니다")
+    # 통짜 액션은 성공했을 때만 저장하므로 다시 쓰면 안 됩니다
+    assert not re.search(r"uses:\s*actions/cache@v4", 글), (
+        "actions/cache 통짜를 다시 쓰고 있습니다 — 취소되면 저장이 "
+        "건너뛰어집니다 (150차-AE 의 사고)")
+
+    # 저장 단계에 always 조건이 실제로 붙어 있는가
+    자리 = 글.index("actions/cache/save@v4")
+    앞토막 = 글[max(0, 자리 - 400):자리]
+    assert "if: always()" in 앞토막, (
+        "캐시 저장에 always 조건이 없습니다 — 취소·실패하면 저장이 "
+        "건너뛰어져 다음 런도 똑같이 시간 초과합니다")
+
+    # 저장이 **수집 실행 뒤**에 와야 합니다 (앞이면 받기 전에 저장)
+    assert 글.index("python collect_job.py") < 자리, (
+        "캐시 저장이 수집 실행보다 앞에 있습니다 — 받기 전에 저장합니다")
 
 
 if __name__ == "__main__":
