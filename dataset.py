@@ -100,10 +100,107 @@ def load(path: str | None = None) -> dict:
         return json.load(f)
 
 
+def _단위를_이웃으로_고치기(ticker: str, rows: list[dict], notes: list[str]) -> dict:
+    """XBRL 자가 없는 행의 단위를 **그 종목 자신의 성한 분기**로 고칩니다.
+
+    ────────────────────────────────────────────────────────────────
+    왜 두 번째 자가 필요한가 (150차-W)
+    ────────────────────────────────────────────────────────────────
+    150차-V 에서 **XBRL 영업이익**을 자로 삼아 천 단위 오류를 고쳤습니다.
+    실측으로 크리도 11칸이 되살아났습니다. 그런데 한 칸이 남았습니다:
+
+        CRDO 2025-05-03  영업이익 62,523 ↔ 매출 170,025,000 = 마진 0.04%
+                         XBRL 영업이익 **없음** ← 잴 자가 없다
+
+    이 행은 **구멍을 메워 새로 만든 행**(150차-Q)이라 짝지을 XBRL 행이
+    없습니다. 자가 없으면 150차-V 는 아무것도 안 합니다.
+
+    ────────────────────────────────────────────────────────────────
+    두 번째 자 — **이 회사의 보도자료가 천 단위임이 이미 증명된 경우에만**
+    ────────────────────────────────────────────────────────────────
+    처음에는 "이웃 분기 마진 안에 들어오는 배수"로 고치려 했습니다.
+    **그건 위험합니다.** 진짜로 손익분기인 분기(매출 10억, 영업이익
+    50만 = 마진 0.05%)를 1,000배 부풀려 버립니다. "없음"은 안전하고
+    "틀림"은 위험합니다(헌법 1조).
+
+    그래서 근거를 바꿉니다. 150차-V 의 XBRL 자가 **같은 종목의 다른
+    분기에서** 배수를 이미 정해 두었다면, 그것은 "이 회사의 보도자료
+    표가 천 단위로 찍힌다"는 **독립된 증명**입니다. 표가 천 단위면
+    그 표에서 나온 **모든 값**이 천 단위입니다 — 진짜로 작은 값이든
+    큰 값이든 똑같이 ×1,000 이 맞습니다.
+
+        CRDO: XBRL 자가 11분기에서 ×1,000 을 정함
+              → 2025-05-03 (자 없는 구멍 메움 행)도 ×1,000
+              62,523 × 1,000 ÷ 170,025,000 = 36.8%
+
+    조건 넷을 모두 넘어야 고칩니다:
+      ① 같은 종목에서 XBRL 자가 정한 배수가 **하나뿐**이고 **2분기 이상**
+      ② 이 행에는 XBRL 자가 없다 (있으면 150차-V 가 이미 봤다)
+      ③ 지금 값이 매출의 0.1% 미만이다 (= 어차피 버려질 값)
+      ④ 그 배수를 곱하면 이 종목의 성한 분기 마진 띠 안에 들어온다
+
+    하나라도 못 넘으면 **아무것도 안 합니다** — 지금처럼 버려집니다.
+
+    돌려주는 것: {분기끝: 곱한 배수} — 고친 것만.
+    """
+    # ① 이 종목에서 XBRL 자가 정한 배수 (150차-V 가 남긴 자취)
+    증명된 = [r.get("unit_scale_fixed") for r in rows
+            if r.get("op_income_xbrl") is not None
+            and isinstance(r.get("unit_scale_fixed"), int)
+            and r["unit_scale_fixed"] > 1]
+    if len(증명된) < 2 or len(set(증명된)) != 1:
+        return {}
+    배수 = 증명된[0]
+
+    # ④ 를 위한 성한 분기 마진 띠
+    성한 = []
+    for r in rows:
+        rev, op = r.get("revenue"), r.get("op_income")
+        if not _finite_number(rev) or not _finite_number(op) or rev < 10_000_000:
+            continue
+        m = abs(op / rev)
+        if 0.001 <= m <= 0.9:
+            성한.append(m)
+    if len(성한) < 3:
+        return {}
+    성한.sort()
+    아래 = max(성한[0] / 3.0, 0.0005)
+    위 = min(성한[-1] * 3.0, 0.95)
+
+    고침: dict[str, int] = {}
+    for r in rows:
+        rev, op = r.get("revenue"), r.get("op_income")
+        if not _finite_number(rev) or not _finite_number(op) or rev < 10_000_000:
+            continue
+        if op == 0 or abs(op) >= rev * 0.001:
+            continue                   # ③ 성한 값 — 건드리지 않는다
+        if r.get("op_income_xbrl") is not None:
+            continue                   # ② XBRL 자가 이미 봤다
+        if not (아래 <= abs(op * 배수 / rev) <= 위):
+            continue                   # ④ 띠 밖 — 고치지 않는다
+        for 돈칸 in ("op_income", "adjusted_ebitda"):
+            if _finite_number(r.get(돈칸)):
+                r[돈칸] = r[돈칸] * 배수
+        r["unit_scale_fixed"] = 배수
+        고침[str(r.get("filing_date"))] = 배수
+        notes.append(
+            f"{ticker} {r.get('period_label', '?')}: 영업이익 {op:,.0f} 은 "
+            f"매출 {rev:,.0f} 대비 마진 {op / rev * 100.0:.3f}% 였는데, "
+            f"같은 종목 {len(증명된)}분기에서 XBRL 자가 ×{배수:,} 로 이미 "
+            f"정해 둔 배수이고 그것을 곱하면 성한 분기 마진 띠"
+            f"({아래 * 100:.1f}~{위 * 100:.1f}%) 안에 들어와 고쳤습니다 (150차-W)"
+        )
+    return 고침
+
+
 def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
     """종목별 분기 행을 검사·정렬합니다. 원본은 바꾸지 않습니다."""
     cleaned: dict[str, list[dict]] = {}
     for ticker, rows in (eps_map or {}).items():
+        # 단위 고치기를 **버리기 전에** 합니다 (150차-W).
+        # 원본을 바꾸지 않으려 사본 목록으로 넘깁니다.
+        rows = [dict(r) for r in (rows or [])]
+        _단위를_이웃으로_고치기(ticker, rows, notes)
         kept: list[dict] = []
         for row in rows or []:
             # 시간축이 없는 행은 어디에도 놓을 수 없으므로 버립니다

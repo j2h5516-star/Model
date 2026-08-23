@@ -1304,6 +1304,22 @@ def test_어떤_띠에서도_배수는_둘_이상_맞을_수_없다():
                     f"배수가 {맞는} 로 여럿 맞습니다")
 
 
+def test_두_번_불려도_배수가_두_번_곱해지지_않는다():
+    """(150차-V) 같은 보도자료로 두 번 부르면 1,000,000배가 되면 안 됩니다.
+
+    지금은 `used_press` 가 같은 보도자료를 두 번 쓰지 못하게 막지만,
+    그 방어막이 언젠가 바뀌면 조용히 1,000배가 더 곱해집니다.
+    넘겨받은 자료를 제자리에서 고치지 않는 것으로 구조로 막습니다.
+    """
+    press = {"op_income": 3_399.0, "source": "직접공시"}
+    for _ in range(2):
+        row = {"op_income": 3_152_000.0}
+        sf._apply_press_to_row(row, press)
+        assert row["op_income"] == 3_399_000.0, (
+            f"두 번째에 배수가 또 곱해졌습니다: {row['op_income']}")
+    assert press["op_income"] == 3_399.0, "넘겨받은 자료를 제자리에서 고쳤습니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

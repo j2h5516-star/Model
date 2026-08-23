@@ -3064,6 +3064,13 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
     if 배수 and 배수 > 1:
         # **같은 문서에서 온 돈 값**에 같은 배수를 적용합니다.
         # 한 표의 단위는 하나이므로, 하나가 천 단위면 나머지도 천 단위입니다.
+        #
+        # ⚠️ 넘겨받은 `press` 를 **제자리에서 고치지 않습니다.** 사본을
+        #    만들어 씁니다. 지금은 `used_press` 가 같은 보도자료를 두 번
+        #    쓰지 못하게 막고 있지만, 그 방어막이 언젠가 바뀌면 배수가
+        #    두 번 곱해져 1,000,000배가 됩니다. 조용히 틀리는 쪽이라
+        #    구조로 막아 둡니다.
+        press = dict(press)
         for _돈칸 in ("op_income", "adjusted_ebitda"):
             if press.get(_돈칸) is not None:
                 press[_돈칸] = press[_돈칸] * 배수
