@@ -109,6 +109,105 @@ def 한종목_수집(ticker: str, progress=print) -> dict:
             "성공": 성공, "말": " / ".join(말), "초": round(걸린, 1)}
 
 
+def 단위진단(ticker: str, progress=print) -> dict:
+    """보도자료가 **단위 표기를 어디에 두었는지** 실물로 확인합니다 (150차-U).
+
+    왜 필요한가 — 주인 질문("값이 왜 비지? 어떻게 가져오지?")의 답을 찾기
+    위해서입니다. 실데이터에서 영업이익·EBITDA **1,800칸**이 "단위 착오
+    의심"으로 버려지고 있습니다(138종목). 크리도는 영업이익 19칸 중 11칸.
+
+        CRDO 26 Q4: 영업이익 216,722 ↔ 매출 437,003,000 → 마진 0.05%
+        216,722 **천 달러** = 2억 1,672만 → 마진 49.6% 가 맞는 값
+
+    매출은 단위를 제대로 읽는데 영업이익은 못 읽습니다. `_detect_table_unit`
+    은 숫자 **앞쪽 3,000자**만 훑어 "(in thousands)" 를 찾고, **못 찾으면
+    1(단위 없음)** 로 봅니다. 그 3,000자가 모자란 것인지, 표기가 아예
+    없는 것인지 — **짐작하지 말고 원문에서 봅니다.**
+
+    개발 환경은 SEC 가 막혀 원문을 못 봅니다. 이 함수는 **깃허브에서**
+    돕니다(150차-S 에서 워크플로를 직접 띄울 수 있음을 확인). 수집이
+    끝난 뒤 `data/raw8k/<종목>/` 에 남은 원문 캐시를 읽습니다.
+
+    **읽기만 합니다** — 어떤 값도 고치지 않습니다.
+    """
+    import re
+    import config as cfg
+    import sec_fundamentals as sf
+
+    폴더 = os.path.join(cfg.RAW8K_CACHE_DIR, ticker)
+    if not os.path.isdir(폴더):
+        return {"본 문서": 0, "말": "원문 캐시가 없습니다"}
+
+    def 라벨위치(text, patterns):
+        for p in patterns:
+            m = re.search(p, text, re.I | re.M)
+            if m:
+                return m.start()
+        return None
+
+    def 가장가까운단위(text, pos):
+        """숫자 앞쪽 **전체**에서 가장 가까운 단위 표기와 그 거리."""
+        best = (None, None)
+        앞 = text[:pos]
+        for pattern, _ in sf._UNIT_PATTERNS:
+            for m in pattern.finditer(앞):
+                거리 = pos - m.start()
+                if best[1] is None or 거리 < best[1]:
+                    best = ((m.group(1) or "").lower(), 거리)
+        return best
+
+    본것 = 0
+    사례: list[dict] = []
+    요약 = {"매출만 단위 찾음": 0, "둘 다 찾음": 0, "둘 다 못 찾음": 0,
+           "영업이익만 찾음": 0, "표기가 문서에 아예 없음": 0}
+    for 이름 in sorted(os.listdir(폴더)):
+        if not 이름.endswith(".json"):
+            continue
+        try:
+            with open(os.path.join(폴더, 이름), encoding="utf-8") as f:
+                text = (json.load(f) or {}).get("text") or ""
+        except Exception:
+            continue
+        if not text:
+            continue
+        본것 += 1
+        rev위치 = 라벨위치(text, sf.LABELS_REVENUE)
+        op위치 = 라벨위치(text, sf.LABELS_NONGAAP_OP_INCOME)
+        if op위치 is None:
+            continue
+        rev단위 = sf._detect_table_unit(text, rev위치) if rev위치 is not None else None
+        op단위 = sf._detect_table_unit(text, op위치)
+        가까운말, 거리 = 가장가까운단위(text, op위치)
+
+        if 가까운말 is None:
+            요약["표기가 문서에 아예 없음"] += 1
+        elif op단위 > 1 and (rev단위 or 1) > 1:
+            요약["둘 다 찾음"] += 1
+        elif op단위 == 1 and (rev단위 or 1) > 1:
+            요약["매출만 단위 찾음"] += 1
+        elif op단위 > 1:
+            요약["영업이익만 찾음"] += 1
+        else:
+            요약["둘 다 못 찾음"] += 1
+
+        if len(사례) < 6 and op단위 == 1 and 가까운말:
+            사례.append({
+                "문서": 이름,
+                "매출_단위배수": rev단위,
+                "영업이익_단위배수": op단위,
+                "가장가까운표기": 가까운말,
+                "그 표기까지_글자수": 거리,
+                "훑는_창": 3000,
+                "창_밖인가": 거리 > 3000,
+                "영업이익_둘레": text[max(0, op위치 - 60):op위치 + 160]
+                                .replace("\n", " ")[:220],
+            })
+
+    progress(f"[단위진단] 원문 {본것}건 — " +
+             " · ".join(f"{k} {v}" for k, v in 요약.items() if v))
+    return {"본 문서": 본것, "요약": 요약, "사례": 사례}
+
+
 def 화면자료_만들기(수집: dict, progress=print) -> dict | None:
     """수집물 하나로 종목 상세 화면 자료를 만듭니다.
 
@@ -155,7 +254,8 @@ def 화면자료_만들기(수집: dict, progress=print) -> dict | None:
     return d
 
 
-def 저장(수집: dict, 화면: dict | None, progress=print) -> list[str]:
+def 저장(수집: dict, 화면: dict | None, progress=print,
+       진단: dict | None = None) -> list[str]:
     """보기 전용 수집물과 화면 자료를 파일로. 판정 표본은 안 건드립니다."""
     쓴것 = []
     os.makedirs(LOOKUP_DIR, exist_ok=True)
@@ -164,6 +264,7 @@ def 저장(수집: dict, 화면: dict | None, progress=print) -> list[str]:
         json.dump({"종목": 수집["종목"], "수집시각": time.strftime(
             "%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "성공": 수집["성공"], "말": 수집["말"],
+            "단위진단": 진단,          # 원문이 단위를 어디에 뒀나 (150차-U)
             "eps": 수집["eps"]}, f, ensure_ascii=False)
     쓴것.append(p)
     if 화면 is not None:
@@ -187,8 +288,14 @@ def main(argv: list[str]) -> int:
         return 2
     print(f"=== {ticker} 지금 수집 ===")
     수집 = 한종목_수집(ticker)
+    # 원문이 단위를 어디에 뒀는지 — 수집 뒤 캐시가 있을 때만 볼 수 있습니다
+    try:
+        진단 = 단위진단(ticker)
+    except Exception as exc:                  # 진단 때문에 수집을 잃지 않음
+        print(f"⚠️ 단위진단 실패: {type(exc).__name__}: {str(exc)[:120]}")
+        진단 = None
     화면 = 화면자료_만들기(수집)
-    저장(수집, 화면)
+    저장(수집, 화면, 진단=진단)
     if not 수집["성공"]:
         print(f"⛔ {ticker}: {수집['말']}")
         return 1

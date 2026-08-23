@@ -132,6 +132,52 @@ def test_수집이_실제로_분기를_돌려준다():
     assert 화면.get("요청수집") is True and 화면.get("안내"), 화면.keys()
 
 
+def test_단위진단이_창밖의_표기를_찾아낸다():
+    """(150차-U) 주인 질문 — "값이 왜 비지? 어떻게 가져오지?"
+
+    영업이익·EBITDA **1,800칸**이 "단위 착오 의심"으로 버려지고 있습니다
+    (138종목). 매출은 단위를 제대로 읽는데 영업이익은 못 읽습니다.
+    `_detect_table_unit` 은 숫자 **앞쪽 3,000자**만 훑고, 못 찾으면
+    1(단위 없음)로 봅니다.
+
+    **짐작하지 말고 원문에서 봐야 합니다.** 이 진단기가 그것을 봅니다:
+    표기가 문서에 아예 없는 것인지, 있는데 창 밖이라 못 본 것인지.
+    """
+    import json
+    import shutil
+    import tempfile
+    import config as cfg
+
+    폴더 = tempfile.mkdtemp()
+    옛 = cfg.RAW8K_CACHE_DIR
+    try:
+        cfg.RAW8K_CACHE_DIR = 폴더
+        os.makedirs(os.path.join(폴더, "ZZTEST"))
+        # 단위 표기는 **맨 위 한 번**, 영업이익 줄은 4,000자 뒤 — 실물 모양
+        본문 = ("(in thousands)\nTotal revenue      437,003\n"
+              + ("filler line for spacing\n" * 200)
+              + "Non-GAAP operating income      216,722\n")
+        assert len(본문) > 3000, "시험 지문이 창(3,000자)보다 짧으면 헛돕니다"
+        with open(os.path.join(폴더, "ZZTEST", "a.json"), "w",
+                  encoding="utf-8") as f:
+            json.dump({"v": 1, "text": 본문}, f)
+        r = co.단위진단("ZZTEST", progress=lambda *a: None)
+    finally:
+        cfg.RAW8K_CACHE_DIR = 옛
+        shutil.rmtree(폴더, ignore_errors=True)
+
+    assert r["본 문서"] == 1, r
+    assert r["요약"]["매출만 단위 찾음"] == 1, (
+        f"매출은 단위를 찾고 영업이익은 못 찾은 상태를 못 잡았습니다: {r['요약']}")
+    사례 = r["사례"][0]
+    assert 사례["매출_단위배수"] == 1000 and 사례["영업이익_단위배수"] == 1, 사례
+    assert 사례["가장가까운표기"] == "thousand", 사례
+    assert 사례["창_밖인가"] is True, (
+        f"표기가 창(3,000자) 밖인데 그렇게 말하지 않았습니다: "
+        f"거리 {사례['그 표기까지_글자수']}")
+    assert "216,722" in 사례["영업이익_둘레"], 사례["영업이익_둘레"]
+
+
 def test_요청수집_파일이_깃에_올라간다():
     """(150차-S) 파일을 만들고도 `.gitignore` 에 걸려 **사라졌습니다.**
 
