@@ -214,6 +214,73 @@ def test_워크플로가_실제로_스크립트를_부른다():
         "정기 수집과 같은 concurrency 그룹이면 서로를 막습니다"
 
 
+def test_빠진분기_진단이_XBRL_시계열을_읽는다():
+    """(150차-X) 분기가 통째로 없는 이유를 XBRL 원자료에서 봅니다.
+
+    실측: 빠진 분기의 **61.7%(92건)가 Q4** 이고, 골드만삭스는 12월
+    결산 분기가 아홉 해 내리 없습니다. 코드에는 `연간 − (1+2+3분기)` 로
+    채우는 길이 있는데(`_fill_missing_q4`) 왜 안 통하는지 **짐작하지
+    말고 원자료에서** 봅니다.
+
+    ⚠️ 이 시험은 **SEC 를 두드리지 않습니다.** 가짜 edgar 를 끼워
+    넣습니다 — 진짜로 두드리면 개발 환경에서 막혀 시험이 몇 분씩
+    멈춥니다(실제로 겪었습니다).
+    """
+    import types
+    import sec_fundamentals as sf
+
+    가짜facts = object()
+    가짜edgar = types.ModuleType("edgar")
+
+    class _가짜회사:
+        def __init__(self, t):
+            self.t = t
+
+        def get_facts(self):
+            return 가짜facts
+
+    가짜edgar.Company = _가짜회사
+
+    삼개월 = {"2025-03-31": 10.0, "2025-06-30": 11.0, "2025-09-30": 12.0}
+    연간 = {"2025-12-31": 50.0}          # 12월 분기가 없고 연간만 있음
+
+    옛모듈 = sys.modules.get("edgar")
+    옛것 = (sf._ensure_identity, sf._quarterly_series, sf._annual_series,
+          sf.fetch_xbrl_approximation)
+    try:
+        sys.modules["edgar"] = 가짜edgar
+        sf._ensure_identity = lambda *a, **k: None
+        sf._quarterly_series = lambda f, c, r=None, unit="USD": (
+            dict(삼개월) if c == "OperatingIncomeLoss" else {})
+        sf._annual_series = lambda f, c, r=None, unit="USD": (
+            dict(연간) if c == "OperatingIncomeLoss" else {})
+        sf.fetch_xbrl_approximation = lambda t, s=None, r=None: [
+            {"filing_date": d} for d in sorted(삼개월)]
+        r = co.빠진분기_진단("ZZTEST", progress=lambda *a: None)
+    finally:
+        (sf._ensure_identity, sf._quarterly_series, sf._annual_series,
+         sf.fetch_xbrl_approximation) = 옛것
+        if 옛모듈 is None:
+            sys.modules.pop("edgar", None)
+        else:
+            sys.modules["edgar"] = 옛모듈
+
+    op = r["묶음"]["op_income"]
+    assert op["3개월 값"] == 3 and op["연간 값"] == 1, op
+    assert op["채워서 새로 생긴 분기"] == 1, (
+        f"연간에서 4분기를 못 채웠습니다: {op}")
+    assert "2025-12-31" in op["새로 생긴 것 보기"], op
+    # gaap_eps 는 **일부러** 안 채웁니다 (주식 수가 분기마다 달라 뺄셈이 안 됨)
+    assert r["묶음"]["gaap_eps"]["gaap_eps 는 일부러 안 채움"] is True
+
+    with open(os.path.join(ROOT, "collect_one.py"), encoding="utf-8") as f:
+        코드 = f.read()
+    assert "구멍 = 빠진분기_진단(ticker)" in 코드, \
+        "진단을 만들고 실행 경로에 안 붙였습니다 (글자만 있으면 헛돕니다)"
+    assert '"빠진분기진단": 구멍진단' in 코드, \
+        "진단 결과를 파일에 안 적습니다 — 남지 않으면 볼 수 없습니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

@@ -265,6 +265,90 @@ def xbrl_대_보도자료(ticker: str, progress=print) -> dict:
     return {"짝 수": sum(배수셈.values()), "배수분포": 배수셈, "보기": 줄}
 
 
+def 빠진분기_진단(ticker: str, progress=print) -> dict:
+    """**분기가 통째로 안 잡히는** 이유를 XBRL 원자료에서 봅니다 (150차-X).
+
+    실측: 발표일이 130일 넘게 벌어진 곳 170건 · 76종목. 그중
+    **61.7%(92건)가 Q4** 다. 골드만삭스는 12월 결산 분기(1월 발표)가
+    **아홉 해 내리** 통째로 없다.
+
+        GS 분기 이름: 22Q2 22Q3 23Q1 23Q2 23Q3 24Q1 … — **Q4 가 하나도 없음**
+
+    회사는 1~3분기를 10-Q 에 "3개월"로 신고하지만 4분기는 10-K 에
+    "연간(12개월)"으로만 신고하는 일이 많습니다. 그래서 코드에는
+    `연간 − (1+2+3분기)` 로 채우는 길이 있습니다(`_fill_missing_q4`).
+    **그 길이 왜 GS 에서 안 통하는지**를 짐작하지 말고 원자료에서 봅니다.
+
+    무엇을 적나 — 개념 묶음별로:
+      · 3개월 값이 몇 개인가 · 12개월(연간) 값이 몇 개인가
+      · 채우기 뒤 12월 31일(또는 회계연도 끝) 키가 생겼는가
+      · 못 채웠다면 앞선 세 분기를 못 찾은 것인가
+
+    **읽기만 합니다** — 어떤 값도 고치지 않습니다.
+    """
+    import sec_fundamentals as sf
+
+    try:
+        sf._ensure_identity()
+        from edgar import Company
+        facts = Company(ticker).get_facts()
+    except Exception as exc:
+        return {"말": f"XBRL 을 못 받았습니다: {type(exc).__name__}: {str(exc)[:100]}"}
+    if facts is None:
+        return {"말": "이 종목의 XBRL 자료가 없습니다"}
+
+    묶음 = {}
+    for key in ("revenue", "op_income", "gaap_eps"):
+        if key not in sf._XBRL_CONCEPTS:
+            continue
+        unit = sf._XBRL_UNITS.get(key, "USD")
+        삼개월, 연간 = {}, {}
+        for concept in sf._XBRL_CONCEPTS[key]:
+            try:
+                삼개월.update(sf._quarterly_series(facts, concept, None, unit=unit))
+                연간.update(sf._annual_series(facts, concept, None, unit=unit))
+            except Exception:
+                continue
+        # ⚠️ **실제 수집이 쓰는 함수를 그대로 부릅니다** (150차-X).
+        #    처음엔 여기서 `_fill_missing_q4` 를 직접 불렀는데, 그러면
+        #    수집 경로가 채우기를 그만두어도 진단은 "채워졌다"고 말합니다.
+        #    돌연변이(`_series_for_key` 의 채우기 끄기)가 통과해서 알았습니다.
+        #    진단이 **딴 길로 가면 거짓말을 합니다** — 150차-S 와 같은 부류.
+        채운 = sf._series_for_key(key, facts)
+        새로생긴 = sorted(set(채운) - set(삼개월))
+        못채운 = []
+        for fy in sorted(연간):
+            if fy in 삼개월 or fy in 새로생긴:
+                continue
+            앞셋 = sf._find_prior_three_quarters(삼개월, fy)
+            못채운.append({"회계연도끝": fy,
+                         "앞선세분기": "못 찾음" if 앞셋 is None else "찾음"})
+        묶음[key] = {
+            "3개월 값": len(삼개월),
+            "연간 값": len(연간),
+            "채워서 새로 생긴 분기": len(새로생긴),
+            "새로 생긴 것 보기": 새로생긴[-4:],
+            "연간은 있는데 못 채운 것": 못채운[-6:],
+            "gaap_eps 는 일부러 안 채움": key == "gaap_eps",
+        }
+
+    # 뼈대가 실제로 만들어 낸 분기끝 — 위 시계열이 행으로 살아남았는가
+    try:
+        보고 = sf.new_report(ticker)
+        뼈대 = sf.fetch_xbrl_approximation(ticker, None, 보고)
+        분기끝 = sorted(str(q.get("filing_date"))[:10] for q in (뼈대 or []))
+    except Exception as exc:
+        분기끝, 보고 = [], {"first_error": f"{type(exc).__name__}: {str(exc)[:80]}"}
+
+    달별 = {}
+    for d in 분기끝:
+        달별[d[5:7]] = 달별.get(d[5:7], 0) + 1
+    progress(f"[빠진분기진단] 뼈대 분기 {len(분기끝)}개 · 끝나는 달 분포 {달별}")
+    return {"묶음": 묶음, "뼈대 분기 수": len(분기끝),
+            "끝나는 달 분포": 달별, "최근 분기끝": 분기끝[-8:],
+            "애매하다고 뺀 것": (보고 or {}).get("xbrl_ambiguous", [])[-6:]}
+
+
 def 화면자료_만들기(수집: dict, progress=print) -> dict | None:
     """수집물 하나로 종목 상세 화면 자료를 만듭니다.
 
@@ -312,7 +396,7 @@ def 화면자료_만들기(수집: dict, progress=print) -> dict | None:
 
 
 def 저장(수집: dict, 화면: dict | None, progress=print,
-       진단: dict | None = None) -> list[str]:
+       진단: dict | None = None, 구멍진단: dict | None = None) -> list[str]:
     """보기 전용 수집물과 화면 자료를 파일로. 판정 표본은 안 건드립니다."""
     쓴것 = []
     os.makedirs(LOOKUP_DIR, exist_ok=True)
@@ -322,6 +406,7 @@ def 저장(수집: dict, 화면: dict | None, progress=print,
             "%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "성공": 수집["성공"], "말": 수집["말"],
             "단위진단": 진단,          # 원문이 단위를 어디에 뒀나 (150차-U)
+            "빠진분기진단": 구멍진단,   # 분기가 왜 통째로 없나 (150차-X)
             "eps": 수집["eps"]}, f, ensure_ascii=False)
     쓴것.append(p)
     if 화면 is not None:
@@ -351,8 +436,13 @@ def main(argv: list[str]) -> int:
     except Exception as exc:                  # 진단 때문에 수집을 잃지 않음
         print(f"⚠️ 단위진단 실패: {type(exc).__name__}: {str(exc)[:120]}")
         진단 = None
+    try:
+        구멍 = 빠진분기_진단(ticker)
+    except Exception as exc:
+        print(f"⚠️ 빠진분기 진단 실패: {type(exc).__name__}: {str(exc)[:120]}")
+        구멍 = None
     화면 = 화면자료_만들기(수집)
-    저장(수집, 화면, 진단=진단)
+    저장(수집, 화면, 진단=진단, 구멍진단=구멍)
     if not 수집["성공"]:
         print(f"⛔ {ticker}: {수집['말']}")
         return 1
