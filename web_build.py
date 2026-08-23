@@ -224,6 +224,18 @@ def build_ticker(ds: dict, ticker: str, 완성사건: list[dict]) -> dict:
             "신고점폭": _round(s["신고점폭"], 1),
         })
 
+    # 델타 흐름 (150차-L, 주인 요청) — 잣대 분기값이 직전 분기보다 올랐나.
+    # **TTM 과 다른 것을 잰다**: 델타는 분기 대 분기, TTM 은 네 분기 합이라
+    # 한 분기가 빠지면 TTM 만 못 만듭니다(CRDO 에서 주인이 본 것).
+    # 계기판과 **같은 함수**를 씁니다 — 스스로 세면 두 화면이 갈립니다.
+    델타흐름 = [{"발표일": d, "상승": bool(up)}
+              for d, up in sm._delta_series(ds, ticker)]
+    # 그 발표일의 잣대 분기값도 같이 실어 흐름을 눈으로 보게 합니다
+    분기값 = {str(r.get("announced_date"))[:10]: r.get(잣대)
+            for r in quarters if r.get("announced_date")} if 잣대 else {}
+    for x in 델타흐름:
+        x["값"] = _round(분기값.get(x["발표일"]), 3)
+
     이력 = [{
         "완성일": e["day"], "이격도": _round(e["이격도"], 1),
         "델타": e["델타"], "초과60": _round(e["초과60"], 1),
@@ -243,6 +255,7 @@ def build_ticker(ds: dict, ticker: str, 완성사건: list[dict]) -> dict:
             prices, ds["prices"][ds["benchmark"]]["dates"][-1]), 1) if prices else None,
         "신호": bool(최근.get(ticker, {}).get("신호")),
         "완성이력": 이력,
+        "델타흐름": 델타흐름,
         "실적": 실적,
     }
 

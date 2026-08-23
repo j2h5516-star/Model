@@ -209,6 +209,80 @@ def test_채택까지_남은_거리가_웹앱에도_실린다():
         assert "채택거리" in f.read(), "웹앱 화면이 채택 거리를 그리지 않습니다"
 
 
+def test_델타_흐름이_종목화면에_실린다():
+    """(150차-L, 주인 요청) "델타 상승/하락의 흐름을 보게 그래프를 추가하자."
+
+    주인이 CRDO 에서 본 것 — **델타는 계속 상승인데 TTM 은 빈칸**이었습니다.
+    둘은 다른 것을 잽니다: 델타는 **분기 대 분기**, TTM 은 **네 분기 합**.
+    한 분기가 통째로 빠지면 델타는 나오는데 TTM 만 못 만듭니다.
+
+    값을 못 잰 분기는 **그리지 않습니다** — 0 으로 그리면 "이익이 0"으로
+    읽혀 거짓이 됩니다.
+    """
+    import dataset
+    import sector_model as sm
+
+    from datetime import date, timedelta
+    d = date(2023, 1, 6)
+    날들, 종가 = [], []
+    for i in range(160):
+        날들.append(d.isoformat()); 종가.append(100.0 + i)
+        d += timedelta(days=7)
+
+    # 91일 간격으로 또박또박 오르는 조정 EPS 12분기
+    행 = []
+    나 = date(2023, 2, 15)
+    for i in range(12):
+        # ⚠️ 이 저장소에서 **분기끝 노릇을 하는 칸은 `filing_date`** 입니다
+        #    (138차 상식 검사가 그것을 씁니다 — 발표일과 10~70일 차이여야
+        #    합니다). 처음에 filing_date 를 발표일과 같게 뒀더니 지연 0일로
+        #    걸려 발표일이 통째로 지워지고 델타가 0건이었습니다.
+        행.append({"filing_date": (나 - timedelta(days=31)).isoformat(),
+                   "announced_date": 나.isoformat(),
+                   "period_end": (나 - timedelta(days=31)).isoformat(),
+                   "period_label": f"Q{i}", "revenue": 1e9, "op_income": 1e8,
+                   "adj_eps": 1.0 + i * 0.1, "adjusted_ebitda": None,
+                   "gaap_eps": 0.9, "gross_margin_pct": 50.0,
+                   "gaap_eps_xbrl": None, "revenue_xbrl": None,
+                   "gross_margin_pct_xbrl": None})
+        나 += timedelta(days=91)
+    snap = {"benchmark": "SPY", "tickers": ["SPY", "UP"],
+            "eps": {"SPY": [], "UP": 행},
+            "prices": {"SPY": {"dates": 날들, "close": 종가},
+                       "UP": {"dates": 날들, "close": 종가}}}
+    ds = dataset.build(snap)
+    완성 = sm.completion_events(ds)
+    한종목 = wb.build_ticker(ds, "UP", 완성)
+
+    흐름 = 한종목["델타흐름"]
+    assert 흐름, "델타 흐름이 종목 자료에 없습니다 — 그래프를 그릴 수 없습니다"
+    assert all(x["상승"] for x in 흐름), f"또박또박 오르는데 하락이 섞였습니다: {흐름}"
+    assert all(x["값"] is not None for x in 흐름), 흐름
+    # 계기판과 같은 함수를 쓰는가 (스스로 세면 두 화면이 갈립니다)
+    assert [x["발표일"] for x in 흐름] == [d for d, _ in sm._delta_series(ds, "UP")]
+
+    root = os.path.join(os.path.dirname(__file__), "..")
+    with open(os.path.join(root, "web_build.py"), encoding="utf-8") as f:
+        assert "sm._delta_series(" in f.read(), \
+            "웹앱이 델타를 스스로 계산합니다 — 계기판과 갈립니다"
+    with open(os.path.join(root, "docs", "app.js"), encoding="utf-8") as f:
+        js = f.read()
+    # ⚠️ **글자가 어딘가 있기만 하면 통과하는 검사는 헛돕니다.**
+    #    150차-J 에서 한 번 겪고 여기서 또 했습니다 — `델타막대(` 는 함수
+    #    **정의**에도 있어서 호출을 지워도 통과했고, `x.값 !== null` 은
+    #    다른 줄에도 있어서 0 채움 돌연변이가 통과했습니다.
+    #    그래서 **호출 지점**과 **함수 몸통**을 각각 콕 집습니다.
+    assert "html += 델타막대(델타)" in js, \
+        "화면이 델타 그래프를 실제로 그리지 않습니다 (호출이 없습니다)"
+    assert "d.델타흐름" in js, "화면이 델타 자료를 읽지 않습니다"
+    몸통 = js.split("function 델타막대(", 1)
+    assert len(몸통) == 2, "델타막대 함수가 없습니다"
+    몸통 = 몸통[1].split("\nfunction ", 1)[0]
+    assert "filter" in 몸통 and "!== null" in 몸통, (
+        "델타막대가 값 없는 분기를 걸러내지 않습니다 — 0 으로 그려져 "
+        f"'이익이 0'으로 읽힙니다: {몸통[:200]}")
+
+
 def test_표본이_0인_가설은_언제_나올_수_있는지_말한다():
     """(150차-J) 웹앱 검증 탭에서 11개 가설이 전부 "표본 없음"이라고만
     말하고 있었습니다. 주인이 보면 시스템이 멈춘 줄 압니다.

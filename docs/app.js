@@ -75,6 +75,32 @@ function twoLines(주봉, ma, height = 150) {
       stroke-linejoin="round"/></svg>`;
 }
 
+/** 델타 흐름 막대 (150차-L, 주인 요청)
+ *
+ * 잣대 분기값이 직전 분기보다 올랐으면 초록 위쪽, 내렸으면 빨강 아래쪽.
+ * 막대 **높이**는 분기값 자체(절댓값)라 흐름의 크기도 같이 보입니다.
+ * 값을 못 잰 분기는 **그리지 않습니다** — 0 으로 그리면 "이익이 0"으로
+ * 읽혀 거짓이 됩니다(헌법 1조).
+ */
+function 델타막대(흐름, height = 90) {
+  const 있는 = 흐름.filter((x) => x.값 !== null && x.값 !== undefined);
+  if (있는.length < 2) return '<div class="empty">델타를 그릴 분기가 모자랍니다.</div>';
+  const W = 340, H = height, pad = 4;
+  const 크기 = 있는.map((x) => Math.abs(x.값));
+  const hi = Math.max(...크기) || 1;
+  const 폭 = (W - pad * 2) / 있는.length;
+  const 막대 = 있는.map((x, i) => {
+    const h = Math.max(2, (H - pad * 2) * (Math.abs(x.값) / hi));
+    const x0 = pad + i * 폭 + 폭 * 0.15;
+    const w = 폭 * 0.7;
+    const y = pad + (H - pad * 2) - h;
+    const c = x.상승 ? "#00c805" : "#ff453a";
+    return `<rect x="${x0.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}"
+      height="${h.toFixed(1)}" fill="${c}" rx="1"/>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${막대}</svg>`;
+}
+
 /** 장세 구간 말 — 실측 근거가 있는 구간만 이름을 붙입니다 */
 function 장세말(폭) {
   if (폭 === null || 폭 === undefined) return { 말: "판단 불가", cls: "" };
@@ -343,6 +369,25 @@ async function 화면_상세(sym) {
     ${twoLines(d.주봉, d.ma52)}
     <div class="cap">주봉 종가(초록)와 52주 이동평균(회색 점선) · 최근 ${
       d.주봉.length}주 · 마지막 ${num(마지막, 2)}</div></div>`;
+
+  const 델타 = d.델타흐름 || [];
+  const 그린것 = 델타.filter((x) => x.값 !== null && x.값 !== undefined);
+  html += `<h2>이익 델타 흐름 <span class="n">${esc(d.잣대 || "잣대 없음")}</span></h2>`;
+  if (그린것.length < 2) {
+    html += `<div class="empty">델타를 그릴 분기가 모자랍니다 — 없는 것은
+      없다고 말합니다.</div>`;
+  } else {
+    const 오른것 = 그린것.filter((x) => x.상승).length;
+    html += 델타막대(델타) +
+      `<div class="cap">막대 하나가 분기 하나 · 높이는 그 분기의 값 ·
+      <b class="up">초록</b>=직전 분기보다 올랐음 ·
+      <b class="down">빨강</b>=내렸음 · 최근 ${그린것.length}분기 중
+      <b>${오른것}분기 상승</b></div>
+      <div class="honest">이 그래프는 <b>분기 대 분기</b>를 봅니다. 아래
+      실적 이력의 TTM 은 <b>네 분기의 합</b>이라, 한 분기가 빠지면
+      델타는 나오는데 TTM 만 "—"가 됩니다 — 둘이 다른 것을 재기 때문이지
+      고장이 아닙니다.</div>`;
+  }
 
   html += `<h2>정배열 완성 이력</h2>`;
   if (!d.완성이력.length) {
