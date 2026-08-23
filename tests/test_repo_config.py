@@ -221,9 +221,30 @@ def test_웹앱_화면_파일이_그대로_있다():
     with open(os.path.join(ROOT, "docs", "app.js"), encoding="utf-8") as f:
         js = f.read()
     assert "data/app.json" in js, "웹앱이 데이터 경로를 잃었습니다"
-    # 외부 인터넷에서 무엇을 받아오면 안 됩니다 (오프라인·차단 환경 대비)
-    assert "http://" not in js and "https://" not in js, \
-        "웹앱이 바깥 주소를 부릅니다 — 자기 파일만 읽어야 합니다"
+
+    # 외부 인터넷에서 무엇을 **받아오면** 안 됩니다 (오프라인·차단 환경 대비).
+    #
+    # ⚠️ 원래는 "http" 글자가 있기만 해도 실패였는데, 150차-O 에서 **사람이
+    #    눌러야 열리는 링크**(없는 종목을 수집하러 가는 GitHub 실행 화면)를
+    #    넣자 걸렸습니다. 규칙을 약화하는 대신 **뜻을 정확히** 나눕니다 —
+    #    금지해야 할 것은 "화면이 스스로 바깥에서 받아오는 것"이고,
+    #    사람이 누르는 <a href> 는 아무것도 안 받아옵니다.
+    받아오기 = ("fetch(", "XMLHttpRequest", "importScripts",
+              "<script src", "<link rel", "@import", "new Image(",
+              "navigator.sendBeacon")
+    for 표 in 받아오기:
+        if 표 in js:
+            자리 = js.index(표)
+            토막 = js[max(0, 자리 - 80):자리 + 120]
+            assert "http://" not in 토막 and "https://" not in 토막, (
+                f"웹앱이 바깥에서 받아옵니다({표}) — 자기 파일만 읽어야 합니다:"
+                f" …{토막.strip()[:160]}…")
+    # 링크로 나가는 바깥 주소는 **이 저장소의 깃허브**만 허용합니다
+    import re
+    바깥 = set(re.findall(r"https?://[A-Za-z0-9./_-]+", js))
+    허용 = {u for u in 바깥 if u.startswith("https://github.com/j2h5516-star/Model")}
+    남은 = 바깥 - 허용
+    assert not 남은, f"허용되지 않은 바깥 주소: {sorted(남은)}"
 
 
 if __name__ == "__main__":

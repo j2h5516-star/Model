@@ -1,0 +1,92 @@
+# 한 종목만 지금 수집 — 주인이 화면에서 궁금한 종목을 바로 보기 위한 것
+#
+# 왜 따로 있나 (150차-O, 주인 요청):
+#   매일 도는 `collect` 는 401종목을 훑어 약 226분 걸립니다. 궁금한 종목
+#   하나 때문에 하루를 기다릴 수 없습니다. 한 종목이면 실측 10~25초
+#   (캐시 있을 때)이고 캐시 없는 새 종목이라도 몇 분입니다.
+#
+# ⚠️ 이 워크플로는 **판정 표본(data/measure/snapshot.json)을 건드리지
+#    않습니다.** 궁금해서 부른 종목을 표본에 넣으면 "결과를 보고 종목을
+#    고르는 것"이 되어 사전 등록이 무너집니다(헌법 2조). 결과는
+#    data/lookup/ 과 docs/data/t/ 에만 씁니다.
+#
+# 쓰는 법 (휴대폰에서도 됩니다):
+#   GitHub → Actions → "collect-one" → Run workflow → 종목 코드 입력 → Run
+
+name: collect-one
+
+on:
+  workflow_dispatch:
+    inputs:
+      ticker:
+        description: "종목 코드 (예: NVDA)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+# 매일 수집과 **같은 그룹이 아닙니다** — 정기 수집을 막지 않게 따로 둡니다.
+concurrency:
+  group: collect-one
+  cancel-in-progress: false
+
+jobs:
+  one:
+    runs-on: ubuntu-latest
+    # 한 종목이라 넉넉히 20분이면 충분합니다 (실측 10~25초, 새 종목 몇 분)
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # 매일 수집이 쌓아 둔 공시 원문 캐시를 **읽기만** 합니다.
+      # 여기서 새 키로 저장하면 정기 수집의 캐시를 밀어낼 수 있으므로
+      # restore-keys 로 받아 쓰기만 합니다.
+      - name: 공시 원문 캐시 복원 (읽기 전용)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/raw8k
+          key: raw8k-one-${{ github.run_id }}
+          restore-keys: |
+            raw8k-v1-
+
+      - name: 의존성 설치
+        run: pip install -r requirements.txt
+
+      - name: 한 종목 수집
+        env:
+          SEC_IDENTITY: ${{ secrets.SEC_IDENTITY }}
+        run: python collect_one.py "${{ inputs.ticker }}"
+
+      - name: 변경분 커밋
+        if: always()          # 실패해도 받은 것까지는 남깁니다
+        run: |
+          git config user.name "수집 로봇"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # ⚠️ data/measure 는 **일부러 뺐습니다** — 판정 표본 보호
+          git add data/lookup docs/data/t || true
+          if git diff --cached --quiet; then
+            echo "변경 없음 — 커밋 생략"
+          else
+            git commit -m "요청 수집 — ${{ inputs.ticker }} ($(date -u +%Y-%m-%d\ %H:%M))"
+            BRANCH="${GITHUB_REF_NAME:-main}"
+            for attempt in 1 2 3; do
+              if git push origin "HEAD:$BRANCH"; then break; fi
+              [ "$attempt" = 3 ] && { echo "3회 실패"; exit 1; }
+              echo "push 거부 — 최신 $BRANCH 위에 다시 ($attempt/3)"
+              rm -rf /tmp/one_lookup /tmp/one_web
+              cp -r data/lookup /tmp/one_lookup 2>/dev/null || true
+              cp -r docs/data/t /tmp/one_web 2>/dev/null || true
+              git fetch origin "$BRANCH"
+              git reset --hard "origin/$BRANCH"
+              [ -d /tmp/one_lookup ] && mkdir -p data && rm -rf data/lookup && mv /tmp/one_lookup data/lookup
+              [ -d /tmp/one_web ] && mkdir -p docs/data && rm -rf docs/data/t && mv /tmp/one_web docs/data/t
+              git add data/lookup docs/data/t
+              git commit -m "요청 수집 — ${{ inputs.ticker }} (충돌 재커밋)"
+            done
+          fi

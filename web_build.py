@@ -188,6 +188,11 @@ def build_payload(ds: dict, verdict: dict | None, log: dict | None) -> dict:
         "신호종목": [r for r in 종목판 if r["신호"]],
         "완성전체": 종목판,
         "정배열유지": app.aligned_now_rows(ds),
+        # 150차-O — 검색이 **자료가 있는 종목 전부**를 훑게 하려면
+        # 목록이 필요합니다. 정배열도 아니고 최근 완성도 없는 종목은
+        # 그동안 화면 목록에 아예 없어서 검색해도 안 나왔습니다.
+        "종목목록": sorted(ds["quarters"]),
+        "묶음표": {t: cfg.GROUPS.get(t, "미분류") for t in sorted(ds["quarters"])},
         "섹터폭": 섹터폭,
         # 같은 앱 안의 두 "정배열"이 갈리는 종목 (150차-D) — 화면이
         # 서로 다른 말을 하는 것처럼 보이던 것을 설명하기 위한 사실.

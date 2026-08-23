@@ -297,14 +297,50 @@ function 화면_종목() {
     정배열: false, 완성: 완성표[t],
   }));
 
-  const 전체 = 목록.concat(나머지);
-  let html = `<input class="search" id="q" placeholder="종목 코드로 찾기 (예: LITE)"
+  // 150차-O — 정배열도 아니고 최근 완성도 없는 종목은 **목록에 아예
+  // 없었습니다.** 검색해도 안 나와서 "자료가 없다"로 오해합니다.
+  // 자료가 있는 종목은 **전부** 넣습니다(a.종목목록).
+  const 담긴 = new Set(목록.concat(나머지).map((r) => r.종목));
+  const 조용한 = (a.종목목록 || []).filter((t) => !담긴.has(t)).map((t) => ({
+    종목: t, 묶음: (a.묶음표 || {})[t] || "", 이격도: null,
+    정배열: false, 완성: null,
+  }));
+
+  const 전체 = 목록.concat(나머지).concat(조용한);
+  let html = `<input class="search" id="q" placeholder="종목 코드로 찾기 (예: NVDA)"
     autocomplete="off">
   <div class="note">지금 <b>주봉 정배열을 유지 중</b>인 종목 ${a.정배열유지.length}개를
-  이격도 큰 순으로 먼저 보여 줍니다. 여기 없는 종목은 지금 배열이 깨져 있다는
-  뜻입니다 (예: 조정 중).</div>
-  <div id="list">${전체.map(종목간단줄).join("")}</div>`;
+  이격도 큰 순으로 먼저 보여 줍니다. 그 아래로 <b>자료가 있는 나머지
+  ${조용한.length + 나머지.length}개</b>도 검색됩니다 — 정배열이 깨진 종목(조정 중)도
+  찾아볼 수 있습니다.</div>
+  <div id="list">${전체.map(종목간단줄).join("")}</div>
+  <div id="없음" style="display:none"></div>`;
   return html;
+}
+
+/** 검색해도 아무것도 안 나올 때 — **없다고 정직하게 말하고 방법을 준다**
+ *
+ * 150차-O(주인 요청): "없는 종목을 치면 그 자리에서 긁어와서 판단까지."
+ * 웹앱은 정적 파일이라 브라우저에서 SEC 에 접속할 수 없습니다(서버 없음
+ * · CORS). 토큰을 넣어 자동 실행하게 만들면 공개 페이지에 저장소 열쇠를
+ * 두는 셈이라 더 나쁩니다. 그래서 **누르면 실행 화면으로 가는 링크**를
+ * 줍니다 — 열쇠가 필요 없고, 한 종목이면 몇 분입니다.
+ */
+function 못찾음판(말) {
+  const 코드 = (말 || "").replace(/[^A-Z.\-]/g, "").slice(0, 8);
+  const 주소 = "https://github.com/j2h5516-star/Model/actions/workflows/collect_one.yml";
+  return `<div class="card"><div class="t">${esc(코드)} — 자료가 없습니다</div>
+    <div class="d">아직 이 종목을 수집한 적이 없습니다. <b>지금 수집</b>하면
+    몇 분 뒤 이 화면에서 볼 수 있습니다.<br><br>
+    <a class="back" href="${주소}" target="_blank" rel="noopener">▶ 지금 수집하기</a>
+    <br><span class="n">GitHub → Run workflow → 종목 코드에
+    <b>${esc(코드)}</b> 입력 → Run</span><br><br>
+    <b>왜 화면에서 바로 안 되나</b>: 이 앱은 서버 없는 정적 페이지라
+    브라우저가 SEC 에 직접 접속할 수 없습니다. 자동 실행하려면 저장소
+    열쇠를 이 공개 페이지에 넣어야 하는데 그건 더 위험합니다.<br><br>
+    <b>미리 알아 둘 것</b>: 이렇게 받아 온 종목은 <b>가설 판정 표본에
+    쓰이지 않습니다</b> — 궁금해서 부른 종목을 표본에 넣으면 "결과를 보고
+    종목을 고르는 것"이 되어 사전 등록이 무너집니다.</div></div>`;
 }
 
 function 종목간단줄(r) {
@@ -372,7 +408,14 @@ async function 화면_상세(sym) {
     }
   }
   const 마지막 = d.주봉.length ? d.주봉[d.주봉.length - 1][1] : null;
-  let html = `<a class="back" href="#/stocks">‹ 종목</a>
+  let html = `<a class="back" href="#/stocks">‹ 종목</a>`;
+  // 150차-O — 요청으로 받아 온 종목은 **판정 표본이 아니라고** 화면이
+  // 먼저 말해야 합니다. 안 적으면 다른 종목과 같은 무게로 읽힙니다.
+  if (d.요청수집) {
+    html += `<div class="honest"><b>요청 수집분</b>${
+      d.수집시각 ? ` (${esc(d.수집시각)})` : ""} — ${bold(esc(d.안내 || ""))}</div>`;
+  }
+  html += `
   <div class="detail-hd"><div class="sym">${esc(d.종목)}</div>
     <div class="cap">${esc(d.섹터)} · ${esc(d.묶음)}</div></div>
   <div class="hero"><div class="big ${d.지금정배열 ? "up" : ""}">${
@@ -467,9 +510,18 @@ async function 그리기() {
     const q = $("#q");
     if (q) q.addEventListener("input", () => {
       const 말 = q.value.trim().toUpperCase();
+      let 보인것 = 0;
       document.querySelectorAll("#list .row").forEach((el) => {
-        el.style.display = !말 || el.dataset.sym.includes(말) ? "" : "none";
+        const 보임 = !말 || el.dataset.sym.includes(말);
+        el.style.display = 보임 ? "" : "none";
+        if (보임) 보인것 += 1;
       });
+      const 판 = $("#없음");
+      if (판) {
+        const 없다 = 말.length >= 1 && 보인것 === 0;
+        판.style.display = 없다 ? "" : "none";
+        판.innerHTML = 없다 ? 못찾음판(말) : "";
+      }
     });
   } else if (길 === "check") view.innerHTML = 화면_검증();
   else view.innerHTML = 화면_주도();
