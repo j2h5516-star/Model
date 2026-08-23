@@ -607,6 +607,42 @@ def test_far_away_unit_header_is_refused_for_prose_and_for_billions():
     assert sf.find_labeled_value(가까운십억, sf.LABELS_REVENUE) == 10_000_000_000
 
 
+def test_unit_written_as_a_footnote_below_the_table_is_used():
+    """단위 선언이 표 **아래 각주**로 붙는 회사가 있습니다 (150차-AG, 실물 MCHP).
+
+        Net sales                        $1,484.7
+        (1) In millions, except per share amounts and percentages of net sales.
+
+    앞쪽만 보던 규칙이라 이런 문서는 단위를 영영 못 찾았고, MCHP 매출이
+    14.8억이 아니라 **1,484.7 달러**로 들어왔습니다.
+    """
+    글 = ("Total net sales                    $1,484.7\n"
+         "(1) In millions, except per share amounts.\n")
+    assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 1_484_700_000
+
+
+def test_footnote_unit_keeps_the_same_two_guards():
+    """각주도 **표의 칸**일 때만, 그리고 **10억이 아닐 때만** 씁니다.
+
+    앞의 규칙과 같은 방어막입니다. 이 둘이 없으면 서술문 숫자가 부풀고,
+    "billion" 각주가 조 단위 값을 만듭니다.
+    """
+    # 서술문(공백 한 칸)에는 안 붙인다
+    산문 = ("Total net sales of 1,484.7 for the quarter\n"
+           "(1) In millions, except per share amounts.\n")
+    assert sf.find_labeled_value(산문, sf.LABELS_REVENUE) == 1_484.7
+
+    # 10억 각주는 안 쓴다
+    십억 = ("Total net sales                    1,484.7\n"
+           "(1) In billions, except per share amounts.\n")
+    assert sf.find_labeled_value(십억, sf.LABELS_REVENUE) == 1_484.7
+
+    # 너무 먼 각주(2,000자 밖)는 다음 표의 것일 수 있어 안 쓴다
+    먼각주 = ("Total net sales                    1,484.7\n"
+             + ("메꿈 " * 800) + "\n(1) In millions.\n")
+    assert sf.find_labeled_value(먼각주, sf.LABELS_REVENUE) == 1_484.7
+
+
 def test_share_count_unit_is_not_treated_as_a_money_unit():
     """"Shares (M)" 는 **주식 수**의 단위지 금액의 단위가 아닙니다.
 

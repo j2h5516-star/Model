@@ -207,9 +207,49 @@ def _멀리_있는_단위를_조심히_쓰기(text: str, position: int) -> int:
     if not _TABLE_CELL_RE.match(text, position, position + _FAR_UNIT_AHEAD):
         return 1
     먼 = _가장_가까운_단위(text, position, position)   # 문서 처음까지
-    if 먼 >= 1_000_000_000:
-        return 1
-    return 먼
+    if 먼 < 1_000_000_000 and 먼 != 1:
+        return 먼
+    return _표_아래_각주에_적힌_단위(text, position)
+
+
+# 각주 꼴 "(1) In millions, except per share amounts" — 번호가 괄호 안에 있어
+# 종전 괄호 패턴(`\([^)]{0,40}?\bin …`)에 안 걸립니다. 닫는 괄호를 못 넘거든요.
+_FOOTNOTE_UNIT_RE = re.compile(
+    rf"\(\d+\)\s*in\s+{_SCALE_WORDS}\b", re.I
+)
+_FOOTNOTE_AHEAD = 2000     # 숫자 뒤 몇 자까지 각주를 찾을 것인가
+
+
+def _표_아래_각주에_적힌_단위(text: str, position: int) -> int:
+    """단위 선언이 표 **아래 각주**로 붙는 회사가 있습니다 (150차-AG, 실물 MCHP).
+
+        Net sales                        $1,484.7
+        ...
+        (1) In millions, except per share amounts and percentages of net sales.
+
+    앞쪽만 보는 규칙이라 이런 문서는 단위를 영영 못 찾았고, MCHP 매출이
+    14.8억이 아니라 **1,484.7 달러**로 들어왔습니다.
+
+    여는 조건은 앞의 것과 같습니다 — **표의 칸**이어야 하고(이 함수를 부르는
+    자리에서 이미 확인됨), **10억 선언은 안 씁니다.** 여기에 하나를 더
+    좁힙니다: 숫자 **바로 뒤 2,000자** 안의 각주만 봅니다. 더 멀리 보면
+    다음 표의 각주를 이 표의 것으로 오해합니다.
+
+    원문 1,443건 전수 실측 — 바뀐 것 **7건 / 3종목**뿐이고 사고는 없었습니다.
+    MCHP 4건이 전부 정확히 제자리로 갔고(1,484.7 → 14.847억), BMY 2건도
+    자릿수가 맞았습니다. 남은 1건(EOG 32)은 고치기 전에도 틀린 값입니다.
+    """
+    뒤 = text[position:position + _FOOTNOTE_AHEAD]
+    최근, 배수 = None, 1
+    for pattern, _ in _UNIT_PATTERNS:
+        m = pattern.search(뒤)
+        if m and (최근 is None or m.start() < 최근):   # 가장 가까운(=앞쪽)
+            최근, 배수 = m.start(), _SCALE_MULTIPLIER.get(
+                (m.group(1) or "").lower(), 1)
+    m2 = _FOOTNOTE_UNIT_RE.search(뒤)
+    if m2 and (최근 is None or m2.start() < 최근):
+        배수 = _SCALE_MULTIPLIER.get(m2.group(1).lower(), 1)
+    return 1 if 배수 >= 1_000_000_000 else 배수
 
 
 def _parse_number_at(
