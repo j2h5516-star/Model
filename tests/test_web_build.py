@@ -256,6 +256,9 @@ def test_델타_흐름이_종목화면에_실린다():
 
     흐름 = 한종목["델타흐름"]
     assert 흐름, "델타 흐름이 종목 자료에 없습니다 — 그래프를 그릴 수 없습니다"
+    assert all("성장률" in x and "가속" in x for x in 흐름), (
+        "성장률·가속이 없습니다 — 값의 방향만 보면 1→10→20 이 셋 다 "
+        f"'상승'으로 보입니다: {흐름[0]}")
     assert all(x["상승"] for x in 흐름), f"또박또박 오르는데 하락이 섞였습니다: {흐름}"
     assert all(x["값"] is not None for x in 흐름), 흐름
     # 계기판과 같은 함수를 쓰는가 (스스로 세면 두 화면이 갈립니다)
@@ -281,6 +284,63 @@ def test_델타_흐름이_종목화면에_실린다():
     assert "filter" in 몸통 and "!== null" in 몸통, (
         "델타막대가 값 없는 분기를 걸러내지 않습니다 — 0 으로 그려져 "
         f"'이익이 0'으로 읽힙니다: {몸통[:200]}")
+
+
+def test_값이_올라도_성장이_꺾이면_둔화로_표시한다():
+    """(150차-M, 주인 지적) "1-10-20 이면 올라갔다 내려가야지 — 10배에서
+    2배가 된 거니까."
+
+    값의 **방향**만 보면 1 → 10 → 20 이 셋 다 "상승"입니다. 하지만
+    성장은 **+900% → +100%** 로 반토막입니다. 실물 CRDO 도 값은 계속
+    오르는데 성장률이 257% → 168% → 60% → 8% 로 뚜렷이 둔화 중입니다.
+
+    ⚠️ `상승`(방향)은 **사전 등록된 델타 정의**라 건드리지 않습니다
+    (H19·H21 등이 씁니다). 성장률·가속은 **화면 표시**일 뿐입니다.
+    """
+    import dataset
+    from datetime import date, timedelta
+
+    d = date(2023, 1, 6); 날들, 종가 = [], []
+    for i in range(160):
+        날들.append(d.isoformat()); 종가.append(100.0 + i); d += timedelta(days=7)
+
+    값들 = [1.0, 10.0, 20.0] + [20.0 + i for i in range(1, 10)]
+    행 = []; 나 = date(2023, 2, 15)
+    for i, v in enumerate(값들):
+        행.append({"filing_date": (나 - timedelta(days=31)).isoformat(),
+                   "announced_date": 나.isoformat(),
+                   "period_end": (나 - timedelta(days=31)).isoformat(),
+                   "period_label": f"Q{i}", "revenue": 1e9 + i, "op_income": 1e8,
+                   "adj_eps": v, "adjusted_ebitda": None, "gaap_eps": 0.9,
+                   "gross_margin_pct": 50.0, "gaap_eps_xbrl": None,
+                   "revenue_xbrl": None, "gross_margin_pct_xbrl": None})
+        나 += timedelta(days=91)
+    snap = {"benchmark": "SPY", "tickers": ["SPY", "SLOW"],
+            "eps": {"SPY": [], "SLOW": 행},
+            "prices": {"SPY": {"dates": 날들, "close": 종가},
+                       "SLOW": {"dates": 날들, "close": 종가}}}
+    ds = dataset.build(snap)
+    import sector_model as sm
+    한종목 = wb.build_ticker(ds, "SLOW", sm.completion_events(ds))
+    표 = {x["발표일"]: x for x in 한종목["델타흐름"]}
+    행날 = [r["announced_date"] for r in ds["quarters"]["SLOW"]]
+
+    열 = 표.get(행날[1])       # 1 → 10
+    스물 = 표.get(행날[2])     # 10 → 20
+    assert 열 and 스물, (행날[:3], list(표))
+    assert 열["상승"] is True and 스물["상승"] is True, "둘 다 값은 올랐습니다"
+    assert 열["성장률"] == 900.0, 열
+    assert 스물["성장률"] == 100.0, 스물
+    # 여기가 주인이 말한 "올라갔다 내려가야지" — 성장이 꺾였음
+    assert 스물["가속"] is False, (
+        f"1→10→20 인데 둔화로 표시되지 않았습니다: {스물}")
+
+    root = os.path.join(os.path.dirname(__file__), "..")
+    with open(os.path.join(root, "docs", "app.js"), encoding="utf-8") as f:
+        js = f.read()
+    몸통 = js.split("function 델타막대(", 1)[1].split("\nfunction ", 1)[0]
+    assert "x.가속" in 몸통, "그래프가 가속/둔화를 색으로 나누지 않습니다"
+    assert "성장률 흐름" in js, "화면이 성장률 흐름을 적지 않습니다"
 
 
 def test_표본이_0인_가설은_언제_나올_수_있는지_말한다():
