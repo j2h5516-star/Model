@@ -78,6 +78,11 @@ def hypothesis_rows(verdict: dict | None) -> list[dict]:
     # — 주인은 휴대폰만 쓰므로 이 정직화 정보가 정작 보는 화면에 안 닿고
     #   있었습니다(150차-C 실측). 계기판과 같은 함수를 씁니다.
     거리 = {d["가설"]: d for d in judge.adoption_distance(verdict)}
+    # 표본이 0 인 가설은 "표본 없음"만으로는 **아무것도 알려 주지 못합니다**
+    # (150차-J). 11개가 전부 그렇게 나오면 주인은 시스템이 멈춘 줄 압니다.
+    # 실제 이유는 구조적입니다 — 표적 창이 60거래일이라 08-15 에 등록한
+    # 가설은 11-07 이전에 판정이 나올 수가 없습니다. 그 날짜를 적습니다.
+    바닥 = {d["가설"]: d for d in judge.first_verdict_floor(verdict)}
     rows = []
     for name, entry in (verdict.get("가설") or {}).items():
         judged = entry.get("신규(판정)") or {}
@@ -99,6 +104,9 @@ def hypothesis_rows(verdict: dict | None) -> list[dict]:
             # 판정을 만들지 않습니다 — 이미 계산된 거리를 옮겨 적을 뿐입니다.
             "채택거리": d.get("상태"),
             "필요표본": d.get("필요표본"),
+            # 값을 만들지 않습니다 — 등록일 상수를 못 찾은 가설은 없음.
+            "가장이른날": (바닥.get(name) or {}).get("가장이른날"),
+            "창_거래일": (바닥.get(name) or {}).get("창_거래일"),
         })
     순서 = {"채택": 0, "미채택": 2, "판정 불가": 1}
     rows.sort(key=lambda r: (순서.get(r["판정"], 3), r["이름"]))
