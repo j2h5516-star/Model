@@ -1805,6 +1805,10 @@ def new_report(ticker: str) -> dict:
         "first_error": "",         # 첫 예외 (화면 요약용)
         "all_errors": [],          # 그 뒤의 예외들 — 첫 것만 보면 진짜 실패를 놓칩니다
         "unpaired_press": 0,       # 분기와 짝을 못 찾은 8-K 건수
+        # 그 8-K 들의 **날짜** (150차-AA). 개수만으로는 "어느 분기가
+        # 빠졌나"를 알 수 없습니다 — GS 의 1월 발표가 그래서 안 보였습니다.
+        "unpaired_dates": [],
+        "hole_filled": 0,          # 구멍 메우기로 새로 끼운 분기 수 (150차-Q)
         "pair_note": "",           # 짝짓기 실패 설명
         "forward_note": "",        # 전망(컨센서스) 수집 실패 사유
         "note": "",
@@ -3465,6 +3469,11 @@ def merge_quarters(
             if index not in used_press
         ]
         report["unpaired_press"] = len(unpaired)
+        # **날짜를 남깁니다** (150차-AA). 개수만 보면 "어느 분기가 빠졌나"를
+        # 알 수 없습니다. 실물: GS 는 1월 발표(4분기)가 아홉 해 내리 없는데,
+        # 그 1월 8-K 가 짝을 못 찾아 남은 것인지(= 구멍 메우기가 기회를
+        # 얻고도 실패) 아니면 다른 분기가 가져간 것인지 구분이 안 됐습니다.
+        report["unpaired_dates"] = sorted(unpaired)[-24:]
         if unpaired:
             report["pair_note"] = (
                 f"짝 못 찾은 8-K {len(unpaired)}건 (예: {unpaired[0]}) — "

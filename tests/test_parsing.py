@@ -1320,6 +1320,35 @@ def test_두_번_불려도_배수가_두_번_곱해지지_않는다():
     assert press["op_income"] == 3_399.0, "넘겨받은 자료를 제자리에서 고쳤습니다"
 
 
+def test_짝_못_찾은_8K_의_날짜를_남긴다():
+    """(150차-AA) 개수만 남기면 **어느 분기가 빠졌는지** 알 수 없습니다.
+
+    실물: GS 는 1월 발표(4분기)가 아홉 해 내리 없는데, 그 1월 8-K 가
+    짝을 못 찾아 남은 것인지 다른 분기가 가져간 것인지 구분이 안 됐습니다.
+    """
+    xbrl = [
+        {"ticker": "T", "filing_date": "2025-03-31", "revenue": 1e9,
+         "op_income": 1e8, "source": "근사치"},
+        {"ticker": "T", "filing_date": "2025-06-30", "revenue": 1.1e9,
+         "op_income": 1.1e8, "source": "근사치"},
+    ]
+    press = [
+        {"ticker": "T", "filing_date": "2025-04-20", "revenue": 1e9,
+         "op_income": 1e8, "adj_eps": 1.0, "source": "직접공시"},
+        # 어느 분기와도 멀리 떨어진 발표 — 짝을 못 찾습니다
+        {"ticker": "T", "filing_date": "2021-11-05", "revenue": 5e8,
+         "op_income": 5e7, "adj_eps": 0.5, "source": "직접공시"},
+    ]
+    report = sf.new_report("T")
+    sf.merge_quarters([dict(r) for r in xbrl], [dict(p) for p in press], report)
+
+    assert report["unpaired_press"] >= 1, report["unpaired_press"]
+    assert "2021-11-05" in report["unpaired_dates"], (
+        f"짝 못 찾은 날짜를 안 남겼습니다: {report['unpaired_dates']}")
+    # 개수와 날짜가 어긋나면 둘 중 하나가 거짓말입니다
+    assert len(report["unpaired_dates"]) <= report["unpaired_press"], report
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

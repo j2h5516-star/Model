@@ -116,7 +116,11 @@ def 한종목_수집(ticker: str, progress=print) -> dict:
     계기 = {k: v for k, v in (보고 or {}).items() if k != "raw_texts"}
     progress(f"[수집계기] 8-K {계기.get('filings_found')}건 · 실적으로 인정 "
              f"{계기.get('gate_passed')}건 · 숫자 뽑음 {계기.get('parsed_ok')}건 · "
-             f"짝 못 찾음 {계기.get('unpaired_press')}건")
+             f"짝 못 찾음 {계기.get('unpaired_press')}건 · "
+             f"구멍 메움 {계기.get('hole_filled')}건")
+    if 계기.get("unpaired_dates"):
+        progress("           짝 못 찾은 날: "
+                 + ", ".join(str(d) for d in 계기["unpaired_dates"][-12:]))
     return {"종목": ticker, "eps": eps, "prices": prices, "계기": 계기,
             "성공": 성공, "말": " / ".join(말), "초": round(걸린, 1)}
 
