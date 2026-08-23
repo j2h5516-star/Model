@@ -190,7 +190,18 @@ def 단위진단(ticker: str, progress=print) -> dict:
         else:
             요약["둘 다 못 찾음"] += 1
 
-        if len(사례) < 6 and op단위 == 1 and 가까운말:
+        # 표기를 **못 찾았을 때**, 단위 낱말이 글로는 있는지 따로 봅니다.
+        #  · 낱말이 있는데 못 찾았다 → 우리 패턴이 모자란 것 (고칠 수 있음)
+        #  · 낱말이 아예 없다      → 원문에 단위가 안 적혔거나 뽑을 때 잃은 것
+        낱말 = sorted({m.group(0).lower() for m in
+                     re.finditer(r"thousands?|millions?|billions?", text, re.I)})
+        if 가까운말 is None:
+            요약["단위 낱말은 글에 있음" if 낱말 else "단위 낱말도 아예 없음"] = \
+                요약.get("단위 낱말은 글에 있음" if 낱말 else "단위 낱말도 아예 없음", 0) + 1
+
+        if len(사례) < 5 and op단위 == 1:
+            낱말자리 = [m.start() for m in
+                     re.finditer(r"thousands?|millions?|billions?", text, re.I)][:3]
             사례.append({
                 "문서": 이름,
                 "매출_단위배수": rev단위,
@@ -198,14 +209,60 @@ def 단위진단(ticker: str, progress=print) -> dict:
                 "가장가까운표기": 가까운말,
                 "그 표기까지_글자수": 거리,
                 "훑는_창": 3000,
-                "창_밖인가": 거리 > 3000,
+                "창_밖인가": (거리 > 3000) if 거리 is not None else None,
+                "단위낱말": 낱말[:5],
+                "단위낱말_둘레": [text[max(0, p - 90):p + 40].replace("\n", " ")
+                             for p in 낱말자리],
+                "문서_머리": text[:260].replace("\n", " "),
                 "영업이익_둘레": text[max(0, op위치 - 60):op위치 + 160]
                                 .replace("\n", " ")[:220],
             })
 
     progress(f"[단위진단] 원문 {본것}건 — " +
              " · ".join(f"{k} {v}" for k, v in 요약.items() if v))
-    return {"본 문서": 본것, "요약": 요약, "사례": 사례}
+    맞댐 = xbrl_대_보도자료(ticker, progress=progress)
+    return {"본 문서": 본것, "요약": 요약, "사례": 사례, "XBRL맞댐": 맞댐}
+
+
+def xbrl_대_보도자료(ticker: str, progress=print) -> dict:
+    """XBRL 영업이익(달러)과 합쳐진 값(보도자료)을 **크기로** 맞댑니다.
+
+    보도자료에 단위 표기가 아예 없으면 원문만 봐서는 배수를 알 수 없습니다.
+    그런데 **XBRL 은 언제나 절대 달러**입니다. 같은 분기의 GAAP 영업이익과
+    논갭 영업이익이 1,000배 차이 나는 일은 없습니다 — 그래서 XBRL 값이
+    **독립된 자**가 됩니다. 지어내는 것이 아니라 **다른 자로 재는 것**입니다.
+
+    읽기만 합니다. 어떤 값도 고치지 않습니다.
+    """
+    import sec_fundamentals as sf
+
+    try:
+        보고 = sf.new_report(ticker)
+        xb = sf.fetch_xbrl_approximation(ticker, None, 보고)
+    except Exception as exc:
+        return {"말": f"XBRL 을 못 받았습니다: {type(exc).__name__}: {str(exc)[:100]}"}
+
+    x맵 = {str(q.get("period_end") or q.get("filing_date") or "")[:10]:
+           q.get("op_income") for q in (xb or [])}
+    합친, _ = sf.get_fundamentals(ticker, use_cache=True)
+    줄 = []
+    배수셈: dict[str, int] = {}
+    for q in (합친 or []):
+        키 = str(q.get("period_end") or q.get("filing_date") or "")[:10]
+        p, x = q.get("op_income"), x맵.get(키)
+        if p is None or x is None or p == 0 or x == 0:
+            continue
+        비 = abs(x / p)
+        표 = ("같은 크기(1배)" if 0.2 <= 비 <= 5 else
+              "약 1,000배" if 200 <= 비 <= 5000 else
+              "약 100만배" if 2e5 <= 비 <= 5e6 else f"그 밖({비:,.0f}배)")
+        배수셈[표] = 배수셈.get(표, 0) + 1
+        if len(줄) < 8:
+            줄.append({"분기끝": 키, "합쳐진값": p, "XBRL값": x,
+                       "XBRL÷합쳐진": round(비, 1), "판정": 표})
+    progress("[XBRL맞댐] " + (" · ".join(f"{k} {v}" for k, v in 배수셈.items())
+                            or "맞댈 짝이 없습니다"))
+    return {"짝 수": sum(배수셈.values()), "배수분포": 배수셈, "보기": 줄}
 
 
 def 화면자료_만들기(수집: dict, progress=print) -> dict | None:
