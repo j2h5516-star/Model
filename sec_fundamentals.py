@@ -3415,9 +3415,24 @@ def merge_quarters(
         press_date = _to_date(press.get("filing_date", ""))
         if press_date is None:
             continue
-        # 이익 숫자가 없으면 실적 발표가 아닐 수 있습니다 — 끼우지 않습니다
+        # 이익 숫자가 없으면 실적 발표가 아닐 수 있습니다 — 끼우지 않습니다.
+        #
+        # ⚠️ **GAAP EPS 도 이익 숫자입니다** (150차-AB). 처음에는 조정EPS·
+        #    논갭 영업이익·조정EBITDA 셋만 봤는데, **은행은 그 셋을 아예
+        #    발표하지 않습니다.** 그래서 골드만삭스의 1월 발표(4분기)가
+        #    아홉 해 내리 "실적 발표가 아님"으로 걸러졌습니다.
+        #
+        #    실측(깃허브에서 GS 를 받아 계기를 읽음): 짝 못 찾은 8-K 12건 중
+        #    **9건이 1월**(2018-01-17 … 2026-01-15) — 빠진 아홉 개의 Q4 와
+        #    정확히 같은 자리입니다. 구멍 메움은 **0건**이었습니다.
+        #
+        #    이 문지기의 목적은 "예비 **매출** 공지"를 막는 것입니다
+        #    (9차 감사 CRDO 26Q3). GAAP EPS 가 실린 문서는 예비 매출 공지가
+        #    아니라 실적 발표입니다. 잣대 사다리도 gaap_eps 를 셋째 칸으로
+        #    이미 인정합니다 — 여기서만 빼 두면 앞뒤가 안 맞습니다.
         if (press.get("adj_eps") is None and press.get("op_income") is None
-                and press.get("adjusted_ebitda") is None):
+                and press.get("adjusted_ebitda") is None
+                and press.get("gaap_eps") is None):
             continue
         # 이 발표를 감싸는 **이웃한 두 XBRL 행**을 찾습니다
         앞행 = 뒤행 = None

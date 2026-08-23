@@ -1349,6 +1349,67 @@ def test_짝_못_찾은_8K_의_날짜를_남긴다():
     assert len(report["unpaired_dates"]) <= report["unpaired_press"], report
 
 
+def test_은행처럼_GAAP_EPS_만_있는_발표도_구멍을_메운다():
+    """(150차-AB) **골드만삭스의 4분기가 아홉 해 내리 사라진 이유.**
+
+    구멍 메우기의 문지기가 "이익 숫자"로 조정EPS·논갭 영업이익·
+    조정EBITDA 셋만 인정했습니다. 은행은 **그 셋을 아예 발표하지
+    않습니다** — GAAP EPS 만 냅니다. 그래서 1월 발표가 전부
+    "실적 발표가 아님"으로 걸러졌습니다.
+
+    실측(깃허브에서 GS 를 받아 계기를 읽음):
+        짝 못 찾은 8-K 12건 중 **9건이 1월** · 구멍 메움 **0건**
+    """
+    # 9월말 · 3월말 XBRL 행 사이에 12월 분기가 비어 있는 모양 (GS 실물)
+    xbrl = [
+        {"ticker": "GS", "filing_date": "2025-09-30", "gaap_eps": 12.25,
+         "source": "근사치"},
+        {"ticker": "GS", "filing_date": "2026-03-31", "gaap_eps": 17.55,
+         "source": "근사치"},
+    ]
+    press = [
+        # 1월 발표 — **GAAP EPS 만** 있습니다 (조정EPS·영업이익 없음)
+        {"ticker": "GS", "filing_date": "2026-01-15", "gaap_eps": 14.20,
+         "adj_eps": None, "op_income": None, "adjusted_ebitda": None,
+         "source": "직접공시"},
+    ]
+    report = sf.new_report("GS")
+    out = sf.merge_quarters([dict(r) for r in xbrl], [dict(p) for p in press],
+                            report)
+    끼운 = [r for r in out if r.get("구멍메움")]
+    assert 끼운, (
+        "GAAP EPS 만 있는 은행 발표가 구멍을 못 메웠습니다 — "
+        f"분기 {len(out)}개 · 구멍 메움 {report.get('hole_filled')}건")
+    assert 끼운[0]["gaap_eps"] == 14.20, 끼운[0]
+    # 분기끝은 **지어내지 않고** 앞뒤 사이 한가운데입니다
+    assert 끼운[0]["filing_date"].startswith("2025-12"), 끼운[0]["filing_date"]
+
+
+def test_숫자가_하나도_없는_공지는_여전히_안_끼운다():
+    """문지기를 넓혔다고 **아무 공지나** 들어오면 안 됩니다.
+
+    예비 매출 공지가 분기를 차지해 진짜 발표를 밀어낸 사고(9차 감사)의
+    재발 방지입니다 — 그 목적은 그대로 지킵니다.
+    """
+    xbrl = [
+        {"ticker": "T", "filing_date": "2025-09-30", "gaap_eps": 1.0,
+         "source": "근사치"},
+        {"ticker": "T", "filing_date": "2026-03-31", "gaap_eps": 1.2,
+         "source": "근사치"},
+    ]
+    press = [
+        # 매출만 있는 예비 공지 — 이익 숫자가 하나도 없습니다
+        {"ticker": "T", "filing_date": "2026-01-15", "revenue": 5e8,
+         "gaap_eps": None, "adj_eps": None, "op_income": None,
+         "adjusted_ebitda": None, "source": "직접공시"},
+    ]
+    report = sf.new_report("T")
+    out = sf.merge_quarters([dict(r) for r in xbrl], [dict(p) for p in press],
+                            report)
+    assert not [r for r in out if r.get("구멍메움")], (
+        "이익 숫자가 없는 예비 공지가 분기를 차지했습니다")
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
