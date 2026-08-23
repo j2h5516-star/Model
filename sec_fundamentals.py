@@ -147,7 +147,17 @@ def _detect_table_unit(text: str, position: int, window: int = 3000) -> int:
 
     표 형태의 보도자료는 숫자에 단위가 안 붙어 있고 표 제목에만 적혀 있기 때문입니다.
     못 찾으면 1(단위 없음)을 돌려줍니다.
+
+    ⚠️ `position` 은 **숫자 앞 공백의 시작**입니다(_parse_number_at 이 돌려주는
+       number_start). 아래 '표의 칸인가' 검사가 그 공백을 봅니다.
     """
+    가까운 = _가장_가까운_단위(text, position, window)
+    if 가까운 != 1:
+        return 가까운
+    return _멀리_있는_단위를_조심히_쓰기(text, position)
+
+
+def _가장_가까운_단위(text: str, position: int, window: int) -> int:
     start = max(0, position - window)
     context = text[start:position]
     best_scale, best_pos = 1, -1
@@ -158,6 +168,48 @@ def _detect_table_unit(text: str, position: int, window: int = 3000) -> int:
                 best_pos = match.start()
                 best_scale = _SCALE_MULTIPLIER.get(word, 1)
     return best_scale
+
+
+# 표의 칸인가 — 이름과 값 사이가 공백 두 칸 이상으로 벌어지면 표의 칸입니다.
+# 서술문은 "revenues of $17.23" 처럼 한 칸으로 붙습니다.
+_TABLE_CELL_RE = re.compile(r"[ \t]{2,}")
+_FAR_UNIT_AHEAD = 40
+
+
+def _멀리_있는_단위를_조심히_쓰기(text: str, position: int) -> int:
+    """창(3,000자) 안에서 못 찾았을 때만, 더 멀리 있는 단위 선언을 씁니다.
+
+    150차-AF — GS 는 합계 줄이 단위 선언에서 3,225자 떨어져 있어 창 밖입니다.
+    그래서 매출이 172억이 아니라 **17,227 달러**로 남았습니다.
+
+    다만 그냥 멀리까지 보게 하면 **더 나빠집니다.** 원문 1,443건 전수 실측 —
+    문서 전체를 보게 하면 47건이 바뀌는데 그중 27건이 잘못됐고, 그 안에는
+    Citi 10.35**조** · JPM 100**조** · TROW 5.6**조** 같은 값이 있었습니다.
+    88차에 적어 둔 "그럴듯해져서 더 위험하다"가 그대로 재현된 것입니다.
+
+    그래서 두 가지를 함께 요구합니다.
+
+      (가) 배수가 **10억이면 쓰지 않습니다.** 재무제표 표는 천·백만 단위로
+           적지 10억 단위로 적지 않습니다. 멀리 있는 "billion" 은 거의 언제나
+           서술문("$1.2 billion 자사주 매입")이거나 다른 구역입니다.
+           실측 — 먼 곳의 10억 선언 6건이 **6건 모두 틀렸습니다.**
+
+      (나) 숫자가 **표의 칸**에 있어야 합니다. "(in millions)" 는 그 **표**의
+           단위 선언이지 서술문의 단위가 아닙니다. 서술문 숫자에 표의 단위를
+           곱하는 것은 종류가 다른 것을 곱하는 일입니다.
+           실측 — 잃던 값 202·3·28 은 전부 슬라이드·서술문 숫자였습니다.
+
+    둘을 얹은 뒤 전수 재측정: 바뀐 것 29건 중 **23건이 제자리로** 갔고
+    (GS 5 · MCK 3 · LLY 3 · MET 2 · MCD 2 · CMCSA 2 · NFLX 2 · AFL · BAC ·
+    CL · TTMI), 남은 6건(CGNX 3 · SO 2 · JPM 1)은 **고치기 전에도 틀린 값**
+    이며 `dataset.py` 의 자릿수 안전망이 이웃 분기와 견주어 잡습니다.
+    """
+    if not _TABLE_CELL_RE.match(text, position, position + _FAR_UNIT_AHEAD):
+        return 1
+    먼 = _가장_가까운_단위(text, position, position)   # 문서 처음까지
+    if 먼 >= 1_000_000_000:
+        return 1
+    return 먼
 
 
 def _parse_number_at(

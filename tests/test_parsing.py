@@ -560,6 +560,53 @@ def test_bare_in_millions_counts_only_at_the_start_of_a_line():
     assert sf._detect_table_unit(text2, len(text2)) == 1_000_000
 
 
+def _멀리(글자수: int) -> str:
+    """창(3,000자)보다 확실히 멀도록 메꿈 글을 만듭니다.
+
+    ⚠️ 메꿈이 3,000자에 못 미치면 **가까운 길로 통과해** 시험이 헛돕니다.
+       처음에 2,700자를 넣었다가 그 함정에 빠졌습니다.
+    """
+    assert 글자수 > 3000, "창보다 짧으면 이 시험은 아무것도 재지 않습니다"
+    return "메꿈 " * (글자수 // 3)
+
+
+def test_far_away_unit_header_is_used_for_a_table_cell():
+    """단위 선언이 창(3,000자)보다 멀어도 **표의 칸**이면 씁니다 (150차-AF).
+
+    실물 GS: 합계 줄이 단위 선언에서 3,225자 떨어져 있어 창 밖이었고,
+    그래서 매출이 172억이 아니라 **17,227 달러**로 남았습니다.
+    """
+    글 = "$ in millions\n" + _멀리(4200) + "\nTotal net revenues      17,227\n"
+    assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 17_227_000_000
+
+
+def test_far_away_unit_header_is_refused_for_prose_and_for_billions():
+    """멀리 있는 선언은 **표의 칸**이고 **10억이 아닐 때만** 씁니다.
+
+    그냥 멀리까지 보게 하면 더 나빠집니다. 원문 1,443건 전수 실측 —
+    문서 전체를 보게 하면 47건이 바뀌는데 27건이 잘못됐고, 그중에는
+    Citi 10.35조 · JPM 100조 · TROW 5.6조 같은 값이 있었습니다.
+
+    (가) 서술문 숫자에는 표의 단위를 곱하지 않습니다 — "(in millions)" 는
+         그 **표**의 단위 선언이지 문장의 단위가 아닙니다.
+    (나) 멀리 있는 "billion" 은 안 씁니다 — 재무제표 표는 천·백만으로 적지
+         10억으로 적지 않습니다. 실측 6건이 6건 모두 틀렸습니다.
+    """
+    멀리 = _멀리(4200)
+
+    # (가) 서술문(공백 한 칸)에는 안 붙인다
+    산문 = "$ in millions\n" + 멀리 + "\nTotal net revenues of 17,227 for the quarter\n"
+    assert sf.find_labeled_value(산문, sf.LABELS_REVENUE) == 17_227
+
+    # (나) 멀리 있는 10억 선언은 안 쓴다
+    십억 = "$ in billions\n" + 멀리 + "\nTotal net revenues      10,353\n"
+    assert sf.find_labeled_value(십억, sf.LABELS_REVENUE) == 10_353
+
+    # 가까이(창 안)에 있는 10억 선언은 여전히 씁니다 — 멀 때만 조심하는 것입니다
+    가까운십억 = "($ in billions)\nTotal net revenues      10\n"
+    assert sf.find_labeled_value(가까운십억, sf.LABELS_REVENUE) == 10_000_000_000
+
+
 def test_share_count_unit_is_not_treated_as_a_money_unit():
     """"Shares (M)" 는 **주식 수**의 단위지 금액의 단위가 아닙니다.
 
