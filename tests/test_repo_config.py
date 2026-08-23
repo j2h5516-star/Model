@@ -190,6 +190,29 @@ def test_워크플로_주석이_일꾼수를_거꾸로_말하지_않는다():
             f"config 는 {cfg.COLLECT_WORKERS} 입니다")
 
 
+def test_설계도가_실제_모듈을_전부_적고_있다():
+    """(150차-I) `설계도.md` 는 새 세션이 **모듈 경계를 배우는** 문서인데,
+    실제로 있는 파이썬 파일 **14개가 빠져** 있었습니다(sector_model ·
+    leadership · vendor_feed · vendor_compare · web_build · model_verify
+    등). 새 세션이 시스템을 절반만 보게 됩니다.
+
+    문서는 **아무도 안 보면 반드시 썩습니다** — 시험이 대신 봅니다.
+    새 파일을 지으면 설계도에도 적어야 통과합니다.
+    """
+    import re
+    with open(os.path.join(ROOT, "설계도.md"), encoding="utf-8") as f:
+        적힌것 = set(re.findall(r"[A-Za-z_][A-Za-z0-9_]*\.py", f.read()))
+    실제 = {f for f in os.listdir(ROOT) if f.endswith(".py")}
+    빠짐 = sorted(실제 - 적힌것)
+    assert not 빠짐, (
+        f"설계도.md 에 안 적힌 모듈: {빠짐} — 새 세션은 이 부품들이 "
+        "없는 줄 압니다")
+    유령 = sorted(적힌것 - 실제)
+    assert not 유령, (
+        f"설계도.md 가 없는 파일을 말합니다: {유령} — 지워졌는데 "
+        "문서만 남았습니다")
+
+
 def test_웹앱_화면_파일이_그대로_있다():
     """index/style/app.js 중 하나만 빠져도 화면이 통째로 죽습니다."""
     for name in ("index.html", "style.css", "app.js", "manifest.json"):
