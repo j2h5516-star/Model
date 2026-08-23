@@ -78,6 +78,7 @@ def 한종목_수집(ticker: str, progress=print) -> dict:
     sf._ensure_identity()          # SEC 는 신원 없는 요청을 막습니다(403)
     오류 = None
     quarters: list[dict] = []
+    보고 = {}
     try:
         quarters, 보고 = sf.get_fundamentals(ticker, use_cache=False)
         오류 = (보고 or {}).get("first_error")
@@ -105,7 +106,18 @@ def 한종목_수집(ticker: str, progress=print) -> dict:
         말.append(f"기준지수({cfg.BENCHMARK}) 주가를 못 받아 견줄 수가 없습니다")
     progress(f"{ticker}: 분기 {len(eps)}개 · 주가 {'있음' if 주가있음 else '없음'}"
              f" · 기준지수 {'있음' if 기준지수있음 else '없음'} · {걸린:.1f}초")
-    return {"종목": ticker, "eps": eps, "prices": prices,
+
+    # 수집 진단 계기를 그대로 남깁니다 (150차-Z).
+    # 왜: "분기가 왜 없나"의 답이 여기 들어 있습니다 — 8-K 를 몇 건
+    # 찾았고(filings_found), 실적발표로 인정했고(gate_passed), 숫자를
+    # 뽑았고(parsed_ok), **짝을 못 찾아 버려진 것이 몇 건인가**
+    # (unpaired_press·pair_note). 짐작 대신 이 숫자를 봅니다.
+    # ⚠️ `raw_texts` 는 원문 통째라 큽니다 — 뺍니다.
+    계기 = {k: v for k, v in (보고 or {}).items() if k != "raw_texts"}
+    progress(f"[수집계기] 8-K {계기.get('filings_found')}건 · 실적으로 인정 "
+             f"{계기.get('gate_passed')}건 · 숫자 뽑음 {계기.get('parsed_ok')}건 · "
+             f"짝 못 찾음 {계기.get('unpaired_press')}건")
+    return {"종목": ticker, "eps": eps, "prices": prices, "계기": 계기,
             "성공": 성공, "말": " / ".join(말), "초": round(걸린, 1)}
 
 
@@ -405,6 +417,7 @@ def 저장(수집: dict, 화면: dict | None, progress=print,
         json.dump({"종목": 수집["종목"], "수집시각": time.strftime(
             "%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "성공": 수집["성공"], "말": 수집["말"],
+            "수집계기": 수집.get("계기"),  # 8-K 를 몇 건 찾고 몇 건 버렸나 (150차-Z)
             "단위진단": 진단,          # 원문이 단위를 어디에 뒀나 (150차-U)
             "빠진분기진단": 구멍진단,   # 분기가 왜 통째로 없나 (150차-X)
             "eps": 수집["eps"]}, f, ensure_ascii=False)
