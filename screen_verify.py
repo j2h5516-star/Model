@@ -165,6 +165,18 @@ def 화면과_데이터를_맞댄다() -> list[dict]:
         f"가까운 분기의 1/100 미만인 매출 {깨진매출['행']}행"
         + (f" · {깨진매출['종목들']}" if 깨진매출["행"] else " (150차-Y 고침 뒤 0이 정상)"))
 
+    # ── ⑭ **종목 전체**의 매출이 수상한 곳 (150차-AC) ──────────────
+    #      150차-Y 는 "그 종목의 성한 분기"와 견주므로, **모든 분기가 다
+    #      어긋난 종목**은 견줄 데가 없어 손을 못 댑니다. 실물: GS 는
+    #      전 분기가 백만 단위로 들어와 있습니다(15,520 = 실제 155억).
+    #      고칠 수 없어도 **말은 해야** 합니다 — 화면이 조용하면 주인은
+    #      그 숫자를 믿습니다.
+    적기("종목 전체 매출", False,
+        f"분기 최대 매출이 500만 달러 미만인 종목 {len(깨진매출['통째수상'])}개"
+        + (f" {깨진매출['통째수상']} — 고칠 자가 없어 미해결(150차-AC)"
+           if 깨진매출["통째수상"] else ""),
+        확인못함=bool(깨진매출["통째수상"]))
+
     # ── ⑫ 분기 **이름**이 그 종목 안에서 어긋나지 않는가 (150차-T) ──
     #      이름은 보도자료 글자에서 뽑아 못 믿습니다. 계산에는 안 쓰지만
     #      (기간끝을 씁니다) 화면에 이름을 띄우므로 세어서 보고합니다.
@@ -210,18 +222,23 @@ def _자릿수깨진_매출_세기(ds: dict) -> dict:
     import statistics
     행 = 0
     종목 = set()
+    통째수상 = []
     for t, rows in (ds.get("quarters") or {}).items():
-        좋은 = [r["revenue"] for r in rows
-              if isinstance(r.get("revenue"), (int, float)) and r["revenue"] > 1_000_000]
+        값들 = [r["revenue"] for r in rows
+              if isinstance(r.get("revenue"), (int, float)) and r["revenue"] > 0]
+        # **종목 전체**가 어긋난 경우 (150차-AC) — 견줄 성한 행이 없어
+        # 150차-Y 가 손을 못 댑니다. 고칠 수는 없어도 세어서 말합니다.
+        if 값들 and max(값들) < 5_000_000:
+            통째수상.append(t)
+        좋은 = [v for v in 값들 if v > 1_000_000]
         if len(좋은) < 4:
             continue
         중앙 = statistics.median(좋은)
-        for r in rows:
-            v = r.get("revenue")
-            if isinstance(v, (int, float)) and 0 < v < 중앙 / 100.0:
+        for v in 값들:
+            if 0 < v < 중앙 / 100.0:
                 행 += 1
                 종목.add(t)
-    return {"행": 행, "종목들": sorted(종목)[:8]}
+    return {"행": 행, "종목들": sorted(종목)[:8], "통째수상": sorted(통째수상)[:8]}
 
 
 def _어긋난라벨_세기(ds: dict) -> dict:
