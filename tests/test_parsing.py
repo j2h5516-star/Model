@@ -1169,23 +1169,6 @@ def test_구멍이_없으면_아무것도_안_끼운다():
     assert len(out) == 4, [r["filing_date"] for r in out]
 
 
-if __name__ == "__main__":
-    tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
-    passed = failed = 0
-    for name, fn in tests:
-        try:
-            fn()
-            print(f"  ✅ {name}")
-            passed += 1
-        except AssertionError as e:
-            print(f"  ❌ {name} — {e}")
-            failed += 1
-        except Exception as e:
-            print(f"  💥 {name} — {type(e).__name__}: {e}")
-            failed += 1
-    print(f"\n파싱 테스트: {passed}개 통과, {failed}개 실패")
-    sys.exit(1 if failed else 0)
-
 
 def test_xbrl_addbacks_are_used_only_when_every_quarter_has_them():
     """되돌릴 항목이 일부 분기에만 있으면 아예 쓰지 않아야 합니다.
@@ -1231,3 +1214,109 @@ def test_all_exceptions_are_recorded_not_just_the_first():
     assert "단계0" in report["first_error"]          # 화면 요약용 첫 오류는 그대로
     assert len(report["all_errors"]) == 3            # 나머지도 남습니다
     assert any("단계2" in e for e in report["all_errors"])
+
+
+# ---------------------------------------------------------------------------
+# 보도자료 표의 **단위**를 XBRL 을 자로 삼아 맞추기 (150차-V)
+# ---------------------------------------------------------------------------
+def test_보도자료가_천단위로_들어오면_XBRL_을_자로_고친다():
+    """실물 CRDO: 216,722 ↔ 매출 4.37억 → 마진 0.05% 로 버려지던 값.
+
+    깃허브에서 다시 받아 XBRL 과 맞대니 **19분기 중 11분기가 정확히
+    1,000배** 차이였습니다(나머지 8분기는 1배). XBRL 은 규정상 절대
+    달러이고, 같은 분기의 GAAP 과 논갭이 1,000배 차이 날 수는 없습니다.
+    """
+    row = {"op_income": 3_152_000.0, "revenue": 51_369_000.0}   # XBRL 행
+    press = {"op_income": 3_399.0, "source": "직접공시"}          # 천 단위
+    sf._apply_press_to_row(row, press)
+    assert row["op_income"] == 3_399_000.0, (
+        f"천 단위를 못 고쳤습니다: {row['op_income']}")
+    assert row["unit_scale_fixed"] == 1000
+    assert row["op_income_xbrl"] == 3_152_000.0, "자로 쓴 XBRL 값을 안 남겼습니다"
+
+
+def test_단위가_이미_맞으면_건드리지_않는다():
+    """멀쩡한 값을 고치면 그게 더 나쁩니다 (실물 CRDO 2025-08-02)."""
+    row = {"op_income": 88_000_000.0}
+    press = {"op_income": 96_197_000.0, "source": "직접공시"}
+    sf._apply_press_to_row(row, press)
+    assert row["op_income"] == 96_197_000.0, "멀쩡한 값을 건드렸습니다"
+    assert row.get("unit_scale_fixed") is None
+
+
+def test_자가_없으면_고치지_않는다():
+    """XBRL 영업이익이 없으면 잴 자가 없습니다 — 없음이 안전합니다."""
+    row = {"op_income": None}
+    press = {"op_income": 3_399.0, "source": "직접공시"}
+    sf._apply_press_to_row(row, press)
+    assert row["op_income"] == 3_399.0, "자도 없이 고쳤습니다"
+    assert row.get("unit_scale_fixed") is None
+
+
+def test_배수가_하나로_안_정해지면_고치지_않는다():
+    """자가 이상하면(GAAP 이 0 에 가깝다든지) 어떤 배수도 안 맞습니다."""
+    row = {"op_income": 1_000.0}          # 자 자체가 수상함
+    press = {"op_income": 250_000_000.0, "source": "직접공시"}
+    sf._apply_press_to_row(row, press)
+    assert row["op_income"] == 250_000_000.0
+    assert row.get("unit_scale_fixed") is None
+
+
+def test_같은_문서의_EBITDA_도_같은_배수로_고친다():
+    """한 표의 단위는 하나입니다 — 영업이익이 천 단위면 EBITDA 도 천 단위."""
+    row = {"op_income": 3_152_000.0, "da": 500_000.0}
+    press = {"op_income": 3_399.0, "adjusted_ebitda": 3_899.0, "source": "직접공시"}
+    sf._apply_press_to_row(row, press)
+    assert row["adjusted_ebitda"] == 3_899_000.0, (
+        f"같은 문서인데 EBITDA 는 안 고쳤습니다: {row['adjusted_ebitda']}")
+
+
+def test_띠가_1000배_이상이면_거부한다():
+    """띠가 넓으면 두 배수가 동시에 맞아 '하나로 정해짐'이 무너집니다.
+
+    나중에 누가 "더 많이 살리자"며 띠를 넓히면 조용히 틀린 배수를 고를
+    수 있습니다. 그 자리에서 멈추게 합니다.
+    """
+    try:
+        sf._단위배수_정하기(1.0, 1.0, (0.001, 10.0))
+    except ValueError:
+        return
+    raise AssertionError("띠가 1,000배 이상인데 그대로 계산했습니다")
+
+
+def test_어떤_띠에서도_배수는_둘_이상_맞을_수_없다():
+    """'하나로 정해질 때만 고친다'가 **구조적으로** 지켜지는지 봅니다.
+
+    배수 후보는 1 · 1,000 · 100만 · 10억이라 서로 1,000배씩 떨어져
+    있습니다. 띠 폭이 1,000배 미만이면 둘이 동시에 들어올 수 없습니다.
+    허용되는 띠를 여러 개 넣어 실제로 그런지 확인합니다.
+
+    (이 성질이 깨지면 `len(맞는) == 1` 이 조용히 값을 버리기 시작합니다.)
+    """
+    띠들 = [(0.05, 20.0), (0.2, 100.0), (0.5, 400.0), (0.001, 0.9)]
+    for 아래, 위 in 띠들:
+        for xbrl in (1.0, -3_152_000.0, 8.7e9):
+            for 보도 in (1.0, 3_399.0, -216_722.0, 9.6e7):
+                맞는 = [s for s in sf._UNIT_SCALES
+                       if 아래 <= abs(보도 * s / xbrl) <= 위]
+                assert len(맞는) <= 1, (
+                    f"띠 {(아래, 위)} · 보도 {보도} · XBRL {xbrl} 에서 "
+                    f"배수가 {맞는} 로 여럿 맞습니다")
+
+
+if __name__ == "__main__":
+    tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
+    passed = failed = 0
+    for name, fn in tests:
+        try:
+            fn()
+            print(f"  ✅ {name}")
+            passed += 1
+        except AssertionError as e:
+            print(f"  ❌ {name} — {e}")
+            failed += 1
+        except Exception as e:
+            print(f"  💥 {name} — {type(e).__name__}: {e}")
+            failed += 1
+    print(f"\n파싱 테스트: {passed}개 통과, {failed}개 실패")
+    sys.exit(1 if failed else 0)

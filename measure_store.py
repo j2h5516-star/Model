@@ -59,6 +59,13 @@ EPS_FIELDS = (
     "gaap_eps_xbrl",
     "revenue_xbrl",
     "gross_margin_pct_xbrl",
+    # 150차-V — 보도자료 표의 단위를 XBRL 을 자로 삼아 맞춘 자취.
+    #   op_income_xbrl   덮어쓰기 전의 XBRL 영업이익 (자로 쓴 값)
+    #   unit_scale_fixed 실제로 곱한 배수 (안 고쳤으면 없음)
+    # 남기는 이유: 나중에 "이 값이 왜 이렇게 됐나"를 사람이 되짚을 수
+    # 있어야 합니다. 고친 자취를 안 남기면 감사할 수가 없습니다.
+    "op_income_xbrl",
+    "unit_scale_fixed",
     "source",
     # 이 분기에 보도자료가 실제로 붙었는가 (98차 계기).
     #

@@ -247,6 +247,41 @@ def test_웹앱_화면_파일이_그대로_있다():
     assert not 남은, f"허용되지 않은 바깥 주소: {sorted(남은)}"
 
 
+def test_실행스위치_뒤에_갇힌_시험이_없다():
+    """(150차-V) **두 번째로 같은 사고가 났습니다.**
+
+    시험 파일은 맨 아래 `if __name__ == "__main__":` 안에서 `globals()` 를
+    훑어 자기 시험을 돌립니다. 그 블록보다 **아래**에 적힌 시험 함수는
+    그 시점에 아직 만들어지지 않았고, 블록이 `sys.exit` 로 끝나므로
+    **영원히 안 돕니다.** 그런데 초록불은 그대로 뜹니다.
+
+    · 1차: 실행 스위치 뒤에 적혀 한 번도 안 돈 시험 **12개** (인수인계 4장)
+    · 2차: `test_parsing.py` 에 **8개** — 그중 2개는 제가 만든 것도
+      아닌, 예전부터 잠들어 있던 것이었습니다 (150차-V).
+
+    사람이 조심해서 될 일이 아닙니다. 기계가 막습니다.
+    """
+    import re
+
+    d = os.path.join(ROOT, "tests")
+    갇힘 = []
+    for f in sorted(os.listdir(d)):
+        if not (f.startswith("test_") and f.endswith(".py")):
+            continue
+        with open(os.path.join(d, f), encoding="utf-8") as fh:
+            글 = fh.read()
+        i = 글.find('if __name__ ==')
+        if i < 0:
+            갇힘.append(f"{f}: 실행 스위치가 아예 없습니다")
+            continue
+        뒤 = re.findall(r"^def (test_\w+)", 글[i:], re.M)
+        if 뒤:
+            갇힘.append(f"{f}: 스위치 뒤에 {len(뒤)}개 — {뒤}")
+    assert not 갇힘, (
+        "실행 스위치 **뒤**에 적혀 한 번도 돌지 않는 시험이 있습니다. "
+        "그 블록을 파일 맨 끝으로 옮기세요:\n  " + "\n  ".join(갇힘))
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
