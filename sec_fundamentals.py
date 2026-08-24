@@ -2723,7 +2723,37 @@ def fetch_xbrl_approximation(
     for key in _XBRL_CONCEPTS:
         series[key] = _series_for_key(key, facts, report)
 
-    return _quarters_from_series(ticker, series, start_date, report)
+    # 회계연도 **연간** GAAP EPS — 오염을 가릴 **독립된 자** (150차-AL).
+    # 이 계열은 12개월짜리라 열쇠(기간종료일)가 곧 **결산일**입니다.
+    # 그래서 회계 달력을 짐작할 필요가 없습니다 — 12개월 값이 있는 그 날이
+    # 그 회사의 회계연도 끝입니다.
+    annual_eps = _연간_gaap_eps(facts, report)
+
+    return _quarters_from_series(ticker, series, start_date, report, annual_eps)
+
+
+def _연간_gaap_eps(facts, report: dict | None = None) -> dict[str, float]:
+    """회계연도 **연간** GAAP 희석 EPS 를 {결산일: 값} 으로 뽑습니다.
+
+    무엇에 쓰나 (150차-AL): 보도자료가 **4분기 자리에 연간값을 넣는** 사고를
+    가리는 데 씁니다. 150차-AK 에서 항등식(Q1+Q2+Q3+Q4=연간)만으로는
+    연간값과 진짜 성수기 4분기를 **원리적으로 못 가른다**는 것을 실측으로
+    확인했습니다 — 식 안에서는 둘이 똑같이 생겼기 때문입니다.
+
+    가르려면 **식 밖에서 온 값**이 있어야 하고, 그것이 이 계열입니다.
+    저장된 4분기 값이 이 연간값과 같으면 그것은 연간값이고, 다르면
+    진짜 4분기값입니다. 150차-V 가 단위를 고칠 때 XBRL 을 자로 삼은 것과
+    같은 수입니다 — 숫자를 만드는 것이 아니라 **다른 출처에 묻는 것**입니다.
+
+    ⚠️ 이 값으로 4분기 EPS 를 **계산해 채우지 않습니다.** EPS 는 비율이라
+       연간에서 분기 합을 빼도 4분기 EPS 가 아닙니다(주식 수가 분기마다
+       다릅니다). 오직 **가리는 데만** 씁니다.
+    """
+    annual: dict[str, float] = {}
+    for concept in _XBRL_CONCEPTS["gaap_eps"]:
+        annual.update(_annual_series(
+            facts, concept, report, unit=_XBRL_UNITS["gaap_eps"]))
+    return annual
 
 
 
@@ -2733,6 +2763,7 @@ def _quarters_from_series(
     series: dict,
     start_date: str,
     report: dict | None = None,
+    annual_eps: dict[str, float] | None = None,
 ) -> list[dict]:
     """XBRL 시계열(series)에서 분기 뼈대 행을 조립합니다 (113차에 분리).
 
@@ -2875,6 +2906,10 @@ def _quarters_from_series(
                 "revenue": revenue,
                 "op_income": approx_op,   # 논갭 근사
                 "gaap_eps": gaap_eps,     # GAAP 희석 EPS (XBRL 구조화 — 근사 아님)
+                # 이 기간끝이 **결산일**이면 그 해의 연간 GAAP EPS.
+                # 4분기 자리에 연간값이 들어왔는지 가리는 자입니다 (150차-AL).
+                # 결산일이 아니면 없음 — 12개월 값이 그 날에 없기 때문입니다.
+                "gaap_eps_annual_xbrl": (annual_eps or {}).get(period_end),
                 "da": da,                 # 감가상각비 — EBITDA 역산에 씁니다
                 "gross_margin_pct": gm_pct,
                 "source": cfg.SRC_APPROX,
@@ -2936,7 +2971,7 @@ def _annual_series(facts, concept: str, report: dict | None = None, unit: str = 
 
     4분기(Q4)는 10-K에 연간으로만 신고되는 경우가 많아, 이 값이 필요합니다.
     """
-    return _period_series(facts, concept, months=12, report=report)
+    return _period_series(facts, concept, months=12, report=report, unit=unit)
 
 
 def _fill_missing_q4(

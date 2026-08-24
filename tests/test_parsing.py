@@ -879,6 +879,49 @@ def test_period_series_unit_filter_by_kind():
     assert got == {"2025-03-31": 1.26}, got
 
 
+def test_연간_gaap_eps_를_따로_뽑는다():
+    """4분기 자리의 연간값을 가릴 **독립된 자**를 함께 뽑아야 합니다 (150차-AL).
+
+    150차-AK 에서 항등식(Q1+Q2+Q3+Q4=연간)만으로는 연간값과 진짜 성수기
+    4분기를 **원리적으로 못 가른다**는 것을 실측으로 확인했습니다 —
+    식 안에서는 둘이 똑같이 생겼기 때문입니다. 가르려면 식 밖에서 온
+    값이 있어야 하고, 그것이 XBRL 의 12개월 EPS 입니다.
+
+    12개월 값은 **결산일에만** 있으므로, 이 계열의 열쇠가 곧 결산일입니다.
+    회계 달력을 짐작할 필요가 없습니다.
+    """
+    rows = (
+        [_eps_fact(d, 1.0) for d in ("2024-03-31", "2024-06-30", "2024-09-30")]
+        + [_eps_fact("2024-12-31", 5.0, months=12)]
+    )
+    연간 = sf._연간_gaap_eps(_FakeFacts(rows), None)
+    assert 연간 == {"2024-12-31": 5.0}, 연간
+
+
+def test_연간_gaap_eps_는_분기값을_섞지_않는다():
+    """3개월 값이 이 계열에 섞이면 자가 자기 자신을 재게 됩니다.
+
+    섞이면 모든 분기에 '연간값'이 붙어, 4분기 자리 판정이 통째로 무너집니다.
+    """
+    rows = [_eps_fact(d, 1.0) for d in ("2024-03-31", "2024-06-30")]
+    assert sf._연간_gaap_eps(_FakeFacts(rows), None) == {}
+
+
+def test_결산일_행에만_연간_gaap_eps_칸이_붙는다():
+    """이 칸이 있다는 것 자체가 '그 기간끝이 결산일'이라는 뜻입니다."""
+    series = {키: {} for 키 in sf._XBRL_CONCEPTS}
+    series["gaap_eps"] = {"2024-09-30": 1.0, "2024-12-31": 1.2}
+    series["revenue"] = {"2024-09-30": 1.0e9, "2024-12-31": 1.1e9}
+    rows = sf._quarters_from_series(
+        "TT", series, "2020-01-01", None, {"2024-12-31": 5.0})
+    칸 = {r["filing_date"]: r["gaap_eps_annual_xbrl"] for r in rows}
+    assert 칸 == {"2024-09-30": None, "2024-12-31": 5.0}, 칸
+
+    # 자를 안 넘기면 모든 행이 없음이어야 합니다 (없는 자를 지어내지 않음)
+    없이 = sf._quarters_from_series("TT", series, "2020-01-01")
+    assert all(r["gaap_eps_annual_xbrl"] is None for r in 없이)
+
+
 def test_xbrl_eps_is_not_q4_filled():
     """EPS 는 비율이라 `연간 − 3분기합`이 4분기 값이 아닙니다 — 채우면 창작.
 
