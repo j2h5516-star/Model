@@ -1441,6 +1441,94 @@ def test_겹친_머리글_윗줄이_연간이면_아랫줄도_연간이다():
     assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.92
 
 
+# ---------------------------------------------------------------------------
+# 주당 값이 **아랫줄**에 있는 표 (150차-AJ — 실물 ALL 올스테이트)
+# ---------------------------------------------------------------------------
+
+_보험사표 = (
+    "($ in millions, except per share data)          Q2 2022     Q2 2021\n"
+    "Consolidated revenues                            $12,220     $12,646\n"
+    "Net income (loss) applicable to common shareholders  (1,042)    1,595\n"
+    "per diluted common share (1)                       (3.81)       5.26\n"
+    "Adjusted net income (loss)*                          (209)       316\n"
+    "per diluted common share* (1)                       (0.76)      3.79\n"
+)
+
+
+def test_주당값이_아랫줄에_있는_표를_읽는다():
+    """보험사는 주당 값을 **윗줄 항목에 딸린 아랫줄**로 적습니다.
+
+    실물 ALL(올스테이트) 2022년 2분기. 지금 파서는 이름과 "per share" 가
+    같은 줄에 붙어 있다고 보고 찾으므로 이 꼴을 통째로 못 읽었고,
+    ALL 은 GAAP EPS 도 조정 EPS 도 전부 "없음"이었습니다.
+    """
+    assert sf.find_eps_value(_보험사표, sf.LABELS_GAAP_EPS) == -3.81
+    assert sf.find_eps_value(_보험사표, sf.LABELS_ADJUSTED_EPS) == -0.76
+
+
+def test_아랫줄_규칙은_이미_찾은_값을_밀어내지_않는다():
+    """**아무것도 못 찾았을 때만** 도는 마지막 수단이어야 합니다.
+
+    이 방어막이 없으면, 멀쩡히 읽히던 문장형 보도자료가 표 어딘가의
+    아랫줄 값에 밀려 바뀝니다 — 하나 고치고 여럿을 잃는 길입니다.
+    """
+    글 = ("Diluted net income per share was $1.96 for the quarter.\n"
+         "Net income applicable to common shareholders          1,000\n"
+         "per diluted common share (1)                          (9.99)\n")
+    assert sf.find_eps_value(글, sf.LABELS_GAAP_EPS) == 1.96
+
+
+def test_아랫줄_규칙은_윗줄을_모르면_손대지_않는다():
+    """윗줄이 어느 잣대인지 모르면 **없음**이 정답입니다 (헌법 1조).
+
+    윗줄에 adjusted·non-GAAP·core 도, net income/earnings/loss 도 없으면
+    그 주당 값이 무엇의 주당 값인지 알 수 없습니다.
+    """
+    글 = ("Book value                                            75,000\n"
+         "per diluted common share (1)                          (9.99)\n")
+    assert sf.find_eps_value(글, sf.LABELS_GAAP_EPS) is None
+    assert sf.find_eps_value(글, sf.LABELS_ADJUSTED_EPS) is None
+
+
+def test_아랫줄_규칙은_조정과_GAAP_을_섞지_않는다():
+    """조정 줄을 GAAP 자리에, GAAP 줄을 조정 자리에 넣으면 안 됩니다."""
+    조정만 = ("Adjusted net income (loss)*                          (209)\n"
+             "per diluted common share* (1)                       (0.76)\n")
+    assert sf.find_eps_value(조정만, sf.LABELS_ADJUSTED_EPS) == -0.76
+    assert sf.find_eps_value(조정만, sf.LABELS_GAAP_EPS) is None
+
+    GAAP만 = ("Net income (loss) applicable to common shareholders  (1,042)\n"
+             "per diluted common share (1)                       (3.81)\n")
+    assert sf.find_eps_value(GAAP만, sf.LABELS_GAAP_EPS) == -3.81
+    assert sf.find_eps_value(GAAP만, sf.LABELS_ADJUSTED_EPS) is None
+
+
+def test_아랫줄_규칙은_이름_뒤에_설명글이_오면_손대지_않는다():
+    """"per share" 로 시작하기만 하면 무엇이든 읽으면 안 됩니다.
+
+    이 문지기가 없어서 실측으로 헛값 둘이 잡혔습니다:
+      PG   "per share from early debt retirement … Core Effective Tax Rate
+            range of 18% to 19%"  → 세율 18 을 EPS 로 읽음 (참값 1.6대)
+      CGNX "Per share impact of discrete tax adjustments identified above
+            0.0x"                 → 영향값을 EPS 로 읽음
+
+    진짜 표의 줄은 이름이 끝나면 **바로 숫자**입니다.
+    """
+    설명글 = ("Net income applicable to common shareholders   1,000\n"
+             "per share from early debt retirement, tax rate range of 18% to 19%\n")
+    assert sf.find_eps_value(설명글, sf.LABELS_GAAP_EPS) is None
+
+    영향줄 = ("Adjusted net income                              1,000\n"
+             "Per share impact of discrete tax adjustments      0.07\n")
+    assert sf.find_eps_value(영향줄, sf.LABELS_ADJUSTED_EPS) is None
+
+    # 각주 번호와 별표는 이름의 일부이므로 통과해야 합니다
+    각주 = ("Net income applicable to common shareholders   1,000\n"
+           "per diluted common share* (2)                  (3.81)\n")
+    assert sf.find_eps_value(각주, sf.LABELS_GAAP_EPS) == -3.81
+
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

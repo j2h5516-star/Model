@@ -1370,6 +1370,82 @@ def find_eps_value(
                 if value > 0 and says_loss:
                     value = -value
                 return value
+    return _주당값이_아랫줄에_있는_표(text, label_patterns)
+
+
+# 줄 **맨 앞**이 "per (diluted) (common) share" 인 줄 — 실물 ALL(올스테이트).
+_PER_SHARE_LINE_RE = re.compile(
+    r"^\s*per\s+(?:diluted\s+)?(?:common\s+)?share", re.I)
+# 윗줄이 어느 잣대인지 가르는 말
+_ADJ_ITEM_RE = re.compile(r"adjusted|non[-\s]?GAAP|\bcore\b", re.I)
+_NET_ITEM_RE = re.compile(r"net\s+(?:income|earnings|loss)", re.I)
+_EPS_LINE_MAX = 60          # 주당 값의 크기 상한 (find_eps_value 와 같은 뜻)
+
+
+def _주당값이_아랫줄에_있는_표(
+    text: str, label_patterns: list[str]
+) -> float | None:
+    """주당 값이 **윗줄 항목에 딸린 아랫줄**로 적히는 표를 읽습니다 (150차-AJ).
+
+    보험사가 이렇게 씁니다. 실물 ALL(올스테이트) 2022년 2분기:
+
+        Net income (loss) applicable to common shareholders   (1,042)   1,595
+        per diluted common share (1)                           (3.81)    5.26
+        Adjusted net income (loss)*                             (420)     316
+        per diluted common share* (1)                          (1.56)    1.04
+
+    지금 파서는 **이름과 "per share" 가 같은 줄에 붙어 있다**고 보고 찾으므로
+    이 꼴을 통째로 못 읽습니다. ALL 은 GAAP EPS 도 조정 EPS 도 전부 없음이었습니다.
+
+    ⚠️ **아무것도 못 찾았을 때만** 도는 마지막 수단입니다. 이미 찾은 값은
+       절대 바꾸지 않습니다 — 없음을 값으로 바꿀 뿐이라 되돌리기 쉽습니다.
+
+    가르는 법은 **윗줄의 이름**입니다. 윗줄에 adjusted·non-GAAP·core 가 있으면
+    조정 잣대, net income/earnings/loss 면 GAAP 잣대입니다. 둘 다 아니면
+    건드리지 않습니다 — 모르면 없음이 정답입니다(헌법 1조).
+
+    원문 실측 — 이 꼴이 있는 파일 76개 / 36종목, 그중 윗줄을 알아본 줄이
+    47개(GAAP 34 · 조정 13)입니다.
+    """
+    조정찾는중 = any(_NONGAAP_NEAR_RE.search(p) for p in label_patterns)
+    줄들 = text.split("\n")
+    for i, 줄 in enumerate(줄들):
+        if i == 0 or not _PER_SHARE_LINE_RE.match(줄):
+            continue
+        윗 = 줄들[i - 1]
+        윗이조정 = bool(_ADJ_ITEM_RE.search(윗))
+        if 윗이조정 != 조정찾는중:
+            continue
+        if not 윗이조정 and not _NET_ITEM_RE.search(윗):
+            continue          # GAAP 쪽인데 순이익 항목이 아니면 모르는 줄
+        이름끝 = _PER_SHARE_LINE_RE.match(줄).end()
+        # ⚠️ **이름 뒤에는 각주 번호·별표·공백만 와야 합니다.**
+        #
+        #    이 문지기가 없으면 "per share" 로 시작하기만 하면 무엇이든
+        #    주당 값으로 읽습니다. 실측으로 잡힌 헛값 둘:
+        #      PG   "per share from early debt retirement … Core Effective
+        #            Tax Rate range of 18% to 19%"  → 세율 18 을 EPS 로 (참값 1.6대)
+        #      CGNX "Per share impact of discrete tax adjustments identified
+        #            above   0.0x"                  → 영향값을 EPS 로
+        #    둘 다 이름 뒤에 **설명 글**이 이어집니다. 진짜 표의 줄은
+        #    "per diluted common share (1)        (3.81)" 처럼 이름이 끝나면
+        #    바로 숫자입니다.
+        나머지 = 줄[이름끝:]
+        머리 = re.match(r"^[\s*]*(?:\(\d+\))?[\s*]*", 나머지).group(0)
+        if not _FIRST_DIGIT_RE.match(나머지[len(머리):].lstrip("$([ ")[:1] or "x"):
+            continue
+        나머지 = 나머지[len(머리):]
+        parsed = _parse_number_at(나머지, 0, len(나머지))
+        if parsed is None:
+            continue
+        값 = parsed[0]
+        if 값 == 0 or abs(값) > _EPS_LINE_MAX:
+            continue
+        # 윗줄 이름이 손실을 말하는데 값이 양수면 부호를 뒤집습니다
+        # (표 형식의 "(3.81)" 은 괄호 규칙으로 이미 음수입니다)
+        if 값 > 0 and re.search(r"\bnet\s+loss\b", 윗, re.I):
+            값 = -값
+        return 값
     return None
 
 
