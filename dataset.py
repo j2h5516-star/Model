@@ -388,6 +388,13 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
         kept.sort(key=lambda r: r["filing_date"])
         # 정렬 뒤에야 "직전 4분기"를 말할 수 있으므로 여기서 누적값을 거릅니다
         _drop_repeated_revenue(ticker, kept, notes)
+        # ⚠️ **연간값 검사를 누적값 검사보다 먼저** 돌립니다 (150차-AO).
+        #    누적값 검사는 GAAP EPS 를 곧잘 잡아 없음으로 만드는데, 그러면
+        #    연간값 검사가 **자로 쓸 값이 사라집니다.** 실물 SHW: GAAP 이
+        #    먼저 지워져 조정 EPS(연간값 11.33)가 그대로 살아남았습니다 —
+        #    150차-AD 가 "GAAP 은 잡히는데 조정 EPS 만 빠져나간다"고 적은
+        #    그 현상의 정체가 이 순서였습니다.
+        _연간값이_4분기_자리에_있으면_버린다(ticker, kept, notes)
         _drop_cumulative_values(ticker, kept, notes)
         _drop_parse_debris(ticker, kept, notes)
         _drop_same_day_siblings(ticker, kept, notes)
@@ -445,6 +452,73 @@ def _one_cumulative_pass(ticker: str, rows: list[dict], notes: list[str]) -> boo
                 rows[index][field] = None
                 return True
     return False
+
+
+# ---------------------------------------------------------------------------
+# 4분기 자리에 들어온 연간값 — **독립된 자**로 가린다 (150차-AO)
+# ---------------------------------------------------------------------------
+# 위 `_drop_cumulative_values` 는 "직전 4분기 합과 거의 같은가"를 보는데,
+# **그 합이 이미 오염되면 무력해집니다.** 실물 SHW 는 2019년 첫 것부터
+# 놓치고 그 뒤로 영영 못 잡습니다 — 오염이 스스로를 지키는 것입니다.
+#
+# 150차-AK 에서 회계 항등식(Q1+Q2+Q3+Q4 = 연간)으로 풀어 보려다 **원리적으로
+# 안 된다**는 것을 실측으로 확인했습니다. 4분기 자리 값이 연간값이든 진짜
+# 성수기 값이든 `Q4 − (Q1+Q2+Q3)` 은 **언제나** 정의되고 언제나 그럴듯합니다.
+# 그 규칙은 SHW 를 잡는 대신 AMZN 2017·TSLA 2023·SNAP 2024 의 **진짜 4분기
+# 값을 죽였고**, 사전 등록한 채택 기준에 따라 버렸습니다.
+#
+# 가르려면 **식 밖에서 온 값**이 있어야 합니다. 그것이 XBRL 의 12개월
+# GAAP EPS 입니다(150차-AL 에서 수집에 실었습니다). 12개월 값은 결산일에만
+# 있으므로 그 칸이 있다는 것 자체가 "이 기간끝이 결산일"이라는 뜻이고,
+# 회계 달력을 짐작할 필요가 없습니다.
+#
+#     4분기 자리 값 ≈ XBRL 연간값  →  연간값이 들어온 것 (버린다)
+#     4분기 자리 값 ≠ XBRL 연간값  →  진짜 4분기값 (둔다)
+#
+# 실데이터(08-24 수집)로 확인한 결과 — 150차-AK 의 채택 기준을 그대로 통과:
+#     SHW FY2022~2025  7.72·9.25·10.55·10.26 = 연간과 같음  ⛔ 잡힘
+#     CAT FY2021·23·24·25  11.83·20.12·22.05·18.81 = 같음  ⛔ 잡힘
+#     AMZN FY2017  4분기 3.75 ≠ 연간 6.15   → 살아남음 ✓
+#     TSLA FY2023  4분기 2.27 ≠ 연간 4.30   → 살아남음 ✓
+#     SNAP 전 회계연도 전부 정상            → 살아남음 ✓
+#
+# **같은 행의 다른 잣대도 함께 버립니다.** GAAP 이 연간값으로 확증되면
+# 그 행의 조정 EPS·조정 EBITDA 도 **같은 표에서 온** 연간값입니다
+# (실물 SHW 24Q4: GAAP 10.55 = 연간, 조정 11.33 도 연간).
+#
+# 고치지 않고 **버립니다** — 차액으로 채워 넣으면 창작입니다(헌법 1조).
+# 그리고 EPS 는 비율이라 연간에서 분기 합을 빼도 4분기 EPS 가 아닙니다
+# (주식 수가 분기마다 다릅니다).
+
+# "같다"고 볼 차이 — EPS 는 센트 단위로 발표되므로 2센트, 큰 값은 1%.
+_ANNUAL_SAME_ABS = 0.02
+_ANNUAL_SAME_PCT = 0.01
+# 같은 행에서 함께 버릴 잣대 (같은 표에서 온 값들)
+_ANNUAL_ROW_FIELDS = ("gaap_eps", "adj_eps", "adjusted_ebitda")
+
+
+def _연간값이_4분기_자리에_있으면_버린다(
+    ticker: str, rows: list[dict], notes: list[str]
+) -> None:
+    """XBRL 연간 GAAP EPS 를 자로 삼아, 4분기 자리의 연간값을 버립니다."""
+    for row in rows:
+        연간 = row.get("gaap_eps_annual_xbrl")
+        분기 = row.get("gaap_eps")
+        if not _finite_number(연간) or not _finite_number(분기) or 연간 == 0:
+            continue
+        if abs(분기 - 연간) > max(_ANNUAL_SAME_ABS, abs(연간) * _ANNUAL_SAME_PCT):
+            continue                    # 다르다 = 진짜 4분기값 — 둔다
+        버린것 = [f for f in _ANNUAL_ROW_FIELDS if row.get(f) is not None]
+        if not 버린것:
+            continue
+        notes.append(
+            f"{ticker} {row.get('period_label', '?')}: 4분기 자리의 GAAP EPS "
+            f"{분기} 가 XBRL 연간값 {연간} 과 같아 **연간값이 분기 칸에 들어온 "
+            f"것**으로 보아 {'·'.join(버린것)} 없음 처리 (150차-AO). "
+            "XBRL 12개월 값은 식 밖에서 온 독립된 자입니다."
+        )
+        for f in 버린것:
+            row[f] = None
 
 
 def _drop_cumulative_values(ticker: str, rows: list[dict], notes: list[str]) -> None:

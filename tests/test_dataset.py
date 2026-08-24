@@ -18,6 +18,7 @@ test_dataset.py — 데이터 계층(dataset.py) 검증 · v3 4단계
 
 import copy
 import json
+import pathlib
 import os
 import sys
 
@@ -1050,6 +1051,83 @@ def test_매출_배수도_둘_이상_맞을_수_없다():
                    if 중앙 / 3.0 <= v * s <= 중앙 * 3.0]
             assert len(맞는) <= 1, (
                 f"중앙 {중앙:,.0f} · 값 {v:,.0f} 에서 배수가 {맞는} 로 여럿입니다")
+
+
+# ---------------------------------------------------------------------------
+# 4분기 자리에 들어온 연간값 — 독립된 자로 가리기 (150차-AO)
+# ---------------------------------------------------------------------------
+
+def _연말행(분기끝, gaap, 연간, adj=None, ebitda=None):
+    return {"filing_date": 분기끝, "announced_date": None,
+            "period_label": 분기끝[:7], "gaap_eps": gaap,
+            "gaap_eps_annual_xbrl": 연간, "adj_eps": adj,
+            "adjusted_ebitda": ebitda, "revenue": 1.0e9}
+
+
+def test_4분기_자리의_연간값을_XBRL_연간과_대조해_버린다():
+    """실물 SHW — 4분기 자리에 **연간값**이 들어와 있었습니다 (150차-AD).
+
+    앞선 검사(`_drop_cumulative_values`)는 "직전 4분기 합"을 기준으로 쓰는데
+    그 합이 이미 오염되면 무력해집니다. 150차-AK 에서 회계 항등식으로
+    풀어 보려다 **원리적으로 안 된다**는 것을 실측으로 확인했고, 가르려면
+    **식 밖에서 온 값**이 필요했습니다 — XBRL 의 12개월 GAAP EPS 입니다.
+
+    같은 행의 조정 EPS·조정 EBITDA 도 함께 버립니다. GAAP 이 연간값으로
+    확증되면 그 행의 다른 잣대도 **같은 표에서 온** 연간값입니다.
+    """
+    rows = [_연말행("2024-12-31", 10.55, 10.55, adj=11.33, ebitda=5.0e8)]
+    notes = []
+    dataset._연간값이_4분기_자리에_있으면_버린다("SHW", rows, notes)
+    assert rows[0]["gaap_eps"] is None, rows[0]
+    assert rows[0]["adj_eps"] is None, "같은 표에서 온 조정 EPS 도 버려야 합니다"
+    assert rows[0]["adjusted_ebitda"] is None, rows[0]
+    assert notes and "150차-AO" in notes[0], notes
+
+
+def test_진짜_4분기값은_남긴다():
+    """4분기 값이 연간값과 **다르면** 그것은 진짜 분기값입니다.
+
+    150차-AK 의 항등식 규칙은 이것을 못 가려 AMZN 2017(성수기) · TSLA 2023
+    (일회성 세금 환입) · SNAP 2024(광고업)의 진짜 값을 죽였고, 그래서
+    버렸습니다. 이 자는 가릅니다 — 그것이 채택 근거입니다.
+    """
+    실물 = [
+        ("AMZN", 3.75, 6.15),    # 연말 성수기
+        ("TSLA", 2.27, 4.30),    # 일회성 이연법인세 환입
+        ("SNAP", 0.01, -0.42),   # 광고업 4분기
+    ]
+    for 종목, 분기, 연간 in 실물:
+        rows = [_연말행("2024-12-31", 분기, 연간, adj=0.5)]
+        dataset._연간값이_4분기_자리에_있으면_버린다(종목, rows, [])
+        assert rows[0]["gaap_eps"] == 분기, f"{종목} 진짜 4분기값이 죽었습니다"
+        assert rows[0]["adj_eps"] == 0.5, 종목
+
+
+def test_자가_없으면_손대지_않는다():
+    """XBRL 연간값이 없는 행(결산일이 아닌 분기)은 판단할 수 없습니다.
+
+    자가 없는데 버리면 그것은 재지 않고 버리는 것입니다 (헌법 1조).
+    """
+    rows = [_연말행("2024-09-30", 10.55, None, adj=11.33)]
+    dataset._연간값이_4분기_자리에_있으면_버린다("SHW", rows, [])
+    assert rows[0]["gaap_eps"] == 10.55 and rows[0]["adj_eps"] == 11.33
+
+
+def test_연간값_검사가_누적값_검사보다_먼저_돈다():
+    """순서가 뒤바뀌면 **자로 쓸 값이 먼저 사라집니다.**
+
+    누적값 검사는 GAAP EPS 를 곧잘 잡아 없음으로 만드는데, 그러면 연간값
+    검사가 대조할 GAAP 이 없어 조정 EPS(연간값)가 그대로 살아남습니다.
+    150차-AD 가 "GAAP 은 잡히는데 조정 EPS 만 빠져나간다"고 적은 그 현상의
+    정체가 이 순서였습니다 — 실측으로 확인하고 순서를 바꿨습니다.
+    """
+    소스 = pathlib.Path(dataset.__file__).read_text()
+    연간자리 = 소스.find("_연간값이_4분기_자리에_있으면_버린다(ticker, kept, notes)")
+    누적자리 = 소스.find("_drop_cumulative_values(ticker, kept, notes)")
+    assert 연간자리 != -1 and 누적자리 != -1, "두 검사 호출을 못 찾았습니다"
+    assert 연간자리 < 누적자리, (
+        "연간값 검사가 누적값 검사보다 **뒤에** 있습니다 — 자로 쓸 GAAP 이 "
+        "먼저 지워져 조정 EPS 의 연간값을 못 잡습니다")
 
 
 if __name__ == "__main__":
