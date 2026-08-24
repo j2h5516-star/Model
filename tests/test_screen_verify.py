@@ -217,6 +217,73 @@ def _sv_세기(ds):
     return sv._자릿수깨진_매출_세기(ds)
 
 
+def test_빈칸사유를_갈래별로_센다():
+    """빈칸이 왜 비었는지 **갈래를 갈라** 세어야 합니다 (150차-AM).
+
+    주인 지시(2026-08-24) — "빈칸이 너무 많다". 세어 보니 대부분은
+    우리가 못 가져온 것이 아니라 **가져올 것이 없는 것**이었습니다.
+    셋을 갈라 보이지 않으면 주인은 고칠 수 없는 것을 고치라고 하거나,
+    고칠 수 있는 것을 못 보고 지나갑니다.
+    """
+    ds = {"quarters": {
+        # 조정 EPS 를 **내는** 회사
+        "AAA": [
+            {"filing_date": "2024-03-31", "announced_date": "2024-04-20",
+             "press_matched": True, "adj_eps": 1.0},           # 있음
+            {"filing_date": "2024-06-30", "announced_date": "2024-07-20",
+             "press_matched": True, "adj_eps": None},          # 회사 미발표
+            {"filing_date": "2024-09-30", "announced_date": "2024-10-20",
+             "press_matched": False, "adj_eps": None},         # 못 붙임 · 냄
+            {"filing_date": "2023-12-31", "announced_date": None,
+             "press_matched": False, "adj_eps": None},         # 발표 기록 없음
+            {"filing_date": "2024-12-31", "announced_date": "2025-01-20",
+             "press_matched": None, "adj_eps": None},          # 구멍 메움
+        ],
+        # 조정 EPS 를 **아예 안 내는** 회사
+        "BBB": [
+            {"filing_date": "2024-03-31", "announced_date": "2024-04-20",
+             "press_matched": False, "adj_eps": None},         # 못 붙임 · 안 냄
+        ],
+    }}
+    셈 = sv._빈칸사유_세기(ds)
+    assert 셈["전체"] == 6, 셈
+    assert 셈["있음"] == 1, 셈
+    assert 셈["회사미발표"] == 1, 셈
+    assert 셈["짝없음_냄"] == 1, 셈
+    assert 셈["짝없음_안냄"] == 1, 셈
+    assert 셈["그시절없음"] == 1, 셈
+    assert 셈["구멍메움"] == 1, 셈
+
+
+def test_빈칸사유는_회사가_내는지로_일감을_가른다():
+    """8-K 를 못 붙인 것이라도, **그 회사가 애초에 안 내면** 일감이 아닙니다.
+
+    붙여도 값이 안 나오는 것을 일감으로 세면, 영원히 안 줄어드는 숫자를
+    쳐다보게 됩니다 — 0 이 될 수 없는 경보는 곧 무시됩니다.
+    """
+    def 만들기(다른분기에_값이_있나):
+        rows = [{"filing_date": "2024-09-30", "announced_date": "2024-10-20",
+                 "press_matched": False, "adj_eps": None}]
+        if 다른분기에_값이_있나:
+            rows.append({"filing_date": "2024-06-30",
+                         "announced_date": "2024-07-20",
+                         "press_matched": True, "adj_eps": 2.0})
+        return {"quarters": {"AAA": rows}}
+
+    낸다 = sv._빈칸사유_세기(만들기(True))
+    안낸다 = sv._빈칸사유_세기(만들기(False))
+    assert 낸다["짝없음_냄"] == 1 and 낸다["짝없음_안냄"] == 0, 낸다
+    assert 안낸다["짝없음_안냄"] == 1 and 안낸다["짝없음_냄"] == 0, 안낸다
+
+
+def test_빈칸사유가_화면_점검_목록에_실린다():
+    """세기만 하고 보고하지 않으면 아무도 안 보는 칸이 됩니다 (150차-C)."""
+    if not _있나():
+        return
+    이름들 = [r["검사"] for r in sv.화면과_데이터를_맞댄다()]
+    assert "주 잣대 빈칸 사유" in 이름들, 이름들
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
