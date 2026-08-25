@@ -1732,6 +1732,82 @@ def test_Approx_는_전망표의_말이다():
     assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
 
 
+# ===========================================================================
+# 150차-AT — 남은 일감 98건에서 뭉쳐 있던 네 꼴 + 전망 창 고침
+# ===========================================================================
+def test_이름_가운데_수식어가_길어도_읽는다():
+    """실물 CGNX — "Net income per **diluted weighted-average common and
+    common-equivalent** share (Non-GAAP)". 줄임 표기는 "per (diluted)
+    share" 가 붙어 있기를 요구해 이 꼴 9건을 놓쳤다."""
+    text = ("Net income per diluted weighted-average common and "
+            "common-equivalent share (Non-GAAP)      $0.21\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.21
+
+
+def test_영향_줄은_이_이름으로_읽히지_않는다():
+    """반례 보존 — 같은 CGNX 표의 "Per share impact of Non-GAAP adjustments
+    identified above   0.02" 는 영향값이다. 이름이 share 로 끝나지 않아
+    위 이름에 걸리지 않아야 한다."""
+    text = ("Per share impact of Non-GAAP adjustments identified above"
+            "        0.02\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
+def test_적자_분기의_같은_문장_꼴을_읽는다():
+    """실물 AMBA — "non-GAAP net **loss** of $5.9 million, or **loss** per
+    diluted ordinary share of $0.13". 앞 이름은 "net profit … or
+    **earnings** per …" 만 받아 적자 분기 6건을 놓쳤다. 부호도 뒤집힌다."""
+    text = ("Non-GAAP net loss of $5.9 million, or loss per diluted "
+            "ordinary share of $0.13.\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == -0.13
+
+
+def test_제목_줄_아래_논갭_항목을_읽는다():
+    """실물 HPE — 제목 줄 아래 GAAP·논갭이 하위 항목으로 온다.
+    GAAP 쪽만 이름이 있어 조정 EPS 가 비어 있었다(5건)."""
+    text = ("•Diluted net earnings per share (“EPS”): \n"
+            "◦GAAP of $0.44, up $1.26 from the prior-year period\n"
+            "◦Non-GAAP(1) of $0.79, up $0.41 from the prior-year period\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.79
+
+
+def test_값_뒤의_전망_낱말은_실적을_버리지_않는다():
+    """실물 HPE·MKSI — 값 **뒤**의 "above our outlook range of …" ·
+    "above the midpoint of guidance" 는 이번 분기 실적을 전망과 견주는
+    말이다. 그것 때문에 진짜 실적을 버리고 있었다."""
+    text = ("Non-GAAP net earnings per diluted share of $1.32, above the "
+            "midpoint of guidance\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.32
+
+
+def test_전망_그_자체인_숫자는_읽지_않는다():
+    """반례 보존 (실물 QRVO 가이던스 갱신 공시) — "$2.14 **at** the midpoint
+    of guidance" 는 값이 곧 전망이다. 위 MKSI 의 "**above** the midpoint"
+    와 낱말 하나가 다르다."""
+    text = ("Diluted earnings per share   $2.14 at the midpoint of guidance\n")
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+
+def test_줄머리_Excluding_은_GAAP_이_아니다():
+    """실물 KSS — "• **Excluding** tax reform benefits, diluted earnings per
+    share were $4.31" 은 정의상 GAAP 이 아니다(게다가 연간값)."""
+    text = ("•   Excluding tax reform benefits, diluted earnings per share "
+            "were $4.31, exceeding the high end of guidance\n")
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+
+def test_문장_중간의_excluding_은_GAAP_을_막지_않는다():
+    """반례 보존 (실물 PYPL) — 줄머리가 아닌 excluding 까지 막았더니
+    진짜 GAAP 값 세 분기가 죽었다."""
+    text = ("• Revenue of $6.5 billion, growing 7%; excluding eBay, revenue "
+            "grew 15% on a spot basis(1) • GAAP EPS of $0.43 compared to "
+            "$0.92 in Q1'21\n")
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == 0.43
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

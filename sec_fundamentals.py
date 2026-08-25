@@ -771,13 +771,37 @@ LABELS_ADJUSTED_EPS = [
     # 금액($5.5)의 소수점과 줄바꿈이 사이에 끼므로 문장 종료(.)로 끊지 않고
     # 거리로만 제한합니다.
     # 여백 패딩(공백 60~70자 + 줄바꿈)이 문장 중간에 끼는 실물이 있어 220자.
-    r"non[-\s]?GAAP\s+net\s+profit[\s\S]{0,220}?\bor\s+earnings\s+per\s+diluted"
-    r"\s+(?:ordinary\s+)?share",
+    # 150차-AT — 적자 분기의 같은 문장 꼴도 함께 받습니다. 실물 AMBA:
+    #   "non-GAAP net **loss** of $5.9 million, or **loss** per diluted
+    #    ordinary share of $0.13"
+    # 앞의 이름은 "net profit … or **earnings** per …" 만 받아 적자 분기
+    # 6건을 놓쳤습니다. 이름에 loss 가 들어가면 find_eps_value 의
+    # says_loss 규칙이 부호를 알아서 뒤집습니다.
+    r"non[-\s]?GAAP\s+net\s+(?:profit|loss|income)[\s\S]{0,220}?"
+    r"\bor\s+(?:earnings|loss|income)\s+per\s+diluted"
+    r"\s+(?:ordinary\s+|common\s+)?share",
     # 150차-AP ① — 수식어가 **두 개 겹치는** 줄임말: "non-GAAP **diluted net**
     # EPS"(실물 HPE). 아래 두 줄은 diluted 하나만 허용해서 이 꼴을 놓쳤습니다.
     r"non[-\s]?GAAP\s+(?:(?:diluted|net)\s+){0,2}EPS",
     r"adjusted\s+(?:(?:diluted|net)\s+){0,2}EPS",
-    r"(?:earnings|income)\s+per\s+(?:diluted\s+)?share\s*\(non[-\s]?GAAP\)",
+    # 150차-AT — **제목 줄 아래 GAAP/논갭 하위 항목** (실물 HPE):
+    #     •Diluted net earnings per share (“EPS”):
+    #     ◦GAAP of $0.44, up $1.26 from the prior-year period …
+    #     ◦Non-GAAP(1) of $0.79, up $0.41 …          ← 우리가 쓰는 값
+    # GAAP 쪽은 76차에 넣은 "net EPS" 이름이 잡고 있었는데 **논갭 쪽 짝이
+    # 없어서** 조정 EPS 가 비어 있었습니다(HPE 5건). 제목 줄에서 논갭
+    # 항목까지를 이름으로 삼습니다(MPWR 형과 같은 방식). GAAP 항목 한 줄을
+    # 건너뛸 거리만 줍니다(200자).
+    r"(?:diluted\s+)?net\s+(?:earnings|income|loss)\s+per\s+share[^\n]{0,20}:"
+    r"[\s\S]{0,200}?non[-\s]?GAAP\s*(?:\(\d+\))?\s+of\b",
+    # 150차-AT — 이름 **가운데에 수식어가 길게** 끼는 표기.
+    # 실물 CGNX: "Net income per **diluted weighted-average common and
+    # common-equivalent** share (Non-GAAP)   $0.21"
+    # 위 줄임 표기는 "per (diluted) share" 가 붙어 있기를 요구해 놓쳤습니다
+    # (이 한 꼴로 CGNX 9건). 낱말·붙임표·공백만 허용하고 60자로 묶습니다 —
+    # "Per share impact of Non-GAAP adjustments identified above" 같은
+    # **영향 줄**은 이름이 share 로 끝나지 않아 걸리지 않습니다.
+    r"(?:earnings|income|loss)\s+per\s+[a-z\-\s]{0,60}?share\s*\(non[-\s]?GAAP\)",
     # ------------------------------------------------------------------
     # 150차-AP ② — **회사가 자기 논갭 지표를 "core" 라고 부르는 경우.**
     # 실물 BA(보잉): "GAAP loss per share of ($0.11) and **core loss per
@@ -880,6 +904,22 @@ _NONGAAP_NEAR_RE = re.compile(r"non[-\s]?GAAP|adjusted|\bcore\b", re.I)
 #   CRDO "…**non-GAAP** net income of $208.8 million. **GAAP diluted
 #         net income per share** of $0.82" ← 55자 앞, 앞 문장 → 살려야 함
 # 차이는 글자 수가 아니라 **문장**입니다.
+# GAAP 을 찾을 때 이름 **앞**에서 보는 말 — 위 목록에 "excluding" 을 더합니다.
+# "**Excluding** tax reform benefits, diluted earnings per share were $4.31"
+# (실물 KSS)은 정의상 **GAAP 이 아닌** 수치입니다. 이 낱말은 이름 뒤(값과
+# 이름 사이)에서는 반대로 **막으면 안 되므로**(VZ "adjusted EPS, excluding
+# special items, of $1.19" 가 진짜 값) 여기서만 씁니다.
+_NONGAAP_BEFORE_RE = re.compile(
+    r"non[-\s]?GAAP|adjusted|\bcore\b", re.I)
+
+# 줄(글머리표 항목)이 "**Excluding** …" 으로 **시작하면** 그 줄의 주당 값은
+# 정의상 GAAP 이 아닙니다 (실물 KSS: "• Excluding tax reform benefits,
+# diluted earnings per share were $4.31" — 게다가 연간값입니다).
+# ⚠️ **줄머리에서만** 봅니다. 문장 중간의 excluding 까지 막았더니 실물
+#    PYPL 의 진짜 GAAP 값 세 분기가 죽었습니다("…; **excluding** eBay,
+#    revenue grew 15% … • GAAP EPS of $0.43").
+_EXCLUDING_HEAD_RE = re.compile(r"^[\s•·◦\-–*]*excluding\b", re.I)
+
 _NONGAAP_LOOKBACK = 120  # 이름 앞 몇 글자까지 (문장 끝이 있으면 거기까지)
 
 # 문장 끝 — 마침표 뒤에 공백과 대문자가 오는 자리. 숫자의 소수점("1.00")이나
@@ -1057,6 +1097,10 @@ _PRIOR_PERIOD_AFTER_RE = re.compile(
     r"|\byear[-\s]ago\b|\bprior[-\s]year\s+period\b|\bin\s+the\s+prior\s+year\b",
     re.I,
 )
+
+# 값 바로 뒤의 "at the midpoint of guidance" 꼴 (150차-AT, 위 주석 참조)
+_GUIDANCE_TAIL_RE = re.compile(
+    r"\s*at\s+the\s+(?:mid|high|low)[-\s]?point\b", re.I)
 
 _ANNUAL_AFTER_FAR_RE = re.compile(
     r"\bfor\s+the\s+(?:fiscal\s+|full\s+)?year\b"
@@ -1241,7 +1285,35 @@ def find_eps_value(
                 cut = text.find(stop, label_match.end(), ahead_limit)
                 if cut != -1:
                     ahead_limit = cut
-            if _FORECAST_NEAR_RE.search(text[back:ahead_limit]):
+            # 뒤쪽 창은 **값 앞에서 멈춥니다** (150차-AT).
+            #
+            # 이 창의 뜻은 처음부터 "이름과 값 **사이**의 to approach 류"였는데,
+            # 실제로는 값을 지나 그 뒤 설명까지 읽고 있었습니다. 실물 HPE:
+            #   "◦Non-GAAP(1) of **$0.79**, up $0.41 from the prior-year
+            #    period and above our **outlook** range of $0.51 - $0.55"
+            # 값 뒤의 "outlook" 은 이번 분기 실적을 전망과 견주는 말인데,
+            # 그것 때문에 **진짜 실적 0.79 를 통째로 버리고** 있었습니다.
+            # 값 **앞**의 전망 문구("expected to be in the range of $…",
+            # "Approx. $…")는 그대로 걸립니다.
+            _첫숫자 = _FIRST_DIGIT_RE.search(text, label_match.end(), ahead_limit)
+            if _첫숫자:
+                ahead_limit = _첫숫자.start()
+            # ⚠️ **이름 몸통은 통째로 보지 않습니다** (150차-AT).
+            #    이름이 여러 줄에 걸치는 꼴(MPWR·HPE 형)에서는 이름 안에
+            #    다른 항목의 설명이 통째로 들어옵니다. 실물 HPE 의 이름은
+            #      "Diluted net earnings per share (“EPS”): ⏎◦GAAP of $0.44,
+            #       … above our **outlook** range of $0.09 - $0.13 ⏎
+            #       ◦Non-GAAP(1) of"
+            #    이라 **GAAP 줄의 outlook** 때문에 논갭 값 0.79 를 버렸습니다.
+            #    값에 닿아 있는 세 곳만 봅니다 — 이름 앞 · 이름의 **마지막
+            #    줄** · 값 앞.
+            _끝줄시작 = max(text.rfind("\n", label_match.start(),
+                                    label_match.end()) + 1,
+                         label_match.start())
+            if (_FORECAST_NEAR_RE.search(text[back:label_match.start()])
+                    or _FORECAST_NEAR_RE.search(text[_끝줄시작:label_match.end()])
+                    or _FORECAST_NEAR_RE.search(
+                        text[label_match.end():ahead_limit])):
                 continue
 
             if exclude_nongaap:
@@ -1273,7 +1345,9 @@ def find_eps_value(
                     문장 = m.end()
                 if 문장 is not None:
                     window_start = 문장
-                if _NONGAAP_NEAR_RE.search(text[window_start:start]):
+                if _EXCLUDING_HEAD_RE.match(text[line_start:start]):
+                    continue
+                if _NONGAAP_BEFORE_RE.search(text[window_start:start]):
                     continue
 
             # 주식 수 행이면 EPS 가 아닙니다 (74차 — 실물 UCTT).
@@ -1540,6 +1614,18 @@ def find_eps_value(
                 #    per share, for the full year 2020**"
                 #   → 1.61 은 연간, 진짜 4분기값은 같은 문단의 0.21 입니다.
                 # 이 자리만 건너뛰면 바로 뒤의 분기값을 이어서 찾습니다.
+                # 값 바로 뒤가 "**at the midpoint of guidance**" 면 그
+                # 숫자는 실적이 아니라 **전망 그 자체**입니다 (150차-AT).
+                # 실물 QRVO 2020-09-08(가이던스 갱신 공시):
+                #   "Diluted earnings per share  **$2.14 at the midpoint of
+                #    guidance**"
+                # ⚠️ "**above** the midpoint of guidance"(실물 MKSI)는 실적을
+                #    전망과 견주는 말이라 **막으면 안 됩니다** — 그래서
+                #    "at" 으로 시작하는 꼴만 좁게 봅니다.
+                if _GUIDANCE_TAIL_RE.match(text[num_end:num_end + 40]):
+                    search_from = number_end
+                    continue
+
                 if _ANNUAL_AFTER_FAR_RE.search(
                         text[num_end:num_end + _ANNUAL_AHEAD]):
                     search_from = number_end
