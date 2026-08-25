@@ -269,6 +269,9 @@ def _빠진분기_세기(ds: dict) -> dict:
     return {"구간": 구간, "분기": 분기, "종목": len(종목)}
 
 
+_이웃창 = 4      # 앞뒤 몇 분기까지를 "가까운 분기"로 볼 것인가 (150차-AX)
+
+
 def _자릿수깨진_매출_세기(ds: dict) -> dict:
     """정제 **뒤**에도 이웃과 자릿수가 100배 넘게 어긋난 매출 세기 (150차-Y).
 
@@ -286,12 +289,29 @@ def _자릿수깨진_매출_세기(ds: dict) -> dict:
         # 150차-Y 가 손을 못 댑니다. 고칠 수는 없어도 세어서 말합니다.
         if 값들 and max(값들) < 5_000_000:
             통째수상.append(t)
-        좋은 = [v for v in 값들 if v > 1_000_000]
-        if len(좋은) < 4:
-            continue
-        중앙 = statistics.median(좋은)
-        for v in 값들:
-            if 0 < v < 중앙 / 100.0:
+        # ⚠️ **가까운 분기와** 견줍니다 (150차-AX).
+        #
+        #    처음에는 종목 **전체 중앙값**과 견줬는데, 이름표는 "가까운
+        #    분기의 1/100 미만"이라고 말하면서 코드는 전체를 보고 있었습니다.
+        #    말과 코드가 달랐고, 그 탓에 **크게 자란 회사가 통째로** 걸렸습니다.
+        #    실물 ALNY: 매출이 38M → 1,291M 로 34배 자란 회사입니다.
+        #    전체 중앙값은 224.8M 이라 2018년 분기(2.069M)가 1/100 밑으로
+        #    떨어져 ⛔ 가 났는데, **앞뒤 이웃은 21~33M** 이라 자릿수가
+        #    어긋난 것이 아니라 그냥 그 시절이 작았던 것입니다.
+        #
+        #    150차-Y 가 잡으려던 것(GS 15,520 = 실제 155억 같은 **한 행만**
+        #    단위가 어긋난 것)은 이웃과 견줘도 그대로 걸립니다.
+        for i, r in enumerate(rows):
+            v = r.get("revenue")
+            if not isinstance(v, (int, float)) or v <= 0:
+                continue
+            이웃 = [x["revenue"] for j, x in enumerate(rows)
+                  if j != i and abs(j - i) <= _이웃창
+                  and isinstance(x.get("revenue"), (int, float))
+                  and x["revenue"] > 1_000_000]
+            if len(이웃) < 4:
+                continue
+            if v < statistics.median(이웃) / 100.0:
                 행 += 1
                 종목.add(t)
     return {"행": 행, "종목들": sorted(종목)[:8], "통째수상": sorted(통째수상)[:8]}
