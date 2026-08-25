@@ -29,19 +29,30 @@ def _있나():
 
 
 def _깨고_보기(바꾸기):
-    """app.json 을 잠깐 망가뜨려 ⛔ 가 뜨는지 보고 **반드시 되돌린다**."""
-    백업 = tempfile.mktemp(suffix=".json")
-    shutil.copy(APP, 백업)
+    """**딴 곳에 복사해** 망가뜨린 뒤, 점검기가 그 파일을 보게 합니다.
+
+    ⚠️ 150차-AQ 에 방식을 바꿨습니다. 예전에는 **진짜 app.json 을 덮어쓰고**
+       finally 에서 되돌렸는데, 시험이 도는 도중에 프로세스가 죽으면
+       (시간 초과·Ctrl-C·컨테이너 재시작) 되돌리기가 실행되지 않아
+       **저장소의 화면 데이터가 망가진 채로 남습니다.** 실제로 그 일이
+       일어나 다음 시험이 "완성 목록 135줄 · 서로 다른 종목 133개" 라는
+       거짓 경보를 냈고, 원인을 찾는 데 시간을 썼습니다.
+       이제는 진짜 파일을 **건드리지 않습니다.**
+    """
+    임시 = tempfile.mktemp(suffix=".json")
+    본디 = sv.APP_JSON
     try:
         with open(APP, encoding="utf-8") as f:
             a = json.load(f)
         바꾸기(a)
-        with open(APP, "w", encoding="utf-8") as f:
+        with open(임시, "w", encoding="utf-8") as f:
             json.dump(a, f, ensure_ascii=False)
+        sv.APP_JSON = 임시
         return [r for r in sv.화면과_데이터를_맞댄다() if r["상태"] == "⛔"]
     finally:
-        shutil.copy(백업, APP)
-        os.unlink(백업)
+        sv.APP_JSON = 본디
+        if os.path.exists(임시):
+            os.unlink(임시)
 
 
 def test_멀쩡하면_조용하다():

@@ -1528,6 +1528,131 @@ def test_아랫줄_규칙은_이름_뒤에_설명글이_오면_손대지_않는�
     assert sf.find_eps_value(각주, sf.LABELS_GAAP_EPS) == -3.81
 
 
+# ===========================================================================
+# 150차-AP — 저장된 원문 2,064건을 전수로 읽어 찾아낸 여섯 가지 (실물 근거)
+# ===========================================================================
+def test_회사가_논갭을_core_라고_부르면_읽는다():
+    """실물 BA(보잉) — 자기 논갭 지표를 'core' 라고 부릅니다.
+    이 말이 이름 목록에 없어서 보잉의 조정 EPS 9개 분기가 통째로
+    "없음"이었습니다."""
+    text = ("•GAAP loss per share of ($0.11) and core loss per share "
+            "(non-GAAP)* of ($0.20)\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == -0.20
+
+
+def test_맨_core_EPS_는_증감률_이름이라_읽지_않는다():
+    """반례 보존 — PG·PEP 의 발표자료는 'Core EPS Growth +19%' 처럼
+    **증감률**의 이름으로 이 말을 씁니다. 여기서 숫자를 읽으면
+    (실측 PG 0.40·5.35·0.10, PEP 8.16) 전부 틀린 값이 됩니다."""
+    # 실물 PG 발표자료 꼴 — "Core EPS Growth" 뒤에 EPS 가 아닌 숫자가 옵니다.
+    text = ("Currency Neutral Core EPS Growth Q1 FY 2021 RESULTS\n"
+            "Core operating margin expanded to 1.70 points\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+    # ⚠️ 글로만 재면 다른 문지기가 대신 막아 헛돌 수 있으므로 **이름 목록
+    #    자체**도 함께 못박습니다 — 맨 core EPS 이름이 있으면 안 됩니다.
+    맨core = [p for p in sf.LABELS_ADJUSTED_EPS
+              if "core" in p.lower() and "per" not in p.lower()]
+    assert not 맨core, f"맨 'core EPS' 이름이 목록에 들어왔습니다: {맨core}"
+
+
+def test_값이_이름보다_앞에_오는_or_꼴을_읽는다():
+    """실물 UCTT·MCHP·ISRG — "…였고, **주당 얼마**" 꼴.
+    파서는 이름 **뒤**에서 숫자를 찾으므로 이름을 "…or" 까지로 끊습니다."""
+    text = ("On a non-GAAP basis, gross margin was 16.5%, operating margin "
+            "was 5.1%, and net income was $14.5 million or $0.31 per "
+            "diluted share.\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.31
+
+
+def test_제외한다는_문장의_숫자는_잣대가_아니다():
+    """실물 HPE — "non-GAAP diluted net EPS estimate **excludes** net
+    after-tax adjustments of approximately $1.28 per diluted share".
+    1.28 은 빼낸 항목의 크기이지 EPS 가 아닙니다."""
+    # ⚠️ 시험글에서 "full year" 와 "estimate" 를 **일부러 뺐습니다.**
+    #    처음엔 실물 문장 그대로 썼는데, 돌연변이 시험을 해 보니 이 문지기를
+    #    꺼도 시험이 통과했습니다 — 연간 문지기와 전망 문지기가 대신
+    #    막고 있었던 것입니다. 이 시험은 **제외 문지기만** 재야 합니다.
+    text = ("Non-GAAP diluted net EPS excludes net after-tax adjustments of "
+            "approximately $1.28 per diluted share, primarily related to "
+            "costs.\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
+def test_excluding_은_이름을_꾸미는_말이라_값을_살린다():
+    """반례 보존 — 실물 VZ·IFF. "excludes(제외한다)" 와 달리
+    "excluding(제외한)" 은 잣대 이름을 꾸미는 단서입니다. 이것까지
+    막으면 멀쩡한 값 8건이 죽습니다(전수 실측)."""
+    text = ("•$1.56 in EPS, compared with $1.11 in fourth-quarter 2021; "
+            "adjusted EPS1, excluding special items, of $1.19.\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 1.19
+
+
+def test_compared_to_바로_뒤_숫자는_비교값이다():
+    """실물 PYPL — "non-GAAP earnings per diluted share of ~$0.86,
+    **compared to $1.15** in the prior year period". 1.15 는 전년 값입니다."""
+    # ⚠️ "expected" 와 "in the prior year period" 를 **일부러 뺐습니다** —
+    #    실물 문장 그대로 쓰면 전망 문지기와 전기(前期) 문지기가 대신
+    #    막아, 이 문지기를 꺼도 시험이 통과합니다(돌연변이 시험으로 확인).
+    text = ("• non-GAAP earnings per diluted share of ~$0.86, compared to "
+            "$1.15 a year earlier\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
+def test_같은_기간에_라는_꼬리말이_붙은_값은_비교값이다():
+    """실물 PCG — "…, or $3.93 per share, **during the same period in
+    2019**". 앞의 연간값을 거른 뒤 전년 연간값을 물면 안 됩니다."""
+    text = ("PG&E Corporation's non-GAAP core earnings were $2,020 million, "
+            "or $1.61 per share, for the full year 2020, compared with "
+            "$2,074 million, or $3.93 per share, during the same period "
+            "in 2019.\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
+def test_소수점_세자리는_각주번호다():
+    """실물 DG "$1.741" · MS "$1.301" — 마지막 한 자리는 각주 번호입니다.
+    자릿수를 우리가 고치는 것은 창작이므로 **읽지 않습니다**."""
+    text = "Adjusted Diluted EPS Increased 14.5% to $1.741\n"
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
+def test_expected_도_전망_문맥이다():
+    """실물 PYPL — "Non-GAAP earnings per diluted share **expected** to be
+    in line with $5.10 in the prior year". expects/expecting 만 알고
+    **expected** 를 몰라서 연간 전망치가 4분기 값으로 들어왔습니다."""
+    # ⚠️ 실물의 "in the prior year" 를 **일부러 뺐습니다** — 두면 전기(前期)
+    #    문지기가 대신 막아 이 시험이 헛돕니다(돌연변이 시험으로 확인).
+    text = ("• Non-GAAP earnings per diluted share expected to be in line "
+            "with $5.10.\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
+def test_수식어가_둘_겹친_줄임말도_읽는다():
+    """실물 HPE "non-GAAP diluted net EPS" · SEDG "Non-GAAP net diluted EPS".
+    diluted 하나만 허용해서 이 어순을 놓쳤습니다."""
+    text = "Non-GAAP net diluted EPS of $0.63\n"
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.63
+
+
+def test_Financial_Highlights_도_구역_제목이다():
+    """실물 CSX — "Fourth Quarter Financial **Highlights**" 와 "Full Year
+    2025 Financial **Highlights**" 로 나눠 적습니다. 'results' 만 알아서
+    연간 구역의 값을 4분기로 읽었습니다."""
+    text = ("Full Year 2025 Financial Highlights1\n"
+            "•Revenue totaled $14.09 billion in 2025.\n"
+            "•EPS was $1.54, and adjusted EPS was $1.61.\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
+def test_멀리_있는_연간_표시도_본다():
+    """실물 PG 발표자료 — 한 줄이 수천 자라 60자 되돌아보기로는 "for the
+    fiscal year" 에 닿지 못했습니다. 그 글에는 4분기 값이 아예 없으므로
+    올바른 답은 "없음"입니다."""
+    text = ("26 of our top 50 category/country combinations held or grew "
+            "share for the fiscal year. Global aggregate value share was "
+            "slightly down vs the prior year. Core earnings per share were "
+            "$6.89, +1% vs the prior year.\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
 
 if __name__ == "__main__":
     tests = [

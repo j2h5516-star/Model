@@ -1,0 +1,153 @@
+# 앱에서 온 수집 요청을 받아 자동으로 한 종목 수집 (150차-AQ)
+#
+# 왜 이런 방식인가 (주인 요청: "앱에서 종목을 치면 자동으로 연계될 수 있게"):
+#   웹앱은 서버가 없는 정적 페이지라 브라우저가 직접 SEC 에 붙지 못하고,
+#   깃허브에 실행을 시키려면 열쇠(토큰)가 필요합니다. 그 열쇠를 공개
+#   페이지에 넣으면 누구나 저장소를 건드릴 수 있어 더 위험합니다.
+#
+#   그래서 **열쇠가 필요 없는 길**을 씁니다 — 앱은 종목 코드가 미리 채워진
+#   "요청장(이슈)" 주소를 열어 줄 뿐이고, 주인은 이미 깃허브에 로그인돼
+#   있으므로 초록 단추 한 번이면 요청이 등록됩니다. 그 순간 이 워크플로가
+#   깨어나 수집하고, 끝나면 요청장에 결과를 적고 닫습니다.
+#
+# ⚠️ 안전장치 세 겹:
+#   ① **저장소 주인이 연 요청장만** 실행합니다 (남이 열면 무시).
+#   ② 제목이 "수집: XXXX" 꼴이어야 합니다.
+#   ③ 종목 코드는 영문 대문자·점·붙임표 8자까지만 (명령 끼워넣기 차단).
+#
+# ⚠️ collect_one 과 마찬가지로 **판정 표본(data/measure)은 건드리지
+#    않습니다.** 궁금해서 부른 종목을 표본에 넣으면 "결과를 보고 종목을
+#    고르는 것"이 되어 사전 등록이 무너집니다(헌법 2조).
+
+name: collect-request
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+# collect-one 과 **같은 그룹** — 한 종목 수집끼리는 줄을 서게 합니다.
+concurrency:
+  group: collect-one
+  cancel-in-progress: false
+
+jobs:
+  request:
+    # 안전장치 ①② — 주인이 연 "수집:" 요청장만
+    if: >-
+      github.event.issue.user.login == github.repository_owner &&
+      startsWith(github.event.issue.title, '수집:')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      # 안전장치 ③ — 제목에서 종목 코드만 꺼내 **모양을 검사**합니다.
+      # 셸에 그대로 넣지 않고 환경변수를 거쳐 받습니다(명령 끼워넣기 차단).
+      - name: 종목 코드 꺼내기
+        id: 코드
+        env:
+          제목: ${{ github.event.issue.title }}
+        run: |
+          RAW="${제목#수집:}"
+          TICKER="$(printf '%s' "$RAW" | tr -d '[:space:]' | tr '[:lower:]' '[:upper:]')"
+          if ! printf '%s' "$TICKER" | grep -qE '^[A-Z][A-Z.-]{0,7}$'; then
+            echo "종목 코드 모양이 아닙니다: '$TICKER'"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "ticker=$TICKER" >> "$GITHUB_OUTPUT"
+          echo "ok=true" >> "$GITHUB_OUTPUT"
+
+      - name: 모양이 아니면 알려 주고 끝
+        if: steps.코드.outputs.ok != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "제목에서 종목 코드를 읽지 못했습니다. 제목을 \`수집: NVDA\` 처럼 적어 주세요."
+          gh issue close "${{ github.event.issue.number }}"
+
+      - uses: actions/setup-python@v5
+        if: steps.코드.outputs.ok == 'true'
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # 매일 수집이 쌓아 둔 공시 원문 캐시를 **읽기만** 합니다.
+      - name: 공시 원문 캐시 복원 (읽기 전용)
+        if: steps.코드.outputs.ok == 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: data/raw8k
+          key: raw8k-req-${{ github.run_id }}
+          restore-keys: |
+            raw8k-v1-
+
+      - name: 의존성 설치
+        if: steps.코드.outputs.ok == 'true'
+        run: pip install -r requirements.txt
+
+      - name: 시작했다고 알리기
+        if: steps.코드.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "🤖 ${{ steps.코드.outputs.ticker }} 수집을 시작했습니다. 앱 화면은 그대로 두시면 자료가 도착할 때 저절로 열립니다."
+
+      - name: 한 종목 수집
+        if: steps.코드.outputs.ok == 'true'
+        id: 수집
+        env:
+          SEC_IDENTITY: ${{ secrets.SEC_IDENTITY }}
+          TICKER: ${{ steps.코드.outputs.ticker }}
+        run: python collect_one.py "$TICKER"
+
+      - name: 변경분 커밋
+        if: always() && steps.코드.outputs.ok == 'true'
+        env:
+          TICKER: ${{ steps.코드.outputs.ticker }}
+        run: |
+          git config user.name "수집 로봇"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # ⚠️ data/measure 는 **일부러 뺐습니다** — 판정 표본 보호
+          git add data/lookup docs/data/t || true
+          if git diff --cached --quiet; then
+            echo "변경 없음 — 커밋 생략"
+          else
+            git commit -m "요청 수집 — $TICKER ($(date -u +%Y-%m-%d\ %H:%M))"
+            BRANCH="${GITHUB_REF_NAME:-main}"
+            for attempt in 1 2 3; do
+              if git push origin "HEAD:$BRANCH"; then break; fi
+              [ "$attempt" = 3 ] && { echo "3회 실패"; exit 1; }
+              echo "push 거부 — 최신 $BRANCH 위에 다시 ($attempt/3)"
+              rm -rf /tmp/req_lookup /tmp/req_web
+              cp -r data/lookup /tmp/req_lookup 2>/dev/null || true
+              cp -r docs/data/t /tmp/req_web 2>/dev/null || true
+              git fetch origin "$BRANCH"
+              git reset --hard "origin/$BRANCH"
+              [ -d /tmp/req_lookup ] && mkdir -p data && rm -rf data/lookup && mv /tmp/req_lookup data/lookup
+              [ -d /tmp/req_web ] && mkdir -p docs/data && rm -rf docs/data/t && mv /tmp/req_web docs/data/t
+              git add data/lookup docs/data/t
+              git commit -m "요청 수집 — $TICKER (충돌 재커밋)"
+            done
+          fi
+
+      - name: 끝났다고 알리고 요청장 닫기
+        if: always() && steps.코드.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TICKER: ${{ steps.코드.outputs.ticker }}
+          결과: ${{ steps.수집.outcome }}
+        run: |
+          if [ "$결과" = "success" ]; then
+            MSG="✅ $TICKER 수집을 마쳤습니다. 앱에서 1~2분 뒤 보입니다(페이지가 다시 만들어지는 시간). 이 종목은 **가설 판정 표본에는 쓰이지 않습니다** — 궁금해서 부른 종목을 표본에 넣으면 사전 등록이 무너지기 때문입니다."
+          else
+            MSG="⚠️ $TICKER 수집이 끝까지 가지 못했습니다. 받은 데까지는 저장했습니다. 실행 기록: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          fi
+          gh issue comment "${{ github.event.issue.number }}" --body "$MSG"
+          gh issue close "${{ github.event.issue.number }}"

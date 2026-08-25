@@ -329,6 +329,55 @@ def test_공시원문_캐시는_시간초과에도_저장된다():
         "캐시 저장이 수집 실행보다 앞에 있습니다 — 받기 전에 저장합니다")
 
 
+# ---------------------------------------------------------------------------
+# 앱에서 온 수집 요청 (150차-AQ) — 문이 열렸으면 **자물쇠도 걸려 있어야** 함
+# ---------------------------------------------------------------------------
+def _요청워크플로():
+    path = os.path.join(ROOT, ".github", "workflows", "collect_request.yml")
+    with open(path, encoding="utf-8") as f:
+        return f.read()
+
+
+def test_요청수집은_주인이_연_요청장만_받는다():
+    """이슈 하나로 실행이 걸리는 문을 열었으므로, **아무나 못 열게** 하는
+    자물쇠가 함께 있어야 합니다. 없으면 남이 요청장을 계속 열어 실행
+    시간을 태우고 저장소에 커밋까지 남길 수 있습니다."""
+    글 = _요청워크플로()
+    assert "github.event.issue.user.login == github.repository_owner" in 글, \
+        "요청장을 연 사람이 저장소 주인인지 확인하지 않습니다"
+    assert "startsWith(github.event.issue.title, '수집:')" in 글, \
+        "제목이 '수집:' 으로 시작하는지 확인하지 않습니다"
+
+
+def test_요청수집이_종목코드_모양을_검사한다():
+    """제목은 사람이 자유롭게 적는 글입니다. 그대로 셸에 넣으면 명령을
+    끼워 넣을 수 있으므로, **모양 검사**와 **환경변수 경유**가 둘 다
+    있어야 합니다."""
+    글 = _요청워크플로()
+    assert "grep -qE '^[A-Z][A-Z.-]{0,7}$'" in 글, "종목 코드 모양 검사가 없습니다"
+    assert 'python collect_one.py "$TICKER"' in 글, \
+        "종목 코드를 환경변수로 넘기지 않습니다 (셸 끼워넣기 위험)"
+
+
+def test_요청수집이_판정표본을_건드리지_않는다():
+    """궁금해서 부른 종목을 표본에 넣으면 '결과를 보고 종목을 고르는 것'이
+    되어 사전 등록이 무너집니다(헌법 2조). collect_one 과 같은 규칙."""
+    글 = _요청워크플로()
+    assert "git add data/lookup docs/data/t" in 글, "커밋 대상이 다릅니다"
+    assert "git add data/measure" not in 글, \
+        "요청 수집이 판정 표본(data/measure)을 커밋합니다 — 사전 등록이 무너집니다"
+
+
+def test_앱의_요청단추가_이_워크플로와_같은_말을_쓴다():
+    """앱이 만드는 요청장 제목과 로봇이 기다리는 제목이 **한 글자라도**
+    다르면, 주인은 요청을 넣었는데 아무 일도 안 일어납니다. 두 곳이
+    같은 말을 쓰는지 못박습니다."""
+    with open(os.path.join(ROOT, "docs", "app.js"), encoding="utf-8") as f:
+        앱 = f.read()
+    assert "`수집: ${코드}`" in 앱, "앱이 '수집: 종목' 꼴 제목을 만들지 않습니다"
+    assert "issues/new?title=" in 앱, "앱이 요청장 주소를 열지 않습니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

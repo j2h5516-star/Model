@@ -767,9 +767,56 @@ LABELS_ADJUSTED_EPS = [
     # 여백 패딩(공백 60~70자 + 줄바꿈)이 문장 중간에 끼는 실물이 있어 220자.
     r"non[-\s]?GAAP\s+net\s+profit[\s\S]{0,220}?\bor\s+earnings\s+per\s+diluted"
     r"\s+(?:ordinary\s+)?share",
-    r"non[-\s]?GAAP\s+(?:diluted\s+)?EPS",
-    r"adjusted\s+(?:diluted\s+)?EPS",
+    # 150차-AP ① — 수식어가 **두 개 겹치는** 줄임말: "non-GAAP **diluted net**
+    # EPS"(실물 HPE). 아래 두 줄은 diluted 하나만 허용해서 이 꼴을 놓쳤습니다.
+    r"non[-\s]?GAAP\s+(?:(?:diluted|net)\s+){0,2}EPS",
+    r"adjusted\s+(?:(?:diluted|net)\s+){0,2}EPS",
     r"(?:earnings|income)\s+per\s+(?:diluted\s+)?share\s*\(non[-\s]?GAAP\)",
+    # ------------------------------------------------------------------
+    # 150차-AP ② — **회사가 자기 논갭 지표를 "core" 라고 부르는 경우.**
+    # 실물 BA(보잉): "GAAP loss per share of ($0.11) and **core loss per
+    # share (non-GAAP)*** of ($0.20)". PG 도 "Core EPS" 라고 씁니다.
+    # `_NONGAAP_NEAR_RE` 는 이미 core 를 논갭으로 알고 있었는데(그래서 GAAP
+    # 자리에 들어가는 것은 막고 있었는데), **조정 EPS 이름 목록에는 core 가
+    # 없어서** 그 값이 어디에도 안 들어가고 사라지고 있었습니다.
+    # 저장원문 실측 — 이 꼴로 조정 EPS 를 놓친 발표가 BA 만 9건입니다.
+    rf"(?<!non-)(?<!non )\bcore\s+(?:(?:net|diluted)\s+){{0,2}}\(?{_PROFIT_WORD}\)?"
+    r"\s+per\s+(?:diluted\s+)?(?:common\s+|ordinary\s+)?share",
+    # ⚠️ **맨 "core EPS" 는 넣지 않습니다.** 넣어 봤더니 원문 전수에서 값이
+    #    네 곳 새로 생겼는데 **넷 다 틀렸습니다** — PG·PEP 의 발표자료는
+    #    "Core EPS **Growth** +19%" 처럼 EPS 가 아니라 **증감률**의 이름으로
+    #    이 말을 쓰기 때문입니다(PG 0.40·5.35·0.10, PEP 8.16 — 진짜 값은
+    #    1.5 안팎). 반면 "core earnings per share were $1.83" 꼴(위 이름)은
+    #    같은 전수에서 PG 세 분기가 전부 맞았습니다(1.83·1.84·1.52).
+    #    "없음"이 "틀림"보다 안전하므로 맞는 쪽만 남깁니다.
+    # ------------------------------------------------------------------
+    # 150차-AP ③ — **"…였고, 주당 얼마" 꼴** (값이 이름보다 **앞**에 옵니다).
+    # 실물:
+    #   UCTT "On a non-GAAP basis, … net income was $14.5 million
+    #         **or $0.31 per diluted share**"
+    #   MCHP "Non-GAAP net income … was $252.8 million, **or $0.44 per
+    #         diluted share**"
+    #   ISRG "non-GAAP* net income … was $901 million, **or $2.50 per
+    #         diluted share**"
+    # 파서는 이름 **뒤**에서 숫자를 찾으므로, 이름을 "…or" 까지로 끊고
+    # 그 뒤의 숫자를 읽게 합니다. 뒤에 "per (diluted) share" 가 실제로
+    # 오는지는 **미리보기(lookahead)** 로 확인합니다 — 확인하지 않으면
+    # "or" 뒤의 아무 숫자나 물게 됩니다.
+    #
+    # ⚠️ 이 이름은 **목록의 맨 끝**에 둡니다. 앞의 구체적인 이름들이 먼저
+    #    이기고, 아무것도 못 읽었을 때만 이 마지막 수단이 나섭니다.
+    # 이름과 이익 낱말 사이에 다른 말이 끼는 실물이 많아 거리로만 묶습니다:
+    #   "non-GAAP basis, gross margin was 16.5% … and **net income** was"(UCTT)
+    #   "non-GAAP***** net income attributable to Intuitive Surgical, Inc."(ISRG)
+    # 문장 끝(". ")으로 끊으려 했으나 회사 이름의 "Inc. was" 에 걸려 못 씁니다.
+    # ⚠️ "non-**core**" 를 core 로 읽으면 안 됩니다 — 붙임표도 낱말 경계라
+    #    `\bcore\b` 만으로는 걸립니다. 실물 PCG: "GAAP results include
+    #    **non-core** items … totaled $3.3 billion after-tax, **or $2.66 per
+    #    share, for the year**" → 연간 제외액 2.66 을 조정 EPS 로 읽었습니다.
+    r"(?:non[-\s]?GAAP|adjusted|(?<!non-)(?<!non )\bcore\b)[^\n]{0,120}?"
+    r"\b(?:income|profit|earnings|loss)\b[^\n]{0,140}?\bor\b"
+    r"(?=\s*\$?\s*\(?-?\d[\d.,]*\)?\s*per\s+(?:diluted\s+)?"
+    r"(?:common\s+|ordinary\s+)?share)",
 ]
 
 # GAAP 주당순이익 — 조정 EPS 와 짝지어 '이익의 질'을 보는 데 씁니다.
@@ -831,7 +878,12 @@ _DIVIDEND_NEAR_RE = re.compile(r"\bdividends?\b|\bdistribution\b", re.I)
 # $8.00" · TTMI "to approach $5.00"). 그 이름 자리는 건너뛰고 다음
 # 자리(대개 표의 진짜 분기 값)를 계속 찾습니다.
 _FORECAST_NEAR_RE = re.compile(
-    r"\b(?:expects?|expecting|anticipates?|approach(?:es|ing)?"
+    # 150차-AP — "expect**ed**" 가 빠져 있었습니다. 실물 PYPL 2024-02-07:
+    #   "• Non-GAAP earnings per diluted share **expected** to be in line
+    #    with $5.10 in the prior year."
+    # 이 한 낱말이 없어 연간 전망치 5.10 이 4분기 조정 EPS 로 들어왔습니다
+    # (진짜 값은 같은 글의 1.48).
+    r"\b(?:expects?|expected|expecting|anticipates?|approach(?:es|ing)?"
     r"|targets?|targeting|forecasts?|estimates?|guidance|outlook"
     r"|earnings\s+model)\b",
     re.I,
@@ -930,6 +982,61 @@ _ANNUAL_GAP_RE = re.compile(
     re.I,
 )
 
+# 이름과 값 **사이**에 "제외한다"는 말 — 그 숫자는 잣대가 아니라 빼낸 항목입니다.
+# (150차-AP — 실물 HPE "non-GAAP diluted net EPS estimate **excludes** net
+#  after-tax adjustments of approximately $1.28 per diluted share")
+#
+# ⚠️ **"excluding" 은 넣으면 안 됩니다.** 처음에 exclude/excludes/excluded/
+#    excluding 을 다 넣었더니 원문 전수에서 멀쩡한 값 8건이 죽었습니다:
+#      VZ  "adjusted EPS1, **excluding** special items, of $1.19"   ← 진짜 값
+#      IFF "Adjusted EPS **excluding** amortization1 was $0.72"     ← 진짜 값
+#    "excluding …" 은 잣대 이름을 꾸미는 **단서**이고, "excludes …" 는
+#    "이 잣대는 무엇무엇을 뺀다"는 **다른 문장**입니다. 뒤엣것만 막습니다.
+_EXCLUDE_GAP_RE = re.compile(r"\bexcludes?\b", re.I)
+
+# 멀리 있는 연간 표시 (150차-AP — 위 find_eps_value 안 주석 참조).
+# 좁은 낱말만 씁니다: "그 해 동안"을 뜻하는 말.
+_ANNUAL_FAR_RE = re.compile(
+    r"\bfor\s+the\s+(?:fiscal\s+|full\s+)?year\b"
+    r"|\bfull[-\s]?year\b|\bfiscal\s+year\s+ended\b|\btwelve\s+months\b",
+    re.I,
+)
+_ANNUAL_FAR_BACK = 200   # 이름 앞 몇 글자까지 (줄을 넘지 않습니다)
+
+# 값 **뒤**에 붙는 연간 표시. 뒤쪽에서는 "for 2019" 같은 맨 연도도 연간을
+# 뜻합니다(실물 PCG "or $3.93 per share, **for 2019**"). 앞쪽 되돌아보기에
+# 쓰면 비교 문구까지 물어 위험하므로 **뒤쪽 전용**으로 따로 둡니다.
+# 값 **바로 앞**에 붙은 비교 문구 — "compared to $1.15" 의 1.15 는 견주는
+# 대상(전년)이지 이번 값이 아닙니다 (150차-AP).
+#
+# ⚠️ **아주 짧게** 겁니다(24자). 처음에는 "이름과 값 **사이** 어디든 비교
+#    문구가 있으면 포기"로 넓게 걸었더니, 기존 시험 두 개가 빨간 불로
+#    잡았습니다:
+#      GS   "…was $59.45 for the year ended … **compared with** $24.74 …,
+#            and was $10.81 for the fourth quarter" → 진짜 값 10.81 을 잃음
+#      NTAP "Non-GAAP net income per share **compared to** the fourth quarter
+#            of fiscal year 2022 was $1.54"        → 진짜 값 1.54 를 잃음
+#    두 경우 모두 비교 문구와 **진짜 값 사이에 다른 말**이 끼어 있습니다.
+#    막아야 할 것은 "compared to $숫자" 처럼 **바로 붙은** 꼴뿐입니다.
+_COMPARED_BEFORE_RE = re.compile(
+    r"\b(?:compared\s+(?:with|to)|versus|vs\.?)\s*\$?\s*$", re.I)
+_COMPARED_BACK = 24
+
+# 값 **바로 뒤**의 "같은 기간·전년" — 그 값도 견주는 대상입니다.
+# 실물 PCG "…, or $3.93 per share, **during the same period in 2019**"
+_PRIOR_PERIOD_AFTER_RE = re.compile(
+    r"\b(?:during|in)\s+the\s+same\s+period\b|\ba\s+year\s+ago\b"
+    r"|\byear[-\s]ago\b|\bprior[-\s]year\s+period\b|\bin\s+the\s+prior\s+year\b",
+    re.I,
+)
+
+_ANNUAL_AFTER_FAR_RE = re.compile(
+    r"\bfor\s+the\s+(?:fiscal\s+|full\s+)?year\b"
+    r"|\bfull[-\s]?year\b|\bfiscal\s+year\s+ended\b|\btwelve\s+months\b"
+    r"|\bfor\s+(?:fiscal\s+)?20\d{2}\b",
+    re.I,
+)
+
 # 값 뒤가 "to $숫자" 면 **전망 범위**입니다 (119차 — 실물 LOW·LLY·NEE):
 #   "Adjusted diluted EPS of approximately **$11.80 to $11.90**" (연간 전망)
 #   "Earnings per share (non-GAAP)  **$5.60 to $5.70**" (전망 조정표)
@@ -986,7 +1093,11 @@ _ANNUAL_LINE_HEAD = 24   # 줄머리에서 이만큼 안에 "Full-year" 가 있�
 #    줄만 인정합니다.
 # ⚠️ 제목에 "quarter" 가 함께 있으면(예: "Fourth Quarter and Full Year
 #    2025 Financial Results") 분기값도 그 아래 있으므로 건너뛰지 않습니다.
-_SECTION_TITLE_RE = re.compile(r"financial\s+results", re.I)
+# 150차-AP — "Financial **Highlights**" 도 구역 제목입니다. 실물 CSX
+# 2026-01-22 는 "Fourth Quarter Financial Highlights" 와 "**Full Year 2025**
+# Financial Highlights" 로 나눠 적는데, 이 말을 몰라서 연간 구역의
+# "•EPS was $1.54, and adjusted EPS was $1.61" 을 4분기 값으로 읽었습니다.
+_SECTION_TITLE_RE = re.compile(r"financial\s+(?:results|highlights)", re.I)
 _SECTION_DOC_TITLE_RE = re.compile(r"\b(?:reports?|announces?|announced)\b", re.I)
 _SECTION_QUARTER_RE = re.compile(r"\bquarter(?:ly)?\b|\bQ[1-4]\b", re.I)
 _SECTION_MAX_CHARS = 60       # 이보다 길면 문서 제목으로 봅니다
@@ -1131,6 +1242,22 @@ def find_eps_value(
             if _ANNUAL_BEFORE_RE.search(
                 text[max(_line_start, _start - _ANNUAL_BACK):_start]
             ):
+                continue
+            # **멀리 있는 연간 표시** (150차-AP). 위 되돌아보기는 60자라
+            # 발표자료(슬라이드)처럼 한 줄이 수천 자인 글에서는 닿지 않습니다.
+            # 실물 PG 2026-07-29(4분기 발표자료):
+            #   "… held or grew share **for the fiscal year**. Global aggregate
+            #    value share was slightly down vs the prior year. **Core
+            #    earnings per share were $6.89**, +1% vs the prior year."
+            #   → 6.89 는 그 해 **연간** 값입니다. 이 글에는 4분기 값이
+            #     아예 없으므로 올바른 답은 "없음"입니다.
+            # 넓게 보는 만큼 **좁은 낱말**만 씁니다 — annual·FY2025 처럼
+            # 비교 대상으로 늘 나오는 말은 빼고, "그 해 동안"을 뜻하는
+            # 말만 봅니다. 그리고 같은 구간에 quarter 가 하나라도 있으면
+            # 분기 이야기가 섞인 것이므로 건드리지 않습니다.
+            _먼앞 = text[max(_line_start, _start - _ANNUAL_FAR_BACK):_start]
+            if (_ANNUAL_FAR_RE.search(_먼앞)
+                    and not _SECTION_QUARTER_RE.search(_먼앞)):
                 continue
             # 줄(=글머리표 항목)이 "Full-year …" 로 **시작하면** 그 줄의 값은
             # 전부 연간입니다 (실물 VZ: "•Full-year 2022 earnings per share
@@ -1298,6 +1425,22 @@ def find_eps_value(
                     search_from = number_end
                     continue
 
+                # 소수점 아래가 **세 자리 이상**이면 마지막 자리는 숫자가
+                # 아니라 **각주 번호**입니다 (150차-AP). 주당 금액을 세
+                # 자리로 적는 회사는 없습니다. 실물:
+                #   DG "Adjusted Diluted EPS Increased 14.5% to $1.74**1**"
+                #   MS "…per diluted share of $1.30**1**"
+                # 저장원문 2,064건 전수에서 이 꼴은 이 둘뿐이었고 둘 다
+                # 각주였습니다. 잘라 쓰지 않고 **이 숫자를 건너뜁니다** —
+                # 자릿수를 우리가 고치면 그것은 창작입니다(헌법 1조).
+                # ⚠️ 이 자리는 **건너뛰지 말고 통째로 포기**합니다. 각주가
+                #    붙은 그 숫자가 답이었으므로, 뒤로 더 훑으면 상관없는
+                #    숫자를 뭅니다 — 실제로 그렇게 해 봤더니 DG 의 조정
+                #    EPS 가 같은 문단 뒤쪽의 **배당금 0.32** 가 됐습니다.
+                _소수부 = text[num_start:num_end].split(".")[-1]
+                if len(_소수부) >= 3 and _소수부.isdigit():
+                    break
+
                 # 숫자 바로 앞이 ">" · "≥" · "~" 면 그것은 **목표·전망**이지
                 # 실적이 아닙니다 (84차 — 실물 UNH 전망표):
                 #   "Diluted Net Earnings per Share to UNH Shareholders
@@ -1330,6 +1473,41 @@ def find_eps_value(
                 if _ANNUAL_AFTER_RE.match(text[num_end:num_end + _ANNUAL_AHEAD]):
                     search_from = number_end
                     continue
+                # 값 뒤에 **"주당 …, 그 해 동안"** 이 붙은 경우 (150차-AP).
+                # 위 검사는 값 **바로 뒤**만 보므로 "per share" 가 사이에
+                # 끼면 닿지 않습니다. 실물 PCG 2021-02-25:
+                #   "non-GAAP core earnings … were $2,020 million, **or $1.61
+                #    per share, for the full year 2020**"
+                #   → 1.61 은 연간, 진짜 4분기값은 같은 문단의 0.21 입니다.
+                # 이 자리만 건너뛰면 바로 뒤의 분기값을 이어서 찾습니다.
+                if _ANNUAL_AFTER_FAR_RE.search(
+                        text[num_end:num_end + _ANNUAL_AHEAD]):
+                    search_from = number_end
+                    continue
+                # 값 바로 **앞**이 "compared to $" 면 견주는 대상입니다.
+                # (150차-AP — 실물 PYPL "non-GAAP earnings per diluted share
+                #  of ~$0.86, **compared to $1.15** in the prior year period")
+                # ⚠️ 건너뛰지 않고 **자리를 포기**합니다. 이 자리의 값은
+                #    그 숫자였고 다만 이번 기간 것이 아니었을 뿐이라,
+                #    뒤로 더 훑으면 상관없는 숫자를 뭅니다 — 실제로
+                #    PYPL 이 전망 문장 뒤의 "0.20(러시아 영향)"을 물었습니다.
+                if _COMPARED_BEFORE_RE.search(
+                        text[max(num_start - _COMPARED_BACK, 0):num_start]):
+                    break
+                # 값 바로 **뒤**가 "같은 기간에" 면 그 값도 견주는 대상입니다.
+                # (실물 PCG "or $3.93 per share, during the same period in 2019")
+                #
+                # ⚠️ **다음 숫자가 나오기 전까지만** 봅니다. 넓게 봤더니
+                #    "Adjusted EPS of $2.45 compared to $1.90 **in the prior
+                #    year period**" 에서 앞의 진짜 값 2.45 까지 버렸습니다
+                #    (기존 시험 4개가 빨간 불로 잡음). 그 꼬리말은 뒤엣
+                #    숫자(1.90)의 것이지 2.45 의 것이 아닙니다.
+                _뒤 = text[num_end:num_end + _ANNUAL_AHEAD]
+                _다음숫자 = re.search(r"[\$\d]", _뒤)
+                if _다음숫자:
+                    _뒤 = _뒤[:_다음숫자.start()]
+                if _PRIOR_PERIOD_AFTER_RE.search(_뒤):
+                    break            # 위와 같은 이유로 자리를 포기합니다
 
                 # "X to Y" 전망 범위의 양끝 (119차 — 위 _RANGE_TO_AFTER_RE
                 # 주석). 앞끝은 값 뒤의 "to $숫자"로, 뒤끝은 값 앞의
@@ -1362,6 +1540,28 @@ def find_eps_value(
                 if (len(_사이) <= 60 and _ANNUAL_GAP_RE.search(_사이)
                         and not _SECTION_QUARTER_RE.search(_사이)):
                     break            # 자리 포기 — 다음 이름 자리로
+
+                # 이름과 값 사이에 "**제외한다**"는 말이 있으면 그 숫자는
+                # 잣대가 아니라 **빼낸 항목의 크기**입니다 (150차-AP).
+                # 실물 HPE 2026-03-09:
+                #   "Fiscal 2026 full year non-GAAP diluted net EPS **estimate
+                #    excludes** net after-tax adjustments of **approximately
+                #    $1.28 per diluted share**"
+                # 문단 단위(300자)로 앞을 훑는 규칙 때문에, 앞 문장의 전망
+                # 범위($2.30~$2.50)를 전부 걸러낸 뒤 **다음 문장의 제외액**을
+                # 물었습니다. 1분기 진짜 논갭 EPS 는 0.65 인데 1.28 이 됐고,
+                # 이것은 "없음"보다 나쁩니다.
+                # "A 는 B 를 제외한다" 문장에서 B 가 A 인 경우는 없습니다.
+                # ⚠️ **이름 자체**도 함께 봅니다. "…or" 로 끊어 읽는 이름
+                #    (150차-AP ③)은 문장을 통째로 물기 때문에 "제외한다"가
+                #    이름 안쪽에 들어갑니다. 실물 DG 2019-12-05:
+                #      "Adjusted net income and adjusted diluted EPS … which
+                #       **exclude** the after-tax impact of approximately
+                #       $24.1 million **or $0.09 per diluted share**"
+                #      → 0.09 는 빼낸 항목의 크기입니다(진짜 값 1.42).
+                if _EXCLUDE_GAP_RE.search(label_text + _사이):
+                    break            # 자리 포기 — 다음 이름 자리로
+
 
                 # 이름이 "적자"라고 말하고 있는데 숫자가 양수면 부호를 뒤집습니다.
                 #   "net loss per diluted share of $0.83"  →  −0.83
