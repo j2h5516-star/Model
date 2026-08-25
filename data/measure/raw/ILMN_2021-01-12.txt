@@ -1,0 +1,365 @@
+# 잣대값 파싱 실패 원문 — ILMN 2021-01-12
+# 출처: https://www.sec.gov/Archives/edgar/data/1110803/000111080321000003/ilmn-20210111.htm
+
+Document
+
+The following is a transcript of a webcast presented by Illumina, Inc. (the “Company”) at the JPMorgan Healthcare Conference (Virtual) on January 11, 2021.
+C O R P O R A T E P A R T I C I P A N T S
+Alexander Aravanis Illumina, Inc. - Senior VP & CTO
+Francis A. deSouza Illumina, Inc. - CEO, President & Director
+Sam A. Samad Illumina, Inc. - CFO & Senior VP
+C O N F E R E N C E C A L L P A R T I C I P A N T S
+Tycho W. Peterson JPMorgan Chase & Co, Research Division - Senior Analyst
+P R E S E N T A T I O N
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+Okay. Good afternoon. I'm Tycho Peterson from the life science team. It's my pleasure to introduce our next company this afternoon, Illumina.
+(Operator Instructions)
+And with that, let me turn it over to Francis.
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Thank you, Tycho and the JPMorgan team for hosting us. And thank you, everyone, for joining us today. Our presentation today includes non-GAAP
+financial measures and forward-looking statements. Reconciliations to GAAP measures are included in our presentation. Please refer to our SEC
+filings for a full presentation of risks.
+Going to Slide 3. The current pandemic has highlighted the critical role that genomics and Illumina will play in global health. In December 2019,
+Illumina worked with the Wuhan public health authorities to identify the cause of the COVID-19 outbreak. And in January 2020, the Shanghai Public
+Health Clinical Center used our instruments to sequence and publish the first complete SARS-CoV-2 genome. This genomic sequence enabled
+companies like Moderna and BioNtech with Pfizer to create groundbreaking vaccines. Using data from Illumina sequencers, Moderna shipped the
+first doses of vaccine to clinical trial in 42 days without ever having the virus on site, an unprecedented achievement in scientific and medical
+history.
+Our technology powers global COVID research and surveillance. Illumina technology helped identify the B117 strain through the COG-UK surveillance
+program and were working with Helix and the U.S. CDC to track the emergence and prevalence of novel variants and strains. We are committed
+to helping fight this pandemic, which will bring greater awareness and accelerate the use of sequencing in infectious disease and public health.
+Moving to the next slide and turning to our fourth quarter and full year 2020 results. Illumina delivered a very strong finish to 2020 with Q4 top
+line and bottom line results exceeding our expectations. Preliminary fourth quarter revenue of approximately $950 million grew roughly 20%
+compared to the third quarter. Sequencing consumables revenue set a new record, growing approximately 20% sequentially and 5% compared
+to Q4 of 2019.
+Q4 also saw record orders booked in the quarter, including record sequencing instrument orders. Preliminary non-GAAP EPS for the fourth quarter
+of 2020 was approximately $1.20. Full year 2020 revenue of approximately $3.2 billion declined 9% year-over-year due to the pandemic, with the
+biggest impact in the second quarter.
+Our business has shown strong sequential growth since Q2. As we exited the year, average sequencing run rates in our clinical customers exceeded
+pre-COVID levels, and our research customers have returned to pre-COVID levels. We'll provide additional details when we report our fourth quarter
+and full year 2020 results in February.
+2
+Now on the next slide, I'll share progress on our instrument placements. We placed over 2,000 instruments in 2020. We now have a total of 17,000
+systems at 7,300 customers in 131 countries, including 700 new customers in 2020. Notably, 2020 was the second consecutive year of record growth
+for our mid-throughput platforms.
+Now on the next slide, looking at our high-throughput platforms. NovaSeq became the first sequencer to generate over $1 billion in annual revenue,
+and it generated an average pull-through exceeding $1 million per instrument. Customer reception to the version 1.5 consumables has been very
+positive. Labs of any size can now access the $600 genome. And as we expected, this is unlocking demand elasticity from both new and existing
+customers. As a result, Q4 was the second highest quarter of NovaSeq orders ever, 4 years after we launched the product in 2017. More than half
+of our Q4 orders came from new to high-throughput customers.
+We also saw record S4 revenues and customers in Q4. As an example with version 1.5 pricing and our TruSight software suite, Shriners Hospital for
+Children converted from exome to whole-genome sequencing for genetic disease diagnosis and expanded their offerings to all their 22 hospitals
+in the U.S., Canada and Mexico. Looking ahead, we also expect version 1.5 to further catalyze NovaSeq upgrades for the remaining 320 active HiSeq
+customers that have yet to begin the transition.
+The next slide, following last year's successful 1000 and 2000 launches, our mid-throughput NextSeq systems performed exceptionally well. NextSeq
+beat its 2019 shipments record, setting a new record in 2020 driven by strong demand from clinical and research customers. For example, Adaptive
+Biotechnologies uses NextSeq for MRD for hematological cancers, and Scripps uses it for single cell profiling of T cells.
+We're launching a new NextSeq flow cell, the P1, in the second half of 2021. P1 adds a lower-throughput option to support applications such as
+pathogen surveillance and targeted sequencing for tumor profiling. P1 offers an attractive upgrade option for MiSeq and NextSeq 550 customers.
+Next slide. Our low-throughput systems continue to be a great entry point for many new to sequencing labs, including more than 500 new customers
+in 2020. With a winning combination of affordability and ease of use, our low-throughput systems have an installed base of more than 10,000
+instruments across approximately 6,100 customers in 122 countries.
+Next slide. The major population initiatives are on track to grow in 2021, and we expect the number of whole genome equivalent sequenced in
+2021 to increase by about 50% to approximately 450,000. This is driven primarily by All of Us and the NHS, which is rolling out the world's first
+population scale clinical program, covering 21 rare diseases and 4 cancer groups. We were also selected as a clinical sequencing partner for Denmark,
+and that will begin this year.
+Managing the large volumes of data generated is a bottleneck for population genomics programs. And we are pleased to announce the availability
+of Illumina Connected Analytics later this month to address this. This software solution enables population initiatives to analyze, interpret, aggregate,
+explore and share multi-omic data at scale, combining the technology from our Edico, Enancio and BlueBee acquisitions into a single, fully integrated
+solution. For example, the National Applied Research Labs in Taiwan uses ICA to accelerate their pipeline processing 50x and reduce data storage
+by 5x.
+Turning on the next page to clinical. Illumina is the world leader in clinical genomics with more than $1.5 billion in 2020 revenues from clinical
+customers. We delivered the broadest clinical genomics menu, spanning reproductive health, oncology and genetic disease. Our commercial reach
+extends to major health systems in 131 countries. And our regulatory and reimbursement teams deliver and support IVDs in more than 50 countries.
+In total, more than 2,100 Illumina employees serve the clinical market. The growing adoption of sequencing and reimbursement are key themes
+contributing to future growth.
+And moving to the next slide. We are particularly excited about recent positive developments in noninvasive prenatal testing. With landmark
+decisions from Aetna and UnitedHealthcare in 2020 and additional coverage expected, we anticipate an additional 1.1 million pregnancies to be
+covered for NIPT in 2021, a 50% increase from 2019.
+Our TruSight NIPT IVD module submission is in progress to deliver an FDA-approved, distributable end-to-end kit in the U.S. in 2022, further enabling
+adoption. In Europe, more than 1.5 million samples in 35 countries have been processed using VeriSeq CE-IVD NIPT since its launch in 2017, with
+sample volume growing 20% in 2020. Looking forward, Germany will start reimbursing NIPT in the second half of 2021, an opportunity of at least
+200,000 pregnancies per year.
+Moving to the next slide. Reimbursement for genetic disease testing increased tenfold in 2020. Less than 1% of the 300 million people living with
+a genetic disease have been sequenced, and this represents a large growth opportunity for Illumina. We have over 400 customers in genetic disease
+testing, like Invitae and the Mayo Clinic. And our industry-leading whole-genome sequencing workflow can go from sample to answer in less than
+24 hours. We're also working on the first whole genome sequencing IVD for genetic disease.
+As reimbursement grows and programs like the Medical Genome Initiative increase awareness among patients and clinicians, we expect whole
+genome sequencing to become the standard of care in genetic disease testing.
+Moving to the next slide. Comprehensive Genomic Profiling, CGP, is an NGS test that enables a single companion diagnostic for the 55 and growing
+targeted oncology therapies. CGP simultaneously tests for targeted alterations in single genes and also cancer signatures like TMB and HRD, which
+affect many genes and require large panels. By 2026, CGP is expected to be $1 billion-plus market.
+Last year, more than 205 million lives were covered for CGP in the U.S., and Illumina customers' Foundation Medicine and Guardant received the
+first single-site FDA approvals for liquid biopsy-based CGP companion diagnostics.
+Moving to the next slide. Illumina's TruSight Oncology 500 is the leading distributed CGP test for tissue and liquid biopsy, with the largest number
+of companion diagnostic and collaboration partners. We're announcing today partnerships with Merck, Gilead and Kura and an agreement with
+Myriad for HRD testing using TSO 500. We also announced that we are expanding our collaboration with Bristol-Myers Squibb to develop a
+companion diagnostic for microsatellite instability and the diagnostic based on our liquid version of TSO 500.
+TSO 500 has over 250 customers worldwide, and revenue grew over 130% in 2020. We plan to launch TSO 500 as an IVD in Europe and the U.S. this
+year, making this important test available more broadly.
+Moving to the next slide and to our technology. We have now achieved the key technology breakthroughs to deliver the next order of magnitude
+improvements in cost as well as significant steps forward in accuracy, speed and read length. These breakthroughs include 5x higher cluster density
+than NovaSeq version 1.5 kits, yielding 5x the data from the same flow cell area. We've developed a flow cell manufacturing process using
+300-millimeter wafers, doubling the wafer yield. Taken together, these innovations can reduce flow cell cost by 90%.
+We've also made fundamental improvements to SBS, including new dies and blocking chemistries, enabling 3x higher accuracy, 2x faster cycle
+times and 2x longer reads. We're excited to bring these breakthroughs to our customers in future products and confident in our path to get there.
+Moving to the next slide. Illumina expanded the whole-genome sequencing market with the $1,000 genome in 2014. Today, NovaSeq's $600
+human genome offers gold standard accuracy, 150x more scale and 10x lower cost for whole genomes -- whole human genomes than accurate
+non-SBS platforms today. Making whole human genome sequencing routine for applications such as genetic disease testing and population
+sequencing will require the next level of cost, scale and accuracy. Illumina's technology road map will allow us to continue raising the bar on
+accuracy and scale, while delivering up to 80x better price than accurate long read approaches into the future.
+Moving to the next slide. We're leveraging artificial intelligence to produce additional insights from the genome by training neural networks and
+graph-based algorithms on Illumina's aggregate data of over 1 million samples, the world's largest genomic data set. In 2020, we released new
+methods for clinical applications such as highly accurate pharmacogenomics, repeat expansions and gene paralogs.
+We will release new versions of our powerful AI-based genome interpretation tools, Splice AI and Primate AI, this year. Illumina AI, paired with our
+industry-leading SBS, powers our relentless quest to obtain the most comprehensive view of the genome.
+Moving to the next slide. Illumina sequencing is also central to innovation across a rapidly growing ecosystem of multi-omics applications, including
+single cell, spatial analysis and proteomics. Spatial cell transcriptomics was named Nature's 2020 Method of the Year, and companies like 10x and
+NanoString are making it accessible. These applications allow researchers to understand additional dimensions of biology and will drive demand
+for vast amounts of sequencing data. And the insights gained will lead to the next wave of NGS-based diagnostics and therapeutics, fueling further
+demand for our sequencing. We're actively partnering with these innovators to drive global adoption.
+Next slide. Turning now to 2021 guidance, which excludes GRAIL. We expect recovery from the global pandemic to continue through the first half
+of the year and a return to normal by the second half of 2021. We expect revenue of $3.79 billion to $3.88 billion, representing approximately 17%
+to 20% growth. At the midpoint of our guidance, sequencing growth is projected to be approximately 20% in 2021. This reflects sequencing
+consumables growth of approximately 20%, sequencing instruments growth of approximately 33% and arrays approximately 5%.
+We expect operating margin to be approximately 24% and non-GAAP earnings per share of between $5.10 and $5.35 per share for 2021. Our 2021
+EPS guidance reflects modest improvement in operating margin, onetime costs associated with stock-based compensation plan adjustments and
+lower interest income. We expect Q1 2021 revenues to be flat to slightly up compared to Q1 of 2020.
+Now moving on the next slide to GRAIL. We expect early cancer detection and recurrence monitoring will be the largest genomic applications over
+the next decade by far, representing a $60 billion addressable market.
+Moving to the next slide. 71% of all deadly cancers still do not have a screening test available today. So most cancers are detected too late, when
+chances of survival are much lower.
+Moving to the next slide. GRAIL's flagship product, Galleri, is a pan-cancer screening blood test that detects more than 50 types of cancers with a
+low false positive rate of less than 1% and tissue of origin with 93% accuracy. The potential human and public health impact that could be achieved
+by adding Galleri to current single cancer screening is enormous.
+A recent publication modeled this potential impact and found that if Galleri were able to detect cancers at earlier stages, that this could avert 26%
+of the expected deaths of cancer over 5 years. This potential benefit is approximately what we are achieving annually with all of the interventions,
+testing and therapeutics that we're deploying to fight cancer today combined.
+Today, GRAIL announced that it will launch Galleri in Q2 of this year. They also announced that its prospective 6,600 participant PATHFINDER study
+was fully enrolled in December. GRAIL will present PATHFINDER results as well as additional clinical validation data from its CCGA study in the first
+half of 2021. This adds to their ongoing prospective clinical study program that has enrolled over 100,000 participants, the largest clinical program
+in early cancer detection.
+GRAIL recently announced that the U.K.'s NHS will pilot Galleri in 2021 with plans to enroll 165,000 patients. Following a successful pilot, the NHS
+expects to test 1 million people in 2024 to 2025 as a starting point. In addition to Galleri, GRAIL plans to launch its diagnostic aid for cancer later
+this year to speed time to diagnosis when cancer is suspected. GRAIL's time to market lead and strong IP position it well, and Illumina will help
+GRAIL accelerate global adoption by contributing our expertise in market access, regulatory and commercial scale.
+Moving to the next slide. In addition to Galleri, GRAIL is also developing an MRD test designed to monitor for early signs of cancer recurrence. GRAIL
+announced today collaborations with Amgen, AstraZeneca and Bristol-Myers Squibb for their MRD offering. Many MRD tests available today for
+solid tumors require tissue analysis and development of patient-specific assays, contributing to longer turnaround times and potential delay in
+treatment decisions. GRAIL's targeted methylation platform could enable a blood-based MRD detection assay for solid tumors that perform
+comparably to bespoke tissue-based assays while reducing complexity and processing times.
+Moving to the next slide. Illumina delivered a strong close to 2020 and is well positioned entering 2021, with strength in our core sequencing
+business and momentum continuing to build in our clinical segments. In 2020, we launched 2 major products, NextSeq 2000 and the v1.5 reagents.
+We announced 3 acquisitions and closed 2 already. We added key talent to our leadership team, including Alex Aravanis as CTO; Kathryne Reeves 
+as Chief Marketing Officer; and former U.S. FDA Commissioner, Dr. Scott Gottlieb, to our Board. I'd like to thank our employees for their dedication
+and hard work. We look forward to closing the acquisition of GRAIL and welcoming GRAIL employees to Illumina.
+Looking ahead to 2021. Genomics-based vaccines will help lead us out of the pandemic. And an idea we had developed in our lab 7 years ago will
+come to market and could fundamentally transform cancer survivability. There has never been a more exciting time to be in genomics or at Illumina.
+Thank you, and we look forward to your questions in the breakout session.
+Q U E S T I O N S A N D A N S W E R S
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+All right. Thanks. We're going to jump into Q&A. Francis, I want to start with guidance. I've had quite a few inbounds. The EPS guidance excludes
+GRAIL. And obviously, as you previously talked about, that's $3.25 to $3.75 dilutive. So maybe just talk a little bit about the gives and takes on the
+bottom line for this year.
+If you do the run rate on 4Q EPS, you get to about $6.80. And obviously, you're making a lot of investments. So maybe just help us bridge that.
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Yes. So maybe I'll start and I'll turn it over to you, Sam. So as I said in the prepared remarks, a number of things factored into the guidance for this
+year. So there is a slight -- on the plus side, there's a slight improvement in our operating margin assumption coming into this year. But then we
+have the headwinds associated with an adjustment in stock-based compensation plans to deal with the pandemic effect of last year and slightly
+lower interest income.
+So maybe, Sam, you could add some more color?
+Sam A. Samad - Illumina, Inc. - CFO & Senior VP
+Yes. Maybe I can punctuate this with more detail. So just -- and go through the parts. Gross margin next year -- or this year, I should say, in '21, is
+expected to be modestly better. But one thing we should keep in mind is we are still in the pandemic. And the first half of the year is still impacted
+by the pandemic until we get out of the pandemic in the second half. So you have certain things like freight costs, for instance, that are higher in
+the first half of the year.
+As Francis said, stock-based compensation is a onetime adjustment that will happen in '21, that's factored into our guidance, which reflects the
+fact that for those plans that vest in '21 and '22, which have been heavily impacted by the pandemic, there will be a catch-up expense related to
+those as we adjust their performance metrics.
+And then finally, to add to the point about interest income, that is just driven by significantly lower yields in general, but also the fact that some
+of our investments are moving into shorter-duration investments as we project and look forward to the close of the GRAIL acquisition. So there is
+a significant year-over-year headwind related to interest income.
+So the stock-based compensation impact is roughly a 1.5 percentage point impact on operating margin. And the interest income is roughly a $30
+million to $35 million year-over-year headwind as well. So that's a significant impact on EPS.
+6
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+Okay. But even the core margins of GRAIL are still going to be quite a bit below 2019 levels, even before the pandemic, right? You were at 31%.
+Now you're guiding to 24%. Is that also -- how much of a headwind is -- are the pricing adjustments to the margins? Is that a big factor here?
+Sam A. Samad - Illumina, Inc. - CFO & Senior VP
+It's not a significant factor, Tycho. We expect our margins to go back to above the 70% as we get out of the pandemic and volumes increase and
+we start to get to normalcy in terms of just in general and freight costs return to normal.
+There is, I would say, an impact related to the v1.5, but that's also going to basically be behind us when the volume increase. And we're seeing
+tremendous uptick in terms of the v1.5 volumes and tremendous customer adoption as well.
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+Can you maybe touch on some of the gives and takes on the top line as well, 17% to 20%? Street's at 25%. You've got easy comps. So maybe just
+talk about if there's conservatism in guidance, where is it baked in?
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Yes. So let me start. And then maybe, Sam, you can add some color, too. So the way we're thinking about 2021 is that the first half of the year, we're
+still dealing with the pandemic. And so while we've seen strong recovery starting from Q2 into 3 and then 4, there's still going to be recovery playing
+out in the first half of the year. And it really is only the second half where we start to see -- where we expect to see more normal sort of buying
+patterns.
+The second thing is that part of the year -- this year, certainly, Q1, you're comparing a pandemic-impacted quarter this year to a
+non-pandemic-impacted Q1 of last year. And so it's not as straight up as a -- this year is a post-pandemic year compared to pandemic. If that was
+true, I think we'd get to the numbers that you were talking about. But when you take the blended impact of half the year is pandemic this year,
+some quarters are pandemic this year, not last year, that's where we end up.
+Sam A. Samad - Illumina, Inc. - CFO & Senior VP
+Yes. Maybe I'll add a couple. Exiting Q4, we had a tremendous quarter in Q4. So exiting Q4, gives us a lot of confidence about the momentum that
+we're seeing in our business. The fact of the matter is we're still in a pandemic, and we are still going to be challenged in the first half of the year
+as we get out of this pandemic. But the trends are really strong. And as you saw in the guidance as well, we're guiding to 33% at the midpoint in
+terms of instrument growth; and overall sequencing, 20% at the midpoint.
+But in terms of caution, Tycho, to address your question, it really has to do with the pandemic and the fact that we're cautious in the first half, given
+the fact that we're still all living in this reality until we get out of it in the second half.
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+And the question on the elasticity, Sam. You alluded to, you're seeing a lot of incremental demand from the pricing adjustments. I think when you
+and I have talked in the past, you said, you only need customers to order 2 additional kits to kind of make up for the pricing adjustment.
+But can you maybe just talk to a degree to which the adjustments are driving incremental demand? How you think about the elasticity? And then
+I had somebody asking me while we're talking if NovaSeq is still the platform to get to $100 genome or do you need another instrument?
+Sam A. Samad - Illumina, Inc. - CFO & Senior VP
+Yes. So maybe I'll start. And Francis, I'll let you talk about the $100 genome and the platform. We're definitely seeing that elasticity of demand play
+out with regards to the v1.5 and the S4. We're seeing, as we talked about in the prepared remarks, significant increase in orders, increase in customers.
+In fact, in Q4, we had a near-record amount of orders of consumables driven by the S4, v1.5 introduction.
+Now we'll continue our expectation as that continues to play out in 2021, and that's why we're guiding to the 20% increase in sequencing
+consumables. So definitely, we're seeing that continue. We're also seeing it in terms of NovaSeq adoption as well, Tycho. We had, in Q4, the second
+highest quarter for NovaSeq orders. And thus, the first highest was in Q1 of '17 when we launched the instrument.
+So we're seeing that increase in adoption of NovaSeq driven by the fact that we've launched the v1.5. And the pipeline couldn't be more healthy
+in terms of instruments as well.
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Yes. And so let me answer -- let me touch on that, and then I'll answer the $100 genome question. So Tycho, look, as we said in the remarks and
+we're sharing with you now, we had a really strong Q4. And we feel like we're coming into '21 with some really nice tailwinds behind us in terms
+of the impact of the v1.5 consumables, the strength in NovaSeq, in S4 and NextSeq. And that's what gave us the confidence to put out guidance
+for the year.
+So to reinstate guidance to say, "Look, we have visibility, and that's the number that you're seeing." Obviously, we're watching to see how the pandemic plays out. And to your point, are there potential good guys? Obviously, we'll be sharing them with you as we work our way through the
+quarter.
+In terms of what it will take to get to the $100 genome, I've outlined some of the key technologies that we now are -- have running in our labs,
+right? So it's the increased cluster density, the 5x increase, for example. So -- and the larger -- the 300-millimeter wafers, we now have those running
+in our labs. And we'll sort of -- we'll think about what is the right form factor to bring it into the market. So we haven't announced that yet, whether
+it's in addition to NovaSeq or a new instrument. But we certainly have now the technologies available and running in our labs.
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+One last one on the fourth quarter pre-announcement that came in. Was -- you had an extra week. Are you be able to quantify what that contributed?
+Is 4% or so kind of the right math, Sam?
+Sam A. Samad - Illumina, Inc. - CFO & Senior VP
+I think that's on the high side, Tycho, because the extra week usually coincides with the holidays as well so that we have reduced shipping schedules.
+So that's probably on the high side.
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+Okay. Francis, curious if you can talk a little bit about GRAIL. And I'll let you say what you want to say here because the deal hasn't closed yet. But
+as we think about the MRD opportunity, competitive positioning, you've got Natera. Guardant had some announcements today. How do you think
+about how that platform or how that test will be launched and received in the market?
+8
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Yes. Overall, I think MRD is a very exciting opportunity in oncology and a pretty greenfield opportunity. Obviously, customers of ours like Natera
+have products out there in the market, and those are strong products.
+GRAIL's approach is slightly different. So with their targeted methylation approach, they won't need patients to do a tissue sample first and create
+a custom assay for each patient. And so GRAIL's approach is more of just a blood test looking for any types of cancer in the blood.
+And so what that should do is it should shorten the time to get the results and reduce any potential delays associated with treatment decisions
+from the test. So sort of exciting approach. We're excited to see the partnerships that they announced today and to see that they're making progress,
+and we look forward to having that approach into the market as well.
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+And then one roaming in on e-mail was just around pricing. You've talked a little bit about when the deal was announced around pricing for the
+Galleri test. But are you able to talk about cost, what you're assuming for COGS per test? And then how do you see pricing coming down for that
+test over time?
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Yes. So let me start with the pricing and how that's going to evolve over time. And maybe, Sam, I'll turn it over to you to talk about COGS. So you
+know what GRAIL has announced is that they expect the price of the test when they launch to be between $600 a test and $1,000 a test, depending
+on which channel you buy the product. And then they expect the price of that test to come down over time and that at the end of a 15-year period,
+that could be a $300 test.
+What we did then is we took those assumptions, and we took a haircut to them as we build our valuation model for GRAIL. So when we built our
+model, we assumed that even the starting price was at the $600 point and that it was more aggressively going down over that time period.
+So that's what we built for our models. But based on -- what GRAIL's put out there is they said they expect the test to come out at $600 to $1,000
+and work its way to $300. Sam, you can comment on COGS.
+Sam A. Samad - Illumina, Inc. - CFO & Senior VP
+Yes. I would look at the cost, Tycho, in over 3 periods, basically: initially, in the first couple of years; over the first 5 years; and then beyond the 5
+years. So initially, COGS are going to be -- they're going to be higher than our overall average, higher than our services COGS, just driven by the
+fact that volumes are going to be ramping up.
+In the -- but once you get beyond that and up to the 5 years, then I think you can expect within that period, beyond the first 2 years, but within the
+5 years, that COGS will be somewhere around our services COGS average. So slightly lower than sequencing instruments and consumables but
+around our services average.
+Beyond the 5 years, though, we expect the COGS and the gross margin from GRAIL, so gross margin, to start actually be at our overall gross margin,
+if not better, because of the fact that volumes will ramp up and because of the fact that we have innovations that reduce the cost of sequencing
+for both GRAIL and our other customers as well.
+So over the long term, we actually see the gross margin profile from GRAIL exceeding our overall gross margin. But you have to take a long-term
+view to that. Within the 5 years, I would say, comparable gross margin to our services gross margins.
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+Can you talk to any early payer discussions you're having around the Galleri test at this point? Or is it a little bit premature?
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Yes. It's probably premature to make any announcements. What we were encouraged, though, to see are the bills that were introduced, both in
+the House and the Senate, around the intent to accelerate the reimbursement, if you like, for multi-cancer advanced technology tests like the test
+that GRAIL has. What that shows is that there is bipartisan momentum to adopt a test like a GRAIL test. And that should have a really good knock-on
+effect in terms of the pace at which we see acceleration play out and the reimbursement play out over the coming years.
+So too early to announce. We're having good conversations, and we're seeing some encouraging signs in the market, but no news at this point.
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+Another question that came in just on single cell and spatial. And to what degree can you guys -- I mean, obviously, you're benefiting as a downstream
+detection method, but are there other ways you can kind of participate in that market? I know you had the Bio-Rad JV for single cell. But can you
+just talk a little bit about your overall kind of priorities and how you can participate in that market maybe a little more?
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Yes. Sure. And maybe it's a good chance for me to introduce Alex Aravanis, our CTO. He's on the call with us. And maybe, Alex, you can comment
+on the evolution of spatial and then single cell, and the opportunities for us to participate. And maybe also touch on proteomics a little bit because
+there seems to be some interest in that as well.
+Alexander Aravanis - Illumina, Inc. - Senior VP & CTO
+Sure. Happy to do that, Francis. So we see tremendous growth in spatial and in single cell as proliferating more and more research applications,
+quite exciting. There's opportunities to actively partner with those companies to create technologies that make it easier for customers to adopt,
+both on the analytics and the chemistry side. So we're actively exploring those partnerships and how we can bring those technologies with
+customers like a NanoString or a 10x to market faster.
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Yes. And on the proteomics side, we're seeing opportunities. There are some companies that already use NGS as a readout mechanism, so tremendous
+companies like Olink, for example, uses Illumina NGS as a readout mechanism for their proteomics product. And there are opportunities to do the
+same for other companies in that space, too. Because, as I touched on in my prepared remarks, our sequencers are a great, universal, high-throughput
+readout mechanism for all these multi-omics products.
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+Got it. I also got one on competitive dynamics, vis-à-vis MGI, and you've done a good job kicking them out of the U.S. market. But how do you think
+about them longer-term and potentially coming into the U.S. as some of your IP starts to roll off?
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Our approach is going to be the same with MGI as it is with the market as a whole, which is we are going to continue to innovate and sort of push
+the forefront in terms of what's possible on a number of fronts. So one on an accuracy front, and that's been very important, especially in the clinical
+markets. And that has been a differentiator for us against other players like MGI, but with other players in the market, too.
+And we're going to continue to push the bar higher. And you know the markets that we serve, right? Customers are using the results of our tests
+to choose a therapy to deal with their cancer or they're using the results of our test to gauge the health of a baby during pregnancy. So accuracy
+really matters. False negatives and false positives have significant consequences.
+And so we're going to keep pushing the bar on accuracy and deliver the best accuracy in the market. We're also going to keep pushing the bar in
+terms of the price performance that we deliver to the market. And so we talked about the innovations we have to continue to drive the price -- the
+cost of sequencing for our customers down.
+And so -- and then you add to that our commercial reach and the investment we make and the relationships with our customers, we feel all of those things are going to -- we're going to keep doing that. And that's what's going to be what distinguishes us from MGI long term and everyone
+else.
+And in terms of IP, these innovations, we take very seriously. And we spend a lot to actually develop intellectual property assets around them, and
+we will protect those IP assets. And so I talked about in the prepared remarks that even on the SBS side, we're developing new dies, new blocking
+chemistry. And every time we put something like that out, that adds a significant time horizon in terms of the protection around that IP. So that's
+going to be our approach.
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+You've been very clear on your views on the long read market as well historically. Do you see that changing? And obviously, there were some
+announcements by PacBio of some hires from you guys. I mean a question we've gotten is, is there a brain drain problem at Illumina? Or is this kind
+of normal churn? And you've got a good bench to kind of fill some of the roles that are open now.
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Our thoughts on long read haven't really changed in the sense that, as we said a few years ago, we believe long-read technologies complement
+short-read technologies that they serve about 5% of the market where you're doing de novo sequencing for new species, for example. So there
+are a number of segments where that technology is well suited. And for the vast majority of the market, the 95% of the market, short reads are just
+simply the better technology in terms of accuracy, in terms of price performance. The price gap can be 10x between what you can do in short reads
+and what you can do in long reads. The raw accuracy is it's higher on short reads.
+And in big markets for us, so for example, in NIPT, the fragments you're reading are 130 base pairs long. And so being able to read 10,000 base
+pairs really doesn't matter. Same thing with liquid biopsy. You're looking at fragments that are under 200 base pairs long. And so you're not willing
+to make a trade-off in accuracy or cost just to be able to read 10,000 base pairs. And so we continue to believe there's a complementary part of the
+market that long read serves well. And for the majority of -- the vast majority of the market, short reads are -- especially SBS, is really, really well
+suited for.
+Now having said that, I touched on the fact that the investments we're making in AI and have been making over the last few years have really
+extended what's possible with short reads. And so now there are applications like pharmacogenomics that maybe a few years ago, we would have
+said is better suited to long read, where now we're actually seeing tremendous results marrying AI capabilities in SBS.
+And so there are a number of those applications that now fall within what's possible with short read. So that's probably the only way our thinking
+has changed over the last few years, but we continue to believe it's complementary.
+In terms of talent, you can look at almost every space in genomics. And over time, there's Illumina talent there. We are the place where genomics
+talent gets groomed. We bring on tremendous talent at Illumina. We're very proud of it. We're not surprised that people come after us. And so you
+look at the people we're bringing on, and I think we're in great shape.
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+Great. Well, we hit the end of the time slot. So I appreciate you taking the time. Enjoy the rest of the conference, and we'll talk to you soon.
+Francis A. deSouza - Illumina, Inc. - CEO, President & Director
+Thank you, Tycho.
+Tycho W. Peterson - JPMorgan Chase & Co, Research Division - Senior Analyst
+Thanks.
+Additional Information and Where to Find It
+In connection with the proposed transaction, the Company has filed with the SEC a registration statement on Form S-4 (the “Registration Statement”), which includes a preliminary prospectus with respect to the Company’s common stock and contingent value rights to be issued in the proposed transaction and a consent solicitation statement of GRAIL, Inc. (“GRAIL”) in connection with the proposed transaction.  The Company may also file other documents with the SEC regarding the proposed transaction.  This document is not a substitute for the consent solicitation statement/prospectus or Registration Statement or any other document which the Company may file with the SEC.  INVESTORS AND SECURITY HOLDERS OF GRAIL ARE URGED TO READ THE REGISTRATION STATEMENT, WHICH INCLUDES THE CONSENT SOLICITATION STATEMENT/PROSPECTUS, AND ANY OTHER RELEVANT DOCUMENTS THAT ARE FILED OR WILL BE FILED WITH THE SEC, AS WELL AS ANY AMENDMENTS OR SUPPLEMENTS TO THESE DOCUMENTS, CAREFULLY AND IN THEIR ENTIRETY BECAUSE THEY CONTAIN OR WILL CONTAIN IMPORTANT INFORMATION ABOUT THE PROPOSED TRANSACTION AND RELATED MATTERS.  Investors and security holders may obtain free copies of the Registration Statement, which includes the consent solicitation statement/prospectus, and other documents filed with the SEC by the Company through the website maintained by the SEC at www.sec.gov, through the Company’s Investor Relations page (investor.illumina.com) or by writing to Illumina Investor Relations, 5200 Illumina Way, San Diego, CA 92122.
+No Offer or Solicitation
+This communication is for informational purposes only and is not intended to and does not constitute an offer to subscribe for, buy or sell, or the solicitation of an offer to subscribe for, buy or sell, or an invitation to subscribe for, buy or sell any securities or a solicitation of any vote or approval in any jurisdiction, nor shall there be any sale, issuance or transfer of securities in any jurisdiction in which such offer, invitation, sale or solicitation would be unlawful prior to registration or qualification under the securities laws of any such jurisdiction.  No offer of securities shall be made except by means of a prospectus meeting the requirements of Section 10 of the Securities Act of 1933, as amended, and otherwise in accordance with applicable law.
+Cautionary Notes on Forward-Looking Statements
+This communication contains “forward-looking statements” within the meaning of the federal securities laws, including Section 27A of the Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934, as amended.  In this context, forward-looking statements often address expected future business and financial performance and financial condition, and often contain words such as “expect,” “anticipate,” “intend,” “plan,” “believe,” “seek,” “see,” “will,” “would,” “may,” “target,” similar expressions and variations or negatives of these words.  Forward-looking statements by their nature address matters that are, to different degrees, uncertain, such as statements about the consummation of the proposed transaction and the anticipated benefits thereof.  These and other forward-looking statements are not guarantees of future results and are subject to risks, uncertainties and assumptions that could cause actual results to differ materially from those expressed in any forward-looking statements, including the failure to consummate the proposed transaction or to make any filing or take other action required to consummate such transaction in a timely matter or at all.  Important risk factors that may cause such a difference include, but are not limited to: (i) the proposed transaction may not be completed on anticipated terms and timing, (ii) a condition to closing of the transaction may not be satisfied, including obtaining regulatory approvals, (iii) the potential impact of unforeseen liabilities, future capital expenditures, revenues, costs, expenses, earnings, synergies, economic performance, indebtedness, financial condition and losses on the future prospects, business and management strategies for the management, expansion and growth of the Company’s business after the consummation of the transaction, (iv) potential adverse reactions or changes to business relationships resulting from the announcement or completion of the transaction, (v) any negative effects of the announcement, pendency or consummation of the transaction on the market price of the Company’s common stock and on the Company’s operating results, (vi) risks associated with third-party contracts containing consent and/or other provisions that may be triggered by the proposed transaction, (vii) the risks and costs associated with the integration of, and the ability of the Company to integrate, GRAIL’s business successfully and to achieve anticipated synergies, (viii) the risks and costs associated with the development and commercialization of, and the Company’s ability to develop and commercialize, GRAIL’s products; (ix) the risk that disruptions from the proposed transaction will harm the Company’s business, including current plans and operations, (x) legislative, regulatory and economic developments, (xi) the other risks described in the consent solicitation statement/prospectus that is included in the Registration Statement, as well as in the Company’s most recent annual reports on Form 10-K and quarterly reports on Form 10-Q and in the registration statement on Form S-1 filed with the SEC by GRAIL on September 9, 2020, as amended on September 17, 2020, and (xii) management’s response to any of the aforementioned factors.
+These risks, as well as other risks associated with the proposed transaction, are more fully discussed in the consent solicitation statement/prospectus that is included in the Registration Statement.  While the list of factors presented here is, and the list of factors  presented in the Registration Statement are, considered representative, no such list should be considered to be a complete statement of all potential risks and uncertainties.  Unlisted factors may present significant additional obstacles to the realization of forward-looking statements.  Consequences of material differences in results as compared with those anticipated in the forward-looking statements could include, among other things, business disruption, operational problems, financial loss, legal liability to third parties and similar risks, any of which could have a material adverse effect on the Company’s financial condition, results of operations, credit rating or liquidity.  The Company does not assume any 
+obligation to publicly provide revisions or updates to any forward-looking statements, whether as a result of new information, future developments or otherwise, should circumstances change, except as otherwise required by securities and other applicable laws.
+12
+
+
