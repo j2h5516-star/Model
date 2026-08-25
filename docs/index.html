@@ -27,6 +27,17 @@
   <a href="#/check" data-tab="check"><span>🧾</span>검증</a>
 </nav>
 
-<script src="app.js"></script>
+<!-- 화면 코드를 **캐시에서 꺼내 쓰지 않도록** 시각을 붙여 부릅니다 (150차-AW).
+     주소를 그대로(시각 없이) 두었더니, 화면을 고쳐 올려도 휴대폰이
+     예전에 받아 둔 app.js 를 계속 써서 **옛 화면이 그대로 남았습니다**
+     (주인이 08-25 에 옛 안내문을 보고 알려 주었습니다).
+     한 시간 단위로 주소를 바꿔, 늦어도 한 시간이면 새 화면이 옵니다. -->
+<script>
+  (function () {
+    var s = document.createElement("script");
+    s.src = "app.js?v=" + Math.floor(Date.now() / 3600000);
+    document.body.appendChild(s);
+  })();
+</script>
 </body>
 </html>

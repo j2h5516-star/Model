@@ -135,6 +135,14 @@ input.search::placeholder { color: var(--dim); }
 /* ── 종목 상세 ──────────────────────────────────────── */
 .back { display: inline-block; color: var(--dim); font-size: 13px;
         text-decoration: none; margin-bottom: 8px; }
+
+/* 큰 단추 — 휴대폰에서 엄지로 확실히 닿는 크기 (150차-AW).
+   "가져오기"처럼 **한 번 누르면 일이 시작되는** 자리에만 씁니다. */
+.go { display: block; width: 100%; box-sizing: border-box; text-align: center;
+      background: var(--up); color: #06210a; font-size: 16px; font-weight: 800;
+      text-decoration: none; padding: 14px 12px; border-radius: 12px;
+      margin: 4px 0 10px; }
+.go:active { filter: brightness(.9); }
 .detail-hd { display: flex; align-items: baseline; gap: 8px; }
 .detail-hd .sym { font-size: 26px; font-weight: 800; letter-spacing: -.8px; }
 table.mini { width: 100%; border-collapse: collapse; font-size: 12.5px; }
