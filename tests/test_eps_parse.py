@@ -1808,6 +1808,37 @@ def test_문장_중간의_excluding_은_GAAP_을_막지_않는다():
                              exclude_nongaap=True) == 0.43
 
 
+# ===========================================================================
+# 150차-AZ — GAAP 쪽에는 있는데 조정 쪽에만 빠져 있던 세 곳
+# ===========================================================================
+def test_common_share_도_조정_이름으로_받는다():
+    """실물 EL·SMCI — "Adjusted diluted net earnings **per common share**".
+    GAAP 쪽 이름은 common|ordinary 를 둘 다 받는데 조정 쪽은 ordinary 만
+    받고 있었습니다(반쪽만 넣은 자리).
+
+    SMCI 는 이 때문에 GAAP 과 조정이 **같은 값 0.60 으로 무너져** 있었습니다."""
+    text = ("•Diluted net income per common share of $0.60 versus $0.26\n"
+            "•Non-GAAP diluted net income per common share of $0.69 versus $0.59\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.69
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == 0.60
+
+
+def test_operating_수식어도_받는다():
+    """실물 AMP — "Adjusted **operating** earnings per diluted share
+    increased 7 percent to $9.11". 보험·자산운용사의 표준 표현입니다."""
+    text = ("•Second quarter adjusted operating earnings per diluted share "
+            "increased 7 percent to $9.11.\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 9.11
+
+
+def test_이름에_쉼표가_끼어도_받는다():
+    """실물 UTHR 표 — "Non-GAAP earnings**,** per diluted share(1)  $3.34"."""
+    text = ("Non-GAAP earnings, per diluted share(1)           $3.34"
+            "             $3.89\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 3.34
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

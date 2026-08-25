@@ -758,10 +758,21 @@ LABELS_ADJUSTED_EPS = [
     # (CRDO·샌디스크), "net diluted loss"(SEDG). 순서 무관 최대 2개 허용.
     # 적자를 "(loss)" 로 묶는 표기(실물: STX)와 케이맨 법인의 "ordinary share"
     # (실물: AMBA)도 허용합니다. (9차 감사에서 실물 4형식 보강)
-    rf"non[-\s]?GAAP\s+(?:(?:net|diluted)\s+){{0,2}}\(?{_PROFIT_WORD}\)?"
-    r"\s+per\s+(?:diluted\s+)?(?:ordinary\s+)?share",
-    rf"adjusted\s+(?:(?:net|diluted)\s+){{0,2}}\(?{_PROFIT_WORD}\)?"
-    r"\s+per\s+(?:diluted\s+)?(?:ordinary\s+)?share",
+    #
+    # 150차-AZ — 세 곳을 넓힙니다. 전부 GAAP 쪽 이름에는 이미 있던 것들인데
+    # 조정 쪽에만 빠져 있었습니다(반쪽만 넣은 자리):
+    #   ① **common share** — 실물 EL "Adjusted diluted net earnings
+    #      **per common share** increased to $.32" (EL 5건).
+    #      GAAP 쪽 `_SHARE` 는 common|ordinary 를 둘 다 받고 있었습니다.
+    #   ② **operating** 수식어 — 실물 AMP "Adjusted **operating** earnings
+    #      per diluted share increased 7 percent to $9.11". 보험·자산운용사가
+    #      쓰는 표준 표현입니다 (AMP·MET).
+    #   ③ **쉼표** — 실물 UTHR 표 "Non-GAAP earnings**,** per diluted
+    #      share(1)   $3.34" (UTHR 4건).
+    rf"non[-\s]?GAAP\s+(?:(?:net|diluted|operating)\s+){{0,3}}\(?{_PROFIT_WORD}\)?"
+    r"[\s,]+per\s+(?:diluted\s+)?(?:common\s+|ordinary\s+)?share",
+    rf"adjusted\s+(?:(?:net|diluted|operating)\s+){{0,3}}\(?{_PROFIT_WORD}\)?"
+    r"[\s,]+per\s+(?:diluted\s+)?(?:common\s+|ordinary\s+)?share",
     # MPWR 형 대조표: "Non-GAAP net income per share:" 제목 아래 Basic/Diluted
     # 줄이 따로 옵니다. Diluted 바로 뒤의 값을 집습니다.
     # (표 여백이 넓어 창을 600자로 둡니다 — Basic 줄 하나를 건너뛰는 거리)
