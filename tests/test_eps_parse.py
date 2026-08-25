@@ -1654,6 +1654,84 @@ def test_멀리_있는_연간_표시도_본다():
     assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
 
 
+# ===========================================================================
+# 150차-AS — 이름이 두 줄로 쪼개진 표, 그리고 그 표를 읽다가 드러난 셋
+# ===========================================================================
+def test_이름이_두_줄로_쪼개진_표를_읽는다():
+    """실물 CGNX — 항목 이름이 길어 줄바꿈이 되면서 **어느 잣대인지
+    말해 주는 꼬리표가 아랫줄로** 밀려났다. 값은 윗줄에 있다.
+    기존 이름들은 "non-GAAP … per share" 가 붙어 있기를 요구해 이 꼴을
+    하나도 못 읽었다 (CGNX·SCHW 두 종목만 20건)."""
+    text = (
+        "Net income (Non-GAAP)                                    $40,433\n"
+        "Net income per diluted weighted-average common and common-equivalent   $0.23\n"
+        "share (Non-GAAP)\n"
+    )
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.23
+
+
+def test_소수점으로_시작하는_표기를_읽는다():
+    """실물 SCHW — 주당 금액을 "$.74" 라고 적는다(0 을 안 쓴다).
+    이 표기를 못 읽어 그 칸을 건너뛰고 **6개월 누적 칸**을 분기값으로
+    읽고 있었다."""
+    text = (
+        "Adjusted net income available to common stockholders   $1,358   $.74\n"
+        "(non-GAAP), Adjusted diluted EPS (non-GAAP)\n"
+    )
+    # $1,358 은 소수점이 없어 저절로 걸러지고 $.74 가 남는다
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 0.74
+
+
+def test_영점영영은_EPS_로_읽지_않는다():
+    """실물 BE — "GAAP EPS, Diluted   **$.00**   $(0.10)  $0.46" 처럼
+    첫 칸이 빈칸 대신 놓인 0 이다. 그 분기의 진짜 값은 −0.10 이다."""
+    text = "GAAP EPS, Diluted       $.00       $(0.10)       $0.46\n"
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == -0.10
+
+
+def test_앞_문장의_논갭_이야기는_이_이름과_상관없다():
+    """반례 보존 (실물 CRDO) — 되돌아보기 창을 넓히면서 **문장 끝**에서
+    자르지 않으면, 앞 문장의 'non-GAAP' 때문에 뒤 문장의 진짜 GAAP 값을
+    잃습니다. 55자 앞이라 40자 창에서는 안 걸리던 것입니다."""
+    text = ("GAAP net income of $157.1 million and non-GAAP net income of "
+            "$208.8 million. GAAP diluted net income per share of $0.82 and "
+            "non-GAAP diluted net income per share of $1.07")
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) == 0.82
+
+
+def test_같은_문장의_논갭_이야기는_막는다():
+    """실물 SCHW — "…costs, **adjusted** (1) net income and diluted common
+    **earnings per share** equaled $1.5 billion and $.74". 'adjusted' 가
+    51자 앞이라 40자 창에 닿지 않아 **조정값이 GAAP 칸에** 들어갔습니다.
+    GAAP 과 조정이 같은 값으로 무너지는 것이 이 결함의 표시입니다."""
+    text = ("Excluding $140 million of pre-tax costs, adjusted (1) net income "
+            "and diluted common earnings per share equaled $1.5 billion and "
+            "$.74, respectively.")
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+
+def test_영향의_크기는_잣대가_아니다():
+    """실물 PYPL — "GAAP EPS **included a negative impact of** approximately
+    $0.11 …". 0.11 은 잣대 안에 든 영향의 크기입니다.
+    실물 BMY 도 같은 꼴로 조정 EPS 가 −0.01 이 돼 있었습니다(참값 1.82)."""
+    text = ("In the fourth quarter, GAAP EPS included a negative impact of "
+            "approximately $0.11 on strategic investments.")
+    assert sf.find_eps_value(text, sf.LABELS_GAAP_EPS,
+                             exclude_nongaap=True) is None
+
+
+def test_Approx_는_전망표의_말이다():
+    """실물 CCL 전망표 — "Adjusted earnings per share - diluted (a)
+    **Approx. $0.00**   **Approx. $1.70**". 둘 다 전망(분기·연간)이다.
+    낱말 전체("approximately")는 실적 문장에도 흔해 **약자만** 막는다."""
+    text = ("Adjusted earnings per share - diluted (a)   "
+            "Approx. $0.00      Approx. $1.70\n")
+    assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) is None
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

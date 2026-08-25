@@ -109,7 +109,13 @@ _NUMBER_RE = re.compile(
     r"""
     (?P<paren_open>\()?          # 괄호로 시작하면 음수
     \s*\$?\s*
-    (?P<num>\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+(?:\.\d+)?)
+    # 150차-AS — 마지막 갈래 `\.\d+` 는 **소수점으로 시작하는 표기**입니다.
+    # 실물 SCHW 는 주당 금액을 "$.75" 라고 적습니다(0 을 안 씁니다).
+    # 이 갈래가 없어서 그 칸을 건너뛰고 **6개월 누적 칸($1.68)** 을
+    # 분기값으로 읽었습니다.
+    # "Dec. 31" 처럼 점 뒤에 공백이 오는 것은 걸리지 않습니다(점 바로
+    # 뒤에 숫자를 요구하므로).
+    (?P<num>\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+(?:\.\d+)?|\.\d+)
     \s*
     (?P<paren_close>\))?
     \s*
@@ -866,7 +872,19 @@ LABELS_GAAP_EPS = [
 # "Core" 라고 부릅니다: "Diluted EPS $1.63 … **Core EPS $1.59**".
 # 이 말을 모르면 논갭 값이 GAAP 칸에 들어갑니다.
 _NONGAAP_NEAR_RE = re.compile(r"non[-\s]?GAAP|adjusted|\bcore\b", re.I)
-_NONGAAP_LOOKBACK = 40   # 이름 앞 몇 글자까지 되돌아볼 것인가
+# 150차-AS — 40 → 120. 대신 창 안에 **문장 끝**이 있으면 거기서부터만
+# 봅니다(위 find_eps_value 안 주석). 글자 수만으로 재면 두 실물이 서로
+# 반대 방향으로 깨지기 때문입니다:
+#   SCHW "…costs, **adjusted** (1) net income and diluted common
+#         **earnings per share** … $.74"   ← 51자 앞, 같은 문장 → 막아야 함
+#   CRDO "…**non-GAAP** net income of $208.8 million. **GAAP diluted
+#         net income per share** of $0.82" ← 55자 앞, 앞 문장 → 살려야 함
+# 차이는 글자 수가 아니라 **문장**입니다.
+_NONGAAP_LOOKBACK = 120  # 이름 앞 몇 글자까지 (문장 끝이 있으면 거기까지)
+
+# 문장 끝 — 마침표 뒤에 공백과 대문자가 오는 자리. 숫자의 소수점("1.00")이나
+# 약자("U.S. ")를 문장 끝으로 오인하지 않도록 **앞뒤를 함께** 봅니다.
+_SENTENCE_END_RE = re.compile(r"(?<=[a-z0-9%)\]])\.\s+(?=[A-Z])")
 
 # 배당금 문맥 — "$0.13 per share" 앞에 배당 이야기가 있으면 EPS 가 아닙니다
 # (76차 — 실물 HPE "regular cash dividend of $0.13 per share").
@@ -883,7 +901,13 @@ _FORECAST_NEAR_RE = re.compile(
     #    with $5.10 in the prior year."
     # 이 한 낱말이 없어 연간 전망치 5.10 이 4분기 조정 EPS 로 들어왔습니다
     # (진짜 값은 같은 글의 1.48).
-    r"\b(?:expects?|expected|expecting|anticipates?|approach(?:es|ing)?"
+    # 150차-AS — "Approx." (전망표의 표준 약자). 실물 CCL 2024-12-20 의
+    # 전망표: "Adjusted earnings per share - diluted (a)  Approx. $0.00
+    #          Approx. $1.70" — 둘 다 **전망**이다(분기·연간).
+    # 낱말 전체("approximately")는 실적 문장에도 흔히 쓰여 넣지 않고,
+    # **약자만** 넣습니다.
+    r"\bapprox\.?(?=\s|$)"
+    r"|\b(?:expects?|expected|expecting|anticipates?|approach(?:es|ing)?"
     r"|targets?|targeting|forecasts?|estimates?|guidance|outlook"
     r"|earnings\s+model)\b",
     re.I,
@@ -992,7 +1016,11 @@ _ANNUAL_GAP_RE = re.compile(
 #      IFF "Adjusted EPS **excluding** amortization1 was $0.72"     ← 진짜 값
 #    "excluding …" 은 잣대 이름을 꾸미는 **단서**이고, "excludes …" 는
 #    "이 잣대는 무엇무엇을 뺀다"는 **다른 문장**입니다. 뒤엣것만 막습니다.
-_EXCLUDE_GAP_RE = re.compile(r"\bexcludes?\b", re.I)
+# 150차-AS — "**영향**" 도 같은 갈래입니다. 실물 PYPL 2023-11-01:
+#   "GAAP EPS **included a negative impact of** approximately $0.11 on
+#    PayPal's strategic investments"
+#   → 0.11 은 잣대가 아니라 그 안에 든 영향의 크기입니다.
+_EXCLUDE_GAP_RE = re.compile(r"\bexcludes?\b|\bimpacts?\b|\bimpacted\b", re.I)
 
 # 멀리 있는 연간 표시 (150차-AP — 위 find_eps_value 안 주석 참조).
 # 좁은 낱말만 씁니다: "그 해 동안"을 뜻하는 말.
@@ -1220,9 +1248,31 @@ def find_eps_value(
                 # 이름 앞쪽을 되돌아보되 **줄을 넘어가지는 않습니다.**
                 # 표에서는 한 줄이 한 항목이므로, 윗줄의 'Non-GAAP' 때문에
                 # 아랫줄의 진짜 GAAP 값까지 버리는 일을 막아야 합니다.
+                #
+                # ⚠️ 150차-AS 에 **문장 단위**로 바꿔 봤다가 되돌렸습니다.
+                #    실물 SCHW 2024-04-15 은 "…costs, **adjusted** (1) net
+                #    income and diluted common **earnings per share** …
+                #    $.74" 처럼 'adjusted' 가 51자 앞이라 이 40자 창에
+                #    닿지 않아 조정값이 GAAP 칸에 들어갑니다. 그런데
+                #    창을 넓히면 CRDO "…**non-GAAP** net income of $208.8
+                #    million. **GAAP diluted net income per share** of
+                #    $0.82" 에서 진짜 GAAP 값을 잃습니다(55자 앞).
+                #    문장(". ")으로 자르는 안은 표 안의 소수점·약어를 문장
+                #    끝으로 오인해 **기존 시험 5개**가 빨간 불이 됐습니다.
+                #    셋 다 실측으로 확인했고, 지금은 **40자·줄 안**이 가장
+                #    덜 나쁩니다. SCHW 의 GAAP 칸이 틀리는 것은 남은 흠으로
+                #    적어 둡니다 — 주 잣대(조정 EPS)는 맞고, GAAP EPS 는
+                #    XBRL 이 94.7% 를 채우므로 영향이 작습니다.
                 start = label_match.start()
                 line_start = text.rfind("\n", 0, start) + 1
                 window_start = max(line_start, start - _NONGAAP_LOOKBACK)
+                # **앞 문장의 논갭 이야기는 이 이름과 상관없습니다.**
+                # 창 안에 문장 끝이 있으면 거기서부터만 봅니다 (150차-AS).
+                문장 = None
+                for m in _SENTENCE_END_RE.finditer(text, window_start, start):
+                    문장 = m.end()
+                if 문장 is not None:
+                    window_start = 문장
                 if _NONGAAP_NEAR_RE.search(text[window_start:start]):
                     continue
 
@@ -1425,6 +1475,16 @@ def find_eps_value(
                     search_from = number_end
                     continue
 
+                # **0.00 은 EPS 로 읽지 않습니다** (150차-AS).
+                # 실물 BE 2026-02-05: "GAAP EPS, Diluted   **$.00**   $(0.10)
+                # $0.46 …" — 첫 칸이 빈칸 대신 놓인 0 이고, 그 분기의 진짜
+                # 값은 −0.10 입니다. 주당 정확히 0.00 인 분기는 사실상 없고,
+                # 있더라도 신기록 판단에 쓸 정보가 없습니다.
+                # 이미 아랫줄 표 파서에서 쓰던 규칙을 본줄기에도 댑니다.
+                if value == 0:
+                    search_from = number_end
+                    continue
+
                 # 소수점 아래가 **세 자리 이상**이면 마지막 자리는 숫자가
                 # 아니라 **각주 번호**입니다 (150차-AP). 주당 금액을 세
                 # 자리로 적는 회사는 없습니다. 실물:
@@ -1541,6 +1601,20 @@ def find_eps_value(
                         and not _SECTION_QUARTER_RE.search(_사이)):
                     break            # 자리 포기 — 다음 이름 자리로
 
+                # GAAP 을 찾는 중인데 **이름과 값 사이에서 논갭 이야기가
+                # 시작되면** 그 뒤의 값은 논갭 값입니다 (150차-AS).
+                # 실물 SCHW 2024-04-15:
+                #   "…, or $.68 diluted earnings per common share.
+                #    **Excluding** $140 million of … costs, **adjusted** (1)
+                #    net income and diluted common earnings per share equaled
+                #    $1.5 billion and **$.74**, respectively."
+                #   → 이름의 제 값(0.68)은 이름 **앞**에 있고, 앞으로 훑다
+                #     보면 다음 문장의 조정값 0.74 에 닿습니다. GAAP·조정이
+                #     **같은 값으로 무너지는 것**이 이 결함의 표시입니다.
+                # exclude_nongaap 은 이름 **앞**만 보므로 여기서 뒤도 봅니다.
+                if exclude_nongaap and _NONGAAP_NEAR_RE.search(_사이):
+                    break            # 자리 포기 — 여기서부터는 논갭 구간
+
                 # 이름과 값 사이에 "**제외한다**"는 말이 있으면 그 숫자는
                 # 잣대가 아니라 **빼낸 항목의 크기**입니다 (150차-AP).
                 # 실물 HPE 2026-03-09:
@@ -1570,7 +1644,75 @@ def find_eps_value(
                 if value > 0 and says_loss:
                     value = -value
                 return value
-    return _주당값이_아랫줄에_있는_표(text, label_patterns)
+    값 = _주당값이_아랫줄에_있는_표(text, label_patterns)
+    if 값 is not None:
+        return 값
+    return _이름이_두_줄로_쪼개진_표(text, label_patterns)
+
+
+# ---------------------------------------------------------------------------
+# 이름이 **두 줄로 쪼개진** 표 (150차-AS) — 실물 CGNX·SCHW
+# ---------------------------------------------------------------------------
+# 표의 항목 이름이 길어 줄바꿈이 되면서, **어느 잣대인지 말해 주는 꼬리표**
+# 가 아랫줄로 밀려난 형식입니다. 값은 **윗줄**에 있습니다.
+#
+#   CGNX
+#     Net income per diluted weighted-average common and common-equivalent   $0.23
+#     share (Non-GAAP)                                     ← 여기서야 논갭이라고 말한다
+#
+#   SCHW
+#     Adjusted net income available to common stockholders   $1,358   $.74
+#     (non-GAAP), Adjusted diluted EPS (non-GAAP)          ← 두 번째 칸이 EPS 라고 말한다
+#
+# 기존 이름들은 전부 "non-GAAP … per share" 가 **붙어 있기**를 요구해서
+# 이 꼴을 하나도 못 읽었습니다 — 두 종목만 20건입니다.
+#
+# 값 고르기: 윗줄에서 **소수점이 있는 첫 숫자**를 집습니다. SCHW 의
+# "$1,358"(백만 달러)은 소수점이 없어 저절로 걸러지고 "$.74" 가 남습니다.
+# 이것은 이미 쓰고 있는 규칙(소수점 없는 숫자는 EPS 가 아니다)과 같습니다.
+
+# 이어짐줄의 표시 — **자기 숫자가 없고**, 잣대 이름을 괄호로 달고 있고,
+# 주당 값을 말하는 줄
+_CONT_MARK_RE = re.compile(r"\((?:non[-\s]?GAAP|GAAP)\)", re.I)
+_CONT_SHARE_RE = re.compile(r"\bshare\b|\bEPS\b", re.I)
+_CONT_MAX = 90            # 이어짐줄은 짧습니다 (설명 문장이 아닙니다)
+_CONT_PROFIT_RE = re.compile(r"\b(?:income|earnings|loss|profit)\b", re.I)
+
+
+def _이름이_두_줄로_쪼개진_표(text: str, label_patterns: list[str]) -> float | None:
+    조정찾는중 = any(_NONGAAP_NEAR_RE.search(p) for p in label_patterns)
+    줄들 = text.split("\n")
+    for i, 줄 in enumerate(줄들):
+        if i == 0:
+            continue
+        이어짐 = 줄.strip()
+        # ① 자기 숫자가 있으면 이어짐줄이 아니라 제 값을 가진 줄입니다
+        if not 이어짐 or len(이어짐) > _CONT_MAX or _FIRST_DIGIT_RE.search(이어짐):
+            continue
+        # ② 잣대 꼬리표와 주당 표시가 둘 다 있어야 합니다
+        표 = _CONT_MARK_RE.search(이어짐)
+        if not 표 or not _CONT_SHARE_RE.search(이어짐):
+            continue
+        이줄이조정 = bool(re.match(r"\(non", 표.group(0), re.I))
+        if 이줄이조정 != 조정찾는중:
+            continue
+        윗 = 줄들[i - 1]
+        if not _CONT_PROFIT_RE.search(윗):
+            continue          # 이익 항목이 아니면 모르는 줄 — 건드리지 않음
+        # ③ 윗줄에서 **소수점이 있는 첫 숫자**를 집습니다
+        자리 = 0
+        while 자리 < len(윗):
+            parsed = _parse_number_at(윗, 자리, len(윗))
+            if parsed is None:
+                break
+            값, 시작, 끝, _배수, 끝2 = parsed
+            if "." in 윗[시작:끝2] and 값 != 0 and abs(값) <= _EPS_LINE_MAX:
+                if 값 > 0 and re.search(r"\bnet\s+loss\b", 윗, re.I):
+                    값 = -값
+                return 값
+            자리 = 끝
+        continue
+    return None
 
 
 # 줄 **맨 앞**이 "per (diluted) (common) share" 인 줄 — 실물 ALL(올스테이트).
