@@ -80,6 +80,24 @@ def test_한_종목이_두_줄이면_잡는다():
     assert any("한 종목" in r["검사"] for r in 이상), 이상
 
 
+def test_등록만_되고_런이_안_돈_가설은_경보가_아니다():
+    """(151차) 새 가설을 등록한 날은 마지막 로봇 런이 등록보다 앞이라
+    웹앱에 없는 것이 **정상**입니다 — "다음 런 대기"로 두어야 합니다.
+    반대로 등록일을 지나서 돈 런에도 없으면 그때는 진짜 배선 사고(⛔)."""
+    if not _있나():
+        return
+    # 수집 시각을 등록일들보다 한참 **뒤**로 조작 → 빠진 가설은 전부 ⛔
+    이상 = _깨고_보기(lambda a: a.__setitem__("수집", "2099-01-01T00:00:00"))
+    가설수 = [r for r in 이상 if r["검사"] == "가설 수"]
+    import judge, model_verify as mv
+    빠짐 = set(mv.expected_hypotheses()) - {  # 지금 웹앱에 없는 등록 가설
+        h["이름"] for h in __import__("json").load(open(APP, encoding="utf-8"))["가설"]}
+    if 빠짐:
+        assert 가설수, "등록일 지난 런에도 빠졌는데 ⛔ 가 안 울립니다"
+    else:
+        assert not 가설수
+
+
 def test_기준일이_어긋나면_잡는다():
     """옛 데이터로 화면이 굳는 것 — 겉보기엔 멀쩡한 최악의 고장."""
     if not _있나():

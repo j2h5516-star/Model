@@ -254,6 +254,13 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         vendor_compare.attach_street_surprise(
             events, vendor_feed.load(f"{cfg.MEASURE_DIR}/vendor.json"))
         verdict["가설"].update(judge.judge_momentum_beat(events))
+        # H27·H28 (151차 등록) — 가뭄 끝 첫돌파 · 안 달린 첫돌파. 문턱
+        # (8발표 · −15%)을 탐색 표를 보고 골랐으므로 판정 표본은 등록일
+        # 뒤의 새 발표만입니다. "가뭄"은 사건에 이미 실려 오고(측정 장치),
+        # "고가대비"만 여기서 붙입니다.
+        measure_engine.attach_high52(ds, events)
+        verdict["가설"].update(judge.judge_drought_breakout(events))
+        verdict["가설"].update(judge.judge_position_breakout(events))
         # H26 (143차 등록) — 창 125거래일 첫 돌파를 **탐색에 쓰지 않은 새
         # 종목**으로만 판정합니다. 목록이 비어 있으면(확장 전) 판정하지
         # 않고 그 사실을 적습니다 — 없는 것을 지어내지 않습니다.

@@ -115,15 +115,33 @@ def 화면과_데이터를_맞댄다() -> list[dict]:
         "어긋난 종목: " + ", ".join(어긋남) if 어긋남 else "모두 일치")
 
     # ── ⑥ 등록 가설이 전부 실렸는가 (150차-J 와 같은 자리) ──────────
+    #
+    # 151차 — "**아직 안 실림**"의 두 갈래를 가릅니다. 새 가설을 등록한
+    # 날은 마지막 로봇 런이 등록보다 **앞**이라 웹앱에 없는 것이 정상인데,
+    # 그것까지 ⛔ 로 울리면 등록하는 날마다 거짓 경보가 납니다(실제로
+    # H27·H28 등록날 시험이 그렇게 깨졌습니다). 마지막 수집 시각이 그
+    # 가설의 등록일보다 앞이면 "다음 런 대기"(확인 못함)로 두고, 등록일을
+    # 지나서 돈 런에도 없으면 그때가 진짜 배선 사고(⛔)입니다.
     실린 = {h["이름"] for h in (a.get("가설") or [])}
     기대 = set(judge.expected_hypotheses()) if hasattr(judge, "expected_hypotheses") \
         else set()
     if not 기대:
         import model_verify as mv
         기대 = set(mv.expected_hypotheses())
-    적기("가설 수", bool(기대 - 실린),
+    시계 = judge.hypothesis_clock()
+    수집시각 = str(a.get("수집") or "")[:10]
+    말썽, 대기 = [], []
+    for 이름 in sorted(기대 - 실린):
+        등록일 = (시계.get(이름) or (None,))[0]
+        if 등록일 and 수집시각 and 수집시각 <= 등록일:
+            대기.append(이름)
+        else:
+            말썽.append(이름)
+    적기("가설 수", bool(말썽),
         f"웹앱 {len(실린)}개 · 등록 {len(기대)}개"
-        + (f" · 빠짐 {sorted(기대 - 실린)}" if 기대 - 실린 else ""))
+        + (f" · 빠짐 {말썽}" if 말썽 else "")
+        + (f" · 다음 런 대기 {대기}" if 대기 else ""),
+        확인못함=bool(대기) and not 말썽)
 
     # ── ⑦ 정직화 칸이 화면 자료에 있는가 (150차-C·J) ────────────────
     빈칸 = []

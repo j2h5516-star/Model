@@ -195,6 +195,8 @@ def hypothesis_clock() -> dict[str, tuple[str, int]]:
         H18B_NAME: (_sm.H18B_START_DAY, _TRADING_DAYS_PER_YEAR),
         H19B_NAME: (_ld.H19B_START_DAY, me.WINDOW_TRADING_DAYS),
         H20_NAME: (_ld.H22_START_DAY, me.WINDOW_TRADING_DAYS),
+        H27_NAME: (H27_START_DAY, me.WINDOW_TRADING_DAYS),
+        H28_NAME: (H28_START_DAY, me.WINDOW_TRADING_DAYS),
     }
     for 이름, _수준 in H22_LEVELS[1:]:
         표[이름] = (H22_START_DAY, me.WINDOW_TRADING_DAYS)
@@ -676,6 +678,79 @@ def judge_momentum_beat(events: list[dict],
         entry["판정"] = entry["신규(판정)"]["판정"]
         out[name] = entry
     return out
+
+
+# ---------------------------------------------------------------------------
+# H27·H28 (151차 등록) — 가뭄 끝 첫돌파 · 안 달린 첫돌파
+# ---------------------------------------------------------------------------
+# 151차 탐색(조정 EPS 사건 7,137건 · 기준선 10.1% [9.4, 10.8])에서 나온
+# 두 후보입니다. 둘 다 "주가가 미리 반영하기 **전**의 첫 새 소식"이라는
+# 같은 생각의 두 자입니다:
+#
+#   · H27 가뭄 끝 첫돌파 — 직전 신고점 이후 **8발표 이상**(약 2년) 신기록이
+#     없던 회사의 첫 돌파. 탐색치 20.7% [12.3, 32.8] · **폭락 3.4%**(기준선
+#     7.4) · 초과수익 중앙 +4.4%p · 앞/뒤 23.1%/20.0% · 57종목에 분산.
+#     같은 탐색에서 발표 반응·동료 선행·게이지 방향은 폭등과 폭락이 **같이**
+#     높아지는 U자(변동성 착시)로 판명됐는데, 이것은 폭락이 절반으로
+#     주는 **비대칭**이라 결이 다릅니다.
+#   · H28 안 달린 첫돌파 — 첫 돌파인데 발표 전일 종가가 52주 고가 대비
+#     **−15% 이하**(아직 안 달림). 탐색치 16.7% [11.9, 22.8] · 앞/뒤
+#     17.8%/15.6%. 대조도 함께 적습니다: 위치 단독(전체 ∧ −15%↓)이 이미
+#     13.7% 라 우위의 상당 부분은 위치 효과이고, 반대쪽(고가 −5% 이내의
+#     첫돌파)은 4.6% — **이미 달린 첫돌파는 늦다**가 이 탐색의 더 단단한
+#     발견입니다.
+#
+# ⚠️ **문턱 8발표·−15% 는 탐색 표를 보고 골랐습니다.** 그래서 탐색 표본으로는
+#    판정하지 않습니다 — 등록일 뒤의 새 발표만 셉니다 (헌법 5조).
+# ⚠️ H27 은 가뭄 길이의 **단조성이 없습니다** (0~3발표 11.4% · 4~7발표
+#    6.0% · 8+ 20.7%). 우연한 승자일 위험을 등록문에 함께 적어 둡니다.
+# ⚠️ H27 신호는 드뭅니다 — 탐색 10년에 58건(연 약 6건). n≥10 까지
+#    약 2년이 걸립니다. 서두르지 않습니다.
+H27_START_DAY = "2026-08-26"
+H27_NAME = "H27_가뭄끝_첫돌파"
+H27_DROUGHT_MIN = 8         # 직전 신고점 이후 발표 수 문턱
+H28_START_DAY = "2026-08-26"
+H28_NAME = "H28_안달린_첫돌파"
+H28_GAP_MAX = -15.0         # 발표 전일 종가의 52주 고가 대비 상한 (%)
+
+
+def judge_drought_breakout(events: list[dict],
+                           start_day: str = H27_START_DAY) -> dict:
+    """H27 판정 — 조정 EPS 사건 전체가 표본, 신호 = 첫돌파 ∧ 가뭄 ≥ 8.
+
+    가뭄을 판단할 수 없는 사건(이력에 신고점이 없던 종목 — "가뭄" None)은
+    신호가 될 수 없지만 기준선(표본)에는 남습니다 — 기준선은 등록대로
+    "같은 표본의 모든 발표"입니다.
+    """
+    usable = [e for e in events if _adj(e)]
+    entry: dict = {"등록일": start_day, "문턱": {"가뭄_발표수": H27_DROUGHT_MIN}}
+    for label, pool in (
+        ("신규(판정)", [e for e in usable if e["announced"] > start_day]),
+        ("탐색표본(참고)", [e for e in usable if e["announced"] <= start_day]),
+    ):
+        signal = [e for e in pool
+                  if e["newhigh_streak"] == 1
+                  and e.get("가뭄") is not None and e["가뭄"] >= H27_DROUGHT_MIN]
+        entry[label] = _judge(signal, pool)
+    entry["판정"] = entry["신규(판정)"]["판정"]
+    return {H27_NAME: entry}
+
+
+def judge_position_breakout(events: list[dict],
+                            start_day: str = H28_START_DAY) -> dict:
+    """H28 판정 — 고가대비를 잴 수 있는 조정 EPS 사건이 표본,
+    신호 = 첫돌파 ∧ 발표 전일 종가가 52주 고가 대비 −15% 이하."""
+    usable = [e for e in events if _adj(e) and e.get("고가대비") is not None]
+    entry: dict = {"등록일": start_day, "문턱": {"고가대비_상한": H28_GAP_MAX}}
+    for label, pool in (
+        ("신규(판정)", [e for e in usable if e["announced"] > start_day]),
+        ("탐색표본(참고)", [e for e in usable if e["announced"] <= start_day]),
+    ):
+        signal = [e for e in pool
+                  if e["newhigh_streak"] == 1 and e["고가대비"] <= H28_GAP_MAX]
+        entry[label] = _judge(signal, pool)
+    entry["판정"] = entry["신규(판정)"]["판정"]
+    return {H28_NAME: entry}
 
 
 def judge_completion_gap(events: list[dict], start_day: str,

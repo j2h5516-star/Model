@@ -45,6 +45,7 @@ def expected_hypotheses() -> list[str]:
     names.append(judge.H24_NAME)
     names += [judge.H25_NAME, judge.H25B_NAME]
     names.append(judge.H26_NAME)
+    names += [judge.H27_NAME, judge.H28_NAME]   # 151차 등록
     return names
 
 

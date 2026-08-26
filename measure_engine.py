@@ -127,7 +127,8 @@ def ttm_series(values: list[float]) -> list[float]:
 def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
     """한 종목의 발표 시점 상태 목록 (시간순).
 
-    각 항목: {"announced", "new_high", "newhigh_streak", "ttm", "decidable"}
+    각 항목: {"announced", "new_high", "newhigh_streak", "ttm", "decidable",
+              "drought"}
       · new_high        = 이번 발표로 TTM 이 **수집 이력 내 과거 정점**을
                           넘었는가. 구간이 끊겨도 정점은 기억한다 (사고 6)
       · newhigh_streak  = 몇 발표 연속 신고점인가 (첫 돌파 = 1)
@@ -135,12 +136,19 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
       · decidable       = 신고점 여부를 **판단할 수 있는** 발표였는가
                           (TTM 이 있고, 비교할 과거 정점도 있음). 판단
                           불가 발표는 게이지 분모에서 빠집니다 (11차 등록)
+      · drought         = **직전 신고점 이후 몇 번째 발표인가** (가뭄 길이,
+                          151차 H27). 신고점 발표에서는 "방금 끝난 가뭄의
+                          길이"가 적힙니다. 이력에 신고점이 아직 한 번도
+                          없었으면 None — 판단 불가를 0 으로 지어내지
+                          않습니다. 셈은 발표(상태) 단위이고, 구간이
+                          끊겨도 이어 셉니다 (정점 기억과 같은 규칙).
     발표일 없는 분기는 상태를 못 만들지만 정점 기억에는 참여합니다.
     같은 발표일의 중복(정정 공시)은 한 번만 셉니다.
     """
     states: list[dict] = []
     past_peak: float | None = None
     seen: set[str] = set()
+    drought: int | None = None    # 직전 신고점 이후 발표 수 (본 적 없으면 None)
     for run in eps_runs(rows, field):
         streak = 0    # 구간이 새로 시작하면 연속 셈도 새로
         values: list[float] = []
@@ -184,8 +192,16 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
                     "ttm": current,
                     "신고점폭": 폭,
                     "decidable": current is not None and had_prior,
+                    "drought": drought,
                 }
             )
+            # 가뭄 셈 (151차 H27) — 상태를 적은 **뒤에** 갱신합니다.
+            # 신고점이면 방금 끝난 가뭄 길이가 위에 적혔으니 0 부터 다시
+            # 세고, 아니면 (한 번이라도 신고점을 본 뒤라면) 하나 더 셉니다.
+            if new_high:
+                drought = 0
+            elif drought is not None:
+                drought += 1
     states.sort(key=lambda s: s["announced"])
     # 몇 번째 판단 가능한 발표인가 (누적) — H23(116차 등록)이 씁니다.
     # 판단 불가 발표는 세지 않고 값도 없음으로 둡니다.
@@ -291,6 +307,35 @@ def attach_runup(ds: dict, events: list[dict], days: int = 60) -> None:
             backward_excess(prices, spy, event["announced"], days)
             if prices else None
         )
+
+
+# 고가대비를 판단하기에 필요한 최소 주가 이력 (거래일). 이력이 이보다
+# 짧으면 "52주 고가"라는 말 자체가 성립하지 않아 None 을 둡니다.
+HIGH52_MIN_HISTORY = 60
+HIGH52_LOOKBACK = 252      # 52주 ≈ 252거래일
+
+
+def attach_high52(ds: dict, events: list[dict]) -> None:
+    """발표 사건마다 **발표 전일 종가의 52주 고가 대비 위치**(%)를 붙입니다.
+
+    "고가대비" 키: 0 = 발표 직전에 이미 52주 신고가, −15 = 고가에서 15%
+    아래. **발표일 이전 마지막 거래일**까지의 종가만 씁니다 — 발표 후
+    움직임이 새어 들면 신호가 미래를 보게 됩니다(H28, 151차 등록).
+    이력이 HIGH52_MIN_HISTORY 미만이면 None (판단 불가를 지어내지 않음).
+    """
+    for event in events:
+        event["고가대비"] = None
+        prices = ds["prices"].get(event["ticker"])
+        if not prices:
+            continue
+        dates, closes = prices["dates"], prices["close"]
+        i = bisect.bisect_right(dates, str(event["announced"])[:10]) - 1
+        if i < HIGH52_MIN_HISTORY:
+            continue
+        high52 = max(closes[max(0, i - HIGH52_LOOKBACK): i + 1])
+        if high52 <= 0:
+            continue
+        event["고가대비"] = (closes[i] / high52 - 1.0) * 100.0
 
 
 # ---------------------------------------------------------------------------
@@ -473,6 +518,8 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
                     "below52": below_52wk_ma(prices, state["announced"]),
                     # H22·H22b (109차 등록) — 신고점을 직전 정점 대비 몇 % 넘었나
                     "신고점폭": state.get("신고점폭"),
+                    # H27 (151차 등록) — 직전 신고점 이후 발표 수 (가뭄 길이)
+                    "가뭄": state.get("drought"),
                     "excess": excess,
                     # H26 (143차 등록) — 125거래일 창. **기존 excess(60일)는
                     # 한 칸도 안 바뀝니다.** 창이 더 길어 최근 사건은 아직

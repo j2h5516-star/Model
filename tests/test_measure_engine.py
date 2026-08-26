@@ -482,6 +482,80 @@ def test_사건에_125일_창이_붙고_60일과_다르다():
 
 
 
+# ---------------------------------------------------------------------------
+# 가뭄 셈 · 고가대비 (151차 — H27·H28 의 재료)
+# ---------------------------------------------------------------------------
+def test_가뭄은_직전_신고점_이후_발표_수다():
+    """신고점 발표에는 **방금 끝난 가뭄의 길이**가 적히고, 이력에 신고점이
+    아직 없으면 None(판단 불가를 0 으로 지어내지 않음)입니다."""
+    def 행(끝, 발표, eps):
+        return {"filing_date": 끝, "announced_date": 발표, "adj_eps": eps}
+
+    # 4분기를 채우고(TTM), 정점 1.2 → 하락 → 다시 돌파하는 이력
+    rows = [
+        행("2020-03-31", "2020-05-01", 0.3), 행("2020-06-30", "2020-08-01", 0.3),
+        행("2020-09-30", "2020-11-01", 0.3), 행("2020-12-31", "2021-02-01", 0.3),
+        행("2021-03-31", "2021-05-01", 0.4),   # TTM 1.3 > 1.2 → 신고점
+        행("2021-06-30", "2021-08-01", 0.1),   # TTM 1.1 — 가뭄 시작
+        행("2021-09-30", "2021-11-01", 0.1),
+        행("2021-12-31", "2022-02-01", 0.1),
+        행("2022-03-31", "2022-05-01", 1.2),   # TTM 1.5 → 신고점 (가뭄 3 끝)
+    ]
+    states = me.earnings_states(rows)
+    가뭄들 = {s["announced"]: s["drought"] for s in states}
+    assert 가뭄들["2021-05-01"] is None, "이력상 최초 신고점의 가뭄은 None 이어야 합니다"
+    assert 가뭄들["2021-08-01"] == 0
+    assert 가뭄들["2022-02-01"] == 2
+    assert 가뭄들["2022-05-01"] == 3, "신고점 발표에는 방금 끝난 가뭄 길이가 적혀야 합니다"
+
+
+def test_사건에_가뭄이_실려_온다():
+    """상태에만 있고 사건에 안 실리면 판정기가 볼 수 없습니다."""
+    ds = _mini_ds({"A": _history_rows([1, 1, 1, 1, 2, 2, 2, 2])}, price_days=800)
+    events, _ = me.collect_events(ds)
+    assert events, "사건이 하나도 없습니다 — 시험 재료가 잘못됨"
+    assert all("가뭄" in e for e in events)
+
+
+def test_고가대비는_발표_전일까지의_종가만_본다():
+    """발표 다음 날 주가가 두 배로 뛰어도 고가대비는 변하면 안 됩니다 —
+    발표 후 움직임이 새어 들면 신호가 미래를 봅니다."""
+    from datetime import date, timedelta
+    시작 = date(2024, 1, 1)
+    dates, closes = [], []
+    d = 시작
+    while len(dates) < 100:
+        if d.weekday() < 5:
+            dates.append(d.isoformat())
+            closes.append(100.0)
+        d += timedelta(days=1)
+    고점자리 = 70
+    closes[고점자리] = 200.0                       # 52주 고가
+    발표일 = dates[90]
+    ds = {"prices": {"AA": {"dates": dates, "close": closes}},
+          "benchmark": "SPY"}
+    사건 = [{"ticker": "AA", "announced": 발표일}]
+    me.attach_high52(ds, 사건)
+    assert 사건[0]["고가대비"] is not None
+    assert abs(사건[0]["고가대비"] - (100.0 / 200.0 - 1.0) * 100.0) < 1e-6
+
+    # 발표 **다음** 거래일 종가를 조작해도 값이 그대로인가 (미래 금지)
+    조작 = list(closes)
+    조작[91] = 1000.0
+    사건2 = [{"ticker": "AA", "announced": 발표일}]
+    me.attach_high52({"prices": {"AA": {"dates": dates, "close": 조작}},
+                      "benchmark": "SPY"}, 사건2)
+    assert 사건2[0]["고가대비"] == 사건[0]["고가대비"], "발표 후 종가가 새어 들었습니다"
+
+
+def test_고가대비는_이력이_짧으면_None():
+    ds = {"prices": {"AA": {"dates": ["2024-01-02", "2024-01-03"],
+                            "close": [1.0, 2.0]}}, "benchmark": "SPY"}
+    사건 = [{"ticker": "AA", "announced": "2024-01-03"}]
+    me.attach_high52(ds, 사건)
+    assert 사건[0]["고가대비"] is None
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
