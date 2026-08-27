@@ -334,6 +334,8 @@ def yardstick_of_safe(ds: dict, ticker: str) -> str | None:
 H18_GAP_MIN = 30.0          # H18 신호 문턱 — 완성 시점 52주선 이격도 30% 이상
 H18_START_DAY = "2026-08-15"   # 이 날 **뒤**의 완성만 H18 판정 표본 (원칙 5)
 H18B_START_DAY = "2026-08-21"  # H18b(1년 표적, 126차) — 이 날 뒤의 완성만
+H29_START_DAY = "2026-08-27"   # H29(152차 — 델타↑∧이격상승∧이격30%+ 결합)
+H29_GAP_BACK_WEEKS = 4         # "이격 상승" = 완성 주 이격도 > 4주 전 이격도
 SHORT_FORWARD_DAYS = 60     # 측정 기본형 창 (전략.md 고정값)
 
 
@@ -342,6 +344,7 @@ def completion_events(ds: dict) -> list[dict]:
 
     각 사건에 담기는 것 — 전부 **완성 시점에 알 수 있는 값**입니다:
       · 이격도   완성 주 종가가 52주선 위로 몇 %  (H18 신호 변수)
+      · 이격도_4주전  4주 전 같은 값 (H29 재료 — 이격이 오르는 중이었나)
       · 델타     그때까지 발표된 최신 분기 이익이 직전 연속 분기보다 늘었나
       · 바닥주   완성 직전에 정배열이 아니었던 연속 주수 (H16 관찰용)
     사후에만 알 수 있는 값은 이름에 그렇게 적습니다:
@@ -381,12 +384,20 @@ def completion_events(ds: dict) -> list[dict]:
                     - date.fromisoformat(delta_days[position])
                 ).days <= DELTA_FRESH_DAYS:
                     delta = series[position][1]
+                # 이격도_4주전 (152차 — H29 재료): flags 의 열쇠는 연속된
+                # 주(週)라서 index-4 가 곧 4주 전입니다. 이력이 모자라면
+                # 없음(None) — 만들지 않습니다.
+                gap_before = (
+                    gap_over_52w(prices, weeks[index - H29_GAP_BACK_WEEKS])
+                    if index >= H29_GAP_BACK_WEEKS else None
+                )
                 events.append({
                     "ticker": ticker,
                     "섹터": cfg.SECTORS.get(ticker, "미분류"),
                     "테마": cfg.theme_of(ticker),
                     "day": day,
                     "이격도": gap_over_52w(prices, day),
+                    "이격도_4주전": gap_before,
                     "델타": delta,
                     "바닥주": base,
                     "유지주": hold,

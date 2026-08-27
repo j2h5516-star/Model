@@ -286,6 +286,11 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         verdict["가설"].update(judge.judge_completion_gap_1y(
             completions, sector_model.H18B_START_DAY, sector_model.H18_GAP_MIN,
         ))
+        # H29 (152차 등록) — 완성 ∧ 델타↑ ∧ 이격 상승 ∧ 이격도 30%+.
+        # 문턱을 탐색 표를 보고 골랐으므로 등록일 뒤 새 완성만 센다.
+        verdict["가설"].update(judge.judge_completion_combo(
+            completions, sector_model.H29_START_DAY, sector_model.H18_GAP_MIN,
+        ))
         # H19·H20·H21 (44차 등록) — 주도섹터 판정·전환·분기점.
         # 45차 확정 분류(config.GROUPS)로 매일 다시 셉니다. 표본이 국면
         # 단위라 오래 "판정 불가"로 남을 것이며, 그것을 그대로 적습니다.

@@ -105,6 +105,42 @@ def test_completion_fires_once_per_completion():
     assert event["이격도"] is not None
 
 
+def test_completion_carries_gap_4weeks_before():
+    """이격도_4주전(152차 — H29 재료)은 완성 주에서 정확히 4주 전의
+    이격도여야 하고, 미래를 보지 않아야 합니다."""
+    closes = [200.0 - i for i in range(60)] + [140.0 + i * 3 for i in range(60)]
+    ds = fake_ds({"AAA": weekly_prices(closes),
+                  "SPY": weekly_prices([100.0] * 120)})
+    event = sm.completion_events(ds)[0]
+    assert event["이격도_4주전"] is not None
+    # 손으로 재검산: 완성 주에서 4주 전 그 주의 gap_over_52w 와 같아야 한다
+    prices = ds["prices"]["AAA"]
+    weeks = sm.weekly_indices(prices["dates"])
+    wdays = [prices["dates"][i] for i in weeks]
+    i = wdays.index(event["day"])
+    direct = sm.gap_over_52w(prices, wdays[i - sm.H29_GAP_BACK_WEEKS])
+    assert abs(event["이격도_4주전"] - direct) < 1e-9
+    # 이 사건은 급반등 중의 완성이므로 이격이 4주 전보다 올라 있어야 한다
+    assert event["이격도"] > event["이격도_4주전"]
+
+
+def test_completion_gap_before_is_none_without_history():
+    """완성이 판단 가능 구간 맨 앞(첫 4주 안)에 나면 4주 전 이격도를
+    잴 수 없고, 그때는 없음(None)이어야 합니다 — 값을 만들지 않습니다."""
+    # 52주 하락(워밍업) 뒤 거대한 급등 — 평균 희석으로 둘째 판단 주에
+    # 곧바로 이평선이 정배열이 되는 극단 꼴
+    closes = [100.0 - i for i in range(52)] + [10000.0] * 3
+    ds = fake_ds({"AAA": weekly_prices(closes),
+                  "SPY": weekly_prices([100.0] * 55)})
+    events = sm.completion_events(ds)
+    assert events, "완성 사건이 없으면 이 시험은 표적을 잃습니다"
+    first = events[0]
+    weeks = sm.weekly_indices(ds["prices"]["AAA"]["dates"])
+    wdays = [ds["prices"]["AAA"]["dates"][i] for i in weeks]
+    assert wdays.index(first["day"]) < sm.WARMUP_WEEKS - 1 + sm.H29_GAP_BACK_WEEKS
+    assert first["이격도_4주전"] is None
+
+
 def test_completion_target_is_none_when_window_unfinished():
     """표적 창이 아직 안 끝난 사건은 값을 만들지 않습니다 (우측 검열)."""
     closes = [200.0 - i for i in range(60)] + [140.0 + i * 3 for i in range(60)]

@@ -197,6 +197,7 @@ def hypothesis_clock() -> dict[str, tuple[str, int]]:
         H20_NAME: (_ld.H22_START_DAY, me.WINDOW_TRADING_DAYS),
         H27_NAME: (H27_START_DAY, me.WINDOW_TRADING_DAYS),
         H28_NAME: (H28_START_DAY, me.WINDOW_TRADING_DAYS),
+        H29_NAME: (_sm.H29_START_DAY, me.WINDOW_TRADING_DAYS),
     }
     for 이름, _수준 in H22_LEVELS[1:]:
         표[이름] = (H22_START_DAY, me.WINDOW_TRADING_DAYS)
@@ -836,6 +837,65 @@ def judge_completion_gap_1y(events: list[dict], start_day: str,
     out["판정"] = out["신규(판정)"]["판정"]
     out["등록일"] = start_day
     return {H18B_NAME: out}
+
+
+# ---------------------------------------------------------------------------
+# H29 (152차 **사전 등록**) — 완성 ∧ 델타↑ ∧ 이격 상승 ∧ 이격도 30%+
+# ---------------------------------------------------------------------------
+# 주인 관찰(2026-08-27, 소프트웨어 폭등 관찰 중): "델타 상승 + 주봉 정배열
+# 완성 + 이격 상승으로 보면 어떤가?" 152차 백테스트(완성 4,971건, 창 완료분,
+# 표적 60거래일 SPY+20%p)로 재니:
+#
+#   기준선(완성 전체)              9.0% · 폭락 6.9% · 중앙 −0.7%p
+#   델타↑ ∧ 이격상승 ∧ 이격 30%+  24.4% · 폭락 12.0% · 중앙 +2.8%p
+#   앞/뒤 시기 26.2%/22.5% · 이격 수준별 5.7→33.0% 단조
+#
+# 몸통은 H18(이격 30%+, 단독 23.5%)이고 델타↑∧이격상승은 폭락률을
+# 14.1→12.0% 로 깎는 보조 필터다. 폭등이 폭락의 2배(비대칭)·중앙 양수·
+# 시간 분할 안정 — 151차 U자 착시 검사를 통과한 결합이다.
+#
+# ⚠️ 약점을 미리 적는다: ① 문턱 30%·4주는 탐색 표를 보고 골랐다 — 그래서
+#    판정은 등록일 **뒤**의 새 완성만 센다(원칙 5). ② 같은 재료를 **섹터
+#    매수**로 번역한 판(묶음에서 2건+ 몰린 주 → 묶음 매수)은 2023년 이후
+#    우위가 소멸했고(폭등 6%·중앙 −3%p) 소프트웨어 묶음은 6연속 실패라
+#    등록하지 않는다 — 이 가설은 **종목 단위**다.
+H29_NAME = "H29_완성_델타이격_결합"
+
+
+def judge_completion_combo(events: list[dict], start_day: str,
+                           gap_min: float) -> dict:
+    """H29 판정 — 완성 사건 중 델타↑ ∧ 이격 상승 ∧ 이격도 문턱 이상.
+
+    표본(기준선)은 세 재료를 모두 잴 수 있는 완성 사건 전부입니다.
+    하나라도 못 재면(없음) 표본에서 뺍니다 — 값을 만들지 않습니다.
+    """
+    usable = [e for e in events
+              if e.get("초과60") is not None and e.get("이격도") is not None
+              and e.get("델타") is not None
+              and e.get("이격도_4주전") is not None]
+    out: dict = {}
+    for label, pool in (
+        ("신규(판정)", [e for e in usable if e["day"] > start_day]),
+        ("탐색표본(참고)", [e for e in usable if e["day"] <= start_day]),
+    ):
+        signal = [e for e in pool
+                  if e["델타"] is True and e["이격도"] >= gap_min
+                  and e["이격도"] > e["이격도_4주전"]]
+        signal_stats = _completion_stats(signal)
+        base_stats = _completion_stats(pool)
+        if signal_stats["n"] < MIN_SIGNAL_N:
+            verdict = "판정 불가"
+        elif signal_stats["ci"][0] > base_stats["ci"][1]:
+            verdict = "채택"
+        else:
+            verdict = "미채택"
+        out[label] = {"신호": signal_stats, "기준선": base_stats,
+                      "판정": verdict}
+    out["판정"] = out["신규(판정)"]["판정"]
+    out["등록일"] = start_day
+    out["문턱"] = {"이격도_최소": gap_min,
+                 "이격상승_비교주": "4주 전", "델타": "상승만"}
+    return {H29_NAME: out}
 
 
 # H19·H20·H21 (44차 등록): 주도섹터 판정 · 전환 · 분기점.
