@@ -263,9 +263,17 @@ def test_예산초과_분기는_break_가_아니라_continue_다():
     src = inspect.getsource(sf)
     i = src.find("153차 수리")
     assert i > 0, "153차 수리 주석이 사라졌습니다"
-    가지 = src[i:i + 1200]
-    assert "_text_in_cache" in 가지, "예산 가지가 캐시 확인 없이 동작합니다"
+    # 예산 가지만 좁혀서 본다: 시간초과 표시부터 다음 문장(scanned)까지.
+    # 넓게 보면 아래쪽 다른 continue/break 가 걸려들어 시험이 헛돕니다
+    # (실제로 그렇게 돌연변이를 놓쳤다 — 153차).
+    j = src.find('report["시간초과"] = True', i)
+    k = src.find("scanned += 1", j)
+    assert 0 < j < k, "예산 가지의 모양이 바뀌었습니다 — 시험을 같이 고치세요"
+    가지 = src[j:k]
     assert "continue" in 가지, "예산 가지가 continue 가 아닙니다"
+    assert "break" not in 가지, "예산 가지가 통째로 멈춥니다(break) — 옛 분기를 또 잃습니다"
+    조건 = src[i:j]
+    assert "_text_in_cache" in 조건, "예산 가지가 캐시 확인 없이 동작합니다"
 
 
 # 수집 시간 예산 (94차) — 10년 확장의 안전장치
