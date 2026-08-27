@@ -215,6 +215,59 @@ def test_collect_fundamentals_parallel_keeps_order():
 
 
 # ---------------------------------------------------------------------------
+# 예산 초과여도 캐시된 원문은 읽는다 (153차)
+# ---------------------------------------------------------------------------
+# 왜 시험하나: 예산에 걸리는 종목이 날마다 달라서, 예전(통째로 break)에는
+# 캐시에 멀쩡히 있는 옛 분기 값이 사라졌다 돌아왔다 했습니다
+# (08-25/26/27 실측: GWW 조정 EPS 10→27→10칸). 예산이 미루는 것은
+# **새 내려받기뿐**이어야 하고, 그 판별은 _text_in_cache 가 합니다.
+class _가짜공시:
+    def __init__(self, accession):
+        self.accession_no = accession
+
+
+def test_캐시확인은_네트워크_없이_판별한다(tmp_dir=None):
+    import tempfile, json as _json
+    import config as _cfg
+    import sec_fundamentals as sf
+
+    옛경로 = _cfg.RAW8K_CACHE_DIR
+    with tempfile.TemporaryDirectory() as 임시:
+        _cfg.RAW8K_CACHE_DIR = 임시
+        try:
+            공시 = _가짜공시("0001-23-000045")
+            # ① 캐시 없음 → False
+            assert sf._text_in_cache("AAA", 공시) is False
+            # ② 현재 판 번호로 저장돼 있으면 → True
+            path = sf._raw8k_cache_path("AAA", "0001-23-000045")
+            with open(path, "w", encoding="utf-8") as f:
+                _json.dump({"v": _cfg.RAW8K_CACHE_VERSION, "text": "실적",
+                            "source": "ex99", "had_exhibit": True}, f)
+            assert sf._text_in_cache("AAA", 공시) is True
+            # ③ 옛 판 번호는 없는 것으로 (읽어도 다시 받게 되므로)
+            with open(path, "w", encoding="utf-8") as f:
+                _json.dump({"v": -999, "text": "실적"}, f)
+            assert sf._text_in_cache("AAA", 공시) is False
+            # ④ 공시번호가 없으면 판단 불가 → False (값을 만들지 않는다)
+            assert sf._text_in_cache("AAA", _가짜공시(None)) is False
+        finally:
+            _cfg.RAW8K_CACHE_DIR = 옛경로
+
+
+def test_예산초과_분기는_break_가_아니라_continue_다():
+    """수리의 핵심이 코드에 남아 있는지 — 예산 초과 가지에서 통째로
+    멈추면(break) 캐시된 옛 분기까지 잃습니다. 소스를 직접 확인합니다."""
+    import inspect
+    import sec_fundamentals as sf
+
+    src = inspect.getsource(sf)
+    i = src.find("153차 수리")
+    assert i > 0, "153차 수리 주석이 사라졌습니다"
+    가지 = src[i:i + 1200]
+    assert "_text_in_cache" in 가지, "예산 가지가 캐시 확인 없이 동작합니다"
+    assert "continue" in 가지, "예산 가지가 continue 가 아닙니다"
+
+
 # 수집 시간 예산 (94차) — 10년 확장의 안전장치
 # ---------------------------------------------------------------------------
 # 왜 시험하나: 이 장치가 고장 나는 방향은 두 가지고, 둘 다 조용합니다.

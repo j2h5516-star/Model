@@ -2640,20 +2640,28 @@ def fetch_earnings_8k(
         if scanned >= cfg.MAX_8K_SCAN:
             report["note"] = f"8-K {cfg.MAX_8K_SCAN}건까지만 확인했습니다"
             break
-        # 시간 예산 초과 — 옛 분기를 포기하고 지금까지 받은 만큼으로 멈춥니다
-        # (94차. 최신 것부터 훑으므로 잘리는 쪽은 항상 가장 오래된 분기입니다)
+        # 시간 예산 초과 — **새 내려받기만** 다음 런으로 미룹니다 (94차→153차)
         #
         # ⚠️ 단, 바닥(COLLECT_BUDGET_FLOOR)을 채우기 전에는 멈추지 않습니다.
         #    예산은 전체 시계로 재는데 종목은 순서대로 처리되므로, 바닥이
         #    없으면 뒷쪽 종목이 8-K 를 **한 건도** 못 훑어 최신 분기까지
         #    잃습니다 — 표본을 늘리려다 있던 표본을 깎는 최악입니다.
-        if report["parsed_ok"] >= cfg.COLLECT_BUDGET_FLOOR and _budget_over():
+        #
+        # 153차 수리: 예전에는 여기서 통째로 멈췄습니다(break). 그러자 예산에
+        # 걸리는 종목이 날마다 달라서, **캐시에 멀쩡히 있는 옛 분기 값이
+        # 사라졌다 돌아왔다** 했습니다 (08-25/26/27 실측: GWW 조정 EPS
+        # 10→27→10칸, 하루 ±수백 칸 출렁임 — 측정 이력이 매일 바뀌는 병).
+        # 캐시된 원문의 파싱은 네트워크가 아니라 몇 초면 되므로, 예산이
+        # 미루는 것은 **내려받기뿐**이어야 합니다. 캐시에 없는 공시만
+        # 건너뛰고(시간초과 표시), 캐시에 있는 공시는 계속 읽습니다.
+        if report["parsed_ok"] >= cfg.COLLECT_BUDGET_FLOOR and _budget_over() \
+                and not _text_in_cache(ticker, filing):
             report["시간초과"] = True
             report["note"] = (
-                f"수집 시간 예산 초과 — 실적 {report['parsed_ok']}건까지만 받았습니다"
-                " (다음 런이 캐시로 이어받습니다)"
+                f"수집 시간 예산 초과 — 새 내려받기는 다음 런으로 미루고 "
+                f"캐시된 원문만 읽었습니다 (실적 {report['parsed_ok']}건 시점)"
             )
-            break
+            continue
         scanned += 1
         report["filings_found"] += 1
 
@@ -2890,6 +2898,27 @@ def _raw8k_cache_path(ticker: str, accession: str) -> str:
     folder = os.path.join(cfg.RAW8K_CACHE_DIR, ticker)
     os.makedirs(folder, exist_ok=True)
     return os.path.join(folder, f"{safe}.json")
+
+
+def _text_in_cache(ticker: str, filing) -> bool:
+    """이 공시의 원문이 캐시에 있는가 — **네트워크 없이** 확인만 합니다.
+
+    (153차) 시간 예산이 초과됐을 때 "이 공시는 공짜로 읽을 수 있나"를
+    가르는 용도입니다. 판 번호가 다른 옛 캐시는 없는 것으로 칩니다
+    (읽어 봐야 다시 내려받게 되므로).
+    """
+    accession = (getattr(filing, "accession_no", None)
+                 or getattr(filing, "accession_number", None))
+    if not accession:
+        return False
+    path = _raw8k_cache_path(ticker, accession)
+    if not os.path.exists(path):
+        return False
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f).get("v") == cfg.RAW8K_CACHE_VERSION
+    except Exception:
+        return False
 
 
 def _earnings_text_cached(
