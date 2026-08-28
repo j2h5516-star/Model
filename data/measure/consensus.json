@@ -3320,6 +3320,33 @@
       "rev_analysts": 29
      }
     }
+   },
+   {
+    "as_of": "2026-08-28",
+    "rows": {
+     "0q": {
+      "avg": 0.93077,
+      "low": 0.88,
+      "high": 0.95707,
+      "analysts": 33,
+      "year_ago": 0.67,
+      "rev_avg": 2710801390.0,
+      "rev_low": 2600000000.0,
+      "rev_high": 2769600000.0,
+      "rev_analysts": 32
+     },
+     "+1q": {
+      "avg": 1.07504,
+      "low": 1.05,
+      "high": 1.11,
+      "analysts": 29,
+      "year_ago": 0.76,
+      "rev_avg": 3035373290.0,
+      "rev_low": 2980000000.0,
+      "rev_high": 3160589520.0,
+      "rev_analysts": 29
+     }
+    }
    }
   ],
   "KLAC": [
