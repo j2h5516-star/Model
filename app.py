@@ -1007,6 +1007,55 @@ def aligned_now_rows(ds: dict) -> list[dict]:
     return rows
 
 
+def combo_now_rows(ds: dict) -> list[dict]:
+    """지금 H29 조합 상태인 종목 — 이격도순 (154차, 주인 지시).
+
+    조합 = 주봉 정배열 유지 ∧ 최근 발표 델타 상승 ∧ 52주선 이격도 30%+
+    ∧ 이격도가 4주 전보다 상승. 판정이 아니라 **사실의 나열**이며,
+    화면은 이 조합의 과거 실측(152차 백테스트)과 H29 판정 상태를 함께
+    적습니다(정직화). 재료 하나라도 못 재면 목록에 안 넣습니다 —
+    없는 값은 만들지 않습니다.
+    """
+    rows = []
+    for ticker in ds["tickers"]:
+        prices = ds["prices"].get(ticker)
+        if not prices or not prices.get("dates"):
+            continue
+        flags = sm.aligned_flags_chart(prices)
+        if not flags:
+            continue
+        days = sorted(flags)
+        last_week = days[-1]
+        if not flags[last_week]:
+            continue
+        gap = sm.gap_over_52w(prices, last_week)
+        if gap is None or gap < sm.H18_GAP_MIN:
+            continue
+        i = days.index(last_week)
+        if i < sm.H29_GAP_BACK_WEEKS:
+            continue
+        gap_before = sm.gap_over_52w(prices, days[i - sm.H29_GAP_BACK_WEEKS])
+        if gap_before is None or gap <= gap_before:
+            continue
+        # 기준일(마지막 주)까지 발표된 것만 봅니다 — 미래 금지
+        series = [s for s in sm._delta_series(ds, ticker)
+                  if s[0] <= last_week]
+        if not series or series[-1][1] is not True:
+            continue
+        # 신선도 — 마지막 발표가 너무 오래됐으면 델타 판단 불가로 뺍니다
+        # (게이지·주도섹터 장치와 같은 140일 기준, 새 문턱을 만들지 않음)
+        from datetime import date as _d
+        if (_d.fromisoformat(last_week)
+                - _d.fromisoformat(series[-1][0])).days > sm.DELTA_FRESH_DAYS:
+            continue
+        rows.append({"종목": ticker,
+                     "묶음": cfg.GROUPS.get(ticker, "미분류"),
+                     "이격도": round(gap, 1),
+                     "이격도_4주전": round(gap_before, 1)})
+    rows.sort(key=lambda r: -r["이격도"])
+    return rows
+
+
 def recent_completion_rows(완성사건: list[dict], 기준일: str,
                            days: int = 91) -> list[dict]:
     """최근 days 일 안의 정배열 완성 종목 (127차 — 주도 후보 관찰판).

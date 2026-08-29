@@ -211,6 +211,37 @@ function 화면_주도() {
     });
   }
 
+  // 154차 (주인 지시) — H29 조합 상태 종목판. 판정이 아니라 사실의
+  // 나열이며, 과거 실측·판정 상태를 함께 적습니다(정직화).
+  const 조합 = a.조합신호;
+  if (조합) {
+    html += `<h2>조합 신호 (H29)<span class="n">정배열+델타↑+이격상승</span></h2>
+    <div class="note">주봉 정배열 유지 ∧ 최근 실적 델타 상승 ∧ 52주선
+    이격 30% 이상 ∧ 이격이 4주 전보다 커짐 — 네 가지가 지금 동시에
+    맞는 종목입니다.</div>`;
+    if (!조합.종목들.length) {
+      html += '<div class="empty">지금 조합을 전부 만족하는 종목이 없습니다 — 없는 것은 없다고 말합니다.</div>';
+    } else {
+      조합.종목들.slice(0, 10).forEach((r) => {
+        html += `<div class="row"><a class="t" href="#/t/${esc(r.종목)}">${esc(r.종목)}</a>
+          <span class="g">${esc(r.묶음)}</span>
+          <span class="v">이격 ${num(r.이격도)}% <span class="d">(4주 전 ${num(r.이격도_4주전)}%)</span></span></div>`;
+      });
+      if (조합.종목들.length > 10) {
+        html += `<details><summary>나머지 ${조합.종목들.length - 10}개 보기</summary>
+          <div class="body">${조합.종목들.slice(10).map((r) =>
+            `<div class="row"><a class="t" href="#/t/${esc(r.종목)}">${esc(r.종목)}</a>
+             <span class="g">${esc(r.묶음)}</span>
+             <span class="v">이격 ${num(r.이격도)}%</span></div>`).join("")}</div></details>`;
+      }
+    }
+    html += `<div class="honest">과거 실측(${esc(조합.실측.출처)}):
+      이 조합의 60거래일 폭등률 <b>${num(조합.실측.폭등률)}%</b>
+      (아무 완성이나 잡으면 ${num(조합.실측.기준선)}%) ·
+      폭락률도 ${num(조합.실측.폭락률)}%로 기준선보다 높습니다 —
+      움직임이 큰 종목들입니다. ${esc(조합.판정상태)}.</div>`;
+  }
+
   // 150차 — 차례가 "새 완성 먼저 + 이격도순"으로 바뀌었는데 라벨만
   // "최신순"으로 남아 있었습니다. 화면 글자가 실제와 다르면 그 자체가
   // 거짓말입니다.

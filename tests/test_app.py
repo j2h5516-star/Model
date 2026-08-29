@@ -886,6 +886,69 @@ def test_표본이_0인_가설의_시점도_화면에_적는다():
 
 
 
+# ---------------------------------------------------------------------------
+# 조합 신호판 (154차) — H29 조합의 현재 상태 나열
+# ---------------------------------------------------------------------------
+def _조합_ds(델타상승=True, 급등=True, 신선=True):
+    """정배열 유지 ∧ 이격 30%+ ∧ 이격 상승을 만들 수 있는 최소 자료.
+
+    급등=False 면 완만한 상승이라 이격이 30%에 못 미칩니다.
+    """
+    from datetime import date as d, timedelta as td
+    n = 120
+    day = d.fromisoformat("2023-01-02")
+    dates = []
+    for _ in range(n):
+        dates.append(day.isoformat()); day += td(days=7)
+    if 급등:
+        # 가속 상승 — 직선 상승은 막판에 이격(52주선 대비 %)이 도로
+        # 줄어들어 '이격 상승' 조건을 못 만든다 (실측 98.2 < 100.0)
+        closes = ([100.0] * 90 + [100.0 * 1.06 ** i for i in range(1, 31)])
+    else:
+        closes = [100.0 + i * 0.3 for i in range(n)]
+    rows = []
+    qday = d.fromisoformat(dates[0])
+    for i in range(12):
+        v = (1.0 + i * 0.1) if 델타상승 else (5.0 - i * 0.1)
+        rows.append({"announced_date": qday.isoformat(),
+                     "filing_date": qday.isoformat(),
+                     "period_label": f"Q{i}", "adj_eps": v})
+        qday += td(days=91 if 신선 else 40)
+    return {"tickers": ["AAA"], "benchmark": "SPY",
+            "prices": {"AAA": {"dates": dates, "close": closes},
+                       "SPY": {"dates": dates, "close": [100.0] * n}},
+            "quarters": {"AAA": rows}}
+
+
+def test_조합신호판은_네_조건을_전부_요구한다():
+    """정배열∧델타↑∧이격30%+∧이격상승 — 하나라도 빠지면 목록에 없다."""
+    ds = _조합_ds()
+    rows = app.combo_now_rows(ds)
+    assert [r["종목"] for r in rows] == ["AAA"], rows
+    assert rows[0]["이격도"] >= 30.0
+    assert rows[0]["이격도"] > rows[0]["이격도_4주전"]
+    # 델타 하락이면 빠진다
+    assert app.combo_now_rows(_조합_ds(델타상승=False)) == []
+    # 이격이 문턱에 못 미치면 빠진다
+    assert app.combo_now_rows(_조합_ds(급등=False)) == []
+
+
+def test_조합신호판은_이격이_줄면_뺀다():
+    """이격 30%+ 라도 4주 전보다 줄었으면 조합이 아니다 — 직선 상승은
+    막판에 이격이 도로 줄어드는 실측(98.2 < 100.0)을 그대로 쓴다."""
+    ds = _조합_ds()
+    n = len(ds["prices"]["AAA"]["close"])
+    ds["prices"]["AAA"]["close"] = ([100.0] * 90
+                                    + [100.0 + i * 8 for i in range(1, n - 89)])
+    assert app.combo_now_rows(ds) == []
+
+
+def test_조합신호판은_오래된_델타를_판단하지_않는다():
+    """마지막 발표가 신선도(140일)를 넘으면 델타를 지어내지 않고 뺀다."""
+    ds = _조합_ds(신선=False)   # 40일 간격 12개 → 마지막 발표가 2년 전
+    assert app.combo_now_rows(ds) == []
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
