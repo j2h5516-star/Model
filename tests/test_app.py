@@ -905,15 +905,20 @@ def _조합_ds(델타상승=True, 급등=True, 신선=True):
         # 줄어들어 '이격 상승' 조건을 못 만든다 (실측 98.2 < 100.0)
         closes = ([100.0] * 90 + [100.0 * 1.06 ** i for i in range(1, 31)])
     else:
-        closes = [100.0 + i * 0.3 for i in range(n)]
+        # 가속이되 작게 — 이격이 오르는 중이지만 30% 문턱에는 못 미침
+        # (이격상승 조건까지 통과해야 문턱 검사만 따로 시험할 수 있다)
+        closes = ([100.0] * 90 + [100.0 * 1.008 ** i for i in range(1, 31)])
     rows = []
     qday = d.fromisoformat(dates[0])
-    for i in range(12):
+    # 신선=False 는 분기 8개(정상 간격)로 끝내 마지막 발표를 오래되게
+    # 한다 — 간격을 줄이면(40일) 연속 분기 인정(55~150일)에서 통째로
+    # 탈락해 신선도 검사에 닿기도 전에 빠진다 (돌연변이가 안 잡혔던 원인)
+    for i in range(12 if 신선 else 8):
         v = (1.0 + i * 0.1) if 델타상승 else (5.0 - i * 0.1)
         rows.append({"announced_date": qday.isoformat(),
                      "filing_date": qday.isoformat(),
                      "period_label": f"Q{i}", "adj_eps": v})
-        qday += td(days=91 if 신선 else 40)
+        qday += td(days=91)
     return {"tickers": ["AAA"], "benchmark": "SPY",
             "prices": {"AAA": {"dates": dates, "close": closes},
                        "SPY": {"dates": dates, "close": [100.0] * n}},
