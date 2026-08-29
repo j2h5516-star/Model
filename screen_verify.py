@@ -160,8 +160,13 @@ def 화면과_데이터를_맞댄다() -> list[dict]:
 
     # ── ⑧b 조합 신호(H29 상태판, 154차)가 지금 값과 같은가 ──────────
     #      화면에 새 칸을 추가하면 여기에도 검사를 추가한다(150차-C 규칙).
+    #      ⚠️ 재계산은 화면 빌더와 **같은 조립**(액면분할 보정 포함)으로
+    #      해야 한다 — 위의 ds 는 보정 없이 지어져 CRWD 가 갈렸다(실측).
+    #      snap 을 다시 읽는 이유: build 가 입력을 제자리에서 바꿀 수
+    #      있어 이미 쓴 snap 을 재사용하면 이중 보정 위험이 있다.
     조합 = (a.get("조합신호") or {}).get("종목들")
-    지금조합 = app.combo_now_rows(ds)
+    지금조합 = app.combo_now_rows(
+        dataset.build(_load(snap_path), splits=dataset.load_splits()))
     화면조합 = sorted(r["종목"] for r in (조합 or []))
     실조합 = sorted(r["종목"] for r in 지금조합)
     적기("조합 신호", 조합 is None or 화면조합 != 실조합,
