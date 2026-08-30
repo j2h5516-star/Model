@@ -965,6 +965,12 @@
     "est": 0.79495,
     "act": 0.8,
     "surprise_pct": 0.6
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 0.93077,
+    "act": 0.94,
+    "surprise_pct": 1.0
    }
   ],
   "KLAC": [
@@ -1789,6 +1795,12 @@
     "est": -0.23673,
     "act": -0.23,
     "surprise_pct": 2.8
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": -0.23174,
+    "act": -0.27,
+    "surprise_pct": -16.5
    }
   ],
   "HUBS": [
@@ -2743,6 +2755,12 @@
     "est": 2.51697,
     "act": 2.66,
     "surprise_pct": 5.7
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 2.61224,
+    "act": 2.75,
+    "surprise_pct": 5.3
    }
   ],
   "CSCO": [
@@ -5397,6 +5415,12 @@
     "est": 1.88281,
     "act": 2.0,
     "surprise_pct": 6.2
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 2.00768,
+    "act": 2.48,
+    "surprise_pct": 23.5
    }
   ],
   "DLTR": [
@@ -6521,6 +6545,12 @@
     "est": 1.227,
     "act": 1.28,
     "surprise_pct": 4.3
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 1.37984,
+    "act": 1.47,
+    "surprise_pct": 6.5
    }
   ],
   "KSS": [
@@ -7169,6 +7199,12 @@
     "est": 0.56252,
     "act": 0.61,
     "surprise_pct": 8.4
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 0.58406,
+    "act": 0.7,
+    "surprise_pct": 19.9
    }
   ],
   "TENB": [
