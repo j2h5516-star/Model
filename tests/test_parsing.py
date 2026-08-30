@@ -248,6 +248,46 @@ def test_merge_without_xbrl_still_stamps_announced_date():
     assert "announced_date" not in press[0]
 
 
+def test_merge_skips_press_promotion_when_xbrl_errored():
+    """155차 — 뼈대가 **오류로** 빈 날은 보도자료를 승격하지 않는다.
+
+    RH 실측: SEC 가 이따금 SSL 오류를 내면 뼈대가 비고, 승격 경로가
+    발표일 그대로 분기 행을 만들어(한 날짜에 분기 4개, 이름 중복)
+    나흘간 16→24→16→24칸으로 흔들렸다. 오류일 때 "없음"이 정답이다.
+    원래 XBRL 이 없는 회사(오류 아님)는 위 두 시험이 지키는 대로
+    지금까지처럼 승격한다 — 41차의 업종 편향 구멍을 다시 열면 안 된다.
+    """
+    press = [_press_row("2025-04-25", 111.0)]
+    report = {"xbrl_error": True}
+    assert sf.merge_quarters([], press, report=report) == []
+    # 오류 표시가 없으면(원래 XBRL 없는 회사) 승격은 그대로 산다
+    assert len(sf.merge_quarters([], press, report={})) == 1
+
+
+def test_xbrl_조회는_일시_오류를_재시도로_흡수한다():
+    """155차 — 처음 두 번 터지고 세 번째 성공하는 일시 오류는 값을 얻고,
+    끝까지 실패하면 xbrl_error 를 찍는다 (없음이 틀림보다 안전)."""
+    calls = {"n": 0}
+    def flaky():
+        calls["n"] += 1
+        if calls["n"] < 3:
+            raise OSError("SSL 흉내")
+        return "FACTS"
+    waits = []
+    report = {}
+    facts, errored = sf._facts_with_retry(flaky, report, sleeper=waits.append)
+    assert facts == "FACTS" and errored is False
+    assert calls["n"] == 3 and len(waits) == 2, (calls, waits)
+    assert "xbrl_error" not in report
+    # 끝까지 실패하는 경우
+    report2 = {}
+    def always():
+        raise OSError("죽음")
+    facts2, errored2 = sf._facts_with_retry(always, report2, sleeper=lambda s: None)
+    assert facts2 is None and errored2 is True
+    assert report2.get("xbrl_error") is True
+
+
 def test_merge_without_press_keeps_xbrl():
     """8-K가 하나도 없으면 XBRL 뼈대를 그대로 유지해야 함"""
     xbrl = [_xbrl_row("2025-03-31", 100.0)]

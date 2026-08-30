@@ -3160,6 +3160,36 @@ def _pick_close_value(unique: list[float], per_share: bool) -> float | None:
     return None
 
 
+def _facts_with_retry(fetch, report: dict | None,
+                      tries: int = 3, wait: float = 2.0, sleeper=None):
+    """XBRL 조회를 재시도합니다 (155차).
+
+    왜 필요한가: RH 실측 — SEC 가 이따금 SSL 오류를 내면(일시적)
+    뼈대가 통째로 비고, merge_quarters 의 대체 경로가 보도자료 행을
+    발표일 그대로 승격해 **분기 신원이 틀린 행**(한 날짜에 분기 4개,
+    이름 중복)이 생겼습니다. 나흘간 16→24→16→24칸으로 번갈아 흔들린
+    원인이 이것입니다.
+
+    돌려주는 값: (facts, 오류였나). 오류로 끝나면 report 에
+    xbrl_error 를 찍어 merge_quarters 가 대체 경로를 밟지 않게 합니다
+    — "없음"은 안전하고 "틀림"은 위험합니다(헌법 1조).
+    """
+    if sleeper is None:
+        import time as _time
+        sleeper = _time.sleep
+    for attempt in range(tries):
+        try:
+            return fetch(), False
+        except Exception as exc:
+            if attempt == tries - 1:
+                _record_error(report, "get_facts", exc)
+                if report is not None:
+                    report["xbrl_error"] = True
+                return None, True
+            sleeper(wait * (attempt + 1))
+    return None, True
+
+
 def fetch_xbrl_approximation(
     ticker: str,
     start_date: str | None = None,
@@ -3178,12 +3208,12 @@ def fetch_xbrl_approximation(
     _ensure_identity()
     from edgar import Company
 
-    try:
-        facts = Company(ticker).get_facts()
-        if facts is None:
-            return []
-    except Exception as exc:
-        _record_error(report, "get_facts", exc)
+    # 155차 — 일시적 오류(SSL 등)는 재시도로 흡수하고, 끝내 실패하면
+    # xbrl_error 를 찍어 둡니다. "조회 실패"와 "원래 XBRL 없음"은
+    # 다른 사건이고 대응이 정반대입니다 (아래 merge_quarters 참고).
+    facts, errored = _facts_with_retry(
+        lambda: Company(ticker).get_facts(), report)
+    if errored or facts is None:
         return []
 
     # 개념별로 "분기(3개월)" 데이터를 뽑고, 빠진 4분기를 채워 넣습니다
@@ -3899,6 +3929,13 @@ def merge_quarters(
             return None
 
     if not xbrl_quarters:
+        # 155차 — 뼈대가 **오류로** 빈 날은 아래 대체 경로를 밟지 않습니다.
+        # 대체 경로는 보도자료 행을 발표일 그대로 분기 행으로 승격하는데,
+        # 그 행은 분기 신원(기간종료일)이 틀려 규격 위반입니다(실측: RH —
+        # 한 날짜에 분기 4개, 이름 중복). 원래 XBRL 이 없는 회사(오류
+        # 아님 — 41차의 은행·제약 구멍)는 지금까지처럼 승격합니다.
+        if report is not None and report.get("xbrl_error"):
+            return []
         # XBRL 뼈대가 통째로 비면 보도자료 행을 그대로 돌려주는데, 예전에는
         # 여기서 **발표일 도장을 찍지 않고** 나갔습니다. 측정은 발표일로만
         # 전 종목을 줄 세우므로(전략.md 7장), 도장이 없는 행은 측정에서
