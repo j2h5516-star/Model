@@ -3227,7 +3227,50 @@ def fetch_xbrl_approximation(
     # 그 회사의 회계연도 끝입니다.
     annual_eps = _연간_gaap_eps(facts, report)
 
+    # 157차 계기 — **은행 매출 개념 후보를 세기만 합니다** (값은 안 씁니다).
+    #
+    # 156차 계기가 실측으로 확정한 것: 은행은 XBRL 매출 계열이 아예 없거나
+    # (SYF·TFC 연간 0·분기 0) 분기 계열만 비어 있습니다(RF 연간 6·분기 0).
+    # 그래서 분기 뼈대가 안 만들어지고 "빠진 분기" 81건의 상위가 전부
+    # 은행(JPM 6·MTB 6·RF 5·SYF 4·WFC 3·TFC 3)입니다.
+    #
+    # 은행은 손익 구조가 달라 `Revenues`·`OperatingIncomeLoss` 대신 아래
+    # 개념을 씁니다. ⚠️ 이 개념들이 **실제로 있는지** 개발 환경에서는
+    # 확인할 수 없으므로(SEC 차단), 먼저 **세기만** 하고 뼈대는 그대로
+    # 둡니다. 숫자를 보고 나서 넣을지 정합니다 (106차 규칙 그대로 —
+    # 짐작으로 뼈대를 건드리지 않는다).
+    if report is not None:
+        report["은행개념_후보"] = _은행개념_세기(facts, report)
+
     return _quarters_from_series(ticker, series, start_date, report, annual_eps)
+
+
+# 은행·보험이 매출 자리에 쓰는 개념들 (157차 — 세기 전용)
+_BANK_REVENUE_CANDIDATES = [
+    "RevenuesNetOfInterestExpense",
+    "InterestAndDividendIncomeOperating",
+    "InterestIncomeExpenseNet",
+    "InterestIncomeExpenseAfterProvisionForLoanLoss",
+    "NoninterestIncome",
+]
+
+
+def _은행개념_세기(facts, report: dict | None = None) -> dict[str, dict[str, int]]:
+    """은행 매출 후보 개념이 분기·연간으로 몇 개나 있는지 셉니다 (157차).
+
+    **값을 쓰지 않습니다** — 뼈대에 넣을지 정하기 전에 재기만 하는
+    자리입니다. 조회가 실패하면 그 개념은 0으로 둡니다(창작 금지).
+    """
+    out: dict[str, dict[str, int]] = {}
+    for concept in _BANK_REVENUE_CANDIDATES:
+        try:
+            분기 = len(_quarterly_series(facts, concept, None, unit="USD"))
+            연간 = len(_annual_series(facts, concept, None, unit="USD"))
+        except Exception:
+            분기 = 연간 = 0
+        if 분기 or 연간:
+            out[concept] = {"분기": 분기, "연간": 연간}
+    return out
 
 
 def _연간_gaap_eps(facts, report: dict | None = None) -> dict[str, float]:

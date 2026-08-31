@@ -219,6 +219,40 @@ def test_series_for_key_가_계기를_report_에_실제로_채운다():
         sf._quarterly_series, sf._annual_series = 원분기, 원연간
 
 
+def test_은행개념_세기는_값을_쓰지_않고_세기만_한다():
+    """157차 — 은행 매출 후보 개념을 **세기만** 한다. 있는 개념만 담고,
+    조회가 터지는 개념은 0으로 둔다(창작 금지). 뼈대는 손대지 않는다."""
+    원분기, 원연간 = sf._quarterly_series, sf._annual_series
+    첫, 둘째 = sf._BANK_REVENUE_CANDIDATES[0], sf._BANK_REVENUE_CANDIDATES[1]
+
+    def 가짜분기(facts, concept, report=None, unit="USD"):
+        if concept == 첫:
+            return {"2025-03-31": 1.0, "2025-06-30": 2.0}
+        if concept == 둘째:
+            raise RuntimeError("조회 실패 흉내")
+        return {}
+
+    def 가짜연간(facts, concept, report=None, unit="USD"):
+        return {"2025-12-31": 9.0} if concept == 첫 else {}
+
+    sf._quarterly_series, sf._annual_series = 가짜분기, 가짜연간
+    try:
+        out = sf._은행개념_세기(facts=None)
+        assert out == {첫: {"분기": 2, "연간": 1}}, out
+        assert 둘째 not in out, "터진 개념을 값처럼 담았습니다"
+    finally:
+        sf._quarterly_series, sf._annual_series = 원분기, 원연간
+
+
+def test_은행개념_계기가_report_에_실린다():
+    """만들어 놓고 배선을 잊으면 아무도 안 보는 칸이 된다(150차-C)."""
+    import inspect
+    src = inspect.getsource(sf.fetch_xbrl_approximation)
+    assert 'report["은행개념_후보"] = _은행개념_세기' in src, src[-800:]
+    import collect_job as cj
+    assert '"은행개념_후보"' in inspect.getsource(cj.run), "로봇 기록 배선 없음"
+
+
 def test_fill_q4_non_calendar_fiscal_year():
     """회계연도가 12월이 아닌 회사(예: 1월 결산)도 계산돼야 함"""
     quarterly = {
