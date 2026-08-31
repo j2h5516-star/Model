@@ -197,6 +197,28 @@ def test_q4_채움_계기는_연간값이_없는_경우도_남긴다():
     assert 계기["연간없음"] == 1 and 계기["연간수"] == 0, 계기
 
 
+def test_series_for_key_가_계기를_report_에_실제로_채운다():
+    """156차 — 계기를 만들어도 **넘기지 않으면** 로그에 빈 칸만 남는다.
+    가짜 계열을 물려 실제 실행 경로(_series_for_key)를 태워 확인한다
+    (collect_job 쪽 배선 시험만으로는 이 구멍이 안 잡혔다 — 실측)."""
+    원분기, 원연간 = sf._quarterly_series, sf._annual_series
+    sf._quarterly_series = lambda facts, concept, report=None, unit="USD": (
+        {"2025-03-31": 100.0, "2025-06-30": 110.0, "2025-09-30": 120.0}
+        if concept == sf._XBRL_CONCEPTS["revenue"][0] else {})
+    sf._annual_series = lambda facts, concept, report=None, unit="USD": (
+        {"2025-12-31": 500.0}
+        if concept == sf._XBRL_CONCEPTS["revenue"][0] else {})
+    try:
+        report = sf.new_report("TT")
+        out = sf._series_for_key("revenue", facts=None, report=report)
+        assert abs(out["2025-12-31"] - 170.0) < 1e-9, out
+        계기 = (report.get("q4_채움") or {}).get("revenue")
+        assert 계기, f"계기가 report 에 안 실렸습니다: {report.get('q4_채움')}"
+        assert 계기.get("채움") == 1, 계기
+    finally:
+        sf._quarterly_series, sf._annual_series = 원분기, 원연간
+
+
 def test_fill_q4_non_calendar_fiscal_year():
     """회계연도가 12월이 아닌 회사(예: 1월 결산)도 계산돼야 함"""
     quarterly = {
