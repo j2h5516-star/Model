@@ -2424,6 +2424,61 @@ def _ensure_identity() -> None:
         _configured_identity = wanted
 
 
+def _회사(ticker: str, report: dict | None = None):
+    """티커로 SEC 회사를 엽니다. 티커표에서 사라진 종목은 **번호(CIK)** 로 엽니다.
+
+    왜 필요한가 (159차 실측):
+      유니버스를 401종목으로 넓힌 뒤, 6개 종목(ZI·CFLT·DFS·HOLX·X·HES)이
+      8일 내내 똑같은 오류로 **한 건도** 수집되지 않았습니다
+      ("Company not found"). SEC가 주는 티커→회사번호 표는 **지금 상장된
+      티커만** 담고 있어서, 티커를 바꾼 회사(ZI→GTM)나 인수되어 상장이
+      끝난 회사는 이름표에서 빠집니다. 회사가 낸 공시는 번호로는 그대로
+      남아 있으므로, 번호를 알면 되살아납니다.
+
+    번호를 모르는 종목은 예전처럼 티커로 열어 보고, 실패하면 그대로
+    실패로 둡니다 — 짐작한 번호를 넣지 않습니다(헌법 1조).
+    """
+    from edgar import Company
+
+    cik = cfg.TICKER_CIK.get(ticker)
+    if cik is not None:
+        if report is not None:
+            report["회사번호로_열었음"] = cik
+        return Company(cik)
+    return Company(ticker)
+
+
+def 사라진회사_찾아보기(ticker: str, report: dict | None = None) -> dict:
+    """티커로 회사를 못 찾았을 때, 이름으로 SEC 를 뒤져 **기록만** 합니다 (159차).
+
+    ⚠️ 찾은 번호를 **쓰지 않습니다.** 이 개발 환경에서는 SEC 접속이 막혀
+    있어 번호가 맞는지 확인할 방법이 없습니다. 그래서 로봇이 실제로
+    무엇을 찾았는지 로그에 실어 오게 하고, 사람이 그 숫자를 보고
+    `config.TICKER_CIK` 에 넣습니다 (짐작 전에 계기 — 106·157차 규칙).
+
+    돌려주는 것: {"이름": 찾을 때 쓴 이름,
+                 "찾음": [[회사이름, 번호, 지금티커], …]}
+    이름표에 없는 티커면 빈 dict — 아무 일도 하지 않습니다.
+    """
+    name = cfg.TICKER_NAME_HINT.get(ticker)
+    if not name:
+        return {}
+    찾음: list[list] = []
+    try:
+        from edgar import find_company
+
+        results = find_company(name, top_n=3)
+        # edgartools 의 검색 결과는 results.results 라는 표(cik·ticker·company)
+        for row in results.results.itertuples():
+            찾음.append([str(row.company), str(row.cik), str(row.ticker)])
+    except Exception as exc:      # 검색이 깨져도 수집 전체를 멈추지 않습니다
+        찾음 = [["검색실패", f"{type(exc).__name__}: {str(exc)[:80]}", ""]]
+    out = {"이름": name, "찾음": 찾음}
+    if report is not None:
+        report["사라진회사_검색"] = out
+    return out
+
+
 def new_report(ticker: str) -> dict:
     """수집 과정을 기록할 '진단 리포트'를 만듭니다.
 
@@ -2624,10 +2679,9 @@ def fetch_earnings_8k(
         )
 
     _ensure_identity()
-    from edgar import Company
 
     quarters: list[dict] = []
-    company = Company(ticker)
+    company = _회사(ticker, report)
     filings = company.get_filings(form="8-K", filing_date=f"{start_date}:")
 
     scanned = 0
@@ -3206,14 +3260,17 @@ def fetch_xbrl_approximation(
         start_date = cfg.HISTORY_START_DATE
 
     _ensure_identity()
-    from edgar import Company
 
     # 155차 — 일시적 오류(SSL 등)는 재시도로 흡수하고, 끝내 실패하면
     # xbrl_error 를 찍어 둡니다. "조회 실패"와 "원래 XBRL 없음"은
     # 다른 사건이고 대응이 정반대입니다 (아래 merge_quarters 참고).
     facts, errored = _facts_with_retry(
-        lambda: Company(ticker).get_facts(), report)
+        lambda: _회사(ticker, report).get_facts(), report)
     if errored or facts is None:
+        # 159차 — 티커표에서 사라진 회사면 이름으로 뒤져 **기록만** 합니다.
+        #   여기서 찾은 번호는 쓰지 않습니다. 다음 런에서 사람이 보고
+        #   config.TICKER_CIK 에 넣습니다.
+        사라진회사_찾아보기(ticker, report)
         return []
 
     # 개념별로 "분기(3개월)" 데이터를 뽑고, 빠진 4분기를 채워 넣습니다

@@ -1734,6 +1734,109 @@ def test_숫자가_하나도_없는_공지는_여전히_안_끼운다():
         "이익 숫자가 없는 예비 공지가 분기를 차지했습니다")
 
 
+# ---------------------------------------------------------------------------
+# 159차 — 티커표에서 사라진 회사를 번호로 열기
+# ---------------------------------------------------------------------------
+
+def test_사라진종목은_회사번호로_연다():
+    """159차 — 번호표에 적힌 종목은 티커가 아니라 **번호**로 연다.
+
+    실측: ZI·CFLT·DFS·HOLX·X·HES 6종목이 8일 내내 "Company not found"로
+    한 건도 수집되지 않았다. SEC 티커표에는 지금 상장된 티커만 있어서,
+    티커를 바꾼 회사(ZI→GTM)나 인수로 상장이 끝난 회사가 빠진다.
+    """
+    import edgar
+    본래 = edgar.Company
+    받은 = []
+    edgar.Company = lambda x: (받은.append(x), "회사")[1]
+    try:
+        report = {}
+        assert sf._회사("ZI", report) == "회사"
+        assert 받은 == [cfg.TICKER_CIK["ZI"]], 받은
+        assert report["회사번호로_열었음"] == cfg.TICKER_CIK["ZI"]
+        # 번호표에 없는 보통 종목은 예전 그대로 티커로 연다
+        받은.clear()
+        sf._회사("AAPL", {})
+        assert 받은 == ["AAPL"], 받은
+    finally:
+        edgar.Company = 본래
+
+
+def test_사라진회사_검색은_이름표에_있을_때만_기록한다():
+    """159차 — 이름으로 찾아본 결과를 **기록만** 한다 (값은 안 씀).
+
+    이 개발 환경에서는 SEC 접속이 막혀 번호가 맞는지 확인할 길이 없다.
+    그래서 로봇이 무엇을 찾았는지 실어 오게 하고, 사람이 그 숫자를 보고
+    config.TICKER_CIK 에 넣는다 (짐작 전에 계기 — 106·157차 규칙).
+    """
+    import types
+    import edgar
+    import pandas as pd
+
+    본래 = edgar.find_company
+    질의 = []
+
+    def 가짜(name, top_n=10):
+        질의.append(name)
+        표 = pd.DataFrame(
+            # 일부러 가짜 번호입니다 — 진짜 번호로 오해하지 않도록.
+            [{"cik": 999999, "ticker": "HES", "company": "Hess Corporation",
+              "score": 100}])
+        return types.SimpleNamespace(results=표)
+
+    edgar.find_company = 가짜
+    try:
+        report = {}
+        out = sf.사라진회사_찾아보기("HES", report)
+        assert 질의 == [cfg.TICKER_NAME_HINT["HES"]], 질의
+        assert out["찾음"] == [["Hess Corporation", "999999", "HES"]], out
+        assert report["사라진회사_검색"] == out
+        # 이름표에 없는 종목은 검색조차 하지 않는다 (쓸데없는 SEC 요청 금지)
+        질의.clear()
+        report2 = {}
+        assert sf.사라진회사_찾아보기("AAPL", report2) == {}
+        assert 질의 == [] and report2 == {}
+    finally:
+        edgar.find_company = 본래
+
+
+def test_XBRL이_실패하면_사라진회사_검색이_실제로_돈다():
+    """159차 — 배선 시험. 뼈대 조회가 끝내 실패한 자리에서 검색이 불린다.
+
+    ⚠️ 이 시험은 `fetch_xbrl_approximation` 을 **실제로 태웁니다.**
+    수집기 쪽만 들여다보는 약한 시험은 "안 부름" 돌연변이를 놓칩니다
+    (157차에 실제로 놓쳤습니다).
+    """
+    불림 = []
+    본래_facts = sf._facts_with_retry
+    본래_검색 = sf.사라진회사_찾아보기
+    sf._facts_with_retry = lambda fetch, report, **kw: (None, True)
+    sf.사라진회사_찾아보기 = lambda t, report=None: 불림.append(t)
+    try:
+        report = sf.new_report("HES")
+        assert sf.fetch_xbrl_approximation("HES", report=report) == []
+        assert 불림 == ["HES"], 불림
+    finally:
+        sf._facts_with_retry = 본래_facts
+        sf.사라진회사_찾아보기 = 본래_검색
+
+
+def test_사라진종목_표는_유니버스_안에만_있다():
+    """159차 — 번호표·이름표에 적은 티커는 모두 실제 관심 종목이어야 한다.
+
+    오타로 엉뚱한 티커를 적어 두면 아무 일도 안 일어나므로 조용히 썩습니다.
+    """
+    유니버스 = set(cfg.TICKERS)
+    for 표이름, 표 in (("TICKER_CIK", cfg.TICKER_CIK),
+                    ("TICKER_NAME_HINT", cfg.TICKER_NAME_HINT)):
+        for t in 표:
+            assert t in 유니버스, f"{표이름} 의 {t} 가 유니버스에 없습니다"
+    for t, cik in cfg.TICKER_CIK.items():
+        assert isinstance(cik, int) and cik > 0, (t, cik)
+    # 번호를 아는 종목은 이름표에 남겨 둘 이유가 없습니다 (두 길이 갈리면 헷갈립니다)
+    assert not (set(cfg.TICKER_CIK) & set(cfg.TICKER_NAME_HINT))
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
