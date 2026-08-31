@@ -3454,7 +3454,11 @@ def _series_for_key(key: str, facts, report: dict | None = None) -> dict[str, fl
     annual: dict[str, float] = {}
     for concept in _XBRL_CONCEPTS[key]:
         annual.update(_annual_series(facts, concept, report, unit=unit))
-    return _fill_missing_q4(merged, annual)
+    # 156차 — 4분기 채움의 성패를 항목별로 남깁니다 (빠진 분기 79건 추적).
+    계기 = None
+    if report is not None:
+        계기 = report.setdefault("q4_채움", {}).setdefault(key, {})
+    return _fill_missing_q4(merged, annual, 계기)
 
 
 def _quarterly_series(
@@ -3475,6 +3479,7 @@ def _annual_series(facts, concept: str, report: dict | None = None, unit: str = 
 def _fill_missing_q4(
     quarterly: dict[str, float],
     annual: dict[str, float],
+    계기: dict | None = None,
 ) -> dict[str, float]:
     """빠져 있는 4분기를 `연간 − (1분기 + 2분기 + 3분기)` 로 계산해 채웁니다.
 
@@ -3483,7 +3488,18 @@ def _fill_missing_q4(
       4분기는 10-K에 "연간(12개월)"으로만 신고하는 경우가 대부분입니다.
       그래서 3개월짜리만 모으면 매년 4분기가 통째로 빠지고,
       가속/감속을 판단할 표본이 25%나 줄어듭니다.
+
+    `계기` 를 주면 **왜 못 채웠는지**를 갈래별로 세어 넣습니다 (156차).
+    빠진 분기 91건 중 79건이 "행 자체가 없음"인데, 그 원인이 이 함수의
+    실패인지 애초에 연간값도 없는 것인지 개발 환경에서는 SEC 접속이
+    막혀 확인할 수 없습니다. 로봇이 답을 실어 오게 하는 자리입니다
+    (짐작 전에 계기 — 91·98·106차 규칙).
     """
+    if 계기 is not None:
+        계기["연간수"] = 계기.get("연간수", 0) + len(annual)
+        계기["분기수"] = 계기.get("분기수", 0) + len(quarterly)
+        if not annual:
+            계기["연간없음"] = 계기.get("연간없음", 0) + 1
     if not annual:
         return quarterly
 
@@ -3491,15 +3507,24 @@ def _fill_missing_q4(
 
     for fy_end, annual_value in annual.items():
         if fy_end in filled:
+            if 계기 is not None:
+                계기["이미있음"] = 계기.get("이미있음", 0) + 1
             continue  # 이미 4분기 값이 있으면 건드리지 않습니다
 
         # 회계연도 종료일로부터 거슬러 올라가며 앞선 세 분기를 찾습니다
         prior = _find_prior_three_quarters(quarterly, fy_end)
         if prior is None:
+            if 계기 is not None:
+                계기["앞선세분기부족"] = 계기.get("앞선세분기부족", 0) + 1
+                예 = 계기.setdefault("못채운예", [])
+                if len(예) < 5:
+                    예.append(fy_end)
             continue
 
         q4_value = annual_value - sum(prior)
         filled[fy_end] = q4_value
+        if 계기 is not None:
+            계기["채움"] = 계기.get("채움", 0) + 1
 
     return filled
 

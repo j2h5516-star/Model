@@ -414,6 +414,10 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
                 # 영업이익이 없는 분기의 매출은 찾아 놓고도 버려집니다.
                 # 얼마나 버려지는지 세어 둡니다 (아직 고치지 않고 잽니다).
                 "xbrl_orphan": r.get("xbrl_orphan") or {},
+                # 156차 계기 — 4분기(연말) 행이 통째로 없어 생기는 "빠진
+                # 분기" 79건의 원인을 가릅니다. 항목별로 연간값 수 ·
+                # 채운 수 · 앞선 세 분기가 모자라 못 채운 수를 남깁니다.
+                "q4_채움": r.get("q4_채움") or {},
                 "시간초과": bool(r.get("시간초과")),
                 "note": r.get("note", ""),
             }

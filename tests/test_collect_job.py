@@ -96,6 +96,9 @@ def test_run_writes_snapshot_and_log(tmp_dir="/tmp/claude-0/robot_test"):
             log = json.load(f)
         assert log["tickers"] == 2
         assert log["per_ticker"][0]["adj_eps_ok"] == 1
+        # 156차 — 4분기 채움 계기가 **로그까지** 실려야 한다. 만들어 놓고
+        # 배선을 잊으면 아무도 안 보는 칸이 된다(150차-C 와 같은 병).
+        assert "q4_채움" in log["per_ticker"][0], log["per_ticker"][0].keys()
         # v3 5단계 — 수집 성공 시 자동 판정도 기록되어야 합니다.
         # (가짜 데이터는 분기 1개뿐이라 사건 0건 → 전 가설 '판정 불가'가 정답)
         assert "verdict" in log, log.keys()
