@@ -394,6 +394,27 @@ def test_앱의_요청단추가_이_워크플로와_같은_말을_쓴다():
     assert "issues/new?title=" in 앱, "앱이 요청장 주소를 열지 않습니다"
 
 
+# ---------------------------------------------------------------------------
+# 매일 점검의 자는 저장소에 있어야 한다 (158차)
+# ---------------------------------------------------------------------------
+def test_모바일_점검자가_저장소에_있고_스킬이_그것을_가리킨다():
+    """왜 시험으로 막는가: 이 자를 임시 폴더에 두면 세션 컨테이너가
+    초기화될 때마다 다시 만들어야 한다(실제로 하루 세 번 다시 만들었다).
+    절차의 일부이므로 저장소에 있어야 하고, 스킬 문서도 그것을 가리켜야
+    한다. 문서가 옛 방법을 가리키면 다음 회차가 또 임시로 만든다."""
+    import os
+    뿌리 = os.path.join(os.path.dirname(__file__), "..")
+    경로 = os.path.join(뿌리, "tools", "mobile_check.py")
+    assert os.path.exists(경로), "tools/mobile_check.py 가 없습니다"
+    본문 = open(경로, encoding="utf-8").read()
+    assert "412" in 본문, "휴대폰 폭이 안 적혀 있습니다"
+    assert "pageerror" in 본문, "콘솔 오류 검사가 없습니다"
+    assert "getBoundingClientRect" in 본문, "요소별 넘침 검사가 없습니다"
+    스킬 = os.path.join(뿌리, ".claude", "skills", "screen-verify", "SKILL.md")
+    글 = open(스킬, encoding="utf-8").read()
+    assert "tools/mobile_check.py" in 글, "스킬이 저장소의 자를 안 가리킵니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

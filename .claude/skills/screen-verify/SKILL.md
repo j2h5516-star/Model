@@ -47,16 +47,16 @@ description: 화면과 데이터의 정합성 점검 — 웹앱(docs/data)에 �
 
 4. **모바일에서 실제로 렌더링해 본다** (주인은 휴대폰만 쓴다):
    ```
-   python3 -m http.server 8899 --directory docs &
+   python3 tools/mobile_check.py; echo $?
    ```
-   Playwright(크로미움 `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`,
-   `--no-sandbox`)로 **412px** 에서 네 탭(`#/home` `#/market` `#/stocks`
-   `#/check`)을 띄우고 확인한다:
-   - `document.documentElement.scrollWidth == clientWidth` (가로 넘침 없음)
-   - **요소마다** `getBoundingClientRect()` 로 412px 밖을 넘는 것이
-     있는지 — 가로 스크롤만 보면 `overflow:hidden` 에 가려 놓친다
-   - `pageerror` 콘솔 오류 0건
-   끝나면 `pkill -f "http.server 8899"`.
+   412px 에서 네 탭(`#/home` `#/market` `#/stocks` `#/check`)을 띄워
+   ① 문서 가로 폭이 412 를 넘지 않는지 ② **요소마다** 오른쪽 끝이 412 를
+   넘지 않는지(가로 스크롤만 보면 `overflow:hidden` 에 가려 놓친다)
+   ③ 콘솔 오류 0건인지 확인한다. 종료코드 0 이면 이상 없음.
+
+   ⚠️ 이 자를 임시 폴더에 만들어 쓰지 말 것 — 세션 컨테이너가 자주
+   초기화돼 **매번 다시 만들게 된다**(실제로 하루에 세 번 다시 만들었다).
+   저장소의 `tools/mobile_check.py` 를 쓴다 (158차).
 
 5. **이상이 있으면** 측정결과.md 에 회차로 기록하고 고친다.
    이상이 없으면 **짧게 한 줄**만 보고한다 (주인은 비개발자 — 한국어로,
