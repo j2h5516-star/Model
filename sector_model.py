@@ -638,3 +638,105 @@ def _breadths_at(ds: dict, members: list[str], day: str, memo: dict | None = Non
         return None
     return (round(aligned / decidable * 100.0, 1),
             round(delta_up / decidable * 100.0, 1))
+
+
+# ---------------------------------------------------------------------------
+# H30 (160차 등록) — 무너진 섹터를 팔고 오른 섹터로 갈아타야 하는가
+# ---------------------------------------------------------------------------
+# 주인 질문(2026-09-01): "AI 가 오늘도 하락 중인데 비중을 다른 섹터로
+# 옮겨야 하나?"
+#
+# 탐색으로 재 보니 **정반대**였습니다(섹터-시점 680건):
+#   가장 약한 섹터 다음 60일 중앙값 +2.4%p · 이긴비율 62.5%
+#   가장 강한 섹터            −2.2%p · 이긴비율 41.9% (뒤시기 −6.1%p · 26.5%)
+#   섹터 60일 상대 −15%p 이하였던 32건 → 다음 60일 중앙값 +3.6%p · 68.8%
+#
+# ⚠️ 그러나 이것은 **탐색**이고 채택 근거가 아닙니다(헌법 5원칙). 문턱
+#    −15%p 도 표를 보고 고른 것입니다. 그래서 여기 사전 등록하고
+#    **등록일 뒤 새 시점만** 판정합니다. 탐색 표본은 참고로만 붙입니다.
+#
+# 등록문 (2026-09-01, 값을 더 보기 전에 고정):
+#   사건 단위 : (섹터, 시점). 시점은 **고정 격자** — 표본 시작일에서
+#               60거래일씩 앞으로. 데이터가 하루 늘어도 격자가 밀리지
+#               않아야 "등록일 뒤 새 시점"이 흔들리지 않습니다.
+#   신호      : 그 시점의 **과거** 60거래일 섹터 중앙값 초과수익 ≤ −15%p
+#   표적      : 이후 60거래일 섹터 중앙값 초과수익 > 0 (시장을 이김)
+#   기준선    : 같은 표본의 **모든** (섹터, 시점)
+#   채택      : 신호 윌슨 95% 하한 > 기준선 상한 · n≥10 · **서로 다른
+#               시점 4개 이상**(한 시점의 장세에 통째로 기대지 않기 위해)
+#
+# 미리 적어 두는 약점 (숨기지 않습니다):
+#   · 같은 시점의 섹터들은 **독립이 아닙니다** — 같은 장세를 공유합니다.
+#     구간이 실제보다 좁게 나올 수 있습니다.
+#   · 표적이 측정 기본형(+20%p 폭등)이 아니라 ">0" 입니다. 섹터 중앙값은
+#     종목보다 흔들림이 작아 60일에 +20%p 가 거의 안 나오기 때문입니다.
+#     기준선도 같은 자로 재므로 비교 자체는 공정합니다.
+#   · 유니버스는 살아남은 회사 위주라 **생존편향**이 있습니다.
+#   · 시점이 1년에 4개뿐이라 판정에 오래 걸립니다.
+H30_NAME = "H30_약한섹터_역전"
+H30_START_DAY = "2026-09-01"
+H30_WEAK_PP = -15.0          # 신호 문턱 — 과거 60일 섹터 초과수익 (%p)
+H30_MIN_MEMBERS = 5          # 섹터 중앙값을 낼 최소 종목 수
+
+
+def sector_momentum_events(ds: dict, start_date: str | None = None) -> list[dict]:
+    """H30 재료 — (섹터, 시점)마다 과거 60일·이후 60일 초과수익.
+
+    격자를 **표본 시작일에서 앞으로** 깔기 때문에, 데이터가 하루 늘어도
+    이미 만들어진 사건의 날짜가 바뀌지 않습니다(등록일 기준 판정이
+    날마다 흔들리면 사전 등록이 무의미해집니다).
+    """
+    import statistics as _st
+
+    import config as _cfg
+
+    prices = ds.get("prices") or {}
+    bench = ds.get("benchmark")
+    b = prices.get(bench)
+    if not b or len(b["dates"]) < 2 * SHORT_FORWARD_DAYS + 1:
+        return []
+    days, bclose = b["dates"], b["close"]
+    if start_date is None:
+        start_date = _cfg.HISTORY_START_DATE
+
+    members: dict[str, list[str]] = {}
+    for t in ds.get("tickers") or []:
+        if t == bench or t not in prices:
+            continue
+        members.setdefault(_cfg.SECTORS.get(t, "미분류"), []).append(t)
+    members = {s: v for s, v in members.items() if len(v) >= H30_MIN_MEMBERS}
+
+    닫힘 = {t: dict(zip(prices[t]["dates"], prices[t]["close"]))
+          for t in prices if t != bench}
+
+    # 고정 격자 — 표본 시작일 이후 첫 거래일에서 60거래일씩
+    첫 = next((i for i, d in enumerate(days) if d >= start_date), None)
+    if 첫 is None:
+        return []
+    격자 = list(range(첫 + SHORT_FORWARD_DAYS, len(days) - SHORT_FORWARD_DAYS,
+                    SHORT_FORWARD_DAYS))
+
+    out: list[dict] = []
+    for i in 격자:
+        d0, d1, d2 = days[i - SHORT_FORWARD_DAYS], days[i], days[i + SHORT_FORWARD_DAYS]
+        b과거 = bclose[i] / bclose[i - SHORT_FORWARD_DAYS] - 1
+        b미래 = bclose[i + SHORT_FORWARD_DAYS] / bclose[i] - 1
+        for sector, ts in members.items():
+            과거, 미래 = [], []
+            for t in ts:
+                m = 닫힘.get(t) or {}
+                a, c, e = m.get(d0), m.get(d1), m.get(d2)
+                if not a or not c or not e or a <= 0 or c <= 0:
+                    continue
+                과거.append((c / a - 1) - b과거)
+                미래.append((e / c - 1) - b미래)
+            if len(과거) < H30_MIN_MEMBERS:
+                continue
+            뒤 = round(_st.median(미래) * 100.0, 2)
+            out.append({
+                "day": d1, "섹터": sector, "종목수": len(과거),
+                "과거60": round(_st.median(과거) * 100.0, 2),
+                "excess": 뒤,
+                "이김": 뒤 > 0,
+            })
+    return out

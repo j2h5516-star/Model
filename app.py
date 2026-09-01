@@ -269,6 +269,78 @@ def adopted_names(verdict: dict | None) -> list[str]:
     ]
 
 
+def adoption_caveats(verdict: dict | None) -> list[dict]:
+    """채택된 가설마다 **얼마나 아슬아슬한지**를 함께 적습니다 (160차).
+
+    왜 필요한가:
+      2026-09-01 런에서 v3 들어 **처음으로** 가설 하나가 채택 기준을
+      넘었습니다(H9). 그런데 넘긴 폭이 **0.1%p** 였고, 앞/뒤 시간 분할을
+      보니 앞시기에는 우위가 없었습니다(8.3% — 기준선과 구간이 겹침).
+      헌법 4원칙이 정확히 이것을 경고합니다: "어떤 측정이든 앞/뒤 시간
+      분할을 함께 보고하고, **강세장 구간만의 우위는 믿지 않는다.**"
+
+      판정 자체는 건드리지 않습니다 — 문턱은 데이터를 보기 전에 등록한
+      것이고, 결과를 보고 규칙을 고치면 사전 등록이 무의미해집니다
+      (헌법 8번). 대신 **화면이 함께 말하게** 합니다. 채택이라는 글자만
+      띄우면 주인은 그것을 매수 근거로 읽습니다.
+
+    지어내지 않습니다 — 판정 파일에 이미 있는 수를 옮겨 적고, 빼기만
+    합니다. 없는 칸은 None 으로 둡니다.
+    """
+    out: list[dict] = []
+    for name, entry in ((verdict or {}).get("가설") or {}).items():
+        if entry.get("판정") != "채택":
+            continue
+        판정칸 = entry.get("신규(판정)") or {}
+        신호 = 판정칸.get("신호") or {}
+        기준 = 판정칸.get("기준선") or {}
+        신호구간 = 신호.get("ci") or [None, None]
+        기준구간 = 기준.get("ci") or [None, None]
+        여유 = (round(신호구간[0] - 기준구간[1], 1)
+              if 신호구간[0] is not None and 기준구간[1] is not None else None)
+        앞 = entry.get("신규_앞시기") or {}
+        뒤 = entry.get("신규_뒤시기") or {}
+        전체 = (entry.get("전체(참고)") or {}).get("판정")
+
+        주의: list[str] = []
+        # ① 앞시기 구간이 기준선 구간과 겹치면 "뒤시기에만 우위"입니다.
+        앞구간 = 앞.get("ci") or [None, None]
+        if (앞구간[0] is not None and 기준구간[1] is not None
+                and 앞구간[0] <= 기준구간[1]):
+            주의.append("앞시기에는 우위 없음 — 뒤시기(강세장)에만 나타남")
+        # ② 같은 자로 잰 전체 표본이 채택이 아니면 그것도 사실입니다.
+        if 전체 and 전체 != "채택":
+            주의.append(f"전체 표본으로는 {전체}")
+        out.append({
+            "이름": name,
+            "라벨": HYPOTHESIS_LABELS.get(name, name),
+            "여유": 여유,                      # 신호 하한 − 기준선 상한 (%p)
+            "신호n": 신호.get("n"),
+            "신호율": 신호.get("rate"),
+            "기준선율": 기준.get("rate"),
+            "앞시기율": 앞.get("rate"), "앞시기n": 앞.get("n"),
+            "뒤시기율": 뒤.get("rate"), "뒤시기n": 뒤.get("n"),
+            "전체판정": 전체,
+            "주의": 주의,
+        })
+    return out
+
+
+def adoption_caveat_line(caveats: list[dict]) -> str:
+    """채택 신호 옆에 한 줄로 붙일 정직화 문구 (없으면 빈 글자)."""
+    조각 = []
+    for c in caveats:
+        말 = []
+        if c.get("여유") is not None:
+            말.append(f"여유 {c['여유']:+.1f}%p")
+        if c.get("앞시기율") is not None and c.get("뒤시기율") is not None:
+            말.append(f"앞 {c['앞시기율']}% → 뒤 {c['뒤시기율']}%")
+        말 += c.get("주의") or []
+        if 말:
+            조각.append(f"{c['라벨']}: " + " · ".join(말))
+    return " / ".join(조각)
+
+
 def recent_ticker_rows(ds: dict, today: str | None = None) -> list[dict]:
     """최근 RECENT_DAYS 일 안에 발표한 종목의 사실 상태 (판단 아님)."""
     if today is None:
@@ -856,7 +928,8 @@ def signal_row_html(r: dict) -> str:
 
 def summary_cards_html(폭: float | None, fired: list[dict],
                        watch: list[dict], 새완성: list[dict],
-                       adopted: list[str]) -> str:
+                       adopted: list[str],
+                       caveats: list[dict] | None = None) -> str:
     """오늘 요약을 증권앱풍 2×2 카드로 (130차 — 순수 함수, 시험 가능).
 
     없는 값은 만들지 않습니다 — 폭이 없으면 "판단 불가"라고 적습니다.
@@ -881,7 +954,10 @@ def summary_cards_html(폭: float | None, fired: list[dict],
     새색 = "mv-green" if 새완성 else ""
 
     채택값 = " · ".join(adopted) if adopted else "없음"
-    채택설명 = "" if adopted else "모든 표시는 관찰 — 매수 근거 아님"
+    # 160차 — 채택이 생기면 **얼마나 아슬아슬한지**를 같은 칸에 적습니다.
+    #   "채택"이라는 글자만 띄우면 주인은 그것을 매수 근거로 읽습니다.
+    채택설명 = (adoption_caveat_line(caveats or []) if adopted
+            else "모든 표시는 관찰 — 매수 근거 아님")
 
     return (
         '<div class="mv-grid">'
@@ -894,8 +970,14 @@ def summary_cards_html(폭: float | None, fired: list[dict],
         f'<div class="mv-card"><div class="mv-label">이번 주 새 완성</div>'
         f'<div class="mv-value {새색}">{새이름}</div>'
         f'<div class="mv-sub">7일 안 정배열 완성</div></div>'
+        # ⚠️ 160차 수리: 예전에는 `채택설명` 을 만들어 놓고 **그리지
+        #    않았습니다.** "모든 표시는 관찰 — 매수 근거 아님"이라는
+        #    정직화 문구가 계기판에 한 번도 뜬 적이 없습니다(웹앱에는
+        #    있었습니다). 만들어 놓고 안 쓰는 칸은 없는 것과 같습니다
+        #    (150차-C 와 같은 병).
         f'<div class="mv-card"><div class="mv-label">채택된 신호 / 몰리는 묶음</div>'
         f'<div class="mv-value">{채택값}</div>'
+        f'<div class="mv-sub">{채택설명}</div>'
         f'<div class="mv-sub">{몰림값}</div></div>'
         '</div>'
     )
@@ -1300,7 +1382,8 @@ def main():
     _종목판전체 = recent_completion_rows(_완성, _오늘)
     _새완성 = [r for r in _종목판전체 if r["새완성"] and r["신호"]]
     st.markdown(summary_cards_html(_폭, fired, _묶음판, _새완성,
-                                   adopted_names(verdict) if verdict else []),
+                                   adopted_names(verdict) if verdict else [],
+                                   adoption_caveats(verdict)),
                 unsafe_allow_html=True)
 
     tab_home, tab_market, tab_fund, tab_check = st.tabs(

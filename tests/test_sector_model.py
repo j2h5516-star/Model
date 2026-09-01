@@ -255,6 +255,53 @@ def test_시장폭은_발표일_직전_주의_값을_붙인다():
     assert abs(events[1]["장세폭"] - last_val) < 1e-9
 
 
+# ---------------------------------------------------------------------------
+# H30 재료 — 섹터 모멘텀 사건 (160차)
+# ---------------------------------------------------------------------------
+
+def _h30_ds(n_days=200):
+    """SPY 는 평평하고, A섹터는 앞 60일 내리막 뒤 오르막인 미니 데이터."""
+    import config as cfg
+    days = [f"2020-{1 + i // 28:02d}-{1 + i % 28:02d}" for i in range(n_days)]
+    days = sorted(set(days))[:n_days]
+    ts = [t for t in cfg.TICKERS if cfg.SECTORS.get(t) == "소프트웨어"][:6]
+    prices = {"SPY": {"dates": days, "close": [100.0] * len(days)}}
+    for t in ts:
+        c = []
+        for i in range(len(days)):
+            c.append(100.0 * (0.99 ** i) if i <= 120 else 100.0 * (0.99 ** 120) * (1.01 ** (i - 120)))
+        prices[t] = {"dates": days, "close": c}
+    return {"benchmark": "SPY", "tickers": ts + ["SPY"], "prices": prices,
+            "quarters": {}}
+
+
+def test_섹터모멘텀_사건이_과거와_이후를_함께_담는다():
+    """H30 은 '과거 60일이 무너진 섹터'를 신호로 삼으므로, 한 사건 안에
+    과거와 이후가 **둘 다** 있어야 한다. 하나라도 없으면 판정 못 한다."""
+    ds = _h30_ds()
+    ev = sm.sector_momentum_events(ds, start_date=ds["prices"]["SPY"]["dates"][0])
+    assert ev, "사건이 하나도 안 나왔습니다"
+    for e in ev:
+        assert e["과거60"] is not None and e["excess"] is not None, e
+        assert e["이김"] == (e["excess"] > 0), e
+        assert e["종목수"] >= sm.H30_MIN_MEMBERS, e
+    # 내리막 구간의 사건은 과거60 이 음수여야 한다 (자가 뒤집혀 있지 않은지)
+    assert ev[0]["과거60"] < 0, ev[0]
+
+
+def test_섹터모멘텀_격자는_데이터가_늘어도_밀리지_않는다():
+    """격자를 **마지막 날 기준**으로 깔면 데이터가 하루 늘 때마다 시점이
+    통째로 밀려, '등록일 뒤 새 시점'이 날마다 달라진다 — 사전 등록이
+    무의미해진다. 그래서 표본 시작일에서 앞으로 깐다."""
+    ds = _h30_ds()
+    시작 = ds["prices"]["SPY"]["dates"][0]
+    앞 = {e["day"] for e in sm.sector_momentum_events(ds, start_date=시작)}
+    # 데이터가 하루 더 쌓인 상황을 흉내
+    ds2 = _h30_ds(n_days=201)
+    뒤 = {e["day"] for e in sm.sector_momentum_events(ds2, start_date=시작)}
+    assert 앞 <= 뒤, f"이미 만들어진 시점이 사라졌습니다: {sorted(앞 - 뒤)}"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

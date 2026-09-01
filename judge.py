@@ -198,6 +198,7 @@ def hypothesis_clock() -> dict[str, tuple[str, int]]:
         H27_NAME: (H27_START_DAY, me.WINDOW_TRADING_DAYS),
         H28_NAME: (H28_START_DAY, me.WINDOW_TRADING_DAYS),
         H29_NAME: (_sm.H29_START_DAY, me.WINDOW_TRADING_DAYS),
+        H30_NAME: (_sm.H30_START_DAY, me.WINDOW_TRADING_DAYS),
     }
     for 이름, _수준 in H22_LEVELS[1:]:
         표[이름] = (H22_START_DAY, me.WINDOW_TRADING_DAYS)
@@ -896,6 +897,66 @@ def judge_completion_combo(events: list[dict], start_day: str,
     out["문턱"] = {"이격도_최소": gap_min,
                  "이격상승_비교주": "4주 전", "델타": "상승만"}
     return {H29_NAME: out}
+
+
+# H30 (160차 등록): 무너진 섹터를 팔고 오른 섹터로 갈아타야 하는가.
+# 등록문·약점은 sector_model.H30_NAME 위 주석에 있습니다.
+# 사건 단위가 (섹터, 시점)이라 종목 발표 사건과 자가 다릅니다 —
+# 표적이 "+20%p 폭등"이 아니라 "시장을 이김(>0)" 입니다.
+H30_NAME = "H30_약한섹터_역전"
+
+
+def _h30_stats(group: list[dict]) -> dict:
+    n = len(group)
+    hits = sum(1 for e in group if e.get("이김"))
+    low, high = wilson_interval(hits, n)
+    return {"n": n, "rate": round(hits / n * 100.0, 1) if n else None,
+            "ci": [round(low, 1), round(high, 1)],
+            "시점수": len({e["day"] for e in group})}
+
+
+def judge_sector_momentum(events: list[dict], start_day: str,
+                          weak_pp: float) -> dict:
+    """H30 판정 — 과거 60일이 무너진 섹터가 다음 60일에 시장을 이기는가.
+
+    ⚠️ 한 시점에는 섹터 17개가 한꺼번에 들어오므로, n 만 보면 표본이
+    많아 보여도 실제로는 **같은 장세 몇 개**일 수 있습니다. 그래서
+    서로 다른 시점이 4개 미만이면 판정하지 않습니다(등록문 그대로).
+    """
+    out: dict = {}
+    for label, pool in (
+        ("신규(판정)", [e for e in events if e["day"] > start_day]),
+        ("탐색표본(참고)", [e for e in events if e["day"] <= start_day]),
+    ):
+        signal = [e for e in pool if e.get("과거60") is not None
+                  and e["과거60"] <= weak_pp]
+        signal_stats = _h30_stats(signal)
+        base_stats = _h30_stats(pool)
+        if (signal_stats["n"] < MIN_SIGNAL_N
+                or signal_stats["시점수"] < H30_MIN_PERIODS):
+            verdict = "판정 불가"
+        elif signal_stats["ci"][0] > base_stats["ci"][1]:
+            verdict = "채택"
+        else:
+            verdict = "미채택"
+        out[label] = {"신호": signal_stats, "기준선": base_stats,
+                      "판정": verdict}
+    # 시간 분할은 헌법 4원칙상 **필수**입니다. 다만 이 사건은 열쇠가
+    # "announced"(발표일)가 아니라 "day"(시점)라, 공용 _halves 를 쓰지
+    # 않고 여기서 나눕니다 — 남의 열쇠를 짐작으로 쓰면 조용히 터집니다.
+    ordered = sorted(events, key=lambda e: e["day"])
+    반 = len(ordered) // 2
+    for 이름, 몫 in (("신규_앞시기", ordered[:반]), ("신규_뒤시기", ordered[반:])):
+        out[이름] = _h30_stats(
+            [e for e in 몫 if e.get("과거60") is not None and e["과거60"] <= weak_pp])
+    out["판정"] = out["신규(판정)"]["판정"]
+    out["등록일"] = start_day
+    out["문턱"] = {"약한섹터_기준": weak_pp, "표적": "이후 60거래일 초과수익 > 0",
+                 "최소시점": H30_MIN_PERIODS}
+    return {H30_NAME: out}
+
+
+H30_MIN_PERIODS = 4      # 등록문 — 서로 다른 시점이 이보다 적으면 판정 안 함
 
 
 # H19·H20·H21 (44차 등록): 주도섹터 판정 · 전환 · 분기점.

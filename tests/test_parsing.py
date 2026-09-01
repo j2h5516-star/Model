@@ -249,8 +249,50 @@ def test_은행개념_계기가_report_에_실린다():
     import inspect
     src = inspect.getsource(sf.fetch_xbrl_approximation)
     assert 'report["은행개념_후보"] = _은행개념_세기' in src, src[-800:]
+    # 160차 — 지금 뼈대와 견주려면 series·start_date 를 넘겨야 한다.
+    #   안 넘기면 "새기간"이 아예 안 세어져 계기가 반쪽이 된다.
+    assert "series=series" in src and "start_date=start_date" in src, src[-800:]
     import collect_job as cj
     assert '"은행개념_후보"' in inspect.getsource(cj.run), "로봇 기록 배선 없음"
+
+
+def test_은행개념이_뼈대에_들어갔을때_늘_분기를_센다():
+    """160차 — 넣기 전에 **얼마나 늘어나는지**를 먼저 센다 (106차 규칙).
+
+    오늘 157차 계기의 첫 숫자가 156차 결론("은행은 매출 계열이 없다")을
+    뒤집었다. 다음 질문은 "넣으면 무엇이 얼마나 달라지나"이고, 뼈대를
+    바꾸면 모든 종목의 행이 달라지므로 재고 나서 바꾼다.
+
+    4분기 채움까지 똑같이 흉내 내야 실제 수와 같아진다 — 여기서는
+    앞선 세 분기가 다 있으므로 연말 2025-12-31 이 채워져야 한다.
+    """
+    원분기, 원연간 = sf._quarterly_series, sf._annual_series
+    첫 = sf._BANK_REVENUE_CANDIDATES[0]
+
+    def 가짜분기(facts, concept, report=None, unit="USD"):
+        if concept != 첫:
+            return {}
+        return {"2025-03-31": 1.0, "2025-06-30": 2.0, "2025-09-30": 3.0}
+
+    def 가짜연간(facts, concept, report=None, unit="USD"):
+        return {"2025-12-31": 10.0} if concept == 첫 else {}
+
+    sf._quarterly_series, sf._annual_series = 가짜분기, 가짜연간
+    try:
+        # 지금 뼈대에는 1분기 하나만 있다 → 나머지 셋이 새로 생긴다
+        series = {"op_income": {"2025-03-31": 5.0}, "revenue": {}, "gaap_eps": {}}
+        out = sf._은행개념_세기(facts=None, series=series, start_date="2016-09-15")
+        assert out[첫]["채운뒤"] == 4, out          # 3개월 3개 + 채운 4분기 1개
+        assert out[첫]["새기간"] == 3, out          # 2025-03-31 은 이미 있음
+        assert out["_요약"] == {"지금뼈대": 1, "합집합_새기간": 3}, out
+        # 표본 시작 전의 기간은 세지 않는다 (측정 밖이라 늘어나도 의미 없음)
+        늦게 = sf._은행개념_세기(facts=None, series=series, start_date="2025-07-01")
+        assert 늦게[첫]["채운뒤"] == 2, 늦게        # 09-30 · 12-31 만
+        # series 를 안 주면 예전처럼 개수만 센다 (157차 동작 유지)
+        옛 = sf._은행개념_세기(facts=None)
+        assert 옛 == {첫: {"분기": 3, "연간": 1}}, 옛
+    finally:
+        sf._quarterly_series, sf._annual_series = 원분기, 원연간
 
 
 def test_fill_q4_non_calendar_fiscal_year():

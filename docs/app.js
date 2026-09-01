@@ -28,6 +28,26 @@ function num(v, digits = 1, sign = false) {
   return sign && v > 0 ? `+${s}` : s;
 }
 
+/** 채택된 신호가 얼마나 아슬아슬한지 한 줄로 (160차)
+ *
+ * 왜 필요한가: 2026-09-01 에 v3 들어 처음으로 가설 하나가 채택 기준을
+ * 넘었는데, 넘긴 폭이 0.1%p 였고 앞시기에는 우위가 없었다. "채택"이라는
+ * 글자만 띄우면 주인은 그것을 매수 근거로 읽는다(헌법 3·4원칙).
+ * 값은 만들지 않는다 — 판정 파일에 있는 수를 옮겨 적을 뿐이다.
+ */
+function 채택주의말(주의목록) {
+  if (!Array.isArray(주의목록) || !주의목록.length) return "";
+  return 주의목록.map((c) => {
+    const 말 = [];
+    if (c.여유 !== null && c.여유 !== undefined) 말.push(`여유 ${num(c.여유, 1, true)}%p`);
+    if (c.앞시기율 !== null && c.앞시기율 !== undefined &&
+        c.뒤시기율 !== null && c.뒤시기율 !== undefined)
+      말.push(`앞 ${num(c.앞시기율)}% → 뒤 ${num(c.뒤시기율)}%`);
+    (c.주의 || []).forEach((w) => 말.push(w));
+    return 말.length ? `${c.라벨}: ${말.join(" · ")}` : "";
+  }).filter(Boolean).join(" / ");
+}
+
 /** 꺾은선 차트 (SVG 직접 그리기 — 외부 라이브러리 없음) */
 function sparkline(points, color, height = 96) {
   const vals = points.map((p) => p[1]).filter((v) => v !== null);
@@ -171,7 +191,8 @@ function 화면_주도() {
       <div class="s">7일 안 정배열 완성</div></div>
     <div class="kpi"><div class="k">채택된 신호</div>
       <div class="v">${채택.length ? esc(채택.join(" · ")) : "없음"}</div>
-      <div class="s">${채택.length ? "" : "모든 표시는 관찰 — 매수 근거 아님"}</div></div>
+      <div class="s">${채택.length ? esc(채택주의말(a.채택주의))
+        : "모든 표시는 관찰 — 매수 근거 아님"}</div></div>
   </div>`;
 
   html += `<h2>확인 신호<span class="n">늦지만 강함</span></h2>
@@ -464,7 +485,19 @@ function 화면_검증() {
   let html = `<h2>등록된 가설 ${a.가설.length}개</h2>
   <div class="note">데이터를 보기 <b>전에</b> 문턱·표적을 적어 두고, 로봇이 매일
   자동으로 다시 판정합니다. 채택 기준은 신호의 95% 구간 하한이 기준선 상한보다
-  높을 때(완전 분리)이며, 표본 10건 미만은 "판정 대기"입니다.</div>`;
+  높을 때(완전 분리)이며, 표본 10건 미만은 "판정 대기"입니다.
+  <br><b>채택은 확정이 아닙니다</b> — 가설 ${a.가설.length}개를 <b>날마다</b>
+  다시 재므로, 아슬아슬하게 넘은 것은 다음 날 도로 미채택이 될 수 있습니다.
+  넘긴 폭을 함께 보세요.</div>`;
+  if (Array.isArray(a.채택주의) && a.채택주의.length) {
+    html += a.채택주의.map((c) => `<div class="note">
+      <b>${esc(c.라벨)} — 채택되었지만 아슬아슬합니다.</b>
+      기준선 상한을 <b>${num(c.여유, 1, true)}%p</b> 넘겼습니다
+      (신호 ${num(c.신호율)}% n=${c.신호n ?? "—"} · 기준선 ${num(c.기준선율)}%).
+      시간 분할: 앞시기 ${num(c.앞시기율)}% (n=${c.앞시기n ?? "—"}) →
+      뒤시기 ${num(c.뒤시기율)}% (n=${c.뒤시기n ?? "—"}).
+      ${(c.주의 || []).map((w) => esc(w)).join(" · ")}</div>`).join("");
+  }
   html += a.가설.map((h) => `<div class="card">
     <div class="t">${esc(h.라벨)} ${배지(h.판정)}</div>
     <div class="d">신호 ${h.신호율 === null ? "—" : num(h.신호율) + "%"}

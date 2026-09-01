@@ -3297,7 +3297,8 @@ def fetch_xbrl_approximation(
     # 둡니다. 숫자를 보고 나서 넣을지 정합니다 (106차 규칙 그대로 —
     # 짐작으로 뼈대를 건드리지 않는다).
     if report is not None:
-        report["은행개념_후보"] = _은행개념_세기(facts, report)
+        report["은행개념_후보"] = _은행개념_세기(
+            facts, report, series=series, start_date=start_date)
 
     return _quarters_from_series(ticker, series, start_date, report, annual_eps)
 
@@ -3312,21 +3313,56 @@ _BANK_REVENUE_CANDIDATES = [
 ]
 
 
-def _은행개념_세기(facts, report: dict | None = None) -> dict[str, dict[str, int]]:
+def _은행개념_세기(facts, report: dict | None = None,
+               series: dict | None = None,
+               start_date: str | None = None) -> dict[str, dict[str, int]]:
     """은행 매출 후보 개념이 분기·연간으로 몇 개나 있는지 셉니다 (157차).
 
     **값을 쓰지 않습니다** — 뼈대에 넣을지 정하기 전에 재기만 하는
     자리입니다. 조회가 실패하면 그 개념은 0으로 둡니다(창작 금지).
+
+    160차에 한 가지를 더 셉니다: **이 개념을 뼈대에 넣었다면 분기가
+    몇 개 늘었을까.**
+
+    왜 이것이 필요한가 (오늘 실측이 뒤집은 것):
+      156차는 "은행은 XBRL 매출 계열이 아예 없다"고 결론지었는데,
+      157차 계기의 첫 숫자가 그것을 뒤집었습니다 — 은행에도 계열이
+      풍부하고(TFC·RF 분기 55개), 다만 **이름이 달랐을** 뿐입니다.
+      그러면 다음 질문은 "넣으면 무엇이 얼마나 달라지나"입니다.
+      뼈대를 바꾸면 모든 종목의 행이 달라져 판정까지 흔들리므로
+      (106차), 바꾸기 전에 **늘어날 행 수를 먼저 셉니다.**
+
+    `series` 와 `start_date` 를 주면 지금 뼈대와 견주어 "새로 생길
+    기간"을 셉니다. 4분기 채움(연간 − 앞선 세 분기)까지 똑같이 흉내
+    내므로, 실제로 넣었을 때의 수와 같습니다.
     """
     out: dict[str, dict[str, int]] = {}
+    지금: set = set()
+    if series is not None and start_date is not None:
+        지금 = {d
+              for key in ("op_income", "revenue", "gaap_eps")
+              for d in (series.get(key) or {})
+              if d >= start_date}
+    합집합: set = set()
     for concept in _BANK_REVENUE_CANDIDATES:
         try:
-            분기 = len(_quarterly_series(facts, concept, None, unit="USD"))
-            연간 = len(_annual_series(facts, concept, None, unit="USD"))
+            분기 = _quarterly_series(facts, concept, None, unit="USD")
+            연간 = _annual_series(facts, concept, None, unit="USD")
         except Exception:
-            분기 = 연간 = 0
-        if 분기 or 연간:
-            out[concept] = {"분기": 분기, "연간": 연간}
+            분기, 연간 = {}, {}
+        if not (분기 or 연간):
+            continue
+        칸 = {"분기": len(분기), "연간": len(연간)}
+        if series is not None and start_date is not None:
+            채운뒤 = _fill_missing_q4(dict(분기), 연간)
+            기간 = {d for d in 채운뒤 if d >= start_date}
+            합집합 |= 기간
+            칸["채운뒤"] = len(기간)
+            칸["새기간"] = len(기간 - 지금)
+        out[concept] = 칸
+    if out and series is not None and start_date is not None:
+        out["_요약"] = {"지금뼈대": len(지금),
+                      "합집합_새기간": len(합집합 - 지금)}
     return out
 
 

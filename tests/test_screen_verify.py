@@ -339,6 +339,27 @@ def test_빈칸사유가_화면_점검_목록에_실린다():
     assert "주 잣대 빈칸 사유" in 이름들, 이름들
 
 
+def test_채택_정직화가_화면에서_빠지면_잡는다():
+    """160차 — 채택이 생겼는데 아슬아슬한 정도가 화면에 없으면 ⛔.
+
+    2026-09-01 에 H9 가 처음 채택됐다. 넘긴 폭 0.1%p · 앞시기 우위 없음 ·
+    전체 표본으로는 미채택 — 헌법 4원칙이 경고하는 모양 그대로다.
+    "채택"이라는 글자만 뜨면 매수 근거로 읽힌다.
+    """
+    if not _있나():
+        return
+    이름들 = [r["검사"] for r in sv.화면과_데이터를_맞댄다()]
+    assert "채택 정직화" in 이름들, 이름들
+    이상 = _깨고_보기(lambda a: a.pop("채택주의", None))
+    import json as _json
+    import os as _os
+    with open(_os.path.join(ROOT, "data", "measure", "verdict.json"),
+              encoding="utf-8") as f:
+        v = _json.load(f)
+    if [h for h in v.get("가설", {}).values() if h.get("판정") == "채택"]:
+        assert any("채택 정직화" in r["검사"] for r in 이상), 이상
+
+
 def test_한_칸도_못_모은_종목을_보고한다():
     """159차 — 유니버스에 이름만 있고 값이 없는 종목을 매일 드러낸다.
 

@@ -291,6 +291,13 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         verdict["가설"].update(judge.judge_completion_combo(
             completions, sector_model.H29_START_DAY, sector_model.H18_GAP_MIN,
         ))
+        # H30 (160차 등록) — 무너진 섹터가 다음 60일에 시장을 이기는가.
+        # 주인 질문("AI 하락 중인데 비중을 옮겨야 하나")에서 나온 탐색을
+        # 사전 등록한 것이라, 등록일 뒤 **새 시점만** 판정한다.
+        verdict["가설"].update(judge.judge_sector_momentum(
+            sector_model.sector_momentum_events(ds),
+            sector_model.H30_START_DAY, sector_model.H30_WEAK_PP,
+        ))
         # H19·H20·H21 (44차 등록) — 주도섹터 판정·전환·분기점.
         # 45차 확정 분류(config.GROUPS)로 매일 다시 셉니다. 표본이 국면
         # 단위라 오래 "판정 불가"로 남을 것이며, 그것을 그대로 적습니다.

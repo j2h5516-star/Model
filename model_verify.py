@@ -40,6 +40,7 @@ def expected_hypotheses() -> list[str]:
     names.append(judge.H18_NAME)
     names.append(judge.H18B_NAME)
     names.append(judge.H29_NAME)   # 152차 등록
+    names.append(judge.H30_NAME)   # 160차 등록
     names += [judge.H19_NAME, judge.H20_NAME, judge.H21_NAME, judge.H19B_NAME]
     names += [name for name, _level in judge.H22_LEVELS]
     names.append(judge.H23_NAME)

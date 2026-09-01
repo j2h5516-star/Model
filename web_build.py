@@ -208,6 +208,10 @@ def build_payload(ds: dict, verdict: dict | None, log: dict | None) -> dict:
         # 서로 다른 말을 하는 것처럼 보이던 것을 설명하기 위한 사실.
         "잣대차이": app.gauge_gap_rows(ds),
         "가설": hypothesis_rows(verdict),
+        # 160차 — 채택이 생기면 **얼마나 아슬아슬한지**를 함께 싣습니다.
+        #   판정 파일에 이미 있는 수를 옮겨 적을 뿐, 만들지 않습니다.
+        #   "채택"이라는 글자만 띄우면 매수 근거로 읽힙니다(헌법 3·4원칙).
+        "채택주의": app.adoption_caveats(verdict),
         "건강": (log or {}).get("건강검진"),
         "실측": {
             "완성이격도30_1년": 46.6, "완성기준선_1년": 27.5,

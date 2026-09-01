@@ -769,6 +769,67 @@ def test_H27_H28_이_시계와_등록부에_있다():
     assert judge.H27_NAME in expected and judge.H28_NAME in expected
 
 
+# ---------------------------------------------------------------------------
+# H30 (160차 등록) — 무너진 섹터가 다음 60일에 시장을 이기는가
+# ---------------------------------------------------------------------------
+
+def _h30_event(day, sector, 과거, 이김):
+    return {"day": day, "섹터": sector, "종목수": 8,
+            "과거60": 과거, "excess": 1.0 if 이김 else -1.0, "이김": 이김}
+
+
+def test_H30은_등록일_뒤_시점만_판정한다():
+    """탐색 표를 보고 문턱(−15%p)을 골랐으므로 옛 시점은 판정에 못 쓴다
+    (헌법 5원칙). 옛 시점은 '탐색표본(참고)'로만 붙는다."""
+    옛 = [_h30_event("2026-01-15", f"S{i}", -20.0, True) for i in range(12)]
+    새 = [_h30_event("2026-12-15", f"S{i}", -20.0, True) for i in range(12)]
+    out = judge.judge_sector_momentum(옛 + 새, "2026-09-01", -15.0)[judge.H30_NAME]
+    assert out["신규(판정)"]["신호"]["n"] == 12, out
+    assert out["탐색표본(참고)"]["신호"]["n"] == 12, out
+    assert out["등록일"] == "2026-09-01"
+
+
+def test_H30은_시점이_적으면_판정하지_않는다():
+    """한 시점에 섹터 17개가 한꺼번에 들어오므로 n 만 보면 표본이 많아
+    보인다. 실제로는 **같은 장세 하나**다 — 등록문대로 시점 4개 미만은
+    '판정 불가'."""
+    한시점 = [_h30_event("2026-12-15", f"S{i}", -20.0, True) for i in range(20)]
+    out = judge.judge_sector_momentum(한시점, "2026-09-01", -15.0)[judge.H30_NAME]
+    assert out["신규(판정)"]["신호"]["시점수"] == 1, out
+    assert out["판정"] == "판정 불가", out
+    # 네 시점으로 흩어 놓으면 판정에 들어간다 (문턱이 실제로 작동하는지)
+    넉시점 = []
+    for k, d in enumerate(["2026-10-01", "2026-11-01", "2026-12-01", "2027-01-04"]):
+        넉시점 += [_h30_event(d, f"S{i}", -20.0, True) for i in range(5)]
+    out2 = judge.judge_sector_momentum(넉시점, "2026-09-01", -15.0)[judge.H30_NAME]
+    assert out2["신규(판정)"]["신호"]["시점수"] == 4, out2
+    assert out2["판정"] != "판정 불가", out2
+
+
+def test_H30은_문턱_위의_섹터를_신호로_세지_않는다():
+    """신호는 **무너진** 섹터만이다. 문턱 위 섹터가 섞이면 기준선과
+    같아져 아무 말도 못 하게 된다."""
+    ev = []
+    for d in ["2026-10-01", "2026-11-01", "2026-12-01", "2027-01-04"]:
+        ev += [_h30_event(d, "약함", -20.0, True)] * 3
+        ev += [_h30_event(d, "강함", +30.0, False)] * 3
+    out = judge.judge_sector_momentum(ev, "2026-09-01", -15.0)[judge.H30_NAME]
+    assert out["신규(판정)"]["신호"]["n"] == 12, out
+    assert out["신규(판정)"]["신호"]["rate"] == 100.0, out
+    assert out["신규(판정)"]["기준선"]["n"] == 24, out
+    assert out["신규(판정)"]["기준선"]["rate"] == 50.0, out
+
+
+def test_H30이_가설_시계와_점검_목록에_들어있다():
+    """등록만 하고 배선을 잊으면 판정 파일에 영영 안 나온다(150차-C)."""
+    import model_verify as mv
+    assert judge.H30_NAME in judge.hypothesis_clock(), judge.hypothesis_clock().keys()
+    assert judge.H30_NAME in mv.expected_hypotheses()
+    import inspect
+    import collect_job as cj
+    assert "judge_sector_momentum" in inspect.getsource(cj.run), "로봇 배선 없음"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
