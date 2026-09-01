@@ -329,6 +329,64 @@ function 화면_장세() {
     html += `<div class="honest">판단 불가(이력 부족) 섹터 ${안됨.length}개:
       ${esc(안됨.map((r) => r.섹터).join(" · "))}</div>`;
   }
+  html += 성장속도판(a.성장속도);
+  return html;
+}
+
+/* ── 실적 성장 속도표 (162차) ─────────────────────────────
+ * 주인 지시: "저런 표를 앞으로의 기준으로 삼아."
+ * CRDO 사건(161차)에서 배운 것 — "델타 상승(TTM 신고점)"은 계속 깨지는데
+ * **속도가 꺾인** 회사를 첫 돌파 자는 구별하지 못했습니다. 그래서 종목마다
+ * 이번 TTM 증가율과 직전 증가율을 나란히 두고 가속/감속을 **사실로만**
+ * 적습니다. 판정·점수가 아니고, 과거 실측도 아직 없습니다(H31 후보).
+ */
+function 성장속도판(성장) {
+  if (!성장) return "";
+  const 묶음별 = 성장.묶음별 || [];
+  const 종목들 = 성장.종목들 || [];
+  let html = `<h2>실적 성장 속도<span class="n">묶음별 가속 비율</span></h2>
+  <div class="note">이익(TTM)이 <b>한 분기 전보다 더 빨리</b> 늘고 있으면 가속,
+  더 느리게 늘거나 줄면 감속입니다. "어느 묶음의 델타가 지금 <b>늘어나는
+  중</b>인가"에 답하는 표입니다.</div>`;
+  const 비율있는 = 묶음별.filter((g) => g.가속비율 !== null && g.가속비율 !== undefined);
+  if (!종목들.length) {
+    html += '<div class="empty">아직 성장 속도를 잴 수 있는 종목이 없습니다.</div>';
+    return html;
+  }
+  html += 비율있는.map((g) => `<div class="bar">
+    <div class="nm">${esc(g.묶음)}</div>
+    <div class="track"><div class="fill" style="width:${Math.max(2, g.가속비율)}%"></div></div>
+    <div class="vl">${num(g.가속비율, 0)}%</div></div>`).join("");
+  const 작은 = 묶음별.filter((g) => g.가속비율 === null || g.가속비율 === undefined);
+  if (작은.length) {
+    html += `<div class="honest">종목 5개 미만이라 비율을 적지 않은 묶음 ${작은.length}개
+      (가속/감속 수만): ${esc(작은.map((g) =>
+        `${g.묶음} ${g.가속}/${g.감속}`).join(" · "))}</div>`;
+  }
+  const 가속 = 종목들.filter((r) => r.가속 === true);
+  const 감속 = 종목들.filter((r) => r.가속 === false);
+  const 불가 = 종목들.filter((r) => r.가속 !== true && r.가속 !== false);
+  const 줄 = (r) => `<tr>
+    <td><a class="t" href="#/t/${esc(r.종목)}">${esc(r.종목)}</a>
+      <div class="d">${esc(r.묶음)}${r.신고점 === true ? " · 신고점" : ""}</div></td>
+    <td class="${r.TTM증가 > 0 ? "up" : r.TTM증가 < 0 ? "down" : ""}">${
+      r.TTM증가 === null ? "—" : num(r.TTM증가, 0, true) + "%"}</td>
+    <td>${r.직전TTM증가 === null ? "—" : num(r.직전TTM증가, 0, true) + "%"}</td>
+    <td>${r.매출QoQ === null ? "—" : num(r.매출QoQ, 0, true) + "%"}</td></tr>`;
+  const 표 = (rows) => `<table class="mini"><tr><th>종목</th><th>TTM증가</th>
+    <th>직전</th><th>매출QoQ</th></tr>${rows.map(줄).join("")}</table>`;
+  html += `<details><summary>가속 종목 ${가속.length}개 보기 (TTM 증가 큰 순)</summary>
+    <div class="body">${가속.length ? 표(가속) : '<div class="empty">없습니다.</div>'}</div></details>
+  <details><summary>감속 종목 ${감속.length}개 보기</summary>
+    <div class="body">${감속.length ? 표(감속) : '<div class="empty">없습니다.</div>'}</div></details>`;
+  if (불가.length) {
+    html += `<details><summary>가릴 수 없는 종목 ${불가.length}개 (직전 TTM 이 0 이하 등)</summary>
+      <div class="body">${표(불가)}</div></details>`;
+  }
+  html += `<div class="honest"><b>${esc(성장.정직화 || "")}</b><br>
+    잣대: ${esc(성장.기준 || "")}. TTM증가는 이번 TTM 이 한 분기 전 TTM 보다 몇 %
+    늘었는지, 직전은 그 한 분기 전의 같은 값입니다. 직전 TTM 이 0 이하면 비율이
+    뜻을 잃어 "—"로 둡니다(없는 값을 만들지 않음).</div>`;
   return html;
 }
 
@@ -590,6 +648,20 @@ async function 화면_상세(sym) {
       이 그래프는 <b>분기 대 분기</b>를 봅니다. 아래 실적 이력의 TTM 은
       <b>네 분기의 합</b>이라, 한 분기가 빠지면 델타는 나오는데 TTM 만
       "—"가 됩니다 — 둘이 다른 것을 재기 때문이지 고장이 아닙니다.</div>`;
+  }
+
+  // 162차 — 이 종목의 성장 속도 한 줄 (장세 화면의 성장 속도표와 같은 값).
+  //   표에 없는 종목(연속 6분기 미만·발표가 낡음)은 그 사실을 적습니다.
+  const 성장줄 = ((APP.성장속도 || {}).종목들 || []).find((r) => r.종목 === d.종목);
+  if (성장줄) {
+    const 말 = 성장줄.가속 === true ? '<b class="up">가속</b>'
+      : 성장줄.가속 === false ? '<b class="down">감속</b>' : "가릴 수 없음";
+    html += `<div class="honest"><b>성장 속도</b> (${esc(성장줄.잣대)} · 발표 ${
+      esc(성장줄.최근발표)}): TTM 증가 <b>${num(성장줄.TTM증가, 1, true)}%</b>
+      (직전 ${num(성장줄.직전TTM증가, 1, true)}%) → ${말} · 매출 QoQ ${
+      num(성장줄.매출QoQ, 1, true)}% (직전 ${num(성장줄.직전매출QoQ, 1, true)}%) ·
+      발표일까지 60거래일 SPY 대비 ${num(성장줄.상대60, 1, true)}%p.
+      판정이 아니라 사실입니다 — 장세 화면의 성장 속도표와 같은 값.</div>`;
   }
 
   html += `<h2>정배열 완성 이력</h2>`;

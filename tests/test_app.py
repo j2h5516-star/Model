@@ -998,6 +998,125 @@ def test_조합신호판은_오래된_델타를_판단하지_않는다():
     assert app.combo_now_rows(ds) == []
 
 
+# ---------------------------------------------------------------------------
+# 성장 속도표 (162차) — "저런 표를 앞으로의 기준으로 삼아"
+# ---------------------------------------------------------------------------
+def _성장_eps행(values, start_year=2024):
+    """분기마다 ~91일 간격으로 발표한 조정 EPS 행. 매출은 조금씩 다르게
+    (같은 값이 4번 나오면 자리채움으로 보고 없음 처리되는 검사가 있음)."""
+    rows = []
+    for i, v in enumerate(values):
+        y, m = start_year + i // 4, 1 + (i % 4) * 3
+        rev = 1e9 + i * 3e7
+        rows.append({"filing_date": f"{y}-{m:02d}-15",
+                     "announced_date": f"{y}-{m + 1:02d}-15",
+                     "period_label": f"Q{i}", "revenue": rev, "op_income": rev * 0.1,
+                     "adj_eps": v, "adjusted_ebitda": None,
+                     "gaap_eps": round(v * 0.9, 4), "gross_margin_pct": 50.0,
+                     "gaap_eps_xbrl": None, "revenue_xbrl": None,
+                     "gross_margin_pct_xbrl": None})
+    return rows
+
+
+def _성장_ds(eps: dict, 마지막날="2026-01-02"):
+    """dataset.build 를 **실제로 거친** 미니 데이터 — 정제기가 행을 지우면
+    성장표도 그 뒤를 봐야 하기 때문입니다."""
+    import dataset
+    from datetime import date, timedelta
+    d, 날들, 종가 = date(2023, 1, 6), [], []
+    while d <= date.fromisoformat(마지막날):
+        날들.append(d.isoformat())
+        종가.append(100.0 + len(날들))
+        d += timedelta(days=7)
+    snap = {"benchmark": "SPY", "tickers": ["SPY"] + list(eps),
+            "eps": {"SPY": [], **eps},
+            "prices": {"SPY": {"dates": 날들, "close": 종가}}}
+    for t in eps:
+        snap["prices"][t] = {"dates": 날들, "close": [c * 1.2 for c in 종가]}
+    return dataset.build(snap)
+
+
+def test_pct_change_는_전값이_0_이하면_없음():
+    assert app._pct_change(4.8, 4.2) == 14.3
+    assert app._pct_change(3.0, 4.0) == -25.0
+    assert app._pct_change(1.0, 0.0) is None, "0 으로 나눈 비율을 만들었습니다"
+    assert app._pct_change(1.0, -2.0) is None, "음수에서 온 비율은 뜻이 없습니다"
+    assert app._pct_change(None, 4.0) is None and app._pct_change(4.0, None) is None
+
+
+def test_성장행은_가속과_감속을_TTM_증가율로_가른다():
+    """가속 = 이번 TTM 증가율 > 직전 TTM 증가율. 값이 올라도(둘 다 TTM
+    신고점) 속도가 꺾이면 감속이다 — CRDO 사건(161차)의 교훈."""
+    ds = _성장_ds({"가속": _성장_eps행([1, 1, 1, 1, 1, 1, 1.2, 1.6]),
+                  "감속": _성장_eps행([1, 1, 1, 1, 1, 1, 1.6, 1.2])})
+    가 = app.growth_row(ds, "가속")
+    # TTM 4.0 → 4.2 → 4.8 : 직전 +5.0% · 이번 +14.3%
+    assert 가["TTM"] == 4.8 and 가["직전TTM증가"] == 5.0 and 가["TTM증가"] == 14.3, 가
+    assert 가["가속"] is True and 가["신고점"] is True, 가
+    assert 가["잣대"] == "adj_eps" and 가["최근발표"] == "2025-11-15", 가
+    assert 가["분기QoQ"] == 33.3 and 가["직전분기QoQ"] == 20.0, 가
+    감 = app.growth_row(ds, "감속")
+    # TTM 4.0 → 4.6 → 4.8 : 직전 +15.0% · 이번 +4.3% → 값은 신고점인데 감속
+    assert 감["신고점"] is True and 감["가속"] is False, 감
+    assert 감["TTM증가"] == 4.3 and 감["직전TTM증가"] == 15.0, 감
+
+
+def test_성장행은_직전_TTM_이_0_이하면_가속을_가리지_않는다():
+    """없는 값을 만들지 않습니다 — 적자에서 흑자로 돌아선 첫 분기의
+    '증가율'은 뜻이 없어 None 이고 가속도 None(판단불가)입니다."""
+    ds = _성장_ds({"음수": _성장_eps행([1, 1, -2, -2, -2, -2, 1, 2])})
+    r = app.growth_row(ds, "음수")
+    assert r["TTM"] == -1 and r["TTM증가"] is None and r["가속"] is None, r
+    assert r["직전분기QoQ"] is None and r["분기QoQ"] == 100.0, r
+
+
+def test_성장행은_마지막_연속_구간만_쓴다():
+    """끊긴 이력을 이어붙이면 한 푼도 안 늘었는데 가속이 나옵니다(사고 7).
+    마지막 연속 구간이 6분기 미만이면 줄을 만들지 않습니다."""
+    앞 = _성장_eps행([1, 1, 1, 1, 1, 1, 1.2, 1.6], start_year=2021)   # 2021~2022
+    뒤 = _성장_eps행([2, 2.5, 3], start_year=2025)                     # 2년 뒤 3분기
+    ds = _성장_ds({"끊김": 앞 + 뒤})
+    assert app.growth_row(ds, "끊김") is None, "끊긴 구간을 이어붙여 잤습니다"
+    # 잣대 자체가 없으면(8분기 미만) 당연히 없음
+    ds2 = _성장_ds({"짧음": _성장_eps행([1, 1, 1, 1, 1.2, 1.6, 1.7])})
+    assert app.growth_row(ds2, "짧음") is None
+
+
+def test_성장표는_낡은_발표를_빼고_가속_먼저_정렬한다():
+    """마지막 발표가 기준일(주가 마지막 날)에서 140일 넘게 오래면 뺍니다 —
+    실측으로 UTHR 2022 · PFE 2023 · ZBH 2022 가 '지금의 감속'으로 섞여
+    들어왔습니다. 차례는 가속 → 판단불가 → 감속, 그 안에서 TTM증가 큰 순."""
+    ds = _성장_ds({
+        "가속": _성장_eps행([1, 1, 1, 1, 1, 1, 1.2, 1.6]),
+        "더가속": _성장_eps행([1, 1, 1, 1, 1, 1, 1.5, 2.5]),
+        "감속": _성장_eps행([1, 1, 1, 1, 1, 1, 1.6, 1.2]),
+        "음수": _성장_eps행([1, 1, -2, -2, -2, -2, 1, 2]),
+        "낡음": _성장_eps행([1, 1, 1, 1, 1, 1, 1.2, 1.6], start_year=2022),
+    })
+    표 = app.growth_table_rows(ds)
+    assert [r["종목"] for r in 표] == ["더가속", "가속", "음수", "감속"], [r["종목"] for r in 표]
+    assert app.growth_row(ds, "낡음") is not None, "낡음은 줄은 있되 표에서만 빠져야 합니다"
+    # 기준일을 직접 주면 그 날짜로 신선도를 잽니다 — 2024-01 기준이면 낡음(2023-11)도 신선
+    assert "낡음" in [r["종목"] for r in app.growth_table_rows(ds, 기준일="2024-01-15")]
+    # 묶음 필터 — 시험 종목은 전부 미분류
+    assert app.growth_table_rows(ds, 묶음="없는묶음") == []
+    assert len(app.growth_table_rows(ds, 묶음="미분류")) == 4
+
+
+def test_성장묶음_비율은_5개_미만이면_적지_않는다():
+    """한 종목이 20%p 를 움직이는 표본으로 비율을 말하지 않습니다."""
+    작은 = _성장_ds({"가속": _성장_eps행([1, 1, 1, 1, 1, 1, 1.2, 1.6]),
+                    "감속": _성장_eps행([1, 1, 1, 1, 1, 1, 1.6, 1.2]),
+                    "음수": _성장_eps행([1, 1, -2, -2, -2, -2, 1, 2])})
+    [g] = app.growth_sector_rows(작은)
+    assert g == {"묶음": "미분류", "가속": 1, "감속": 1, "판단불가": 1, "가속비율": None}, g
+
+    큰 = _성장_ds({f"가속{i}": _성장_eps행([1, 1, 1, 1, 1, 1, 1.2, 1.6 + i / 10])
+                  for i in range(5)} | {"감속": _성장_eps행([1, 1, 1, 1, 1, 1, 1.6, 1.2])})
+    [g] = app.growth_sector_rows(큰)
+    assert g["가속"] == 5 and g["감속"] == 1 and g["가속비율"] == 83.3, g
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

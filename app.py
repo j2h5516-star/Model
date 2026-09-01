@@ -1138,6 +1138,136 @@ def combo_now_rows(ds: dict) -> list[dict]:
     return rows
 
 
+# ---------------------------------------------------------------------------
+# 성장 속도표 (162차, 주인 지시 "저런 표를 앞으로의 기준으로 삼아")
+# ---------------------------------------------------------------------------
+# CRDO 사건(161차)에서 배운 것: "TTM 신고점(델타 상승)"은 계속 깨지는데
+# **속도가 꺾인** 회사를 이 모델의 자(첫 돌파)는 구별하지 못한다. 그래서
+# 종목마다 TTM 증가율과 그 직전 증가율을 나란히 놓고 "가속/감속"을
+# 사실로만 적는다. 판정도 점수도 아니다 — 가설로 쓰려면 H번호로 사전
+# 등록하고 새 데이터로 재야 한다(헌법 2·5조).
+GROWTH_MIN_QUARTERS = 6      # TTM 두 개의 증가율을 견주려면 연속 6분기가 필요
+
+
+def _pct_change(now: float | None, before: float | None) -> float | None:
+    """전 값 대비 % 변화. 전 값이 0 이하이면 비율이 뜻을 잃으므로 없음."""
+    if now is None or before is None or before <= 0:
+        return None
+    return round((now / before - 1.0) * 100.0, 1)
+
+
+def growth_row(ds: dict, ticker: str) -> dict | None:
+    """한 종목의 성장 속도 한 줄. 잣대가 없거나 연속 분기가 모자라면 None.
+
+    담는 것 — 전부 **마지막 발표 시점에 알 수 있는 값**입니다:
+      · 잣대        adj_eps / adj_ebitda / gaap_eps (사다리 규칙, 섞지 않음)
+      · 최근발표    마지막 발표일
+      · TTM · 신고점  마지막 TTM 과 그것이 수집 이력 내 신고점인가(델타)
+      · TTM증가     TTM 이 한 분기 전 TTM 보다 몇 % 늘었나
+      · 직전TTM증가  그 한 분기 전에는 몇 % 늘었었나
+      · 가속        TTM증가 > 직전TTM증가 (둘 다 있을 때만, 아니면 None)
+      · 분기QoQ · 직전분기QoQ  잣대 값 자체의 전분기비
+      · 매출QoQ · 직전매출QoQ  매출의 전분기비 (없으면 None)
+      · 상대60     마지막 발표일까지 60거래일 SPY 대비 초과수익(%p)
+    마지막 **연속 구간**만 씁니다 — 끊긴 분기를 이어붙이면 한 푼도 안
+    늘었는데 가속이 나옵니다(사고 7).
+    """
+    rows = ds["quarters"].get(ticker) or []
+    yardstick = me.yardstick_of(rows)
+    if not yardstick:
+        return None
+    runs = me.eps_runs(rows, yardstick)
+    if not runs:
+        return None
+    run = runs[-1]
+    if len(run) < GROWTH_MIN_QUARTERS:
+        return None
+    values = [r[yardstick] for r in run]
+    ttm = me.ttm_series(values)
+    states = me.earnings_states(rows, yardstick)
+    last = run[-1]
+    new_high = None
+    for s in states:
+        if s["announced"] == last.get("announced_date"):
+            new_high = s["new_high"] if s.get("decidable") else None
+    revenue = [r.get("revenue") for r in run]
+    prices, spy = ds["prices"].get(ticker), ds["prices"].get(ds["benchmark"])
+    상대60 = None
+    if prices and spy and last.get("announced_date"):
+        상대60 = me.backward_excess(prices, spy, last["announced_date"])
+    증가, 직전증가 = _pct_change(ttm[-1], ttm[-2]), _pct_change(ttm[-2], ttm[-3])
+    return {
+        "종목": ticker,
+        "묶음": cfg.GROUPS.get(ticker, "미분류"),
+        "잣대": yardstick,
+        "최근발표": last.get("announced_date"),
+        "TTM": round(ttm[-1], 2),
+        "신고점": new_high,
+        "TTM증가": 증가,
+        "직전TTM증가": 직전증가,
+        "가속": (증가 > 직전증가) if (증가 is not None and 직전증가 is not None) else None,
+        "분기QoQ": _pct_change(values[-1], values[-2]),
+        "직전분기QoQ": _pct_change(values[-2], values[-3]),
+        "매출QoQ": _pct_change(revenue[-1], revenue[-2]),
+        "직전매출QoQ": _pct_change(revenue[-2], revenue[-3]),
+        "상대60": None if 상대60 is None else round(상대60, 1),
+    }
+
+
+def growth_table_rows(ds: dict, 묶음: str | None = None,
+                      기준일: str | None = None) -> list[dict]:
+    """성장 속도표 — 가속인 종목 먼저, 그 안에서 TTM증가 큰 순.
+
+    묶음을 주면 그 묶음만. 잴 수 없는 종목은 빠집니다(없는 값을 만들지
+    않음). 마지막 발표가 기준일(주가 마지막 날)보다 140일 넘게 오래된
+    종목도 뺍니다 — 게이지·조합 장치와 같은 신선도 기준(새 문턱 아님).
+    실측: 그대로 두면 UTHR 2022 · PFE 2023 · ZBH 2022 같은 낡은 줄이
+    "지금의 감속"으로 섞여 들어갔습니다. 화면은 이 표가 **판정이 아님**을
+    함께 적어야 합니다.
+    """
+    if 기준일 is None:
+        기준일 = (ds["prices"].get(ds["benchmark"]) or {}).get("dates", [None])[-1]
+    out = []
+    for ticker in ds["tickers"]:
+        if 묶음 and cfg.GROUPS.get(ticker, "미분류") != 묶음:
+            continue
+        row = growth_row(ds, ticker)
+        if not row:
+            continue
+        if 기준일 and row["최근발표"] and (
+                date.fromisoformat(기준일) - date.fromisoformat(row["최근발표"])
+        ).days > sm.DELTA_FRESH_DAYS:
+            continue
+        out.append(row)
+    순서 = {True: 0, None: 1, False: 2}
+    out.sort(key=lambda r: (순서[r["가속"]],
+                            -(r["TTM증가"] if r["TTM증가"] is not None else -1e9)))
+    return out
+
+
+def growth_sector_rows(ds: dict) -> list[dict]:
+    """묶음별로 가속·감속·판단불가 종목 수와 가속 비율.
+
+    "델타가 늘어나는 섹터가 있는가"에 답하는 표. 비율의 분모는 가속/감속을
+    **가릴 수 있었던** 종목만(판단불가 제외). 종목 5개 미만 묶음은 비율을
+    적지 않습니다 — 표본이 작아 한 종목이 20%p 를 움직입니다.
+    """
+    묶음별: dict[str, dict] = {}
+    for row in growth_table_rows(ds):
+        g = 묶음별.setdefault(row["묶음"], {"묶음": row["묶음"], "가속": 0,
+                                           "감속": 0, "판단불가": 0})
+        g["가속" if row["가속"] is True else
+          "감속" if row["가속"] is False else "판단불가"] += 1
+    out = []
+    for g in 묶음별.values():
+        n = g["가속"] + g["감속"]
+        g["가속비율"] = round(g["가속"] / n * 100.0, 1) if n >= 5 else None
+        out.append(g)
+    out.sort(key=lambda g: (-(g["가속비율"] if g["가속비율"] is not None else -1),
+                            g["묶음"]))
+    return out
+
+
 def recent_completion_rows(완성사건: list[dict], 기준일: str,
                            days: int = 91) -> list[dict]:
     """최근 days 일 안의 정배열 완성 종목 (127차 — 주도 후보 관찰판).

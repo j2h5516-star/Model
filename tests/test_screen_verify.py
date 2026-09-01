@@ -397,9 +397,9 @@ def test_같은_파일이면_재료를_다시_짓지_않는다():
     import sector_model as sm
 
     가짜파일 = tempfile.mktemp(suffix=".json")
-    센다 = {"build": 0, "완성": 0, "잣대": 0, "조합": 0}
-    원본 = (dataset.build, sm.completion_events,
-           app.gauge_gap_rows, app.combo_now_rows, dataset.load_splits)
+    센다 = {"build": 0, "완성": 0, "잣대": 0, "조합": 0, "성장": 0}
+    원본 = (dataset.build, sm.completion_events, app.gauge_gap_rows,
+           app.combo_now_rows, dataset.load_splits, app.growth_table_rows)
     본디기억 = dict(sv._재료_기억)
     sv._재료_기억.clear()
     try:
@@ -415,10 +415,13 @@ def test_같은_파일이면_재료를_다시_짓지_않는다():
         sm.completion_events = lambda ds: 센다.__setitem__("완성", 센다["완성"] + 1) or []
         app.gauge_gap_rows = lambda ds: 센다.__setitem__("잣대", 센다["잣대"] + 1) or {}
         app.combo_now_rows = lambda ds: 센다.__setitem__("조합", 센다["조합"] + 1) or []
+        # 162차 — 성장 속도표도 무거운 조립에 들어갔다(ds["prices"] 를 읽는다)
+        app.growth_table_rows = lambda ds: 센다.__setitem__("성장", 센다["성장"] + 1) or []
 
         첫 = sv.재료(가짜파일)
-        assert 첫 is not None and set(첫) == {"ds", "완성", "잣대차이", "조합"}, 첫
-        assert 센다["완성"] == 1 and 센다["잣대"] == 1 and 센다["조합"] == 1, 센다
+        assert 첫 is not None and set(첫) == {"ds", "완성", "잣대차이", "조합", "성장"}, 첫
+        assert (센다["완성"] == 1 and 센다["잣대"] == 1 and 센다["조합"] == 1
+                and 센다["성장"] == 1), 센다
 
         둘 = sv.재료(가짜파일)
         assert 둘 is 첫, "같은 파일인데 다시 지었습니다"
@@ -436,7 +439,7 @@ def test_같은_파일이면_재료를_다시_짓지_않는다():
         assert 센다["완성"] == 2, 센다
     finally:
         (dataset.build, sm.completion_events, app.gauge_gap_rows,
-         app.combo_now_rows, dataset.load_splits) = 원본
+         app.combo_now_rows, dataset.load_splits, app.growth_table_rows) = 원본
         sv._재료_기억.clear()
         sv._재료_기억.update(본디기억)
         if os.path.exists(가짜파일):
@@ -450,6 +453,30 @@ def test_되풀이해도_점검_결과가_같다():
     첫 = sv.화면과_데이터를_맞댄다()
     둘 = sv.화면과_데이터를_맞댄다()
     assert 첫 == 둘, "같은 데이터로 두 번 쟀는데 답이 달랐습니다"
+
+
+def test_성장_속도표가_어긋나면_잡는다():
+    """(162차) 화면에 새 칸을 추가하면 점검에도 검사를 추가한다(150차-C 규칙).
+    줄 수가 같아도 **가속 종목이 갈리면** 어긋남이다."""
+    if not _있나():
+        return
+    이름들 = [r["검사"] for r in sv.화면과_데이터를_맞댄다()]
+    assert "성장 속도표" in 이름들, 이름들
+    # ① 칸이 통째로 없으면
+    이상 = _깨고_보기(lambda a: a.pop("성장속도", None))
+    assert any(r["검사"] == "성장 속도표" for r in 이상), 이상
+    # ② 줄 하나를 지우면
+    이상 = _깨고_보기(lambda a: a["성장속도"]["종목들"].pop(0))
+    assert any(r["검사"] == "성장 속도표" for r in 이상), 이상
+
+    # ③ 줄 수는 같은데 가속 표시를 뒤집으면
+    def 뒤집기(a):
+        for r in a["성장속도"]["종목들"]:
+            if r["가속"] is True:
+                r["가속"] = False
+                return
+    이상 = _깨고_보기(뒤집기)
+    assert any(r["검사"] == "성장 속도표" and "어긋남" in r["말"] for r in 이상), 이상
 
 
 if __name__ == "__main__":

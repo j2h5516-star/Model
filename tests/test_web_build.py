@@ -555,6 +555,42 @@ def test_웹앱_주소가_문서에_적혀_있다():
         "인수인계.md 에 웹앱 주소가 없습니다"
 
 
+def test_성장_속도표가_웹앱에_실리고_화면이_그린다():
+    """(162차, 주인 지시 "저런 표를 앞으로의 기준으로 삼아")
+
+    CRDO 사건에서 "델타 상승은 계속인데 속도가 꺾인" 것을 첫 돌파 자가
+    가리지 못했습니다. 성장 속도표를 웹앱에 상설로 싣습니다. 판정이
+    아니므로 **판정 아님·과거 실측 없음**이 자료와 화면 양쪽에 있어야
+    합니다(정직화). 값은 계기판과 같은 함수(app.growth_*)로 만듭니다.
+    """
+    import app
+    root = os.path.join(os.path.dirname(__file__), "..")
+    sys.path.insert(0, os.path.join(root, "tests"))
+    import test_app as ta
+
+    ds = ta._성장_ds({"가속": ta._성장_eps행([1, 1, 1, 1, 1, 1, 1.2, 1.6]),
+                     "감속": ta._성장_eps행([1, 1, 1, 1, 1, 1, 1.6, 1.2])})
+    payload = wb.build_payload(ds, None, {"ran_at": "시험"})
+    성장 = payload["성장속도"]
+    assert 성장["종목들"] == app.growth_table_rows(ds), "계기판과 다른 계산입니다"
+    assert 성장["묶음별"] == app.growth_sector_rows(ds)
+    assert [r["종목"] for r in 성장["종목들"]] == ["가속", "감속"]
+    assert "판정" in 성장["정직화"] and "재지 않았" in 성장["정직화"], 성장["정직화"]
+    assert "140일" in 성장["기준"] and "6분기" in 성장["기준"], 성장["기준"]
+    # 없는 값은 null 로 나가야 합니다 (JSON 으로 돌려도 None)
+    빈 = ta._성장_ds({"음수": ta._성장_eps행([1, 1, -2, -2, -2, -2, 1, 2])})
+    r = json.loads(json.dumps(wb.build_payload(빈, None, None)["성장속도"]))["종목들"][0]
+    assert r["TTM증가"] is None and r["가속"] is None, r
+
+    # 화면이 실제로 그리는가 — 값만 담고 안 그리면 주인은 못 봅니다
+    with open(os.path.join(root, "docs", "app.js"), encoding="utf-8") as f:
+        js = f.read()
+    assert "성장속도판(" in js and "a.성장속도" in js, "장세 화면이 성장 속도표를 그리지 않습니다"
+    assert "가속비율" in js and "직전TTM증가" in js, "묶음 비율 또는 직전 증가율을 안 그립니다"
+    assert "성장.정직화" in js, "화면이 정직화 문구를 옮겨 적지 않습니다"
+    assert "APP.성장속도" in js, "종목 상세 화면에 성장 속도 줄이 없습니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
