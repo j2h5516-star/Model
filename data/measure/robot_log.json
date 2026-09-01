@@ -1,73 +1,73 @@
 {
- "ran_at": "2026-08-31T13:45:24.258617+00:00",
+ "ran_at": "2026-09-01T12:32:51.482142+00:00",
  "tickers": 401,
  "수집계기": {
   "일꾼": 6,
   "코어": 4,
-  "벽시계_분": 201.1,
-  "일감합_분": 1204.5,
-  "겹침배수": 5.99,
-  "내려받기": 2,
-  "접속시도": 2,
-  "초당요청": 0.0,
-  "초당요청_내려받기만": 0.0,
+  "벽시계_분": 133.4,
+  "일감합_분": 796.1,
+  "겹침배수": 5.97,
+  "내려받기": 354,
+  "접속시도": 354,
+  "초당요청": 0.04,
+  "초당요청_내려받기만": 0.04,
   "음성기억": 0,
   "음성적중": 1
  },
- "summary": "조정 EPS 시계열 394종목 · 일봉 395종목(기준지수 포함) · 파싱 실패 원문 1680건 · 실적 캐시 없음: NVMI, ZI, CFLT, DFS, HOLX, X, HES · 주가 없음: ZI, CFLT, BK, DFS, HOLX, X, HES",
- "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 미채택 · H6_결합_H5bxH2b: 미채택 · H7_EBITDA_첫돌파: 미채택 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 미채택 · H10_논갭영업이익_저평가_첫신기록: 미채택 · H11_섹터정배열폭_60: 미채택 · H11b_섹터정배열폭_80: 미채택 · H22_신고점폭_5: 판정 불가 · H22b_신고점폭_20: 판정 불가 · H23_실적폭_중앙값_깊은게이지: 판정 불가 · H24_장세조건부_첫돌파: 판정 불가 · H25_런업_큰상회: 판정 불가 · H25b_런업단독: 판정 불가 · H27_가뭄끝_첫돌파: 판정 불가 · H28_안달린_첫돌파: 판정 불가 · H26_첫돌파_125일_새종목: 미채택 · H18_완성시_52주선이격도: 판정 불가 · H18b_완성이격도_1년: 판정 불가 · H29_완성_델타이격_결합: 판정 불가 · H19_주도섹터_판정: 판정 불가 · H20_주도섹터_전환: 미채택 · H21_주도섹터_분기점: 미채택 · H19b_주도섹터_완성후확인: 판정 불가",
- "consensus": "컨센서스: 확보 393종목 · 원장 추가 0건 · 실패 0종목",
+ "summary": "조정 EPS 시계열 395종목 · 일봉 395종목(기준지수 포함) · 파싱 실패 원문 1689건 · 실적 캐시 없음: NVMI, CFLT, DFS, HOLX, X, HES · 주가 없음: ZI, CFLT, BK, DFS, HOLX, X, HES",
+ "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 미채택 · H6_결합_H5bxH2b: 미채택 · H7_EBITDA_첫돌파: 미채택 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 채택 · H10_논갭영업이익_저평가_첫신기록: 미채택 · H11_섹터정배열폭_60: 미채택 · H11b_섹터정배열폭_80: 미채택 · H22_신고점폭_5: 판정 불가 · H22b_신고점폭_20: 판정 불가 · H23_실적폭_중앙값_깊은게이지: 판정 불가 · H24_장세조건부_첫돌파: 판정 불가 · H25_런업_큰상회: 판정 불가 · H25b_런업단독: 판정 불가 · H27_가뭄끝_첫돌파: 판정 불가 · H28_안달린_첫돌파: 판정 불가 · H26_첫돌파_125일_새종목: 미채택 · H18_완성시_52주선이격도: 판정 불가 · H18b_완성이격도_1년: 판정 불가 · H29_완성_델타이격_결합: 판정 불가 · H19_주도섹터_판정: 판정 불가 · H20_주도섹터_전환: 미채택 · H21_주도섹터_분기점: 미채택 · H19b_주도섹터_완성후확인: 판정 불가",
+ "consensus": "컨센서스: 확보 393종목 · 원장 추가 21건 · 실패 0종목",
  "surprise": "서프라이즈: 확보 393종목 · 신규 0분기 · 실패 0종목",
- "vendor": "두 번째 자(야후) — 401종목 성공 · 0종목 실패 · 분기 2385개 · 발표기록 32509개 · 과거 소급 변경 0칸",
+ "vendor": "두 번째 자(야후) — 401종목 성공 · 0종목 실패 · 분기 2379개 · 발표기록 32504개 · 과거 소급 변경 48칸",
  "건강검진": {
   "설명": "수집물 전체 건강검진 (108차). **값을 바꾸지 않고 세기만 합니다.** 경보 문턱은 며칠치를 쌓아 정상 범위를 실측한 뒤 사전 등록합니다.",
   "채움률": {
-   "행": 15130,
+   "행": 15159,
    "revenue": {
-    "찬칸": 14697,
+    "찬칸": 14725,
     "비율": 97.1
    },
    "adj_eps": {
-    "찬칸": 8311,
-    "비율": 54.9
+    "찬칸": 8374,
+    "비율": 55.2
    },
    "adjusted_ebitda": {
-    "찬칸": 2416,
-    "비율": 16.0
+    "찬칸": 2468,
+    "비율": 16.3
    },
    "gaap_eps": {
-    "찬칸": 14460,
+    "찬칸": 14495,
     "비율": 95.6
    },
    "op_income": {
-    "찬칸": 12113,
+    "찬칸": 12142,
     "비율": 80.1
    },
    "gross_margin_pct": {
-    "찬칸": 7789,
-    "비율": 51.5
+    "찬칸": 7818,
+    "비율": 51.6
    },
    "revenue_xbrl": {
-    "찬칸": 12089,
-    "비율": 79.9
+    "찬칸": 12183,
+    "비율": 80.4
    },
    "gaap_eps_xbrl": {
-    "찬칸": 9678,
-    "비율": 64.0
+    "찬칸": 9753,
+    "비율": 64.3
    },
    "press_matched": {
-    "찬칸": 14887,
+    "찬칸": 14916,
     "비율": 98.4
    }
   },
   "이상값": {
    "revenue": {
-    "건수": 42,
+    "건수": 41,
     "모양별": {
-     "이력보다 1000배 이상 작음": 36,
+     "이력보다 1000배 이상 작음": 35,
      "이력보다 1000배 이상 큼": 6
     },
-    "종목수": 19,
+    "종목수": 18,
     "예시": [
      {
       "종목": "WDC",
@@ -154,14 +154,14 @@
    }
   },
   "어제 대비": {
-   "맞대본 분기": 15111,
-   "바뀐 칸": 85,
-   "사라진 분기": 10,
-   "새 분기": 18,
+   "맞대본 분기": 15056,
+   "바뀐 칸": 2,
+   "사라진 분기": 73,
+   "새 분기": 102,
    "많이 바뀐 종목": [
     {
-     "종목": "RH",
-     "칸": 85
+     "종목": "SMCI",
+     "칸": 2
     }
    ]
   }
@@ -171,7 +171,7 @@
    "ticker": "CRDO",
    "adj_eps_ok": 17,
    "merged_direct": 17,
-   "seconds": 13.3,
+   "seconds": 11.6,
    "cache_hits": 36,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -268,6 +268,9 @@
      "이미있음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -275,7 +278,7 @@
    "ticker": "CLS",
    "adj_eps_ok": 9,
    "merged_direct": 1,
-   "seconds": 11.2,
+   "seconds": 10.0,
    "cache_hits": 24,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -373,6 +376,9 @@
      "채움": 2
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -380,7 +386,7 @@
    "ticker": "MU",
    "adj_eps_ok": 34,
    "merged_direct": 30,
-   "seconds": 44.7,
+   "seconds": 35.5,
    "cache_hits": 114,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -473,6 +479,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -480,7 +489,7 @@
    "ticker": "SNDK",
    "adj_eps_ok": 7,
    "merged_direct": 7,
-   "seconds": 11.7,
+   "seconds": 8.5,
    "cache_hits": 14,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -576,6 +585,9 @@
      "이미있음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -583,7 +595,7 @@
    "ticker": "LITE",
    "adj_eps_ok": 34,
    "merged_direct": 11,
-   "seconds": 45.6,
+   "seconds": 45.8,
    "cache_hits": 79,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -678,6 +690,9 @@
      "채움": 7
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -685,7 +700,7 @@
    "ticker": "STRL",
    "adj_eps_ok": 11,
    "merged_direct": 8,
-   "seconds": 155.8,
+   "seconds": 82.4,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -786,6 +801,9 @@
      "채움": 3
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -793,7 +811,7 @@
    "ticker": "MXL",
    "adj_eps_ok": 28,
    "merged_direct": 27,
-   "seconds": 56.5,
+   "seconds": 49.8,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -895,6 +913,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -902,10 +923,10 @@
    "ticker": "COHR",
    "adj_eps_ok": 23,
    "merged_direct": 18,
-   "seconds": 122.5,
+   "seconds": 77.0,
    "cache_hits": 120,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -998,6 +1019,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1005,7 +1029,7 @@
    "ticker": "TTMI",
    "adj_eps_ok": 34,
    "merged_direct": 32,
-   "seconds": 41.9,
+   "seconds": 41.8,
    "cache_hits": 83,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1097,6 +1121,9 @@
      "채움": 13
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1104,7 +1131,7 @@
    "ticker": "ICHR",
    "adj_eps_ok": 35,
    "merged_direct": 33,
-   "seconds": 22.3,
+   "seconds": 41.6,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1196,6 +1223,9 @@
      "채움": 10
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1203,7 +1233,7 @@
    "ticker": "AMD",
    "adj_eps_ok": 34,
    "merged_direct": 38,
-   "seconds": 48.0,
+   "seconds": 71.9,
    "cache_hits": 118,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1317,6 +1347,14 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 0,
+     "연간": 13
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1324,7 +1362,7 @@
    "ticker": "PLTR",
    "adj_eps_ok": 22,
    "merged_direct": 24,
-   "seconds": 14.4,
+   "seconds": 26.7,
    "cache_hits": 45,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1420,6 +1458,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -1427,7 +1468,7 @@
    "ticker": "ZETA",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 29.4,
+   "seconds": 35.1,
    "cache_hits": 46,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1514,6 +1555,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -1521,7 +1565,7 @@
    "ticker": "INTC",
    "adj_eps_ok": 35,
    "merged_direct": 34,
-   "seconds": 66.5,
+   "seconds": 23.3,
    "cache_hits": 136,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1634,6 +1678,9 @@
      "이미있음": 3
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1641,7 +1688,7 @@
    "ticker": "ENPH",
    "adj_eps_ok": 36,
    "merged_direct": 36,
-   "seconds": 60.9,
+   "seconds": 26.1,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1734,6 +1781,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1741,7 +1791,7 @@
    "ticker": "SWKS",
    "adj_eps_ok": 36,
    "merged_direct": 34,
-   "seconds": 43.9,
+   "seconds": 36.5,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1831,6 +1881,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -1838,7 +1891,7 @@
    "ticker": "PYPL",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 104.8,
+   "seconds": 44.1,
    "cache_hits": 131,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1932,6 +1985,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -1939,7 +1995,7 @@
    "ticker": "QRVO",
    "adj_eps_ok": 26,
    "merged_direct": 24,
-   "seconds": 30.1,
+   "seconds": 27.3,
    "cache_hits": 77,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2031,6 +2087,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2038,7 +2097,7 @@
    "ticker": "APP",
    "adj_eps_ok": 0,
    "merged_direct": 3,
-   "seconds": 34.0,
+   "seconds": 26.0,
    "cache_hits": 58,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2126,6 +2185,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -2133,7 +2195,7 @@
    "ticker": "NVDA",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 29.0,
+   "seconds": 23.2,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2249,6 +2311,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -2256,7 +2321,7 @@
    "ticker": "ANET",
    "adj_eps_ok": 40,
    "merged_direct": 39,
-   "seconds": 19.0,
+   "seconds": 52.8,
    "cache_hits": 75,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2360,6 +2425,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -2367,7 +2435,7 @@
    "ticker": "FN",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 22.7,
+   "seconds": 31.0,
    "cache_hits": 67,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2465,6 +2533,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -2472,7 +2543,7 @@
    "ticker": "SMCI",
    "adj_eps_ok": 26,
    "merged_direct": 25,
-   "seconds": 38.4,
+   "seconds": 44.1,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2481,51 +2552,51 @@
    "first_error": "",
    "xbrl_calls": [
     "OperatingIncomeLoss(3개월): 받음 90 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 48 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
-    "OperatingIncomeLoss(12개월): 받음 42 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
+    "OperatingIncomeLoss(12개월): 받음 45 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
     "ShareBasedCompensation(3개월): 받음 775 · 이름버림 745 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationandexerciseofstockoptions', 'adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'adjustmentstoadditionalpaidincapitaltaxeffectfromsharebasedcompensation'] · 본단위 ['USD']",
     "AllocatedShareBasedCompensationExpense(3개월): 받음 168 · 이름버림 84 · 단위버림 0 · 모호 0 · 남음 45 · 본이름 ['allocatedsharebasedcompensationexpense', 'allocatedsharebasedcompensationexpensenetoftax'] · 본단위 ['USD']",
-    "ShareBasedCompensation(12개월): 받음 738 · 이름버림 696 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationandexerciseofstockoptions', 'adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'adjustmentstoadditionalpaidincapitaltaxeffectfromsharebasedcompensation'] · 본단위 ['USD']",
-    "AllocatedShareBasedCompensationExpense(12개월): 받음 84 · 이름버림 42 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['allocatedsharebasedcompensationexpense', 'allocatedsharebasedcompensationexpensenetoftax'] · 본단위 ['USD']",
+    "ShareBasedCompensation(12개월): 받음 770 · 이름버림 725 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationandexerciseofstockoptions', 'adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'adjustmentstoadditionalpaidincapitaltaxeffectfromsharebasedcompensation'] · 본단위 ['USD']",
+    "AllocatedShareBasedCompensationExpense(12개월): 받음 90 · 이름버림 45 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['allocatedsharebasedcompensationexpense', 'allocatedsharebasedcompensationexpensenetoftax'] · 본단위 ['USD']",
     "DepreciationDepletionAndAmortization(3개월): 받음 38 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 22 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
-    "DepreciationDepletionAndAmortization(12개월): 받음 42 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
+    "DepreciationDepletionAndAmortization(12개월): 받음 45 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
     "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 64 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 30 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
     "Revenues(3개월): 받음 14 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['revenues'] · 본단위 ['USD']",
-    "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 21 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 9 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
+    "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 10 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
     "Revenues(12개월): 받음 3 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 3 · 본이름 ['revenues'] · 본단위 ['USD']",
     "GrossProfit(3개월): 받음 162 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 58 · 본이름 ['grossprofit'] · 본단위 ['USD']",
-    "GrossProfit(12개월): 받음 42 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['grossprofit'] · 본단위 ['USD']",
+    "GrossProfit(12개월): 받음 45 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['grossprofit'] · 본단위 ['USD']",
     "EarningsPerShareDiluted(3개월): 받음 162 · 이름버림 0 · 단위버림 0 · 모호 8 · 남음 50 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']",
-    "EarningsPerShareDiluted(12개월): 받음 42 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 13 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
+    "EarningsPerShareDiluted(12개월): 받음 45 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 14 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
-   "xbrl_rejected": 1567,
+   "xbrl_rejected": 1599,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 39,
+    "분기목록(영업이익 기준)": 40,
     "revenue": 0,
     "gaap_eps": 0,
     "gross_profit": 0
    },
    "q4_채움": {
     "op_income": {
-     "연간수": 16,
+     "연간수": 17,
      "분기수": 48,
      "앞선세분기부족": 1,
      "못채운예": [
       "2010-06-30"
      ],
-     "채움": 15
+     "채움": 16
     },
     "sbc": {
-     "연간수": 16,
+     "연간수": 17,
      "분기수": 46,
      "앞선세분기부족": 2,
      "못채운예": [
       "2010-06-30",
       "2011-06-30"
      ],
-     "채움": 14
+     "채움": 15
     },
     "depreciation_amortization": {
-     "연간수": 16,
+     "연간수": 17,
      "분기수": 22,
      "앞선세분기부족": 14,
      "못채운예": [
@@ -2535,7 +2606,7 @@
       "2013-06-30",
       "2014-06-30"
      ],
-     "채움": 2
+     "채움": 3
     },
     "amortization": {
      "연간수": 0,
@@ -2543,26 +2614,29 @@
      "연간없음": 1
     },
     "revenue": {
-     "연간수": 11,
+     "연간수": 12,
      "분기수": 38,
      "이미있음": 5,
-     "채움": 5,
+     "채움": 6,
      "앞선세분기부족": 1,
      "못채운예": [
       "2015-06-30"
      ]
     },
     "gross_profit": {
-     "연간수": 16,
+     "연간수": 17,
      "분기수": 58,
      "앞선세분기부족": 1,
      "못채운예": [
       "2010-06-30"
      ],
      "이미있음": 10,
-     "채움": 5
+     "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2570,7 +2644,7 @@
    "ticker": "LSCC",
    "adj_eps_ok": 39,
    "merged_direct": 38,
-   "seconds": 19.6,
+   "seconds": 17.6,
    "cache_hits": 98,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2669,6 +2743,14 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 13,
+     "연간": 4
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2676,7 +2758,7 @@
    "ticker": "SYNA",
    "adj_eps_ok": 36,
    "merged_direct": 36,
-   "seconds": 27.2,
+   "seconds": 27.0,
    "cache_hits": 100,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2777,6 +2859,14 @@
      "채움": 17
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 4,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2784,7 +2874,7 @@
    "ticker": "UCTT",
    "adj_eps_ok": 34,
    "merged_direct": 31,
-   "seconds": 72.8,
+   "seconds": 44.7,
    "cache_hits": 89,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2889,6 +2979,9 @@
      "채움": 10
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -2896,7 +2989,7 @@
    "ticker": "ONTO",
    "adj_eps_ok": 35,
    "merged_direct": 35,
-   "seconds": 38.3,
+   "seconds": 132.8,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2997,6 +3090,9 @@
      "이미있음": 2
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3004,7 +3100,7 @@
    "ticker": "IPGP",
    "adj_eps_ok": 9,
    "merged_direct": 6,
-   "seconds": 34.2,
+   "seconds": 22.9,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3103,6 +3199,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3110,7 +3209,7 @@
    "ticker": "CGNX",
    "adj_eps_ok": 30,
    "merged_direct": 29,
-   "seconds": 32.5,
+   "seconds": 31.4,
    "cache_hits": 61,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3213,6 +3312,9 @@
      "이미있음": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3220,7 +3322,7 @@
    "ticker": "AVGO",
    "adj_eps_ok": 32,
    "merged_direct": 10,
-   "seconds": 76.8,
+   "seconds": 41.1,
    "cache_hits": 118,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3316,6 +3418,9 @@
      "채움": 3
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3323,7 +3428,7 @@
    "ticker": "QCOM",
    "adj_eps_ok": 33,
    "merged_direct": 0,
-   "seconds": 37.8,
+   "seconds": 30.7,
    "cache_hits": 124,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3421,6 +3526,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3428,7 +3536,7 @@
    "ticker": "TXN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 28.2,
+   "seconds": 19.8,
    "cache_hits": 102,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3522,6 +3630,9 @@
      "이미있음": 8
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -3529,7 +3640,7 @@
    "ticker": "ADI",
    "adj_eps_ok": 30,
    "merged_direct": 31,
-   "seconds": 33.5,
+   "seconds": 91.1,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3628,6 +3739,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3635,7 +3749,7 @@
    "ticker": "MCHP",
    "adj_eps_ok": 36,
    "merged_direct": 36,
-   "seconds": 34.8,
+   "seconds": 23.5,
    "cache_hits": 109,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3741,6 +3855,9 @@
      "이미있음": 11
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3748,7 +3865,7 @@
    "ticker": "NXPI",
    "adj_eps_ok": 14,
    "merged_direct": 19,
-   "seconds": 36.4,
+   "seconds": 45.3,
    "cache_hits": 54,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3855,6 +3972,14 @@
      "채움": 7
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 0,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -3957,6 +4082,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -3964,7 +4092,7 @@
    "ticker": "KLAC",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 22.0,
+   "seconds": 13.9,
    "cache_hits": 118,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4056,6 +4184,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4063,7 +4194,7 @@
    "ticker": "LRCX",
    "adj_eps_ok": 37,
    "merged_direct": 37,
-   "seconds": 27.8,
+   "seconds": 11.9,
    "cache_hits": 99,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4161,6 +4292,9 @@
      "채움": 17
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4168,7 +4302,7 @@
    "ticker": "AMAT",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 28.1,
+   "seconds": 13.8,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4283,6 +4417,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -4290,7 +4427,7 @@
    "ticker": "TER",
    "adj_eps_ok": 33,
    "merged_direct": 0,
-   "seconds": 28.9,
+   "seconds": 17.8,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4397,6 +4534,9 @@
      "이미있음": 10
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4404,7 +4544,7 @@
    "ticker": "ENTG",
    "adj_eps_ok": 35,
    "merged_direct": 34,
-   "seconds": 48.8,
+   "seconds": 40.0,
    "cache_hits": 141,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4503,6 +4643,9 @@
      "채움": 2
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4510,7 +4653,7 @@
    "ticker": "MKSI",
    "adj_eps_ok": 34,
    "merged_direct": 32,
-   "seconds": 253.7,
+   "seconds": 32.8,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4618,6 +4761,14 @@
      "이미있음": 10
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 8,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4625,7 +4776,7 @@
    "ticker": "FORM",
    "adj_eps_ok": 38,
    "merged_direct": 29,
-   "seconds": 36.0,
+   "seconds": 36.1,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4727,6 +4878,14 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 14,
+     "연간": 0
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4734,7 +4893,7 @@
    "ticker": "ACLS",
    "adj_eps_ok": 8,
    "merged_direct": 7,
-   "seconds": 30.7,
+   "seconds": 33.9,
    "cache_hits": 68,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4829,6 +4988,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -4836,7 +4998,7 @@
    "ticker": "AMBA",
    "adj_eps_ok": 39,
    "merged_direct": 10,
-   "seconds": 15.4,
+   "seconds": 28.4,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4939,6 +5101,9 @@
      "채움": 14
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -4946,7 +5111,7 @@
    "ticker": "POWI",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 19.8,
+   "seconds": 23.7,
    "cache_hits": 70,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5039,6 +5204,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -5046,7 +5214,7 @@
    "ticker": "DIOD",
    "adj_eps_ok": 40,
    "merged_direct": 4,
-   "seconds": 248.7,
+   "seconds": 123.7,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5139,6 +5307,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -5146,7 +5317,7 @@
    "ticker": "SLAB",
    "adj_eps_ok": 36,
    "merged_direct": 35,
-   "seconds": 29.6,
+   "seconds": 95.3,
    "cache_hits": 93,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5242,6 +5413,9 @@
      "이미있음": 2
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -5249,7 +5423,7 @@
    "ticker": "MPWR",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 80.4,
+   "seconds": 154.7,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5350,6 +5524,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -5357,7 +5534,7 @@
    "ticker": "CIEN",
    "adj_eps_ok": 38,
    "merged_direct": 3,
-   "seconds": 195.9,
+   "seconds": 125.6,
    "cache_hits": 95,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5451,6 +5628,9 @@
      "채움": 16
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -5458,7 +5638,7 @@
    "ticker": "EXTR",
    "adj_eps_ok": 37,
    "merged_direct": 35,
-   "seconds": 23.6,
+   "seconds": 94.3,
    "cache_hits": 82,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5552,6 +5732,9 @@
      "채움": 14
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -5559,7 +5742,7 @@
    "ticker": "NTAP",
    "adj_eps_ok": 39,
    "merged_direct": 39,
-   "seconds": 163.8,
+   "seconds": 108.2,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5662,6 +5845,9 @@
      "채움": 12
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -5669,7 +5855,7 @@
    "ticker": "P",
    "adj_eps_ok": 0,
    "merged_direct": 27,
-   "seconds": 165.7,
+   "seconds": 58.6,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5770,6 +5956,9 @@
      "채움": 11
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -5777,7 +5966,7 @@
    "ticker": "WDC",
    "adj_eps_ok": 41,
    "merged_direct": 39,
-   "seconds": 155.5,
+   "seconds": 52.6,
    "cache_hits": 158,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5881,6 +6070,9 @@
      "채움": 3
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -5888,7 +6080,7 @@
    "ticker": "STX",
    "adj_eps_ok": 34,
    "merged_direct": 33,
-   "seconds": 50.6,
+   "seconds": 36.2,
    "cache_hits": 126,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5985,6 +6177,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -5992,7 +6187,7 @@
    "ticker": "DELL",
    "adj_eps_ok": 28,
    "merged_direct": 31,
-   "seconds": 64.2,
+   "seconds": 41.2,
    "cache_hits": 129,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6087,6 +6282,9 @@
      "채움": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -6094,7 +6292,7 @@
    "ticker": "VIAV",
    "adj_eps_ok": 32,
    "merged_direct": 21,
-   "seconds": 531.1,
+   "seconds": 46.8,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6182,6 +6380,9 @@
      "채움": 3
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -6189,7 +6390,7 @@
    "ticker": "AAOI",
    "adj_eps_ok": 38,
    "merged_direct": 2,
-   "seconds": 43.1,
+   "seconds": 312.1,
    "cache_hits": 144,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6289,6 +6490,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -6296,7 +6500,7 @@
    "ticker": "TWLO",
    "adj_eps_ok": 37,
    "merged_direct": 34,
-   "seconds": 277.1,
+   "seconds": 254.6,
    "cache_hits": 95,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6394,6 +6598,9 @@
      "채움": 10
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -6401,7 +6608,7 @@
    "ticker": "DDOG",
    "adj_eps_ok": 28,
    "merged_direct": 28,
-   "seconds": 191.6,
+   "seconds": 127.5,
    "cache_hits": 43,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6497,6 +6704,9 @@
      "채움": 7
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -6504,7 +6714,7 @@
    "ticker": "NET",
    "adj_eps_ok": 29,
    "merged_direct": 20,
-   "seconds": 388.4,
+   "seconds": 53.3,
    "cache_hits": 55,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6600,6 +6810,9 @@
      "채움": 7
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -6607,7 +6820,7 @@
    "ticker": "MDB",
    "adj_eps_ok": 36,
    "merged_direct": 20,
-   "seconds": 552.4,
+   "seconds": 328.0,
    "cache_hits": 68,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6707,6 +6920,9 @@
      "채움": 9
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -6714,7 +6930,7 @@
    "ticker": "SNOW",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 502.6,
+   "seconds": 320.1,
    "cache_hits": 43,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6810,6 +7026,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -6817,7 +7036,7 @@
    "ticker": "OKTA",
    "adj_eps_ok": 39,
    "merged_direct": 23,
-   "seconds": 368.6,
+   "seconds": 303.9,
    "cache_hits": 82,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6908,6 +7127,9 @@
      "채움": 10
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -6915,7 +7137,7 @@
    "ticker": "ZS",
    "adj_eps_ok": 33,
    "merged_direct": 31,
-   "seconds": 266.9,
+   "seconds": 226.3,
    "cache_hits": 59,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7003,6 +7225,14 @@
      "채움": 8
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 9,
+     "연간": 4
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -7010,7 +7240,7 @@
    "ticker": "CRWD",
    "adj_eps_ok": 30,
    "merged_direct": 27,
-   "seconds": 161.7,
+   "seconds": 107.6,
    "cache_hits": 64,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7095,6 +7325,9 @@
      "채움": 8
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -7102,7 +7335,7 @@
    "ticker": "S",
    "adj_eps_ok": 21,
    "merged_direct": 7,
-   "seconds": 116.9,
+   "seconds": 79.7,
    "cache_hits": 44,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7199,6 +7432,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -7206,7 +7442,7 @@
    "ticker": "HUBS",
    "adj_eps_ok": 37,
    "merged_direct": 39,
-   "seconds": 50.3,
+   "seconds": 32.7,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7307,6 +7543,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -7314,7 +7553,7 @@
    "ticker": "BILL",
    "adj_eps_ok": 24,
    "merged_direct": 17,
-   "seconds": 37.0,
+   "seconds": 31.2,
    "cache_hits": 78,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7415,6 +7654,14 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 15,
+     "연간": 4
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -7422,7 +7669,7 @@
    "ticker": "U",
    "adj_eps_ok": 16,
    "merged_direct": 2,
-   "seconds": 32.3,
+   "seconds": 21.9,
    "cache_hits": 76,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7524,6 +7771,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -7531,7 +7781,7 @@
    "ticker": "ROKU",
    "adj_eps_ok": 0,
    "merged_direct": 19,
-   "seconds": 93.6,
+   "seconds": 48.1,
    "cache_hits": 91,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7629,6 +7879,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -7636,7 +7889,7 @@
    "ticker": "SNAP",
    "adj_eps_ok": 29,
    "merged_direct": 22,
-   "seconds": 62.9,
+   "seconds": 36.6,
    "cache_hits": 89,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7721,6 +7974,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -7728,7 +7984,7 @@
    "ticker": "ZM",
    "adj_eps_ok": 32,
    "merged_direct": 30,
-   "seconds": 24.7,
+   "seconds": 18.4,
    "cache_hits": 66,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7824,6 +8080,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -7831,7 +8090,7 @@
    "ticker": "DOCU",
    "adj_eps_ok": 33,
    "merged_direct": 33,
-   "seconds": 23.3,
+   "seconds": 23.0,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7929,6 +8188,9 @@
      "채움": 9
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -7936,7 +8198,7 @@
    "ticker": "TSLA",
    "adj_eps_ok": 18,
    "merged_direct": 0,
-   "seconds": 42.3,
+   "seconds": 112.6,
    "cache_hits": 168,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8036,6 +8298,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "보도자료 형식 특수(config.PRESS_PARSE_SKIP) — 날짜 열 EPS 만 부분 파싱, 나머지는 XBRL 근사"
   },
@@ -8043,7 +8308,7 @@
    "ticker": "TTD",
    "adj_eps_ok": 40,
    "merged_direct": 10,
-   "seconds": 18.9,
+   "seconds": 18.7,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8128,6 +8393,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 27,
+     "연간": 9
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -8135,7 +8408,7 @@
    "ticker": "FSLR",
    "adj_eps_ok": 9,
    "merged_direct": 1,
-   "seconds": 30.4,
+   "seconds": 45.0,
    "cache_hits": 102,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8239,6 +8512,9 @@
      "채움": 17
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -8246,7 +8522,7 @@
    "ticker": "SEDG",
    "adj_eps_ok": 38,
    "merged_direct": 39,
-   "seconds": 22.6,
+   "seconds": 17.4,
    "cache_hits": 98,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8351,6 +8627,9 @@
      "이미있음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -8358,7 +8637,7 @@
    "ticker": "GNRC",
    "adj_eps_ok": 42,
    "merged_direct": 38,
-   "seconds": 56.2,
+   "seconds": 20.0,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8457,6 +8736,9 @@
      "채움": 2
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -8464,7 +8746,7 @@
    "ticker": "GOOGL",
    "adj_eps_ok": 2,
    "merged_direct": 5,
-   "seconds": 35.2,
+   "seconds": 18.3,
    "cache_hits": 103,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8540,6 +8822,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -8547,7 +8832,7 @@
    "ticker": "META",
    "adj_eps_ok": 2,
    "merged_direct": 2,
-   "seconds": 41.8,
+   "seconds": 21.7,
    "cache_hits": 99,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8640,6 +8925,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -8647,7 +8935,7 @@
    "ticker": "AMZN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 53.5,
+   "seconds": 176.7,
    "cache_hits": 87,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8750,6 +9038,9 @@
      ]
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -8757,7 +9048,7 @@
    "ticker": "NFLX",
    "adj_eps_ok": 1,
    "merged_direct": 21,
-   "seconds": 52.8,
+   "seconds": 49.2,
    "cache_hits": 104,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8849,6 +9140,9 @@
      "이미있음": 2
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -8856,7 +9150,7 @@
    "ticker": "PINS",
    "adj_eps_ok": 30,
    "merged_direct": 11,
-   "seconds": 36.4,
+   "seconds": 16.9,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8944,6 +9238,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -8951,7 +9248,7 @@
    "ticker": "EBAY",
    "adj_eps_ok": 35,
    "merged_direct": 35,
-   "seconds": 43.6,
+   "seconds": 19.1,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9062,6 +9359,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -9069,7 +9369,7 @@
    "ticker": "ETSY",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 123.7,
+   "seconds": 32.8,
    "cache_hits": 82,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9166,6 +9466,9 @@
      "채움": 12
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -9173,7 +9476,7 @@
    "ticker": "ABNB",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 79.2,
+   "seconds": 15.6,
    "cache_hits": 40,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9259,6 +9562,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -9266,7 +9572,7 @@
    "ticker": "DASH",
    "adj_eps_ok": 0,
    "merged_direct": 23,
-   "seconds": 22.8,
+   "seconds": 17.2,
    "cache_hits": 57,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9353,6 +9659,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -9360,7 +9669,7 @@
    "ticker": "VRT",
    "adj_eps_ok": 11,
    "merged_direct": 23,
-   "seconds": 66.4,
+   "seconds": 37.8,
    "cache_hits": 109,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9454,6 +9763,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -9461,7 +9773,7 @@
    "ticker": "ETN",
    "adj_eps_ok": 26,
    "merged_direct": 0,
-   "seconds": 33.9,
+   "seconds": 23.9,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9561,6 +9873,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 36,
+     "연간": 12
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -9568,7 +9888,7 @@
    "ticker": "PWR",
    "adj_eps_ok": 42,
    "merged_direct": 0,
-   "seconds": 46.5,
+   "seconds": 27.0,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9662,6 +9982,9 @@
      "이미있음": 10
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -9669,7 +9992,7 @@
    "ticker": "VST",
    "adj_eps_ok": 0,
    "merged_direct": 7,
-   "seconds": 64.0,
+   "seconds": 36.2,
    "cache_hits": 147,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9744,6 +10067,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 2,
+     "연간": 0
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -9751,7 +10082,7 @@
    "ticker": "NRG",
    "adj_eps_ok": 9,
    "merged_direct": 30,
-   "seconds": 58.1,
+   "seconds": 53.1,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9850,6 +10181,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -9857,7 +10191,7 @@
    "ticker": "NEE",
    "adj_eps_ok": 36,
    "merged_direct": 0,
-   "seconds": 64.9,
+   "seconds": 29.1,
    "cache_hits": 185,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9951,6 +10285,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -9958,7 +10295,7 @@
    "ticker": "SO",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 39.0,
+   "seconds": 17.2,
    "cache_hits": 186,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10053,6 +10390,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -10060,7 +10400,7 @@
    "ticker": "RUN",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 44.4,
+   "seconds": 52.9,
    "cache_hits": 100,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10152,6 +10492,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -10159,7 +10502,7 @@
    "ticker": "BE",
    "adj_eps_ok": 29,
    "merged_direct": 17,
-   "seconds": 153.1,
+   "seconds": 109.8,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10241,6 +10584,9 @@
      "이미있음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -10248,7 +10594,7 @@
    "ticker": "ADBE",
    "adj_eps_ok": 36,
    "merged_direct": 36,
-   "seconds": 33.6,
+   "seconds": 25.1,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10356,6 +10702,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -10363,7 +10712,7 @@
    "ticker": "CRM",
    "adj_eps_ok": 32,
    "merged_direct": 32,
-   "seconds": 109.1,
+   "seconds": 36.1,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10472,6 +10821,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -10479,7 +10831,7 @@
    "ticker": "NOW",
    "adj_eps_ok": 38,
    "merged_direct": 38,
-   "seconds": 103.4,
+   "seconds": 51.5,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10579,6 +10931,9 @@
      "채움": 14
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -10586,7 +10941,7 @@
    "ticker": "ORCL",
    "adj_eps_ok": 37,
    "merged_direct": 37,
-   "seconds": 50.6,
+   "seconds": 63.0,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10673,6 +11028,9 @@
      "채움": 2
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -10680,7 +11038,7 @@
    "ticker": "TEAM",
    "adj_eps_ok": 17,
    "merged_direct": 16,
-   "seconds": 144.2,
+   "seconds": 112.2,
    "cache_hits": 39,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10770,6 +11128,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -10777,7 +11138,7 @@
    "ticker": "WDAY",
    "adj_eps_ok": 27,
    "merged_direct": 38,
-   "seconds": 33.4,
+   "seconds": 60.9,
    "cache_hits": 100,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10864,6 +11225,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -10871,7 +11235,7 @@
    "ticker": "CSCO",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 97.3,
+   "seconds": 49.4,
    "cache_hits": 130,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10984,6 +11348,9 @@
      "채움": 10
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -10991,7 +11358,7 @@
    "ticker": "HPQ",
    "adj_eps_ok": 37,
    "merged_direct": 3,
-   "seconds": 468.1,
+   "seconds": 72.9,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11093,6 +11460,9 @@
      "채움": 3
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -11100,7 +11470,7 @@
    "ticker": "HPE",
    "adj_eps_ok": 26,
    "merged_direct": 15,
-   "seconds": 80.2,
+   "seconds": 58.7,
    "cache_hits": 105,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11195,6 +11565,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -11202,7 +11575,7 @@
    "ticker": "JPM",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 437.7,
+   "seconds": 282.4,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11288,6 +11661,30 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 38,
+     "연간": 13
+    },
+    "InterestAndDividendIncomeOperating": {
+     "분기": 13,
+     "연간": 5
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 52,
+     "연간": 18
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -11295,7 +11692,7 @@
    "ticker": "BAC",
    "adj_eps_ok": 11,
    "merged_direct": 0,
-   "seconds": 1608.3,
+   "seconds": 862.9,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11378,6 +11775,22 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -11385,7 +11798,7 @@
    "ticker": "WFC",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 397.4,
+   "seconds": 82.3,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11472,6 +11885,30 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 20,
+     "연간": 8
+    },
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 38,
+     "연간": 13
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "8-K 200건까지만 확인했습니다"
   },
@@ -11479,7 +11916,7 @@
    "ticker": "C",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 374.1,
+   "seconds": 396.4,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11568,6 +12005,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 52,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 52,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 50,
+     "연간": 18
+    },
+    "NoninterestIncome": {
+     "분기": 52,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "8-K 200건까지만 확인했습니다"
   },
@@ -11575,7 +12032,7 @@
    "ticker": "GS",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 1365.4,
+   "seconds": 872.8,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11650,6 +12107,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 42,
+     "연간": 15
+    },
+    "InterestAndDividendIncomeOperating": {
+     "분기": 42,
+     "연간": 15
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 44,
+     "연간": 15
+    },
+    "NoninterestIncome": {
+     "분기": 42,
+     "연간": 15
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "8-K 200건까지만 확인했습니다"
   },
@@ -11657,7 +12134,7 @@
    "ticker": "MS",
    "adj_eps_ok": 19,
    "merged_direct": 5,
-   "seconds": 999.8,
+   "seconds": 799.0,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11745,6 +12222,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 45,
+     "연간": 13
+    },
+    "InterestAndDividendIncomeOperating": {
+     "분기": 54,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 61,
+     "연간": 18
+    },
+    "NoninterestIncome": {
+     "분기": 67,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -11752,7 +12249,7 @@
    "ticker": "SCHW",
    "adj_eps_ok": 25,
    "merged_direct": 0,
-   "seconds": 925.3,
+   "seconds": 177.0,
    "cache_hits": 120,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11840,6 +12337,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -11847,7 +12352,7 @@
    "ticker": "BLK",
    "adj_eps_ok": 1,
    "merged_direct": 5,
-   "seconds": 922.6,
+   "seconds": 579.6,
    "cache_hits": 24,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11930,6 +12435,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -11937,7 +12445,7 @@
    "ticker": "V",
    "adj_eps_ok": 37,
    "merged_direct": 0,
-   "seconds": 979.1,
+   "seconds": 635.3,
    "cache_hits": 141,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12030,6 +12538,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 36,
+     "연간": 13
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -12037,7 +12553,7 @@
    "ticker": "MA",
    "adj_eps_ok": 38,
    "merged_direct": 0,
-   "seconds": 40.2,
+   "seconds": 435.5,
    "cache_hits": 110,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12132,6 +12648,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -12139,7 +12658,7 @@
    "ticker": "AXP",
    "adj_eps_ok": 11,
    "merged_direct": 0,
-   "seconds": 34.5,
+   "seconds": 48.7,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12236,6 +12755,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 37,
+     "연간": 11
+    },
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "8-K 200건까지만 확인했습니다"
   },
@@ -12243,7 +12782,7 @@
    "ticker": "COF",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 57.2,
+   "seconds": 48.9,
    "cache_hits": 198,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12338,6 +12877,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 58,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 58,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 58,
+     "연간": 19
+    },
+    "NoninterestIncome": {
+     "분기": 58,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -12345,7 +12904,7 @@
    "ticker": "LLY",
    "adj_eps_ok": 29,
    "merged_direct": 0,
-   "seconds": 51.3,
+   "seconds": 38.2,
    "cache_hits": 89,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12435,6 +12994,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -12442,7 +13004,7 @@
    "ticker": "UNH",
    "adj_eps_ok": 34,
    "merged_direct": 0,
-   "seconds": 246.0,
+   "seconds": 41.3,
    "cache_hits": 134,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12536,6 +13098,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -12543,7 +13108,7 @@
    "ticker": "JNJ",
    "adj_eps_ok": 37,
    "merged_direct": 0,
-   "seconds": 125.9,
+   "seconds": 136.9,
    "cache_hits": 113,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12648,6 +13213,9 @@
      "채움": 3
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -12655,7 +13223,7 @@
    "ticker": "ABBV",
    "adj_eps_ok": 34,
    "merged_direct": 0,
-   "seconds": 618.6,
+   "seconds": 381.2,
    "cache_hits": 135,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12731,6 +13299,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -12738,7 +13309,7 @@
    "ticker": "MRK",
    "adj_eps_ok": 40,
    "merged_direct": 14,
-   "seconds": 553.8,
+   "seconds": 319.2,
    "cache_hits": 81,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12827,6 +13398,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -12834,7 +13408,7 @@
    "ticker": "PFE",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 803.5,
+   "seconds": 567.8,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12925,6 +13499,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 4,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -12932,7 +13514,7 @@
    "ticker": "AMGN",
    "adj_eps_ok": 27,
    "merged_direct": 27,
-   "seconds": 513.7,
+   "seconds": 361.0,
    "cache_hits": 81,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13034,6 +13616,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -13041,7 +13626,7 @@
    "ticker": "GILD",
    "adj_eps_ok": 35,
    "merged_direct": 22,
-   "seconds": 722.4,
+   "seconds": 487.5,
    "cache_hits": 93,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13134,6 +13719,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -13141,7 +13729,7 @@
    "ticker": "BMY",
    "adj_eps_ok": 37,
    "merged_direct": 3,
-   "seconds": 770.9,
+   "seconds": 517.7,
    "cache_hits": 148,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13231,6 +13819,9 @@
      "이미있음": 12
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -13238,7 +13829,7 @@
    "ticker": "REGN",
    "adj_eps_ok": 37,
    "merged_direct": 0,
-   "seconds": 420.5,
+   "seconds": 288.4,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13335,6 +13926,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -13342,7 +13936,7 @@
    "ticker": "VRTX",
    "adj_eps_ok": 24,
    "merged_direct": 30,
-   "seconds": 310.0,
+   "seconds": 217.0,
    "cache_hits": 93,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13433,6 +14027,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 28,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -13440,7 +14042,7 @@
    "ticker": "ISRG",
    "adj_eps_ok": 32,
    "merged_direct": 32,
-   "seconds": 308.8,
+   "seconds": 213.7,
    "cache_hits": 70,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13536,6 +14138,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -13543,7 +14148,7 @@
    "ticker": "WMT",
    "adj_eps_ok": 26,
    "merged_direct": 21,
-   "seconds": 1123.2,
+   "seconds": 660.7,
    "cache_hits": 91,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13632,6 +14237,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 46,
+     "연간": 15
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -13639,7 +14252,7 @@
    "ticker": "COST",
    "adj_eps_ok": 0,
    "merged_direct": 1,
-   "seconds": 66.5,
+   "seconds": 45.3,
    "cache_hits": 93,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13726,6 +14339,9 @@
      "채움": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -13733,7 +14349,7 @@
    "ticker": "PG",
    "adj_eps_ok": 16,
    "merged_direct": 0,
-   "seconds": 652.5,
+   "seconds": 429.1,
    "cache_hits": 117,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13830,6 +14446,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -13837,7 +14456,7 @@
    "ticker": "KO",
    "adj_eps_ok": 2,
    "merged_direct": 33,
-   "seconds": 84.5,
+   "seconds": 75.0,
    "cache_hits": 112,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13936,6 +14555,9 @@
      "채움": 17
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -13943,7 +14565,7 @@
    "ticker": "PEP",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 559.6,
+   "seconds": 122.7,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14050,6 +14672,14 @@
      "이미있음": 2
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 2,
+     "연간": 0
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -14057,7 +14687,7 @@
    "ticker": "MCD",
    "adj_eps_ok": 9,
    "merged_direct": 0,
-   "seconds": 624.5,
+   "seconds": 429.6,
    "cache_hits": 124,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14140,6 +14770,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -14147,7 +14780,7 @@
    "ticker": "SBUX",
    "adj_eps_ok": 41,
    "merged_direct": 36,
-   "seconds": 696.8,
+   "seconds": 446.6,
    "cache_hits": 131,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14243,6 +14876,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -14250,7 +14886,7 @@
    "ticker": "NKE",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 553.7,
+   "seconds": 367.2,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14339,6 +14975,9 @@
      "채움": 18
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -14346,7 +14985,7 @@
    "ticker": "HD",
    "adj_eps_ok": 9,
    "merged_direct": 12,
-   "seconds": 116.8,
+   "seconds": 324.1,
    "cache_hits": 113,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14450,6 +15089,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -14457,7 +15099,7 @@
    "ticker": "LOW",
    "adj_eps_ok": 35,
    "merged_direct": 16,
-   "seconds": 187.7,
+   "seconds": 112.9,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14561,6 +15203,9 @@
      "채움": 12
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -14568,7 +15213,7 @@
    "ticker": "TGT",
    "adj_eps_ok": 40,
    "merged_direct": 7,
-   "seconds": 109.6,
+   "seconds": 69.3,
    "cache_hits": 107,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14673,6 +15318,9 @@
      "이미있음": 3
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -14680,7 +15328,7 @@
    "ticker": "EL",
    "adj_eps_ok": 28,
    "merged_direct": 21,
-   "seconds": 214.5,
+   "seconds": 106.0,
    "cache_hits": 107,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14779,6 +15427,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -14786,7 +15437,7 @@
    "ticker": "CAT",
    "adj_eps_ok": 0,
    "merged_direct": 17,
-   "seconds": 160.2,
+   "seconds": 88.4,
    "cache_hits": 78,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14877,6 +15528,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -14884,7 +15538,7 @@
    "ticker": "DE",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 248.5,
+   "seconds": 115.4,
    "cache_hits": 148,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14982,6 +15636,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -14989,7 +15646,7 @@
    "ticker": "HON",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 233.7,
+   "seconds": 90.7,
    "cache_hits": 134,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15086,6 +15743,9 @@
      "이미있음": 12
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -15093,7 +15753,7 @@
    "ticker": "GE",
    "adj_eps_ok": 31,
    "merged_direct": 1,
-   "seconds": 88.9,
+   "seconds": 66.0,
    "cache_hits": 117,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15196,6 +15856,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -15203,7 +15866,7 @@
    "ticker": "UNP",
    "adj_eps_ok": 10,
    "merged_direct": 7,
-   "seconds": 47.9,
+   "seconds": 35.3,
    "cache_hits": 157,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15280,17 +15943,20 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
   {
    "ticker": "UPS",
-   "adj_eps_ok": 30,
-   "merged_direct": 33,
-   "seconds": 45.5,
-   "cache_hits": 73,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "adj_eps_ok": 29,
+   "merged_direct": 32,
+   "seconds": 37.5,
+   "cache_hits": 72,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -15381,6 +16047,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -15388,7 +16057,7 @@
    "ticker": "FDX",
    "adj_eps_ok": 9,
    "merged_direct": 1,
-   "seconds": 52.3,
+   "seconds": 37.0,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15480,6 +16149,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -15487,7 +16159,7 @@
    "ticker": "BA",
    "adj_eps_ok": 37,
    "merged_direct": 1,
-   "seconds": 54.7,
+   "seconds": 45.2,
    "cache_hits": 137,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15593,6 +16265,9 @@
      "채움": 16
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -15600,7 +16275,7 @@
    "ticker": "T",
    "adj_eps_ok": 22,
    "merged_direct": 21,
-   "seconds": 97.1,
+   "seconds": 68.6,
    "cache_hits": 94,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15692,6 +16367,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -15699,7 +16377,7 @@
    "ticker": "VZ",
    "adj_eps_ok": 29,
    "merged_direct": 11,
-   "seconds": 117.4,
+   "seconds": 73.4,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15790,6 +16468,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -15797,7 +16478,7 @@
    "ticker": "TMUS",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 1009.5,
+   "seconds": 403.4,
    "cache_hits": 163,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15894,6 +16575,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -15901,7 +16585,7 @@
    "ticker": "CMCSA",
    "adj_eps_ok": 28,
    "merged_direct": 25,
-   "seconds": 67.9,
+   "seconds": 46.3,
    "cache_hits": 134,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15998,6 +16682,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -16005,7 +16692,7 @@
    "ticker": "DIS",
    "adj_eps_ok": 7,
    "merged_direct": 0,
-   "seconds": 110.2,
+   "seconds": 63.7,
    "cache_hits": 102,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16094,6 +16781,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 27,
+     "연간": 0
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -16101,7 +16796,7 @@
    "ticker": "XOM",
    "adj_eps_ok": 1,
    "merged_direct": 1,
-   "seconds": 135.5,
+   "seconds": 104.8,
    "cache_hits": 148,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16172,6 +16867,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -16179,7 +16877,7 @@
    "ticker": "CVX",
    "adj_eps_ok": 15,
    "merged_direct": 0,
-   "seconds": 46.4,
+   "seconds": 48.6,
    "cache_hits": 130,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16248,6 +16946,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -16255,7 +16956,7 @@
    "ticker": "COP",
    "adj_eps_ok": 37,
    "merged_direct": 0,
-   "seconds": 68.1,
+   "seconds": 54.9,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16333,6 +17034,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -16340,10 +17044,10 @@
    "ticker": "SLB",
    "adj_eps_ok": 0,
    "merged_direct": 13,
-   "seconds": 61.5,
-   "cache_hits": 109,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 43.1,
+   "cache_hits": 110,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -16434,6 +17138,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -16441,7 +17148,7 @@
    "ticker": "OXY",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 80.2,
+   "seconds": 53.3,
    "cache_hits": 146,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16516,6 +17223,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -16523,7 +17233,7 @@
    "ticker": "AMT",
    "adj_eps_ok": 0,
    "merged_direct": 31,
-   "seconds": 356.7,
+   "seconds": 114.7,
    "cache_hits": 199,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16617,6 +17327,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -16624,7 +17337,7 @@
    "ticker": "PLD",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 1427.6,
+   "seconds": 842.3,
    "cache_hits": 166,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16711,6 +17424,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -16718,7 +17434,7 @@
    "ticker": "EQIX",
    "adj_eps_ok": 0,
    "merged_direct": 30,
-   "seconds": 837.1,
+   "seconds": 538.9,
    "cache_hits": 135,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16816,6 +17532,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -16823,7 +17542,7 @@
    "ticker": "SPG",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 851.1,
+   "seconds": 546.6,
    "cache_hits": 98,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16896,6 +17615,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -16903,7 +17625,7 @@
    "ticker": "O",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 1049.3,
+   "seconds": 672.1,
    "cache_hits": 168,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16996,6 +17718,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -17003,7 +17728,7 @@
    "ticker": "PSA",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 505.4,
+   "seconds": 332.6,
    "cache_hits": 147,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17109,6 +17834,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -17116,7 +17844,7 @@
    "ticker": "DLR",
    "adj_eps_ok": 0,
    "merged_direct": 10,
-   "seconds": 398.5,
+   "seconds": 469.2,
    "cache_hits": 193,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17201,6 +17929,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -17208,10 +17939,10 @@
    "ticker": "BXP",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 376.3,
+   "seconds": 325.0,
    "cache_hits": 81,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -17299,6 +18030,9 @@
      "채움": 7
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -17306,7 +18040,7 @@
    "ticker": "SHW",
    "adj_eps_ok": 36,
    "merged_direct": 0,
-   "seconds": 26.2,
+   "seconds": 33.6,
    "cache_hits": 132,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17403,6 +18137,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -17410,7 +18147,7 @@
    "ticker": "APD",
    "adj_eps_ok": 40,
    "merged_direct": 18,
-   "seconds": 154.8,
+   "seconds": 115.9,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17506,6 +18243,9 @@
      "이미있음": 12
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -17513,7 +18253,7 @@
    "ticker": "PPG",
    "adj_eps_ok": 26,
    "merged_direct": 0,
-   "seconds": 144.8,
+   "seconds": 99.2,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17610,6 +18350,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 46,
+     "연간": 15
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -17617,7 +18365,7 @@
    "ticker": "LYB",
    "adj_eps_ok": 0,
    "merged_direct": 1,
-   "seconds": 54.8,
+   "seconds": 31.7,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17697,6 +18445,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 2,
+     "연간": 0
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -17704,7 +18460,7 @@
    "ticker": "ECL",
    "adj_eps_ok": 31,
    "merged_direct": 16,
-   "seconds": 130.4,
+   "seconds": 100.5,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17797,6 +18553,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 2,
+     "연간": 0
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -17804,7 +18568,7 @@
    "ticker": "NUE",
    "adj_eps_ok": 6,
    "merged_direct": 0,
-   "seconds": 169.4,
+   "seconds": 96.5,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17882,6 +18646,18 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 6,
+     "연간": 3
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 10,
+     "연간": 4
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -17889,7 +18665,7 @@
    "ticker": "FCX",
    "adj_eps_ok": 9,
    "merged_direct": 0,
-   "seconds": 326.1,
+   "seconds": 174.3,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17974,6 +18750,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 32,
+     "연간": 12
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -17981,7 +18765,7 @@
    "ticker": "ALB",
    "adj_eps_ok": 40,
    "merged_direct": 35,
-   "seconds": 74.7,
+   "seconds": 53.9,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18084,6 +18868,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -18091,7 +18878,7 @@
    "ticker": "PGR",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 66.1,
+   "seconds": 52.0,
    "cache_hits": 57,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18164,6 +18951,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -18171,7 +18966,7 @@
    "ticker": "ALL",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 362.6,
+   "seconds": 165.0,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18254,6 +19049,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 52,
+     "연간": 18
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "8-K 200건까지만 확인했습니다"
   },
@@ -18261,7 +19064,7 @@
    "ticker": "TRV",
    "adj_eps_ok": 36,
    "merged_direct": 0,
-   "seconds": 73.4,
+   "seconds": 48.9,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18358,6 +19161,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 0,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -18365,7 +19176,7 @@
    "ticker": "MET",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 360.8,
+   "seconds": 226.8,
    "cache_hits": 191,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18452,6 +19263,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -18459,7 +19273,7 @@
    "ticker": "AIG",
    "adj_eps_ok": 11,
    "merged_direct": 0,
-   "seconds": 104.4,
+   "seconds": 94.7,
    "cache_hits": 189,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18542,6 +19356,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -18549,7 +19366,7 @@
    "ticker": "AFL",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 96.7,
+   "seconds": 98.9,
    "cache_hits": 109,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18624,6 +19441,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -18631,7 +19451,7 @@
    "ticker": "ICE",
    "adj_eps_ok": 37,
    "merged_direct": 30,
-   "seconds": 38.4,
+   "seconds": 57.6,
    "cache_hits": 111,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18726,6 +19546,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -18733,7 +19556,7 @@
    "ticker": "SPGI",
    "adj_eps_ok": 35,
    "merged_direct": 30,
-   "seconds": 87.1,
+   "seconds": 64.1,
    "cache_hits": 130,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18833,6 +19656,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 17,
+     "연간": 0
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -18840,7 +19671,7 @@
    "ticker": "DUK",
    "adj_eps_ok": 25,
    "merged_direct": 0,
-   "seconds": 97.6,
+   "seconds": 118.3,
    "cache_hits": 110,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18942,6 +19773,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -18949,7 +19783,7 @@
    "ticker": "AEP",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 83.5,
+   "seconds": 54.0,
    "cache_hits": 128,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19047,6 +19881,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -19054,7 +19891,7 @@
    "ticker": "XEL",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 71.4,
+   "seconds": 80.7,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19143,6 +19980,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "8-K 200건까지만 확인했습니다"
   },
@@ -19150,7 +19990,7 @@
    "ticker": "ED",
    "adj_eps_ok": 29,
    "merged_direct": 0,
-   "seconds": 352.9,
+   "seconds": 215.5,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19240,6 +20080,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -19247,7 +20090,7 @@
    "ticker": "SRE",
    "adj_eps_ok": 36,
    "merged_direct": 0,
-   "seconds": 242.1,
+   "seconds": 89.9,
    "cache_hits": 189,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19340,6 +20183,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -19347,10 +20193,10 @@
    "ticker": "PCG",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 335.9,
+   "seconds": 230.0,
    "cache_hits": 180,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -19424,6 +20270,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -19431,7 +20280,7 @@
    "ticker": "CL",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 149.9,
+   "seconds": 25.7,
    "cache_hits": 93,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19534,6 +20383,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -19541,7 +20393,7 @@
    "ticker": "KMB",
    "adj_eps_ok": 40,
    "merged_direct": 35,
-   "seconds": 121.8,
+   "seconds": 42.3,
    "cache_hits": 94,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19645,6 +20497,9 @@
      "채움": 12
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -19652,7 +20507,7 @@
    "ticker": "MDLZ",
    "adj_eps_ok": 27,
    "merged_direct": 14,
-   "seconds": 128.4,
+   "seconds": 125.9,
    "cache_hits": 72,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19755,6 +20610,9 @@
      "이미있음": 11
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -19762,7 +20620,7 @@
    "ticker": "GIS",
    "adj_eps_ok": 30,
    "merged_direct": 30,
-   "seconds": 91.0,
+   "seconds": 73.5,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19850,6 +20708,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -19857,7 +20718,7 @@
    "ticker": "KHC",
    "adj_eps_ok": 23,
    "merged_direct": 12,
-   "seconds": 59.3,
+   "seconds": 105.6,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19959,6 +20820,14 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 2,
+     "연간": 0
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -19966,7 +20835,7 @@
    "ticker": "HSY",
    "adj_eps_ok": 33,
    "merged_direct": 33,
-   "seconds": 85.0,
+   "seconds": 116.4,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20069,6 +20938,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -20176,6 +21048,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -20183,7 +21058,7 @@
    "ticker": "CSX",
    "adj_eps_ok": 6,
    "merged_direct": 7,
-   "seconds": 87.9,
+   "seconds": 47.3,
    "cache_hits": 132,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20274,6 +21149,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 16,
+     "연간": 8
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -20281,7 +21164,7 @@
    "ticker": "NSC",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 56.7,
+   "seconds": 35.2,
    "cache_hits": 159,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20368,6 +21251,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -20375,7 +21261,7 @@
    "ticker": "DAL",
    "adj_eps_ok": 9,
    "merged_direct": 4,
-   "seconds": 142.3,
+   "seconds": 41.2,
    "cache_hits": 104,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20469,6 +21355,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 35,
+     "연간": 13
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -20476,7 +21370,7 @@
    "ticker": "AAL",
    "adj_eps_ok": 8,
    "merged_direct": 1,
-   "seconds": 105.3,
+   "seconds": 171.4,
    "cache_hits": 139,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20572,6 +21466,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -20579,7 +21476,7 @@
    "ticker": "TJX",
    "adj_eps_ok": 21,
    "merged_direct": 4,
-   "seconds": 24.2,
+   "seconds": 28.6,
    "cache_hits": 91,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20670,6 +21567,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 0,
+     "연간": 1
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -20677,7 +21582,7 @@
    "ticker": "DG",
    "adj_eps_ok": 3,
    "merged_direct": 8,
-   "seconds": 36.9,
+   "seconds": 25.1,
    "cache_hits": 77,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20775,6 +21680,14 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 2,
+     "연간": 0
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -20782,7 +21695,7 @@
    "ticker": "DLTR",
    "adj_eps_ok": 18,
    "merged_direct": 22,
-   "seconds": 373.3,
+   "seconds": 228.7,
    "cache_hits": 177,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20886,6 +21799,14 @@
      "채움": 2
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 29,
+     "연간": 9
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -20893,7 +21814,7 @@
    "ticker": "ORLY",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 90.8,
+   "seconds": 54.9,
    "cache_hits": 148,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20993,6 +21914,14 @@
      "채움": 2
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 4,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -21000,7 +21929,7 @@
    "ticker": "CVS",
    "adj_eps_ok": 37,
    "merged_direct": 31,
-   "seconds": 157.1,
+   "seconds": 73.7,
    "cache_hits": 133,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21112,6 +22041,14 @@
      "이미있음": 9
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 30,
+     "연간": 12
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -21119,7 +22056,7 @@
    "ticker": "CI",
    "adj_eps_ok": 32,
    "merged_direct": 31,
-   "seconds": 63.2,
+   "seconds": 41.1,
    "cache_hits": 134,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21210,6 +22147,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -21217,7 +22157,7 @@
    "ticker": "ELV",
    "adj_eps_ok": 30,
    "merged_direct": 0,
-   "seconds": 193.2,
+   "seconds": 57.7,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21310,6 +22250,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -21317,7 +22260,7 @@
    "ticker": "HCA",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 188.0,
+   "seconds": 139.1,
    "cache_hits": 114,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21399,6 +22342,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -21406,7 +22352,7 @@
    "ticker": "MCK",
    "adj_eps_ok": 40,
    "merged_direct": 14,
-   "seconds": 213.3,
+   "seconds": 148.1,
    "cache_hits": 126,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21511,6 +22457,9 @@
      "이미있음": 12
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -21518,7 +22467,7 @@
    "ticker": "BSX",
    "adj_eps_ok": 16,
    "merged_direct": 0,
-   "seconds": 260.7,
+   "seconds": 149.0,
    "cache_hits": 131,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21619,17 +22568,20 @@
      "채움": 15
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
   {
    "ticker": "MDT",
    "adj_eps_ok": 37,
-   "merged_direct": 5,
-   "seconds": 157.5,
-   "cache_hits": 100,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "merged_direct": 6,
+   "seconds": 139.8,
+   "cache_hits": 98,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -21717,6 +22669,14 @@
      "이미있음": 5
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 9,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -21724,7 +22684,7 @@
    "ticker": "SYK",
    "adj_eps_ok": 41,
    "merged_direct": 34,
-   "seconds": 60.7,
+   "seconds": 63.2,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21821,6 +22781,14 @@
      "이미있음": 17
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 2,
+     "연간": 0
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -21828,7 +22796,7 @@
    "ticker": "ZBH",
    "adj_eps_ok": 19,
    "merged_direct": 33,
-   "seconds": 105.6,
+   "seconds": 78.8,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21934,6 +22902,14 @@
      "이미있음": 6
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 32,
+     "연간": 8
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -21941,7 +22917,7 @@
    "ticker": "BIIB",
    "adj_eps_ok": 41,
    "merged_direct": 0,
-   "seconds": 80.5,
+   "seconds": 63.7,
    "cache_hits": 105,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22043,6 +23019,9 @@
      "이미있음": 12
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -22050,7 +23029,7 @@
    "ticker": "ILMN",
    "adj_eps_ok": 27,
    "merged_direct": 26,
-   "seconds": 67.6,
+   "seconds": 50.7,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22153,6 +23132,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -22160,7 +23142,7 @@
    "ticker": "USB",
    "adj_eps_ok": 4,
    "merged_direct": 3,
-   "seconds": 178.1,
+   "seconds": 108.2,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22234,6 +23216,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 55,
+     "연간": 19
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -22241,7 +23243,7 @@
    "ticker": "PNC",
    "adj_eps_ok": 9,
    "merged_direct": 0,
-   "seconds": 99.7,
+   "seconds": 88.4,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22332,6 +23334,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 0,
+     "연간": 10
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -22339,7 +23361,7 @@
    "ticker": "KEY",
    "adj_eps_ok": 7,
    "merged_direct": 0,
-   "seconds": 111.5,
+   "seconds": 95.0,
    "cache_hits": 94,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22432,6 +23454,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 54,
+     "연간": 19
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -22439,7 +23481,7 @@
    "ticker": "ZION",
    "adj_eps_ok": 7,
    "merged_direct": 0,
-   "seconds": 133.8,
+   "seconds": 75.5,
    "cache_hits": 63,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22526,6 +23568,30 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 15,
+     "연간": 6
+    },
+    "InterestAndDividendIncomeOperating": {
+     "분기": 68,
+     "연간": 18
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 68,
+     "연간": 18
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 52,
+     "연간": 18
+    },
+    "NoninterestIncome": {
+     "분기": 61,
+     "연간": 18
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -22533,7 +23599,7 @@
    "ticker": "FITB",
    "adj_eps_ok": 1,
    "merged_direct": 2,
-   "seconds": 111.9,
+   "seconds": 153.6,
    "cache_hits": 83,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22623,6 +23689,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 55,
+     "연간": 19
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -22630,7 +23716,7 @@
    "ticker": "CME",
    "adj_eps_ok": 0,
    "merged_direct": 8,
-   "seconds": 33.1,
+   "seconds": 19.1,
    "cache_hits": 112,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22724,6 +23810,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -22731,7 +23820,7 @@
    "ticker": "MCO",
    "adj_eps_ok": 36,
    "merged_direct": 36,
-   "seconds": 52.4,
+   "seconds": 36.6,
    "cache_hits": 107,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22823,6 +23912,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 6,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -22830,7 +23927,7 @@
    "ticker": "TROW",
    "adj_eps_ok": 19,
    "merged_direct": 11,
-   "seconds": 50.3,
+   "seconds": 33.4,
    "cache_hits": 78,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22926,6 +24023,18 @@
      "이미있음": 4
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 20,
+     "연간": 6
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 12,
+     "연간": 7
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -22933,7 +24042,7 @@
    "ticker": "MMM",
    "adj_eps_ok": 24,
    "merged_direct": 17,
-   "seconds": 38.0,
+   "seconds": 60.2,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23029,6 +24138,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -23036,7 +24148,7 @@
    "ticker": "EMR",
    "adj_eps_ok": 31,
    "merged_direct": 2,
-   "seconds": 34.2,
+   "seconds": 25.9,
    "cache_hits": 129,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23130,6 +24242,9 @@
      "이미있음": 17
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -23137,7 +24252,7 @@
    "ticker": "ITW",
    "adj_eps_ok": 2,
    "merged_direct": 6,
-   "seconds": 26.1,
+   "seconds": 20.6,
    "cache_hits": 77,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23222,6 +24337,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -23229,7 +24347,7 @@
    "ticker": "PH",
    "adj_eps_ok": 37,
    "merged_direct": 4,
-   "seconds": 502.1,
+   "seconds": 93.4,
    "cache_hits": 102,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23326,6 +24444,9 @@
      "이미있음": 9
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -23333,7 +24454,7 @@
    "ticker": "CMI",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 76.4,
+   "seconds": 48.4,
    "cache_hits": 83,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23436,6 +24557,9 @@
      "이미있음": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -23443,7 +24567,7 @@
    "ticker": "PCAR",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 541.5,
+   "seconds": 212.4,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23521,6 +24645,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -23528,7 +24655,7 @@
    "ticker": "LMT",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 76.9,
+   "seconds": 45.5,
    "cache_hits": 112,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23635,6 +24762,9 @@
      "채움": 17
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -23642,7 +24772,7 @@
    "ticker": "WM",
    "adj_eps_ok": 15,
    "merged_direct": 27,
-   "seconds": 278.7,
+   "seconds": 144.0,
    "cache_hits": 124,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23736,6 +24866,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 9,
+     "연간": 4
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -23743,7 +24881,7 @@
    "ticker": "PSX",
    "adj_eps_ok": 40,
    "merged_direct": 12,
-   "seconds": 82.9,
+   "seconds": 69.2,
    "cache_hits": 119,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23831,6 +24969,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -23838,7 +24979,7 @@
    "ticker": "VLO",
    "adj_eps_ok": 41,
    "merged_direct": 22,
-   "seconds": 483.3,
+   "seconds": 293.5,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23936,6 +25077,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -23943,7 +25087,7 @@
    "ticker": "MPC",
    "adj_eps_ok": 26,
    "merged_direct": 31,
-   "seconds": 229.7,
+   "seconds": 249.7,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24038,6 +25182,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 7,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -24045,7 +25197,7 @@
    "ticker": "HAL",
    "adj_eps_ok": 26,
    "merged_direct": 36,
-   "seconds": 186.5,
+   "seconds": 184.6,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24132,6 +25284,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -24139,7 +25294,7 @@
    "ticker": "EOG",
    "adj_eps_ok": 18,
    "merged_direct": 19,
-   "seconds": 691.8,
+   "seconds": 500.7,
    "cache_hits": 124,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24225,6 +25380,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -24232,7 +25390,7 @@
    "ticker": "KMI",
    "adj_eps_ok": 38,
    "merged_direct": 40,
-   "seconds": 190.9,
+   "seconds": 141.4,
    "cache_hits": 188,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24325,6 +25483,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 22,
+     "연간": 12
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -24332,7 +25498,7 @@
    "ticker": "MAR",
    "adj_eps_ok": 35,
    "merged_direct": 34,
-   "seconds": 198.6,
+   "seconds": 129.4,
    "cache_hits": 103,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24425,6 +25591,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -24432,7 +25601,7 @@
    "ticker": "HLT",
    "adj_eps_ok": 0,
    "merged_direct": 40,
-   "seconds": 108.3,
+   "seconds": 112.6,
    "cache_hits": 107,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24527,6 +25696,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -24534,7 +25706,7 @@
    "ticker": "RCL",
    "adj_eps_ok": 22,
    "merged_direct": 17,
-   "seconds": 53.2,
+   "seconds": 42.6,
    "cache_hits": 91,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24618,6 +25790,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 15,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -24625,7 +25805,7 @@
    "ticker": "CCL",
    "adj_eps_ok": 33,
    "merged_direct": 9,
-   "seconds": 138.1,
+   "seconds": 132.1,
    "cache_hits": 158,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24715,6 +25895,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -24722,7 +25905,7 @@
    "ticker": "LVS",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 155.4,
+   "seconds": 193.7,
    "cache_hits": 153,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24811,6 +25994,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -24818,7 +26004,7 @@
    "ticker": "MGM",
    "adj_eps_ok": 29,
    "merged_direct": 12,
-   "seconds": 100.5,
+   "seconds": 91.7,
    "cache_hits": 133,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24915,6 +26101,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -24922,7 +26111,7 @@
    "ticker": "LULU",
    "adj_eps_ok": 21,
    "merged_direct": 18,
-   "seconds": 235.9,
+   "seconds": 143.0,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25031,6 +26220,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -25038,7 +26230,7 @@
    "ticker": "BBY",
    "adj_eps_ok": 34,
    "merged_direct": 34,
-   "seconds": 193.9,
+   "seconds": 162.2,
    "cache_hits": 87,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25149,6 +26341,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -25156,10 +26351,10 @@
    "ticker": "KSS",
    "adj_eps_ok": 19,
    "merged_direct": 7,
-   "seconds": 358.7,
+   "seconds": 293.5,
    "cache_hits": 167,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -25253,6 +26448,14 @@
      "이미있음": 7
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 52,
+     "연간": 15
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -25260,7 +26463,7 @@
    "ticker": "W",
    "adj_eps_ok": 23,
    "merged_direct": 23,
-   "seconds": 215.8,
+   "seconds": 108.1,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25367,6 +26570,9 @@
      "채움": 12
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -25374,7 +26580,7 @@
    "ticker": "ROST",
    "adj_eps_ok": 0,
    "merged_direct": 3,
-   "seconds": 219.4,
+   "seconds": 116.7,
    "cache_hits": 63,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25457,6 +26663,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 49,
+     "연간": 12
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -25464,7 +26678,7 @@
    "ticker": "AZO",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 193.1,
+   "seconds": 87.8,
    "cache_hits": 65,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25562,6 +26776,14 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 8,
+     "연간": 4
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -25569,7 +26791,7 @@
    "ticker": "AMKR",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 186.8,
+   "seconds": 97.3,
    "cache_hits": 92,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25675,6 +26897,9 @@
      "이미있음": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -25682,7 +26907,7 @@
    "ticker": "ALGM",
    "adj_eps_ok": 24,
    "merged_direct": 24,
-   "seconds": 244.4,
+   "seconds": 72.5,
    "cache_hits": 72,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25774,6 +26999,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -25781,7 +27009,7 @@
    "ticker": "WOLF",
    "adj_eps_ok": 28,
    "merged_direct": 2,
-   "seconds": 78.2,
+   "seconds": 41.1,
    "cache_hits": 111,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25882,6 +27110,14 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 0,
+     "연간": 4
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -25889,7 +27125,7 @@
    "ticker": "SITM",
    "adj_eps_ok": 27,
    "merged_direct": 27,
-   "seconds": 16.5,
+   "seconds": 17.8,
    "cache_hits": 59,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25976,6 +27212,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -25983,7 +27222,7 @@
    "ticker": "RMBS",
    "adj_eps_ok": 15,
    "merged_direct": 10,
-   "seconds": 37.0,
+   "seconds": 31.8,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26081,6 +27320,14 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 12,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -26088,7 +27335,7 @@
    "ticker": "MTSI",
    "adj_eps_ok": 38,
    "merged_direct": 38,
-   "seconds": 131.4,
+   "seconds": 87.9,
    "cache_hits": 81,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26195,6 +27442,14 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 11,
+     "연간": 1
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -26202,7 +27457,7 @@
    "ticker": "SMTC",
    "adj_eps_ok": 29,
    "merged_direct": 18,
-   "seconds": 25.5,
+   "seconds": 18.9,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26311,6 +27566,14 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 0,
+     "연간": 8
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -26318,7 +27581,7 @@
    "ticker": "AOSL",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 114.1,
+   "seconds": 87.8,
    "cache_hits": 78,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26418,6 +27681,14 @@
      "채움": 16
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 0,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -26425,7 +27696,7 @@
    "ticker": "NVMI",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 1.0,
+   "seconds": 0.6,
    "cache_hits": 0,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26523,6 +27794,14 @@
      ]
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 0,
+     "연간": 9
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -26530,7 +27809,7 @@
    "ticker": "PLAB",
    "adj_eps_ok": 13,
    "merged_direct": 2,
-   "seconds": 126.5,
+   "seconds": 93.1,
    "cache_hits": 98,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26636,6 +27915,9 @@
      ]
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -26643,7 +27925,7 @@
    "ticker": "ACMR",
    "adj_eps_ok": 1,
    "merged_direct": 15,
-   "seconds": 445.2,
+   "seconds": 291.9,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26735,6 +28017,14 @@
      "채움": 9
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 0,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -26742,7 +28032,7 @@
    "ticker": "KLIC",
    "adj_eps_ok": 36,
    "merged_direct": 29,
-   "seconds": 135.1,
+   "seconds": 289.0,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26834,6 +28124,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -26841,7 +28134,7 @@
    "ticker": "AEIS",
    "adj_eps_ok": 37,
    "merged_direct": 37,
-   "seconds": 23.3,
+   "seconds": 218.0,
    "cache_hits": 92,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26948,6 +28241,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -26955,7 +28251,7 @@
    "ticker": "VECO",
    "adj_eps_ok": 36,
    "merged_direct": 36,
-   "seconds": 371.7,
+   "seconds": 224.9,
    "cache_hits": 87,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27050,6 +28346,14 @@
      "이미있음": 10
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 12,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -27057,7 +28361,7 @@
    "ticker": "PANW",
    "adj_eps_ok": 39,
    "merged_direct": 9,
-   "seconds": 31.6,
+   "seconds": 17.4,
    "cache_hits": 105,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27160,6 +28464,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -27167,7 +28474,7 @@
    "ticker": "FTNT",
    "adj_eps_ok": 41,
    "merged_direct": 38,
-   "seconds": 334.8,
+   "seconds": 203.2,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27267,24 +28574,109 @@
      "채움": 15
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
   {
    "ticker": "ZI",
-   "adj_eps_ok": 0,
-   "merged_direct": 0,
-   "seconds": 7.0,
+   "adj_eps_ok": 25,
+   "merged_direct": 25,
+   "seconds": 316.2,
    "cache_hits": 0,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 68,
+   "fetch_attempts": 68,
    "negative_cached": 0,
    "negative_hits": 0,
-   "first_error": "[get_facts] CompanyNotFoundError: Company not found: 'ZI'\n  Similar: 'ZIP' (ZIPRECRUITER, INC.), 'ZIM' (ZIM Integrated Shipping Services Ltd.), 'ZIVO' (Zivo Bioscience, Inc.)\n  Tip: Search by name with find_company",
-   "xbrl_calls": [],
-   "xbrl_rejected": 0,
-   "xbrl_orphan": {},
-   "q4_채움": {},
+   "first_error": "",
+   "xbrl_calls": [
+    "OperatingIncomeLoss(3개월): 받음 40 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 22 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
+    "OperatingIncomeLoss(12개월): 받음 18 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
+    "ShareBasedCompensation(3개월): 받음 214 · 이름버림 202 · 단위버림 0 · 모호 0 · 남음 7 · 본이름 ['adjustmentsrelatedtotaxwithholdingforsharebasedcompensation', 'adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
+    "AllocatedShareBasedCompensationExpense(3개월): 받음 40 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 22 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
+    "ShareBasedCompensation(12개월): 받음 152 · 이름버림 134 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['adjustmentsrelatedtotaxwithholdingforsharebasedcompensation', 'adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
+    "AllocatedShareBasedCompensationExpense(12개월): 받음 18 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
+    "DepreciationDepletionAndAmortization(3개월): 받음 2 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 2 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
+    "DepreciationAndAmortization(3개월): 받음 16 · 이름버림 16 · 단위버림 0 · 모호 0 · 남음 0 · 본이름 ['otherdepreciationandamortization'] · 본단위 []",
+    "DepreciationAndAmortization(12개월): 받음 18 · 이름버림 18 · 단위버림 0 · 모호 0 · 남음 0 · 본이름 ['otherdepreciationandamortization'] · 본단위 []",
+    "AmortizationOfIntangibleAssets(3개월): 받음 40 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 22 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
+    "AmortizationOfIntangibleAssets(12개월): 받음 18 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
+    "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 40 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 22 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
+    "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 18 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
+    "GrossProfit(3개월): 받음 40 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 22 · 본이름 ['grossprofit'] · 본단위 ['USD']",
+    "GrossProfit(12개월): 받음 18 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['grossprofit'] · 본단위 ['USD']",
+    "EarningsPerShareDiluted(3개월): 받음 36 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 18 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']",
+    "EarningsPerShareDiluted(12개월): 받음 15 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
+   ],
+   "xbrl_rejected": 370,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 28,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
+   "q4_채움": {
+    "op_income": {
+     "연간수": 8,
+     "분기수": 22,
+     "앞선세분기부족": 2,
+     "못채운예": [
+      "2018-12-31",
+      "2019-12-31"
+     ],
+     "채움": 6
+    },
+    "sbc": {
+     "연간수": 8,
+     "분기수": 22,
+     "앞선세분기부족": 2,
+     "못채운예": [
+      "2018-12-31",
+      "2019-12-31"
+     ],
+     "채움": 6
+    },
+    "depreciation_amortization": {
+     "연간수": 0,
+     "분기수": 2,
+     "연간없음": 1
+    },
+    "amortization": {
+     "연간수": 8,
+     "분기수": 22,
+     "앞선세분기부족": 2,
+     "못채운예": [
+      "2018-12-31",
+      "2019-12-31"
+     ],
+     "채움": 6
+    },
+    "revenue": {
+     "연간수": 8,
+     "분기수": 22,
+     "앞선세분기부족": 2,
+     "못채운예": [
+      "2018-12-31",
+      "2019-12-31"
+     ],
+     "채움": 6
+    },
+    "gross_profit": {
+     "연간수": 8,
+     "분기수": 22,
+     "앞선세분기부족": 2,
+     "못채운예": [
+      "2018-12-31",
+      "2019-12-31"
+     ],
+     "채움": 6
+    }
+   },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": 1794515,
    "시간초과": false,
    "note": ""
   },
@@ -27292,7 +28684,7 @@
    "ticker": "ASAN",
    "adj_eps_ok": 24,
    "merged_direct": 6,
-   "seconds": 326.1,
+   "seconds": 27.9,
    "cache_hits": 58,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27381,6 +28773,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -27388,7 +28783,7 @@
    "ticker": "PATH",
    "adj_eps_ok": 17,
    "merged_direct": 20,
-   "seconds": 325.5,
+   "seconds": 20.4,
    "cache_hits": 44,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27479,6 +28874,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -27486,7 +28884,7 @@
    "ticker": "GTLB",
    "adj_eps_ok": 21,
    "merged_direct": 12,
-   "seconds": 331.2,
+   "seconds": 22.2,
    "cache_hits": 41,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27582,6 +28980,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -27589,7 +28990,7 @@
    "ticker": "CFLT",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 6.1,
+   "seconds": 8.4,
    "cache_hits": 0,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27600,6 +29001,12 @@
    "xbrl_rejected": 0,
    "xbrl_orphan": {},
    "q4_채움": {},
+   "은행개념_후보": {},
+   "사라진회사_검색": {
+    "이름": "Confluent Inc",
+    "찾음": []
+   },
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -27607,7 +29014,7 @@
    "ticker": "ESTC",
    "adj_eps_ok": 32,
    "merged_direct": 21,
-   "seconds": 42.6,
+   "seconds": 30.8,
    "cache_hits": 65,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27703,6 +29110,9 @@
      "채움": 8
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -27710,7 +29120,7 @@
    "ticker": "TENB",
    "adj_eps_ok": 34,
    "merged_direct": 25,
-   "seconds": 97.1,
+   "seconds": 64.3,
    "cache_hits": 72,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27807,6 +29217,14 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 17,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -27814,7 +29232,7 @@
    "ticker": "VRNS",
    "adj_eps_ok": 40,
    "merged_direct": 36,
-   "seconds": 27.8,
+   "seconds": 43.1,
    "cache_hits": 66,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27908,6 +29326,9 @@
      "채움": 13
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -27915,7 +29336,7 @@
    "ticker": "PCTY",
    "adj_eps_ok": 38,
    "merged_direct": 39,
-   "seconds": 41.3,
+   "seconds": 39.9,
    "cache_hits": 81,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28013,6 +29434,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -28020,7 +29444,7 @@
    "ticker": "PAYC",
    "adj_eps_ok": 40,
    "merged_direct": 0,
-   "seconds": 41.9,
+   "seconds": 50.5,
    "cache_hits": 120,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28118,6 +29542,9 @@
      "채움": 2
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -28125,7 +29552,7 @@
    "ticker": "BOX",
    "adj_eps_ok": 38,
    "merged_direct": 29,
-   "seconds": 28.7,
+   "seconds": 46.1,
    "cache_hits": 88,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28222,6 +29649,14 @@
      "채움": 12
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 4,
+     "연간": 0
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -28229,7 +29664,7 @@
    "ticker": "DBX",
    "adj_eps_ok": 34,
    "merged_direct": 33,
-   "seconds": 57.1,
+   "seconds": 31.1,
    "cache_hits": 73,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28317,6 +29752,9 @@
      "채움": 9
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -28324,7 +29762,7 @@
    "ticker": "APPF",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 74.1,
+   "seconds": 48.1,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28421,6 +29859,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 30,
+     "연간": 11
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -28428,7 +29874,7 @@
    "ticker": "MANH",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 22.9,
+   "seconds": 23.9,
    "cache_hits": 62,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28525,6 +29971,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 8,
+     "연간": 17
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -28532,7 +29986,7 @@
    "ticker": "TYL",
    "adj_eps_ok": 42,
    "merged_direct": 39,
-   "seconds": 34.3,
+   "seconds": 28.4,
    "cache_hits": 79,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28638,6 +30092,14 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 11,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -28645,7 +30107,7 @@
    "ticker": "PEGA",
    "adj_eps_ok": 7,
    "merged_direct": 3,
-   "seconds": 26.2,
+   "seconds": 63.8,
    "cache_hits": 104,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28747,6 +30209,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -28754,7 +30219,7 @@
    "ticker": "VEEV",
    "adj_eps_ok": 39,
    "merged_direct": 38,
-   "seconds": 49.4,
+   "seconds": 37.5,
    "cache_hits": 88,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28849,6 +30314,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -28856,7 +30324,7 @@
    "ticker": "UBER",
    "adj_eps_ok": 4,
    "merged_direct": 29,
-   "seconds": 50.3,
+   "seconds": 36.1,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28943,6 +30411,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -28950,7 +30421,7 @@
    "ticker": "LYFT",
    "adj_eps_ok": 0,
    "merged_direct": 6,
-   "seconds": 54.8,
+   "seconds": 48.0,
    "cache_hits": 88,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29043,6 +30514,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 7,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -29050,7 +30529,7 @@
    "ticker": "DKNG",
    "adj_eps_ok": 15,
    "merged_direct": 6,
-   "seconds": 100.0,
+   "seconds": 58.6,
    "cache_hits": 37,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29138,6 +30617,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 6,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -29145,7 +30632,7 @@
    "ticker": "EXPE",
    "adj_eps_ok": 35,
    "merged_direct": 30,
-   "seconds": 99.6,
+   "seconds": 59.3,
    "cache_hits": 109,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29236,6 +30723,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -29243,7 +30733,7 @@
    "ticker": "BKNG",
    "adj_eps_ok": 34,
    "merged_direct": 37,
-   "seconds": 112.2,
+   "seconds": 130.4,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29342,6 +30832,9 @@
      "이미있음": 9
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -29349,7 +30842,7 @@
    "ticker": "CHWY",
    "adj_eps_ok": 10,
    "merged_direct": 2,
-   "seconds": 256.5,
+   "seconds": 171.6,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29446,6 +30939,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -29453,7 +30949,7 @@
    "ticker": "CVNA",
    "adj_eps_ok": 5,
    "merged_direct": 0,
-   "seconds": 115.8,
+   "seconds": 167.7,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29542,6 +31038,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -29549,7 +31048,7 @@
    "ticker": "ZG",
    "adj_eps_ok": 9,
    "merged_direct": 12,
-   "seconds": 793.6,
+   "seconds": 453.7,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29647,6 +31146,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -29654,7 +31156,7 @@
    "ticker": "MTCH",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 666.0,
+   "seconds": 387.3,
    "cache_hits": 99,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29745,6 +31247,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -29752,7 +31257,7 @@
    "ticker": "YELP",
    "adj_eps_ok": 4,
    "merged_direct": 22,
-   "seconds": 755.0,
+   "seconds": 426.6,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29841,6 +31346,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -29848,7 +31356,7 @@
    "ticker": "TRIP",
    "adj_eps_ok": 39,
    "merged_direct": 27,
-   "seconds": 510.6,
+   "seconds": 286.9,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29945,6 +31453,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 8,
+     "연간": 2
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -29952,10 +31468,10 @@
    "ticker": "TDOC",
    "adj_eps_ok": 0,
    "merged_direct": 12,
-   "seconds": 665.1,
+   "seconds": 273.2,
    "cache_hits": 95,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -30056,6 +31572,14 @@
      "이미있음": 3
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 28,
+     "연간": 8
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -30063,7 +31587,7 @@
    "ticker": "RH",
    "adj_eps_ok": 24,
    "merged_direct": 15,
-   "seconds": 499.6,
+   "seconds": 271.7,
    "cache_hits": 118,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30172,6 +31696,18 @@
      "채움": 3
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 0,
+     "연간": 2
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 2,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -30179,7 +31715,7 @@
    "ticker": "YETI",
    "adj_eps_ok": 33,
    "merged_direct": 32,
-   "seconds": 156.5,
+   "seconds": 59.4,
    "cache_hits": 75,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30278,6 +31814,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -30285,7 +31824,7 @@
    "ticker": "TFC",
    "adj_eps_ok": 24,
    "merged_direct": 7,
-   "seconds": 137.9,
+   "seconds": 267.8,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30354,6 +31893,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 55,
+     "연간": 19
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -30361,7 +31920,7 @@
    "ticker": "RF",
    "adj_eps_ok": 10,
    "merged_direct": 5,
-   "seconds": 831.2,
+   "seconds": 277.6,
    "cache_hits": 68,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30456,6 +32015,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 55,
+     "연간": 18
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -30463,7 +32042,7 @@
    "ticker": "HBAN",
    "adj_eps_ok": 17,
    "merged_direct": 0,
-   "seconds": 84.7,
+   "seconds": 42.9,
    "cache_hits": 113,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30545,6 +32124,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 61,
+     "연간": 18
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 61,
+     "연간": 18
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 51,
+     "연간": 18
+    },
+    "NoninterestIncome": {
+     "분기": 61,
+     "연간": 18
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -30552,7 +32151,7 @@
    "ticker": "CFG",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 372.1,
+   "seconds": 223.9,
    "cache_hits": 82,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30643,6 +32242,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 39,
+     "연간": 14
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 39,
+     "연간": 14
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 39,
+     "연간": 14
+    },
+    "NoninterestIncome": {
+     "분기": 39,
+     "연간": 14
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -30650,7 +32269,7 @@
    "ticker": "MTB",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 358.2,
+   "seconds": 227.0,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30740,6 +32359,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 55,
+     "연간": 19
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -30747,7 +32386,7 @@
    "ticker": "STT",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 336.7,
+   "seconds": 218.8,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30822,6 +32461,22 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 26,
+     "연간": 10
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 17
+    },
+    "NoninterestIncome": {
+     "분기": 23,
+     "연간": 10
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -30829,7 +32484,7 @@
    "ticker": "BK",
    "adj_eps_ok": 15,
    "merged_direct": 1,
-   "seconds": 457.5,
+   "seconds": 299.9,
    "cache_hits": 158,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30916,6 +32571,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 71,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 71,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 71,
+     "연간": 19
+    },
+    "NoninterestIncome": {
+     "분기": 69,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -30923,7 +32598,7 @@
    "ticker": "NTRS",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 404.7,
+   "seconds": 134.4,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31015,6 +32690,30 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 8,
+     "연간": 4
+    },
+    "InterestAndDividendIncomeOperating": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 55,
+     "연간": 19
+    },
+    "NoninterestIncome": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -31022,7 +32721,7 @@
    "ticker": "ALLY",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 763.3,
+   "seconds": 472.7,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31106,6 +32805,18 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 42,
+     "연간": 15
+    },
+    "NoninterestIncome": {
+     "분기": 51,
+     "연간": 15
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -31113,7 +32824,7 @@
    "ticker": "DFS",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 6.4,
+   "seconds": 6.0,
    "cache_hits": 0,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31124,6 +32835,28 @@
    "xbrl_rejected": 0,
    "xbrl_orphan": {},
    "q4_채움": {},
+   "은행개념_후보": {},
+   "사라진회사_검색": {
+    "이름": "Discover Financial Services",
+    "찾음": [
+     [
+      "CHOICEONE FINANCIAL SERVICES INC",
+      "803164",
+      "COFS"
+     ],
+     [
+      "Intercorp Financial Services Inc.",
+      "1615903",
+      "IFS"
+     ],
+     [
+      "CB Financial Services, Inc.",
+      "1605301",
+      "CBFV"
+     ]
+    ]
+   },
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -31131,7 +32864,7 @@
    "ticker": "SYF",
    "adj_eps_ok": 2,
    "merged_direct": 2,
-   "seconds": 318.8,
+   "seconds": 241.7,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31192,6 +32925,18 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 48,
+     "연간": 14
+    },
+    "NoninterestIncome": {
+     "분기": 40,
+     "연간": 14
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "8-K 200건까지만 확인했습니다"
   },
@@ -31199,7 +32944,7 @@
    "ticker": "AMP",
    "adj_eps_ok": 34,
    "merged_direct": 0,
-   "seconds": 387.6,
+   "seconds": 222.9,
    "cache_hits": 82,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31287,6 +33032,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 35,
+     "연간": 10
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -31294,7 +33047,7 @@
    "ticker": "RJF",
    "adj_eps_ok": 31,
    "merged_direct": 0,
-   "seconds": 609.7,
+   "seconds": 445.9,
    "cache_hits": 160,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31380,6 +33133,26 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 39,
+     "연간": 14
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 49,
+     "연간": 17
+    },
+    "InterestIncomeExpenseAfterProvisionForLoanLoss": {
+     "분기": 49,
+     "연간": 17
+    },
+    "NoninterestIncome": {
+     "분기": 18,
+     "연간": 7
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -31387,7 +33160,7 @@
    "ticker": "LPLA",
    "adj_eps_ok": 14,
    "merged_direct": 0,
-   "seconds": 203.4,
+   "seconds": 143.8,
    "cache_hits": 79,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31472,6 +33245,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 32,
+     "연간": 12
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -31479,7 +33260,7 @@
    "ticker": "IBKR",
    "adj_eps_ok": 28,
    "merged_direct": 0,
-   "seconds": 121.6,
+   "seconds": 96.2,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31564,6 +33345,22 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 34,
+     "연간": 12
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 23,
+     "연간": 8
+    },
+    "NoninterestIncome": {
+     "분기": 23,
+     "연간": 8
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -31571,7 +33368,7 @@
    "ticker": "COIN",
    "adj_eps_ok": 0,
    "merged_direct": 6,
-   "seconds": 360.4,
+   "seconds": 231.9,
    "cache_hits": 68,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31657,6 +33454,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -31664,7 +33464,7 @@
    "ticker": "HOOD",
    "adj_eps_ok": 0,
    "merged_direct": 5,
-   "seconds": 332.5,
+   "seconds": 233.6,
    "cache_hits": 67,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31750,6 +33550,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 19,
+     "연간": 7
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -31757,7 +33565,7 @@
    "ticker": "SOFI",
    "adj_eps_ok": 7,
    "merged_direct": 3,
-   "seconds": 111.3,
+   "seconds": 96.1,
    "cache_hits": 83,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31843,6 +33651,22 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "RevenuesNetOfInterestExpense": {
+     "분기": 19,
+     "연간": 7
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 19,
+     "연간": 7
+    },
+    "NoninterestIncome": {
+     "분기": 19,
+     "연간": 7
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -31850,7 +33674,7 @@
    "ticker": "CB",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 172.6,
+   "seconds": 129.7,
    "cache_hits": 98,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31927,6 +33751,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 44,
+     "연간": 16
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -31934,7 +33766,7 @@
    "ticker": "HIG",
    "adj_eps_ok": 42,
    "merged_direct": 0,
-   "seconds": 206.3,
+   "seconds": 154.7,
    "cache_hits": 120,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32031,6 +33863,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -32038,7 +33873,7 @@
    "ticker": "CINF",
    "adj_eps_ok": 22,
    "merged_direct": 24,
-   "seconds": 134.4,
+   "seconds": 121.1,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32117,6 +33952,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -32124,7 +33962,7 @@
    "ticker": "WRB",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 44.4,
+   "seconds": 26.8,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32206,6 +34044,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -32213,7 +34054,7 @@
    "ticker": "AIZ",
    "adj_eps_ok": 20,
    "merged_direct": 6,
-   "seconds": 29.0,
+   "seconds": 29.3,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32298,6 +34139,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -32305,7 +34149,7 @@
    "ticker": "GL",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 22.6,
+   "seconds": 26.8,
    "cache_hits": 104,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32396,6 +34240,9 @@
      "채움": 9
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -32403,7 +34250,7 @@
    "ticker": "L",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 22.2,
+   "seconds": 23.9,
    "cache_hits": 77,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32490,6 +34337,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 0,
+     "연간": 1
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -32497,7 +34352,7 @@
    "ticker": "MKL",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 22.0,
+   "seconds": 30.4,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32582,6 +34437,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -32589,7 +34447,7 @@
    "ticker": "AFG",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 56.6,
+   "seconds": 30.9,
    "cache_hits": 102,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32684,6 +34542,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 11,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -32691,7 +34557,7 @@
    "ticker": "ABT",
    "adj_eps_ok": 27,
    "merged_direct": 0,
-   "seconds": 26.4,
+   "seconds": 22.7,
    "cache_hits": 112,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32777,6 +34643,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -32784,7 +34653,7 @@
    "ticker": "BDX",
    "adj_eps_ok": 34,
    "merged_direct": 1,
-   "seconds": 33.3,
+   "seconds": 31.0,
    "cache_hits": 133,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32881,6 +34750,9 @@
      "이미있음": 7
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -32888,7 +34760,7 @@
    "ticker": "BAX",
    "adj_eps_ok": 25,
    "merged_direct": 25,
-   "seconds": 49.4,
+   "seconds": 53.9,
    "cache_hits": 94,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32995,6 +34867,14 @@
      "채움": 2
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 31,
+     "연간": 10
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -33002,7 +34882,7 @@
    "ticker": "EW",
    "adj_eps_ok": 27,
    "merged_direct": 3,
-   "seconds": 39.6,
+   "seconds": 30.2,
    "cache_hits": 81,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33100,6 +34980,14 @@
      "채움": 3
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 29,
+     "연간": 4
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -33107,7 +34995,7 @@
    "ticker": "IDXX",
    "adj_eps_ok": 1,
    "merged_direct": 2,
-   "seconds": 51.6,
+   "seconds": 29.9,
    "cache_hits": 92,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33214,6 +35102,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -33221,7 +35112,7 @@
    "ticker": "RMD",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 35.9,
+   "seconds": 50.7,
    "cache_hits": 77,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33327,6 +35218,14 @@
      "채움": 17
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 15,
+     "연간": 4
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -33334,10 +35233,10 @@
    "ticker": "ALGN",
    "adj_eps_ok": 26,
    "merged_direct": 26,
-   "seconds": 29.3,
+   "seconds": 26.6,
    "cache_hits": 116,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -33442,6 +35341,9 @@
      "채움": 16
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -33449,7 +35351,7 @@
    "ticker": "DXCM",
    "adj_eps_ok": 31,
    "merged_direct": 31,
-   "seconds": 35.7,
+   "seconds": 22.8,
    "cache_hits": 92,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33554,6 +35456,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -33561,7 +35466,7 @@
    "ticker": "PODD",
    "adj_eps_ok": 4,
    "merged_direct": 16,
-   "seconds": 47.6,
+   "seconds": 45.4,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33665,6 +35570,18 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {
+    "InterestAndDividendIncomeOperating": {
+     "분기": 14,
+     "연간": 5
+    },
+    "InterestIncomeExpenseNet": {
+     "분기": 14,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -33672,7 +35589,7 @@
    "ticker": "HOLX",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 6.7,
+   "seconds": 6.0,
    "cache_hits": 0,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33683,6 +35600,12 @@
    "xbrl_rejected": 0,
    "xbrl_orphan": {},
    "q4_채움": {},
+   "은행개념_후보": {},
+   "사라진회사_검색": {
+    "이름": "Hologic Inc",
+    "찾음": []
+   },
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -33690,7 +35613,7 @@
    "ticker": "STE",
    "adj_eps_ok": 32,
    "merged_direct": 1,
-   "seconds": 124.6,
+   "seconds": 67.8,
    "cache_hits": 63,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33787,6 +35710,9 @@
      "채움": 2
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -33794,7 +35720,7 @@
    "ticker": "WAT",
    "adj_eps_ok": 32,
    "merged_direct": 1,
-   "seconds": 173.8,
+   "seconds": 100.6,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33887,6 +35813,14 @@
      "이미있음": 7
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 6,
+     "연간": 4
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -33894,7 +35828,7 @@
    "ticker": "MTD",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 122.0,
+   "seconds": 49.5,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33979,6 +35913,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -33986,7 +35923,7 @@
    "ticker": "WST",
    "adj_eps_ok": 0,
    "merged_direct": 30,
-   "seconds": 211.3,
+   "seconds": 130.6,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34092,6 +36029,9 @@
      "이미있음": 2
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -34099,7 +36039,7 @@
    "ticker": "TMO",
    "adj_eps_ok": 32,
    "merged_direct": 31,
-   "seconds": 141.8,
+   "seconds": 97.1,
    "cache_hits": 103,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34196,6 +36136,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -34203,7 +36146,7 @@
    "ticker": "DHR",
    "adj_eps_ok": 29,
    "merged_direct": 4,
-   "seconds": 145.5,
+   "seconds": 96.4,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34304,6 +36247,9 @@
      "채움": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -34311,7 +36257,7 @@
    "ticker": "ZTS",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 81.9,
+   "seconds": 73.8,
    "cache_hits": 61,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34390,6 +36336,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -34397,10 +36346,10 @@
    "ticker": "JAZZ",
    "adj_eps_ok": 29,
    "merged_direct": 2,
-   "seconds": 94.5,
+   "seconds": 91.6,
    "cache_hits": 91,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -34491,6 +36440,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -34498,10 +36450,10 @@
    "ticker": "INCY",
    "adj_eps_ok": 34,
    "merged_direct": 27,
-   "seconds": 30.7,
+   "seconds": 39.4,
    "cache_hits": 93,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -34590,6 +36542,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -34597,10 +36552,10 @@
    "ticker": "EXEL",
    "adj_eps_ok": 31,
    "merged_direct": 2,
-   "seconds": 37.1,
+   "seconds": 62.4,
    "cache_hits": 98,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -34685,6 +36640,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -34692,7 +36650,7 @@
    "ticker": "NBIX",
    "adj_eps_ok": 26,
    "merged_direct": 44,
-   "seconds": 36.1,
+   "seconds": 31.6,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34791,6 +36749,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -34798,7 +36759,7 @@
    "ticker": "ALNY",
    "adj_eps_ok": 33,
    "merged_direct": 8,
-   "seconds": 40.0,
+   "seconds": 27.5,
    "cache_hits": 95,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34887,6 +36848,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -34894,10 +36858,10 @@
    "ticker": "BMRN",
    "adj_eps_ok": 16,
    "merged_direct": 10,
-   "seconds": 78.3,
-   "cache_hits": 97,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 46.9,
+   "cache_hits": 98,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -34993,6 +36957,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -35000,7 +36967,7 @@
    "ticker": "UTHR",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 98.7,
+   "seconds": 57.0,
    "cache_hits": 131,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35106,6 +37073,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -35113,7 +37083,7 @@
    "ticker": "VTRS",
    "adj_eps_ok": 11,
    "merged_direct": 23,
-   "seconds": 85.4,
+   "seconds": 68.6,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35210,6 +37180,9 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -35217,7 +37190,7 @@
    "ticker": "IQV",
    "adj_eps_ok": 40,
    "merged_direct": 39,
-   "seconds": 84.3,
+   "seconds": 55.1,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35308,6 +37281,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -35315,7 +37291,7 @@
    "ticker": "CRL",
    "adj_eps_ok": 28,
    "merged_direct": 17,
-   "seconds": 93.4,
+   "seconds": 66.9,
    "cache_hits": 91,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35412,6 +37388,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -35419,7 +37398,7 @@
    "ticker": "GD",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 101.3,
+   "seconds": 247.7,
    "cache_hits": 77,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35515,6 +37494,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 54,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -35522,7 +37509,7 @@
    "ticker": "NOC",
    "adj_eps_ok": 34,
    "merged_direct": 3,
-   "seconds": 49.7,
+   "seconds": 245.4,
    "cache_hits": 114,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35621,6 +37608,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -35628,7 +37618,7 @@
    "ticker": "LHX",
    "adj_eps_ok": 20,
    "merged_direct": 11,
-   "seconds": 492.1,
+   "seconds": 244.3,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35739,6 +37729,14 @@
      "이미있음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 25,
+     "연간": 6
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -35746,7 +37744,7 @@
    "ticker": "TDG",
    "adj_eps_ok": 24,
    "merged_direct": 0,
-   "seconds": 46.0,
+   "seconds": 239.9,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35852,6 +37850,14 @@
      "채움": 14
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 48,
+     "연간": 16
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -35859,7 +37865,7 @@
    "ticker": "HWM",
    "adj_eps_ok": 12,
    "merged_direct": 19,
-   "seconds": 506.0,
+   "seconds": 230.8,
    "cache_hits": 131,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35957,6 +37963,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 2,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -35964,7 +37978,7 @@
    "ticker": "TXT",
    "adj_eps_ok": 18,
    "merged_direct": 2,
-   "seconds": 40.2,
+   "seconds": 222.5,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36053,6 +38067,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 28,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -36060,7 +38082,7 @@
    "ticker": "RTX",
    "adj_eps_ok": 32,
    "merged_direct": 31,
-   "seconds": 456.5,
+   "seconds": 31.9,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36157,6 +38179,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 13,
+     "연간": 4
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -36164,7 +38194,7 @@
    "ticker": "BAH",
    "adj_eps_ok": 33,
    "merged_direct": 14,
-   "seconds": 519.0,
+   "seconds": 122.0,
    "cache_hits": 61,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36258,6 +38288,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -36265,7 +38298,7 @@
    "ticker": "LDOS",
    "adj_eps_ok": 26,
    "merged_direct": 25,
-   "seconds": 444.6,
+   "seconds": 29.6,
    "cache_hits": 66,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36360,6 +38393,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 22,
+     "연간": 8
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -36367,7 +38408,7 @@
    "ticker": "URI",
    "adj_eps_ok": 35,
    "merged_direct": 2,
-   "seconds": 448.0,
+   "seconds": 26.7,
    "cache_hits": 126,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36467,6 +38508,9 @@
      "이미있음": 16
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -36474,7 +38518,7 @@
    "ticker": "FAST",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 35.0,
+   "seconds": 22.3,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36573,6 +38617,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -36580,7 +38627,7 @@
    "ticker": "GWW",
    "adj_eps_ok": 27,
    "merged_direct": 0,
-   "seconds": 35.6,
+   "seconds": 22.5,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36685,6 +38732,14 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 23,
+     "연간": 8
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -36692,7 +38747,7 @@
    "ticker": "SWK",
    "adj_eps_ok": 19,
    "merged_direct": 5,
-   "seconds": 73.7,
+   "seconds": 64.1,
    "cache_hits": 117,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36780,6 +38835,14 @@
      "이미있음": 9
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 7,
+     "연간": 2
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -36787,7 +38850,7 @@
    "ticker": "DOV",
    "adj_eps_ok": 34,
    "merged_direct": 1,
-   "seconds": 95.4,
+   "seconds": 67.4,
    "cache_hits": 73,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36893,6 +38956,14 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 0,
+     "연간": 3
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -36900,7 +38971,7 @@
    "ticker": "ROK",
    "adj_eps_ok": 36,
    "merged_direct": 2,
-   "seconds": 46.3,
+   "seconds": 43.9,
    "cache_hits": 89,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37005,6 +39076,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -37012,7 +39086,7 @@
    "ticker": "AME",
    "adj_eps_ok": 32,
    "merged_direct": 12,
-   "seconds": 38.2,
+   "seconds": 38.4,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37109,6 +39183,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -37116,7 +39193,7 @@
    "ticker": "XYL",
    "adj_eps_ok": 28,
    "merged_direct": 21,
-   "seconds": 58.8,
+   "seconds": 51.1,
    "cache_hits": 63,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37217,6 +39294,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -37224,7 +39304,7 @@
    "ticker": "IEX",
    "adj_eps_ok": 36,
    "merged_direct": 27,
-   "seconds": 76.0,
+   "seconds": 49.9,
    "cache_hits": 92,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37337,6 +39417,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -37344,7 +39427,7 @@
    "ticker": "PNR",
    "adj_eps_ok": 24,
    "merged_direct": 9,
-   "seconds": 36.1,
+   "seconds": 25.1,
    "cache_hits": 87,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37437,6 +39520,14 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 41,
+     "연간": 14
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -37444,7 +39535,7 @@
    "ticker": "WAB",
    "adj_eps_ok": 34,
    "merged_direct": 15,
-   "seconds": 120.0,
+   "seconds": 79.5,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37550,6 +39641,14 @@
      "채움": 6
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 36,
+     "연간": 11
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -37557,7 +39656,7 @@
    "ticker": "JCI",
    "adj_eps_ok": 35,
    "merged_direct": 6,
-   "seconds": 56.0,
+   "seconds": 46.2,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37664,6 +39763,9 @@
      "채움": 10
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -37671,7 +39773,7 @@
    "ticker": "CARR",
    "adj_eps_ok": 26,
    "merged_direct": 26,
-   "seconds": 40.7,
+   "seconds": 25.5,
    "cache_hits": 88,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37759,6 +39861,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -37766,7 +39871,7 @@
    "ticker": "OTIS",
    "adj_eps_ok": 26,
    "merged_direct": 26,
-   "seconds": 27.0,
+   "seconds": 24.3,
    "cache_hits": 61,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37854,6 +39959,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 15,
+     "연간": 6
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -37861,7 +39974,7 @@
    "ticker": "TT",
    "adj_eps_ok": 0,
    "merged_direct": 36,
-   "seconds": 42.9,
+   "seconds": 44.8,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37962,6 +40075,9 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -37969,7 +40085,7 @@
    "ticker": "LIN",
    "adj_eps_ok": 26,
    "merged_direct": 30,
-   "seconds": 51.5,
+   "seconds": 31.7,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38063,6 +40179,14 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 14,
+     "연간": 6
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -38070,7 +40194,7 @@
    "ticker": "DD",
    "adj_eps_ok": 31,
    "merged_direct": 0,
-   "seconds": 59.7,
+   "seconds": 52.7,
    "cache_hits": 89,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38158,6 +40282,9 @@
      "이미있음": 3
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -38165,7 +40292,7 @@
    "ticker": "DOW",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 56.8,
+   "seconds": 65.3,
    "cache_hits": 93,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38253,6 +40380,9 @@
      "이미있음": 4
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -38260,7 +40390,7 @@
    "ticker": "CE",
    "adj_eps_ok": 22,
    "merged_direct": 0,
-   "seconds": 51.3,
+   "seconds": 44.8,
    "cache_hits": 66,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38360,6 +40490,9 @@
      "채움": 17
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -38367,7 +40500,7 @@
    "ticker": "EMN",
    "adj_eps_ok": 29,
    "merged_direct": 0,
-   "seconds": 38.3,
+   "seconds": 20.9,
    "cache_hits": 72,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38467,6 +40600,14 @@
      "이미있음": 12
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 55,
+     "연간": 19
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -38474,7 +40615,7 @@
    "ticker": "MOS",
    "adj_eps_ok": 35,
    "merged_direct": 4,
-   "seconds": 49.9,
+   "seconds": 24.7,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38566,6 +40707,14 @@
      "채움": 16
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 50,
+     "연간": 10
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -38573,7 +40722,7 @@
    "ticker": "CF",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 59.2,
+   "seconds": 33.3,
    "cache_hits": 73,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38677,6 +40826,9 @@
      "이미있음": 10
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -38684,7 +40836,7 @@
    "ticker": "FMC",
    "adj_eps_ok": 25,
    "merged_direct": 4,
-   "seconds": 34.4,
+   "seconds": 56.7,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38787,6 +40939,9 @@
      "이미있음": 16
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -38794,7 +40949,7 @@
    "ticker": "IFF",
    "adj_eps_ok": 32,
    "merged_direct": 14,
-   "seconds": 43.1,
+   "seconds": 72.8,
    "cache_hits": 113,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38896,6 +41051,9 @@
      "이미있음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -38903,7 +41061,7 @@
    "ticker": "AVY",
    "adj_eps_ok": 40,
    "merged_direct": 38,
-   "seconds": 58.4,
+   "seconds": 33.3,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39002,6 +41160,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -39009,10 +41170,10 @@
    "ticker": "PKG",
    "adj_eps_ok": 0,
    "merged_direct": 3,
-   "seconds": 47.7,
+   "seconds": 70.1,
    "cache_hits": 81,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -39113,14 +41274,22 @@
      "채움": 5
     }
    },
-   "시간초과": true,
-   "note": "수집 시간 예산 초과 — 새 내려받기는 다음 런으로 미루고 캐시된 원문만 읽었습니다 (실적 41건 시점)"
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 26,
+     "연간": 9
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
+   "시간초과": false,
+   "note": ""
   },
   {
    "ticker": "IP",
    "adj_eps_ok": 19,
    "merged_direct": 4,
-   "seconds": 28.8,
+   "seconds": 18.0,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39201,6 +41370,14 @@
      "이미있음": 7
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 40,
+     "연간": 12
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -39208,7 +41385,7 @@
    "ticker": "BALL",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 49.4,
+   "seconds": 25.1,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39306,6 +41483,9 @@
      "이미있음": 10
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -39313,7 +41493,7 @@
    "ticker": "STLD",
    "adj_eps_ok": 8,
    "merged_direct": 26,
-   "seconds": 44.4,
+   "seconds": 15.0,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39420,6 +41600,9 @@
      "채움": 5
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -39427,7 +41610,7 @@
    "ticker": "CLF",
    "adj_eps_ok": 11,
    "merged_direct": 2,
-   "seconds": 38.1,
+   "seconds": 17.0,
    "cache_hits": 114,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39533,6 +41716,14 @@
      "이미있음": 11
     }
    },
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 17,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
   },
@@ -39540,7 +41731,7 @@
    "ticker": "X",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 6.1,
+   "seconds": 6.0,
    "cache_hits": 0,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39551,6 +41742,28 @@
    "xbrl_rejected": 0,
    "xbrl_orphan": {},
    "q4_채움": {},
+   "은행개념_후보": {},
+   "사라진회사_검색": {
+    "이름": "United States Steel Corporation",
+    "찾음": [
+     [
+      "UNITED STATES ANTIMONY CORP",
+      "101538",
+      "UAMY"
+     ],
+     [
+      "Toyota Tsusho Corporation",
+      "2018139",
+      "TYHOF"
+     ],
+     [
+      "Toyota Tsusho Corporation",
+      "2018139",
+      "TYHOY"
+     ]
+    ]
+   },
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -39558,7 +41771,7 @@
    "ticker": "RS",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 40.6,
+   "seconds": 45.4,
    "cache_hits": 68,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39650,17 +41863,20 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
   {
    "ticker": "DVN",
-   "adj_eps_ok": 7,
+   "adj_eps_ok": 8,
    "merged_direct": 1,
-   "seconds": 101.7,
+   "seconds": 81.9,
    "cache_hits": 104,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 6,
+   "fetch_attempts": 6,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -39749,17 +41965,20 @@
      "연간없음": 1
     }
    },
-   "시간초과": true,
-   "note": "수집 시간 예산 초과 — 새 내려받기는 다음 런으로 미루고 캐시된 원문만 읽었습니다 (실적 26건 시점)"
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
+   "시간초과": false,
+   "note": ""
   },
   {
    "ticker": "FANG",
-   "adj_eps_ok": 22,
-   "merged_direct": 21,
-   "seconds": 79.0,
+   "adj_eps_ok": 33,
+   "merged_direct": 32,
+   "seconds": 151.7,
    "cache_hits": 86,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 48,
+   "fetch_attempts": 48,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -39843,14 +42062,22 @@
      "연간없음": 1
     }
    },
-   "시간초과": true,
-   "note": "수집 시간 예산 초과 — 새 내려받기는 다음 런으로 미루고 캐시된 원문만 읽었습니다 (실적 32건 시점)"
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 8,
+     "연간": 5
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
+   "시간초과": false,
+   "note": "실적 44건 확보 후 조기 종료"
   },
   {
    "ticker": "HES",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 6.1,
+   "seconds": 6.0,
    "cache_hits": 0,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39861,6 +42088,28 @@
    "xbrl_rejected": 0,
    "xbrl_orphan": {},
    "q4_채움": {},
+   "은행개념_후보": {},
+   "사라진회사_검색": {
+    "이름": "Hess Corporation",
+    "찾음": [
+     [
+      "IHI Corporation",
+      "1567526",
+      "IHICF"
+     ],
+     [
+      "Kose Corporation",
+      "1668501",
+      "KOSCF"
+     ],
+     [
+      "Disco Corporation",
+      "1671750",
+      "DISPF"
+     ]
+    ]
+   },
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
@@ -39868,7 +42117,7 @@
    "ticker": "APA",
    "adj_eps_ok": 0,
    "merged_direct": 22,
-   "seconds": 47.9,
+   "seconds": 43.6,
    "cache_hits": 62,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39940,17 +42189,20 @@
      "연간없음": 1
     }
    },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
    "시간초과": false,
    "note": ""
   },
   {
    "ticker": "OKE",
    "adj_eps_ok": 0,
-   "merged_direct": 24,
-   "seconds": 93.7,
+   "merged_direct": 25,
+   "seconds": 89.4,
    "cache_hits": 188,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 12,
+   "fetch_attempts": 12,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -40050,17 +42302,20 @@
      "이미있음": 5
     }
    },
-   "시간초과": true,
-   "note": "수집 시간 예산 초과 — 새 내려받기는 다음 런으로 미루고 캐시된 원문만 읽었습니다 (실적 27건 시점)"
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
+   "시간초과": false,
+   "note": "8-K 200건까지만 확인했습니다"
   },
   {
    "ticker": "WMB",
-   "adj_eps_ok": 24,
-   "merged_direct": 25,
-   "seconds": 105.1,
+   "adj_eps_ok": 35,
+   "merged_direct": 35,
+   "seconds": 145.4,
    "cache_hits": 76,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 35,
+   "fetch_attempts": 35,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -40154,17 +42409,20 @@
      "연간없음": 1
     }
    },
-   "시간초과": true,
-   "note": "수집 시간 예산 초과 — 새 내려받기는 다음 런으로 미루고 캐시된 원문만 읽었습니다 (실적 28건 시점)"
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
+   "시간초과": false,
+   "note": "실적 44건 확보 후 조기 종료"
   },
   {
    "ticker": "TRGP",
    "adj_eps_ok": 0,
-   "merged_direct": 21,
-   "seconds": 89.0,
+   "merged_direct": 34,
+   "seconds": 107.8,
    "cache_hits": 85,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 55,
+   "fetch_attempts": 55,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -40259,17 +42517,25 @@
      "이미있음": 9
     }
    },
-   "시간초과": true,
-   "note": "수집 시간 예산 초과 — 새 내려받기는 다음 런으로 미루고 캐시된 원문만 읽었습니다 (실적 29건 시점)"
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 9,
+     "연간": 6
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
+   "시간초과": false,
+   "note": "실적 44건 확보 후 조기 종료"
   },
   {
    "ticker": "LNG",
    "adj_eps_ok": 0,
-   "merged_direct": 16,
-   "seconds": 15.3,
+   "merged_direct": 28,
+   "seconds": 126.1,
    "cache_hits": 108,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 66,
+   "fetch_attempts": 66,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -40349,17 +42615,20 @@
      "연간없음": 1
     }
    },
-   "시간초과": true,
-   "note": "수집 시간 예산 초과 — 새 내려받기는 다음 런으로 미루고 캐시된 원문만 읽었습니다 (실적 24건 시점)"
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
+   "시간초과": false,
+   "note": "실적 44건 확보 후 조기 종료"
   },
   {
    "ticker": "BKR",
-   "adj_eps_ok": 16,
-   "merged_direct": 17,
-   "seconds": 27.8,
+   "adj_eps_ok": 33,
+   "merged_direct": 33,
+   "seconds": 121.7,
    "cache_hits": 52,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 52,
+   "fetch_attempts": 52,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -40448,8 +42717,16 @@
      "이미있음": 4
     }
    },
-   "시간초과": true,
-   "note": "수집 시간 예산 초과 — 새 내려받기는 다음 런으로 미루고 캐시된 원문만 읽었습니다 (실적 24건 시점)"
+   "은행개념_후보": {
+    "InterestIncomeExpenseNet": {
+     "분기": 28,
+     "연간": 11
+    }
+   },
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
+   "시간초과": false,
+   "note": "실적 44건 확보 후 조기 종료"
   }
  ]
 }
