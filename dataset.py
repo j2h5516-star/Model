@@ -427,6 +427,62 @@ _CUMULATIVE_TOLERANCE = 0.20    # 직전 4분기 합과 이 비율 안으로 같
 _CUMULATIVE_MIN_HISTORY = 4     # 비교할 지난 분기가 이만큼은 있어야 한다
 
 
+# ---------------------------------------------------------------------------
+# 161차 — 빠르게 자라는 회사를 골라 죽이던 덫
+# ---------------------------------------------------------------------------
+# 주인이 "크리도가 실적발표 후 폭락했다, 델타 하락이냐"고 물어 파다가
+# 찾았습니다. CRDO 의 조정 EPS 1.16·1.07·0.52·0.25 가 **수집은 제대로
+# 됐는데 여기서 지워지고** 있었습니다. 그래서 CRDO 는 2024-12 이후
+# 줄곧 "판단 불가"였습니다 — 주인이 보는 화면에서 통째로 빠져 있었습니다.
+#
+# 왜 그러나 (산수):
+#   위 규칙은 "지난 중앙값의 2.5배 초과 ∧ 직전 4분기 합과 20% 안"입니다.
+#   그런데 이익이 분기마다 비율 r 로 자라면 직전 4분기 합은
+#       v·(1/r + 1/r² + 1/r³ + 1/r⁴)
+#   이고, r ≈ 1.9~2.2 구간에서 이 값이 v 와 20% 안으로 같아집니다.
+#   즉 **분기 이익이 대략 두 배씩 늘면 최근 한 분기가 직전 네 분기 합과
+#   저절로 닮습니다.** 성장률이 높을수록 중앙값 조건도 쉽게 넘습니다.
+#   빠르게 자라는 회사만 골라 죽이는 덫이었습니다.
+#
+# 전수 실측 (2026-09-01 수집물):
+#   누적으로 버린 300건 중 **270건이 진짜 분기 값**(오탐),
+#   진짜 누적으로 확인된 것 **0건**, 가릴 수 없는 것 30건. 148종목.
+#   원 주석이 누적값 사례로 든 **MU 12.20 조차 진짜 분기 값**이었습니다
+#   (매출 23,860M 이 XBRL 3개월 매출과 정확히 같고 앞뒤 분기와 매끄럽게
+#   이어집니다: 13,643 → 23,860 → 41,456).
+#
+# 고침 — **식 밖에서 온 자**로 면제합니다 (150차-AO 와 같은 방법):
+#   ① 보도자료 매출 == XBRL **3개월** 매출  → 그 행은 분기 행이다.
+#      XBRL 은 기간이 태그로 붙어 있어 누적일 수 없습니다.
+#   ② 그리고 GAAP EPS 가 XBRL **연간** EPS 와 같지 **않다**.
+#      ①만으로는 모자랍니다 — 실측으로 "매출은 분기인데 EPS 는 연간"인
+#      행이 **157개** 있었습니다(NXPI 23·24·25 Q4, SWKS 21·22 Q4 등).
+#      대부분 Q4 자리라 앞의 `_연간값이_4분기_자리에_있으면_버린다` 가
+#      먼저 잡지만, 여기서도 한 겹 더 막습니다.
+#   XBRL 연간값 칸이 아예 없으면(1~3분기는 원래 없습니다) ②는 통과로
+#   봅니다 — 연간값이라는 **증거가 없는** 것이니까요.
+#
+# 확인할 자가 하나도 없으면 예전처럼 버립니다 — "없음"이 "틀림"보다
+# 안전하다는 원칙은 그대로입니다(헌법 1조).
+_QUARTER_SAME_PCT = 0.01        # 매출이 "같다"고 볼 차이
+
+
+def _분기행임이_XBRL로_확인됨(row: dict) -> bool:
+    """이 행이 분기 행임을 XBRL(식 밖에서 온 값)로 확인합니다 (161차)."""
+    revenue, revenue_xbrl = row.get("revenue"), row.get("revenue_xbrl")
+    if not revenue or not revenue_xbrl or revenue_xbrl <= 0:
+        return False                      # 견줄 자가 없으면 확인 못 함
+    if abs(revenue - revenue_xbrl) / abs(revenue_xbrl) >= _QUARTER_SAME_PCT:
+        return False                      # 매출부터 분기값이 아니다
+    gaap, annual = row.get("gaap_eps"), row.get("gaap_eps_annual_xbrl")
+    if gaap is not None and annual is not None:
+        같음 = abs(gaap - annual) <= max(_ANNUAL_SAME_ABS,
+                                        abs(annual) * _ANNUAL_SAME_PCT)
+        if 같음:
+            return False                  # EPS 는 연간값이다 — 면제하지 않는다
+    return True
+
+
 def _one_cumulative_pass(ticker: str, rows: list[dict], notes: list[str]) -> bool:
     """누적값을 **한 칸만** 찾아 없음 처리하고, 지웠으면 True 를 돌려줍니다."""
     for field in _CUMULATIVE_FIELDS:
@@ -443,6 +499,10 @@ def _one_cumulative_pass(ticker: str, rows: list[dict], notes: list[str]) -> boo
                 continue
             if (value > middle * _CUMULATIVE_MULTIPLE
                     and abs(value - total) / total < _CUMULATIVE_TOLERANCE):
+                # 161차 — 산수만으로는 "빠르게 자란 것"과 "누적값"이
+                # 똑같이 생겼습니다. XBRL 로 분기 행임이 확인되면 둡니다.
+                if _분기행임이_XBRL로_확인됨(rows[index]):
+                    continue
                 notes.append(
                     f"{ticker} {rows[index].get('period_label', '?')}: "
                     f"{field}={value} 는 직전 4분기 합 {total:.2f} 과 거의 같고 "

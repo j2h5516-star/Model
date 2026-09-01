@@ -1130,6 +1130,88 @@ def test_연간값_검사가_누적값_검사보다_먼저_돈다():
         "먼저 지워져 조정 EPS 의 연간값을 못 잡습니다")
 
 
+# ---------------------------------------------------------------------------
+# 161차 — 빠르게 자라는 회사를 골라 죽이던 덫
+# ---------------------------------------------------------------------------
+
+def _성장행(i, value, revenue, **더):
+    """분기마다 대략 두 배씩 자라는 회사의 행. 매출은 XBRL 과 같게 둡니다.
+
+    영업이익은 매출에 비례시킵니다 — 고정값으로 두면 매출이 커질수록
+    마진이 0에 수렴해 **다른 검사**(단위 착오)가 울립니다.
+    """
+    row = quarter_row(
+        filing_date=f"{2024 + i // 4}-{(i % 4) * 3 + 1:02d}-28",
+        announced_date=f"{2024 + i // 4}-{(i % 4) * 3 + 2:02d}-28",
+        period_label=f"Q{i}", adj_eps=value, gaap_eps=round(value * 0.75, 4),
+        revenue=revenue, revenue_xbrl=revenue, op_income=revenue * 0.2)
+    row.update(더)
+    return row
+
+
+def test_빠르게_자란_분기는_XBRL로_확인되면_살아남는다():
+    """161차 — 실물 CRDO. 조정 EPS 0.25·0.52·1.07·1.16 이 **수집은 제대로
+    됐는데** 정제기가 "연간 누적값"으로 오인해 지웠고, 그 탓에 CRDO 는
+    2024-12 이후 줄곧 판단 불가였다(주인이 보는 화면에서 통째로 빠짐).
+
+    산수로는 가릴 수 없다: 이익이 분기마다 비율 r 로 자라면 직전 4분기
+    합은 v·(1/r+1/r²+1/r³+1/r⁴) 이고, r ≈ 2 에서 그 값이 v 와 거의 같다.
+    그래서 **식 밖에서 온 자**(XBRL 3개월 매출)로 분기 행임을 확인한다.
+    """
+    값들 = [0.07, 0.13, 0.25, 0.50, 1.00, 2.00]      # 분기마다 두 배
+    매출 = [60e6, 110e6, 210e6, 410e6, 800e6, 1600e6]
+    rows = [_성장행(i, v, r) for i, (v, r) in enumerate(zip(값들, 매출))]
+    result = dataset.build(make_snapshot(eps={"AAA": rows}))
+    kept = [r["adj_eps"] for r in result["quarters"]["AAA"]]
+    assert kept == 값들, f"빠르게 자란 진짜 분기 값이 지워졌습니다: {kept}"
+    assert not [n for n in result["notes"] if "누적" in n], result["notes"]
+
+
+def test_매출은_분기인데_EPS가_연간이면_면제하지_않는다():
+    """161차 — 매출 일치만으로 면제하면 **진짜 연간값**을 살려 둔다.
+
+    실측으로 "매출은 분기인데 GAAP EPS 는 XBRL 연간값과 같은" 행이
+    **157개** 있었다(NXPI 23·24·25 Q4 · SWKS 21·22 Q4 등). 그래서 면제
+    조건에 "XBRL 연간 EPS 와 같지 않을 것"을 함께 건다.
+
+    ⚠️ 이 조건은 **함수를 직접 불러** 확인한다. 통합으로 확인하려 했더니
+    앞단의 `_연간값이_4분기_자리에_있으면_버린다` 가 먼저 잡아 버려서,
+    정작 이 조건이 일하는지는 드러나지 않았다(시험이 헛돌 뻔했다).
+    """
+    분기행 = {"revenue": 100e6, "revenue_xbrl": 100e6,
+             "gaap_eps": 0.80, "gaap_eps_annual_xbrl": 2.51}
+    assert dataset._분기행임이_XBRL로_확인됨(분기행) is True, 분기행
+
+    연간행 = dict(분기행, gaap_eps=2.51)      # GAAP 이 XBRL 연간값과 같다
+    assert dataset._분기행임이_XBRL로_확인됨(연간행) is False, 연간행
+
+    # 매출이 XBRL 3개월 값과 다르면 애초에 분기 행이 아니다
+    누적행 = dict(분기행, revenue=380e6)
+    assert dataset._분기행임이_XBRL로_확인됨(누적행) is False, 누적행
+
+    # 견줄 XBRL 값이 없으면 "확인 못 함" — 면제하지 않는다
+    assert dataset._분기행임이_XBRL로_확인됨(
+        {"revenue": 100e6, "gaap_eps": 0.80}) is False
+
+    # 1~3분기는 XBRL 연간 칸이 원래 없다 — 그때는 매출 자만으로 통과
+    assert dataset._분기행임이_XBRL로_확인됨(
+        {"revenue": 100e6, "revenue_xbrl": 100e6, "gaap_eps": 0.80}) is True
+
+
+def test_XBRL_자가_없으면_예전처럼_버린다():
+    """161차 — 확인할 자가 하나도 없으면 버린다. "없음"이 "틀림"보다
+    안전하다는 원칙은 그대로다(헌법 1조). 52차·73차가 막던 사고가
+    되돌아오면 안 된다."""
+    값들 = [0.07, 0.13, 0.25, 0.50, 1.00, 2.00]
+    매출 = [60e6, 110e6, 210e6, 410e6, 800e6, 1600e6]
+    rows = [_성장행(i, v, r) for i, (v, r) in enumerate(zip(값들, 매출))]
+    for row in rows:
+        row.pop("revenue_xbrl", None)          # XBRL 자를 통째로 없앤다
+    kept = [r["adj_eps"] for r in
+            dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]]
+    assert None in kept, f"확인할 자가 없는데도 전부 살렸습니다: {kept}"
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
