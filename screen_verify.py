@@ -44,6 +44,64 @@ def _load(path: str):
         return json.load(f)
 
 
+# ---------------------------------------------------------------------------
+# 무거운 재료를 한 프로세스 안에서 한 번만 짓기 (160차-B)
+# ---------------------------------------------------------------------------
+# 왜: 점검 한 번이 **100초**인데 그중 93초가 세 계산에 몰려 있습니다
+# (실측: completion_events 34.9초 · gauge_gap_rows 35.2초 · 조합 신호
+# 재조립 22.7초 · dataset.build 5.0초 · 파일 읽기 0.4초). 시험 파일은
+# 이 점검을 열여덟 번 부르므로 그것만 17분이 넘었고, 검사를 하나 더할
+# 때마다 몇 분씩 늘었습니다 — 그물을 촘촘히 할수록 느려지는 구조입니다.
+#
+# 열쇠는 **(경로, 고친 시각, 크기)** 입니다. 로봇이 새 수집물을 쓰면
+# 열쇠가 바뀌어 새로 짓습니다 — 낡은 값을 붙들지 않습니다.
+#
+# ⚠️ 돌려주는 것은 **여럿이 함께 쓰는 물건**입니다. 읽기만 하세요.
+#    (점검기는 원래 읽기 전용이라 이 약속을 이미 지키고 있습니다.)
+_재료_기억: dict = {}
+
+
+def _파일도장(path: str):
+    try:
+        st = os.stat(path)
+    except OSError:
+        return None
+    return (path, st.st_mtime_ns, st.st_size)
+
+
+def 재료(snap_path: str, splits_path: str | None = None) -> dict | None:
+    """점검에 쓰는 무거운 재료 묶음 — 같은 파일이면 다시 짓지 않습니다."""
+    import app
+    import dataset
+    import sector_model as sm
+
+    도장 = _파일도장(snap_path)
+    if 도장 is None:
+        return None
+    if splits_path:
+        도장 = (도장, _파일도장(splits_path))
+    if 도장 in _재료_기억:
+        return _재료_기억[도장]
+
+    snap = _load(snap_path)
+    if snap is None:
+        return None
+    ds = dataset.build(snap)
+    # ⚠️ 조합 신호는 화면 빌더와 **같은 조립**(액면분할 보정 포함)이어야
+    #    합니다. build 가 입력을 제자리에서 바꿀 수 있어 snap 을 다시
+    #    읽습니다 — 이미 쓴 것을 재사용하면 이중 보정 위험이 있습니다.
+    ds보정 = dataset.build(_load(snap_path), splits=dataset.load_splits())
+    묶음 = {
+        "ds": ds,
+        "완성": sm.completion_events(ds),
+        "잣대차이": app.gauge_gap_rows(ds),
+        "조합": app.combo_now_rows(ds보정),
+    }
+    _재료_기억.clear()          # 옛 수집물의 재료를 붙들지 않습니다
+    _재료_기억[도장] = 묶음
+    return 묶음
+
+
 def 화면과_데이터를_맞댄다() -> list[dict]:
     """웹앱 파일에 실린 값 vs 지금 데이터로 다시 잰 값.
 
@@ -70,11 +128,11 @@ def 화면과_데이터를_맞댄다() -> list[dict]:
         return 결과
 
     snap_path = os.path.join(cfg.MEASURE_DIR, "snapshot.json")
-    snap = _load(snap_path)
-    if snap is None:
+    묶음 = 재료(snap_path)
+    if 묶음 is None:
         적기("수집물", False, "snapshot.json 이 없습니다", 확인못함=True)
         return 결과
-    ds = dataset.build(snap)
+    ds = 묶음["ds"]
     verdict = _load(os.path.join(cfg.MEASURE_DIR, "verdict.json"))
 
     # ── ① 기준일이 같은가 ────────────────────────────────────────────
@@ -87,7 +145,7 @@ def 화면과_데이터를_맞댄다() -> list[dict]:
         f"웹앱 {a.get('종목수')} · 데이터 {len(ds['tickers'])}")
 
     # ── ③ 신호 종목이 같은가 (150차-B 의 사고) ──────────────────────
-    완성 = sm.completion_events(ds)
+    완성 = 묶음["완성"]
     행 = app.recent_completion_rows(완성, 오늘)
     지금신호 = {r["종목"] for r in 행 if r["신호"]}
     웹신호 = {r["종목"] for r in (a.get("신호종목") or [])}
@@ -153,7 +211,7 @@ def 화면과_데이터를_맞댄다() -> list[dict]:
 
     # ── ⑧ 두 '정배열' 잣대 차이가 실렸는가 (150차-D) ────────────────
     차 = a.get("잣대차이")
-    지금차 = app.gauge_gap_rows(ds)
+    지금차 = 묶음["잣대차이"]
     적기("두 정배열 잣대 차이",
         (차 or {}).get("종목수") != 지금차["종목수"],
         f"웹앱 {(차 or {}).get('종목수')}개 · 지금 {지금차['종목수']}개")
@@ -165,8 +223,7 @@ def 화면과_데이터를_맞댄다() -> list[dict]:
     #      snap 을 다시 읽는 이유: build 가 입력을 제자리에서 바꿀 수
     #      있어 이미 쓴 snap 을 재사용하면 이중 보정 위험이 있다.
     조합 = (a.get("조합신호") or {}).get("종목들")
-    지금조합 = app.combo_now_rows(
-        dataset.build(_load(snap_path), splits=dataset.load_splits()))
+    지금조합 = 묶음["조합"]
     화면조합 = sorted(r["종목"] for r in (조합 or []))
     실조합 = sorted(r["종목"] for r in 지금조합)
     적기("조합 신호", 조합 is None or 화면조합 != 실조합,

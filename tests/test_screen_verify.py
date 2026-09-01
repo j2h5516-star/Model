@@ -378,6 +378,80 @@ def test_한_칸도_못_모은_종목을_보고한다():
     assert (한줄["상태"] == "확인 못함") == (수 > 0), 한줄
 
 
+def test_같은_파일이면_재료를_다시_짓지_않는다():
+    """160차-B — 점검 한 번이 100초였고, 그중 93초가 세 계산이었다
+    (실측: completion_events 34.9 · gauge_gap_rows 35.2 · 조합 재조립
+    22.7). 시험이 이 점검을 열여덟 번 부르므로 검사를 하나 더할 때마다
+    몇 분씩 늘었다 — 그물을 촘촘히 할수록 느려지는 구조였다.
+
+    **다시 짓지 않는 것과 낡은 값을 붙드는 것은 다르다.** 파일이 바뀌면
+    반드시 새로 지어야 한다. 아래에서 둘 다 확인한다.
+
+    ⚠️ 진짜 수집물(28MB)로 재지 않습니다. 그러면 이 시험이 캐시를 비워
+    뒤 시험들이 100초짜리 조립을 다시 하게 되고, 빠르게 하려고 넣은
+    시험이 도리어 느리게 만듭니다(실제로 그렇게 만들었다가 고쳤습니다).
+    무거운 조립만 가짜로 바꾸고 **재료 함수 자체는 진짜를 태웁니다.**
+    """
+    import app
+    import dataset
+    import sector_model as sm
+
+    가짜파일 = tempfile.mktemp(suffix=".json")
+    센다 = {"build": 0, "완성": 0, "잣대": 0, "조합": 0}
+    원본 = (dataset.build, sm.completion_events,
+           app.gauge_gap_rows, app.combo_now_rows, dataset.load_splits)
+    본디기억 = dict(sv._재료_기억)
+    sv._재료_기억.clear()
+    try:
+        with open(가짜파일, "w", encoding="utf-8") as f:
+            json.dump({"eps": {}, "tickers": []}, f)
+
+        def _build(snap, splits=None):
+            센다["build"] += 1
+            return {"표시": "가짜"}
+
+        dataset.build = _build
+        dataset.load_splits = lambda: {}
+        sm.completion_events = lambda ds: 센다.__setitem__("완성", 센다["완성"] + 1) or []
+        app.gauge_gap_rows = lambda ds: 센다.__setitem__("잣대", 센다["잣대"] + 1) or {}
+        app.combo_now_rows = lambda ds: 센다.__setitem__("조합", 센다["조합"] + 1) or []
+
+        첫 = sv.재료(가짜파일)
+        assert 첫 is not None and set(첫) == {"ds", "완성", "잣대차이", "조합"}, 첫
+        assert 센다["완성"] == 1 and 센다["잣대"] == 1 and 센다["조합"] == 1, 센다
+
+        둘 = sv.재료(가짜파일)
+        assert 둘 is 첫, "같은 파일인데 다시 지었습니다"
+        assert 센다["완성"] == 1, f"기억해 두고도 다시 지었습니다: {센다}"
+
+        # 파일이 바뀌면(고친 시각이 달라지면) 반드시 새로 지어야 한다
+        st = os.stat(가짜파일)
+        os.utime(가짜파일, ns=(st.st_atime_ns, st.st_mtime_ns + 1_000_000_000))
+        셋 = sv.재료(가짜파일)
+        assert 셋 is not 첫, "파일이 바뀌었는데 옛 재료를 그대로 썼습니다"
+        assert 센다["완성"] == 2, 센다
+
+        # 없는 파일은 None — 조립을 시도하지 않는다
+        assert sv.재료(가짜파일 + ".없음") is None
+        assert 센다["완성"] == 2, 센다
+    finally:
+        (dataset.build, sm.completion_events, app.gauge_gap_rows,
+         app.combo_now_rows, dataset.load_splits) = 원본
+        sv._재료_기억.clear()
+        sv._재료_기억.update(본디기억)
+        if os.path.exists(가짜파일):
+            os.unlink(가짜파일)
+
+
+def test_되풀이해도_점검_결과가_같다():
+    """기억해 두고 쓰더라도 답이 달라지면 안 된다 (160차-B)."""
+    if not _있나():
+        return
+    첫 = sv.화면과_데이터를_맞댄다()
+    둘 = sv.화면과_데이터를_맞댄다()
+    assert 첫 == 둘, "같은 데이터로 두 번 쟀는데 답이 달랐습니다"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
