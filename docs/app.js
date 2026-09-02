@@ -407,7 +407,7 @@ function 사실카드(r) {
   const p = (v, d = 0) => (v === null || v === undefined) ? "—" : num(v, d, true) + "%";
   const 속도 = (r.가속 === true ? '<span class="badge new">가속</span>'
     : r.가속 === false ? '<span class="badge no">감속</span>'
-    : '<span class="badge wait">가림 불가</span>')
+    : `<span class="badge wait">가림 불가${r.가속불가사유 ? " — " + esc(r.가속불가사유) : ""}</span>`)
     + (r.저기저 ? ' <span class="badge wait">저기저 — 비율 과장</span>' : "");
   const 판 = (r.완성30 ? ' <span class="badge new">완성30%+</span>' : "")
     + (r.H29 ? ' <span class="badge new">H29조합</span>' : "")
@@ -628,16 +628,30 @@ function 화면_검증() {
       뒤시기 ${num(c.뒤시기율)}% (n=${c.뒤시기n ?? "—"}).
       ${(c.주의 || []).map((w) => esc(w)).join(" · ")}</div>`).join("");
   }
-  html += a.가설.map((h) => `<div class="card">
-    <div class="t">${esc(h.라벨)} ${배지(h.판정)}</div>
-    <div class="d">신호 ${h.신호율 === null ? "—" : num(h.신호율) + "%"}
+  // 171차 (주인 지시 "가장 신뢰성 높은 것만") — 등급 A(채택)·B(유력 대기)만
+  // 펼치고 C(우위 없음)·D(자료 없음)는 접습니다. 지우지는 않습니다 — 미채택
+  // 가설도 관찰 목록에 남아 로봇이 매일 다시 판정합니다(헌법 3조).
+  const 카드 = (h) => `<div class="card">
+    <div class="t">${esc(h.라벨)} ${배지(h.판정)}${
+      h.등급 ? ` <span class="badge ${h.등급 === "A" || h.등급 === "B" ? "new" : "no"}">등급 ${esc(h.등급)}</span>` : ""}</div>
+    <div class="d">${h.등급이유 ? `${esc(h.등급이유)}<br>` : ""}신호 ${h.신호율 === null ? "—" : num(h.신호율) + "%"}
       (n=${h.신호n ?? "—"}) · 기준선 ${h.기준선율 === null ? "—" : num(h.기준선율) + "%"}
       ${h.등록일 ? ` · 등록 ${esc(h.등록일)}` : ""}
-      ${h.탐색n ? `<br>탐색 표본(참고): ${num(h.탐색율)}% (n=${h.탐색n})` : ""}
+      ${h.탐색n ? `<br>탐색 표본(참고): ${num(h.탐색율)}% vs 기준선 ${
+        h.탐색기준선율 === null || h.탐색기준선율 === undefined ? "—" : num(h.탐색기준선율) + "%"} (n=${h.탐색n})` : ""}
       ${h.채택거리 ? `<br>채택까지: ${esc(h.채택거리)}${
           h.가장이른날 ? ` — 표적 창${h.창_거래일 ? `(${h.창_거래일}거래일)` : ""} 때문에 <b>${
             esc(h.가장이른날)}</b> 이전에는 나올 수 없습니다` : ""}` : ""}
-      ${h.설명 ? `<br>${bold(h.설명)}` : ""}</div></div>`).join("");
+      ${h.설명 ? `<br>${bold(h.설명)}` : ""}</div></div>`;
+  const 믿을만 = a.가설.filter((h) => h.등급 === "A" || h.등급 === "B");
+  const 나머지 = a.가설.filter((h) => !(h.등급 === "A" || h.등급 === "B"));
+  html += `<h2>믿을 만한 순<span class="n">A 채택 · B 탐색에서 완전 분리(새 표본 대기)</span></h2>`;
+  html += 믿을만.length ? 믿을만.map(카드).join("")
+    : '<div class="empty">지금 등급 A·B 가설이 없습니다.</div>';
+  if (나머지.length) {
+    html += `<details><summary>우위가 확인되지 않은 가설 ${나머지.length}개 보기 (C 우위 없음 · D 자료 없음)</summary>
+      <div class="body">${나머지.map(카드).join("")}</div></details>`;
+  }
 
   if (a.건강 && a.건강["채움률"]) {
     const c = a.건강["채움률"];

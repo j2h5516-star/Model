@@ -83,13 +83,17 @@ def hypothesis_rows(verdict: dict | None) -> list[dict]:
     # 실제 이유는 구조적입니다 — 표적 창이 60거래일이라 08-15 에 등록한
     # 가설은 11-07 이전에 판정이 나올 수가 없습니다. 그 날짜를 적습니다.
     바닥 = {d["가설"]: d for d in judge.first_verdict_floor(verdict)}
+    등급표 = app.hypothesis_tiers(verdict)
     rows = []
     for name, entry in (verdict.get("가설") or {}).items():
         judged = entry.get("신규(판정)") or {}
         signal = judged.get("신호") or {}
         base = judged.get("기준선") or {}
-        탐색 = (entry.get("탐색표본(참고)") or {}).get("신호") or {}
+        탐블록 = entry.get("탐색표본(참고)") or entry.get("전체(참고)") or {}
+        탐색 = 탐블록.get("신호") or {}
+        탐기준 = 탐블록.get("기준선") or {}
         d = 거리.get(name) or {}
+        등급 = 등급표.get(name) or {}
         rows.append({
             "이름": name,
             "라벨": app.HYPOTHESIS_LABELS.get(name, name),
@@ -101,6 +105,11 @@ def hypothesis_rows(verdict: dict | None) -> list[dict]:
             "기준선율": base.get("rate"),
             "탐색n": 탐색.get("n"),
             "탐색율": 탐색.get("rate"),
+            "탐색기준선율": 탐기준.get("rate"),
+            # 171차 — 신뢰 등급(표시용 묶음). 판정을 만들지 않는다.
+            "등급": 등급.get("등급"),
+            "등급이유": 등급.get("이유"),
+            "분리폭": 등급.get("분리폭"),
             # 판정을 만들지 않습니다 — 이미 계산된 거리를 옮겨 적을 뿐입니다.
             "채택거리": d.get("상태"),
             "필요표본": d.get("필요표본"),
@@ -108,8 +117,11 @@ def hypothesis_rows(verdict: dict | None) -> list[dict]:
             "가장이른날": (바닥.get(name) or {}).get("가장이른날"),
             "창_거래일": (바닥.get(name) or {}).get("창_거래일"),
         })
-    순서 = {"채택": 0, "회피 채택": 0, "미채택": 2, "판정 불가": 1}
-    rows.sort(key=lambda r: (순서.get(r["판정"], 3), r["이름"]))
+    # 171차 — 등급(A→D) 먼저, 등급 안에서는 분리 폭 큰 순, 그다음 이름.
+    등급순 = {"A": 0, "B": 1, "C": 2, "D": 3}
+    rows.sort(key=lambda r: (등급순.get(r["등급"], 4),
+                             -(r["분리폭"] if r["분리폭"] is not None else -1e9),
+                             r["이름"]))
     return rows
 
 

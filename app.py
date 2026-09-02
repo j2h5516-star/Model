@@ -190,6 +190,57 @@ def verdict_code_warning(verdict: dict | None,
     )
 
 
+# ---------------------------------------------------------------------------
+# 가설 신뢰 등급 (171차, 주인 지시 "종류가 쓸데없이 너무 많다 — 가장 신뢰성
+# 높은 것만") — **표시용 묶음**이지 판정이 아니다. 등록된 가설은 지우지
+# 않는다(헌법 3조: 미채택 가설은 관찰 목록에 두어 자동 재판정). 화면이
+# 등급 A·B 만 펼치고 C·D 는 접는다.
+#   A 채택      — 판정이 채택/회피 채택 (지금 H9 하나)
+#   B 유력 대기  — 판정 대기인데 **탐색표본에서 완전 분리**(신호 하한 > 기준선
+#                 상한). 등록일 뒤 새 표본이 차면 채택될 가능성이 있는 것
+#   C 우위 없음  — 미채택, 또는 판정 대기인데 탐색표본이 기준선과 겹침
+#   D 자료 없음  — 수치가 아직 없음(섹터 주도 계열 등)
+# 등급 안 순서 = 분리 폭(신호 하한 − 기준선 상한, %p) 큰 순.
+def hypothesis_tier(entry: dict) -> dict:
+    """한 가설의 등급·이유·분리 폭. 값을 만들지 않고 판정 파일의 수만 읽는다."""
+    판정 = entry.get("판정")
+    새 = entry.get("신규(판정)") or {}
+    탐 = entry.get("탐색표본(참고)") or entry.get("전체(참고)") or {}
+    회피 = entry.get("방향") == "회피"
+
+    def 분리폭(j: dict) -> float | None:
+        s, b = j.get("신호") or {}, j.get("기준선") or {}
+        if not s.get("n") or not b.get("n") or not s.get("ci") or not b.get("ci"):
+            return None
+        if 회피:
+            return round(b["ci"][0] - s["ci"][1], 1)     # 기준선 하한 − 신호 상한
+        return round(s["ci"][0] - b["ci"][1], 1)         # 신호 하한 − 기준선 상한
+
+    새폭, 탐폭 = 분리폭(새), 분리폭(탐)
+    if 판정 in ("채택", "회피 채택"):
+        return {"등급": "A", "이유": "새 표본으로 채택 기준 통과", "분리폭": 새폭}
+    if 판정 == "판정 불가":
+        if 탐폭 is not None and 탐폭 > 0:
+            return {"등급": "B", "이유": f"탐색표본에서 완전 분리(+{탐폭}%p) — 새 표본 대기",
+                    "분리폭": 탐폭}
+        if 탐폭 is None and 새폭 is None:
+            return {"등급": "D", "이유": "수치 없음", "분리폭": None}
+        return {"등급": "C", "이유": "탐색표본에서 기준선과 겹침 — 새 표본 대기", "분리폭": 탐폭}
+    if 판정 == "미채택":
+        폭 = 새폭 if 새폭 is not None else 탐폭
+        if 폭 is None:
+            return {"등급": "D", "이유": "수치 없음", "분리폭": None}
+        return {"등급": "C", "이유": f"새 표본에서 기준선과 갈라지지 않음({폭:+}%p)", "분리폭": 폭}
+    return {"등급": "D", "이유": "판정 없음", "분리폭": None}
+
+
+def hypothesis_tiers(verdict: dict | None) -> dict[str, dict]:
+    """가설 이름 → 등급 정보. 판정 파일이 없으면 빈 표."""
+    if not verdict or "가설" not in verdict:
+        return {}
+    return {name: hypothesis_tier(entry) for name, entry in verdict["가설"].items()}
+
+
 def verdict_rows(verdict: dict | None) -> list[dict]:
     """판정 현황 표의 행 (신규 표본 기준 — 등록된 판정 표본)."""
     if not verdict or "가설" not in verdict:
@@ -1218,6 +1269,11 @@ def growth_row(ds: dict, ticker: str) -> dict | None:
     if prices and spy and last.get("announced_date"):
         상대60 = me.backward_excess(prices, spy, last["announced_date"])
     증가, 직전증가 = _pct_change(ttm[-1], ttm[-2]), _pct_change(ttm[-2], ttm[-3])
+    # 171차 — "가림 불가"의 **이유**를 함께 적는다 (주인 질문 "가림불가는 뭐지").
+    가속불가사유 = None
+    if 증가 is None or 직전증가 is None:
+        가속불가사유 = ("직전 TTM이 0 이하 — 비율(%)을 낼 수 없음" if ttm[-2] <= 0
+                  else "두 분기 전 TTM이 0 이하 — 직전 증가율을 낼 수 없음")
     역대최고 = _historic_max_ttm(rows, yardstick)
     저기저 = (역대최고 is not None and 역대최고 > 0
            and ttm[-2] < LOW_BASE_FRACTION * 역대최고)
@@ -1236,6 +1292,7 @@ def growth_row(ds: dict, ticker: str) -> dict | None:
         "TTM증가": 증가,
         "직전TTM증가": 직전증가,
         "가속": (증가 > 직전증가) if (증가 is not None and 직전증가 is not None) else None,
+        "가속불가사유": 가속불가사유,
         # 169차 — 기저 효과를 드러내는 사실 칸. 비율이 아니라 **금액** 증가와
         # 역대 최고 대비 위치를 함께 적는다.
         "TTM증가액": round(ttm[-1] - ttm[-2], 2),
@@ -1481,6 +1538,11 @@ def ticker_fact_row(ds: dict, ticker: str, 기준일: str,
         "TTM증가": g.get("TTM증가"),
         "직전TTM증가": g.get("직전TTM증가"),
         "가속": g.get("가속"),
+        # 가속을 못 가린 이유 — 성장표가 줄을 못 만든 경우(연속 6분기 미달 =
+        # 잣대 칸에 구멍이 있거나 상장이 짧음)와 비율을 못 낸 경우를 가른다.
+        "가속불가사유": (g.get("가속불가사유") if g else
+                    ("잣대 없음 — 조정 EPS·EBITDA·GAAP 중 읽힌 것이 없음" if not yardstick
+                     else "연속 6분기 부족 — 잣대 칸에 구멍이 있거나 이력이 짧음")),
         "TTM증가액": g.get("TTM증가액"),
         "직전TTM증가액": g.get("직전TTM증가액"),
         "역대최고TTM": g.get("역대최고TTM"),
