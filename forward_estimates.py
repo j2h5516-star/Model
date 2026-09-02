@@ -390,20 +390,84 @@ _ITEM_ANNUAL_RE = re.compile(
 )
 _BLOCK_SPAN = 1400
 
+# --- 165차: 제목 줄 닻 + 과거 실적 문장 배제 (ZETA 2026-08-04 실물) ---------
+# 실물: "Increasing 2026 Guidance*" 아래에 "Third Quarter 2026" 이라는 **제목
+# 줄만** 있고 그 밑에 불릿 "•Increasing revenue guidance to a range of $469
+# million to $472 million…" 이 옵니다. 제목 줄에는 guidance/outlook 낱말이
+# 없어 종전 닻이 못 열었고, 대신 실적 하이라이트 "Delivered revenue of $443
+# million for the second quarter … exceeding midpoint of guidance" 가 문장
+# 경로를 통과해 **지난 분기 실적 443 을 다음 분기 전망으로** 읽었습니다.
+# 규칙 두 개:
+#  ① 제목 줄 닻 — 한 줄이 "(fiscal) Third Quarter (fiscal) 2026" / "Q3 2026"
+#     만으로 이뤄져 있고, 그 **앞 240자 안에 guidance/outlook** 이 있을 때만
+#     구획을 엽니다(실적 구획의 같은 꼴 제목 "Second Quarter 2026" 을 열지
+#     않기 위한 조건).
+#  ② 과거 실적 문장 배제 — "delivered/reported/generated … revenue" 또는
+#     "revenue … was/were/increased/grew" 꼴이면서 앞을 보는 강한 말(expect·
+#     anticipat·to be between·guidance of/to/for…)이 없는 항목은 버립니다.
+#     "exceeding midpoint of guidance" 의 guidance 는 앞을 보는 말이 아닙니다.
+_QUARTER_TITLE_RE = re.compile(
+    r"^[ \t]*(?:(?:fiscal\s+)?(?:first|second|third|fourth)\s+quarter"
+    r"(?:\s+(?:of\s+)?(?:fiscal\s+(?:year\s+)?)?(?:FY\s*)?20\d{2})?"
+    r"|Q[1-4]\s*(?:FY\s*)?20\d{2})[ \t]*[*:]?[ \t]*$",
+    re.I | re.M,
+)
+_TITLE_LOOKBACK = 240
+_PAST_RESULT_RE = re.compile(
+    r"\b(?:delivered|reported|generated|achieved|recorded|posted)\s+"
+    r"(?:record\s+|total\s+|net\s+|quarterly\s+)?(?:revenue|net\s+sales|adjusted\s+EBITDA)"
+    # 사이 60자에는 "$3.3 billion" 같은 소수점은 허용합니다(ZG 실물
+    # "Homes segment revenue of $3.3 billion for Q4 well exceeded …" 가
+    # 소수점 때문에 빠져나갔던 결함 — 165차).
+    r"|\b(?:revenue|net\s+sales|adjusted\s+EBITDA)s?\b(?:[^.\n]|\.(?=\d)){0,60}?"
+    r"\b(?:was|were|totaled|came\s+in|increased|decreased|grew|rose|declined"
+    r"|exceeded|beat|surpassed|met|missed|reached)\b",
+    re.I,
+)
+# 앞을 보는 **강한** 말. 맨몸 outlook/guidance 는 넣지 않습니다 — "above the
+# midpoint of the company's outlook range"(ZG 실물 IMT 매출 490) 처럼 실적을
+# 지난 전망과 견주는 문장에도 나오기 때문입니다. "than expected/anticipated"
+# 도 비교일 뿐이라 앞의 than 을 봐서 뺍니다(ZG 실물 "more than expected").
+_STRONG_FORWARD_RE = re.compile(
+    # "than expected"·"better-than-expected"(ZG 실물, 하이픈) 은 앞을 보는
+    # 말이 아니라 실적 평가이므로 뺍니다.
+    r"(?<!than[ -])(?:expect|anticipat|forecast|project(?:s|ed|ion)"
+    r"|outlook\s+(?:for|is|of|to|includes?|calls)"
+    r"|guidance\s+(?:of|to|for|is|in\s+the\s+range|range|calls)"
+    r"|to\s+be\s+(?:approximately|between|in\s+the\s+range)|is\s+projected)",
+    re.I,
+)
+
+
+def _is_past_result(item: str) -> bool:
+    """지난 분기 실적을 말하는 문장인가 (앞보는 강한 말이 없을 때만 참)."""
+    return bool(_PAST_RESULT_RE.search(item)) and not _STRONG_FORWARD_RE.search(item)
+
 
 def quarterly_guidance_blocks(text: str) -> list[str]:
     """분기 가이던스 선언부터 시작하는 구획들 (연간 표지에서 자름)."""
     blocks = []
     tail = text
+    starts: list[int] = []
     for match in _QUARTER_DECL_RE.finditer(tail):
         # 가짜 선언 걸러내기:
         #  · 보도자료 제목("First Quarter 2026 Results ... Revises Full Year
         #    Guidance")은 선언이 아닙니다 (UNH 실물 오탐)
         #  · "quarter ... expects" 꼴 산문(구두점 없는 뭉치 속)도 아님
-        if re.search(r"results|full[-\s]?year|quarter[^.\n]{0,60}?expect",
+        #  · "quarter … exceeding midpoint of guidance / prior guidance" 는
+        #    실적을 지난 가이던스와 비교하는 말이지 선언이 아님 (ZETA 실물)
+        if re.search(r"results|full[-\s]?year|quarter[^.\n]{0,60}?expect"
+                     r"|exceed|midpoint\s+of|prior\s+guidance|previous\s+guidance"
+                     r"|compared",
                      match.group(0), re.I):
             continue
-        segment = tail[match.start():match.start() + _BLOCK_SPAN]
+        starts.append(match.start())
+    for match in _QUARTER_TITLE_RE.finditer(tail):
+        before = tail[max(0, match.start() - _TITLE_LOOKBACK):match.start()]
+        if re.search(r"guidance|outlook", before, re.I):
+            starts.append(match.start())
+    for start in sorted(set(starts)):
+        segment = tail[start:start + _BLOCK_SPAN]
         cut = _ANNUAL_CUT_RE.search(segment, 60)   # 선언 문구 자신은 건너뜀
         if cut:
             segment = segment[:cut.start()]
@@ -450,7 +514,10 @@ def _quarter_items(text: str) -> list[str]:
     # 넓은 표지(_ANNUAL_HINTS 의 "fiscal year 20XX")는 여기서 쓰지 않는다 —
     # "first quarter of fiscal year 2026" 같은 진짜 분기 문장을 죽였던
     # 회귀(29차)의 원인이었다.
-    return [i for i in items if not _ITEM_ANNUAL_RE.search(i)]
+    # 165차: 지난 분기 실적 문장("Delivered revenue of $443 million for the
+    # second quarter … exceeding midpoint of guidance")도 버린다 — ZETA 실물.
+    return [i for i in items
+            if not _ITEM_ANNUAL_RE.search(i) and not _is_past_result(i)]
 
 
 # ± 형 (실물: AMD "approximately $11.2 billion, plus or minus $300 million" ·

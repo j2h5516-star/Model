@@ -1913,6 +1913,78 @@ def test_사라진종목_표는_유니버스_안에만_있다():
     assert not (set(cfg.TICKER_CIK) & set(cfg.TICKER_NAME_HINT))
 
 
+
+# ---------------------------------------------------------------------------
+# 165차 — 제목 줄 닻 + 과거 실적 문장 배제 (ZETA 2026-08-04 실물 발췌)
+# ---------------------------------------------------------------------------
+ZETA_TITLE_LINE_STYLE = (
+    "\u2022Delivered revenue of $443 million for the second quarter, an increase "
+    "of 44%Y/Y, exceeding midpoint of guidance by $23 million, or 5%.\n"
+    "\u2022Achieved positive GAAP net income of $8 million. Generated $92 million "
+    "of adjusted EBITDA.\n"
+    "Increasing 2026 Guidance*\n\n"
+    "Third Quarter 2026\n"
+    "\u2022Increasing revenue guidance to a range of $469 million to $472 million, "
+    "up $10 million at the midpoint from the prior guidance of $461 million.\n"
+    "\u2022Increasing adjusted EBITDA guidance to a range of $115.0 million to "
+    "$116.0 million, up $2.7 million at the midpoint.\n"
+    "Full Year 2026\n"
+    "\u2022Increasing revenue guidance to a range of $1,811 million to $1,824 "
+    "million, up $33 million at the midpoint.\n"
+)
+
+
+def test_guidance_title_line_opens_quarter_block():
+    """제목 줄 "Third Quarter 2026" 아래 불릿을 다음 분기 전망으로 읽고,
+    "Full Year 2026" 제목에서 잘라 연간 값을 섞지 않습니다 (ZETA 실물)."""
+    rev = fe.parse_guidance_revenue(ZETA_TITLE_LINE_STYLE)
+    assert rev["low"] == 469e6 and rev["high"] == 472e6, rev
+    ebitda = fe.parse_guidance_ebitda(ZETA_TITLE_LINE_STYLE)
+    assert ebitda["low"] == 115e6 and ebitda["high"] == 116e6, ebitda
+
+
+def test_guidance_past_result_sentence_is_not_guidance():
+    """"Delivered revenue of $443 million for the second quarter … exceeding
+    midpoint of guidance" 는 지난 분기 실적입니다 — 전망으로 읽으면 안 됨."""
+    past_only = ZETA_TITLE_LINE_STYLE.split("Increasing 2026 Guidance*")[0]
+    assert fe.parse_guidance_revenue(past_only)["mid"] is None
+    assert fe._is_past_result(
+        "Revenue for the second quarter was $443 million, an increase of 44%.")
+    # 앞을 보는 강한 말이 있으면 과거형 낱말이 섞여도 전망으로 남깁니다
+    assert not fe._is_past_result(
+        "Revenue is expected to be between $105.0 million and $111.0 million.")
+
+
+def test_guidance_title_line_without_guidance_context_stays_closed():
+    """실적 구획의 같은 꼴 제목("Second Quarter 2026")은 앞에 guidance/outlook
+    이 없으면 구획을 열지 않습니다 — 실적 불릿이 전망으로 새지 않게."""
+    text = ("Second Quarter 2026\n"
+            "\u2022Revenue of $443 million, an increase of 44% year over year.\n")
+    assert fe.quarterly_guidance_blocks(text) == []
+    assert fe.parse_guidance_revenue(text)["mid"] is None
+
+
+def test_guidance_result_vs_outlook_sentences_are_past():
+    """ZG 실물(2022-02-10·05-05·11-02) — "…outlook range" 에 견주어 실적을
+    평가하는 문장은 과거 실적입니다. 소수점("$3.3 billion")·하이픈
+    ("better-than-expected")·"than anticipated" 가 있어도 새면 안 됩니다."""
+    for s in (
+        "◦Homes segment revenue of $3.3 billion for Q4 well exceeded the "
+        "company’s outlook as the wind-down of iBuying operations progressed "
+        "faster than anticipated.",
+        "▪Premier Agent revenue decreased 13% year over year to $312 million, "
+        "above the high end of the company’s outlook range primarily due to "
+        "better-than-expected conversion rates during Q3.",
+        "◦IMT segment revenue grew 10% year over year to $490 million, above "
+        "the $487 million midpoint of the company’s outlook range.",
+        "•Consolidated Adjusted EBITDA of $164 million exceeded the midpoint "
+        "of our Q2 outlook range.",
+    ):
+        assert fe._is_past_result(s), s
+    # 진짜 전망 문장은 여전히 전망입니다
+    assert not fe._is_past_result(
+        "Our outlook for Q3 revenue is $470 million to $480 million.")
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
