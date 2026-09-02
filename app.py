@@ -1199,6 +1199,11 @@ def growth_row(ds: dict, ticker: str) -> dict | None:
     return {
         "종목": ticker,
         "묶음": cfg.GROUPS.get(ticker, "미분류"),
+        # 세분 묶음 (45차 ④ 감도 분석 — 판정 근거 아님). 기기 OEM 반도체
+        # 안의 데이터센터 실리콘 5(NVDA·AMD·AVGO·MRVL·CRDO), 구독 SW 안의
+        # 사용량 과금 5 만 갈라집니다. 확정 묶음(GROUPS)은 H19~H21 이 쓰는
+        # 등록 장치라 사후에 바꾸지 않습니다 — 그래서 한 칸을 더 둡니다.
+        "세분묶음": cfg.group_of(ticker, fine=True),
         "잣대": yardstick,
         "최근발표": last.get("announced_date"),
         "TTM": round(ttm[-1], 2),
@@ -1245,17 +1250,19 @@ def growth_table_rows(ds: dict, 묶음: str | None = None,
     return out
 
 
-def growth_sector_rows(ds: dict) -> list[dict]:
+def growth_sector_rows(ds: dict, fine: bool = False) -> list[dict]:
     """묶음별로 가속·감속·판단불가 종목 수와 가속 비율.
 
     "델타가 늘어나는 섹터가 있는가"에 답하는 표. 비율의 분모는 가속/감속을
     **가릴 수 있었던** 종목만(판단불가 제외). 종목 5개 미만 묶음은 비율을
     적지 않습니다 — 표본이 작아 한 종목이 20%p 를 움직입니다.
+    fine=True 면 세분 묶음(45차 ④ 감도 분석)으로 셉니다 — 화면 참고용.
     """
+    열 = "세분묶음" if fine else "묶음"
     묶음별: dict[str, dict] = {}
     for row in growth_table_rows(ds):
-        g = 묶음별.setdefault(row["묶음"], {"묶음": row["묶음"], "가속": 0,
-                                           "감속": 0, "판단불가": 0})
+        g = 묶음별.setdefault(row[열], {"묶음": row[열], "가속": 0,
+                                       "감속": 0, "판단불가": 0})
         g["가속" if row["가속"] is True else
           "감속" if row["가속"] is False else "판단불가"] += 1
     out = []

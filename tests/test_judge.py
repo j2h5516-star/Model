@@ -830,6 +830,55 @@ def test_H30이_가설_시계와_점검_목록에_들어있다():
     assert "judge_sector_momentum" in inspect.getsource(cj.run), "로봇 배선 없음"
 
 
+# ---------------------------------------------------------------------------
+# H31 (164차 등록) — 가속 ∧ 첫돌파
+# ---------------------------------------------------------------------------
+def _h31_사건(날, streak, 가속, 초과=0.0):
+    return {"ticker": "AA", "잣대": "adj_eps", "announced": 날,
+            "newhigh_streak": streak, "가속": 가속, "excess": 초과}
+
+
+def test_H31은_등록일_뒤만_판정하고_대조군을_함께_적는다():
+    """신호 = 첫돌파 ∧ 가속. 가속 None 은 신호도 대조도 아니지만 기준선에는
+    남는다(기준선 = 같은 표본의 모든 발표). 감속 첫돌파는 대조군."""
+    옛 = [_h31_사건("2026-01-01", 1, True, 99.0) for _ in range(30)]
+    새신호 = [_h31_사건("2026-09-03", 1, True) for _ in range(11)]
+    새감속 = [_h31_사건("2026-09-04", 1, False) for _ in range(4)]      # 대조
+    새모름 = [_h31_사건("2026-09-05", 1, None)]                           # 표본에만
+    새연속 = [_h31_사건("2026-09-06", 2, True)]                           # 첫돌파 아님
+    등록일당일 = [_h31_사건("2026-09-02", 1, True)]                       # 등록일 = 옛
+    r = judge.judge_accel_breakout(옛 + 새신호 + 새감속 + 새모름 + 새연속 + 등록일당일)
+    h = r["H31_가속_첫돌파"]
+    assert h["등록일"] == "2026-09-02"
+    새 = h["신규(판정)"]
+    assert 새["신호"]["n"] == 11, 새
+    assert 새["대조_감속첫돌파"]["n"] == 4, 새
+    assert 새["첫돌파_n"] == 16, "첫돌파 수(신호 11 + 감속 4 + 모름 1)가 다릅니다"
+    assert 새["기준선"]["n"] == 17, "표본에서 발표가 샜습니다"
+    assert h["탐색표본(참고)"]["신호"]["n"] == 31, "등록일 당일은 탐색 표본이어야 합니다"
+    # 탐색 표본이 전부 폭등(99.0)이어도 판정은 새 표본만 봅니다 (0/11 → 미채택)
+    assert h["판정"] == "미채택", h["판정"]
+
+
+def test_H31은_조정_EPS_잣대만_표본이다():
+    """GAAP·EBITDA 잣대 사건이 섞이면 H2b 와 다른 표본이 됩니다."""
+    e = _h31_사건("2026-09-03", 1, True)
+    e["잣대"] = "gaap_eps"
+    r = judge.judge_accel_breakout([e])
+    assert r[judge.H31_NAME]["신규(판정)"]["기준선"]["n"] == 0
+
+
+def test_H31이_시계와_등록부와_로봇에_있다():
+    """만들어 놓고 배선을 잊으면 판정 파일에 영영 안 나온다(150차-C)."""
+    import model_verify as mv
+    assert judge.H31_NAME in judge.hypothesis_clock()
+    assert judge.hypothesis_clock()[judge.H31_NAME][0] == "2026-09-02"
+    assert judge.H31_NAME in mv.expected_hypotheses()
+    import inspect
+    import collect_job as cj
+    assert "judge_accel_breakout" in inspect.getsource(cj.run), "로봇 배선 없음"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

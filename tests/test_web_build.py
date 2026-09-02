@@ -575,7 +575,10 @@ def test_성장_속도표가_웹앱에_실리고_화면이_그린다():
     assert 성장["종목들"] == app.growth_table_rows(ds), "계기판과 다른 계산입니다"
     assert 성장["묶음별"] == app.growth_sector_rows(ds)
     assert [r["종목"] for r in 성장["종목들"]] == ["가속", "감속"]
-    assert "판정" in 성장["정직화"] and "재지 않았" in 성장["정직화"], 성장["정직화"]
+    # 164차: "재지 않았다" → "H31 로 등록해 재는 중, 아직 판정 없음" 으로 바뀜.
+    # 어느 쪽이든 **판정이 없다**는 말이 있어야 합니다.
+    assert "판정" in 성장["정직화"] and "H31" in 성장["정직화"], 성장["정직화"]
+    assert "아직 판정이 없" in 성장["정직화"], 성장["정직화"]
     assert "140일" in 성장["기준"] and "6분기" in 성장["기준"], 성장["기준"]
     # 없는 값은 null 로 나가야 합니다 (JSON 으로 돌려도 None)
     빈 = ta._성장_ds({"음수": ta._성장_eps행([1, 1, -2, -2, -2, -2, 1, 2])})
@@ -589,6 +592,39 @@ def test_성장_속도표가_웹앱에_실리고_화면이_그린다():
     assert "가속비율" in js and "직전TTM증가" in js, "묶음 비율 또는 직전 증가율을 안 그립니다"
     assert "성장.정직화" in js, "화면이 정직화 문구를 옮겨 적지 않습니다"
     assert "APP.성장속도" in js, "종목 상세 화면에 성장 속도 줄이 없습니다"
+
+
+def test_성장속도표는_세분_묶음을_다른_줄만_따로_싣는다():
+    """164차 — 기기 OEM 반도체 안의 데이터센터 실리콘(NVDA·AMD·AVGO·MRVL·
+    CRDO)을 45차 ④ 세분 분류로 갈라 참고로 싣습니다. 확정 묶음(GROUPS)은
+    H19~H21 이 쓰는 등록 장치라 바꾸지 않습니다. 세분표에서 확정표와
+    똑같은 줄은 두 번 그리지 않습니다."""
+    import app
+    root = os.path.join(os.path.dirname(__file__), "..")
+    sys.path.insert(0, os.path.join(root, "tests"))
+    import test_app as ta
+
+    가속 = [1, 1, 1, 1, 1, 1, 1.2, 1.6]
+    감속 = [1, 1, 1, 1, 1, 1, 1.6, 1.2]
+    # NVDA·AMD = 데이터센터 실리콘(세분) / TXN·QCOM = 기기 OEM 반도체(그대로)
+    # / MU = 메모리(세분 없음 → 확정표와 같은 줄)
+    ds = ta._성장_ds({"NVDA": ta._성장_eps행(가속), "AMD": ta._성장_eps행(가속),
+                     "TXN": ta._성장_eps행(감속), "QCOM": ta._성장_eps행(가속),
+                     "MU": ta._성장_eps행(가속)})
+    rows = {r["종목"]: r for r in app.growth_table_rows(ds)}
+    assert rows["NVDA"]["묶음"] == "기기 OEM 반도체" and rows["NVDA"]["세분묶음"] == "데이터센터 실리콘"
+    assert rows["MU"]["세분묶음"] == rows["MU"]["묶음"], "세분이 없는 종목은 확정 묶음 그대로"
+    확정 = {g["묶음"]: g for g in app.growth_sector_rows(ds)}
+    세분 = {g["묶음"]: g for g in app.growth_sector_rows(ds, fine=True)}
+    assert 확정["기기 OEM 반도체"]["가속"] == 3 and 확정["기기 OEM 반도체"]["감속"] == 1
+    assert 세분["데이터센터 실리콘"]["가속"] == 2 and 세분["데이터센터 실리콘"]["감속"] == 0
+    assert 세분["기기 OEM 반도체"]["가속"] == 1 and 세분["기기 OEM 반도체"]["감속"] == 1
+    payload = wb.build_payload(ds, None, {"ran_at": "시험"})
+    다른줄 = {g["묶음"] for g in payload["성장속도"]["묶음별_세분"]}
+    assert 다른줄 == {"데이터센터 실리콘", "기기 OEM 반도체"}, 다른줄
+    with open(os.path.join(root, "docs", "app.js"), encoding="utf-8") as f:
+        js = f.read()
+    assert "묶음별_세분" in js, "화면이 세분 묶음 줄을 그리지 않습니다"
 
 
 if __name__ == "__main__":

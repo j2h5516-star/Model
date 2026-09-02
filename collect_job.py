@@ -261,6 +261,10 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         measure_engine.attach_high52(ds, events)
         verdict["가설"].update(judge.judge_drought_breakout(events))
         verdict["가설"].update(judge.judge_position_breakout(events))
+        # H31 (164차 등록) — 가속 ∧ 첫돌파. "가속"은 사건에 이미 실려
+        # 옵니다(측정 장치). 등록 시점에 결과를 보지 않았지만 판정은
+        # 다른 가설과 같게 등록일 뒤의 새 발표만 셉니다.
+        verdict["가설"].update(judge.judge_accel_breakout(events))
         # H26 (143차 등록) — 창 125거래일 첫 돌파를 **탐색에 쓰지 않은 새
         # 종목**으로만 판정합니다. 목록이 비어 있으면(확장 전) 판정하지
         # 않고 그 사실을 적습니다 — 없는 것을 지어내지 않습니다.

@@ -48,6 +48,7 @@ def expected_hypotheses() -> list[str]:
     names += [judge.H25_NAME, judge.H25B_NAME]
     names.append(judge.H26_NAME)
     names += [judge.H27_NAME, judge.H28_NAME]   # 151차 등록
+    names.append(judge.H31_NAME)   # 164차 등록 — 가속 ∧ 첫돌파
     return names
 
 

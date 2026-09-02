@@ -121,6 +121,18 @@ def ttm_series(values: list[float]) -> list[float]:
     return [sum(values[i - 3 : i + 1]) for i in range(3, len(values))]
 
 
+def ttm_growth_pct(now: float | None, before: float | None) -> float | None:
+    """TTM 이 직전 TTM 보다 몇 % 늘었나 (164차 H31).
+
+    직전 값이 0 이하면 비율의 뜻이 없어 **없음** — 적자에서 적자로 옮긴
+    것을 "몇 % 성장"이라 부르지 않습니다. 반올림하지 않습니다(화면용
+    반올림은 app 이 따로 합니다).
+    """
+    if now is None or before is None or before <= 0:
+        return None
+    return (now / before - 1.0) * 100.0
+
+
 # ---------------------------------------------------------------------------
 # 발표 상태 걷기 — 각 발표 시점에서 그때까지의 분기만 본다 (미래 금지)
 # ---------------------------------------------------------------------------
@@ -176,6 +188,15 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
             if current is not None and (past_peak is None or current > past_peak):
                 past_peak = current
             streak = streak + 1 if new_high else 0
+            # 가속 (164차 H31 등록) — 같은 연속 구간 안의 TTM 세 개로
+            # "이번 증가율 > 직전 증가율"을 잽니다. 구간이 새로 시작하면
+            # ttm 목록도 새로 시작하므로 끊긴 분기를 이어붙이는 일이
+            # 없습니다(사고 7). 비교 대상 TTM 이 0 이하면 비율의 뜻이
+            # 없어 없음 — 162차 app.growth_row 와 같은 정의입니다.
+            growth = ttm_growth_pct(ttm[-1], ttm[-2]) if len(ttm) >= 2 else None
+            prev_growth = ttm_growth_pct(ttm[-2], ttm[-3]) if len(ttm) >= 3 else None
+            accel = ((growth > prev_growth)
+                     if (growth is not None and prev_growth is not None) else None)
 
             announce = row.get("announced_date")
             if not announce:
@@ -193,6 +214,8 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
                     "신고점폭": 폭,
                     "decidable": current is not None and had_prior,
                     "drought": drought,
+                    "ttm_growth": growth,
+                    "accel": accel,
                 }
             )
             # 가뭄 셈 (151차 H27) — 상태를 적은 **뒤에** 갱신합니다.
@@ -520,6 +543,9 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
                     "신고점폭": state.get("신고점폭"),
                     # H27 (151차 등록) — 직전 신고점 이후 발표 수 (가뭄 길이)
                     "가뭄": state.get("drought"),
+                    # H31 (164차 등록) — TTM 증가율이 직전보다 커졌나 (가속).
+                    # 같은 연속 구간의 TTM 세 개가 없으면 None (판단 불가)
+                    "가속": state.get("accel"),
                     "excess": excess,
                     # H26 (143차 등록) — 125거래일 창. **기존 excess(60일)는
                     # 한 칸도 안 바뀝니다.** 창이 더 길어 최근 사건은 아직

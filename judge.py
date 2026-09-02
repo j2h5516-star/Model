@@ -197,6 +197,7 @@ def hypothesis_clock() -> dict[str, tuple[str, int]]:
         H20_NAME: (_ld.H22_START_DAY, me.WINDOW_TRADING_DAYS),
         H27_NAME: (H27_START_DAY, me.WINDOW_TRADING_DAYS),
         H28_NAME: (H28_START_DAY, me.WINDOW_TRADING_DAYS),
+        H31_NAME: (H31_START_DAY, me.WINDOW_TRADING_DAYS),
         H29_NAME: (_sm.H29_START_DAY, me.WINDOW_TRADING_DAYS),
         H30_NAME: (_sm.H30_START_DAY, me.WINDOW_TRADING_DAYS),
     }
@@ -753,6 +754,53 @@ def judge_position_breakout(events: list[dict],
         entry[label] = _judge(signal, pool)
     entry["판정"] = entry["신규(판정)"]["판정"]
     return {H28_NAME: entry}
+
+
+# ---------------------------------------------------------------------------
+# H31 (164차 **사전 등록**) — 가속 ∧ 첫돌파
+# ---------------------------------------------------------------------------
+# 162차 성장 속도표("가속/감속"을 사실로만 화면에 올린 표)를 163차 보유
+# 종목 보고에서 판단 근거처럼 쓰고 싶어졌다. 쓰기 전에 먼저 등록한다
+# (헌법 2조). **등록 시점에 결과 숫자를 하나도 보지 않았다** — 그래서
+# 이 가설은 예외적으로 탐색 표본 재사용 문제가 없지만, 판정은 다른
+# 가설과 똑같이 등록일 뒤의 새 발표만 센다(규칙을 가설마다 다르게 두지
+# 않는다). 등록일 이전은 "탐색표본(참고)"로 나란히 적는다.
+#
+#   신호 = 첫돌파(newhigh_streak == 1) ∧ 가속(이번 TTM 증가율 > 직전)
+#   대조 = 첫돌파 ∧ 감속 — 가속이 듣는다면 이 군은 기준선 아래여야 한다
+#   표본 = 조정 EPS 잣대 사건 전체(H2b 와 같은 표본)
+#
+# 미리 적은 약점: 첫돌파와 가속은 정의상 상관이 높을 수 있다. 신호 n 이
+# 첫돌파 n 에 가깝다면 이 가설은 H2b 의 재탕이다 — 그래서 "첫돌파_n" 을
+# 함께 적어 둔다. 자세한 등록문은 측정결과.md 164차.
+H31_START_DAY = "2026-09-02"
+H31_NAME = "H31_가속_첫돌파"
+
+
+def judge_accel_breakout(events: list[dict],
+                         start_day: str = H31_START_DAY) -> dict:
+    """H31 판정 — 조정 EPS 사건 전체가 표본, 신호 = 첫돌파 ∧ 가속.
+
+    가속을 판단할 수 없는 사건(같은 구간에 TTM 세 개가 없음 — "가속"
+    None)은 신호가 될 수 없지만 기준선(표본)에는 남습니다 — 기준선은
+    등록대로 "같은 표본의 모든 발표"입니다.
+    """
+    usable = [e for e in events if _adj(e)]
+    entry: dict = {"등록일": start_day,
+                   "문턱": {"가속": "이번 TTM 증가율 > 직전 TTM 증가율"}}
+    for label, pool in (
+        ("신규(판정)", [e for e in usable if e["announced"] > start_day]),
+        ("탐색표본(참고)", [e for e in usable if e["announced"] <= start_day]),
+    ):
+        first = [e for e in pool if e["newhigh_streak"] == 1]
+        signal = [e for e in first if e.get("가속") is True]
+        contrast = [e for e in first if e.get("가속") is False]
+        judged = _judge(signal, pool)
+        judged["대조_감속첫돌파"] = _stats(contrast)
+        judged["첫돌파_n"] = len(first)
+        entry[label] = judged
+    entry["판정"] = entry["신규(판정)"]["판정"]
+    return {H31_NAME: entry}
 
 
 def judge_completion_gap(events: list[dict], start_day: str,

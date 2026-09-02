@@ -113,6 +113,17 @@ def hypothesis_rows(verdict: dict | None) -> list[dict]:
     return rows
 
 
+def _세분만(확정: list[dict], 세분: list[dict]) -> list[dict]:
+    """세분 묶음표에서 확정 묶음표와 **다른 줄만** 고릅니다 (164차).
+
+    세분 분류는 두 묶음(기기 OEM 반도체 · 좌석·계약 정액 구독)만 가르므로
+    나머지 줄은 확정표와 똑같습니다 — 같은 줄을 두 번 그리지 않습니다.
+    """
+    같은 = {(g["묶음"], g["가속"], g["감속"], g["판단불가"]) for g in 확정}
+    return [g for g in 세분
+            if (g["묶음"], g["가속"], g["감속"], g["판단불가"]) not in 같은]
+
+
 def build_payload(ds: dict, verdict: dict | None, log: dict | None) -> dict:
     """첫 화면에 필요한 모든 값 (app.json 의 내용).
 
@@ -200,15 +211,21 @@ def build_payload(ds: dict, verdict: dict | None, log: dict | None) -> dict:
         # 162차 (주인 지시 "저런 표를 앞으로의 기준으로 삼아") — 성장 속도표.
         #   종목마다 TTM 증가율과 그 직전 증가율을 나란히 두어 "가속/감속"을
         #   **사실로만** 적습니다. 판정·점수 아님. 가속이 이후 수익을
-        #   예측하는지는 아직 재지 않았고(H31 후보), 화면이 그 말을 함께 합니다.
+        #   예측하는지는 H31 로 사전 등록했고(164차, 2026-09-02) 판정은 새
+        #   표본이 쌓인 뒤입니다. 화면이 그 말을 함께 합니다.
+        #   세분 묶음(45차 ④ 감도 분석 — 데이터센터 실리콘 5 · 사용량 과금
+        #   SW 5 를 갈라 본 판)은 확정 묶음과 다른 줄만 따로 싣습니다.
         "성장속도": {
             "묶음별": app.growth_sector_rows(ds),
+            "묶음별_세분": _세분만(app.growth_sector_rows(ds),
+                                 app.growth_sector_rows(ds, fine=True)),
             "종목들": app.growth_table_rows(ds),
             "기준": (f"마지막 연속 {app.GROWTH_MIN_QUARTERS}분기 이상 · 최근 발표가 "
                     f"기준일에서 {sm.DELTA_FRESH_DAYS}일 안 · 가속 = 이번 TTM 증가율 "
                     "> 직전 TTM 증가율 · 묶음 비율은 가릴 수 있는 종목 5개 이상일 때만"),
-            "정직화": "사실의 나열입니다 — 가속이 이후 수익을 예측하는지는 아직 "
-                     "재지 않았습니다. 판정도 점수도 아니며 채택 근거로 쓰지 않습니다.",
+            "정직화": "사실의 나열입니다 — 가속이 이후 수익을 예측하는지는 H31 로 "
+                     "사전 등록(2026-09-02)해 새 표본으로 재는 중이며 아직 판정이 "
+                     "없습니다. 판정도 점수도 아니며 채택 근거로 쓰지 않습니다.",
         },
         "정배열유지": app.aligned_now_rows(ds),
         # 150차-O — 검색이 **자료가 있는 종목 전부**를 훑게 하려면
