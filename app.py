@@ -1275,6 +1275,261 @@ def growth_sector_rows(ds: dict, fine: bool = False) -> list[dict]:
     return out
 
 
+# ---------------------------------------------------------------------------
+# 내 포트폴리오 (167차, 주인 지시) — 보유 종목과 교체 후보를 **같은 자**로
+# ---------------------------------------------------------------------------
+# 세션이 손으로 보유 종목을 다시 재던 일(163차·165차 보고)을 로봇이 매일
+# 같은 함수로 하게 합니다. 값은 전부 이미 있는 장치에서 옮겨 옵니다:
+#   성장표(growth_row) · 신고점 연속(earnings_states) · 가격 위치(52주 고가,
+#   52주선) · 발표 뒤 SPY 대비 · 두 관찰판 등재(완성 30%+ / H29 조합) ·
+#   회사 가이던스(스냅샷 칸) · 야후 컨센서스(원장, 분기 정렬이 확인될 때만).
+# 판정도 점수도 아닙니다. "언제 바꿔야 하나"는 가설로 사전 등록해 새 표본으로
+# 판정한 뒤에만 말합니다(헌법 2·3조). 못 재는 칸은 None 으로 둡니다.
+CONSENSUS_ALIGN_TOL = 0.02     # 야후 year_ago 와 우리 4분기 전 값이 2% 안이면 같은 분기
+NEXT_ANNOUNCE_TOL_DAYS = 25    # 작년 같은 분기 발표일로 다음 발표를 짐작할 때 허용 오차
+
+
+def _price_position(prices: dict | None, 기준일: str) -> dict:
+    """기준일 종가의 **52주 고가 대비 %** 와 **52주선(주봉 52주 평균) 대비 %**.
+
+    이력이 52주 미만이면 둘 다 None — 판단 불가를 지어내지 않습니다.
+    """
+    out = {"고가대비": None, "52주선대비": None}
+    if not prices or not prices.get("dates"):
+        return out
+    import bisect
+    dates, closes = prices["dates"], prices["close"]
+    i = bisect.bisect_right(dates, 기준일) - 1
+    if i < 0:
+        return out
+    시작 = (date.fromisoformat(dates[i]) - timedelta(days=365)).isoformat()
+    j = bisect.bisect_left(dates, 시작)
+    if dates[j] > 시작 and j > 0:
+        j -= 1
+    if date.fromisoformat(dates[j]) > date.fromisoformat(시작) + timedelta(days=14):
+        return out                                   # 1년치가 없으면 재지 않음
+    창 = closes[j:i + 1]
+    if 창 and max(창) > 0:
+        out["고가대비"] = round((closes[i] / max(창) - 1.0) * 100.0, 1)
+    weeks: list[float] = []
+    current = None
+    for day, close in zip(dates[:i + 1], closes[:i + 1]):
+        iso = date.fromisoformat(day).isocalendar()
+        key = (iso[0], iso[1])
+        if key != current:
+            weeks.append(close)
+            current = key
+        else:
+            weeks[-1] = close
+    if len(weeks) >= 52:
+        ma = sum(weeks[-52:]) / 52.0
+        if ma > 0:
+            out["52주선대비"] = round((weeks[-1] / ma - 1.0) * 100.0, 1)
+    return out
+
+
+def _excess_since(ds: dict, ticker: str, 시작일: str | None, 기준일: str) -> float | None:
+    """시작일 종가(그날 이전 마지막 거래일)부터 기준일까지 SPY 대비 초과수익(%p)."""
+    if not 시작일:
+        return None
+    import bisect
+    p, spy = ds["prices"].get(ticker), ds["prices"].get(ds["benchmark"])
+    if not p or not spy:
+        return None
+    a = bisect.bisect_right(p["dates"], 시작일) - 1
+    b = bisect.bisect_right(p["dates"], 기준일) - 1
+    sa = bisect.bisect_right(spy["dates"], 시작일) - 1
+    sb = bisect.bisect_right(spy["dates"], 기준일) - 1
+    if min(a, sa) < 0 or b <= a or sb <= sa:
+        return None
+    if p["close"][a] <= 0 or spy["close"][sa] <= 0:
+        return None
+    return round((p["close"][b] / p["close"][a] - spy["close"][sb] / spy["close"][sa]) * 100.0, 1)
+
+
+def _next_announce_guess(announced: list[str], last: str | None) -> str | None:
+    """작년 같은 분기의 발표일 + 364일로 다음 발표를 짐작합니다.
+
+    마지막 발표 + 91일 근처에 오는 작년 발표(±25일)가 있을 때만 값을 내고,
+    없으면 None 입니다. 회사가 공식으로 정한 날짜가 아니라 **짐작**이며
+    화면도 그렇게 적습니다.
+    """
+    if not last:
+        return None
+    목표 = date.fromisoformat(last) + timedelta(days=91)
+    best = None
+    for d in announced:
+        try:
+            후보 = date.fromisoformat(d) + timedelta(days=364)
+        except ValueError:
+            continue
+        차 = abs((후보 - 목표).days)
+        if 차 <= NEXT_ANNOUNCE_TOL_DAYS and (best is None or 차 < best[0]):
+            best = (차, 후보)
+    return best[1].isoformat() if best else None
+
+
+def _next_quarter_consensus(entries: list[dict], rows: list[dict]) -> dict | None:
+    """야후 원장의 마지막 스냅샷에서 **다음 분기** 칸을 고릅니다.
+
+    야후의 0q 가 이미 발표된 분기를 가리키는 일이 실제로 있었습니다(165차
+    LITE: 0q 매출 9.88억 = 막 발표한 10.06억). 그래서 칸의 year_ago 가 우리
+    표의 **4분기 전 조정 EPS** 와 2% 안에서 같을 때만 그 칸을 다음 분기로
+    믿습니다. 어느 칸도 맞지 않으면 None — 정렬을 확인 못한 값은 안 씁니다.
+    """
+    if not entries or len(rows) < 4:
+        return None
+    ref = rows[-4].get("adj_eps")
+    if ref is None:
+        ref = rows[-4].get("gaap_eps")
+    if ref is None or ref == 0:
+        return None
+    snap = entries[-1]
+    칸들 = snap.get("rows") or {}
+    for key in ("0q", "+1q"):
+        r = 칸들.get(key) or {}
+        ya, avg = r.get("year_ago"), r.get("avg")
+        if ya is None or avg is None:
+            continue
+        if abs(ya - ref) / abs(ref) <= CONSENSUS_ALIGN_TOL:
+            최근 = rows[-1].get("adj_eps")
+            return {"as_of": snap.get("as_of"), "칸": key,
+                    "EPS": round(avg, 3), "매출": r.get("rev_avg"),
+                    "분석가": r.get("analysts"),
+                    "vs최근": _pct_change(avg, 최근) if 최근 else None}
+    return None
+
+
+GUIDANCE_ECHO_TOL = 0.005      # 가이던스가 이번 분기 실제 매출과 0.5% 안이면 "되읊음"으로 봄
+
+
+def _guidance_vs_revenue(row: dict) -> float | None:
+    """다음 분기 매출 가이던스 중앙값의 이번 분기 매출 대비 %.
+
+    스냅샷의 가이던스 칸은 165차 수리 전 파서가 **지난 분기 실적을 전망으로
+    읊은** 값이 남아 있을 수 있습니다(CLS·ZETA·ICHR 실물: 가이던스 = 실제
+    매출). 그래서 실제 매출과 0.5% 안이면 없음으로 둡니다 — 진짜 가이던스가
+    우연히 그 안에 든 경우(NVDA 18Q4 등 드묾)를 잃지만, "+0%"로 보이는
+    틀린 값보다 없음이 안전합니다(헌법 1조). 로봇이 원문을 다시 읽으면
+    칸 자체가 바로잡힙니다.
+    """
+    mid, rev = row.get("guid_rev_mid"), row.get("revenue")
+    if mid is None or rev is None or rev <= 0:
+        return None
+    if abs(mid - rev) / rev < GUIDANCE_ECHO_TOL:
+        return None
+    return _pct_change(mid, rev)
+
+
+def ticker_fact_row(ds: dict, ticker: str, 기준일: str,
+                    ledger: dict | None = None,
+                    완성신호: frozenset = frozenset(),
+                    조합: dict | None = None) -> dict:
+    """한 종목의 사실 한 줄 — 보유 종목과 교체 후보가 **같은 열**을 갖습니다."""
+    rows = ds["quarters"].get(ticker) or []
+    g = growth_row(ds, ticker) or {}
+    yardstick = me.yardstick_of(rows)
+    states = me.earnings_states(rows, yardstick) if yardstick else []
+    last_state = states[-1] if states else {}
+    최근발표 = rows[-1].get("announced_date") if rows else None
+    last = rows[-1] if rows else {}
+    pos = _price_position(ds["prices"].get(ticker), 기준일)
+    발표일들 = [r["announced_date"] for r in rows if r.get("announced_date")]
+    entries = ((ledger or {}).get("tickers") or {}).get(ticker) or []
+    컨센 = _next_quarter_consensus(entries, rows)
+    조합행 = (조합 or {}).get(ticker)
+    return {
+        "종목": ticker,
+        "묶음": cfg.GROUPS.get(ticker, "미분류"),
+        "테마": cfg.theme_of(ticker),
+        "잣대": yardstick,
+        "최근발표": 최근발표,
+        "TTM": g.get("TTM"),
+        "신고점": last_state.get("new_high") if last_state.get("decidable") else None,
+        "연속": last_state.get("newhigh_streak"),
+        "TTM증가": g.get("TTM증가"),
+        "직전TTM증가": g.get("직전TTM증가"),
+        "가속": g.get("가속"),
+        "분기QoQ": g.get("분기QoQ"),
+        "매출QoQ": g.get("매출QoQ"),
+        "고가대비": pos["고가대비"],
+        "52주선대비": pos["52주선대비"],
+        "발표후SPY": _excess_since(ds, ticker, 최근발표, 기준일),
+        "다음발표_짐작": _next_announce_guess(발표일들, 최근발표),
+        "가이드매출QoQ": _guidance_vs_revenue(last),
+        "가이드EPS": last.get("guid_eps_mid"),
+        "컨센": 컨센,
+        "완성30": ticker in 완성신호,
+        "H29": 조합행 is not None,
+        "이격도": 조합행["이격도"] if 조합행 else None,
+    }
+
+
+def portfolio_rows(ds: dict, 기준일: str | None = None, ledger: dict | None = None,
+                   완성판: list[dict] | None = None, 조합판: list[dict] | None = None,
+                   tickers: tuple | list | None = None) -> list[dict]:
+    """보유 종목(config.PORTFOLIO) 사실표 — 목록 순서 그대로, 판정 없음.
+
+    유니버스에 없거나 자료가 없는 종목은 빼고, 빠진 종목은 payload 의
+    '빠진종목' 칸이 따로 말합니다(없는 것을 없다고).
+    """
+    if 기준일 is None:
+        기준일 = (ds["prices"].get(ds["benchmark"]) or {}).get("dates", [None])[-1]
+    if tickers is None:
+        tickers = cfg.PORTFOLIO
+    완성신호 = frozenset(r["종목"] for r in (완성판 or []) if r.get("신호"))
+    조합 = {r["종목"]: r for r in (조합판 or [])}
+    out = []
+    for t in tickers:
+        if t not in ds["quarters"] and t not in ds["prices"]:
+            continue
+        out.append(ticker_fact_row(ds, t, 기준일, ledger, 완성신호, 조합))
+    return out
+
+
+def swap_candidate_rows(ds: dict, 기준일: str | None = None, ledger: dict | None = None,
+                        완성판: list[dict] | None = None, 조합판: list[dict] | None = None,
+                        exclude: tuple | list | None = None) -> list[dict]:
+    """교체 후보 = 두 관찰판(완성 30%+ ∧ H29 조합)에 **동시에** 오른 종목.
+
+    보유 종목은 뺍니다(exclude, 기본 config.PORTFOLIO). 이격도 큰 순.
+    후보라는 말은 "두 판에 같이 있다"는 사실이지 추천이 아닙니다 — 두 판의
+    가설(H18·H29)은 등록 뒤 새 표본이 아직 없어 판정 불가입니다.
+    """
+    if 기준일 is None:
+        기준일 = (ds["prices"].get(ds["benchmark"]) or {}).get("dates", [None])[-1]
+    if exclude is None:
+        exclude = cfg.PORTFOLIO
+    완성신호 = frozenset(r["종목"] for r in (완성판 or []) if r.get("신호"))
+    조합 = {r["종목"]: r for r in (조합판 or [])}
+    후보 = sorted(set(조합) & 완성신호 - set(exclude),
+                key=lambda t: -조합[t]["이격도"])
+    return [ticker_fact_row(ds, t, 기준일, ledger, 완성신호, 조합) for t in 후보]
+
+
+def portfolio_payload(ds: dict, ledger: dict | None,
+                      완성판: list[dict], 조합판: list[dict]) -> dict:
+    """웹앱 '내 포트폴리오' 탭의 내용 — 계기판·웹앱·원장이 같은 함수를 씁니다."""
+    기준일 = ds["prices"][ds["benchmark"]]["dates"][-1]
+    보유 = portfolio_rows(ds, 기준일, ledger, 완성판, 조합판)
+    있는 = {r["종목"] for r in 보유}
+    return {
+        "기준일": 기준일,
+        "보유": 보유,
+        "빠진종목": [t for t in cfg.PORTFOLIO if t not in 있는],
+        "교체후보": swap_candidate_rows(ds, 기준일, ledger, 완성판, 조합판),
+        "기준": ("성장표와 같은 자(마지막 연속 6분기 · 가속 = 이번 TTM 증가율 > 직전) · "
+               "고가대비 = 기준일 종가 ÷ 1년 최고 종가 · 52주선 = 주봉 52주 평균 · "
+               "발표후SPY = 마지막 발표일부터 SPY 대비 초과수익(%p) · 컨센서스는 야후 "
+               "칸의 전년값이 우리 4분기 전 값과 2% 안에서 맞을 때만 · 다음 발표는 "
+               "작년 같은 분기 발표일 + 364일의 짐작"),
+        "정직화": ("사실의 나열입니다 — 판정·점수·추천이 아닙니다. 두 관찰판의 가설"
+                 "(H18·H29)은 등록 뒤 새 표본이 없어 판정 불가이고, 가속(H31)도 새 "
+                 "표본으로 재는 중입니다. 언제 바꿔야 하는지는 가설로 사전 등록해 "
+                 "새 표본으로 판정한 뒤에만 말합니다."),
+    }
+
+
 def recent_completion_rows(완성사건: list[dict], 기준일: str,
                            days: int = 91) -> list[dict]:
     """최근 days 일 안의 정배열 완성 종목 (127차 — 주도 후보 관찰판).

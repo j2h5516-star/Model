@@ -27,7 +27,7 @@ import subprocess
 import sys
 import time
 
-TABS = ["#/home", "#/market", "#/stocks", "#/check"]
+TABS = ["#/home", "#/market", "#/port", "#/stocks", "#/check"]
 WIDTH = 412
 PORT = 8899
 

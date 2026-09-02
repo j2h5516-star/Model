@@ -24,7 +24,7 @@ from __future__ import annotations
 import json
 import os
 import sys
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 import app                      # 계기판의 순수 함수를 그대로 재사용
 import config as cfg
@@ -124,11 +124,13 @@ def _세분만(확정: list[dict], 세분: list[dict]) -> list[dict]:
             if (g["묶음"], g["가속"], g["감속"], g["판단불가"]) not in 같은]
 
 
-def build_payload(ds: dict, verdict: dict | None, log: dict | None) -> dict:
+def build_payload(ds: dict, verdict: dict | None, log: dict | None,
+                  ledger: dict | None = None) -> dict:
     """첫 화면에 필요한 모든 값 (app.json 의 내용).
 
     계기판과 **같은 함수**로 만들기 때문에 두 화면이 다른 숫자를 말할 수
     없습니다. 못 재는 값은 None 으로 두고, 화면이 "없음"이라고 적습니다.
+    ledger = 야후 컨센서스 원장(consensus.json) — 없으면 컨센 칸은 None.
     """
     오늘 = ds["prices"][ds["benchmark"]]["dates"][-1]
 
@@ -138,6 +140,7 @@ def build_payload(ds: dict, verdict: dict | None, log: dict | None) -> dict:
 
     완성 = sm.completion_events(ds)
     종목판 = app.recent_completion_rows(완성, 오늘)
+    조합신호 = app.combo_now_rows(ds)
     묶음판 = app.leader_watch_rows(완성, 오늘)
     확인 = app.dedupe_confirmations(
         [r for r in sm.confirmation_rows(ds) if r["확인"]])
@@ -200,7 +203,7 @@ def build_payload(ds: dict, verdict: dict | None, log: dict | None) -> dict:
         # 154차 (주인 지시) — 지금 H29 조합(정배열∧델타↑∧이격30%+∧이격상승)
         # 상태인 종목. 과거 실측과 판정 상태를 함께 싣는다(정직화 원칙).
         "조합신호": {
-            "종목들": app.combo_now_rows(ds),
+            "종목들": 조합신호,
             "실측": {"폭등률": 24.4, "폭락률": 12.0, "기준선": 9.0,
                      "출처": "152차 백테스트 (완성 4,971건 · 60거래일 · "
                             "SPY+20%p) — 탐색 표본, 채택 아님"},
@@ -228,6 +231,9 @@ def build_payload(ds: dict, verdict: dict | None, log: dict | None) -> dict:
                      "없습니다. 판정도 점수도 아니며 채택 근거로 쓰지 않습니다.",
         },
         "정배열유지": app.aligned_now_rows(ds),
+        # 167차 (주인 지시) — 내 포트폴리오. 보유 종목과 교체 후보(두 관찰판
+        # 교집합)를 같은 자로 매일 다시 잽니다. 판정 아님 — 정직화 문구 동봉.
+        "포트폴리오": app.portfolio_payload(ds, ledger, 종목판, 조합신호),
         # 150차-O — 검색이 **자료가 있는 종목 전부**를 훑게 하려면
         # 목록이 필요합니다. 정배열도 아니고 최근 완성도 없는 종목은
         # 그동안 화면 목록에 아예 없어서 검색해도 안 나왔습니다.
@@ -395,6 +401,37 @@ def write_all(payload: dict, tickers: dict[str, dict],
     return written
 
 
+PORTFOLIO_LEDGER = os.path.join(cfg.MEASURE_DIR, "portfolio_ledger.json")
+
+
+def append_portfolio_ledger(포트: dict, path: str = PORTFOLIO_LEDGER) -> dict:
+    """그날의 포트폴리오 표를 **추가 전용** 원장에 남깁니다 (167차).
+
+    열쇠는 기준일(주가 마지막 날). 같은 기준일이 이미 있으면 **고치지
+    않습니다** — "그날 화면이 무엇을 말했나"를 나중에 소급 수정 없이
+    되짚기 위한 것입니다(컨센서스 원장과 같은 원칙). 돌려주는 값은 원장
+    전체(검산용).
+    """
+    원장 = {"설명": ("내 포트폴리오 일일 원장 — 추가 전용. 기준일마다 그날 웹앱이 "
+                  "보여 준 보유·교체후보 표를 그대로 보관한다. 과거 항목은 고치지 "
+                  "않는다."), "days": {}}
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            try:
+                원장 = json.load(f)
+            except json.JSONDecodeError:
+                pass
+        원장.setdefault("days", {})
+    기준일 = 포트.get("기준일")
+    if 기준일 and 기준일 not in 원장["days"]:
+        원장["days"][기준일] = {"보유": 포트.get("보유"), "교체후보": 포트.get("교체후보"),
+                             "기록시각": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(원장, f, ensure_ascii=False, indent=0)
+    return 원장
+
+
 def main(argv: list[str]) -> int:
     snap = dataset.load()
     ds = dataset.build(snap, splits=dataset.load_splits())
@@ -408,8 +445,13 @@ def main(argv: list[str]) -> int:
     if os.path.exists(lpath):
         with open(lpath, encoding="utf-8") as f:
             log = json.load(f)
+    ledger = None
+    cpath = os.path.join(cfg.MEASURE_DIR, "consensus.json")
+    if os.path.exists(cpath):
+        with open(cpath, encoding="utf-8") as f:
+            ledger = json.load(f)
 
-    payload = build_payload(ds, verdict, log)
+    payload = build_payload(ds, verdict, log, ledger)
     완성 = sm.completion_events(ds)
     tickers = {t: build_ticker(ds, t, 완성) for t in ds["tickers"]}
 
@@ -418,6 +460,8 @@ def main(argv: list[str]) -> int:
         print(f"app.json {len(body.encode()):,}바이트 · 종목 {len(tickers)}개")
         return 0
     write_all(payload, tickers)
+    원장 = append_portfolio_ledger(payload["포트폴리오"])
+    print(f"포트폴리오 원장: {len(원장.get('days', {}))}일치 (기준일 {payload['포트폴리오']['기준일']})")
     return 0
 
 

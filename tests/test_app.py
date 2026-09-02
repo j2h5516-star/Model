@@ -1036,6 +1036,74 @@ def _성장_ds(eps: dict, 마지막날="2026-01-02"):
     return dataset.build(snap)
 
 
+def test_포트폴리오_사실행은_보유와_후보를_같은_자로_잰다():
+    """167차 — 보유 종목과 교체 후보가 같은 열을 갖고, 후보는 두 관찰판에
+    **동시에** 오른 비보유 종목만이어야 한다."""
+    오름 = [1.0, 1.1, 1.2, 1.3, 1.5, 1.7, 2.0, 2.4, 2.9, 3.5]
+    ds = _성장_ds({"보유": _성장_eps행(오름), "후보": _성장_eps행(오름)}, 마지막날="2026-07-03")
+    기준일 = ds["prices"]["SPY"]["dates"][-1]
+    완성판 = [{"종목": "후보", "신호": True}, {"종목": "보유", "신호": False}]
+    조합판 = [{"종목": "후보", "이격도": 45.0, "이격도_4주전": 30.0}]
+
+    보유 = app.portfolio_rows(ds, 기준일, None, 완성판, 조합판,
+                            tickers=("보유", "없는종목"))
+    assert [r["종목"] for r in 보유] == ["보유"], "자료 없는 종목이 표에 들어갔습니다"
+    r = 보유[0]
+    assert r["가속"] is True and r["신고점"] is True and r["연속"] >= 1, r
+    assert r["고가대비"] is not None and r["52주선대비"] is not None, r
+    assert r["완성30"] is False and r["H29"] is False and r["컨센"] is None, r
+    assert r["다음발표_짐작"] is not None, "분기마다 발표한 회사인데 다음 발표를 짐작 못 했습니다"
+
+    후보 = app.swap_candidate_rows(ds, 기준일, None, 완성판, 조합판, exclude=("보유",))
+    assert [r["종목"] for r in 후보] == ["후보"], 후보
+    assert 후보[0]["완성30"] and 후보[0]["H29"] and 후보[0]["이격도"] == 45.0
+    assert set(후보[0]) == set(r), "보유와 후보의 열이 다릅니다"
+    # 한 판에만 있으면 후보가 아니다
+    assert app.swap_candidate_rows(ds, 기준일, None, [{"종목": "후보", "신호": False}],
+                                   조합판, exclude=("보유",)) == []
+    # 보유 종목은 후보에서 빠진다
+    assert app.swap_candidate_rows(ds, 기준일, None, 완성판, 조합판,
+                                   exclude=("보유", "후보")) == []
+
+
+def test_컨센서스는_전년값이_맞는_칸만_다음_분기로_믿는다():
+    """165차 LITE 실물 — 야후 0q 가 이미 발표된 분기를 가리켰다. 칸의
+    year_ago 가 우리 4분기 전 값과 맞을 때만 그 칸을 다음 분기로 쓴다."""
+    rows = [{"adj_eps": v} for v in (1.0, 1.1, 1.2, 1.3, 1.5, 1.7)]   # rows[-4] = 1.2
+    정상 = [{"as_of": "2026-08-01", "rows": {
+        "0q": {"avg": 1.9, "year_ago": 1.2, "rev_avg": 5e8, "analysts": 9},
+        "+1q": {"avg": 2.1, "year_ago": 1.3}}}]
+    r = app._next_quarter_consensus(정상, rows)
+    assert r["칸"] == "0q" and r["EPS"] == 1.9 and r["vs최근"] == round((1.9 / 1.7 - 1) * 100, 1), r
+    # 0q 가 한 분기 뒤처져 있으면 +1q 가 다음 분기
+    뒤처짐 = [{"as_of": "2026-08-01", "rows": {
+        "0q": {"avg": 1.7, "year_ago": 1.1}, "+1q": {"avg": 1.9, "year_ago": 1.2}}}]
+    r2 = app._next_quarter_consensus(뒤처짐, rows)
+    assert r2["칸"] == "+1q" and r2["EPS"] == 1.9, r2
+    # 어느 칸도 안 맞으면 없음 — 정렬 못 확인한 값은 쓰지 않는다
+    어긋남 = [{"as_of": "2026-08-01", "rows": {
+        "0q": {"avg": 1.7, "year_ago": 1.1}, "+1q": {"avg": 2.2, "year_ago": 1.3}}}]
+    assert app._next_quarter_consensus(어긋남, rows) is None
+    assert app._next_quarter_consensus([], rows) is None
+
+
+def test_가이던스가_실제_매출을_되읊은_값이면_없음으로_둔다():
+    """165차 수리 전 파서가 남긴 "가이던스 = 이번 분기 매출" 칸(CLS·ZETA·ICHR
+    실물)은 화면에 +0% 로 보이므로 없음으로 둔다 — 없음 > 틀림."""
+    assert app._guidance_vs_revenue({"guid_rev_mid": 4.6986e9, "revenue": 4.6986e9}) is None
+    assert app._guidance_vs_revenue({"guid_rev_mid": 4.70e9, "revenue": 4.6986e9}) is None   # 0.03%
+    assert app._guidance_vs_revenue({"guid_rev_mid": 4.70e8, "revenue": 4.37e8}) == 7.6
+    assert app._guidance_vs_revenue({"guid_rev_mid": None, "revenue": 4.37e8}) is None
+    assert app._guidance_vs_revenue({"guid_rev_mid": 4.7e8, "revenue": 0}) is None
+
+
+def test_다음_발표_짐작은_작년_같은_분기가_있을_때만():
+    ann = ["2025-05-15", "2025-08-14", "2025-11-13", "2026-02-12", "2026-05-14"]
+    assert app._next_announce_guess(ann, "2026-05-14") == "2026-08-13"   # 2025-08-14 + 364일
+    assert app._next_announce_guess(["2026-05-14"], "2026-05-14") is None
+    assert app._next_announce_guess(ann, None) is None
+
+
 def test_pct_change_는_전값이_0_이하면_없음():
     assert app._pct_change(4.8, 4.2) == 14.3
     assert app._pct_change(3.0, 4.0) == -25.0

@@ -161,6 +161,43 @@ def test_데이터가_마른_새_종목이_화면을_깨뜨리지_않는다():
             assert 한종목["이격도"] is None and 한종목["주봉"] == [], 한종목
 
 
+def test_포트폴리오가_웹앱에_실리고_원장은_같은_날을_고치지_않는다():
+    """167차 — 내 포트폴리오 칸이 app.json 에 실리고, 일일 원장은 추가
+    전용(같은 기준일을 두 번 쓰지 않고, 과거 날을 고치지 않는다)."""
+    import config as cfg
+    import dataset
+    from datetime import date, timedelta
+
+    d = date(2023, 1, 6)
+    날들, 종가 = [], []
+    while d <= date(2026, 1, 2):
+        날들.append(d.isoformat())
+        종가.append(100.0 + len(날들))
+        d += timedelta(days=7)
+    snap = {"benchmark": "SPY", "tickers": ["SPY"], "eps": {"SPY": []},
+            "prices": {"SPY": {"dates": 날들, "close": 종가}}}
+    ds = dataset.build(snap)
+    payload = wb.build_payload(ds, None, {"ran_at": "시험"})
+    포 = payload["포트폴리오"]
+    assert 포["기준일"] == 날들[-1]
+    assert 포["보유"] == [] and 포["교체후보"] == [], "자료가 없는데 줄을 만들었습니다"
+    assert set(포["빠진종목"]) == set(cfg.PORTFOLIO), "없는 종목을 없다고 말하지 않았습니다"
+    assert "판정" in 포["정직화"] and "추천" in 포["정직화"]
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = os.path.join(tmp, "ledger.json")
+        첫 = {"기준일": "2026-01-02", "보유": [{"종목": "A", "TTM증가": 1.0}], "교체후보": []}
+        wb.append_portfolio_ledger(첫, path)
+        wb.append_portfolio_ledger({**첫, "보유": [{"종목": "A", "TTM증가": 99.0}]}, path)
+        원장 = json.load(open(path, encoding="utf-8"))
+        assert list(원장["days"]) == ["2026-01-02"], "같은 날을 두 번 썼습니다"
+        assert 원장["days"]["2026-01-02"]["보유"][0]["TTM증가"] == 1.0, "과거 날을 고쳤습니다"
+        wb.append_portfolio_ledger({**첫, "기준일": "2026-01-05"}, path)
+        원장 = json.load(open(path, encoding="utf-8"))
+        assert sorted(원장["days"]) == ["2026-01-02", "2026-01-05"]
+        assert wb.append_portfolio_ledger({"기준일": None}, path)["days"].keys() == 원장["days"].keys()
+
+
 def test_채택까지_남은_거리가_웹앱에도_실린다():
     """(150차-C) 139·140차에 만든 "채택까지 얼마나 남았나"가 **계기판에만**
     있었습니다. 주인은 휴대폰만 쓰므로 정작 보는 화면(웹앱)에는 이 정직화

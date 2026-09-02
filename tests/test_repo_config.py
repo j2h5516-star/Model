@@ -142,6 +142,16 @@ def test_6차확장_종목과_6K_종목은_유니버스_안에_있다():
     assert not 빠진, f"6-K 표에만 있고 유니버스에 없는 종목: {빠진}"
 
 
+def test_포트폴리오_종목은_유니버스_안에_있고_겹치지_않는다():
+    """167차 — 보유 목록의 오타(유니버스에 없는 티커)는 화면에서 조용히
+    빠져 아무 일도 안 일어나므로 시험이 센다."""
+    import config as cfg
+
+    assert len(set(cfg.PORTFOLIO)) == len(cfg.PORTFOLIO), "보유 목록에 중복"
+    빠진 = [t for t in cfg.PORTFOLIO if t not in cfg.TICKERS]
+    assert not 빠진, f"유니버스에 없는 보유 종목: {빠진}"
+
+
 
 
 # ---------------------------------------------------------------------------

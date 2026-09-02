@@ -400,6 +400,63 @@ function 성장속도판(성장) {
   return html;
 }
 
+/* ── 화면: 내 포트폴리오 (167차, 주인 지시) ────────────────── */
+// 보유 종목과 교체 후보(두 관찰판 교집합)를 **같은 열**로 나열합니다.
+// 판정·점수·추천이 아니라 사실의 나열이며, 정직화 문구를 함께 적습니다.
+function 사실카드(r) {
+  const p = (v, d = 0) => (v === null || v === undefined) ? "—" : num(v, d, true) + "%";
+  const 속도 = r.가속 === true ? '<span class="badge new">가속</span>'
+    : r.가속 === false ? '<span class="badge no">감속</span>'
+    : '<span class="badge wait">가림 불가</span>';
+  const 판 = (r.완성30 ? ' <span class="badge new">완성30%+</span>' : "")
+    + (r.H29 ? ' <span class="badge new">H29조합</span>' : "");
+  const 신고 = r.신고점 === true ? ` · 신고점 ${r.연속 ?? "?"}연속`
+    : r.신고점 === false ? " · 신고점 아님" : " · 신고점 판단 불가";
+  const 컨센 = r.컨센
+    ? `컨센 다음분기 EPS ${num(r.컨센.EPS, 2)} (최근 대비 ${p(r.컨센.vs최근)})`
+    : "컨센 분기 정렬 확인 불가";
+  const 가이드 = (r.가이드매출QoQ === null || r.가이드매출QoQ === undefined)
+    ? "" : ` · 회사 가이던스 매출 ${p(r.가이드매출QoQ)}`;
+  return `<a class="row port" href="#/t/${esc(r.종목)}">
+    <div class="sym">${esc(r.종목)} ${속도}${판}</div>
+    <div class="meta">${esc(r.묶음)} · ${esc(r.테마)}<br>잣대 ${esc(r.잣대 || "없음")}${신고}</div>
+    <div class="meta">이익 TTM ${p(r.TTM증가)} (직전 ${p(r.직전TTM증가)}) · 분기 ${p(r.분기QoQ)} · 매출 ${p(r.매출QoQ)}</div>
+    <div class="meta">고점 대비 ${p(r.고가대비)} · 52주선 ${p(r["52주선대비"])} · 발표 후 SPY 대비 ${p(r.발표후SPY)}p</div>
+    <div class="meta">${컨센}${가이드}</div>
+    <div class="meta">최근 발표 ${esc(r.최근발표 || "—")} · 다음 발표 짐작 ${r.다음발표_짐작 ? "~" + esc(r.다음발표_짐작) : "—"}</div>
+  </a>`;
+}
+
+function 화면_포트() {
+  const a = APP;
+  const 포 = a.포트폴리오;
+  if (!포) {
+    return '<div class="empty">포트폴리오 자료가 아직 없습니다 — 로봇이 다음 수집에서 만듭니다.</div>';
+  }
+  let html = `<h2>내 포트폴리오<span class="n">보유 ${포.보유.length}종목 · 기준일 ${esc(포.기준일)}</span></h2>
+  <div class="note">보유 종목을 성장표·가격 위치·두 관찰판과 <b>같은 자</b>로 매일 다시 잽니다.
+  <b>판정도 점수도 아닙니다.</b> 가속/감속은 이익(TTM)이 한 분기 전보다 더 빨리
+  느는지의 사실입니다.</div>`;
+  if (!포.보유.length) {
+    html += '<div class="empty">보유 종목의 자료가 없습니다 — 없는 것은 없다고 말합니다.</div>';
+  } else {
+    html += 포.보유.map(사실카드).join("");
+  }
+  if (포.빠진종목 && 포.빠진종목.length) {
+    html += `<div class="honest">자료가 없어 못 실은 보유 종목: ${esc(포.빠진종목.join(", "))}</div>`;
+  }
+  html += `<h2>교체 후보<span class="n">완성 30%+ ∧ H29 조합 — 두 판에 동시에</span></h2>
+  <div class="note">보유하지 않은 종목 중 두 관찰판에 <b>동시에</b> 오른 것입니다. "후보"는
+  두 판에 같이 있다는 사실이지 추천이 아닙니다.</div>`;
+  if (!포.교체후보.length) {
+    html += '<div class="empty">지금 두 판에 동시에 오른 비보유 종목이 없습니다.</div>';
+  } else {
+    html += 포.교체후보.map(사실카드).join("");
+  }
+  html += `<div class="honest"><b>${esc(포.정직화 || "")}</b><br>잣대: ${esc(포.기준 || "")}</div>`;
+  return html;
+}
+
 /* ── 화면: 종목 ──────────────────────────────────────── */
 function 화면_종목() {
   const a = APP;
@@ -743,6 +800,7 @@ async function 그리기() {
     view.innerHTML = '<div class="loading">불러오는 중…</div>';
     view.innerHTML = await 화면_상세(decodeURIComponent(인자));
   } else if (길 === "market") view.innerHTML = 화면_장세();
+  else if (길 === "port") view.innerHTML = 화면_포트();
   else if (길 === "stocks") {
     view.innerHTML = 화면_종목();
     const q = $("#q");
