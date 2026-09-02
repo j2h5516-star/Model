@@ -409,7 +409,9 @@ function 사실카드(r) {
     : r.가속 === false ? '<span class="badge no">감속</span>'
     : '<span class="badge wait">가림 불가</span>';
   const 판 = (r.완성30 ? ' <span class="badge new">완성30%+</span>' : "")
-    + (r.H29 ? ' <span class="badge new">H29조합</span>' : "");
+    + (r.H29 ? ' <span class="badge new">H29조합</span>' : "")
+    + (r.H32신호 ? ' <span class="badge wait">H32 회피신호(판정 대기)</span>' : "")
+    + (r.H32b신호 ? ' <span class="badge wait">H32b 유지신호(판정 대기)</span>' : "");
   const 신고 = r.신고점 === true ? ` · 신고점 ${r.연속 ?? "?"}연속`
     : r.신고점 === false ? " · 신고점 아님" : " · 신고점 판단 불가";
   const 컨센 = r.컨센
@@ -605,6 +607,7 @@ function 종목간단줄(r) {
 function 화면_검증() {
   const a = APP;
   const 배지 = (판정) => 판정 === "채택" ? '<span class="badge adopt">채택</span>'
+    : 판정 === "회피 채택" ? '<span class="badge adopt">회피 채택 (줄이기)</span>'
     : 판정 === "판정 불가" ? '<span class="badge wait">판정 대기</span>'
     : '<span class="badge no">미채택</span>';
   let html = `<h2>등록된 가설 ${a.가설.length}개</h2>

@@ -198,6 +198,8 @@ def hypothesis_clock() -> dict[str, tuple[str, int]]:
         H27_NAME: (H27_START_DAY, me.WINDOW_TRADING_DAYS),
         H28_NAME: (H28_START_DAY, me.WINDOW_TRADING_DAYS),
         H31_NAME: (H31_START_DAY, me.WINDOW_TRADING_DAYS),
+        H32_NAME: (H32_START_DAY, me.WINDOW_TRADING_DAYS),
+        H32B_NAME: (H32_START_DAY, me.WINDOW_TRADING_DAYS),
         H29_NAME: (_sm.H29_START_DAY, me.WINDOW_TRADING_DAYS),
         H30_NAME: (_sm.H30_START_DAY, me.WINDOW_TRADING_DAYS),
     }
@@ -801,6 +803,99 @@ def judge_accel_breakout(events: list[dict],
         entry[label] = judged
     entry["판정"] = entry["신규(판정)"]["판정"]
     return {H31_NAME: entry}
+
+
+# ---------------------------------------------------------------------------
+# H32·H32b (168차 등록, 2026-09-02) — 감속 ∧ 런업 (회피) · 가속 ∧ 런업
+# ---------------------------------------------------------------------------
+# 주인 지시 "포트폴리오 비중이동을 판단하는 로직"을 헌법대로 **가설**로
+# 만든 것입니다. 보유 종목 11개만으로는 표본이 영영 안 쌓이므로 유니버스
+# 전체의 발표 사건으로 일반화합니다:
+#
+#   H32  회피 신호 = 조정 EPS 발표에서 **감속**(이번 TTM 증가율 ≤ 직전) ∧
+#        발표 전 60거래일 SPY 대비 초과수익 ≥ +20%p(런업 — H25 문턱 그대로).
+#        "이미 많이 오른 뒤 속도가 꺾인 발표". 질문: 이런 발표의 60거래일
+#        폭등률이 기준선보다 **낮은가**(= 줄여야 하는가).
+#   H32b 유지 신호 = 같은 런업인데 **가속**. 질문: 달렸어도 속도가 더
+#        빨라지면 폭등률이 기준선보다 높은가(= 들고 가야 하는가).
+#
+# 표본(기준선) = 조정 EPS 사건 중 런업을 잴 수 있는 것 전부. 가속을
+# 판단할 수 없는 사건(None)은 신호·대조가 못 되지만 기준선에는 남습니다.
+#
+# 판정 규칙 — H32 는 **회피 가설**이라 채택 기준을 거울처럼 씁니다:
+#   회피 채택 = 신호 윌슨 95% 구간 **상한** < 기준선 **하한**, n≥10.
+#   (기존 채택 = 신호 하한 > 기준선 상한. 같은 완전 분리 조건의 반대 방향.)
+#   H32b 는 기존 채택 기준 그대로.
+# 폭락률(SPY 대비 −20%p 이하)도 함께 적습니다 — 판정에는 쓰지 않고, 회피
+# 신호가 "안 오르는" 것인지 "무너지는" 것인지 읽기 위한 사실입니다.
+#
+# 등록 시점에 결과 숫자를 보지 않았습니다. 문턱 20%p·60거래일은 새로 만든
+# 수가 아니라 H25·측정 기본형의 수를 그대로 쓴 것입니다. 판정은 등록일 뒤의
+# 새 발표만 셉니다(헌법 5조). 미리 적는 약점: ① 런업이 큰 종목은 변동성이
+# 커서 폭등·폭락이 **같이** 높아지는 U자(151차 착시)가 나올 수 있다 — 그래서
+# 폭락률을 함께 적는다 ② "감속"은 TTM 세 개가 같은 구간에 있어야 하므로
+# 표본의 절반 가까이가 판단 불가로 빠진다(164차 실측 48%).
+H32_START_DAY = "2026-09-02"
+H32_NAME = "H32_감속_런업_회피"
+H32B_NAME = "H32b_가속_런업"
+H32_RUNUP_MIN = H25_RUNUP_MIN     # 새 숫자를 만들지 않음 — H25 의 20%p 그대로
+AVOID_VERDICT = "회피 채택"
+
+
+def _crash_stats(group: list[dict]) -> dict:
+    """폭락률 — SPY 대비 −SURGE_PP(−20%p) 이하로 끝난 비율 (참고 사실)."""
+    n = len(group)
+    hits = sum(1 for e in group if e["excess"] <= -me.SURGE_PP)
+    low, high = wilson_interval(hits, n)
+    return {"n": n, "rate": round(hits / n * 100.0, 1) if n else None,
+            "ci": [round(low, 1), round(high, 1)]}
+
+
+def _judge_avoid(signal: list[dict], baseline: list[dict]) -> dict:
+    """회피 가설의 판정 — 신호 상한 < 기준선 하한 이면 '회피 채택'."""
+    signal_stats = _stats(signal)
+    base_stats = _stats(baseline)
+    if signal_stats["n"] < MIN_SIGNAL_N:
+        verdict = "판정 불가"
+    elif signal_stats["ci"][1] < base_stats["ci"][0]:
+        verdict = AVOID_VERDICT
+    else:
+        verdict = "미채택"
+    return {"신호": signal_stats, "기준선": base_stats, "판정": verdict}
+
+
+def judge_decel_runup(events: list[dict],
+                      start_day: str = H32_START_DAY) -> dict:
+    """H32(감속 ∧ 런업, 회피) · H32b(가속 ∧ 런업) 판정.
+
+    표본 = 조정 EPS 사건 중 런업을 잴 수 있는 것. 신호는 가속 판단이 되는
+    사건(True/False)에서만 나오고, None 은 기준선에만 남습니다.
+    """
+    usable = [e for e in events if _adj(e) and e.get("런업") is not None]
+    문턱 = {"런업": H32_RUNUP_MIN, "감속": "이번 TTM 증가율 ≤ 직전 TTM 증가율",
+          "가속": "이번 TTM 증가율 > 직전 TTM 증가율"}
+    h32: dict = {"등록일": start_day, "문턱": 문턱, "방향": "회피",
+                 "채택기준": "신호 윌슨 상한 < 기준선 하한 (n≥10)"}
+    h32b: dict = {"등록일": start_day, "문턱": 문턱, "방향": "유지",
+                  "채택기준": "신호 윌슨 하한 > 기준선 상한 (n≥10)"}
+    for label, pool in (
+        ("신규(판정)", [e for e in usable if e["announced"] > start_day]),
+        ("탐색표본(참고)", [e for e in usable if e["announced"] <= start_day]),
+    ):
+        달린 = [e for e in pool if e["런업"] >= H32_RUNUP_MIN]
+        감속 = [e for e in 달린 if e.get("가속") is False]
+        가속 = [e for e in 달린 if e.get("가속") is True]
+        a = _judge_avoid(감속, pool)
+        a["폭락"] = {"신호": _crash_stats(감속), "기준선": _crash_stats(pool)}
+        a["런업_n"] = len(달린)
+        h32[label] = a
+        b = _judge(가속, pool)
+        b["폭락"] = {"신호": _crash_stats(가속), "기준선": _crash_stats(pool)}
+        b["런업_n"] = len(달린)
+        h32b[label] = b
+    h32["판정"] = h32["신규(판정)"]["판정"]
+    h32b["판정"] = h32b["신규(판정)"]["판정"]
+    return {H32_NAME: h32, H32B_NAME: h32b}
 
 
 def judge_completion_gap(events: list[dict], start_day: str,

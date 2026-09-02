@@ -108,7 +108,7 @@ def hypothesis_rows(verdict: dict | None) -> list[dict]:
             "가장이른날": (바닥.get(name) or {}).get("가장이른날"),
             "창_거래일": (바닥.get(name) or {}).get("창_거래일"),
         })
-    순서 = {"채택": 0, "미채택": 2, "판정 불가": 1}
+    순서 = {"채택": 0, "회피 채택": 0, "미채택": 2, "판정 불가": 1}
     rows.sort(key=lambda r: (순서.get(r["판정"], 3), r["이름"]))
     return rows
 

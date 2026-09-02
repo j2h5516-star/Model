@@ -58,6 +58,9 @@ HYPOTHESIS_LABELS = {
     "H19b_주도섹터_완성후확인": "주도섹터 — 완성 후 확인형 (H19b)",
     "H20_주도섹터_전환": "주도섹터 전환 (H20)",
     "H21_주도섹터_분기점": "주도섹터 분기점 — 델타 꺾임 (H21)",
+    "H31_가속_첫돌파": "첫 신기록 × 이익 가속 (H31)",
+    "H32_감속_런업_회피": "달린 뒤 감속 — 줄여야 하나 (H32, 회피)",
+    "H32b_가속_런업": "달린 뒤에도 가속 — 들고 가나 (H32b)",
 }
 
 # 미채택·대기 신호를 화면에서 쉬운 말로 풀어 주는 설명 (지시 1의 이행).
@@ -1462,6 +1465,14 @@ def ticker_fact_row(ds: dict, ticker: str, 기준일: str,
         "완성30": ticker in 완성신호,
         "H29": 조합행 is not None,
         "이격도": 조합행["이격도"] if 조합행 else None,
+        # 168차 — H32 회피 신호(감속 ∧ 발표 전 60거래일 런업 ≥ 20%p) 해당
+        # 여부를 **사실**로 적습니다. 판정은 등록일 뒤 새 표본으로만 하며
+        # 화면은 판정 상태를 함께 보입니다. 가속 판단 불가면 None.
+        "런업60": g.get("상대60"),
+        "H32신호": (g.get("가속") is False and g.get("상대60") is not None
+                  and g["상대60"] >= judge.H32_RUNUP_MIN) if g.get("가속") is not None else None,
+        "H32b신호": (g.get("가속") is True and g.get("상대60") is not None
+                   and g["상대60"] >= judge.H32_RUNUP_MIN) if g.get("가속") is not None else None,
     }
 
 

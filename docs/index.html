@@ -8,7 +8,14 @@
 <link rel="manifest" href="manifest.json">
 <!-- 아이콘을 글자로 그려 넣습니다 — 바깥에서 파일을 받아오지 않습니다 -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0e11'/%3E%3Cpath d='M5 22 L12 14 L18 18 L27 8' stroke='%2300c805' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css">
+<!-- 스타일도 화면 코드(app.js)와 같은 이유로 시각을 붙여 부릅니다 (168차):
+     167차에 탭을 다섯 개로 늘렸는데 휴대폰이 예전 style.css(4칸 격자)를
+     캐시에서 꺼내 쓰면 새 탭이 어긋나 보입니다. -->
+<script>
+  document.write('<link rel="stylesheet" href="style.css?v='
+    + Math.floor(Date.now() / 3600000) + '">');
+</script>
+<noscript><link rel="stylesheet" href="style.css"></noscript>
 </head>
 <body>
 <!-- 맨 위 — 언제 수집한 데이터인지 항상 보이게 (정직화) -->

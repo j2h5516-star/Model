@@ -889,6 +889,59 @@ def test_H31이_시계와_등록부와_로봇에_있다():
     assert "judge_accel_breakout" in inspect.getsource(cj.run), "로봇 배선 없음"
 
 
+# ---------------------------------------------------------------------------
+# H32·H32b (168차 등록) — 감속 ∧ 런업(회피) · 가속 ∧ 런업
+# ---------------------------------------------------------------------------
+def _h32_사건(날, 가속, 런업, 초과=0.0):
+    return {"ticker": "AA", "잣대": "adj_eps", "announced": 날,
+            "newhigh_streak": 0, "가속": 가속, "런업": 런업, "excess": 초과}
+
+
+def test_H32는_감속_런업이_기준선보다_낮아야_회피_채택이다():
+    """회피 가설은 채택 기준을 거울처럼 쓴다: 신호 **상한** < 기준선 **하한**.
+    런업을 못 잰 사건은 표본에서 빠지고, 가속 None 은 기준선에만 남는다."""
+    옛 = [_h32_사건("2026-01-01", False, 30.0, 99.0) for _ in range(30)]
+    회피신호 = [_h32_사건("2026-09-03", False, 30.0, -30.0) for _ in range(11)]   # 0/11 폭등, 전부 폭락
+    유지신호 = [_h32_사건("2026-09-04", True, 25.0, 99.0) for _ in range(15)]     # 15/15 폭등
+    안달림 = [_h32_사건("2026-09-05", False, 5.0, 99.0) for _ in range(4)]        # 기준선에만
+    모름 = [_h32_사건("2026-09-05", None, 40.0, 99.0)]                              # 기준선에만
+    런업없음 = [_h32_사건("2026-09-06", False, None, 99.0)]                         # 표본 밖
+    등록일당일 = [_h32_사건("2026-09-02", False, 30.0, 99.0)]                       # 탐색 표본
+    r = judge.judge_decel_runup(옛 + 회피신호 + 유지신호 + 안달림 + 모름 + 런업없음 + 등록일당일)
+    a, b = r[judge.H32_NAME], r[judge.H32B_NAME]
+    assert a["등록일"] == "2026-09-02" and a["방향"] == "회피"
+    새 = a["신규(판정)"]
+    assert 새["신호"]["n"] == 11 and 새["기준선"]["n"] == 31, 새
+    assert 새["런업_n"] == 27, "런업 20%p 이상 사건 수(11+15+1)가 다릅니다"
+    assert 새["폭락"]["신호"]["rate"] == 100.0 and 새["폭락"]["기준선"]["n"] == 31
+    assert a["판정"] == judge.AVOID_VERDICT, 새
+    assert a["탐색표본(참고)"]["신호"]["n"] == 31, "등록일 당일은 탐색 표본이어야 합니다"
+    새b = b["신규(판정)"]
+    assert 새b["신호"]["n"] == 15 and 새b["기준선"]["n"] == 31 and b["판정"] == "채택", 새b
+    # 신호가 기준선과 갈라지지 않으면 회피도 미채택
+    섞임 = [_h32_사건("2026-09-03", False, 30.0, 99.0 if i % 2 else -30.0) for i in range(12)]
+    r2 = judge.judge_decel_runup(섞임 + 유지신호)
+    assert r2[judge.H32_NAME]["판정"] == "미채택"
+    # 표본 부족은 판정 불가
+    assert judge.judge_decel_runup(회피신호[:5])[judge.H32_NAME]["판정"] == "판정 불가"
+
+
+def test_H32가_시계와_등록부와_로봇과_점검기에_있다():
+    import inspect
+    import model_verify as mv
+    import collect_job as cj
+    for name in (judge.H32_NAME, judge.H32B_NAME):
+        assert name in judge.hypothesis_clock()
+        assert judge.hypothesis_clock()[name][0] == "2026-09-02"
+        assert name in mv.expected_hypotheses()
+    assert "judge_decel_runup" in inspect.getsource(cj.run), "로봇 배선 없음"
+    # 점검기가 "회피 채택"을 알 수 없는 판정으로 세면 매일 ⛔ 가 뜬다
+    verdict = {"가설": {judge.H32_NAME: {"판정": judge.AVOID_VERDICT, "신규(판정)": {"신호": {"n": 12}}}}}
+    lines, problems = mv.verify(verdict, [judge.H32_NAME], None)
+    assert not problems, problems
+    assert "회피 채택 1" in lines[0], lines[0]
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

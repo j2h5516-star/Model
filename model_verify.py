@@ -49,6 +49,7 @@ def expected_hypotheses() -> list[str]:
     names.append(judge.H26_NAME)
     names += [judge.H27_NAME, judge.H28_NAME]   # 151차 등록
     names.append(judge.H31_NAME)   # 164차 등록 — 가속 ∧ 첫돌파
+    names += [judge.H32_NAME, judge.H32B_NAME]   # 168차 등록 — 감속/가속 ∧ 런업
     return names
 
 
@@ -76,7 +77,8 @@ def verify(verdict: dict | None, expected: list[str],
         lines.append(f"⚠️ 판정이 옛 코드({recorded})로 계산됨 — 지금 코드 "
                      f"{code_now}. 다음 로봇 런에서 갱신됩니다")
 
-    집계 = {"채택": 0, "미채택": 0, "판정 불가": 0, "기타": 0}
+    # "회피 채택"(168차) 은 줄여야 한다는 쪽의 채택 — 매수 채택과 따로 셉니다
+    집계 = {"채택": 0, "회피 채택": 0, "미채택": 0, "판정 불가": 0, "기타": 0}
     for name in expected:
         entry = 실린.get(name)
         if not entry:
@@ -86,7 +88,7 @@ def verify(verdict: dict | None, expected: list[str],
         신규 = (entry.get("신규(판정)") or {}).get("신호") or {}
         딱지 = f" · 등록 {entry['등록일']}" if entry.get("등록일") else ""
         lines.append(f"{name}: {판정} (신규 신호 n={신규.get('n', '—')}{딱지})")
-    lines.insert(0, "판정 집계 — 채택 {채택} · 미채택 {미채택} · "
+    lines.insert(0, "판정 집계 — 채택 {채택} · 회피 채택 {회피 채택} · 미채택 {미채택} · "
                     "판정 불가 {판정 불가}".format(**집계))
     if 집계["기타"]:
         problems.append(f"알 수 없는 판정 상태 {집계['기타']}건")
