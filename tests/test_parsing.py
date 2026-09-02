@@ -1985,6 +1985,82 @@ def test_guidance_result_vs_outlook_sentences_are_past():
     assert not fe._is_past_result(
         "Our outlook for Q3 revenue is $470 million to $480 million.")
 
+# ---------------------------------------------------------------------------
+# 169차 — 표 형식 전망 (MXL·S·MCHP 실물 발췌)
+# ---------------------------------------------------------------------------
+MXL_TABLE = (
+    "Third Quarter 2026 Business Outlook\n"
+    "The Company estimates the following (in millions):\n\n"
+    "                    GAAP            Non-GAAP\n"
+    "                                    (except for revenue)\n"
+    "Revenue             $210 - $220     $210 - $220\n"
+    "Gross Margin        57.0% - 60.0%   58.5% - 61.5%\n"
+)
+S_TABLE = (
+    "Financial Outlook\n"
+    "We are providing the following guidance for the second quarter of fiscal year 2025, "
+    "and for fiscal year 2025 (ending January 31, 2025).\n\n"
+    "                           Q2FY25          Full FY2025\n"
+    "                         Guidance             Guidance\n"
+    "Revenue              $197 million    $808 - 815 million\n"
+    "Non-GAAP gross margin         79%             78 - 79%\n"
+)
+MCHP_TABLE = (
+    "First Quarter Fiscal Year 2026 Outlook:\n"
+    "The following statements are based on current expectations.\n\n"
+    "                 Microchip Consolidated Guidance\n"
+    "Net Sales        $1.020 to $1.070 billion\n"
+    "Gross Profit     51.2% to 53.2%\n"
+)
+
+
+def test_표_형식_분기_전망을_읽는다():
+    assert fe.parse_guidance_revenue(MXL_TABLE)["mid"] == 215e6
+    r = fe.parse_guidance_revenue(MXL_TABLE)
+    assert (r["low"], r["high"]) == (210e6, 220e6)
+    s = fe.parse_guidance_revenue(S_TABLE)
+    assert (s["low"], s["high"], s["mid"]) == (197e6, 197e6, 197e6), s
+    m = fe.parse_guidance_revenue(MCHP_TABLE)
+    assert (m["low"], m["high"]) == (1.02e9, 1.07e9), m
+
+
+def test_표_형식은_전망_제목과_분기_낱말이_있을_때만_읽는다():
+    """실적 표(제목이 Outlook/Guidance 가 아님)·연간 열이 먼저인 표·단위가
+    없는 표는 읽지 않는다 — 짐작보다 없음."""
+    실적표 = ("Second Quarter 2026 Financial Highlights\n"
+            "                    Q2 2026    Q1 2026\n"
+            "Revenue             $168.8     $137.2\n")
+    assert fe.parse_guidance_revenue(실적표)["mid"] is None
+    연간먼저 = ("Financial Outlook\n"
+            "Guidance for fiscal year 2025 and the second quarter:\n"
+            "                      Full FY2025        Q2FY25\n"
+            "Revenue         $808 - 815 million   $197 million\n")
+    assert fe.parse_guidance_revenue(연간먼저)["mid"] is None
+    단위없음 = ("Third Quarter 2026 Business Outlook\n"
+            "The Company estimates the following:\n"
+            "Revenue             $210 - $220\n")
+    assert fe.parse_guidance_revenue(단위없음)["mid"] is None
+    assert fe._table_outlook_revenue("") is None
+    # 연간 전망 제목 아래의 분기 **실적** 표(FDX 실물) — 제목에 분기 낱말이 없으면 안 읽음
+    연간제목 = ("Raises Full-year Fiscal 2026 Earnings Outlook\n"
+            "Third quarter results:\n"
+            "                       Fiscal 2026          Fiscal 2025\n"
+            "                       (GAAP)   (non-GAAP)  (GAAP)   (non-GAAP)\n"
+            "Revenue                $24.0 billion        $22.2 billion\n")
+    assert fe.parse_guidance_revenue(연간제목)["mid"] is None
+    # Low / Mid / High 세 열(ICHR 실물) — 첫 값이 하한, 마지막 값이 상한
+    세열 = ("First Quarter 2026 Financial Outlook\n"
+          "For the first quarter of 2026, we expect the following:\n\n"
+          "                Low-End         Mid-Point        High-End\n"
+          "Revenue         $240 million    $250 million     $260 million\n")
+    r = fe.parse_guidance_revenue(세열)
+    assert (r["low"], r["high"], r["mid"]) == (240e6, 260e6, 250e6), r
+    # 문장 파서가 값을 찾았으면 표는 보지 않는다
+    문장우선 = ("For the third quarter, revenue is expected to be between $105.0 million "
+            "and $111.0 million.\n") + MXL_TABLE
+    assert fe.parse_guidance_revenue(문장우선)["mid"] == 108e6
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

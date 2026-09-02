@@ -378,7 +378,7 @@ function 성장속도판(성장) {
   const 불가 = 종목들.filter((r) => r.가속 !== true && r.가속 !== false);
   const 줄 = (r) => `<tr>
     <td><a class="t" href="#/t/${esc(r.종목)}">${esc(r.종목)}</a>
-      <div class="d">${esc(r.묶음)}${r.신고점 === true ? " · 신고점" : ""}</div></td>
+      <div class="d">${esc(r.묶음)}${r.신고점 === true ? " · 신고점" : ""}${r.저기저 ? " · 저기저(비율 과장)" : ""}</div></td>
     <td class="${r.TTM증가 > 0 ? "up" : r.TTM증가 < 0 ? "down" : ""}">${
       r.TTM증가 === null ? "—" : num(r.TTM증가, 0, true) + "%"}</td>
     <td>${r.직전TTM증가 === null ? "—" : num(r.직전TTM증가, 0, true) + "%"}</td>
@@ -405,9 +405,10 @@ function 성장속도판(성장) {
 // 판정·점수·추천이 아니라 사실의 나열이며, 정직화 문구를 함께 적습니다.
 function 사실카드(r) {
   const p = (v, d = 0) => (v === null || v === undefined) ? "—" : num(v, d, true) + "%";
-  const 속도 = r.가속 === true ? '<span class="badge new">가속</span>'
+  const 속도 = (r.가속 === true ? '<span class="badge new">가속</span>'
     : r.가속 === false ? '<span class="badge no">감속</span>'
-    : '<span class="badge wait">가림 불가</span>';
+    : '<span class="badge wait">가림 불가</span>')
+    + (r.저기저 ? ' <span class="badge wait">저기저 — 비율 과장</span>' : "");
   const 판 = (r.완성30 ? ' <span class="badge new">완성30%+</span>' : "")
     + (r.H29 ? ' <span class="badge new">H29조합</span>' : "")
     + (r.H32신호 ? ' <span class="badge wait">H32 회피신호(판정 대기)</span>' : "")
@@ -423,6 +424,7 @@ function 사실카드(r) {
     <div class="sym">${esc(r.종목)} ${속도}${판}</div>
     <div class="meta">${esc(r.묶음)} · ${esc(r.테마)}<br>잣대 ${esc(r.잣대 || "없음")}${신고}</div>
     <div class="meta">이익 TTM ${p(r.TTM증가)} (직전 ${p(r.직전TTM증가)}) · 분기 ${p(r.분기QoQ)} · 매출 ${p(r.매출QoQ)}</div>
+    ${r.저기저 ? `<div class="meta">TTM 금액 증가 ${num(r.TTM증가액, 2, true)} (직전 ${num(r.직전TTM증가액, 2, true)}) · 역대 최고 TTM ${num(r.역대최고TTM, 2)} — 바닥 근처라 비율(%)이 과장됩니다</div>` : ""}
     <div class="meta">고점 대비 ${p(r.고가대비)} · 52주선 ${p(r["52주선대비"])} · 발표 후 SPY 대비 ${p(r.발표후SPY)}p</div>
     <div class="meta">${컨센}${가이드}</div>
     <div class="meta">최근 발표 ${esc(r.최근발표 || "—")} · 다음 발표 짐작 ${r.다음발표_짐작 ? "~" + esc(r.다음발표_짐작) : "—"}</div>

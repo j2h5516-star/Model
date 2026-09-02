@@ -1151,6 +1151,12 @@ def combo_now_rows(ds: dict) -> list[dict]:
 # 사실로만 적는다. 판정도 점수도 아니다 — 가설로 쓰려면 H번호로 사전
 # 등록하고 새 데이터로 재야 한다(헌법 2·5조).
 GROWTH_MIN_QUARTERS = 6      # TTM 두 개의 증가율을 견주려면 연속 6분기가 필요
+# 169차 — 저기저(低基底) 표시. 직전 TTM 이 그 종목 **역대 최고 TTM** 의 25%
+# 미만이면 증가율(%)이 기저 효과로 과장된다(MXL 실물: TTM 0.30 → 0.57 →
+# 0.90 이 "+90% → +58% 감속"으로 읽혔지만 달러 증가액은 +0.27 → +0.33 으로
+# 커지는 중이었다). 가속/감속 정의(H31·H32 등록 장치)는 바꾸지 않고,
+# **사실 표시**만 덧붙인다 — 이 표시가 있는 줄은 비율을 그대로 믿지 않는다.
+LOW_BASE_FRACTION = 0.25
 
 
 def _pct_change(now: float | None, before: float | None) -> float | None:
@@ -1158,6 +1164,18 @@ def _pct_change(now: float | None, before: float | None) -> float | None:
     if now is None or before is None or before <= 0:
         return None
     return round((now / before - 1.0) * 100.0, 1)
+
+
+def _historic_max_ttm(rows: list[dict], yardstick: str) -> float | None:
+    """그 종목의 **모든 연속 구간**에서 나온 TTM 중 최고값 (없으면 None)."""
+    best = None
+    for run in me.eps_runs(rows, yardstick):
+        values = [r[yardstick] for r in run]
+        for i in range(3, len(values)):
+            s = sum(values[i - 3:i + 1])
+            if best is None or s > best:
+                best = s
+    return best
 
 
 def growth_row(ds: dict, ticker: str) -> dict | None:
@@ -1200,6 +1218,9 @@ def growth_row(ds: dict, ticker: str) -> dict | None:
     if prices and spy and last.get("announced_date"):
         상대60 = me.backward_excess(prices, spy, last["announced_date"])
     증가, 직전증가 = _pct_change(ttm[-1], ttm[-2]), _pct_change(ttm[-2], ttm[-3])
+    역대최고 = _historic_max_ttm(rows, yardstick)
+    저기저 = (역대최고 is not None and 역대최고 > 0
+           and ttm[-2] < LOW_BASE_FRACTION * 역대최고)
     return {
         "종목": ticker,
         "묶음": cfg.GROUPS.get(ticker, "미분류"),
@@ -1215,6 +1236,12 @@ def growth_row(ds: dict, ticker: str) -> dict | None:
         "TTM증가": 증가,
         "직전TTM증가": 직전증가,
         "가속": (증가 > 직전증가) if (증가 is not None and 직전증가 is not None) else None,
+        # 169차 — 기저 효과를 드러내는 사실 칸. 비율이 아니라 **금액** 증가와
+        # 역대 최고 대비 위치를 함께 적는다.
+        "TTM증가액": round(ttm[-1] - ttm[-2], 2),
+        "직전TTM증가액": round(ttm[-2] - ttm[-3], 2),
+        "역대최고TTM": None if 역대최고 is None else round(역대최고, 2),
+        "저기저": bool(저기저),
         "분기QoQ": _pct_change(values[-1], values[-2]),
         "직전분기QoQ": _pct_change(values[-2], values[-3]),
         "매출QoQ": _pct_change(revenue[-1], revenue[-2]),
@@ -1454,6 +1481,10 @@ def ticker_fact_row(ds: dict, ticker: str, 기준일: str,
         "TTM증가": g.get("TTM증가"),
         "직전TTM증가": g.get("직전TTM증가"),
         "가속": g.get("가속"),
+        "TTM증가액": g.get("TTM증가액"),
+        "직전TTM증가액": g.get("직전TTM증가액"),
+        "역대최고TTM": g.get("역대최고TTM"),
+        "저기저": g.get("저기저"),
         "분기QoQ": g.get("분기QoQ"),
         "매출QoQ": g.get("매출QoQ"),
         "고가대비": pos["고가대비"],

@@ -671,9 +671,111 @@ def _parse_guidance_dollar(text: str, keyword_re: re.Pattern) -> dict:
     return single_result or result
 
 
+# ---------------------------------------------------------------------------
+# 표 형식 전망 (169차 — 표 파서 3탄). MXL·S·MCHP 실물:
+#     Third Quarter 2026 Business Outlook
+#     The Company estimates the following (in millions):
+#                              GAAP            Non-GAAP
+#     Revenue                  $210 - $220     $210 - $220
+# 문장이 아니라 **줄 머리 항목 + 열 값**이라 문장 파서가 못 읽었다(165차에
+# 한계로 기록). 규칙(보수적으로):
+#   ① "Outlook/Guidance" 가 든 짧은 제목 줄 뒤 900자 안의 표만 본다
+#   ② 제목~행 사이에 분기 낱말이 있어야 하고, 연간 낱말이 분기 낱말보다
+#      **앞에** 나오면(연간 열이 먼저인 표) 읽지 않는다 — 열 순서를 짐작하지 않음
+#   ③ 행 머리는 Revenue/Net sales 계열, 값은 첫 열(맨 왼쪽)만 쓴다
+#   ④ 단위는 행의 million/billion 낱말 → 없으면 블록의 "(in millions/thousands)"
+#      → 그것도 없으면 읽지 않는다(단위를 짐작하지 않음)
+#   ⑤ 문장 파서가 값을 찾았으면 이 표는 보지 않는다(기존 동작 우선)
+_OUTLOOK_HEAD_RE = re.compile(
+    r"^[ \t]*(?:[A-Za-z0-9 ,'’()/-]{0,70}?)\b(?:outlook|guidance)\b[ \t]*:?[ \t]*$",
+    re.I | re.M,
+)
+_TABLE_QUARTER_RE = re.compile(
+    r"\b(?:first|second|third|fourth)\s+quarter|\bQ[1-4](?![0-9])|\bthree\s+months\b", re.I)
+_TABLE_ANNUAL_RE = re.compile(
+    r"\bfull[\s-]+(?:fiscal[\s-]+)?year\b|\bfull\s+FY|\bfiscal\s+(?:year\s+)?20\d{2}\s+guidance"
+    r"|\bFY\s?20?\d{2}\s+guidance|\bannual\b", re.I)
+_TABLE_REV_ROW_RE = re.compile(
+    r"^[ \t]*(?:total\s+|net\s+)?(?:revenues?|net\s+sales)(?:\s*\(\d\))?[ \t]{2,}"
+    r"\$?\s?([\d.,]+)(?:\s*(million|billion))?"
+    r"(?:\s*(?:-|–|—|to)\s*\$?\s?([\d.,]+))?(?:\s*(million|billion))?",
+    re.I | re.M,
+)
+_TABLE_UNIT_RE = re.compile(r"\(\s*(?:\$\s*)?in\s+(millions|thousands|billions)\b", re.I)
+_TABLE_SPAN = 900
+
+
+def _table_outlook_revenue(text: str) -> dict | None:
+    """표 형식 다음 분기 매출 전망. 못 읽으면 None (값을 짐작하지 않음)."""
+    if not text:
+        return None
+    for head in _OUTLOOK_HEAD_RE.finditer(text):
+        head_text = text[head.start():head.end()]
+        # 제목이 연간 전망("Raises Full-year Fiscal 2026 Earnings Outlook" — FDX
+        # 실물)이고 분기 낱말이 없으면, 그 아래 표는 그 분기의 **실적** 표인
+        # 경우가 있어 읽지 않는다.
+        if _TABLE_ANNUAL_RE.search(head_text) and not _TABLE_QUARTER_RE.search(head_text):
+            continue
+        block = text[head.end():head.end() + _TABLE_SPAN]
+        row = _TABLE_REV_ROW_RE.search(block)
+        if not row:
+            continue
+        header = text[head.start():head.end() + row.start()]
+        if not _TABLE_QUARTER_RE.search(header):
+            continue
+        # 열 머리(행 바로 위, 빈 줄까지의 줄들)에 연간 열이 있으면 그 자리가
+        # 분기 열보다 앞이면 읽지 않는다 — 열 순서를 짐작하지 않음.
+        # 본문 문장은 보지 않는다(문장에 "second quarter" 가 먼저 나와도 표의
+        # 첫 열은 연간일 수 있다 — S 실물의 거울꼴).
+        # 열 머리 줄 = 공백 3칸 이상이 든 줄(표 배치). 문장 줄은 뺀다.
+        cols = header.rstrip("\n").split("\n")[-4:]
+        col_text = "\n".join(line for line in cols
+                             if line.strip() and re.search(r"\s{3,}", line))
+        a = _TABLE_ANNUAL_RE.search(col_text)
+        if a:
+            q = _TABLE_QUARTER_RE.search(col_text)
+            if not q or a.start() < q.start():
+                continue
+        unit_word = (row.group(4) or row.group(2) or "").lower()
+        if unit_word:
+            scale = _SCALE.get(unit_word, None)
+        else:
+            u = _TABLE_UNIT_RE.search(header)
+            scale = {"millions": 1e6, "thousands": 1e3, "billions": 1e9}.get(
+                u.group(1).lower()) if u else None
+        if not scale:
+            continue
+        try:
+            low = round(float(row.group(1).replace(",", "")) * scale, 2)
+            high = round(float(row.group(3).replace(",", "")) * scale, 2) if row.group(3) else low
+            # 열 머리가 Low / High 로 갈린 표(ICHR 실물 "Low-End · Mid-Point ·
+            # High-End")는 행의 첫 값과 마지막 값이 하한·상한이다.
+            if (not row.group(3) and re.search(r"\blow\b|low-end", col_text, re.I)
+                    and re.search(r"\bhigh\b|high-end", col_text, re.I)):
+                line = block[row.start():].split("\n", 1)[0]
+                nums = [float(n.replace(",", "")) for n in re.findall(r"\$\s?([\d.,]+)", line)]
+                if len(nums) >= 2:
+                    low, high = round(nums[0] * scale, 2), round(nums[-1] * scale, 2)
+        except ValueError:
+            continue
+        if low > high:
+            low, high = high, low
+        if low <= 0 or high / low > 5.0:
+            continue
+        return {"low": low, "high": high, "mid": round((low + high) / 2, 2)}
+    return None
+
+
 def parse_guidance_revenue(text: str) -> dict:
-    """다음 분기 매출 가이던스: {"low","high","mid"} (달러). 없으면 None."""
-    return _parse_guidance_dollar(text, _GUID_REV_KEY_RE)
+    """다음 분기 매출 가이던스: {"low","high","mid"} (달러). 없으면 None.
+
+    문장 파서가 먼저, 못 찾으면 표 형식(169차)을 봅니다."""
+    out = _parse_guidance_dollar(text, _GUID_REV_KEY_RE)
+    if out.get("mid") is None:
+        table = _table_outlook_revenue(text)
+        if table:
+            return table
+    return out
 
 
 def parse_guidance_ebitda(text: str) -> dict:
