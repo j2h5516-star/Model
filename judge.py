@@ -200,6 +200,7 @@ def hypothesis_clock() -> dict[str, tuple[str, int]]:
         H31_NAME: (H31_START_DAY, me.WINDOW_TRADING_DAYS),
         H32_NAME: (H32_START_DAY, me.WINDOW_TRADING_DAYS),
         H32B_NAME: (H32_START_DAY, me.WINDOW_TRADING_DAYS),
+        H33_NAME: (H33_START_DAY, me.WINDOW_TRADING_DAYS),
         H29_NAME: (_sm.H29_START_DAY, me.WINDOW_TRADING_DAYS),
         H30_NAME: (_sm.H30_START_DAY, me.WINDOW_TRADING_DAYS),
     }
@@ -896,6 +897,82 @@ def judge_decel_runup(events: list[dict],
     h32["판정"] = h32["신규(판정)"]["판정"]
     h32b["판정"] = h32b["신규(판정)"]["판정"]
     return {H32_NAME: h32, H32B_NAME: h32b}
+
+
+# ---------------------------------------------------------------------------
+# H33 (168차-D 등록, 2026-09-02) — 런업 변동 폭: "달린 종목은 크게 움직인다"
+# ---------------------------------------------------------------------------
+# 168차-B 탐색에서 나온 단단한 사실: 발표 전 60거래일 SPY 대비 +20%p 이상
+# 달린 발표는 가속·감속을 가리지 않고 폭등률·폭락률이 **둘 다 기준선의
+# 2배** 였다(감속 19.0/15.0 · 가속 16.0/11.6 vs 기준선 9.8/7.2). 방향이
+# 아니라 **폭**이 다르다. 그래서 표적을 바꿔 등록한다:
+#
+#   신호   = 조정 EPS 발표 ∧ 런업 ≥ +20%p (가속/감속 무관)
+#   표적   = 60거래일 SPY 대비 초과수익의 **절대값** ≥ 20%p ("큰 움직임" =
+#            폭등 ∪ 폭락). 폭등·폭락을 따로도 적는다.
+#   기준선 = 같은 표본(런업을 잴 수 있는 조정 EPS 발표)의 모든 발표.
+#   채택   = 신호 큰움직임 비율의 윌슨 하한 > 기준선 상한, n≥10.
+#
+# 쓰임(채택되면): 방향 판단이 아니라 **비중 크기**에 쓴다 — 큰 움직임
+# 확률이 2배인 보유 종목은 같은 위험을 지려면 비중을 그만큼 줄여야 한다는
+# 사실을 포트폴리오 탭에 적는다. "팔라/사라"는 여전히 쓰지 않는다.
+#
+# 정직하게 적는 것: ① 이 가설은 168차-B 탐색 표를 **보고** 만들었다.
+# 그래서 탐색표본으로는 판정하지 않고 등록일 뒤 새 발표만 센다(헌법 5조).
+# ② 문턱 20%p(런업·표적 둘 다)는 H25·측정 기본형의 수를 그대로 쓴 것이지
+# 이 질문에 맞춰 잰 것이 아니다. ③ 큰 움직임은 시장 전체 변동성이 큰
+# 시기에 함께 늘어난다 — 앞/뒤 시기 분할을 함께 적는다.
+H33_START_DAY = "2026-09-02"
+H33_NAME = "H33_런업_변동폭"
+H33_RUNUP_MIN = H25_RUNUP_MIN     # 새 숫자를 만들지 않음
+H33_SWING_PP = me.SURGE_PP        # 큰 움직임 = |초과수익| ≥ 20%p
+
+
+def _swing_stats(group: list[dict]) -> dict:
+    """큰 움직임 비율 — |SPY 대비 초과수익| ≥ SWING_PP 인 사건의 비율."""
+    n = len(group)
+    hits = sum(1 for e in group if abs(e["excess"]) >= H33_SWING_PP)
+    low, high = wilson_interval(hits, n)
+    return {"n": n, "rate": round(hits / n * 100.0, 1) if n else None,
+            "ci": [round(low, 1), round(high, 1)]}
+
+
+def _judge_swing(signal: list[dict], baseline: list[dict]) -> dict:
+    """H33 판정 — 큰 움직임 비율로 채택 기준(하한 > 상한, n≥10)을 적용."""
+    s, b = _swing_stats(signal), _swing_stats(baseline)
+    if s["n"] < MIN_SIGNAL_N:
+        verdict = "판정 불가"
+    elif s["ci"][0] > b["ci"][1]:
+        verdict = "채택"
+    else:
+        verdict = "미채택"
+    return {"신호": s, "기준선": b, "판정": verdict,
+            "폭등": {"신호": _stats(signal), "기준선": _stats(baseline)},
+            "폭락": {"신호": _crash_stats(signal), "기준선": _crash_stats(baseline)}}
+
+
+def judge_runup_swing(events: list[dict],
+                      start_day: str = H33_START_DAY) -> dict:
+    """H33 판정 — 표본 = 런업을 잴 수 있는 조정 EPS 사건, 신호 = 런업 ≥ 20%p."""
+    usable = [e for e in events if _adj(e) and e.get("런업") is not None]
+    entry: dict = {"등록일": start_day, "방향": "변동폭",
+                   "문턱": {"런업": H33_RUNUP_MIN, "큰움직임": f"|초과수익| ≥ {H33_SWING_PP}%p"},
+                   "채택기준": "신호 큰움직임 윌슨 하한 > 기준선 상한 (n≥10)"}
+    for label, pool in (
+        ("신규(판정)", [e for e in usable if e["announced"] > start_day]),
+        ("탐색표본(참고)", [e for e in usable if e["announced"] <= start_day]),
+    ):
+        signal = [e for e in pool if e["런업"] >= H33_RUNUP_MIN]
+        judged = _judge_swing(signal, pool)
+        if label == "탐색표본(참고)" and len(pool) >= 20:
+            앞, 뒤 = _halves(pool)
+            judged["앞시기"] = _swing_stats([e for e in 앞 if e["런업"] >= H33_RUNUP_MIN])
+            judged["뒤시기"] = _swing_stats([e for e in 뒤 if e["런업"] >= H33_RUNUP_MIN])
+            judged["앞시기_기준선"] = _swing_stats(앞)
+            judged["뒤시기_기준선"] = _swing_stats(뒤)
+        entry[label] = judged
+    entry["판정"] = entry["신규(판정)"]["판정"]
+    return {H33_NAME: entry}
 
 
 def judge_completion_gap(events: list[dict], start_day: str,

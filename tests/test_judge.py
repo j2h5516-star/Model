@@ -942,6 +942,38 @@ def test_H32가_시계와_등록부와_로봇과_점검기에_있다():
     assert "회피 채택 1" in lines[0], lines[0]
 
 
+def test_H33은_큰_움직임_비율로_판정하고_폭등_폭락을_따로_적는다():
+    """표적이 |초과수익| ≥ 20%p 라 폭등과 폭락이 **같이** 신호에 센다.
+    런업 없는 사건은 기준선에만, 런업을 못 잰 사건은 표본 밖."""
+    옛 = [_h32_사건("2026-01-01", None, 30.0, 99.0) for _ in range(30)]
+    달림_폭등 = [_h32_사건("2026-09-03", None, 30.0, 40.0) for _ in range(6)]
+    달림_폭락 = [_h32_사건("2026-09-03", None, 30.0, -40.0) for _ in range(6)]   # 12/12 큰 움직임
+    안달림 = [_h32_사건("2026-09-04", None, 5.0, 3.0) for _ in range(20)]        # 0/20 큰 움직임
+    런업없음 = [_h32_사건("2026-09-05", None, None, 99.0)]
+    r = judge.judge_runup_swing(옛 + 달림_폭등 + 달림_폭락 + 안달림 + 런업없음)
+    h = r[judge.H33_NAME]
+    새 = h["신규(판정)"]
+    assert 새["신호"]["n"] == 12 and 새["신호"]["rate"] == 100.0, 새
+    assert 새["기준선"]["n"] == 32 and 새["기준선"]["rate"] == round(12 / 32 * 100, 1), 새
+    assert 새["폭등"]["신호"]["rate"] == 50.0 and 새["폭락"]["신호"]["rate"] == 50.0, 새
+    assert h["판정"] == "채택", 새
+    assert h["탐색표본(참고)"]["신호"]["n"] == 30
+    assert "앞시기" in h["탐색표본(참고)"] and "뒤시기_기준선" in h["탐색표본(참고)"]
+    # 달린 사건이 기준선과 같은 비율이면 미채택
+    같음 = [_h32_사건("2026-09-03", None, 30.0, 3.0) for _ in range(12)]
+    assert judge.judge_runup_swing(같음 + 안달림)[judge.H33_NAME]["판정"] == "미채택"
+    assert judge.judge_runup_swing(달림_폭등[:5])[judge.H33_NAME]["판정"] == "판정 불가"
+
+
+def test_H33이_시계와_등록부와_로봇에_있다():
+    import inspect
+    import model_verify as mv
+    import collect_job as cj
+    assert judge.hypothesis_clock()[judge.H33_NAME][0] == "2026-09-02"
+    assert judge.H33_NAME in mv.expected_hypotheses()
+    assert "judge_runup_swing" in inspect.getsource(cj.run), "로봇 배선 없음"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

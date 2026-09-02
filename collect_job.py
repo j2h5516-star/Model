@@ -269,6 +269,9 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         # 위 H25 자리에서 이미 붙었고 "가속"은 사건에 실려 옵니다. 판정은
         # 등록일 뒤의 새 발표만 셉니다.
         verdict["가설"].update(judge.judge_decel_runup(events))
+        # H33 (168차-D 등록) — 런업 변동 폭. 표적이 폭등이 아니라 |초과수익|
+        # 이라 판정기가 따로 있다. 등록일 뒤의 새 발표만 셉니다.
+        verdict["가설"].update(judge.judge_runup_swing(events))
         # H26 (143차 등록) — 창 125거래일 첫 돌파를 **탐색에 쓰지 않은 새
         # 종목**으로만 판정합니다. 목록이 비어 있으면(확장 전) 판정하지
         # 않고 그 사실을 적습니다 — 없는 것을 지어내지 않습니다.

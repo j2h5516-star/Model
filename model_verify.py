@@ -50,6 +50,7 @@ def expected_hypotheses() -> list[str]:
     names += [judge.H27_NAME, judge.H28_NAME]   # 151차 등록
     names.append(judge.H31_NAME)   # 164차 등록 — 가속 ∧ 첫돌파
     names += [judge.H32_NAME, judge.H32B_NAME]   # 168차 등록 — 감속/가속 ∧ 런업
+    names.append(judge.H33_NAME)   # 168차-D 등록 — 런업 변동 폭
     return names
 
 
