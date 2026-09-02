@@ -271,6 +271,22 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
         # 단위 고치기를 **버리기 전에** 합니다 (150차-W·Y).
         # 원본을 바꾸지 않으려 사본 목록으로 넘깁니다.
         rows = [dict(r) for r in (rows or [])]
+        # 172차 — 6-K 로 실적을 내는 외국 회사(config.FPI_6K_TICKERS)는
+        # 분기 XBRL(10-Q)이 없어 보도자료 전용 행만 생깁니다. 09-02 런 실측:
+        # NBIS 38행이 전부 "역산"이고 매출 0.1(백만 달러 미만)·EBITDA 171억·
+        # GAAP 44.32 — 옛 Yandex 시절 6-K(루블·다른 통화)와 실적 아닌 공시에서
+        # 주운 숫자였고, 그 행이 기준선 사건 1건을 만들었습니다. 그래서 이런
+        # 종목은 **XBRL 자(매출 또는 GAAP EPS)가 붙은 행만** 남깁니다. 지금은
+        # 한 행도 없어 NBIS 는 "없음"이 됩니다 — 없음이 틀림보다 안전합니다.
+        if ticker in cfg.FPI_6K_TICKERS:
+            xbrl_backed = [r for r in rows
+                           if r.get("revenue_xbrl") is not None or r.get("gaap_eps_xbrl") is not None]
+            if len(xbrl_backed) < len(rows):
+                notes.append(
+                    f"{ticker}: 6-K 종목의 XBRL 자 없는 행 {len(rows) - len(xbrl_backed)}개를 "
+                    "버렸습니다 (172차 — 보도자료 전용 행은 통화·기간을 확인할 수 없음)"
+                )
+            rows = xbrl_backed
         _매출_자릿수_바로잡기(ticker, rows, notes)
         _단위를_이웃으로_고치기(ticker, rows, notes)
         kept: list[dict] = []

@@ -1385,6 +1385,36 @@ def test_진짜_큰_4분기_GAAP은_둔다():
     assert result["quarters"]["AAA"][-1]["gaap_eps"] == 67.48
 
 
+def test_6K_종목은_XBRL_자가_있는_행만_남긴다():
+    """172차 — NBIS 실물: 6-K 에서 주운 보도자료 전용 행 38개가 전부 쓰레기
+    (매출 0.1·EBITDA 171억·GAAP 44.32)였고 기준선 사건까지 만들었다.
+    6-K 종목은 XBRL 자(매출 또는 GAAP EPS)가 붙은 행만 남긴다. 다른
+    종목은 예전 그대로다."""
+    import config as cfg
+    옛 = cfg.FPI_6K_TICKERS
+    cfg.FPI_6K_TICKERS = frozenset({"외국"})
+    try:
+        def 행(날, **더):
+            # 분기표·매출을 행마다 다르게 — 163차 쌍둥이 합침 규칙에 안 걸리게
+            base = {"filing_date": 날, "announced_date": 날, "period_label": "Q" + 날[:7],
+                    "revenue": 1e8 + int(날[5:7]) * 1e6, "op_income": 1e7, "adj_eps": None,
+                    "adjusted_ebitda": 2e7, "gaap_eps": 0.5, "gross_margin_pct": 50.0,
+                    "gaap_eps_xbrl": None, "revenue_xbrl": None, "gross_margin_pct_xbrl": None}
+            base.update(더)
+            return base
+        notes: list[str] = []
+        out = dataset._clean_quarters({
+            "외국": [행("2025-05-20"), 행("2025-08-12"), 행("2025-11-12", revenue_xbrl=1.46e8),
+                   행("2026-02-12", gaap_eps=-0.5, gaap_eps_xbrl=-0.5)],
+            "국내": [행("2025-05-20"), 행("2025-08-12")],
+        }, notes)
+        assert [r["filing_date"] for r in out["외국"]] == ["2025-11-12", "2026-02-12"], out["외국"]
+        assert len(out["국내"]) == 2, "6-K 종목이 아닌 회사까지 버렸습니다"
+        assert any("6-K 종목의 XBRL 자 없는 행 2개" in n for n in notes), notes
+    finally:
+        cfg.FPI_6K_TICKERS = 옛
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
