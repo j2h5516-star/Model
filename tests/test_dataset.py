@@ -1144,7 +1144,10 @@ def _성장행(i, value, revenue, **더):
         filing_date=f"{2024 + i // 4}-{(i % 4) * 3 + 1:02d}-28",
         announced_date=f"{2024 + i // 4}-{(i % 4) * 3 + 2:02d}-28",
         period_label=f"Q{i}", adj_eps=value, gaap_eps=round(value * 0.75, 4),
-        revenue=revenue, revenue_xbrl=revenue, op_income=revenue * 0.2)
+        revenue=revenue, revenue_xbrl=revenue, op_income=revenue * 0.2,
+        # 163차 — 면제는 칸 단위가 되어 **점프를 뒷받침할 XBRL 3개월
+        # 자**(영업이익)가 있어야 합니다. 매출에 비례해 함께 자라게 둡니다.
+        op_income_xbrl=revenue * 0.2)
     row.update(더)
     return row
 
@@ -1210,6 +1213,176 @@ def test_XBRL_자가_없으면_예전처럼_버린다():
     kept = [r["adj_eps"] for r in
             dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]]
     assert None in kept, f"확인할 자가 없는데도 전부 살렸습니다: {kept}"
+
+
+# ---------------------------------------------------------------------------
+# 163차 — 161차 면제가 행 단위라서 조정 EPS 연간값이 빠져나가던 구멍
+# ---------------------------------------------------------------------------
+
+def _평평한_회사(연간값, **더):
+    """분기마다 조정 EPS 가 3 안팎인 회사. 마지막 행의 조정 EPS 칸에
+    **연간값**(직전 4분기 합)이 들어왔고, 그 행의 매출·GAAP 은 XBRL 과
+    같다(실물 STRL 25Q4: 조정 11.03 / GAAP 3.09 = XBRL 3.09 / 매출 일치)."""
+    값들 = [2.90, 3.00, 3.10, 3.05, 3.08, 연간값]
+    rows = []
+    for i, v in enumerate(값들):
+        gaap = round(v * 0.9, 2) if i < 5 else 2.80
+        rows.append(_성장행(i, v, 800e6 + i * 5e6, gaap_eps=gaap,
+                            gaap_eps_xbrl=gaap, **더))
+    return rows
+
+
+def test_분기행이어도_조정EPS_칸의_연간값은_버린다():
+    """163차 — 실물 STRL. 행은 분기 행(매출 = XBRL 3개월 매출, GAAP =
+    XBRL 3개월 GAAP)인데 조정 EPS 칸에는 FY 연간값 11.03 이 들어왔다.
+    161차 면제는 행만 보고 통째로 살려 STRL 의 TTM 을 부풀렸다.
+    이제는 **그 칸의 점프**(3.6배)가 XBRL 자(GAAP·영업이익 비율 ≈ 1.0)로
+    뒷받침되지 않으므로 버린다."""
+    rows = _평평한_회사(연간값=12.30)          # ≈ 3.00+3.10+3.05+3.08 = 12.23 (직전 4분기 합)
+    result = dataset.build(make_snapshot(eps={"AAA": rows}))
+    kept = [r["adj_eps"] for r in result["quarters"]["AAA"]]
+    assert kept[-1] is None, f"연간 조정 EPS 가 분기 칸에 남았습니다: {kept}"
+    assert kept[:5] == [2.90, 3.00, 3.10, 3.05, 3.08], kept
+    # 같은 행의 GAAP 은 XBRL 과 같으니 그대로 둔다 — 칸 단위 판정이다
+    assert result["quarters"]["AAA"][-1]["gaap_eps"] == 2.80
+
+
+def test_점프가_XBRL_자로_뒷받침되면_칸을_살린다():
+    """163차 — 함수를 직접 불러 세 갈래를 확인한다 (실물 MU·EOG·APD)."""
+    직전 = {"gaap_eps_xbrl": 4.60, "op_income_xbrl": 10e9}
+    분기행 = {"revenue": 23.86e9, "revenue_xbrl": 23.86e9,
+             "gaap_eps": 12.07, "gaap_eps_xbrl": 12.07, "op_income_xbrl": 25.6e9}
+    # MU 26Q2: 조정 12.20/4.78 = 2.55배, GAAP XBRL 12.07/4.60 = 2.62배 → 뒷받침
+    assert dataset._점프가_XBRL로_뒷받침됨(분기행, 직전, "adj_eps", 12.20, 4.78) is True
+    # 같은 행인데 조정 EPS 가 직전의 5배로 튀면(자는 2.6배) 뒷받침 안 됨
+    assert dataset._점프가_XBRL로_뒷받침됨(분기행, 직전, "adj_eps", 24.0, 4.78) is False
+    # EOG 18Q1 형: GAAP 자는 0.26배(직전 분기 일회성 이익)라도
+    # 영업이익 자가 1.84배면 **큰 쪽**으로 뒷받침한다
+    eog = {"revenue": 3.7e9, "revenue_xbrl": 3.7e9, "gaap_eps": 1.10,
+           "gaap_eps_xbrl": 1.10, "op_income_xbrl": 1.84e9}
+    eog직전 = {"gaap_eps_xbrl": 4.20, "op_income_xbrl": 1.0e9}
+    assert dataset._점프가_XBRL로_뒷받침됨(eog, eog직전, "adj_eps", 1.19, 0.69) is True
+    # 자가 하나도 없으면 버린다 — 보도자료 GAAP 은 같은 표에서 온 값이라
+    # 자가 아니다 (실물 APD 25Q4: GAAP 8.81 도 연간값이었다)
+    apd = {"revenue": 3.2e9, "revenue_xbrl": 3.2e9, "gaap_eps": 8.81}
+    assert dataset._점프가_XBRL로_뒷받침됨(apd, {"gaap_eps": 2.75}, "adj_eps", 12.03, 3.09) is False
+    # 직전 값이 0 이하면 비율을 낼 수 없다 → 버린다
+    assert dataset._점프가_XBRL로_뒷받침됨(분기행, 직전, "adj_eps", 12.20, -0.5) is False
+
+
+def test_GAAP_칸은_XBRL_3개월_GAAP과_값이_같아야_살린다():
+    """163차 — GAAP 칸은 비율이 아니라 **값 자체**를 XBRL 과 견준다.
+    실물 WMT FY24 '25 Q1' 행: GAAP 5.74(연간값) vs 직전 0.17.
+    XBRL 3개월 GAAP 이 있으면 같을 때만, 없으면 영업이익 비율로 본다."""
+    직전 = {"gaap_eps_xbrl": 1.50, "op_income_xbrl": 6.0e9}
+    행 = {"revenue": 170e9, "revenue_xbrl": 170e9, "gaap_eps": 5.74,
+          "gaap_eps_xbrl": 1.80, "op_income_xbrl": 7.0e9}
+    assert dataset._점프가_XBRL로_뒷받침됨(행, 직전, "gaap_eps", 5.74, 1.50) is False
+    assert dataset._점프가_XBRL로_뒷받침됨(행, 직전, "gaap_eps", 1.80, 1.50) is True
+    # 값이 XBRL 과 **같으면** 점프가 커도 살린다 — 진짜 일회성 이익 분기
+    # (실물 NVDA 24Q3 GAAP 3.71 = XBRL 3.71). 비율 자보다 값 자가 앞선다.
+    같은행 = dict(행, gaap_eps_xbrl=5.74)
+    assert dataset._점프가_XBRL로_뒷받침됨(같은행, 직전, "gaap_eps", 5.74, 1.50) is True
+    # 값이 XBRL 과 **다르면** 점프가 작아도 버린다 — 이 칸은 분기 값이 아니다
+    assert dataset._점프가_XBRL로_뒷받침됨(행, 직전, "gaap_eps", 1.90, 1.50) is False
+    # XBRL 3개월 GAAP 이 없으면 영업이익 비율(1.17배)로 — 3.8배 점프는 버린다
+    없음 = dict(행); 없음.pop("gaap_eps_xbrl")
+    assert dataset._점프가_XBRL로_뒷받침됨(없음, 직전, "gaap_eps", 5.74, 1.50) is False
+    assert dataset._점프가_XBRL로_뒷받침됨(없음, 직전, "gaap_eps", 1.80, 1.50) is True
+
+
+def test_매출만_XBRL과_같고_점프_자가_없으면_버린다():
+    """163차 — 161차 시험(`test_빠르게_자란_분기는…`)이 살리던 성장 회사도
+    영업이익·GAAP 의 XBRL 자가 **하나도 없으면** 이제는 버린다. 매출 일치는
+    "행이 분기 행"이라는 증거일 뿐, 그 칸이 분기 값이라는 증거가 아니다."""
+    값들 = [0.07, 0.13, 0.25, 0.50, 1.00, 2.00]
+    매출 = [60e6, 110e6, 210e6, 410e6, 800e6, 1600e6]
+    rows = [_성장행(i, v, r) for i, (v, r) in enumerate(zip(값들, 매출))]
+    for row in rows:
+        row.pop("op_income_xbrl", None)        # 매출 XBRL 은 그대로, 점프 자만 없앤다
+    kept = [r["adj_eps"] for r in
+            dataset.build(make_snapshot(eps={"AAA": rows}))["quarters"]["AAA"]]
+    assert None in kept, f"점프를 뒷받침할 자가 없는데도 전부 살렸습니다: {kept}"
+
+
+def _쌍둥이_표본(gaap_뒤=0.77):
+    """실물 TTMI 26 Q2 — 같은 분기가 두 행으로 들어왔다.
+    앞 행은 XBRL 뼈대(매출 XBRL 있음, 조정 EPS 0.99, EBITDA 없음),
+    뒤 행은 8-K 만으로 승격된 행(매출 XBRL 없음, EBITDA 있음, 발표일 = 제출일)."""
+    rows = [_성장행(i, 0.80 + i * 0.03, 700e6 + i * 10e6) for i in range(5)]
+    뼈대 = _성장행(5, 0.99, 800e6, period_label="26 Q2", gaap_eps=0.77,
+                 announced_date="2026-08-06")
+    뼈대.pop("adjusted_ebitda", None)
+    승격 = quarter_row(filing_date="2026-08-06", announced_date="2026-08-06",
+                       period_label="26 Q2", adj_eps=0.99, gaap_eps=gaap_뒤,
+                       revenue=800e6, adjusted_ebitda=166_770_000.0)
+    승격.pop("revenue_xbrl", None)
+    return rows + [뼈대, 승격]
+
+
+def test_같은_분기_쌍둥이_행은_한_행으로_합친다():
+    """163차 — 실물 TTMI 26 Q2. 같은 분기표·같은 매출·같은 GAAP 인 두 행은
+    한 행으로 합치고, 비어 있던 칸(EBITDA)은 다른 행에서 채운다.
+    합치지 않으면 '매출 반복' 그물이 뒤 행을 버려 EBITDA 를 잃는다."""
+    result = dataset.build(make_snapshot(eps={"AAA": _쌍둥이_표본()}))
+    q2 = [r for r in result["quarters"]["AAA"] if r["period_label"] == "26 Q2"]
+    assert len(q2) == 1, f"26 Q2 가 {len(q2)}행입니다: {q2}"
+    assert q2[0]["adj_eps"] == 0.99 and q2[0]["adjusted_ebitda"] == 166_770_000.0, q2[0]
+    assert q2[0]["revenue_xbrl"] == 800e6, "XBRL 매출이 붙은 행이 앵커여야 합니다"
+    assert [n for n in result["notes"] if "한 행으로 합침" in n], result["notes"]
+
+
+def test_GAAP이_다르면_쌍둥이가_아니다():
+    """같은 분기표·같은 매출이어도 GAAP 이 다르면 다른 발표일 수 있으니 합치지 않는다
+    (합침 노트가 남지 않아야 한다 — 뒤 행의 운명은 다른 그물이 정한다)."""
+    result = dataset.build(make_snapshot(eps={"AAA": _쌍둥이_표본(gaap_뒤=0.55)}))
+    assert not [n for n in result["notes"] if "한 행으로 합침" in n], result["notes"]
+    q2 = [r for r in result["quarters"]["AAA"] if r["period_label"] == "26 Q2"]
+    assert all(r.get("adjusted_ebitda") != 166_770_000.0 or r.get("revenue_xbrl") is None
+               for r in q2), "합치지 않았는데 EBITDA 가 뼈대 행으로 옮겨졌습니다"
+
+
+def _보도자료_GAAP_표본(마지막_gaap, 연간, 앞_gaap=None):
+    """실물 BXP 형 — 8분기 GAAP 0.5~1.2 뒤, 12월 결산 마지막 분기 행에
+    XBRL 3개월 GAAP 은 없고(10-K) 보도자료 GAAP 과 XBRL 연간값만 있다."""
+    앞_gaap = 앞_gaap or [0.9, 1.0, 0.8, 1.1, 0.9, 1.2, 1.0, 0.95]
+    rows = []
+    for i, g in enumerate(앞_gaap):
+        rows.append(_성장행(i, 1.0, 900e6 + i * 7e6, gaap_eps=g, gaap_eps_xbrl=g))
+    끝 = _성장행(len(앞_gaap), 1.0, 990e6, gaap_eps=마지막_gaap,
+                gaap_eps_annual_xbrl=연간)
+    끝.pop("gaap_eps_xbrl", None)
+    rows.append(끝)
+    return rows
+
+
+def test_보도자료만_있는_GAAP이_연간의_두배_넘고_이력의_15배_넘으면_버린다():
+    """163차 — 실물 BXP 26 Q1: 보도자료 GAAP 67.48(순이익 $M 을 EPS 로 읽음),
+    XBRL 연간 1.74, 직전 8분기 중앙값 0.55. 주당 상한 100 아래라 살아남았다."""
+    rows = _보도자료_GAAP_표본(마지막_gaap=67.48, 연간=1.74)
+    result = dataset.build(make_snapshot(eps={"AAA": rows}))
+    끝 = result["quarters"]["AAA"][-1]
+    assert 끝["gaap_eps"] is None, 끝
+    assert 끝["adj_eps"] == 1.0 and 끝["revenue"] == 990e6, "다른 칸은 두어야 합니다"
+    assert [n for n in result["notes"] if "보도자료에서만 온 GAAP EPS" in n], result["notes"]
+
+
+def test_진짜_큰_4분기_GAAP은_둔다():
+    """둘 중 하나라도 안 걸리면 둔다 — 실물 HAL 17Q4(연간의 1.8배)·
+    VECO 23Q4(이력의 10배)·CIEN 17Q4(연간 7.53 과 비슷)."""
+    for gaap, 연간, 앞 in (
+        (-0.94, -0.53, [0.04, 0.05, -0.03, 0.04, 0.06, 0.03, 0.05, 0.04]),  # HAL: 연간×1.8
+        (2.58, -0.56, [0.26, 0.20, 0.30, 0.25, 0.28, 0.22, 0.27, 0.26]),   # VECO: 이력×10
+        (7.32, 7.53, [0.25, 0.30, 0.20, 0.28, 0.22, 0.26, 0.24, 0.25]),    # CIEN: 연간과 비슷
+    ):
+        rows = _보도자료_GAAP_표본(마지막_gaap=gaap, 연간=연간, 앞_gaap=앞)
+        result = dataset.build(make_snapshot(eps={"AAA": rows}))
+        assert result["quarters"]["AAA"][-1]["gaap_eps"] == gaap, (gaap, result["notes"])
+    # XBRL 3개월 GAAP 이 있는 행은 애초에 대상이 아니다
+    rows = _보도자료_GAAP_표본(마지막_gaap=67.48, 연간=1.74)
+    rows[-1]["gaap_eps_xbrl"] = 67.48
+    result = dataset.build(make_snapshot(eps={"AAA": rows}))
+    assert result["quarters"]["AAA"][-1]["gaap_eps"] == 67.48
 
 
 if __name__ == "__main__":

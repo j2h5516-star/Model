@@ -59,7 +59,7 @@ PER_SHARE_ABS_LIMIT = 100.0
 # 바깥 자가 확인해 준 6,874행의 실측 분포에서 골랐습니다
 # (0.5% = 10일 · 50% = 30일 · 99.5% = 58일 · 99.9% = 62일).
 # 자세한 근거와 실행 출력은 _drop_implausible_announced 설명에 있습니다.
-ANNOUNCE_LAG_MIN = 10
+ANNOUNCE_LAG_MIN = cfg.EARNINGS_LAG_MIN_DAYS      # = 10 (수집 쪽 짝짓기와 같은 자)
 ANNOUNCE_LAG_MAX = 70
 
 # 분기 행에서 통행시키는 칸 (measure_store.EPS_FIELDS + 가이던스 3칸)
@@ -386,6 +386,10 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
             kept.append(clean)
 
         kept.sort(key=lambda r: r["filing_date"])
+        # 같은 분기가 두 행으로 들어온 것은 먼저 한 행으로 합칩니다 (163차).
+        # 뒤의 규칙들(자리채움 매출 세기·직전 4분기 합)이 같은 분기를 두 번
+        # 세지 않게 하려면 이 자리여야 합니다.
+        _merge_same_quarter_twins(ticker, kept, notes)
         # 정렬 뒤에야 "직전 4분기"를 말할 수 있으므로 여기서 누적값을 거릅니다
         _drop_repeated_revenue(ticker, kept, notes)
         # ⚠️ **연간값 검사를 누적값 검사보다 먼저** 돌립니다 (150차-AO).
@@ -395,6 +399,10 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
         #    150차-AD 가 "GAAP 은 잡히는데 조정 EPS 만 빠져나간다"고 적은
         #    그 현상의 정체가 이 순서였습니다.
         _연간값이_4분기_자리에_있으면_버린다(ticker, kept, notes)
+        # 보도자료만 있는 4분기 자리의 100배짜리 GAAP 도 누적값 검사 전에
+        # 치웁니다 — 그 값이 남으면 뒤 분기들의 "지난 중앙값"이 부풀어
+        # 진짜 연간값이 누적 그물을 빠져나갑니다 (163차).
+        _보도자료만_있는_GAAP이_연간보다_훨씬_크면_버린다(ticker, kept, notes)
         _drop_cumulative_values(ticker, kept, notes)
         _drop_parse_debris(ticker, kept, notes)
         _drop_same_day_siblings(ticker, kept, notes)
@@ -483,6 +491,79 @@ def _분기행임이_XBRL로_확인됨(row: dict) -> bool:
     return True
 
 
+# ---------------------------------------------------------------------------
+# 163차 — 161차 면제가 **행 단위**라서 조정 EPS 연간값이 빠져나가던 구멍
+# ---------------------------------------------------------------------------
+# 161차 면제는 "이 **행**이 분기 행인가"만 물었습니다. 그런데 보도자료
+# 표 한 장에는 분기 매출과 **연간** 조정 EPS 가 나란히 실리기도 합니다.
+# 매출이 XBRL 3개월 매출과 같으니 행은 분기 행으로 확인되고, 그 행의
+# 조정 EPS 칸에 든 연간값까지 통째로 면제됐습니다.
+#
+# 전수 실측 (2026-09-01 수집물): 누적 지문에 걸렸는데 161차 면제로
+# 살아남은 칸 **195개**. 그중 명백한 연간값 — 실물 STRL 25Q4 조정 EPS
+# 11.03(GAAP 은 3.09, XBRL 도 3.09 — 연간 조정 EPS 가 분기 칸에 든 것),
+# ETN 10.45, AXP 11.85(9개월 누적), LOW 12.25, VZ 4.71, TMO 21.86,
+# GWW 39.48, WM 3.97(직전의 397배!), NOC 22.25(55배). 주인 보유 종목
+# STRL 의 TTM 이 이 한 칸으로 부풀어 있었습니다.
+#
+# 고침 — **칸 단위**로 묻습니다: "이 칸의 점프가 식 밖에서 온 분기
+# 자로 뒷받침되는가."
+#   자 = XBRL 3개월 GAAP EPS(`gaap_eps_xbrl`) · XBRL 3개월 영업이익
+#        (`op_income_xbrl`). 둘 다 기간이 태그로 붙어 있어 누적일 수
+#        없습니다. 보도자료 GAAP EPS 는 **같은 표에서 온 값**이라 자로
+#        쓰지 않습니다(실물 APD 25Q4: GAAP 8.81 도 연간값이었습니다).
+#   ① GAAP EPS 칸: XBRL 3개월 GAAP EPS 가 있으면 **그 값과 같아야**
+#      면제. 다르면 이 칸은 분기 값이 아닙니다.
+#   ② 그 밖(조정 EPS·조정 EBITDA, 또는 XBRL EPS 가 없는 GAAP 칸):
+#      이번/직전 비율이 자의 이번/직전 비율의 **1.5배 이내**여야 면제.
+#      자가 둘이면 큰 쪽을 씁니다 — GAAP 에만 일회성 항목이 붙은
+#      분기(실물 EOG 18Q1: GAAP 비율 0.26, 영업이익 비율 1.84, 조정
+#      EPS 비율 1.72)를 살리기 위해서입니다.
+#   ③ 자가 하나도 없거나 직전 값이 0 이하면 **버립니다**(없음 > 틀림).
+#
+# 실측 결과 (195칸): 살림 94 · 버림 101.
+#   살아남은 진짜 분기: MU 26Q2 12.20·26Q3 25.11(비율 2.55·2.06 vs
+#   GAAP XBRL 2.62·2.04), CRDO 25Q3 0.25(영업이익 5.13배), VRT 24Q4
+#   0.99, ENPH·TTD·VLO·PSX·MPC·EXEL·NVDA 24Q3 GAAP 3.71.
+#   버려진 연간값: STRL 11.03(3.58배 vs 자 1.14), ETN·AXP·LOW·VZ·TMO·
+#   GWW·WM·NOC·APD 12.03·SHW 22.08·CVS 5.95·CI 15.73·ELV 24.73·WMT 5.74.
+#   잃는 것(진짜인데 자가 없어 버림 — 기록만 남김): GE 23Q3 0.82,
+#   MGM 22Q4 1.53, NET 22Q3 0.06; GAAP 일회성 이익 분기 TTD 20Q4 3.05·
+#   AMP 21Q3 8.65·MTSI 22Q4 3.36·CVNA 25Q1 1.61.
+#   남는 구멍(알고 둠): NEE 18Q1 7.70 — 직전 칸도 같은 연간값 7.70 이라
+#   비율이 1.0 으로 나와 살아남습니다. 연속 오염은 비율로 못 잡습니다.
+#
+# 계수 1.5 는 실측으로 정했습니다: 1.25 면 VRT 24Q4(1.30 vs 1.23)가
+# 죽고, 2.0 이면 CF 22Q4 3.27(3.34 vs 1.61)·NUE 26Q2 4.84 가 살아남습니다.
+_JUMP_SUPPORT_FACTOR = 1.5
+
+
+def _점프가_XBRL로_뒷받침됨(row: dict, prev_row: dict, field: str,
+                            value: float, prev_value: float | None) -> bool:
+    """이 **칸**의 점프가 XBRL 3개월 자로 뒷받침되는지 봅니다 (163차)."""
+    if not _분기행임이_XBRL로_확인됨(row):
+        return False                      # 행부터 분기 행이 아니면 끝
+    xbrl_eps = row.get("gaap_eps_xbrl")
+    if field == "gaap_eps" and _finite_number(xbrl_eps):
+        # GAAP 칸은 XBRL 3개월 GAAP EPS 와 **값 자체**를 견줄 수 있다
+        return abs(value - xbrl_eps) <= max(_ANNUAL_SAME_ABS,
+                                            abs(xbrl_eps) * _ANNUAL_SAME_PCT)
+    if not _finite_number(prev_value) or prev_value <= 0:
+        return False                      # 비율을 낼 직전 값이 없다
+    ratio = value / prev_value
+    yardsticks = []
+    prev_xbrl_eps = prev_row.get("gaap_eps_xbrl")
+    if (field != "gaap_eps" and _finite_number(xbrl_eps)
+            and _finite_number(prev_xbrl_eps) and xbrl_eps > 0 and prev_xbrl_eps > 0):
+        yardsticks.append(xbrl_eps / prev_xbrl_eps)
+    op, prev_op = row.get("op_income_xbrl"), prev_row.get("op_income_xbrl")
+    if _finite_number(op) and _finite_number(prev_op) and op > 0 and prev_op > 0:
+        yardsticks.append(op / prev_op)
+    if not yardsticks:
+        return False                      # 자가 없으면 버린다 (없음 > 틀림)
+    return ratio <= _JUMP_SUPPORT_FACTOR * max(yardsticks)
+
+
 def _one_cumulative_pass(ticker: str, rows: list[dict], notes: list[str]) -> bool:
     """누적값을 **한 칸만** 찾아 없음 처리하고, 지웠으면 True 를 돌려줍니다."""
     for field in _CUMULATIVE_FIELDS:
@@ -500,8 +581,11 @@ def _one_cumulative_pass(ticker: str, rows: list[dict], notes: list[str]) -> boo
             if (value > middle * _CUMULATIVE_MULTIPLE
                     and abs(value - total) / total < _CUMULATIVE_TOLERANCE):
                 # 161차 — 산수만으로는 "빠르게 자란 것"과 "누적값"이
-                # 똑같이 생겼습니다. XBRL 로 분기 행임이 확인되면 둡니다.
-                if _분기행임이_XBRL로_확인됨(rows[index]):
+                # 똑같이 생겼습니다. 163차 — 행이 아니라 **이 칸**의
+                # 점프가 XBRL 분기 자로 뒷받침될 때만 둡니다.
+                prev_index, prev_value = seen[position - 1]
+                if _점프가_XBRL로_뒷받침됨(rows[index], rows[prev_index],
+                                          field, value, prev_value):
                     continue
                 notes.append(
                     f"{ticker} {rows[index].get('period_label', '?')}: "
@@ -579,6 +663,67 @@ def _연간값이_4분기_자리에_있으면_버린다(
         )
         for f in 버린것:
             row[f] = None
+
+
+# 보도자료에서만 온 GAAP EPS 가 연간값보다 훨씬 큰 것 (163차 — 실물 BXP·PODD·RS)
+#
+# 회계연도 마지막 분기는 10-K 에 3개월 GAAP EPS 가 없어(`gaap_eps_xbrl` 비어
+# 있음) 보도자료 값이 그대로 들어옵니다. 그 자리에서 파서가 **주당 금액이
+# 아닌 수**(순이익 $67.48M 같은 백만 단위 숫자)를 EPS 로 읽은 행이 전수에서
+# 드러났습니다 — BXP 는 여섯 해 연속 1분기(12월 결산) 자리에 67~115,
+# PODD 111~361, RS 157~271, WST 346, ALGN 264, RUN 157, PFE 51, XYL 53,
+# MTCH 37, BALL 13. 주당 상한(100)이 20건 중 11건을 먼저 걸러 내고, 100
+# 아래의 **9건**(PFE 51.1 · BXP 94.53·67.58·70.17·74.36·67.48 · MTCH 37.38 ·
+# XYL 52.89 · BALL 13.0)이 이 규칙으로 없음 처리됩니다 (실행 출력).
+#
+# 두 자로 가릅니다 — 둘 다 만족해야 버립니다:
+#   ① |값| > 2.0 × |XBRL 연간 GAAP EPS|   (3개월 값이 12개월 값의 두 배 이상)
+#   ② |값| > 15 × 직전 8분기 |GAAP| 중앙값 (이력 4분기 이상일 때만)
+# 연간값과 비교하는 이유: 한 분기 값이 연간값의 두 배를 넘으려면 나머지
+# 세 분기가 큰 적자여야 하는데, 그런 회사는 ②(이력 중앙값)가 걸러 줍니다.
+#
+# 전수 실측(스냅샷 12,898행)으로 계수를 골랐습니다:
+#   연간×1.5 · 이력×15 → 21건 — HAL 17Q4 −0.94(연간 −0.53, **진짜** 세금
+#     비용)가 잡힘 ⛔  ·  연간×2.0 · 이력×10 → 21건 — VECO 23Q4 2.58
+#     (연간 −0.56, **진짜** 세금자산 환입)가 잡힘 ⛔
+#   연간×2.0 · 이력×15 → **20건, 전부 위 쓰레기값** ✅ (가장 작은 값 13.0)
+# 살려 두는 진짜 큰 분기: CIEN 17Q4 7.32(연간 7.53) · NOW 19Q4 3.17 ·
+# WDAY 24Q4 4.52 · ESTC 26Q4 4.14 · SNDK 26Q4 43.97(연간 없음 → 비교 불가,
+# 조정 EPS 39.25 가 뒷받침).
+# ⚠️ 남는 구멍: LITE 26Q4 84.65 — 연간값(−92.96)도 함께 이상해 ①이
+#    성립하지 않습니다. n=1 이라 새 규칙을 만들지 않고 기록만 합니다.
+_PRESS_GAAP_VS_ANNUAL = 2.0
+_PRESS_GAAP_VS_HISTORY = 15.0
+_PRESS_GAAP_HISTORY_MIN = 4
+_PRESS_GAAP_HISTORY_WINDOW = 8
+
+
+def _보도자료만_있는_GAAP이_연간보다_훨씬_크면_버린다(
+    ticker: str, rows: list[dict], notes: list[str]
+) -> None:
+    """XBRL 3개월 GAAP 이 없는 행의 보도자료 GAAP EPS 가 연간값·이력 둘 다에
+    견줘 터무니없이 크면 그 칸만 없음 처리합니다 (다른 칸은 두지 않습니다)."""
+    이력: list[float] = []
+    for row in rows:
+        값 = row.get("gaap_eps")
+        if not _finite_number(값):
+            continue
+        연간 = row.get("gaap_eps_annual_xbrl")
+        if (row.get("gaap_eps_xbrl") is None and _finite_number(연간) and 연간 != 0
+                and len(이력) >= _PRESS_GAAP_HISTORY_MIN):
+            중앙 = statistics.median(abs(v) for v in 이력[-_PRESS_GAAP_HISTORY_WINDOW:])
+            if (중앙 > 0 and abs(값) > _PRESS_GAAP_VS_ANNUAL * abs(연간)
+                    and abs(값) > _PRESS_GAAP_VS_HISTORY * 중앙):
+                notes.append(
+                    f"{ticker} {row.get('period_label', '?')}: 보도자료에서만 온 GAAP EPS "
+                    f"{값} 가 XBRL 연간값 {연간} 의 {abs(값) / abs(연간):.1f}배, 직전 "
+                    f"{len(이력[-_PRESS_GAAP_HISTORY_WINDOW:])}분기 중앙값 {중앙:.2f} 의 "
+                    f"{abs(값) / 중앙:.0f}배 — 주당 금액이 아닌 수를 EPS 로 읽은 것으로 "
+                    "보아 GAAP EPS 만 없음 처리 (163차, 실물 BXP·PODD·RS)"
+                )
+                row["gaap_eps"] = None
+                continue
+        이력.append(값)
 
 
 def _drop_cumulative_values(ticker: str, rows: list[dict], notes: list[str]) -> None:
@@ -683,6 +828,66 @@ def _drop_repeated_revenue(ticker: str, rows: list[dict],
                 "보고 없음 처리 (진짜 매출은 분기마다 다릅니다)"
             )
             row["revenue"] = None
+
+
+# 같은 분기가 두 행으로 들어온 것 (163차 — 실물 TTMI 26 Q2)
+# ---------------------------------------------------------------------------
+# 수집 로봇이 한 분기를 **두 번** 만들 때가 있습니다. 하나는 10-Q 기준
+# (분기끝 날짜 · XBRL 매출·GAAP 붙음 · 조정 EBITDA 없음), 하나는 8-K
+# 기준(분기끝 자리에 8-K 날짜가 들어감 · XBRL 없음 · 조정 EBITDA 있음).
+# 매출 1,004,054,000 · GAAP 0.77 · 조정 EPS 0.99 가 **완전히 같은** 두 행.
+#
+# 무슨 일이 나나: 뒤 행은 "분기끝에서 0일 만에 발표"로 보여 발표일이
+# 지워지고, 그 뒤로 사건 간격이 어긋나 `eps_runs` 가 끊깁니다 —
+# TTMI 는 성장 속도표에서 통째로 빠졌습니다(주인 보유 종목).
+#
+# 합치는 규칙 — **같은 분기표 ∧ 같은 매출 ∧ 같은 GAAP EPS** 인 행들만.
+#   한 칸이라도 다르면 다른 분기이거나 형제 행(배당금 표 등)이므로
+#   여기서는 건드리지 않습니다 — 그쪽은 기존 형제 행 규칙의 영역입니다.
+#   남길 행: XBRL 매출이 붙은 쪽(기간이 태그로 확인된 행), 없으면 분기끝
+#   날짜가 이른 쪽. 남긴 행의 **빈 칸만** 다른 행의 값으로 채웁니다.
+#   값을 바꾸거나 평균 내지 않습니다 — 같은 보도자료에서 읽은 같은 분기의
+#   값이 다른 행에 붙어 있었을 뿐이므로 창작이 아닙니다(헌법 1조).
+#
+# 전수 실측(2026-09-01 수집물): 이 정의에 걸리는 쌍은 TTMI 26 Q2 **한 건**.
+_TWIN_FILL_FIELDS = ("adj_eps", "adjusted_ebitda", "op_income", "gross_margin_pct",
+                     "announced_date", "guid_eps_low", "guid_eps_high", "guid_eps_mid",
+                     "guid_rev_low", "guid_rev_high", "guid_rev_mid",
+                     "guid_ebitda_low", "guid_ebitda_high", "guid_ebitda_mid")
+
+
+def _merge_same_quarter_twins(ticker: str, rows: list[dict],
+                              notes: list[str]) -> None:
+    """같은 분기표·매출·GAAP EPS 인 행들을 한 행으로 합칩니다 (제자리 수정)."""
+    groups: dict[tuple, list[dict]] = {}
+    for row in rows:
+        if row.get("revenue") is None or row.get("gaap_eps") is None:
+            continue                      # 견줄 값이 없으면 같은 분기라 말할 수 없다
+        key = (row.get("period_label"), row["revenue"], row["gaap_eps"])
+        groups.setdefault(key, []).append(row)
+    remove: list[int] = []
+    for key, group in groups.items():
+        if len(group) < 2:
+            continue
+        # XBRL 매출이 붙은 행을 남긴다(기간이 태그로 확인된 쪽). 없으면 이른 쪽.
+        anchor = next((r for r in group if r.get("revenue_xbrl") is not None), group[0])
+        filled = []
+        for twin in group:
+            if twin is anchor:
+                continue
+            for field in _TWIN_FILL_FIELDS:
+                if anchor.get(field) is None and twin.get(field) is not None:
+                    anchor[field] = twin[field]
+                    filled.append(field)
+            remove.append(id(twin))
+        notes.append(
+            f"{ticker} {key[0]}: 같은 분기표·매출 {key[1]:,.0f}·GAAP {key[2]} 인 행이 "
+            f"{len(group)}개 — 한 행으로 합침"
+            + (f" (빈 칸 {'·'.join(filled)} 을 다른 행에서 채움)" if filled else "")
+            + " (163차, 실물 TTMI 26 Q2)"
+        )
+    if remove:
+        rows[:] = [r for r in rows if id(r) not in remove]
 
 
 def _drop_same_day_siblings(ticker: str, rows: list[dict],

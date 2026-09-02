@@ -4146,7 +4146,7 @@ def merge_quarters(
         #    차지하는 사고가 있었습니다 (실물: CRDO 26Q3 — 02-09 예비 공지가
         #    이기고 03-02 실적 발표의 EPS $1.07 이 통째로 버려짐, 9차 감사).
         #    이익 숫자(조정EPS·영업이익·조정EBITDA)를 실은 발표가 항상 이깁니다.
-        best_index, best_gap, best_rank = None, None, None
+        best_index, best_gap, best_rank, best_early = None, None, None, None
         for index, press in enumerate(press_quarters):
             if index in used_press or index in promote_only:
                 continue
@@ -4161,6 +4161,16 @@ def merge_quarters(
                 or press.get("op_income") is not None
                 or press.get("adjusted_ebitda") is not None
             ) else 1
+            # ⚠️ **너무 빠른 8-K 는 뒤로 보냅니다** (163차, 실물 STRL 26Q1).
+            #    분기끝 8일 뒤에 나온 8-K 는 실적 발표가 아니라 **지속가능성
+            #    보고서**였는데, 본문에 "fourth quarter 2025" 와 연간 조정
+            #    EPS $11.03 이 적혀 있어 이익 숫자가 있는 발표로 보였습니다.
+            #    거리 8일이 진짜 실적 발표(34일 뒤, 5/4)를 이겨 그 분기를
+            #    차지했고, 진짜 발표는 조용히 버려졌습니다. 그 결과 26Q1 의
+            #    조정 EPS 자리에 **연간값**이 들어가 TTM 이 두 배로 부풀었습니다.
+            #    분기끝 뒤 10일 미만은 실측 0.5% 뿐이라(138차) 후보가 여럿이면
+            #    뒤로 보내되, 하나뿐이면 그대로 씁니다(ORCL 은 9일 뒤 발표).
+            early = 1 if gap < cfg.EARNINGS_LAG_MIN_DAYS else 0
 
             # ⚠️ **이 8-K 를 더 가깝게 받을 분기가 따로 있으면 가져가지 않습니다.**
             #
@@ -4215,8 +4225,8 @@ def merge_quarters(
                 if not 다음행있음:
                     continue      # 다음 분기가 비었다 — 그 분기의 발표다
 
-            if best_rank is None or (rank, gap) < (best_rank, best_gap):
-                best_index, best_gap, best_rank = index, gap, rank
+            if best_rank is None or (rank, early, gap) < (best_rank, best_early, best_gap):
+                best_index, best_gap, best_rank, best_early = index, gap, rank, early
 
         if best_index is None:
             continue

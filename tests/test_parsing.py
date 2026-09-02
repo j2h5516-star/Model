@@ -441,6 +441,40 @@ def test_merge_prefers_press_with_numbers_over_closer_preliminary():
     assert merged[0]["source"] == "직접공시"
 
 
+def test_merge_demotes_press_filed_too_soon_after_quarter_end():
+    """분기끝 10일 안에 나온 8-K 는 후순위 — 진짜 실적 발표가 있으면 그쪽이 임자.
+
+    실물 (163차): STRL 26Q1 — 분기끝 8일 뒤 지속가능성 보고서 8-K 에
+    연간 조정 EPS $11.03 이 적혀 있어 실적 발표처럼 보였고, 거리가 가까워
+    34일 뒤의 진짜 발표(조정 EPS 2.5 가정)를 밀어냈음.
+    """
+    xbrl = [_xbrl_row("2026-03-31", 100.0)]
+    sustainability = _press_row("2026-04-08", 111.0)
+    sustainability["adj_eps"] = 11.03
+    real = _press_row("2026-05-04", 120.0)
+    real["adj_eps"] = 2.5
+
+    merged = sf.merge_quarters(xbrl, [sustainability, real])
+    assert merged[0]["announced_date"] == "2026-05-04", merged[0]
+    assert merged[0]["adj_eps"] == 2.5
+
+    # 후보가 하나뿐이면 빠르더라도 그대로 짝짓는다 (ORCL 은 9일 뒤 발표)
+    xbrl2 = [_xbrl_row("2025-08-31", 100.0)]
+    orcl = _press_row("2025-09-09", 111.0)
+    orcl["adj_eps"] = 1.47
+    merged2 = sf.merge_quarters(xbrl2, [orcl])
+    assert merged2[0]["announced_date"] == "2025-09-09" and merged2[0]["adj_eps"] == 1.47
+
+    # 이익 숫자 유무가 먼저다 — 빠른 진짜 발표(9일) vs 늦은 예비 공지(숫자 없음)
+    xbrl3 = [_xbrl_row("2025-08-31", 100.0)]
+    quick_real = _press_row("2025-09-09", 111.0)
+    quick_real["adj_eps"] = 1.47
+    late_prelim = _press_row("2025-10-01", 0.0)
+    late_prelim.update(op_income=None, adj_eps=None, gross_margin_pct=None)
+    merged3 = sf.merge_quarters(xbrl3, [late_prelim, quick_real])
+    assert merged3[0]["announced_date"] == "2025-09-09", merged3[0]
+
+
 def test_sanity_ebitda_rules():
     """조정 EBITDA 검사 — ① $10만 미만은 오파싱 ② EBITDA > 매출이면 매출을 버림.
 
