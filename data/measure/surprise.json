@@ -25,6 +25,12 @@
     "est": 1.03414,
     "act": 1.16,
     "surprise_pct": 12.2
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 1.16862,
+    "act": 1.2,
+    "surprise_pct": 2.7
    }
   ],
   "CLS": [
@@ -1497,6 +1503,12 @@
     "est": 2.96358,
     "act": 4.86,
     "surprise_pct": 64.0
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 4.91833,
+    "act": 7.04,
+    "surprise_pct": 43.1
    }
   ],
   "VIAV": [
@@ -1653,6 +1665,12 @@
     "est": 1.18348,
     "act": 1.32,
     "surprise_pct": 11.5
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 1.60897,
+    "act": 1.9,
+    "surprise_pct": 18.1
    }
   ],
   "SNOW": [
@@ -5661,6 +5679,12 @@
     "est": 1.5413,
     "act": 1.55,
     "surprise_pct": 0.6
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 1.38739,
+    "act": 1.45,
+    "surprise_pct": 4.5
    }
   ],
   "SYK": [
@@ -7069,6 +7093,12 @@
     "est": 0.7972,
     "act": 0.85,
     "surprise_pct": 6.6
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 0.97745,
+    "act": 1.02,
+    "surprise_pct": 4.4
    }
   ],
   "FTNT": [
@@ -7173,6 +7203,12 @@
     "est": 0.20478,
     "act": 0.23,
     "surprise_pct": 12.3
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 0.17964,
+    "act": 0.24,
+    "surprise_pct": 33.6
    }
   ],
   "ESTC": [
@@ -10415,6 +10451,52 @@
     "est": 0.48681,
     "act": 0.64,
     "surprise_pct": 31.5
+   }
+  ],
+  "IREN": [
+   {
+    "quarter": "2025-09-30",
+    "est": 0.14333,
+    "act": 0.00806,
+    "surprise_pct": -94.4
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": -0.25,
+    "act": -0.0289,
+    "surprise_pct": 88.4
+   },
+   {
+    "quarter": "2026-03-31",
+    "est": -0.26,
+    "act": -0.1601,
+    "surprise_pct": 38.4
+   }
+  ],
+  "NBIS": [
+   {
+    "quarter": "2025-06-30",
+    "est": -0.42,
+    "act": -0.3833,
+    "surprise_pct": 8.7
+   },
+   {
+    "quarter": "2025-09-30",
+    "est": -0.395,
+    "act": -0.475,
+    "surprise_pct": -20.3
+   },
+   {
+    "quarter": "2025-12-31",
+    "est": -0.605,
+    "act": -0.9865,
+    "surprise_pct": -63.1
+   },
+   {
+    "quarter": "2026-06-30",
+    "est": -0.86333,
+    "act": -0.68,
+    "surprise_pct": 21.2
    }
   ]
  }

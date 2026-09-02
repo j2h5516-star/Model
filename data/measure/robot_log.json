@@ -1,71 +1,71 @@
 {
- "ran_at": "2026-09-01T12:32:51.482142+00:00",
- "tickers": 401,
+ "ran_at": "2026-09-02T18:05:43.373986+00:00",
+ "tickers": 403,
  "수집계기": {
   "일꾼": 6,
   "코어": 4,
-  "벽시계_분": 133.4,
-  "일감합_분": 796.1,
+  "벽시계_분": 190.2,
+  "일감합_분": 1134.5,
   "겹침배수": 5.97,
-  "내려받기": 354,
-  "접속시도": 354,
-  "초당요청": 0.04,
-  "초당요청_내려받기만": 0.04,
+  "내려받기": 158,
+  "접속시도": 158,
+  "초당요청": 0.01,
+  "초당요청_내려받기만": 0.01,
   "음성기억": 0,
   "음성적중": 1
  },
- "summary": "조정 EPS 시계열 395종목 · 일봉 395종목(기준지수 포함) · 파싱 실패 원문 1689건 · 실적 캐시 없음: NVMI, CFLT, DFS, HOLX, X, HES · 주가 없음: ZI, CFLT, BK, DFS, HOLX, X, HES",
- "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 미채택 · H6_결합_H5bxH2b: 미채택 · H7_EBITDA_첫돌파: 미채택 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 채택 · H10_논갭영업이익_저평가_첫신기록: 미채택 · H11_섹터정배열폭_60: 미채택 · H11b_섹터정배열폭_80: 미채택 · H22_신고점폭_5: 판정 불가 · H22b_신고점폭_20: 판정 불가 · H23_실적폭_중앙값_깊은게이지: 판정 불가 · H24_장세조건부_첫돌파: 판정 불가 · H25_런업_큰상회: 판정 불가 · H25b_런업단독: 판정 불가 · H27_가뭄끝_첫돌파: 판정 불가 · H28_안달린_첫돌파: 판정 불가 · H26_첫돌파_125일_새종목: 미채택 · H18_완성시_52주선이격도: 판정 불가 · H18b_완성이격도_1년: 판정 불가 · H29_완성_델타이격_결합: 판정 불가 · H19_주도섹터_판정: 판정 불가 · H20_주도섹터_전환: 미채택 · H21_주도섹터_분기점: 미채택 · H19b_주도섹터_완성후확인: 판정 불가",
- "consensus": "컨센서스: 확보 393종목 · 원장 추가 21건 · 실패 0종목",
- "surprise": "서프라이즈: 확보 393종목 · 신규 0분기 · 실패 0종목",
- "vendor": "두 번째 자(야후) — 401종목 성공 · 0종목 실패 · 분기 2379개 · 발표기록 32504개 · 과거 소급 변경 48칸",
+ "summary": "조정 EPS 시계열 397종목 · 일봉 397종목(기준지수 포함) · 파싱 실패 원문 1713건 · 실적 캐시 없음: NVMI, CFLT, DFS, HOLX, X, HES · 주가 없음: ZI, CFLT, BK, DFS, HOLX, X, HES",
+ "verdict": "H2_신고점: 미채택 · H2b_신고점_첫돌파: 미채택 · H5_실적폭_고정20: 미채택 · H5b_실적폭_중앙값: 미채택 · H6_결합_H5bxH2b: 미채택 · H7_EBITDA_첫돌파: 미채택 · H8_GAAPEPS_첫돌파: 미채택 · H9_저평가_첫신기록: 미채택 · H10_논갭영업이익_저평가_첫신기록: 미채택 · H11_섹터정배열폭_60: 미채택 · H11b_섹터정배열폭_80: 미채택 · H22_신고점폭_5: 판정 불가 · H22b_신고점폭_20: 판정 불가 · H23_실적폭_중앙값_깊은게이지: 판정 불가 · H24_장세조건부_첫돌파: 판정 불가 · H25_런업_큰상회: 판정 불가 · H25b_런업단독: 판정 불가 · H27_가뭄끝_첫돌파: 판정 불가 · H28_안달린_첫돌파: 판정 불가 · H31_가속_첫돌파: 판정 불가 · H32_감속_런업_회피: 판정 불가 · H32b_가속_런업: 판정 불가 · H33_런업_변동폭: 판정 불가 · H26_첫돌파_125일_새종목: 미채택 · H18_완성시_52주선이격도: 판정 불가 · H18b_완성이격도_1년: 판정 불가 · H29_완성_델타이격_결합: 판정 불가 · H30_약한섹터_역전: 판정 불가 · H19_주도섹터_판정: 판정 불가 · H20_주도섹터_전환: 미채택 · H21_주도섹터_분기점: 미채택 · H19b_주도섹터_완성후확인: 판정 불가",
+ "consensus": "컨센서스: 확보 395종목 · 원장 추가 105건 · 실패 0종목",
+ "surprise": "서프라이즈: 확보 395종목 · 신규 13분기 · 실패 0종목",
+ "vendor": "두 번째 자(야후) — 403종목 성공 · 0종목 실패 · 분기 2390개 · 발표기록 32571개 · 과거 소급 변경 0칸",
  "건강검진": {
   "설명": "수집물 전체 건강검진 (108차). **값을 바꾸지 않고 세기만 합니다.** 경보 문턱은 며칠치를 쌓아 정상 범위를 실측한 뒤 사전 등록합니다.",
   "채움률": {
-   "행": 15159,
+   "행": 15210,
    "revenue": {
-    "찬칸": 14725,
+    "찬칸": 14769,
     "비율": 97.1
    },
    "adj_eps": {
-    "찬칸": 8374,
+    "찬칸": 8399,
     "비율": 55.2
    },
    "adjusted_ebitda": {
-    "찬칸": 2468,
+    "찬칸": 2473,
     "비율": 16.3
    },
    "gaap_eps": {
-    "찬칸": 14495,
+    "찬칸": 14536,
     "비율": 95.6
    },
    "op_income": {
-    "찬칸": 12142,
-    "비율": 80.1
+    "찬칸": 12154,
+    "비율": 79.9
    },
    "gross_margin_pct": {
-    "찬칸": 7818,
-    "비율": 51.6
+    "찬칸": 7830,
+    "비율": 51.5
    },
    "revenue_xbrl": {
-    "찬칸": 12183,
-    "비율": 80.4
+    "찬칸": 12191,
+    "비율": 80.2
    },
    "gaap_eps_xbrl": {
-    "찬칸": 9753,
-    "비율": 64.3
+    "찬칸": 9760,
+    "비율": 64.2
    },
    "press_matched": {
-    "찬칸": 14916,
-    "비율": 98.4
+    "찬칸": 14927,
+    "비율": 98.1
    }
   },
   "이상값": {
    "revenue": {
-    "건수": 41,
+    "건수": 44,
     "모양별": {
-     "이력보다 1000배 이상 작음": 35,
-     "이력보다 1000배 이상 큼": 6
+     "이력보다 1000배 이상 작음": 34,
+     "이력보다 1000배 이상 큼": 10
     },
     "종목수": 18,
     "예시": [
@@ -107,13 +107,13 @@
     ]
    },
    "op_income": {
-    "건수": 68,
+    "건수": 67,
     "모양별": {
      "정확히 0": 5,
-     "이력보다 1000배 이상 작음": 62,
+     "이력보다 1000배 이상 작음": 61,
      "이력보다 1000배 이상 큼": 1
     },
-    "종목수": 33,
+    "종목수": 32,
     "예시": [
      {
       "종목": "NET",
@@ -154,14 +154,14 @@
    }
   },
   "어제 대비": {
-   "맞대본 분기": 15056,
-   "바뀐 칸": 2,
-   "사라진 분기": 73,
-   "새 분기": 102,
+   "맞대본 분기": 15075,
+   "바뀐 칸": 1,
+   "사라진 분기": 83,
+   "새 분기": 132,
    "많이 바뀐 종목": [
     {
-     "종목": "SMCI",
-     "칸": 2
+     "종목": "MDB",
+     "칸": 1
     }
    ]
   }
@@ -169,10 +169,10 @@
  "per_ticker": [
   {
    "ticker": "CRDO",
-   "adj_eps_ok": 17,
-   "merged_direct": 17,
-   "seconds": 11.6,
-   "cache_hits": 36,
+   "adj_eps_ok": 18,
+   "merged_direct": 18,
+   "seconds": 12.2,
+   "cache_hits": 37,
    "cache_downloads": 0,
    "fetch_attempts": 0,
    "negative_cached": 0,
@@ -278,7 +278,7 @@
    "ticker": "CLS",
    "adj_eps_ok": 9,
    "merged_direct": 1,
-   "seconds": 10.0,
+   "seconds": 13.8,
    "cache_hits": 24,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -386,7 +386,7 @@
    "ticker": "MU",
    "adj_eps_ok": 34,
    "merged_direct": 30,
-   "seconds": 35.5,
+   "seconds": 41.3,
    "cache_hits": 114,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -489,7 +489,7 @@
    "ticker": "SNDK",
    "adj_eps_ok": 7,
    "merged_direct": 7,
-   "seconds": 8.5,
+   "seconds": 7.7,
    "cache_hits": 14,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -595,7 +595,7 @@
    "ticker": "LITE",
    "adj_eps_ok": 34,
    "merged_direct": 11,
-   "seconds": 45.8,
+   "seconds": 75.8,
    "cache_hits": 79,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -700,7 +700,7 @@
    "ticker": "STRL",
    "adj_eps_ok": 11,
    "merged_direct": 8,
-   "seconds": 82.4,
+   "seconds": 159.2,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -811,7 +811,7 @@
    "ticker": "MXL",
    "adj_eps_ok": 28,
    "merged_direct": 27,
-   "seconds": 49.8,
+   "seconds": 49.5,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -923,10 +923,10 @@
    "ticker": "COHR",
    "adj_eps_ok": 23,
    "merged_direct": 18,
-   "seconds": 77.0,
-   "cache_hits": 120,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 99.0,
+   "cache_hits": 121,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -1029,7 +1029,7 @@
    "ticker": "TTMI",
    "adj_eps_ok": 34,
    "merged_direct": 32,
-   "seconds": 41.8,
+   "seconds": 51.0,
    "cache_hits": 83,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1131,7 +1131,7 @@
    "ticker": "ICHR",
    "adj_eps_ok": 35,
    "merged_direct": 33,
-   "seconds": 41.6,
+   "seconds": 15.5,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1233,7 +1233,7 @@
    "ticker": "AMD",
    "adj_eps_ok": 34,
    "merged_direct": 38,
-   "seconds": 71.9,
+   "seconds": 80.9,
    "cache_hits": 118,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1350,7 +1350,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 0,
-     "연간": 13
+     "연간": 13,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -1362,7 +1368,7 @@
    "ticker": "PLTR",
    "adj_eps_ok": 22,
    "merged_direct": 24,
-   "seconds": 26.7,
+   "seconds": 22.7,
    "cache_hits": 45,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1468,7 +1474,7 @@
    "ticker": "ZETA",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 35.1,
+   "seconds": 44.7,
    "cache_hits": 46,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1565,7 +1571,7 @@
    "ticker": "INTC",
    "adj_eps_ok": 35,
    "merged_direct": 34,
-   "seconds": 23.3,
+   "seconds": 51.8,
    "cache_hits": 136,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1688,7 +1694,7 @@
    "ticker": "ENPH",
    "adj_eps_ok": 36,
    "merged_direct": 36,
-   "seconds": 26.1,
+   "seconds": 40.0,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1791,10 +1797,10 @@
    "ticker": "SWKS",
    "adj_eps_ok": 36,
    "merged_direct": 34,
-   "seconds": 36.5,
+   "seconds": 21.6,
    "cache_hits": 96,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -1891,7 +1897,7 @@
    "ticker": "PYPL",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 44.1,
+   "seconds": 52.1,
    "cache_hits": 131,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -1995,7 +2001,7 @@
    "ticker": "QRVO",
    "adj_eps_ok": 26,
    "merged_direct": 24,
-   "seconds": 27.3,
+   "seconds": 26.1,
    "cache_hits": 77,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2097,7 +2103,7 @@
    "ticker": "APP",
    "adj_eps_ok": 0,
    "merged_direct": 3,
-   "seconds": 26.0,
+   "seconds": 58.8,
    "cache_hits": 58,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2195,7 +2201,7 @@
    "ticker": "NVDA",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 23.2,
+   "seconds": 20.7,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2321,7 +2327,7 @@
    "ticker": "ANET",
    "adj_eps_ok": 40,
    "merged_direct": 39,
-   "seconds": 52.8,
+   "seconds": 25.3,
    "cache_hits": 75,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2435,7 +2441,7 @@
    "ticker": "FN",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 31.0,
+   "seconds": 38.3,
    "cache_hits": 67,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2543,7 +2549,7 @@
    "ticker": "SMCI",
    "adj_eps_ok": 26,
    "merged_direct": 25,
-   "seconds": 44.1,
+   "seconds": 23.6,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2644,7 +2650,7 @@
    "ticker": "LSCC",
    "adj_eps_ok": 39,
    "merged_direct": 38,
-   "seconds": 17.6,
+   "seconds": 29.0,
    "cache_hits": 98,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2746,7 +2752,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 13,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 15,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 38,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -2758,7 +2770,7 @@
    "ticker": "SYNA",
    "adj_eps_ok": 36,
    "merged_direct": 36,
-   "seconds": 27.0,
+   "seconds": 40.2,
    "cache_hits": 100,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2862,7 +2874,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 4,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 44,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -2874,7 +2892,7 @@
    "ticker": "UCTT",
    "adj_eps_ok": 34,
    "merged_direct": 31,
-   "seconds": 44.7,
+   "seconds": 44.4,
    "cache_hits": 89,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -2989,7 +3007,7 @@
    "ticker": "ONTO",
    "adj_eps_ok": 35,
    "merged_direct": 35,
-   "seconds": 132.8,
+   "seconds": 52.6,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3100,7 +3118,7 @@
    "ticker": "IPGP",
    "adj_eps_ok": 9,
    "merged_direct": 6,
-   "seconds": 22.9,
+   "seconds": 26.1,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3209,7 +3227,7 @@
    "ticker": "CGNX",
    "adj_eps_ok": 30,
    "merged_direct": 29,
-   "seconds": 31.4,
+   "seconds": 46.9,
    "cache_hits": 61,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3322,7 +3340,7 @@
    "ticker": "AVGO",
    "adj_eps_ok": 32,
    "merged_direct": 10,
-   "seconds": 41.1,
+   "seconds": 152.9,
    "cache_hits": 118,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3428,7 +3446,7 @@
    "ticker": "QCOM",
    "adj_eps_ok": 33,
    "merged_direct": 0,
-   "seconds": 30.7,
+   "seconds": 141.8,
    "cache_hits": 124,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3536,7 +3554,7 @@
    "ticker": "TXN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 19.8,
+   "seconds": 72.3,
    "cache_hits": 102,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3640,7 +3658,7 @@
    "ticker": "ADI",
    "adj_eps_ok": 30,
    "merged_direct": 31,
-   "seconds": 91.1,
+   "seconds": 30.1,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3749,7 +3767,7 @@
    "ticker": "MCHP",
    "adj_eps_ok": 36,
    "merged_direct": 36,
-   "seconds": 23.5,
+   "seconds": 22.2,
    "cache_hits": 109,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3865,7 +3883,7 @@
    "ticker": "NXPI",
    "adj_eps_ok": 14,
    "merged_direct": 19,
-   "seconds": 45.3,
+   "seconds": 12.9,
    "cache_hits": 54,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -3975,7 +3993,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 0,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 30,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -3987,7 +4011,7 @@
    "ticker": "MRVL",
    "adj_eps_ok": 22,
    "merged_direct": 22,
-   "seconds": 27.2,
+   "seconds": 10.9,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4092,7 +4116,7 @@
    "ticker": "KLAC",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 13.9,
+   "seconds": 16.6,
    "cache_hits": 118,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4194,7 +4218,7 @@
    "ticker": "LRCX",
    "adj_eps_ok": 37,
    "merged_direct": 37,
-   "seconds": 11.9,
+   "seconds": 15.5,
    "cache_hits": 99,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4302,7 +4326,7 @@
    "ticker": "AMAT",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 13.8,
+   "seconds": 21.0,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4427,7 +4451,7 @@
    "ticker": "TER",
    "adj_eps_ok": 33,
    "merged_direct": 0,
-   "seconds": 17.8,
+   "seconds": 14.9,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4544,7 +4568,7 @@
    "ticker": "ENTG",
    "adj_eps_ok": 35,
    "merged_direct": 34,
-   "seconds": 40.0,
+   "seconds": 22.5,
    "cache_hits": 141,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4653,7 +4677,7 @@
    "ticker": "MKSI",
    "adj_eps_ok": 34,
    "merged_direct": 32,
-   "seconds": 32.8,
+   "seconds": 60.8,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4764,7 +4788,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 8,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 1,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -4776,7 +4806,7 @@
    "ticker": "FORM",
    "adj_eps_ok": 38,
    "merged_direct": 29,
-   "seconds": 36.1,
+   "seconds": 20.1,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4881,7 +4911,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 14,
-     "연간": 0
+     "연간": 0,
+     "채운뒤": 14,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -4893,7 +4929,7 @@
    "ticker": "ACLS",
    "adj_eps_ok": 8,
    "merged_direct": 7,
-   "seconds": 33.9,
+   "seconds": 22.3,
    "cache_hits": 68,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -4998,7 +5034,7 @@
    "ticker": "AMBA",
    "adj_eps_ok": 39,
    "merged_direct": 10,
-   "seconds": 28.4,
+   "seconds": 24.3,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5111,7 +5147,7 @@
    "ticker": "POWI",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 23.7,
+   "seconds": 24.4,
    "cache_hits": 70,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5214,7 +5250,7 @@
    "ticker": "DIOD",
    "adj_eps_ok": 40,
    "merged_direct": 4,
-   "seconds": 123.7,
+   "seconds": 258.9,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5317,7 +5353,7 @@
    "ticker": "SLAB",
    "adj_eps_ok": 36,
    "merged_direct": 35,
-   "seconds": 95.3,
+   "seconds": 40.1,
    "cache_hits": 93,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5423,7 +5459,7 @@
    "ticker": "MPWR",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 154.7,
+   "seconds": 168.8,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5534,7 +5570,7 @@
    "ticker": "CIEN",
    "adj_eps_ok": 38,
    "merged_direct": 3,
-   "seconds": 125.6,
+   "seconds": 214.2,
    "cache_hits": 95,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5637,8 +5673,8 @@
   {
    "ticker": "EXTR",
    "adj_eps_ok": 37,
-   "merged_direct": 35,
-   "seconds": 94.3,
+   "merged_direct": 36,
+   "seconds": 144.1,
    "cache_hits": 82,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5742,7 +5778,7 @@
    "ticker": "NTAP",
    "adj_eps_ok": 39,
    "merged_direct": 39,
-   "seconds": 108.2,
+   "seconds": 149.0,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5855,7 +5891,7 @@
    "ticker": "P",
    "adj_eps_ok": 0,
    "merged_direct": 27,
-   "seconds": 58.6,
+   "seconds": 147.7,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -5966,7 +6002,7 @@
    "ticker": "WDC",
    "adj_eps_ok": 41,
    "merged_direct": 39,
-   "seconds": 52.6,
+   "seconds": 56.6,
    "cache_hits": 158,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6080,7 +6116,7 @@
    "ticker": "STX",
    "adj_eps_ok": 34,
    "merged_direct": 33,
-   "seconds": 36.2,
+   "seconds": 45.8,
    "cache_hits": 126,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6185,12 +6221,12 @@
   },
   {
    "ticker": "DELL",
-   "adj_eps_ok": 28,
+   "adj_eps_ok": 29,
    "merged_direct": 31,
-   "seconds": 41.2,
-   "cache_hits": 129,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "seconds": 56.9,
+   "cache_hits": 128,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -6292,7 +6328,7 @@
    "ticker": "VIAV",
    "adj_eps_ok": 32,
    "merged_direct": 21,
-   "seconds": 46.8,
+   "seconds": 533.0,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6390,10 +6426,10 @@
    "ticker": "AAOI",
    "adj_eps_ok": 38,
    "merged_direct": 2,
-   "seconds": 312.1,
+   "seconds": 29.2,
    "cache_hits": 144,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -6500,7 +6536,7 @@
    "ticker": "TWLO",
    "adj_eps_ok": 37,
    "merged_direct": 34,
-   "seconds": 254.6,
+   "seconds": 24.9,
    "cache_hits": 95,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6608,7 +6644,7 @@
    "ticker": "DDOG",
    "adj_eps_ok": 28,
    "merged_direct": 28,
-   "seconds": 127.5,
+   "seconds": 405.3,
    "cache_hits": 43,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6714,7 +6750,7 @@
    "ticker": "NET",
    "adj_eps_ok": 29,
    "merged_direct": 20,
-   "seconds": 53.3,
+   "seconds": 487.3,
    "cache_hits": 55,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -6818,37 +6854,37 @@
   },
   {
    "ticker": "MDB",
-   "adj_eps_ok": 36,
-   "merged_direct": 20,
-   "seconds": 328.0,
+   "adj_eps_ok": 37,
+   "merged_direct": 21,
+   "seconds": 495.9,
    "cache_hits": 68,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
    "xbrl_calls": [
-    "OperatingIncomeLoss(3개월): 받음 52 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 26 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
+    "OperatingIncomeLoss(3개월): 받음 54 · 이름버림 0 · 단위버림 0 · 모호 3 · 남음 27 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
     "OperatingIncomeLoss(12개월): 받음 27 · 이름버림 0 · 단위버림 0 · 모호 2 · 남음 9 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
-    "ShareBasedCompensation(3개월): 받음 188 · 이름버림 170 · 단위버림 0 · 모호 0 · 남음 10 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpense', 'sharebasedcompensation'] · 본단위 ['USD']",
-    "AllocatedShareBasedCompensationExpense(3개월): 받음 52 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 29 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
+    "ShareBasedCompensation(3개월): 받음 196 · 이름버림 178 · 단위버림 0 · 모호 0 · 남음 10 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpense', 'sharebasedcompensation'] · 본단위 ['USD']",
+    "AllocatedShareBasedCompensationExpense(3개월): 받음 54 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 30 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
     "ShareBasedCompensation(12개월): 받음 241 · 이름버림 214 · 단위버림 0 · 모호 0 · 남음 11 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpense', 'incometaxreconciliationnondeductibleexpensesharebasedcompensationcost'] · 본단위 ['USD']",
     "AllocatedShareBasedCompensationExpense(12개월): 받음 27 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 11 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
     "DepreciationDepletionAndAmortization(3개월): 받음 18 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 10 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
     "DepreciationDepletionAndAmortization(12개월): 받음 27 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 11 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
-    "AmortizationOfIntangibleAssets(3개월): 받음 36 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 20 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
+    "AmortizationOfIntangibleAssets(3개월): 받음 38 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 21 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
     "AmortizationOfIntangibleAssets(12개월): 받음 27 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 11 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
-    "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 44 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 25 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
+    "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 46 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 26 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
     "Revenues(3개월): 받음 2 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 2 · 본이름 ['revenues'] · 본단위 ['USD']",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 24 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 10 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
-    "GrossProfit(3개월): 받음 52 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 29 · 본이름 ['grossprofit'] · 본단위 ['USD']",
+    "GrossProfit(3개월): 받음 54 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 30 · 본이름 ['grossprofit'] · 본단위 ['USD']",
     "GrossProfit(12개월): 받음 27 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 11 · 본이름 ['grossprofit'] · 본단위 ['USD']",
-    "EarningsPerShareDiluted(3개월): 받음 2 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 2 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']",
+    "EarningsPerShareDiluted(3개월): 받음 4 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 4 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']",
     "EarningsPerShareDiluted(12개월): 받음 12 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
-   "xbrl_rejected": 384,
+   "xbrl_rejected": 392,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 37,
+    "분기목록(영업이익 기준)": 38,
     "revenue": 0,
     "gaap_eps": 0,
     "gross_profit": 1
@@ -6856,7 +6892,7 @@
    "q4_채움": {
     "op_income": {
      "연간수": 9,
-     "분기수": 26,
+     "분기수": 27,
      "앞선세분기부족": 2,
      "못채운예": [
       "2016-01-31",
@@ -6866,7 +6902,7 @@
     },
     "sbc": {
      "연간수": 11,
-     "분기수": 29,
+     "분기수": 30,
      "앞선세분기부족": 2,
      "못채운예": [
       "2016-01-31",
@@ -6888,7 +6924,7 @@
     },
     "amortization": {
      "연간수": 11,
-     "분기수": 20,
+     "분기수": 21,
      "앞선세분기부족": 6,
      "못채운예": [
       "2016-01-31",
@@ -6901,7 +6937,7 @@
     },
     "revenue": {
      "연간수": 10,
-     "분기수": 26,
+     "분기수": 27,
      "앞선세분기부족": 2,
      "못채운예": [
       "2017-01-31",
@@ -6911,7 +6947,7 @@
     },
     "gross_profit": {
      "연간수": 11,
-     "분기수": 29,
+     "분기수": 30,
      "앞선세분기부족": 2,
      "못채운예": [
       "2016-01-31",
@@ -6930,7 +6966,7 @@
    "ticker": "SNOW",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 320.1,
+   "seconds": 472.4,
    "cache_hits": 43,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7036,7 +7072,7 @@
    "ticker": "OKTA",
    "adj_eps_ok": 39,
    "merged_direct": 23,
-   "seconds": 303.9,
+   "seconds": 501.9,
    "cache_hits": 82,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7137,7 +7173,7 @@
    "ticker": "ZS",
    "adj_eps_ok": 33,
    "merged_direct": 31,
-   "seconds": 226.3,
+   "seconds": 119.5,
    "cache_hits": 59,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7228,7 +7264,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 9,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 11,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 36,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -7240,7 +7282,7 @@
    "ticker": "CRWD",
    "adj_eps_ok": 30,
    "merged_direct": 27,
-   "seconds": 107.6,
+   "seconds": 47.3,
    "cache_hits": 64,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7335,7 +7377,7 @@
    "ticker": "S",
    "adj_eps_ok": 21,
    "merged_direct": 7,
-   "seconds": 79.7,
+   "seconds": 89.3,
    "cache_hits": 44,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7442,7 +7484,7 @@
    "ticker": "HUBS",
    "adj_eps_ok": 37,
    "merged_direct": 39,
-   "seconds": 32.7,
+   "seconds": 57.2,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7553,7 +7595,7 @@
    "ticker": "BILL",
    "adj_eps_ok": 24,
    "merged_direct": 17,
-   "seconds": 31.2,
+   "seconds": 31.6,
    "cache_hits": 78,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7657,7 +7699,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 15,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 18,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 32,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -7669,7 +7717,7 @@
    "ticker": "U",
    "adj_eps_ok": 16,
    "merged_direct": 2,
-   "seconds": 21.9,
+   "seconds": 24.0,
    "cache_hits": 76,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7781,7 +7829,7 @@
    "ticker": "ROKU",
    "adj_eps_ok": 0,
    "merged_direct": 19,
-   "seconds": 48.1,
+   "seconds": 52.8,
    "cache_hits": 91,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7889,7 +7937,7 @@
    "ticker": "SNAP",
    "adj_eps_ok": 29,
    "merged_direct": 22,
-   "seconds": 36.6,
+   "seconds": 59.0,
    "cache_hits": 89,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -7984,7 +8032,7 @@
    "ticker": "ZM",
    "adj_eps_ok": 32,
    "merged_direct": 30,
-   "seconds": 18.4,
+   "seconds": 23.7,
    "cache_hits": 66,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8090,7 +8138,7 @@
    "ticker": "DOCU",
    "adj_eps_ok": 33,
    "merged_direct": 33,
-   "seconds": 23.0,
+   "seconds": 24.0,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8198,7 +8246,7 @@
    "ticker": "TSLA",
    "adj_eps_ok": 18,
    "merged_direct": 0,
-   "seconds": 112.6,
+   "seconds": 163.7,
    "cache_hits": 168,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8308,7 +8356,7 @@
    "ticker": "TTD",
    "adj_eps_ok": 40,
    "merged_direct": 10,
-   "seconds": 18.7,
+   "seconds": 16.2,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8396,7 +8444,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 27,
-     "연간": 9
+     "연간": 9,
+     "채운뒤": 35,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -8408,7 +8462,7 @@
    "ticker": "FSLR",
    "adj_eps_ok": 9,
    "merged_direct": 1,
-   "seconds": 45.0,
+   "seconds": 33.0,
    "cache_hits": 102,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8522,7 +8576,7 @@
    "ticker": "SEDG",
    "adj_eps_ok": 38,
    "merged_direct": 39,
-   "seconds": 17.4,
+   "seconds": 33.1,
    "cache_hits": 98,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8637,7 +8691,7 @@
    "ticker": "GNRC",
    "adj_eps_ok": 42,
    "merged_direct": 38,
-   "seconds": 20.0,
+   "seconds": 30.6,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8746,7 +8800,7 @@
    "ticker": "GOOGL",
    "adj_eps_ok": 2,
    "merged_direct": 5,
-   "seconds": 18.3,
+   "seconds": 39.1,
    "cache_hits": 103,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8832,7 +8886,7 @@
    "ticker": "META",
    "adj_eps_ok": 2,
    "merged_direct": 2,
-   "seconds": 21.7,
+   "seconds": 23.3,
    "cache_hits": 99,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -8935,7 +8989,7 @@
    "ticker": "AMZN",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 176.7,
+   "seconds": 49.5,
    "cache_hits": 87,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9048,7 +9102,7 @@
    "ticker": "NFLX",
    "adj_eps_ok": 1,
    "merged_direct": 21,
-   "seconds": 49.2,
+   "seconds": 38.6,
    "cache_hits": 104,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9150,7 +9204,7 @@
    "ticker": "PINS",
    "adj_eps_ok": 30,
    "merged_direct": 11,
-   "seconds": 16.9,
+   "seconds": 31.3,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9248,7 +9302,7 @@
    "ticker": "EBAY",
    "adj_eps_ok": 35,
    "merged_direct": 35,
-   "seconds": 19.1,
+   "seconds": 38.5,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9369,7 +9423,7 @@
    "ticker": "ETSY",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 32.8,
+   "seconds": 110.5,
    "cache_hits": 82,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9476,7 +9530,7 @@
    "ticker": "ABNB",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 15.6,
+   "seconds": 59.7,
    "cache_hits": 40,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9572,7 +9626,7 @@
    "ticker": "DASH",
    "adj_eps_ok": 0,
    "merged_direct": 23,
-   "seconds": 17.2,
+   "seconds": 19.7,
    "cache_hits": 57,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9669,10 +9723,10 @@
    "ticker": "VRT",
    "adj_eps_ok": 11,
    "merged_direct": 23,
-   "seconds": 37.8,
+   "seconds": 51.5,
    "cache_hits": 109,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 2,
+   "fetch_attempts": 2,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -9773,7 +9827,7 @@
    "ticker": "ETN",
    "adj_eps_ok": 26,
    "merged_direct": 0,
-   "seconds": 23.9,
+   "seconds": 30.3,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9876,7 +9930,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 36,
-     "연간": 12
+     "연간": 12,
+     "채운뒤": 28,
+     "새기간": 2
+    },
+    "_요약": {
+     "지금뼈대": 38,
+     "합집합_새기간": 2
     }
    },
    "사라진회사_검색": {},
@@ -9888,7 +9948,7 @@
    "ticker": "PWR",
    "adj_eps_ok": 42,
    "merged_direct": 0,
-   "seconds": 27.0,
+   "seconds": 39.9,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -9992,7 +10052,7 @@
    "ticker": "VST",
    "adj_eps_ok": 0,
    "merged_direct": 7,
-   "seconds": 36.2,
+   "seconds": 52.9,
    "cache_hits": 147,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10070,7 +10130,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 2,
-     "연간": 0
+     "연간": 0,
+     "채운뒤": 2,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -10082,7 +10148,7 @@
    "ticker": "NRG",
    "adj_eps_ok": 9,
    "merged_direct": 30,
-   "seconds": 53.1,
+   "seconds": 75.6,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10191,7 +10257,7 @@
    "ticker": "NEE",
    "adj_eps_ok": 36,
    "merged_direct": 0,
-   "seconds": 29.1,
+   "seconds": 72.4,
    "cache_hits": 185,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10295,7 +10361,7 @@
    "ticker": "SO",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 17.2,
+   "seconds": 33.2,
    "cache_hits": 186,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10400,7 +10466,7 @@
    "ticker": "RUN",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 52.9,
+   "seconds": 38.9,
    "cache_hits": 100,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10502,7 +10568,7 @@
    "ticker": "BE",
    "adj_eps_ok": 29,
    "merged_direct": 17,
-   "seconds": 109.8,
+   "seconds": 119.4,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10594,7 +10660,7 @@
    "ticker": "ADBE",
    "adj_eps_ok": 36,
    "merged_direct": 36,
-   "seconds": 25.1,
+   "seconds": 35.0,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10712,7 +10778,7 @@
    "ticker": "CRM",
    "adj_eps_ok": 32,
    "merged_direct": 32,
-   "seconds": 36.1,
+   "seconds": 63.0,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10831,7 +10897,7 @@
    "ticker": "NOW",
    "adj_eps_ok": 38,
    "merged_direct": 38,
-   "seconds": 51.5,
+   "seconds": 113.4,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -10941,7 +11007,7 @@
    "ticker": "ORCL",
    "adj_eps_ok": 37,
    "merged_direct": 37,
-   "seconds": 63.0,
+   "seconds": 108.9,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11038,7 +11104,7 @@
    "ticker": "TEAM",
    "adj_eps_ok": 17,
    "merged_direct": 16,
-   "seconds": 112.2,
+   "seconds": 139.9,
    "cache_hits": 39,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11138,7 +11204,7 @@
    "ticker": "WDAY",
    "adj_eps_ok": 27,
    "merged_direct": 38,
-   "seconds": 60.9,
+   "seconds": 70.2,
    "cache_hits": 100,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11235,7 +11301,7 @@
    "ticker": "CSCO",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 49.4,
+   "seconds": 85.7,
    "cache_hits": 130,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11358,7 +11424,7 @@
    "ticker": "HPQ",
    "adj_eps_ok": 37,
    "merged_direct": 3,
-   "seconds": 72.9,
+   "seconds": 384.0,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11470,7 +11536,7 @@
    "ticker": "HPE",
    "adj_eps_ok": 26,
    "merged_direct": 15,
-   "seconds": 58.7,
+   "seconds": 97.1,
    "cache_hits": 105,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11575,7 +11641,7 @@
    "ticker": "JPM",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 282.4,
+   "seconds": 419.3,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11664,23 +11730,37 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 38,
-     "연간": 13
+     "연간": 13,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "InterestAndDividendIncomeOperating": {
      "분기": 13,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 0,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 52,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 10
+    },
+    "_요약": {
+     "지금뼈대": 30,
+     "합집합_새기간": 10
     }
    },
    "사라진회사_검색": {},
@@ -11692,7 +11772,7 @@
    "ticker": "BAC",
    "adj_eps_ok": 11,
    "merged_direct": 0,
-   "seconds": 862.9,
+   "seconds": 1837.9,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11778,15 +11858,25 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -11798,7 +11888,7 @@
    "ticker": "WFC",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 82.3,
+   "seconds": 390.6,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -11888,23 +11978,37 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 20,
-     "연간": 8
+     "연간": 8,
+     "채운뒤": 26,
+     "새기간": 8
     },
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 9
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 9
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 38,
-     "연간": 13
+     "연간": 13,
+     "채운뒤": 17,
+     "새기간": 1
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 9
+    },
+    "_요약": {
+     "지금뼈대": 31,
+     "합집합_새기간": 9
     }
    },
    "사라진회사_검색": {},
@@ -11916,7 +12020,7 @@
    "ticker": "C",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 396.4,
+   "seconds": 361.6,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12008,19 +12112,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 52,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 38,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 52,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 38,
+     "새기간": 0
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 50,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 38,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 52,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 38,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 38,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -12032,7 +12148,7 @@
    "ticker": "GS",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 872.8,
+   "seconds": 1308.6,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12110,19 +12226,31 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 42,
-     "연간": 15
+     "연간": 15,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "InterestAndDividendIncomeOperating": {
      "분기": 42,
-     "연간": 15
+     "연간": 15,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "InterestIncomeExpenseNet": {
      "분기": 44,
-     "연간": 15
+     "연간": 15,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "NoninterestIncome": {
      "분기": 42,
-     "연간": 15
+     "연간": 15,
+     "채운뒤": 40,
+     "새기간": 10
+    },
+    "_요약": {
+     "지금뼈대": 30,
+     "합집합_새기간": 10
     }
    },
    "사라진회사_검색": {},
@@ -12134,7 +12262,7 @@
    "ticker": "MS",
    "adj_eps_ok": 19,
    "merged_direct": 5,
-   "seconds": 799.0,
+   "seconds": 943.3,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12225,19 +12353,31 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 45,
-     "연간": 13
+     "연간": 13,
+     "채운뒤": 40,
+     "새기간": 5
     },
     "InterestAndDividendIncomeOperating": {
      "분기": 54,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 5
     },
     "InterestIncomeExpenseNet": {
      "분기": 61,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 40,
+     "새기간": 5
     },
     "NoninterestIncome": {
      "분기": 67,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 5
+    },
+    "_요약": {
+     "지금뼈대": 35,
+     "합집합_새기간": 5
     }
    },
    "사라진회사_검색": {},
@@ -12249,7 +12389,7 @@
    "ticker": "SCHW",
    "adj_eps_ok": 25,
    "merged_direct": 0,
-   "seconds": 177.0,
+   "seconds": 855.0,
    "cache_hits": 120,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12340,7 +12480,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -12352,7 +12498,7 @@
    "ticker": "BLK",
    "adj_eps_ok": 1,
    "merged_direct": 5,
-   "seconds": 579.6,
+   "seconds": 875.4,
    "cache_hits": 24,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12445,7 +12591,7 @@
    "ticker": "V",
    "adj_eps_ok": 37,
    "merged_direct": 0,
-   "seconds": 635.3,
+   "seconds": 939.6,
    "cache_hits": 141,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12541,7 +12687,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 36,
-     "연간": 13
+     "연간": 13,
+     "채운뒤": 31,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -12553,7 +12705,7 @@
    "ticker": "MA",
    "adj_eps_ok": 38,
    "merged_direct": 0,
-   "seconds": 435.5,
+   "seconds": 74.8,
    "cache_hits": 110,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12658,7 +12810,7 @@
    "ticker": "AXP",
    "adj_eps_ok": 11,
    "merged_direct": 0,
-   "seconds": 48.7,
+   "seconds": 30.1,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -12758,19 +12910,31 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 37,
-     "연간": 11
+     "연간": 11,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -12782,10 +12946,10 @@
    "ticker": "COF",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 48.9,
+   "seconds": 55.1,
    "cache_hits": 198,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -12880,19 +13044,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 58,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 39,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 58,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 39,
+     "새기간": 0
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 58,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 39,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 58,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 39,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -12904,7 +13080,7 @@
    "ticker": "LLY",
    "adj_eps_ok": 29,
    "merged_direct": 0,
-   "seconds": 38.2,
+   "seconds": 55.4,
    "cache_hits": 89,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13004,7 +13180,7 @@
    "ticker": "UNH",
    "adj_eps_ok": 34,
    "merged_direct": 0,
-   "seconds": 41.3,
+   "seconds": 113.0,
    "cache_hits": 134,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13108,7 +13284,7 @@
    "ticker": "JNJ",
    "adj_eps_ok": 37,
    "merged_direct": 0,
-   "seconds": 136.9,
+   "seconds": 117.0,
    "cache_hits": 113,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13223,7 +13399,7 @@
    "ticker": "ABBV",
    "adj_eps_ok": 34,
    "merged_direct": 0,
-   "seconds": 381.2,
+   "seconds": 547.2,
    "cache_hits": 135,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13309,7 +13485,7 @@
    "ticker": "MRK",
    "adj_eps_ok": 40,
    "merged_direct": 14,
-   "seconds": 319.2,
+   "seconds": 232.0,
    "cache_hits": 81,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13408,7 +13584,7 @@
    "ticker": "PFE",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 567.8,
+   "seconds": 812.1,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13502,7 +13678,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 4,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 38,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -13514,7 +13696,7 @@
    "ticker": "AMGN",
    "adj_eps_ok": 27,
    "merged_direct": 27,
-   "seconds": 361.0,
+   "seconds": 462.4,
    "cache_hits": 81,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13626,7 +13808,7 @@
    "ticker": "GILD",
    "adj_eps_ok": 35,
    "merged_direct": 22,
-   "seconds": 487.5,
+   "seconds": 635.8,
    "cache_hits": 93,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13729,7 +13911,7 @@
    "ticker": "BMY",
    "adj_eps_ok": 37,
    "merged_direct": 3,
-   "seconds": 517.7,
+   "seconds": 666.1,
    "cache_hits": 148,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13829,7 +14011,7 @@
    "ticker": "REGN",
    "adj_eps_ok": 37,
    "merged_direct": 0,
-   "seconds": 288.4,
+   "seconds": 419.3,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -13936,10 +14118,10 @@
    "ticker": "VRTX",
    "adj_eps_ok": 24,
    "merged_direct": 30,
-   "seconds": 217.0,
+   "seconds": 304.9,
    "cache_hits": 93,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -14030,7 +14212,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 28,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 21,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -14042,7 +14230,7 @@
    "ticker": "ISRG",
    "adj_eps_ok": 32,
    "merged_direct": 32,
-   "seconds": 213.7,
+   "seconds": 296.2,
    "cache_hits": 70,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14148,7 +14336,7 @@
    "ticker": "WMT",
    "adj_eps_ok": 26,
    "merged_direct": 21,
-   "seconds": 660.7,
+   "seconds": 1114.8,
    "cache_hits": 91,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14240,7 +14428,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 46,
-     "연간": 15
+     "연간": 15,
+     "채운뒤": 31,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -14252,7 +14446,7 @@
    "ticker": "COST",
    "adj_eps_ok": 0,
    "merged_direct": 1,
-   "seconds": 45.3,
+   "seconds": 54.5,
    "cache_hits": 93,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14349,7 +14543,7 @@
    "ticker": "PG",
    "adj_eps_ok": 16,
    "merged_direct": 0,
-   "seconds": 429.1,
+   "seconds": 617.4,
    "cache_hits": 117,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14455,8 +14649,8 @@
   {
    "ticker": "KO",
    "adj_eps_ok": 2,
-   "merged_direct": 33,
-   "seconds": 75.0,
+   "merged_direct": 34,
+   "seconds": 82.1,
    "cache_hits": 112,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14565,7 +14759,7 @@
    "ticker": "PEP",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 122.7,
+   "seconds": 520.3,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14675,7 +14869,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 2,
-     "연간": 0
+     "연간": 0,
+     "채운뒤": 2,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -14687,7 +14887,7 @@
    "ticker": "MCD",
    "adj_eps_ok": 9,
    "merged_direct": 0,
-   "seconds": 429.6,
+   "seconds": 588.7,
    "cache_hits": 124,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14780,7 +14980,7 @@
    "ticker": "SBUX",
    "adj_eps_ok": 41,
    "merged_direct": 36,
-   "seconds": 446.6,
+   "seconds": 620.3,
    "cache_hits": 131,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14886,7 +15086,7 @@
    "ticker": "NKE",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 367.2,
+   "seconds": 516.1,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -14985,7 +15185,7 @@
    "ticker": "HD",
    "adj_eps_ok": 9,
    "merged_direct": 12,
-   "seconds": 324.1,
+   "seconds": 83.7,
    "cache_hits": 113,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15099,7 +15299,7 @@
    "ticker": "LOW",
    "adj_eps_ok": 35,
    "merged_direct": 16,
-   "seconds": 112.9,
+   "seconds": 159.4,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15213,7 +15413,7 @@
    "ticker": "TGT",
    "adj_eps_ok": 40,
    "merged_direct": 7,
-   "seconds": 69.3,
+   "seconds": 80.6,
    "cache_hits": 107,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15328,7 +15528,7 @@
    "ticker": "EL",
    "adj_eps_ok": 28,
    "merged_direct": 21,
-   "seconds": 106.0,
+   "seconds": 123.7,
    "cache_hits": 107,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15437,10 +15637,10 @@
    "ticker": "CAT",
    "adj_eps_ok": 0,
    "merged_direct": 17,
-   "seconds": 88.4,
+   "seconds": 280.8,
    "cache_hits": 78,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -15538,7 +15738,7 @@
    "ticker": "DE",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 115.4,
+   "seconds": 282.4,
    "cache_hits": 148,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15646,7 +15846,7 @@
    "ticker": "HON",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 90.7,
+   "seconds": 253.6,
    "cache_hits": 134,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15753,7 +15953,7 @@
    "ticker": "GE",
    "adj_eps_ok": 31,
    "merged_direct": 1,
-   "seconds": 66.0,
+   "seconds": 86.8,
    "cache_hits": 117,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15866,7 +16066,7 @@
    "ticker": "UNP",
    "adj_eps_ok": 10,
    "merged_direct": 7,
-   "seconds": 35.3,
+   "seconds": 61.0,
    "cache_hits": 157,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -15953,10 +16153,10 @@
    "ticker": "UPS",
    "adj_eps_ok": 29,
    "merged_direct": 32,
-   "seconds": 37.5,
-   "cache_hits": 72,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 69.1,
+   "cache_hits": 73,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -16057,7 +16257,7 @@
    "ticker": "FDX",
    "adj_eps_ok": 9,
    "merged_direct": 1,
-   "seconds": 37.0,
+   "seconds": 67.7,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16159,7 +16359,7 @@
    "ticker": "BA",
    "adj_eps_ok": 37,
    "merged_direct": 1,
-   "seconds": 45.2,
+   "seconds": 62.9,
    "cache_hits": 137,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16275,7 +16475,7 @@
    "ticker": "T",
    "adj_eps_ok": 22,
    "merged_direct": 21,
-   "seconds": 68.6,
+   "seconds": 101.0,
    "cache_hits": 94,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16377,7 +16577,7 @@
    "ticker": "VZ",
    "adj_eps_ok": 29,
    "merged_direct": 11,
-   "seconds": 73.4,
+   "seconds": 118.9,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16478,7 +16678,7 @@
    "ticker": "TMUS",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 403.4,
+   "seconds": 966.0,
    "cache_hits": 163,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16585,7 +16785,7 @@
    "ticker": "CMCSA",
    "adj_eps_ok": 28,
    "merged_direct": 25,
-   "seconds": 46.3,
+   "seconds": 72.4,
    "cache_hits": 134,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16692,7 +16892,7 @@
    "ticker": "DIS",
    "adj_eps_ok": 7,
    "merged_direct": 0,
-   "seconds": 63.7,
+   "seconds": 122.6,
    "cache_hits": 102,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16784,7 +16984,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 27,
-     "연간": 0
+     "연간": 0,
+     "채운뒤": 27,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 38,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -16796,7 +17002,7 @@
    "ticker": "XOM",
    "adj_eps_ok": 1,
    "merged_direct": 1,
-   "seconds": 104.8,
+   "seconds": 126.9,
    "cache_hits": 148,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16877,7 +17083,7 @@
    "ticker": "CVX",
    "adj_eps_ok": 15,
    "merged_direct": 0,
-   "seconds": 48.6,
+   "seconds": 47.2,
    "cache_hits": 130,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -16956,7 +17162,7 @@
    "ticker": "COP",
    "adj_eps_ok": 37,
    "merged_direct": 0,
-   "seconds": 54.9,
+   "seconds": 76.9,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17044,7 +17250,7 @@
    "ticker": "SLB",
    "adj_eps_ok": 0,
    "merged_direct": 13,
-   "seconds": 43.1,
+   "seconds": 55.9,
    "cache_hits": 110,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17148,7 +17354,7 @@
    "ticker": "OXY",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 53.3,
+   "seconds": 74.2,
    "cache_hits": 146,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17233,7 +17439,7 @@
    "ticker": "AMT",
    "adj_eps_ok": 0,
    "merged_direct": 31,
-   "seconds": 114.7,
+   "seconds": 364.2,
    "cache_hits": 199,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17337,7 +17543,7 @@
    "ticker": "PLD",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 842.3,
+   "seconds": 1524.0,
    "cache_hits": 166,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17434,7 +17640,7 @@
    "ticker": "EQIX",
    "adj_eps_ok": 0,
    "merged_direct": 30,
-   "seconds": 538.9,
+   "seconds": 768.4,
    "cache_hits": 135,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17542,7 +17748,7 @@
    "ticker": "SPG",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 546.6,
+   "seconds": 770.9,
    "cache_hits": 98,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17625,7 +17831,7 @@
    "ticker": "O",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 672.1,
+   "seconds": 985.8,
    "cache_hits": 168,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17728,10 +17934,10 @@
    "ticker": "PSA",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 332.6,
+   "seconds": 443.2,
    "cache_hits": 147,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -17844,7 +18050,7 @@
    "ticker": "DLR",
    "adj_eps_ok": 0,
    "merged_direct": 10,
-   "seconds": 469.2,
+   "seconds": 402.2,
    "cache_hits": 193,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -17939,10 +18145,10 @@
    "ticker": "BXP",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 325.0,
-   "cache_hits": 81,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 368.4,
+   "cache_hits": 82,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -18040,7 +18246,7 @@
    "ticker": "SHW",
    "adj_eps_ok": 36,
    "merged_direct": 0,
-   "seconds": 33.6,
+   "seconds": 21.7,
    "cache_hits": 132,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18147,7 +18353,7 @@
    "ticker": "APD",
    "adj_eps_ok": 40,
    "merged_direct": 18,
-   "seconds": 115.9,
+   "seconds": 128.2,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18253,7 +18459,7 @@
    "ticker": "PPG",
    "adj_eps_ok": 26,
    "merged_direct": 0,
-   "seconds": 99.2,
+   "seconds": 125.9,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18353,7 +18559,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 46,
-     "연간": 15
+     "연간": 15,
+     "채운뒤": 33,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -18365,7 +18577,7 @@
    "ticker": "LYB",
    "adj_eps_ok": 0,
    "merged_direct": 1,
-   "seconds": 31.7,
+   "seconds": 58.2,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18448,7 +18660,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 2,
-     "연간": 0
+     "연간": 0,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -18460,7 +18678,7 @@
    "ticker": "ECL",
    "adj_eps_ok": 31,
    "merged_direct": 16,
-   "seconds": 100.5,
+   "seconds": 120.7,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18556,7 +18774,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 2,
-     "연간": 0
+     "연간": 0,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -18568,7 +18792,7 @@
    "ticker": "NUE",
    "adj_eps_ok": 6,
    "merged_direct": 0,
-   "seconds": 96.5,
+   "seconds": 140.7,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18649,11 +18873,19 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 6,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 0,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 10,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -18665,7 +18897,7 @@
    "ticker": "FCX",
    "adj_eps_ok": 9,
    "merged_direct": 0,
-   "seconds": 174.3,
+   "seconds": 306.6,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18753,7 +18985,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 32,
-     "연간": 12
+     "연간": 12,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -18765,7 +19003,7 @@
    "ticker": "ALB",
    "adj_eps_ok": 40,
    "merged_direct": 35,
-   "seconds": 53.9,
+   "seconds": 69.3,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18878,7 +19116,7 @@
    "ticker": "PGR",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 52.0,
+   "seconds": 46.8,
    "cache_hits": 57,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -18954,7 +19192,13 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -18966,7 +19210,7 @@
    "ticker": "ALL",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 165.0,
+   "seconds": 286.0,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19052,7 +19296,13 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 52,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -19064,7 +19314,7 @@
    "ticker": "TRV",
    "adj_eps_ok": 36,
    "merged_direct": 0,
-   "seconds": 48.9,
+   "seconds": 69.4,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19164,7 +19414,13 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 0,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -19176,7 +19432,7 @@
    "ticker": "MET",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 226.8,
+   "seconds": 336.9,
    "cache_hits": 191,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19273,7 +19529,7 @@
    "ticker": "AIG",
    "adj_eps_ok": 11,
    "merged_direct": 0,
-   "seconds": 94.7,
+   "seconds": 120.4,
    "cache_hits": 189,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19366,7 +19622,7 @@
    "ticker": "AFL",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 98.9,
+   "seconds": 99.9,
    "cache_hits": 109,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19451,7 +19707,7 @@
    "ticker": "ICE",
    "adj_eps_ok": 37,
    "merged_direct": 30,
-   "seconds": 57.6,
+   "seconds": 38.9,
    "cache_hits": 111,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19556,7 +19812,7 @@
    "ticker": "SPGI",
    "adj_eps_ok": 35,
    "merged_direct": 30,
-   "seconds": 64.1,
+   "seconds": 85.9,
    "cache_hits": 130,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19659,7 +19915,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 17,
-     "연간": 0
+     "연간": 0,
+     "채운뒤": 17,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -19671,7 +19933,7 @@
    "ticker": "DUK",
    "adj_eps_ok": 25,
    "merged_direct": 0,
-   "seconds": 118.3,
+   "seconds": 93.8,
    "cache_hits": 110,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19783,7 +20045,7 @@
    "ticker": "AEP",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 54.0,
+   "seconds": 77.6,
    "cache_hits": 128,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19891,7 +20153,7 @@
    "ticker": "XEL",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 80.7,
+   "seconds": 100.9,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -19990,7 +20252,7 @@
    "ticker": "ED",
    "adj_eps_ok": 29,
    "merged_direct": 0,
-   "seconds": 215.5,
+   "seconds": 347.4,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20090,7 +20352,7 @@
    "ticker": "SRE",
    "adj_eps_ok": 36,
    "merged_direct": 0,
-   "seconds": 89.9,
+   "seconds": 213.5,
    "cache_hits": 189,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20193,10 +20455,10 @@
    "ticker": "PCG",
    "adj_eps_ok": 3,
    "merged_direct": 0,
-   "seconds": 230.0,
-   "cache_hits": 180,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 322.9,
+   "cache_hits": 181,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -20280,7 +20542,7 @@
    "ticker": "CL",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 25.7,
+   "seconds": 41.3,
    "cache_hits": 93,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20393,7 +20655,7 @@
    "ticker": "KMB",
    "adj_eps_ok": 40,
    "merged_direct": 35,
-   "seconds": 42.3,
+   "seconds": 121.7,
    "cache_hits": 94,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20507,7 +20769,7 @@
    "ticker": "MDLZ",
    "adj_eps_ok": 27,
    "merged_direct": 14,
-   "seconds": 125.9,
+   "seconds": 131.5,
    "cache_hits": 72,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20620,7 +20882,7 @@
    "ticker": "GIS",
    "adj_eps_ok": 30,
    "merged_direct": 30,
-   "seconds": 73.5,
+   "seconds": 106.9,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20718,7 +20980,7 @@
    "ticker": "KHC",
    "adj_eps_ok": 23,
    "merged_direct": 12,
-   "seconds": 105.6,
+   "seconds": 57.6,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20823,7 +21085,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 2,
-     "연간": 0
+     "연간": 0,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -20835,7 +21103,7 @@
    "ticker": "HSY",
    "adj_eps_ok": 33,
    "merged_direct": 33,
-   "seconds": 116.4,
+   "seconds": 94.3,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -20948,7 +21216,7 @@
    "ticker": "TSN",
    "adj_eps_ok": 40,
    "merged_direct": 39,
-   "seconds": 73.1,
+   "seconds": 46.4,
    "cache_hits": 136,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21058,7 +21326,7 @@
    "ticker": "CSX",
    "adj_eps_ok": 6,
    "merged_direct": 7,
-   "seconds": 47.3,
+   "seconds": 78.0,
    "cache_hits": 132,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21152,7 +21420,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 16,
-     "연간": 8
+     "연간": 8,
+     "채운뒤": 21,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -21164,7 +21438,7 @@
    "ticker": "NSC",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 35.2,
+   "seconds": 48.8,
    "cache_hits": 159,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21261,7 +21535,7 @@
    "ticker": "DAL",
    "adj_eps_ok": 9,
    "merged_direct": 4,
-   "seconds": 41.2,
+   "seconds": 152.1,
    "cache_hits": 104,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21358,7 +21632,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 35,
-     "연간": 13
+     "연간": 13,
+     "채운뒤": 27,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -21370,7 +21650,7 @@
    "ticker": "AAL",
    "adj_eps_ok": 8,
    "merged_direct": 1,
-   "seconds": 171.4,
+   "seconds": 129.6,
    "cache_hits": 139,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21476,7 +21756,7 @@
    "ticker": "TJX",
    "adj_eps_ok": 21,
    "merged_direct": 4,
-   "seconds": 28.6,
+   "seconds": 29.3,
    "cache_hits": 91,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21570,7 +21850,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 0,
-     "연간": 1
+     "연간": 1,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 36,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -21582,7 +21868,7 @@
    "ticker": "DG",
    "adj_eps_ok": 3,
    "merged_direct": 8,
-   "seconds": 25.1,
+   "seconds": 31.8,
    "cache_hits": 77,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21683,7 +21969,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 2,
-     "연간": 0
+     "연간": 0,
+     "채운뒤": 2,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 37,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -21695,7 +21987,7 @@
    "ticker": "DLTR",
    "adj_eps_ok": 18,
    "merged_direct": 22,
-   "seconds": 228.7,
+   "seconds": 363.3,
    "cache_hits": 177,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21802,7 +22094,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 29,
-     "연간": 9
+     "연간": 9,
+     "채운뒤": 10,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 36,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -21814,7 +22112,7 @@
    "ticker": "ORLY",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 54.9,
+   "seconds": 88.5,
    "cache_hits": 148,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -21917,7 +22215,13 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 4,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 4,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -21929,7 +22233,7 @@
    "ticker": "CVS",
    "adj_eps_ok": 37,
    "merged_direct": 31,
-   "seconds": 73.7,
+   "seconds": 88.8,
    "cache_hits": 133,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22044,7 +22348,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 30,
-     "연간": 12
+     "연간": 12,
+     "채운뒤": 7,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -22056,7 +22366,7 @@
    "ticker": "CI",
    "adj_eps_ok": 32,
    "merged_direct": 31,
-   "seconds": 41.1,
+   "seconds": 66.4,
    "cache_hits": 134,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22157,7 +22467,7 @@
    "ticker": "ELV",
    "adj_eps_ok": 30,
    "merged_direct": 0,
-   "seconds": 57.7,
+   "seconds": 144.8,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22260,7 +22570,7 @@
    "ticker": "HCA",
    "adj_eps_ok": 0,
    "merged_direct": 9,
-   "seconds": 139.1,
+   "seconds": 170.1,
    "cache_hits": 114,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22352,7 +22662,7 @@
    "ticker": "MCK",
    "adj_eps_ok": 40,
    "merged_direct": 14,
-   "seconds": 148.1,
+   "seconds": 197.4,
    "cache_hits": 126,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22467,7 +22777,7 @@
    "ticker": "BSX",
    "adj_eps_ok": 16,
    "merged_direct": 0,
-   "seconds": 149.0,
+   "seconds": 257.1,
    "cache_hits": 131,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22578,10 +22888,10 @@
    "ticker": "MDT",
    "adj_eps_ok": 37,
    "merged_direct": 6,
-   "seconds": 139.8,
-   "cache_hits": 98,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 204.5,
+   "cache_hits": 99,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -22672,7 +22982,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 9,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 12,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -22684,7 +23000,7 @@
    "ticker": "SYK",
    "adj_eps_ok": 41,
    "merged_direct": 34,
-   "seconds": 63.2,
+   "seconds": 83.4,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22784,7 +23100,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 2,
-     "연간": 0
+     "연간": 0,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -22796,7 +23118,7 @@
    "ticker": "ZBH",
    "adj_eps_ok": 19,
    "merged_direct": 33,
-   "seconds": 78.8,
+   "seconds": 112.5,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -22905,7 +23227,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 32,
-     "연간": 8
+     "연간": 8,
+     "채운뒤": 32,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -22917,7 +23245,7 @@
    "ticker": "BIIB",
    "adj_eps_ok": 41,
    "merged_direct": 0,
-   "seconds": 63.7,
+   "seconds": 79.4,
    "cache_hits": 105,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23029,7 +23357,7 @@
    "ticker": "ILMN",
    "adj_eps_ok": 27,
    "merged_direct": 26,
-   "seconds": 50.7,
+   "seconds": 67.4,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23142,7 +23470,7 @@
    "ticker": "USB",
    "adj_eps_ok": 4,
    "merged_direct": 3,
-   "seconds": 108.2,
+   "seconds": 193.4,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23219,19 +23547,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 4
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 4
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 4
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 4
+    },
+    "_요약": {
+     "지금뼈대": 36,
+     "합집합_새기간": 4
     }
    },
    "사라진회사_검색": {},
@@ -23243,7 +23583,7 @@
    "ticker": "PNC",
    "adj_eps_ok": 9,
    "merged_direct": 0,
-   "seconds": 88.4,
+   "seconds": 98.9,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23337,19 +23677,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 0,
-     "연간": 10
+     "연간": 10,
+     "채운뒤": 0,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -23361,7 +23713,7 @@
    "ticker": "KEY",
    "adj_eps_ok": 7,
    "merged_direct": 0,
-   "seconds": 95.0,
+   "seconds": 119.7,
    "cache_hits": 94,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23457,19 +23809,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 54,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -23481,7 +23845,7 @@
    "ticker": "ZION",
    "adj_eps_ok": 7,
    "merged_direct": 0,
-   "seconds": 75.5,
+   "seconds": 184.7,
    "cache_hits": 63,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23571,23 +23935,37 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 15,
-     "연간": 6
+     "연간": 6,
+     "채운뒤": 19,
+     "새기간": 0
     },
     "InterestAndDividendIncomeOperating": {
      "분기": 68,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 68,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 52,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 61,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -23599,7 +23977,7 @@
    "ticker": "FITB",
    "adj_eps_ok": 1,
    "merged_direct": 2,
-   "seconds": 153.6,
+   "seconds": 116.5,
    "cache_hits": 83,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23692,19 +24070,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 4
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 4
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 4
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 4
+    },
+    "_요약": {
+     "지금뼈대": 36,
+     "합집합_새기간": 4
     }
    },
    "사라진회사_검색": {},
@@ -23716,7 +24106,7 @@
    "ticker": "CME",
    "adj_eps_ok": 0,
    "merged_direct": 8,
-   "seconds": 19.1,
+   "seconds": 33.5,
    "cache_hits": 112,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23820,7 +24210,7 @@
    "ticker": "MCO",
    "adj_eps_ok": 36,
    "merged_direct": 36,
-   "seconds": 36.6,
+   "seconds": 47.1,
    "cache_hits": 107,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -23915,7 +24305,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 6,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -23927,7 +24323,7 @@
    "ticker": "TROW",
    "adj_eps_ok": 19,
    "merged_direct": 11,
-   "seconds": 33.4,
+   "seconds": 50.4,
    "cache_hits": 78,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24026,11 +24422,19 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 20,
-     "연간": 6
+     "연간": 6,
+     "채운뒤": 0,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 12,
-     "연간": 7
+     "연간": 7,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -24042,7 +24446,7 @@
    "ticker": "MMM",
    "adj_eps_ok": 24,
    "merged_direct": 17,
-   "seconds": 60.2,
+   "seconds": 32.5,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24148,7 +24552,7 @@
    "ticker": "EMR",
    "adj_eps_ok": 31,
    "merged_direct": 2,
-   "seconds": 25.9,
+   "seconds": 28.4,
    "cache_hits": 129,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24252,7 +24656,7 @@
    "ticker": "ITW",
    "adj_eps_ok": 2,
    "merged_direct": 6,
-   "seconds": 20.6,
+   "seconds": 28.2,
    "cache_hits": 77,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24347,7 +24751,7 @@
    "ticker": "PH",
    "adj_eps_ok": 37,
    "merged_direct": 4,
-   "seconds": 93.4,
+   "seconds": 470.4,
    "cache_hits": 102,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24454,7 +24858,7 @@
    "ticker": "CMI",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 48.4,
+   "seconds": 69.6,
    "cache_hits": 83,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24567,7 +24971,7 @@
    "ticker": "PCAR",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 212.4,
+   "seconds": 513.0,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24655,7 +25059,7 @@
    "ticker": "LMT",
    "adj_eps_ok": 2,
    "merged_direct": 0,
-   "seconds": 45.5,
+   "seconds": 64.8,
    "cache_hits": 112,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24772,7 +25176,7 @@
    "ticker": "WM",
    "adj_eps_ok": 15,
    "merged_direct": 27,
-   "seconds": 144.0,
+   "seconds": 263.8,
    "cache_hits": 124,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24869,7 +25273,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 9,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -24881,7 +25291,7 @@
    "ticker": "PSX",
    "adj_eps_ok": 40,
    "merged_direct": 12,
-   "seconds": 69.2,
+   "seconds": 63.9,
    "cache_hits": 119,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -24978,8 +25388,8 @@
   {
    "ticker": "VLO",
    "adj_eps_ok": 41,
-   "merged_direct": 22,
-   "seconds": 293.5,
+   "merged_direct": 21,
+   "seconds": 479.8,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25087,7 +25497,7 @@
    "ticker": "MPC",
    "adj_eps_ok": 26,
    "merged_direct": 31,
-   "seconds": 249.7,
+   "seconds": 221.6,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25185,7 +25595,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 7,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -25197,7 +25613,7 @@
    "ticker": "HAL",
    "adj_eps_ok": 26,
    "merged_direct": 36,
-   "seconds": 184.6,
+   "seconds": 157.9,
    "cache_hits": 106,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25294,7 +25710,7 @@
    "ticker": "EOG",
    "adj_eps_ok": 18,
    "merged_direct": 19,
-   "seconds": 500.7,
+   "seconds": 659.8,
    "cache_hits": 124,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25390,7 +25806,7 @@
    "ticker": "KMI",
    "adj_eps_ok": 38,
    "merged_direct": 40,
-   "seconds": 141.4,
+   "seconds": 179.6,
    "cache_hits": 188,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25486,7 +25902,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 22,
-     "연간": 12
+     "연간": 12,
+     "채운뒤": 15,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -25498,7 +25920,7 @@
    "ticker": "MAR",
    "adj_eps_ok": 35,
    "merged_direct": 34,
-   "seconds": 129.4,
+   "seconds": 195.3,
    "cache_hits": 103,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25601,7 +26023,7 @@
    "ticker": "HLT",
    "adj_eps_ok": 0,
    "merged_direct": 40,
-   "seconds": 112.6,
+   "seconds": 99.7,
    "cache_hits": 107,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25706,7 +26128,7 @@
    "ticker": "RCL",
    "adj_eps_ok": 22,
    "merged_direct": 17,
-   "seconds": 42.6,
+   "seconds": 54.1,
    "cache_hits": 91,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25793,7 +26215,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 15,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 18,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -25805,7 +26233,7 @@
    "ticker": "CCL",
    "adj_eps_ok": 33,
    "merged_direct": 9,
-   "seconds": 132.1,
+   "seconds": 88.2,
    "cache_hits": 158,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -25905,7 +26333,7 @@
    "ticker": "LVS",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 193.7,
+   "seconds": 185.4,
    "cache_hits": 153,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26004,7 +26432,7 @@
    "ticker": "MGM",
    "adj_eps_ok": 29,
    "merged_direct": 12,
-   "seconds": 91.7,
+   "seconds": 61.9,
    "cache_hits": 133,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26111,7 +26539,7 @@
    "ticker": "LULU",
    "adj_eps_ok": 21,
    "merged_direct": 18,
-   "seconds": 143.0,
+   "seconds": 219.5,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26230,7 +26658,7 @@
    "ticker": "BBY",
    "adj_eps_ok": 34,
    "merged_direct": 34,
-   "seconds": 162.2,
+   "seconds": 137.2,
    "cache_hits": 87,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26351,10 +26779,10 @@
    "ticker": "KSS",
    "adj_eps_ok": 19,
    "merged_direct": 7,
-   "seconds": 293.5,
-   "cache_hits": 167,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 485.1,
+   "cache_hits": 168,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -26451,7 +26879,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 52,
-     "연간": 15
+     "연간": 15,
+     "채운뒤": 35,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 38,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -26463,7 +26897,7 @@
    "ticker": "W",
    "adj_eps_ok": 23,
    "merged_direct": 23,
-   "seconds": 108.1,
+   "seconds": 182.3,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26580,7 +27014,7 @@
    "ticker": "ROST",
    "adj_eps_ok": 0,
    "merged_direct": 3,
-   "seconds": 116.7,
+   "seconds": 178.3,
    "cache_hits": 63,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26588,21 +27022,21 @@
    "negative_hits": 0,
    "first_error": "",
    "xbrl_calls": [
-    "OperatingIncomeLoss(3개월): 받음 8 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 7 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
+    "OperatingIncomeLoss(3개월): 받음 10 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
     "OperatingIncomeLoss(12개월): 받음 4 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 3 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
-    "ShareBasedCompensation(3개월): 받음 320 · 이름버림 222 · 단위버림 0 · 모호 0 · 남음 50 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'adjustmentstoadditionalpaidincapitaltaxeffectfromsharebasedcompensation', 'employeeservicesharebasedcompensationtaxbenefitfromcompensationexpense'] · 본단위 ['USD']",
+    "ShareBasedCompensation(3개월): 받음 328 · 이름버림 228 · 단위버림 0 · 모호 0 · 남음 51 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'adjustmentstoadditionalpaidincapitaltaxeffectfromsharebasedcompensation', 'employeeservicesharebasedcompensationtaxbenefitfromcompensationexpense'] · 본단위 ['USD']",
     "ShareBasedCompensation(12개월): 받음 240 · 이름버림 201 · 단위버림 0 · 모호 0 · 남음 15 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'adjustmentstoadditionalpaidincapitaltaxeffectfromsharebasedcompensation', 'allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
     "AllocatedShareBasedCompensationExpense(12개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 4 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
-    "DepreciationDepletionAndAmortization(3개월): 받음 36 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 20 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
+    "DepreciationDepletionAndAmortization(3개월): 받음 38 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 21 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
     "DepreciationDepletionAndAmortization(12개월): 받음 42 · 이름버림 3 · 단위버림 0 · 모호 0 · 남음 15 · 본이름 ['accumulateddepreciationdepletionandamortizationexpensepropertyplantandequipmentcurrentcharge', 'depreciationdepletionandamortization'] · 본단위 ['USD']",
-    "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 69 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 30 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
+    "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 71 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 31 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 19 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 8 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
-    "EarningsPerShareDiluted(3개월): 받음 181 · 이름버림 0 · 단위버림 1 · 모호 11 · 남음 49 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']",
+    "EarningsPerShareDiluted(3개월): 받음 183 · 이름버림 0 · 단위버림 1 · 모호 11 · 남음 50 · 본이름 ['earningspersharediluted'] · 본단위 ['NUMBER', 'USD PER SHARE']",
     "EarningsPerShareDiluted(12개월): 받음 39 · 이름버림 0 · 단위버림 0 · 모호 4 · 남음 11 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
-   "xbrl_rejected": 427,
+   "xbrl_rejected": 433,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 35,
+    "분기목록(영업이익 기준)": 36,
     "revenue": 0,
     "gaap_eps": 0,
     "gross_profit": 0
@@ -26610,7 +27044,7 @@
    "q4_채움": {
     "op_income": {
      "연간수": 3,
-     "분기수": 7,
+     "분기수": 8,
      "앞선세분기부족": 1,
      "못채운예": [
       "2023-01-28"
@@ -26619,7 +27053,7 @@
     },
     "sbc": {
      "연간수": 15,
-     "분기수": 50,
+     "분기수": 51,
      "앞선세분기부족": 3,
      "못채운예": [
       "2009-01-31",
@@ -26630,7 +27064,7 @@
     },
     "depreciation_amortization": {
      "연간수": 15,
-     "분기수": 20,
+     "분기수": 21,
      "앞선세분기부족": 13,
      "못채운예": [
       "2009-01-31",
@@ -26648,7 +27082,7 @@
     },
     "revenue": {
      "연간수": 8,
-     "분기수": 30,
+     "분기수": 31,
      "앞선세분기부족": 2,
      "못채운예": [
       "2017-01-28",
@@ -26665,8 +27099,14 @@
    },
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
-     "분기": 49,
-     "연간": 12
+     "분기": 50,
+     "연간": 12,
+     "채운뒤": 36,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 36,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -26678,7 +27118,7 @@
    "ticker": "AZO",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 87.8,
+   "seconds": 167.0,
    "cache_hits": 65,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26779,7 +27219,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 8,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -26791,7 +27237,7 @@
    "ticker": "AMKR",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 97.3,
+   "seconds": 151.5,
    "cache_hits": 92,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -26907,7 +27353,7 @@
    "ticker": "ALGM",
    "adj_eps_ok": 24,
    "merged_direct": 24,
-   "seconds": 72.5,
+   "seconds": 173.4,
    "cache_hits": 72,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27009,7 +27455,7 @@
    "ticker": "WOLF",
    "adj_eps_ok": 28,
    "merged_direct": 2,
-   "seconds": 41.1,
+   "seconds": 199.4,
    "cache_hits": 111,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27113,7 +27559,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 0,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -27125,7 +27577,7 @@
    "ticker": "SITM",
    "adj_eps_ok": 27,
    "merged_direct": 27,
-   "seconds": 17.8,
+   "seconds": 86.4,
    "cache_hits": 59,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27222,7 +27674,7 @@
    "ticker": "RMBS",
    "adj_eps_ok": 15,
    "merged_direct": 10,
-   "seconds": 31.8,
+   "seconds": 52.2,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27323,7 +27775,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 12,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -27335,7 +27793,7 @@
    "ticker": "MTSI",
    "adj_eps_ok": 38,
    "merged_direct": 38,
-   "seconds": 87.9,
+   "seconds": 127.7,
    "cache_hits": 81,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27445,7 +27903,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 11,
-     "연간": 1
+     "연간": 1,
+     "채운뒤": 11,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 37,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -27457,7 +27921,7 @@
    "ticker": "SMTC",
    "adj_eps_ok": 29,
    "merged_direct": 18,
-   "seconds": 18.9,
+   "seconds": 28.4,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27569,7 +28033,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 0,
-     "연간": 8
+     "연간": 8,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 37,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -27581,7 +28051,7 @@
    "ticker": "AOSL",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 87.8,
+   "seconds": 101.8,
    "cache_hits": 78,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27684,7 +28154,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 0,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -27696,7 +28172,7 @@
    "ticker": "NVMI",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 0.6,
+   "seconds": 0.7,
    "cache_hits": 0,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27797,7 +28273,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 0,
-     "연간": 9
+     "연간": 9,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 0,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -27809,7 +28291,7 @@
    "ticker": "PLAB",
    "adj_eps_ok": 13,
    "merged_direct": 2,
-   "seconds": 93.1,
+   "seconds": 103.8,
    "cache_hits": 98,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -27925,7 +28407,7 @@
    "ticker": "ACMR",
    "adj_eps_ok": 1,
    "merged_direct": 15,
-   "seconds": 291.9,
+   "seconds": 366.8,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28020,7 +28502,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 0,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -28032,7 +28520,7 @@
    "ticker": "KLIC",
    "adj_eps_ok": 36,
    "merged_direct": 29,
-   "seconds": 289.0,
+   "seconds": 288.2,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28134,7 +28622,7 @@
    "ticker": "AEIS",
    "adj_eps_ok": 37,
    "merged_direct": 37,
-   "seconds": 218.0,
+   "seconds": 319.6,
    "cache_hits": 92,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28250,8 +28738,8 @@
   {
    "ticker": "VECO",
    "adj_eps_ok": 36,
-   "merged_direct": 36,
-   "seconds": 224.9,
+   "merged_direct": 37,
+   "seconds": 323.9,
    "cache_hits": 87,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28349,7 +28837,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 12,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -28359,12 +28853,12 @@
   },
   {
    "ticker": "PANW",
-   "adj_eps_ok": 39,
-   "merged_direct": 9,
-   "seconds": 17.4,
+   "adj_eps_ok": 40,
+   "merged_direct": 10,
+   "seconds": 276.5,
    "cache_hits": 105,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -28474,7 +28968,7 @@
    "ticker": "FTNT",
    "adj_eps_ok": 41,
    "merged_direct": 38,
-   "seconds": 203.2,
+   "seconds": 286.0,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28584,10 +29078,10 @@
    "ticker": "ZI",
    "adj_eps_ok": 25,
    "merged_direct": 25,
-   "seconds": 316.2,
-   "cache_hits": 0,
-   "cache_downloads": 68,
-   "fetch_attempts": 68,
+   "seconds": 13.0,
+   "cache_hits": 68,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -28684,7 +29178,7 @@
    "ticker": "ASAN",
    "adj_eps_ok": 24,
    "merged_direct": 6,
-   "seconds": 27.9,
+   "seconds": 11.4,
    "cache_hits": 58,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28783,7 +29277,7 @@
    "ticker": "PATH",
    "adj_eps_ok": 17,
    "merged_direct": 20,
-   "seconds": 20.4,
+   "seconds": 35.2,
    "cache_hits": 44,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -28882,36 +29376,36 @@
   },
   {
    "ticker": "GTLB",
-   "adj_eps_ok": 21,
+   "adj_eps_ok": 22,
    "merged_direct": 12,
-   "seconds": 22.2,
+   "seconds": 24.1,
    "cache_hits": 41,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
    "xbrl_calls": [
-    "OperatingIncomeLoss(3개월): 받음 28 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
+    "OperatingIncomeLoss(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
     "OperatingIncomeLoss(12개월): 받음 15 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 7 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
-    "ShareBasedCompensation(3개월): 받음 176 · 이름버림 166 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpense', 'proceedsfromissuanceofsharesunderincentiveandsharebasedcompensationplansincludingstockoptions'] · 본단위 ['USD']",
-    "AllocatedShareBasedCompensationExpense(3개월): 받음 28 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
+    "ShareBasedCompensation(3개월): 받음 183 · 이름버림 173 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpense', 'proceedsfromissuanceofsharesunderincentiveandsharebasedcompensationplansincludingstockoptions'] · 본단위 ['USD']",
+    "AllocatedShareBasedCompensationExpense(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
     "ShareBasedCompensation(12개월): 받음 258 · 이름버림 243 · 단위버림 0 · 모호 0 · 남음 7 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpense', 'proceedsfromissuanceofsharesunderincentiveandsharebasedcompensationplansincludingstockoptions'] · 본단위 ['USD']",
     "AllocatedShareBasedCompensationExpense(12개월): 받음 15 · 이름버림 0 · 단위버림 0 · 모호 1 · 남음 6 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
     "DepreciationDepletionAndAmortization(3개월): 받음 10 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
     "DepreciationDepletionAndAmortization(12개월): 받음 15 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 7 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
-    "AmortizationOfIntangibleAssets(3개월): 받음 26 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 16 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
+    "AmortizationOfIntangibleAssets(3개월): 받음 28 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
     "AmortizationOfIntangibleAssets(12개월): 받음 15 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 7 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
-    "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 28 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
+    "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
     "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 15 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 7 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
-    "GrossProfit(3개월): 받음 28 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['grossprofit'] · 본단위 ['USD']",
+    "GrossProfit(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['grossprofit'] · 본단위 ['USD']",
     "GrossProfit(12개월): 받음 15 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 7 · 본이름 ['grossprofit'] · 본단위 ['USD']",
-    "EarningsPerShareDiluted(3개월): 받음 28 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 17 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']",
+    "EarningsPerShareDiluted(3개월): 받음 30 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 18 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']",
     "EarningsPerShareDiluted(12개월): 받음 15 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 7 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
    ],
-   "xbrl_rejected": 409,
+   "xbrl_rejected": 416,
    "xbrl_orphan": {
-    "분기목록(영업이익 기준)": 22,
+    "분기목록(영업이익 기준)": 23,
     "revenue": 0,
     "gaap_eps": 0,
     "gross_profit": 0
@@ -28919,7 +29413,7 @@
    "q4_채움": {
     "op_income": {
      "연간수": 7,
-     "분기수": 17,
+     "분기수": 18,
      "앞선세분기부족": 2,
      "못채운예": [
       "2020-01-31",
@@ -28929,7 +29423,7 @@
     },
     "sbc": {
      "연간수": 7,
-     "분기수": 17,
+     "분기수": 18,
      "앞선세분기부족": 2,
      "못채운예": [
       "2020-01-31",
@@ -28951,7 +29445,7 @@
     },
     "amortization": {
      "연간수": 7,
-     "분기수": 16,
+     "분기수": 17,
      "앞선세분기부족": 2,
      "못채운예": [
       "2020-01-31",
@@ -28961,7 +29455,7 @@
     },
     "revenue": {
      "연간수": 7,
-     "분기수": 17,
+     "분기수": 18,
      "앞선세분기부족": 2,
      "못채운예": [
       "2020-01-31",
@@ -28971,7 +29465,7 @@
     },
     "gross_profit": {
      "연간수": 7,
-     "분기수": 17,
+     "분기수": 18,
      "앞선세분기부족": 2,
      "못채운예": [
       "2020-01-31",
@@ -28990,7 +29484,7 @@
    "ticker": "CFLT",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 8.4,
+   "seconds": 7.1,
    "cache_hits": 0,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29014,7 +29508,7 @@
    "ticker": "ESTC",
    "adj_eps_ok": 32,
    "merged_direct": 21,
-   "seconds": 30.8,
+   "seconds": 35.9,
    "cache_hits": 65,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29120,7 +29614,7 @@
    "ticker": "TENB",
    "adj_eps_ok": 34,
    "merged_direct": 25,
-   "seconds": 64.3,
+   "seconds": 65.2,
    "cache_hits": 72,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29220,7 +29714,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 17,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 18,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 38,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -29232,7 +29732,7 @@
    "ticker": "VRNS",
    "adj_eps_ok": 40,
    "merged_direct": 36,
-   "seconds": 43.1,
+   "seconds": 52.9,
    "cache_hits": 66,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29336,7 +29836,7 @@
    "ticker": "PCTY",
    "adj_eps_ok": 38,
    "merged_direct": 39,
-   "seconds": 39.9,
+   "seconds": 34.8,
    "cache_hits": 81,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29444,7 +29944,7 @@
    "ticker": "PAYC",
    "adj_eps_ok": 40,
    "merged_direct": 0,
-   "seconds": 50.5,
+   "seconds": 50.3,
    "cache_hits": 120,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29552,7 +30052,7 @@
    "ticker": "BOX",
    "adj_eps_ok": 38,
    "merged_direct": 29,
-   "seconds": 46.1,
+   "seconds": 25.8,
    "cache_hits": 88,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29652,7 +30152,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 4,
-     "연간": 0
+     "연간": 0,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -29664,7 +30170,7 @@
    "ticker": "DBX",
    "adj_eps_ok": 34,
    "merged_direct": 33,
-   "seconds": 31.1,
+   "seconds": 15.8,
    "cache_hits": 73,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29762,7 +30268,7 @@
    "ticker": "APPF",
    "adj_eps_ok": 17,
    "merged_direct": 15,
-   "seconds": 48.1,
+   "seconds": 69.8,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29862,7 +30368,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 30,
-     "연간": 11
+     "연간": 11,
+     "채운뒤": 31,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -29874,7 +30386,7 @@
    "ticker": "MANH",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 23.9,
+   "seconds": 45.7,
    "cache_hits": 62,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -29974,7 +30486,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 8,
-     "연간": 17
+     "연간": 17,
+     "채운뒤": 10,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -29986,7 +30504,7 @@
    "ticker": "TYL",
    "adj_eps_ok": 42,
    "merged_direct": 39,
-   "seconds": 28.4,
+   "seconds": 92.5,
    "cache_hits": 79,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30095,7 +30613,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 11,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 14,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -30107,7 +30631,7 @@
    "ticker": "PEGA",
    "adj_eps_ok": 7,
    "merged_direct": 3,
-   "seconds": 63.8,
+   "seconds": 62.8,
    "cache_hits": 104,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30219,7 +30743,7 @@
    "ticker": "VEEV",
    "adj_eps_ok": 39,
    "merged_direct": 38,
-   "seconds": 37.5,
+   "seconds": 51.9,
    "cache_hits": 88,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30324,7 +30848,7 @@
    "ticker": "UBER",
    "adj_eps_ok": 4,
    "merged_direct": 29,
-   "seconds": 36.1,
+   "seconds": 35.6,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30421,7 +30945,7 @@
    "ticker": "LYFT",
    "adj_eps_ok": 0,
    "merged_direct": 6,
-   "seconds": 48.0,
+   "seconds": 41.7,
    "cache_hits": 88,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30517,7 +31041,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 7,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 9,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 34,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -30529,7 +31059,7 @@
    "ticker": "DKNG",
    "adj_eps_ok": 15,
    "merged_direct": 6,
-   "seconds": 58.6,
+   "seconds": 82.6,
    "cache_hits": 37,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30620,7 +31150,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 6,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 8,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 22,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -30632,7 +31168,7 @@
    "ticker": "EXPE",
    "adj_eps_ok": 35,
    "merged_direct": 30,
-   "seconds": 59.3,
+   "seconds": 96.1,
    "cache_hits": 109,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30733,7 +31269,7 @@
    "ticker": "BKNG",
    "adj_eps_ok": 34,
    "merged_direct": 37,
-   "seconds": 130.4,
+   "seconds": 103.2,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30842,7 +31378,7 @@
    "ticker": "CHWY",
    "adj_eps_ok": 10,
    "merged_direct": 2,
-   "seconds": 171.6,
+   "seconds": 144.1,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -30949,7 +31485,7 @@
    "ticker": "CVNA",
    "adj_eps_ok": 5,
    "merged_direct": 0,
-   "seconds": 167.7,
+   "seconds": 106.9,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31048,7 +31584,7 @@
    "ticker": "ZG",
    "adj_eps_ok": 9,
    "merged_direct": 12,
-   "seconds": 453.7,
+   "seconds": 679.0,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31156,7 +31692,7 @@
    "ticker": "MTCH",
    "adj_eps_ok": 0,
    "merged_direct": 15,
-   "seconds": 387.3,
+   "seconds": 556.5,
    "cache_hits": 99,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31257,7 +31793,7 @@
    "ticker": "YELP",
    "adj_eps_ok": 4,
    "merged_direct": 22,
-   "seconds": 426.6,
+   "seconds": 615.9,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31356,7 +31892,7 @@
    "ticker": "TRIP",
    "adj_eps_ok": 39,
    "merged_direct": 27,
-   "seconds": 286.9,
+   "seconds": 321.4,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31456,7 +31992,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 8,
-     "연간": 2
+     "연간": 2,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -31468,10 +32010,10 @@
    "ticker": "TDOC",
    "adj_eps_ok": 0,
    "merged_direct": 12,
-   "seconds": 273.2,
-   "cache_hits": 95,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 290.7,
+   "cache_hits": 96,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -31575,7 +32117,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 28,
-     "연간": 8
+     "연간": 8,
+     "채운뒤": 23,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -31587,7 +32135,7 @@
    "ticker": "RH",
    "adj_eps_ok": 24,
    "merged_direct": 15,
-   "seconds": 271.7,
+   "seconds": 510.9,
    "cache_hits": 118,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31699,11 +32247,19 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 0,
-     "연간": 2
+     "연간": 2,
+     "채운뒤": 0,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 2,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 2,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 35,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -31715,7 +32271,7 @@
    "ticker": "YETI",
    "adj_eps_ok": 33,
    "merged_direct": 32,
-   "seconds": 59.4,
+   "seconds": 253.2,
    "cache_hits": 75,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31824,7 +32380,7 @@
    "ticker": "TFC",
    "adj_eps_ok": 24,
    "merged_direct": 7,
-   "seconds": 267.8,
+   "seconds": 330.3,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -31896,19 +32452,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 10
+    },
+    "_요약": {
+     "지금뼈대": 30,
+     "합집합_새기간": 10
     }
    },
    "사라진회사_검색": {},
@@ -31920,7 +32488,7 @@
    "ticker": "RF",
    "adj_eps_ok": 10,
    "merged_direct": 5,
-   "seconds": 277.6,
+   "seconds": 849.0,
    "cache_hits": 68,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32018,19 +32586,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 55,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 40,
+     "새기간": 10
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 10
+    },
+    "_요약": {
+     "지금뼈대": 30,
+     "합집합_새기간": 10
     }
    },
    "사라진회사_검색": {},
@@ -32042,7 +32622,7 @@
    "ticker": "HBAN",
    "adj_eps_ok": 17,
    "merged_direct": 0,
-   "seconds": 42.9,
+   "seconds": 361.5,
    "cache_hits": 113,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32127,19 +32707,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 61,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 39,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 61,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 39,
+     "새기간": 0
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 51,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 39,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 61,
-     "연간": 18
+     "연간": 18,
+     "채운뒤": 39,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -32151,7 +32743,7 @@
    "ticker": "CFG",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 223.9,
+   "seconds": 396.2,
    "cache_hits": 82,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32245,19 +32837,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 39,
-     "연간": 14
+     "연간": 14,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 39,
-     "연간": 14
+     "연간": 14,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 39,
-     "연간": 14
+     "연간": 14,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 39,
-     "연간": 14
+     "연간": 14,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -32269,7 +32873,7 @@
    "ticker": "MTB",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 227.0,
+   "seconds": 304.9,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32362,19 +32966,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 8
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 8
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 8
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 8
+    },
+    "_요약": {
+     "지금뼈대": 32,
+     "합집합_새기간": 8
     }
    },
    "사라진회사_검색": {},
@@ -32386,7 +33002,7 @@
    "ticker": "STT",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 218.8,
+   "seconds": 298.2,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32464,15 +33080,25 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 26,
-     "연간": 10
+     "연간": 10,
+     "채운뒤": 34,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 17
+     "연간": 17,
+     "채운뒤": 38,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 23,
-     "연간": 10
+     "연간": 10,
+     "채운뒤": 30,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -32484,7 +33110,7 @@
    "ticker": "BK",
    "adj_eps_ok": 15,
    "merged_direct": 1,
-   "seconds": 299.9,
+   "seconds": 275.9,
    "cache_hits": 158,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32574,19 +33200,31 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 71,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 1
     },
     "InterestIncomeExpenseNet": {
      "분기": 71,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 1
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 71,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 1
     },
     "NoninterestIncome": {
      "분기": 69,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 1
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 1
     }
    },
    "사라진회사_검색": {},
@@ -32598,7 +33236,7 @@
    "ticker": "NTRS",
    "adj_eps_ok": 0,
    "merged_direct": 2,
-   "seconds": 134.4,
+   "seconds": 210.6,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32693,23 +33331,37 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 8,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 10,
+     "새기간": 0
     },
     "InterestAndDividendIncomeOperating": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 3
     },
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 3
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 3
     },
     "NoninterestIncome": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 3
+    },
+    "_요약": {
+     "지금뼈대": 37,
+     "합집합_새기간": 3
     }
    },
    "사라진회사_검색": {},
@@ -32721,7 +33373,7 @@
    "ticker": "ALLY",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 472.7,
+   "seconds": 732.3,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32808,11 +33460,19 @@
    "은행개념_후보": {
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 42,
-     "연간": 15
+     "연간": 15,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 51,
-     "연간": 15
+     "연간": 15,
+     "채운뒤": 38,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -32824,7 +33484,7 @@
    "ticker": "DFS",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 6.0,
+   "seconds": 6.1,
    "cache_hits": 0,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32864,7 +33524,7 @@
    "ticker": "SYF",
    "adj_eps_ok": 2,
    "merged_direct": 2,
-   "seconds": 241.7,
+   "seconds": 407.3,
    "cache_hits": 200,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -32928,11 +33588,19 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 48,
-     "연간": 14
+     "연간": 14,
+     "채운뒤": 40,
+     "새기간": 6
     },
     "NoninterestIncome": {
      "분기": 40,
-     "연간": 14
+     "연간": 14,
+     "채운뒤": 40,
+     "새기간": 6
+    },
+    "_요약": {
+     "지금뼈대": 34,
+     "합집합_새기간": 6
     }
    },
    "사라진회사_검색": {},
@@ -32944,7 +33612,7 @@
    "ticker": "AMP",
    "adj_eps_ok": 34,
    "merged_direct": 0,
-   "seconds": 222.9,
+   "seconds": 470.4,
    "cache_hits": 82,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33035,7 +33703,13 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 35,
-     "연간": 10
+     "연간": 10,
+     "채운뒤": 38,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -33047,10 +33721,10 @@
    "ticker": "RJF",
    "adj_eps_ok": 31,
    "merged_direct": 0,
-   "seconds": 445.9,
+   "seconds": 643.3,
    "cache_hits": 160,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -33136,19 +33810,31 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 39,
-     "연간": 14
+     "연간": 14,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 49,
-     "연간": 17
+     "연간": 17,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseAfterProvisionForLoanLoss": {
      "분기": 49,
-     "연간": 17
+     "연간": 17,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 18,
-     "연간": 7
+     "연간": 7,
+     "채운뒤": 22,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -33160,7 +33846,7 @@
    "ticker": "LPLA",
    "adj_eps_ok": 14,
    "merged_direct": 0,
-   "seconds": 143.8,
+   "seconds": 214.9,
    "cache_hits": 79,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33248,7 +33934,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 32,
-     "연간": 12
+     "연간": 12,
+     "채운뒤": 18,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -33260,7 +33952,7 @@
    "ticker": "IBKR",
    "adj_eps_ok": 28,
    "merged_direct": 0,
-   "seconds": 96.2,
+   "seconds": 122.4,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33348,15 +34040,25 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 34,
-     "연간": 12
+     "연간": 12,
+     "채운뒤": 40,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 23,
-     "연간": 8
+     "연간": 8,
+     "채운뒤": 30,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 23,
-     "연간": 8
+     "연간": 8,
+     "채운뒤": 30,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -33368,7 +34070,7 @@
    "ticker": "COIN",
    "adj_eps_ok": 0,
    "merged_direct": 6,
-   "seconds": 231.9,
+   "seconds": 273.2,
    "cache_hits": 68,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33464,7 +34166,7 @@
    "ticker": "HOOD",
    "adj_eps_ok": 0,
    "merged_direct": 5,
-   "seconds": 233.6,
+   "seconds": 231.2,
    "cache_hits": 67,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33553,7 +34255,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 19,
-     "연간": 7
+     "연간": 7,
+     "채운뒤": 24,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 24,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -33565,7 +34273,7 @@
    "ticker": "SOFI",
    "adj_eps_ok": 7,
    "merged_direct": 3,
-   "seconds": 96.1,
+   "seconds": 185.5,
    "cache_hits": 83,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33654,15 +34362,25 @@
    "은행개념_후보": {
     "RevenuesNetOfInterestExpense": {
      "분기": 19,
-     "연간": 7
+     "연간": 7,
+     "채운뒤": 24,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 19,
-     "연간": 7
+     "연간": 7,
+     "채운뒤": 24,
+     "새기간": 0
     },
     "NoninterestIncome": {
      "분기": 19,
-     "연간": 7
+     "연간": 7,
+     "채운뒤": 24,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 24,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -33674,7 +34392,7 @@
    "ticker": "CB",
    "adj_eps_ok": 35,
    "merged_direct": 0,
-   "seconds": 129.7,
+   "seconds": 145.9,
    "cache_hits": 98,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33754,7 +34472,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 44,
-     "연간": 16
+     "연간": 16,
+     "채운뒤": 39,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -33766,7 +34490,7 @@
    "ticker": "HIG",
    "adj_eps_ok": 42,
    "merged_direct": 0,
-   "seconds": 154.7,
+   "seconds": 49.6,
    "cache_hits": 120,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33873,7 +34597,7 @@
    "ticker": "CINF",
    "adj_eps_ok": 22,
    "merged_direct": 24,
-   "seconds": 121.1,
+   "seconds": 70.0,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -33962,7 +34686,7 @@
    "ticker": "WRB",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 26.8,
+   "seconds": 23.2,
    "cache_hits": 85,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34054,7 +34778,7 @@
    "ticker": "AIZ",
    "adj_eps_ok": 20,
    "merged_direct": 6,
-   "seconds": 29.3,
+   "seconds": 36.6,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34149,7 +34873,7 @@
    "ticker": "GL",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 26.8,
+   "seconds": 30.6,
    "cache_hits": 104,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34250,7 +34974,7 @@
    "ticker": "L",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 23.9,
+   "seconds": 36.0,
    "cache_hits": 77,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34340,7 +35064,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 0,
-     "연간": 1
+     "연간": 1,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -34352,7 +35082,7 @@
    "ticker": "MKL",
    "adj_eps_ok": 0,
    "merged_direct": 4,
-   "seconds": 30.4,
+   "seconds": 15.1,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34447,7 +35177,7 @@
    "ticker": "AFG",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 30.9,
+   "seconds": 41.6,
    "cache_hits": 102,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34545,7 +35275,13 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 11,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -34557,7 +35293,7 @@
    "ticker": "ABT",
    "adj_eps_ok": 27,
    "merged_direct": 0,
-   "seconds": 22.7,
+   "seconds": 19.4,
    "cache_hits": 112,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34653,7 +35389,7 @@
    "ticker": "BDX",
    "adj_eps_ok": 34,
    "merged_direct": 1,
-   "seconds": 31.0,
+   "seconds": 23.0,
    "cache_hits": 133,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34760,7 +35496,7 @@
    "ticker": "BAX",
    "adj_eps_ok": 25,
    "merged_direct": 25,
-   "seconds": 53.9,
+   "seconds": 80.0,
    "cache_hits": 94,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34870,7 +35606,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 31,
-     "연간": 10
+     "연간": 10,
+     "채운뒤": 31,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -34882,7 +35624,7 @@
    "ticker": "EW",
    "adj_eps_ok": 27,
    "merged_direct": 3,
-   "seconds": 30.2,
+   "seconds": 64.3,
    "cache_hits": 81,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -34983,7 +35725,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 29,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 33,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -34995,7 +35743,7 @@
    "ticker": "IDXX",
    "adj_eps_ok": 1,
    "merged_direct": 2,
-   "seconds": 29.9,
+   "seconds": 40.1,
    "cache_hits": 92,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35112,10 +35860,10 @@
    "ticker": "RMD",
    "adj_eps_ok": 40,
    "merged_direct": 40,
-   "seconds": 50.7,
+   "seconds": 31.5,
    "cache_hits": 77,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -35221,7 +35969,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 15,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 14,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -35233,10 +35987,10 @@
    "ticker": "ALGN",
    "adj_eps_ok": 26,
    "merged_direct": 26,
-   "seconds": 26.6,
-   "cache_hits": 116,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 28.4,
+   "cache_hits": 117,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -35351,7 +36105,7 @@
    "ticker": "DXCM",
    "adj_eps_ok": 31,
    "merged_direct": 31,
-   "seconds": 22.8,
+   "seconds": 45.9,
    "cache_hits": 92,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35466,7 +36220,7 @@
    "ticker": "PODD",
    "adj_eps_ok": 4,
    "merged_direct": 16,
-   "seconds": 45.4,
+   "seconds": 100.1,
    "cache_hits": 122,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35573,11 +36327,19 @@
    "은행개념_후보": {
     "InterestAndDividendIncomeOperating": {
      "분기": 14,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 18,
+     "새기간": 0
     },
     "InterestIncomeExpenseNet": {
      "분기": 14,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 18,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -35613,7 +36375,7 @@
    "ticker": "STE",
    "adj_eps_ok": 32,
    "merged_direct": 1,
-   "seconds": 67.8,
+   "seconds": 123.6,
    "cache_hits": 63,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35720,7 +36482,7 @@
    "ticker": "WAT",
    "adj_eps_ok": 32,
    "merged_direct": 1,
-   "seconds": 100.6,
+   "seconds": 183.5,
    "cache_hits": 86,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35816,7 +36578,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 6,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 8,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 63,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -35828,7 +36596,7 @@
    "ticker": "MTD",
    "adj_eps_ok": 41,
    "merged_direct": 40,
-   "seconds": 49.5,
+   "seconds": 103.8,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -35923,7 +36691,7 @@
    "ticker": "WST",
    "adj_eps_ok": 0,
    "merged_direct": 30,
-   "seconds": 130.6,
+   "seconds": 266.7,
    "cache_hits": 74,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36039,7 +36807,7 @@
    "ticker": "TMO",
    "adj_eps_ok": 32,
    "merged_direct": 31,
-   "seconds": 97.1,
+   "seconds": 161.5,
    "cache_hits": 103,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36145,8 +36913,8 @@
   {
    "ticker": "DHR",
    "adj_eps_ok": 29,
-   "merged_direct": 4,
-   "seconds": 96.4,
+   "merged_direct": 3,
+   "seconds": 99.9,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36257,7 +37025,7 @@
    "ticker": "ZTS",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 73.8,
+   "seconds": 90.7,
    "cache_hits": 61,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36346,10 +37114,10 @@
    "ticker": "JAZZ",
    "adj_eps_ok": 29,
    "merged_direct": 2,
-   "seconds": 91.6,
-   "cache_hits": 91,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 122.8,
+   "cache_hits": 92,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -36450,10 +37218,10 @@
    "ticker": "INCY",
    "adj_eps_ok": 34,
    "merged_direct": 27,
-   "seconds": 39.4,
-   "cache_hits": 93,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 44.5,
+   "cache_hits": 94,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -36552,10 +37320,10 @@
    "ticker": "EXEL",
    "adj_eps_ok": 31,
    "merged_direct": 2,
-   "seconds": 62.4,
-   "cache_hits": 98,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 32.7,
+   "cache_hits": 99,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -36650,7 +37418,7 @@
    "ticker": "NBIX",
    "adj_eps_ok": 26,
    "merged_direct": 44,
-   "seconds": 31.6,
+   "seconds": 30.5,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36759,7 +37527,7 @@
    "ticker": "ALNY",
    "adj_eps_ok": 33,
    "merged_direct": 8,
-   "seconds": 27.5,
+   "seconds": 47.9,
    "cache_hits": 95,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -36858,10 +37626,10 @@
    "ticker": "BMRN",
    "adj_eps_ok": 16,
    "merged_direct": 10,
-   "seconds": 46.9,
+   "seconds": 49.9,
    "cache_hits": 98,
-   "cache_downloads": 0,
-   "fetch_attempts": 0,
+   "cache_downloads": 1,
+   "fetch_attempts": 1,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -36967,7 +37735,7 @@
    "ticker": "UTHR",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 57.0,
+   "seconds": 89.2,
    "cache_hits": 131,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37082,8 +37850,8 @@
   {
    "ticker": "VTRS",
    "adj_eps_ok": 11,
-   "merged_direct": 23,
-   "seconds": 68.6,
+   "merged_direct": 24,
+   "seconds": 83.5,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37190,7 +37958,7 @@
    "ticker": "IQV",
    "adj_eps_ok": 40,
    "merged_direct": 39,
-   "seconds": 55.1,
+   "seconds": 80.6,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37291,7 +38059,7 @@
    "ticker": "CRL",
    "adj_eps_ok": 28,
    "merged_direct": 17,
-   "seconds": 66.9,
+   "seconds": 331.1,
    "cache_hits": 91,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37398,7 +38166,7 @@
    "ticker": "GD",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 247.7,
+   "seconds": 333.5,
    "cache_hits": 77,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37497,7 +38265,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 54,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 39,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -37509,7 +38283,7 @@
    "ticker": "NOC",
    "adj_eps_ok": 34,
    "merged_direct": 3,
-   "seconds": 245.4,
+   "seconds": 316.9,
    "cache_hits": 114,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37618,7 +38392,7 @@
    "ticker": "LHX",
    "adj_eps_ok": 20,
    "merged_direct": 11,
-   "seconds": 244.3,
+   "seconds": 310.0,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37732,7 +38506,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 25,
-     "연간": 6
+     "연간": 6,
+     "채운뒤": 27,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 37,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -37744,7 +38524,7 @@
    "ticker": "TDG",
    "adj_eps_ok": 24,
    "merged_direct": 0,
-   "seconds": 239.9,
+   "seconds": 301.5,
    "cache_hits": 116,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37853,7 +38633,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 48,
-     "연간": 16
+     "연간": 16,
+     "채운뒤": 34,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -37865,7 +38651,7 @@
    "ticker": "HWM",
    "adj_eps_ok": 12,
    "merged_direct": 19,
-   "seconds": 230.8,
+   "seconds": 356.5,
    "cache_hits": 131,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -37966,7 +38752,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 2,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 2,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -37978,7 +38770,7 @@
    "ticker": "TXT",
    "adj_eps_ok": 18,
    "merged_direct": 2,
-   "seconds": 222.5,
+   "seconds": 33.9,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38070,7 +38862,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 28,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 17,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 38,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -38082,7 +38880,7 @@
    "ticker": "RTX",
    "adj_eps_ok": 32,
    "merged_direct": 31,
-   "seconds": 31.9,
+   "seconds": 39.8,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38182,7 +38980,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 13,
-     "연간": 4
+     "연간": 4,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -38194,7 +38998,7 @@
    "ticker": "BAH",
    "adj_eps_ok": 33,
    "merged_direct": 14,
-   "seconds": 122.0,
+   "seconds": 89.8,
    "cache_hits": 61,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38298,7 +39102,7 @@
    "ticker": "LDOS",
    "adj_eps_ok": 26,
    "merged_direct": 25,
-   "seconds": 29.6,
+   "seconds": 48.8,
    "cache_hits": 66,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38396,7 +39200,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 22,
-     "연간": 8
+     "연간": 8,
+     "채운뒤": 28,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 38,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -38408,7 +39218,7 @@
    "ticker": "URI",
    "adj_eps_ok": 35,
    "merged_direct": 2,
-   "seconds": 26.7,
+   "seconds": 30.2,
    "cache_hits": 126,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38518,7 +39328,7 @@
    "ticker": "FAST",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 22.3,
+   "seconds": 58.5,
    "cache_hits": 90,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38627,7 +39437,7 @@
    "ticker": "GWW",
    "adj_eps_ok": 27,
    "merged_direct": 0,
-   "seconds": 22.5,
+   "seconds": 31.6,
    "cache_hits": 84,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38735,7 +39545,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 23,
-     "연간": 8
+     "연간": 8,
+     "채운뒤": 29,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -38747,7 +39563,7 @@
    "ticker": "SWK",
    "adj_eps_ok": 19,
    "merged_direct": 5,
-   "seconds": 64.1,
+   "seconds": 44.6,
    "cache_hits": 117,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38838,7 +39654,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 7,
-     "연간": 2
+     "연간": 2,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 38,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -38850,7 +39672,7 @@
    "ticker": "DOV",
    "adj_eps_ok": 34,
    "merged_direct": 1,
-   "seconds": 67.4,
+   "seconds": 81.8,
    "cache_hits": 73,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -38959,7 +39781,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 0,
-     "연간": 3
+     "연간": 3,
+     "채운뒤": 0,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -38971,7 +39799,7 @@
    "ticker": "ROK",
    "adj_eps_ok": 36,
    "merged_direct": 2,
-   "seconds": 43.9,
+   "seconds": 62.1,
    "cache_hits": 89,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39086,7 +39914,7 @@
    "ticker": "AME",
    "adj_eps_ok": 32,
    "merged_direct": 12,
-   "seconds": 38.4,
+   "seconds": 51.6,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39193,7 +40021,7 @@
    "ticker": "XYL",
    "adj_eps_ok": 28,
    "merged_direct": 21,
-   "seconds": 51.1,
+   "seconds": 77.3,
    "cache_hits": 63,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39304,7 +40132,7 @@
    "ticker": "IEX",
    "adj_eps_ok": 36,
    "merged_direct": 27,
-   "seconds": 49.9,
+   "seconds": 126.2,
    "cache_hits": 92,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39427,7 +40255,7 @@
    "ticker": "PNR",
    "adj_eps_ok": 24,
    "merged_direct": 9,
-   "seconds": 25.1,
+   "seconds": 46.7,
    "cache_hits": 87,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39523,7 +40351,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 41,
-     "연간": 14
+     "연간": 14,
+     "채운뒤": 36,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 39,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -39535,7 +40369,7 @@
    "ticker": "WAB",
    "adj_eps_ok": 34,
    "merged_direct": 15,
-   "seconds": 79.5,
+   "seconds": 116.3,
    "cache_hits": 96,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39644,7 +40478,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 36,
-     "연간": 11
+     "연간": 11,
+     "채운뒤": 16,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -39656,7 +40496,7 @@
    "ticker": "JCI",
    "adj_eps_ok": 35,
    "merged_direct": 6,
-   "seconds": 46.2,
+   "seconds": 39.5,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39773,7 +40613,7 @@
    "ticker": "CARR",
    "adj_eps_ok": 26,
    "merged_direct": 26,
-   "seconds": 25.5,
+   "seconds": 34.7,
    "cache_hits": 88,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39871,7 +40711,7 @@
    "ticker": "OTIS",
    "adj_eps_ok": 26,
    "merged_direct": 26,
-   "seconds": 24.3,
+   "seconds": 30.7,
    "cache_hits": 61,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -39962,7 +40802,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 15,
-     "연간": 6
+     "연간": 6,
+     "채운뒤": 19,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 30,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -39974,7 +40820,7 @@
    "ticker": "TT",
    "adj_eps_ok": 0,
    "merged_direct": 36,
-   "seconds": 44.8,
+   "seconds": 27.6,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -40085,7 +40931,7 @@
    "ticker": "LIN",
    "adj_eps_ok": 26,
    "merged_direct": 30,
-   "seconds": 31.7,
+   "seconds": 47.9,
    "cache_hits": 80,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -40182,7 +41028,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 14,
-     "연간": 6
+     "연간": 6,
+     "채운뒤": 18,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 38,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -40194,7 +41046,7 @@
    "ticker": "DD",
    "adj_eps_ok": 31,
    "merged_direct": 0,
-   "seconds": 52.7,
+   "seconds": 52.1,
    "cache_hits": 89,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -40292,7 +41144,7 @@
    "ticker": "DOW",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 65.3,
+   "seconds": 69.3,
    "cache_hits": 93,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -40390,7 +41242,7 @@
    "ticker": "CE",
    "adj_eps_ok": 22,
    "merged_direct": 0,
-   "seconds": 44.8,
+   "seconds": 51.3,
    "cache_hits": 66,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -40500,7 +41352,7 @@
    "ticker": "EMN",
    "adj_eps_ok": 29,
    "merged_direct": 0,
-   "seconds": 20.9,
+   "seconds": 23.2,
    "cache_hits": 72,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -40603,7 +41455,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 55,
-     "연간": 19
+     "연간": 19,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -40615,7 +41473,7 @@
    "ticker": "MOS",
    "adj_eps_ok": 35,
    "merged_direct": 4,
-   "seconds": 24.7,
+   "seconds": 43.3,
    "cache_hits": 108,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -40710,7 +41568,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 50,
-     "연간": 10
+     "연간": 10,
+     "채운뒤": 40,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -40722,7 +41586,7 @@
    "ticker": "CF",
    "adj_eps_ok": 20,
    "merged_direct": 0,
-   "seconds": 33.3,
+   "seconds": 66.0,
    "cache_hits": 73,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -40836,7 +41700,7 @@
    "ticker": "FMC",
    "adj_eps_ok": 25,
    "merged_direct": 4,
-   "seconds": 56.7,
+   "seconds": 27.4,
    "cache_hits": 97,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -40949,7 +41813,7 @@
    "ticker": "IFF",
    "adj_eps_ok": 32,
    "merged_direct": 14,
-   "seconds": 72.8,
+   "seconds": 42.2,
    "cache_hits": 113,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -41061,7 +41925,7 @@
    "ticker": "AVY",
    "adj_eps_ok": 40,
    "merged_direct": 38,
-   "seconds": 33.3,
+   "seconds": 128.2,
    "cache_hits": 101,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -41170,10 +42034,10 @@
    "ticker": "PKG",
    "adj_eps_ok": 0,
    "merged_direct": 3,
-   "seconds": 70.1,
-   "cache_hits": 81,
-   "cache_downloads": 1,
-   "fetch_attempts": 1,
+   "seconds": 26.0,
+   "cache_hits": 82,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -41277,7 +42141,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 26,
-     "연간": 9
+     "연간": 9,
+     "채운뒤": 34,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -41289,7 +42159,7 @@
    "ticker": "IP",
    "adj_eps_ok": 19,
    "merged_direct": 4,
-   "seconds": 18.0,
+   "seconds": 27.5,
    "cache_hits": 71,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -41373,7 +42243,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 40,
-     "연간": 12
+     "연간": 12,
+     "채운뒤": 28,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -41385,7 +42261,7 @@
    "ticker": "BALL",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 25.1,
+   "seconds": 27.1,
    "cache_hits": 69,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -41493,7 +42369,7 @@
    "ticker": "STLD",
    "adj_eps_ok": 8,
    "merged_direct": 26,
-   "seconds": 15.0,
+   "seconds": 45.2,
    "cache_hits": 123,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -41609,8 +42485,8 @@
   {
    "ticker": "CLF",
    "adj_eps_ok": 11,
-   "merged_direct": 2,
-   "seconds": 17.0,
+   "merged_direct": 1,
+   "seconds": 46.3,
    "cache_hits": 114,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -41719,7 +42595,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 17,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 6,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -41731,7 +42613,7 @@
    "ticker": "X",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 6.0,
+   "seconds": 6.2,
    "cache_hits": 0,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -41771,7 +42653,7 @@
    "ticker": "RS",
    "adj_eps_ok": 39,
    "merged_direct": 0,
-   "seconds": 45.4,
+   "seconds": 35.3,
    "cache_hits": 68,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -41873,10 +42755,10 @@
    "ticker": "DVN",
    "adj_eps_ok": 8,
    "merged_direct": 1,
-   "seconds": 81.9,
-   "cache_hits": 104,
-   "cache_downloads": 6,
-   "fetch_attempts": 6,
+   "seconds": 142.4,
+   "cache_hits": 110,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -41975,10 +42857,10 @@
    "ticker": "FANG",
    "adj_eps_ok": 33,
    "merged_direct": 32,
-   "seconds": 151.7,
-   "cache_hits": 86,
-   "cache_downloads": 48,
-   "fetch_attempts": 48,
+   "seconds": 107.6,
+   "cache_hits": 134,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -42065,7 +42947,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 8,
-     "연간": 5
+     "연간": 5,
+     "채운뒤": 6,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -42077,7 +42965,7 @@
    "ticker": "HES",
    "adj_eps_ok": 0,
    "merged_direct": 0,
-   "seconds": 6.0,
+   "seconds": 6.2,
    "cache_hits": 0,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -42117,7 +43005,7 @@
    "ticker": "APA",
    "adj_eps_ok": 0,
    "merged_direct": 22,
-   "seconds": 43.6,
+   "seconds": 53.5,
    "cache_hits": 62,
    "cache_downloads": 0,
    "fetch_attempts": 0,
@@ -42199,10 +43087,10 @@
    "ticker": "OKE",
    "adj_eps_ok": 0,
    "merged_direct": 25,
-   "seconds": 89.4,
-   "cache_hits": 188,
-   "cache_downloads": 12,
-   "fetch_attempts": 12,
+   "seconds": 119.0,
+   "cache_hits": 200,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -42312,10 +43200,10 @@
    "ticker": "WMB",
    "adj_eps_ok": 35,
    "merged_direct": 35,
-   "seconds": 145.4,
-   "cache_hits": 76,
-   "cache_downloads": 35,
-   "fetch_attempts": 35,
+   "seconds": 110.9,
+   "cache_hits": 111,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -42419,10 +43307,10 @@
    "ticker": "TRGP",
    "adj_eps_ok": 0,
    "merged_direct": 34,
-   "seconds": 107.8,
-   "cache_hits": 85,
-   "cache_downloads": 55,
-   "fetch_attempts": 55,
+   "seconds": 66.9,
+   "cache_hits": 140,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -42520,7 +43408,13 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 9,
-     "연간": 6
+     "연간": 6,
+     "채운뒤": 6,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
@@ -42532,10 +43426,10 @@
    "ticker": "LNG",
    "adj_eps_ok": 0,
    "merged_direct": 28,
-   "seconds": 126.1,
-   "cache_hits": 108,
-   "cache_downloads": 66,
-   "fetch_attempts": 66,
+   "seconds": 71.8,
+   "cache_hits": 174,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -42625,10 +43519,10 @@
    "ticker": "BKR",
    "adj_eps_ok": 33,
    "merged_direct": 33,
-   "seconds": 121.7,
-   "cache_hits": 52,
-   "cache_downloads": 52,
-   "fetch_attempts": 52,
+   "seconds": 47.2,
+   "cache_hits": 104,
+   "cache_downloads": 0,
+   "fetch_attempts": 0,
    "negative_cached": 0,
    "negative_hits": 0,
    "first_error": "",
@@ -42720,13 +43614,219 @@
    "은행개념_후보": {
     "InterestIncomeExpenseNet": {
      "분기": 28,
-     "연간": 11
+     "연간": 11,
+     "채운뒤": 36,
+     "새기간": 0
+    },
+    "_요약": {
+     "지금뼈대": 40,
+     "합집합_새기간": 0
     }
    },
    "사라진회사_검색": {},
    "회사번호로_열었음": null,
    "시간초과": false,
    "note": "실적 44건 확보 후 조기 종료"
+  },
+  {
+   "ticker": "IREN",
+   "adj_eps_ok": 0,
+   "merged_direct": 1,
+   "seconds": 22.1,
+   "cache_hits": 0,
+   "cache_downloads": 31,
+   "fetch_attempts": 31,
+   "negative_cached": 0,
+   "negative_hits": 0,
+   "first_error": "",
+   "xbrl_calls": [
+    "OperatingIncomeLoss(3개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
+    "OperatingIncomeLoss(12개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 4 · 본이름 ['operatingincomeloss'] · 본단위 ['USD']",
+    "ShareBasedCompensation(3개월): 받음 36 · 이름버림 34 · 단위버림 0 · 모호 0 · 남음 2 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpense', 'sharebasedcompensation'] · 본단위 ['USD']",
+    "AllocatedShareBasedCompensationExpense(3개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
+    "ShareBasedCompensation(12개월): 받음 45 · 이름버림 39 · 단위버림 0 · 모호 0 · 남음 4 · 본이름 ['adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue', 'allocatedsharebasedcompensationexpense', 'effectiveincometaxratereconciliationnondeductibleexpensesharebasedcompensationcost'] · 본단위 ['USD']",
+    "AllocatedShareBasedCompensationExpense(12개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 4 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['USD']",
+    "DepreciationDepletionAndAmortization(3개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
+    "DepreciationDepletionAndAmortization(12개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 4 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['USD']",
+    "AmortizationOfIntangibleAssets(3개월): 받음 4 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 4 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
+    "AmortizationOfIntangibleAssets(12개월): 받음 3 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 3 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['USD']",
+    "RevenueFromContractWithCustomerExcludingAssessedTax(3개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
+    "RevenueFromContractWithCustomerExcludingAssessedTax(12개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 4 · 본이름 ['revenuefromcontractwithcustomerexcludingassessedtax'] · 본단위 ['USD']",
+    "Revenues(12개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 4 · 본이름 ['revenues'] · 본단위 ['USD']",
+    "EarningsPerShareDiluted(3개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 6 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']",
+    "EarningsPerShareDiluted(12개월): 받음 6 · 이름버림 0 · 단위버림 0 · 모호 0 · 남음 4 · 본이름 ['earningspersharediluted'] · 본단위 ['USD PER SHARE']"
+   ],
+   "xbrl_rejected": 73,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 8,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
+   "q4_채움": {
+    "op_income": {
+     "연간수": 4,
+     "분기수": 6,
+     "앞선세분기부족": 2,
+     "못채운예": [
+      "2023-06-30",
+      "2024-06-30"
+     ],
+     "채움": 2
+    },
+    "sbc": {
+     "연간수": 4,
+     "분기수": 6,
+     "앞선세분기부족": 2,
+     "못채운예": [
+      "2023-06-30",
+      "2024-06-30"
+     ],
+     "채움": 2
+    },
+    "depreciation_amortization": {
+     "연간수": 4,
+     "분기수": 6,
+     "앞선세분기부족": 2,
+     "못채운예": [
+      "2023-06-30",
+      "2024-06-30"
+     ],
+     "채움": 2
+    },
+    "amortization": {
+     "연간수": 3,
+     "분기수": 4,
+     "앞선세분기부족": 3,
+     "못채운예": [
+      "2024-06-30",
+      "2025-06-30",
+      "2026-06-30"
+     ]
+    },
+    "revenue": {
+     "연간수": 4,
+     "분기수": 6,
+     "앞선세분기부족": 2,
+     "못채운예": [
+      "2023-06-30",
+      "2024-06-30"
+     ],
+     "채움": 2
+    },
+    "gross_profit": {
+     "연간수": 0,
+     "분기수": 0,
+     "연간없음": 1
+    }
+   },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
+   "시간초과": false,
+   "note": ""
+  },
+  {
+   "ticker": "NBIS",
+   "adj_eps_ok": 0,
+   "merged_direct": 38,
+   "seconds": 88.9,
+   "cache_hits": 0,
+   "cache_downloads": 112,
+   "fetch_attempts": 112,
+   "negative_cached": 0,
+   "negative_hits": 0,
+   "first_error": "[press_releases] ReadTimeout: The read operation timed out",
+   "xbrl_calls": [
+    "OperatingIncomeLoss(12개월): 받음 58 · 이름버림 0 · 단위버림 39 · 모호 3 · 남음 12 · 본이름 ['operatingincomeloss'] · 본단위 ['RUB', 'USD']",
+    "ShareBasedCompensation(12개월): 받음 268 · 이름버림 210 · 단위버림 39 · 모호 2 · 남음 13 · 본이름 ['adjustmentsrelatedtotaxwithholdingforsharebasedcompensation', 'adjustmentstoadditionalpaidincapitalsharebasedcompensationstockoptionsrequisiteserviceperiodrecognition', 'adjustmentstoadditionalpaidincapitalsharebasedcompensationrequisiteserviceperiodrecognitionvalue'] · 본단위 ['RUB', 'USD']",
+    "AllocatedShareBasedCompensationExpense(12개월): 받음 55 · 이름버림 0 · 단위버림 36 · 모호 0 · 남음 14 · 본이름 ['allocatedsharebasedcompensationexpense'] · 본단위 ['RUB', 'USD']",
+    "DepreciationDepletionAndAmortization(12개월): 받음 16 · 이름버림 0 · 단위버림 12 · 모호 0 · 남음 4 · 본이름 ['depreciationdepletionandamortization'] · 본단위 ['RUB', 'USD']",
+    "DepreciationAndAmortization(12개월): 받음 58 · 이름버림 0 · 단위버림 39 · 모호 2 · 남음 13 · 본이름 ['depreciationandamortization'] · 본단위 ['RUB', 'USD']",
+    "AmortizationOfIntangibleAssets(12개월): 받음 58 · 이름버림 0 · 단위버림 39 · 모호 2 · 남음 13 · 본이름 ['amortizationofintangibleassets'] · 본단위 ['RUB', 'USD']",
+    "Revenues(12개월): 받음 58 · 이름버림 0 · 단위버림 39 · 모호 2 · 남음 13 · 본이름 ['revenues'] · 본단위 ['RUB', 'USD']",
+    "RevenueFromContractWithCustomerIncludingAssessedTax(12개월): 받음 20 · 이름버림 0 · 단위버림 15 · 모호 0 · 남음 5 · 본이름 ['revenuefromcontractwithcustomerincludingassessedtax'] · 본단위 ['RUB', 'USD']",
+    "EarningsPerShareDiluted(12개월): 받음 58 · 이름버림 0 · 단위버림 0 · 모호 13 · 남음 4 · 본이름 ['earningspersharediluted'] · 본단위 ['RUB/SHARES', 'USD PER SHARE']"
+   ],
+   "xbrl_rejected": 468,
+   "xbrl_orphan": {
+    "분기목록(영업이익 기준)": 0,
+    "revenue": 0,
+    "gaap_eps": 0,
+    "gross_profit": 0
+   },
+   "q4_채움": {
+    "op_income": {
+     "연간수": 12,
+     "분기수": 0,
+     "앞선세분기부족": 12,
+     "못채운예": [
+      "2011-12-31",
+      "2012-12-31",
+      "2013-12-31",
+      "2014-12-31",
+      "2015-12-31"
+     ]
+    },
+    "sbc": {
+     "연간수": 15,
+     "분기수": 0,
+     "앞선세분기부족": 15,
+     "못채운예": [
+      "2011-12-31",
+      "2012-12-31",
+      "2013-12-31",
+      "2014-12-31",
+      "2015-12-31"
+     ]
+    },
+    "depreciation_amortization": {
+     "연간수": 13,
+     "분기수": 0,
+     "앞선세분기부족": 13,
+     "못채운예": [
+      "2011-12-31",
+      "2012-12-31",
+      "2013-12-31",
+      "2014-12-31",
+      "2015-12-31"
+     ]
+    },
+    "amortization": {
+     "연간수": 13,
+     "분기수": 0,
+     "앞선세분기부족": 13,
+     "못채운예": [
+      "2011-12-31",
+      "2012-12-31",
+      "2013-12-31",
+      "2014-12-31",
+      "2015-12-31"
+     ]
+    },
+    "revenue": {
+     "연간수": 14,
+     "분기수": 0,
+     "앞선세분기부족": 14,
+     "못채운예": [
+      "2011-12-31",
+      "2012-12-31",
+      "2013-12-31",
+      "2014-12-31",
+      "2015-12-31"
+     ]
+    },
+    "gross_profit": {
+     "연간수": 0,
+     "분기수": 0,
+     "연간없음": 1
+    }
+   },
+   "은행개념_후보": {},
+   "사라진회사_검색": {},
+   "회사번호로_열었음": null,
+   "시간초과": true,
+   "note": "수집 시간 예산 초과 — 새 내려받기는 다음 런으로 미루고 캐시된 원문만 읽었습니다 (실적 38건 시점)"
   }
  ]
 }
