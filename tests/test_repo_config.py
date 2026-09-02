@@ -125,6 +125,23 @@ def test_발견종목은_유니버스_안에_있고_판정에서_빠진다():
     assert len(cfg.MEASURE_DISCOVERY_TICKERS) == 29
 
 
+def test_6차확장_종목과_6K_종목은_유니버스_안에_있다():
+    """166차 — IREN·NBIS 를 넣었다. 6-K 훑기 표에 적힌 종목이 유니버스에
+    없으면 로봇은 그 표를 영영 쓰지 않고, 반대로 NBIS 가 그 표에서 빠지면
+    8-K 만 훑어 0칸으로 남는다(159차 사고 꼴). 둘 다 시험이 센다."""
+    import config as cfg
+
+    assert set(cfg._V6_NEW) == {"IREN", "NBIS"}
+    for t in cfg._V6_NEW:
+        assert t in cfg.TICKERS, f"{t} 가 유니버스에 없습니다"
+        assert t in cfg.SECTORS and t in cfg.GROUPS and t in cfg.THEMES, t
+        assert t not in cfg.UNIVERSE_V5_NEW, f"{t} 는 H26 표본(5차)에 들어가면 안 됩니다"
+    assert "NBIS" in cfg.FPI_6K_TICKERS, "NBIS 는 6-K 로 실적을 알립니다"
+    assert "IREN" not in cfg.FPI_6K_TICKERS, "IREN 은 2025-07 부터 8-K 를 냅니다"
+    빠진 = [t for t in cfg.FPI_6K_TICKERS if t not in cfg.TICKERS]
+    assert not 빠진, f"6-K 표에만 있고 유니버스에 없는 종목: {빠진}"
+
+
 
 
 # ---------------------------------------------------------------------------

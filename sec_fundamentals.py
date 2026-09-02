@@ -2682,7 +2682,12 @@ def fetch_earnings_8k(
 
     quarters: list[dict] = []
     company = _회사(ticker, report)
-    filings = company.get_filings(form="8-K", filing_date=f"{start_date}:")
+    # 외국 회사(config.FPI_6K_TICKERS)는 실적을 8-K 가 아니라 **6-K** 로
+    # 알립니다. 8-K 만 훑으면 한 건도 못 찾아 종목이 조용히 0칸으로
+    # 남습니다(159차 사고와 같은 꼴). 이런 종목만 두 서식을 함께 훑고,
+    # 아래 실적 판별(설명회 자료·표지 검사 등)은 서식과 무관하게 같습니다.
+    form = ["8-K", "6-K"] if ticker in cfg.FPI_6K_TICKERS else "8-K"
+    filings = company.get_filings(form=form, filing_date=f"{start_date}:")
 
     scanned = 0
     for filing in filings:

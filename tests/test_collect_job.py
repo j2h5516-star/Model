@@ -579,6 +579,41 @@ def test_음성캐시_적중은_따로_센다():
         assert 칸 in 로봇, f"로봇 기록에 {칸} 가 없습니다"
 
 
+def test_6K_종목은_8K와_6K를_함께_훑고_나머지는_8K만_훑는다():
+    """166차 — NBIS 처럼 6-K 로 실적을 내는 외국 회사는 8-K 만 훑으면
+    영영 0칸이다. 가짜 회사를 물려 get_filings 에 **어떤 서식을 넘기는지**
+    직접 본다(코드 경로가 실제로 실행됨을 증명 — CLAUDE.md 4장)."""
+    import sys
+    import types
+    sf = cj.sf
+    받은서식 = {}
+
+    class _가짜회사:
+        def __init__(self, ticker):
+            self.ticker = ticker
+
+        def get_filings(self, **kw):
+            받은서식[self.ticker] = kw.get("form")
+            return []
+
+    가짜edgar = types.ModuleType("edgar")
+    가짜edgar.Company = _가짜회사
+    옛edgar = sys.modules.get("edgar")
+    옛신원 = sf._ensure_identity
+    sys.modules["edgar"] = 가짜edgar
+    sf._ensure_identity = lambda: None
+    try:
+        sf.fetch_earnings_8k("NBIS", start_date="2016-09-15", report=sf.new_report("NBIS"))
+        sf.fetch_earnings_8k("IREN", start_date="2016-09-15", report=sf.new_report("IREN"))
+    finally:
+        sf._ensure_identity = 옛신원
+        if 옛edgar is not None:
+            sys.modules["edgar"] = 옛edgar
+        else:
+            sys.modules.pop("edgar", None)
+    assert 받은서식["NBIS"] == ["8-K", "6-K"], 받은서식
+    assert 받은서식["IREN"] == "8-K", 받은서식
+
 
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]

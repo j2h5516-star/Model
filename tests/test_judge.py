@@ -591,8 +591,18 @@ def test_새_종목_목록은_탐색_종목과_겹치지_않는다():
     새 = list(getattr(cfg, "UNIVERSE_V5_NEW", ()))
     if not 새:
         return                                  # 확장 전에는 검사할 것이 없음
-    앞 = cfg.TICKERS[:len(cfg.TICKERS) - len(새)]
-    assert cfg.TICKERS[len(앞):] == 새, \
+    # 166차: 6차 확장(_V6_NEW)이 5차 **뒤에** 또 붙습니다. 그 꼬리를 먼저
+    # 떼어 내야 5차가 "맨 뒤"가 됩니다 — 6차 종목도 5차(H26 표본)에
+    # 섞이면 안 되므로 그것도 함께 봅니다.
+    전체 = list(cfg.TICKERS)
+    육차 = list(getattr(cfg, "_V6_NEW", ()))
+    if 육차:
+        assert 전체[len(전체) - len(육차):] == 육차, \
+            "6차 종목이 목록 맨 뒤에 붙어 있지 않습니다 — 이 시험의 전제가 깨졌습니다"
+        전체 = 전체[:len(전체) - len(육차)]
+        assert not set(육차) & set(새), "6차 종목이 H26 표본(5차)에 섞였습니다"
+    앞 = 전체[:len(전체) - len(새)]
+    assert 전체[len(앞):] == 새, \
         "새 종목이 목록 맨 뒤에 붙어 있지 않습니다 — 이 시험의 전제가 깨졌습니다"
     겹침 = sorted(set(새) & set(앞))
     assert not 겹침, f"탐색에 쓴 종목이 새 종목 목록에 있습니다: {겹침}"
