@@ -133,6 +133,7 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
     # 이라 벽시계가 아닙니다. 둘을 함께 남겨야 병렬이 실제로 먹혔는지
     # 알 수 있습니다.
     수집시작 = time.monotonic()
+    sf.reset_cooling()                      # 170차 — 런마다 SEC 429 냉각 상태를 비움
     reports = collect_fundamentals(tickers, progress)
     수집벽시계 = round(time.monotonic() - 수집시작, 1)
     일감합 = round(sum(r.get("seconds") or 0 for r in reports), 1)

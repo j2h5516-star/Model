@@ -2724,6 +2724,7 @@ def fetch_earnings_8k(
         scanned += 1
         report["filings_found"] += 1
 
+        _wait_if_cooling()                  # 170차 — SEC 429 냉각 중이면 내려받기도 멈춤
         text, text_source, had_exhibit = _earnings_text_cached(ticker, filing, report)
         if not text:
             continue
@@ -3219,8 +3220,78 @@ def _pick_close_value(unique: list[float], per_share: bool) -> float | None:
     return None
 
 
+# ---------------------------------------------------------------------------
+# SEC 429(요청 과다) 냉각 — 170차 (2026-09-02 런 #66 실측)
+# ---------------------------------------------------------------------------
+# 그날 런은 20번째 종목(ANET)에서 SEC 가 429 를 냈고, 그 뒤 **378종목이
+# 7분 동안 전부 429** 로 흘러갔다. 재시도가 2초·4초뿐이라 차단이 풀리기
+# 전에 다음 종목으로 넘어가고, 일꾼 6개가 차단된 채 계속 두드려 차단을
+# 연장시켰다(SEC 안내: "약 10분 기다리라"). 안전판(절반 이상 실패 → 덮어쓰지
+# 않음)은 작동했지만 하루치를 통째로 잃었다.
+#
+# 고침: 429 를 보면 **모든 일꾼이 함께** SEC_COOL_SECONDS 동안 멈춘 뒤
+# 한 번 더 시도한다. 냉각 중에는 8-K 내려받기도 시작하지 않는다. 냉각은
+# 런당 최대 SEC_COOL_MAX 번 — 그래도 429 면 그 종목은 오류로 남기고
+# 다음으로 간다(계기에 남음). 새 데이터를 만들지 않는다 — 기다릴 뿐.
+SEC_COOL_SECONDS = 600.0     # SEC 안내 "~10분"
+SEC_COOL_MAX = 3             # 런당 냉각 횟수 상한 (3 × 10분 = 30분, 예산 350분 안)
+_cool_until = 0.0            # 이 시각(monotonic)까지 SEC 요청을 보내지 않음
+_cool_count = 0
+_cool_lock = threading.Lock()
+
+
+def _is_rate_limited(exc: BaseException) -> bool:
+    name = type(exc).__name__
+    text = str(exc)
+    return "TooManyRequests" in name or "429" in text or "Rate Limit" in text
+
+
+def _wait_if_cooling(sleeper=None, now=None) -> float:
+    """냉각 중이면 남은 시간만큼 기다립니다. 기다린 초를 돌려줍니다(계기용)."""
+    import time as _time
+    sleeper = sleeper or _time.sleep
+    now = now or _time.monotonic
+    remaining = _cool_until - now()
+    if remaining > 0:
+        sleeper(remaining)
+        return remaining
+    return 0.0
+
+
+def _start_cooling(now=None) -> bool:
+    """429 를 본 일꾼이 부릅니다. 이미 냉각 중이면 연장하지 않고 False.
+
+    상한(SEC_COOL_MAX)을 넘으면 False — 더는 기다리지 않는다.
+    """
+    global _cool_until, _cool_count
+    import time as _time
+    now = now or _time.monotonic
+    with _cool_lock:
+        if _cool_until > now():
+            return False
+        if _cool_count >= SEC_COOL_MAX:
+            return False
+        _cool_count += 1
+        _cool_until = now() + SEC_COOL_SECONDS
+        return True
+
+
+def _cooling_active(now=None) -> bool:
+    import time as _time
+    now = now or _time.monotonic
+    return _cool_until > now()
+
+
+def reset_cooling() -> None:
+    """런 시작(또는 시험)마다 냉각 상태를 비웁니다."""
+    global _cool_until, _cool_count
+    with _cool_lock:
+        _cool_until, _cool_count = 0.0, 0
+
+
 def _facts_with_retry(fetch, report: dict | None,
-                      tries: int = 3, wait: float = 2.0, sleeper=None):
+                      tries: int = 3, wait: float = 2.0, sleeper=None,
+                      now=None):
     """XBRL 조회를 재시도합니다 (155차).
 
     왜 필요한가: RH 실측 — SEC 가 이따금 SSL 오류를 내면(일시적)
@@ -3236,16 +3307,29 @@ def _facts_with_retry(fetch, report: dict | None,
     if sleeper is None:
         import time as _time
         sleeper = _time.sleep
-    for attempt in range(tries):
+    cooled_once = False
+    attempt = 0
+    while attempt < tries:
+        _wait_if_cooling(sleeper, now)          # 다른 일꾼이 냉각을 시작했으면 함께 기다림
         try:
             return fetch(), False
         except Exception as exc:
+            # 170차 — 429 는 "잠깐 뒤 다시"가 아니라 "10분 멈춰라"다.
+            #   냉각을 시작(또는 진행 중인 냉각에 합류)한 뒤 한 번 더 시도한다.
+            if _is_rate_limited(exc) and not cooled_once:
+                cooled_once = True
+                if report is not None:
+                    report["sec_429"] = report.get("sec_429", 0) + 1
+                _start_cooling(now)                 # 이미 냉각 중이면 그 냉각에 합류
+                if _cooling_active(now):
+                    continue                        # attempt 를 늘리지 않고 냉각 뒤 재시도
             if attempt == tries - 1:
                 _record_error(report, "get_facts", exc)
                 if report is not None:
                     report["xbrl_error"] = True
                 return None, True
             sleeper(wait * (attempt + 1))
+            attempt += 1
     return None, True
 
 

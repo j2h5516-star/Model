@@ -615,6 +615,83 @@ def test_6K_종목은_8K와_6K를_함께_훑고_나머지는_8K만_훑는다():
     assert 받은서식["IREN"] == "8-K", 받은서식
 
 
+def test_SEC_429는_모든_일꾼이_함께_10분_멈춘_뒤_한_번_더_시도한다():
+    """170차 — 2026-09-02 런 #66: 20번째 종목부터 378종목이 7분 동안 전부
+    429. 429 는 2초 뒤 재시도가 아니라 냉각(10분)이다. 가짜 시계·가짜
+    잠으로 (a) 냉각 시작 (b) 다른 일꾼의 합류 (c) 냉각 뒤 성공
+    (d) 상한 뒤엔 더 기다리지 않음 (e) 일반 오류는 옛 동작을 본다."""
+    sf = cj.sf
+
+    class TooManyRequestsError(Exception):
+        pass
+
+    시계 = {"t": 1000.0}
+    잠 = []
+
+    def now():
+        return 시계["t"]
+
+    def sleeper(sec):
+        잠.append(round(sec, 1))
+        시계["t"] += sec
+
+    sf.reset_cooling()
+    try:
+        # (a)+(c) 첫 호출은 429 → 냉각 600초 → 재시도 성공
+        calls = {"n": 0}
+
+        def fetch():
+            calls["n"] += 1
+            if calls["n"] == 1:
+                raise TooManyRequestsError("SEC Rate Limit Exceeded (HTTP 429)")
+            return {"facts": 1}
+
+        보고 = sf.new_report("AA")
+        facts, errored = sf._facts_with_retry(fetch, 보고, sleeper=sleeper, now=now)
+        assert facts == {"facts": 1} and errored is False
+        assert 잠 == [sf.SEC_COOL_SECONDS], f"냉각 시간만큼 기다려야 합니다: {잠}"
+        assert 보고["sec_429"] == 1 and calls["n"] == 2
+
+        # (b) 냉각 중인 다른 일꾼은 fetch 전에 남은 시간만큼 기다린다
+        sf.reset_cooling()
+        시계["t"] = 2000.0
+        assert sf._start_cooling(now) is True
+        시계["t"] = 2100.0                       # 100초 지남 → 500초 남음
+        잠.clear()
+        facts, errored = sf._facts_with_retry(lambda: {"ok": 1}, sf.new_report("BB"),
+                                              sleeper=sleeper, now=now)
+        assert facts == {"ok": 1} and 잠 == [500.0], 잠
+
+        # (d) 상한을 넘으면 더 기다리지 않고 오류로 남긴다
+        sf.reset_cooling()
+        for _ in range(sf.SEC_COOL_MAX):
+            assert sf._start_cooling(now) is True
+            시계["t"] += sf.SEC_COOL_SECONDS + 1
+        assert sf._start_cooling(now) is False, "상한을 넘겼는데 또 냉각을 시작했습니다"
+        잠.clear()
+        보고2 = sf.new_report("CC")
+
+        def always_429():
+            raise TooManyRequestsError("HTTP 429")
+
+        facts, errored = sf._facts_with_retry(always_429, 보고2, sleeper=sleeper, now=now)
+        assert facts is None and errored is True and 보고2["xbrl_error"] is True
+        assert sf.SEC_COOL_SECONDS not in 잠, f"상한 뒤에는 10분을 기다리면 안 됩니다: {잠}"
+
+        # (e) 일반 오류(SSL 등)는 예전처럼 2초·4초 뒤 재시도
+        sf.reset_cooling()
+        잠.clear()
+        facts, errored = sf._facts_with_retry(lambda: (_ for _ in ()).throw(OSError("ssl")),
+                                              sf.new_report("DD"), sleeper=sleeper, now=now)
+        assert errored is True and 잠 == [2.0, 4.0], 잠
+        # 8-K 경로도 냉각을 본다 (배선)
+        import inspect
+        assert "_wait_if_cooling()" in inspect.getsource(sf.fetch_earnings_8k)
+        assert "reset_cooling" in inspect.getsource(cj.run)
+    finally:
+        sf.reset_cooling()
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
