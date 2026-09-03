@@ -1416,6 +1416,71 @@ def test_6K_종목은_XBRL_자가_있는_행만_남긴다():
         cfg.FPI_6K_TICKERS = 옛
 
 
+def _이름표행(끝: str, 이름: str, **더):
+    """이름표 시험용 분기 행 — 매출을 달마다 다르게 해 쌍둥이 합침을 피합니다."""
+    행 = {"filing_date": 끝, "announced_date": None, "period_label": 이름,
+         "revenue": 1e8 + int(끝[5:7]) * 1e6 + int(끝[2:4]) * 1e5,
+         "op_income": 1e7, "adj_eps": 0.5, "adjusted_ebitda": 2e7,
+         "gaap_eps": 0.4, "gross_margin_pct": 50.0}
+    행.update(더)
+    return 행
+
+
+def test_같은_분기_이름이_겹치면_날짜형으로_바꾼다():
+    """175차 — 실물 ZETA 성장표에 "24 Q3" 이 두 줄(기간끝 06-30·09-30)이고
+    "24 Q2" 는 없었다. 이름은 보도자료 글자에서 뽑아 틀릴 수 있으므로,
+    겹치면 기간끝을 그대로 적은 날짜형으로 물러선다(분기 번호를 지어내지
+    않는다). 계산은 기간끝으로 하므로 표시만 바뀐다."""
+    notes: list[str] = []
+    out = dataset._clean_quarters({
+        "가": [_이름표행("2024-03-31", "24 Q1"), _이름표행("2024-06-30", "24 Q3"),
+              _이름표행("2024-09-30", "24 Q3"), _이름표행("2024-12-31", "24 Q4")],
+    }, notes)
+    이름 = [r["period_label"] for r in out["가"]]
+    assert 이름 == ["24 Q1", "24/06", "24 Q3", "24 Q4"], 이름
+    assert any("겹쳐" in n and "24/06" in n for n in notes), notes
+    # 값은 한 칸도 바뀌지 않는다
+    assert [r["revenue"] for r in out["가"]] == [
+        1e8 + 3e6 + 24e5, 1e8 + 6e6 + 24e5, 1e8 + 9e6 + 24e5, 1e8 + 12e6 + 24e5]
+
+
+def test_회계연도가_어긋난_회사의_이름표는_건드리지_않는다():
+    """CRDO 처럼 4월 결산이면 이름의 분기 번호가 달력 분기와 **일정하게**
+    어긋난다(여기서는 +1). 겹치지 않으므로 하나도 바꾸지 않는다."""
+    notes: list[str] = []
+    out = dataset._clean_quarters({
+        "나": [_이름표행("2025-01-31", "25 Q4"), _이름표행("2025-04-30", "26 Q1"),
+              _이름표행("2025-07-31", "26 Q2"), _이름표행("2025-10-31", "26 Q3")],
+    }, notes)
+    assert [r["period_label"] for r in out["나"]] == ["25 Q4", "26 Q1", "26 Q2", "26 Q3"]
+    assert not [n for n in notes if "분기 이름" in n], notes
+
+
+def test_어느_쪽이_맞는지_가릴_수_없으면_둘_다_날짜형으로():
+    """두 행이 모두 그 종목의 다수 규칙에 맞는데 이름이 같으면(연간 행이
+    섞인 경우 등) 어느 쪽도 믿을 수 없다 → 둘 다 날짜형."""
+    notes: list[str] = []
+    out = dataset._clean_quarters({
+        "다": [_이름표행("2024-09-30", "24 Q3"), _이름표행("2025-09-30", "24 Q3"),
+              _이름표행("2025-12-31", "25 Q4")],
+    }, notes)
+    이름 = [r["period_label"] for r in out["다"]]
+    assert 이름 == ["24/09", "25/09", "25 Q4"], 이름
+    assert sum(1 for n in notes if "가릴 수 없음" in n) == 2, notes
+
+
+def test_이름표_고치기는_한_종목_안에서만_본다():
+    """다른 종목이 같은 이름을 써도 겹친 것이 아니다."""
+    notes: list[str] = []
+    out = dataset._clean_quarters({
+        "라": [_이름표행("2024-09-30", "24 Q3"), _이름표행("2024-12-31", "24 Q4")],
+        "마": [_이름표행("2024-09-30", "24 Q3"), _이름표행("2024-12-31", "24 Q4")],
+    }, notes)
+    assert [r["period_label"] for r in out["라"]] == ["24 Q3", "24 Q4"]
+    assert [r["period_label"] for r in out["마"]] == ["24 Q3", "24 Q4"]
+    assert not [n for n in notes if "분기 이름" in n], notes
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

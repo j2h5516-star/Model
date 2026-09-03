@@ -40,6 +40,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import re
 import statistics
 from datetime import datetime
 
@@ -426,6 +427,8 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
         # 발표일 상식 검사는 **형제 행 규칙들 뒤에** — 그 규칙들이
         # 발표일로 행을 묶어 보기 때문입니다 (아래 함수 설명 참조).
         _drop_implausible_announced(ticker, kept, notes)
+        # 화면에 같은 분기 이름이 두 번 나오지 않게 합니다 (175차) — 아래 함수 설명.
+        _같은_분기_이름표가_겹치면_날짜형으로(ticker, kept, notes)
         for row in kept:
             row.pop("_raw_revenue", None)      # 내부용 표시는 밖으로 내보내지 않습니다
         cleaned[ticker] = kept
@@ -1007,6 +1010,103 @@ def _drop_implausible_announced(ticker: str, rows: list[dict],
                 "(바깥 자 기록이 있으면 되채웁니다)"
             )
             row["announced_date"] = None
+
+
+# ---------------------------------------------------------------------------
+# 175차 — 화면에 같은 분기 이름이 두 번 나오는 것을 없앱니다 (표시 전용)
+# ---------------------------------------------------------------------------
+# 분기 이름("24 Q3")은 보도자료 **본문 글자**에서 뽑습니다
+# (`sec_fundamentals.extract_period_label`). 본문이 직전 분기·다음 분기
+# 전망을 함께 말하면 엉뚱한 것을 집습니다. 150차-T 가 이미 재 놓았습니다 —
+# 이름이 어긋난 칸 8.8%·122종목. 그때 내린 결론은 **계산에는 이름을 쓰지
+# 않는다**(기간종료일을 쓴다)였고, 그 결정은 그대로입니다. 이 함수는
+# 계산을 건드리지 않습니다.
+#
+# 남은 문제는 **화면**입니다. 실물 ZETA 성장표에는 "24 Q3" 이 두 줄 있고
+# (기간끝 2024-06-30 과 2024-09-30), "24 Q2" 는 없습니다. 개발자가 아닌
+# 주인이 이 표를 읽으면 같은 분기가 두 번 있는 것으로 보입니다.
+#
+# 고치는 방법 — **없는 것이 틀린 것보다 낫다**:
+#   ① 종목마다 "이름의 분기 번호 − 기간끝의 달력 분기 번호"를 세어
+#      **가장 많은 차이**를 그 회사의 회계 달력으로 봅니다.
+#      (달력 결산 회사는 0, CRDO 처럼 4월 결산이면 일정하게 어긋납니다.)
+#   ② 이름이 겹치는 무리 안에서 그 차이를 벗어난 행의 이름을
+#      **날짜형("24/06")으로 바꿉니다.** 날짜형은 기간끝을 그대로 적은
+#      것이라 언제나 참입니다 — 분기 번호를 지어내지 않습니다.
+#   ③ 그래도 이름이 겹치면(둘 다 다수 규칙에 맞는 경우) 그 무리를
+#      **전부** 날짜형으로 바꿉니다. 화면에 같은 이름이 두 번 나오는 일이
+#      없어야 하기 때문입니다.
+#
+# 2026-09-02 수집물 실측: 이름표 12,478칸 중 겹치는 무리의 416칸이
+# 날짜형으로 바뀝니다(136종목). 계산에 쓰는 값은 한 칸도 바뀌지 않습니다.
+_LABEL_QUARTER_RE = re.compile(r"^(\d{2})\s*Q([1-4])$")
+_LABEL_PERIOD_RE = re.compile(r"(\d{4})-(\d{2})")
+
+
+def _이름표_분기차이(row: dict) -> int | None:
+    """이름의 분기 번호와 기간끝의 달력 분기 번호의 차이(0~3). 못 재면 None."""
+    label = _LABEL_QUARTER_RE.match(str(row.get("period_label") or ""))
+    period = _LABEL_PERIOD_RE.search(
+        str(row.get("period_end") or row.get("filing_date") or "")
+    )
+    if not (label and period):
+        return None
+    calendar_quarter = (int(period.group(2)) - 1) // 3 + 1
+    return (int(label.group(2)) - calendar_quarter) % 4
+
+
+def _날짜형_이름표(row: dict) -> str | None:
+    """기간끝에서 "24/06" 꼴을 만듭니다. 기간끝이 없으면 None."""
+    period = _LABEL_PERIOD_RE.search(
+        str(row.get("period_end") or row.get("filing_date") or "")
+    )
+    if not period:
+        return None
+    return f"{period.group(1)[2:]}/{period.group(2)}"
+
+
+def _같은_분기_이름표가_겹치면_날짜형으로(
+    ticker: str, rows: list[dict], notes: list[str]
+) -> None:
+    """한 종목 안에서 겹치는 분기 이름을 날짜형으로 바꿉니다 (표시 전용)."""
+    from collections import Counter
+
+    차이들 = [d for d in (_이름표_분기차이(r) for r in rows) if d is not None]
+    if not 차이들:
+        return
+    다수차이 = Counter(차이들).most_common(1)[0][0]
+
+    def 겹친이름() -> set[str]:
+        이름들 = Counter(
+            str(r.get("period_label"))
+            for r in rows
+            if _LABEL_QUARTER_RE.match(str(r.get("period_label") or ""))
+        )
+        return {name for name, count in 이름들.items() if count > 1}
+
+    def 바꾸기(row: dict, 사유: str) -> bool:
+        새이름 = _날짜형_이름표(row)
+        if 새이름 is None or 새이름 == row.get("period_label"):
+            return False
+        notes.append(
+            f"{ticker}: 분기 이름 {row.get('period_label')!r} 이 겹쳐 "
+            f"{새이름!r}(기간끝) 로 바꿨습니다 — {사유}. 표시만 바뀌고 "
+            "계산에 쓰는 값은 그대로입니다"
+        )
+        row["period_label"] = 새이름
+        return True
+
+    # ② 다수 규칙을 벗어난 행부터
+    for row in list(rows):
+        if str(row.get("period_label")) in 겹친이름():
+            차이 = _이름표_분기차이(row)
+            if 차이 is not None and 차이 != 다수차이:
+                바꾸기(row, "이 종목의 회계 달력과 어긋남")
+
+    # ③ 그래도 겹치면 그 무리를 전부
+    for name in 겹친이름():
+        for row in [r for r in rows if str(r.get("period_label")) == name]:
+            바꾸기(row, "어느 쪽이 맞는지 가릴 수 없음")
 
 
 def _drop_parse_debris(ticker: str, rows: list[dict], notes: list[str]) -> None:
