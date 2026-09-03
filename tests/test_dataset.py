@@ -1405,12 +1405,13 @@ def test_6K_종목은_XBRL_자가_있는_행만_남긴다():
         notes: list[str] = []
         out = dataset._clean_quarters({
             "외국": [행("2025-05-20"), 행("2025-08-12"), 행("2025-11-12", revenue_xbrl=1.46e8),
-                   행("2026-02-12", gaap_eps=-0.5, gaap_eps_xbrl=-0.5)],
+                   행("2026-02-12", gaap_eps=-0.5, gaap_eps_xbrl=-0.5),
+                   행("2026-05-13", fpi_results=True)],          # 173차 — 실적 6-K 통행증
             "국내": [행("2025-05-20"), 행("2025-08-12")],
         }, notes)
-        assert [r["filing_date"] for r in out["외국"]] == ["2025-11-12", "2026-02-12"], out["외국"]
+        assert [r["filing_date"] for r in out["외국"]] == ["2025-11-12", "2026-02-12", "2026-05-13"], out["외국"]
         assert len(out["국내"]) == 2, "6-K 종목이 아닌 회사까지 버렸습니다"
-        assert any("6-K 종목의 XBRL 자 없는 행 2개" in n for n in notes), notes
+        assert any("없는 행 2개" in n for n in notes), notes
     finally:
         cfg.FPI_6K_TICKERS = 옛
 

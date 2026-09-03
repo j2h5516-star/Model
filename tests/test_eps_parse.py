@@ -1839,6 +1839,103 @@ def test_이름에_쉼표가_끼어도_받는다():
     assert sf.find_eps_value(text, sf.LABELS_ADJUSTED_EPS) == 3.34
 
 
+# ---------------------------------------------------------------------------
+# 173차 — 연도 열 표 파서 (실물: NBIS 6-K, 전년 열이 먼저)
+# ---------------------------------------------------------------------------
+NBIS_YEAR_TABLE = (
+    "Nebius reports third quarter financial results\n"
+    "  In USD $ millions          Three months ended September 30            Nine months ended September 30\n"
+    "                                   2024        2025     Change             2024      2025     Change\n"
+    "  Revenues                         32.1       146.1      355%              56.3     302.1      437%\n"
+    "  Adjusted EBITDA / (loss)        (45.9)       (5.2)     -89%            (162.4)    (79.9)     -51%\n"
+    "  Net income / (loss) from continuing operations   (43.6)   (119.6)   174%   (229.1)   278.6\n"
+)
+
+
+def test_연도_열_표는_더_늦은_연도의_열을_읽는다():
+    r = sf.find_values_in_year_column_table(NBIS_YEAR_TABLE)
+    assert r["revenue"] == 146.1e6 and r["adjusted_ebitda"] == -5.2e6, r
+    # 6-K 외국 회사(우선 모드)에서는 이 값이 첫 숫자(전년 32.1)를 이긴다
+    p = sf.parse_press_release(NBIS_YEAR_TABLE, year_table_priority=True)
+    assert p["revenue"] == 146.1e6 and p["adjusted_ebitda"] == -5.2e6, p
+    # 기본 모드는 문장 파서가 찾은 값을 건드리지 않고 빈 칸만 채운다.
+    # (문장 파서는 "Revenues" 뒤 첫 숫자 32.1 — 전년 열·단위 없음 — 을 읽는다.
+    #  바로 그 결함 때문에 6-K 종목에는 우선 모드를 쓴다. 173차)
+    q = sf.parse_press_release(NBIS_YEAR_TABLE)
+    assert q["revenue"] == 32.1, ("기본 모드에서 있던 값을 덮어썼습니다", q["revenue"])
+    assert q["adjusted_ebitda"] == -5.2e6 or q["adjusted_ebitda"] is None
+    # 각주 "(1)" 은 값이 아니다
+    각주 = NBIS_YEAR_TABLE.replace("  Revenues     ", "  Revenues (1) ")
+    assert sf.find_values_in_year_column_table(각주)["revenue"] == 146.1e6, 각주
+    # 열 순서가 반대(2025 2024)여도 2025 열
+    뒤집힘 = NBIS_YEAR_TABLE.replace("2024        2025", "2025        2024") \
+        .replace("32.1       146.1", "146.1       32.1").replace("(45.9)       (5.2)", "(5.2)       (45.9)")
+    r2 = sf.find_values_in_year_column_table(뒤집힘)
+    assert r2["revenue"] == 146.1e6 and r2["adjusted_ebitda"] == -5.2e6, r2
+
+
+# NBIS 2026-02-12 실물 모양: "Three"/"months ended", "In"/"USD $ millions",
+# "Adjusted"/"EBITDA / (loss)" 가 전부 두 줄로 갈라져 있다(173차 — 처음 판은
+# 매출을 못 읽었다).
+NBIS_SPLIT_TABLE = (
+    "Consolidated results (1), (2)\n"
+    "  In                                   Three                                  Twelve\n"
+    "  USD $ millions           months ended December 31              months ended December 31\n"
+    "                               2024        2025     Change            2024        2025    Change\n"
+    " ────────────────────────────────────────────────────────────────────\n"
+    "  Revenues                     35.2       227.7      547%            91.5       529.8      479%\n"
+    "  Adjusted                    (63.9)       15.0       n/m          (226.3)      (64.9)     -71%\n"
+    "  EBITDA / (loss)\n"
+    "  Net income                 (122.9)     (249.6)      103%          (352.0)       29.0       n/m\n"
+)
+
+
+def test_연도_열_표는_머리와_이름이_두_줄로_갈라져도_읽는다():
+    r = sf.find_values_in_year_column_table(NBIS_SPLIT_TABLE)
+    assert r["revenue"] == 227.7e6, r
+    assert r["adjusted_ebitda"] == 15.0e6, r
+    # 갈라진 머리의 앞 줄에 three 가 없으면(다른 표) 머리로 보지 않는다
+    머리없음 = NBIS_SPLIT_TABLE.replace("Three", "     ")
+    assert sf.find_values_in_year_column_table(머리없음)["revenue"] is None
+    # 이름 다음 줄에 숫자가 있으면 이름의 나머지로 붙이지 않는다
+    붙임없음 = NBIS_SPLIT_TABLE.replace("  EBITDA / (loss)\n", "  EBITDA / (loss) 2\n")
+    assert sf.find_values_in_year_column_table(붙임없음)["adjusted_ebitda"] is None
+
+
+def test_연도_열_표는_GAAP_EPS를_읽지_않는다():
+    """전수 비교(173차): "Net income  $280.2 …" 다음 줄이 "Earnings per share:"
+    (숫자 없음)라 두 줄 이름이 "Net income Earnings per share" 가 되어 순이익
+    금액(백만)이 주당순이익으로 채워진 문서 47건(EW·YELP·STRL·RUN …).
+    GAAP EPS 는 XBRL 로 받으므로 연도 열 표에서는 아예 읽지 않는다(없음 > 틀림)."""
+    t = (
+        "(in millions, except per share data)\n"
+        "                 Three Months Ended December 31\n"
+        "                          2018        2019\n"
+        "  Revenues               977.7      1,174.1\n"
+        "  Net income               7.0        280.2\n"
+        "  Earnings per share:\n"
+        "  Diluted                 0.03         1.34\n"
+    )
+    r = sf.find_values_in_year_column_table(t)
+    assert r["revenue"] == 1174.1e6, r
+    assert r["gaap_eps"] is None, r
+    # 문장 파서가 "Diluted 1.34" 를 찾는 것은 그 파서의 몫 — 순이익 금액만 아니면 된다
+    assert sf.parse_press_release(t, year_table_priority=True)["gaap_eps"] != 280.2
+
+
+def test_연도_열_표는_단위나_연도가_없으면_읽지_않는다():
+    단위없음 = NBIS_YEAR_TABLE.replace("In USD $ millions", "                 ")
+    assert sf.find_values_in_year_column_table(단위없음)["revenue"] is None
+    import re as _re
+    연도없음 = "\n".join(_re.sub(r"20\d{2}", "Col", l) if "Change" in l else l
+                     for l in NBIS_YEAR_TABLE.split("\n"))
+    assert sf.find_values_in_year_column_table(연도없음)["revenue"] is None
+    assert sf.find_values_in_year_column_table("")["revenue"] is None
+    # 같은 연도 두 번(분기 열이 아님)이면 안 읽음
+    같은연도 = NBIS_YEAR_TABLE.replace("2024        2025     Change", "2025        2025     Change")
+    assert sf.find_values_in_year_column_table(같은연도)["revenue"] is None
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

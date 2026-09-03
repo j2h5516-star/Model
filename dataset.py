@@ -280,10 +280,11 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
         # 한 행도 없어 NBIS 는 "없음"이 됩니다 — 없음이 틀림보다 안전합니다.
         if ticker in cfg.FPI_6K_TICKERS:
             xbrl_backed = [r for r in rows
-                           if r.get("revenue_xbrl") is not None or r.get("gaap_eps_xbrl") is not None]
+                           if r.get("revenue_xbrl") is not None or r.get("gaap_eps_xbrl") is not None
+                           or r.get("fpi_results") is True]          # 173차 — 실적 6-K 통행증
             if len(xbrl_backed) < len(rows):
                 notes.append(
-                    f"{ticker}: 6-K 종목의 XBRL 자 없는 행 {len(rows) - len(xbrl_backed)}개를 "
+                    f"{ticker}: 6-K 종목의 XBRL 자·실적 표시 없는 행 {len(rows) - len(xbrl_backed)}개를 "
                     "버렸습니다 (172차 — 보도자료 전용 행은 통화·기간을 확인할 수 없음)"
                 )
             rows = xbrl_backed

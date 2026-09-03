@@ -2145,8 +2145,164 @@ def find_eps_in_date_column_table(text: str) -> dict:
 # ---------------------------------------------------------------------------
 # 보도자료 텍스트 → 실적 숫자
 # ---------------------------------------------------------------------------
-def parse_press_release(text: str) -> dict:
+# ---------------------------------------------------------------------------
+# 연도 열 표 파서 (173차 — 표 파서 4탄, 실물: NBIS 6-K)
+# ---------------------------------------------------------------------------
+# 네비우스 보도자료 표는 열 제목이 분기가 아니라 **연도**이고 전년이 먼저입니다:
+#     In USD $ millions        Three months ended September 30      Nine months ended …
+#                                   2024        2025     Change        2024      2025
+#     Revenues                      32.1       146.1      355%         56.3     302.1
+#     Adjusted EBITDA / (loss)     (45.9)       (5.2)     -89%       (162.4)    (79.9)
+# "이름 뒤 첫 숫자" 규칙은 전년 값(32.1)을 뭅니다 — 09-02 런에서 NBIS 26Q2
+# 행에 매출 105.1(= 25Q2)이 들어온 것이 이것입니다. 여기서는 연도 두 개를
+# 읽어 **더 늦은 연도의 열**을 고릅니다(열 순서가 반대여도 동작).
+# 확신 조건: ① "Three months ended" 제목 ② 그 아래 3줄 안에 연도 2개 이상
+# ③ 단위가 제목 근처에 적혀 있음(millions) — 없으면 읽지 않음
+# ④ 행에서 %가 아닌 숫자 칸을 열 순서대로 읽어 첫 두 칸이 3개월 열.
+_YEAR_TABLE_HEAD_RE = re.compile(r"three\s+months\s+ended", re.I)
+# NBIS 2026-02-12 실물: 열 머리가 "Three" / "months ended December 31" 두 줄로
+# 갈라져 있다 — 앞 줄에 three 가 홀로 있고 이 줄에 "months ended" 면 같은 머리.
+_YEAR_HEAD_TAIL_RE = re.compile(r"months\s+ended", re.I)
+_YEAR_HEAD_WORD_RE = re.compile(r"\bthree\b", re.I)
+_YEAR_TOKEN_RE = re.compile(r"(?<![\d.])(20\d{2})(?![\d.%])")
+_YEAR_UNIT_RE = re.compile(
+    r"in\s+(?:USD\s*\$?\s*|US\$\s*|U\.S\.\s*dollars?\s*|\$\s*)?(millions|thousands)"
+    r"|\(\s*in\s+(millions|thousands)"
+    r"|\b(?:USD|US\$)\s*\$?\s*(millions|thousands)", re.I)   # "In" 이 앞 줄로 갈라진 경우
+_YEAR_SEPARATOR_RE = re.compile(r"^\s*[─—–\-=_]{3,}")
+_YEAR_CELL_RE = re.compile(r"\(?-?\$?[\d,]+(?:\.\d+)?\)?%?|—|–")
+_YEAR_LABELS = {
+    "revenue": re.compile(r"^\s*(?:total\s+)?(?:net\s+)?revenues?\b(?!\s+(?:growth|cost))", re.I),
+    "adjusted_ebitda": re.compile(r"^\s*adjusted\s+EBITDA\b", re.I),
+    # GAAP EPS 는 여기서 읽지 않습니다 — 전수 비교(173차)에서 "Net income $280.2"
+    # 다음 줄 "Earnings per share:" 가 두 줄 이름으로 붙어 순이익 금액이 주당
+    # 값으로 채워진 문서가 47건(EW·YELP·STRL·RUN …). GAAP EPS 는 XBRL 로 받습니다.
+}
+_YEAR_TABLE_ROWS = 40
+
+
+def _year_cell_value(cell: str) -> float | None:
+    cell = cell.strip()
+    if cell in ("—", "–") or cell.endswith("%"):
+        return None
+    negative = cell.startswith("(") and cell.endswith(")")
+    digits = cell.strip("()").replace("$", "").replace(",", "")
+    try:
+        value = float(digits)
+    except ValueError:
+        return None
+    return -value if negative else value
+
+
+def find_values_in_year_column_table(text: str) -> dict:
+    """연도 열 표에서 (매출, 조정 EBITDA, GAAP EPS)를 읽습니다. 확신이 없으면 없음."""
+    result = {"revenue": None, "adjusted_ebitda": None, "gaap_eps": None}
+    if not text:
+        return result
+    lines = text.split("\n")
+
+    def _is_head(idx: int) -> bool:
+        line = lines[idx]
+        if _YEAR_TABLE_HEAD_RE.search(line):
+            return True
+        # "Three" 가 앞 줄에 홀로, "months ended" 가 이 줄에 — 두 줄 머리
+        return bool(idx > 0 and _YEAR_HEAD_TAIL_RE.search(line)
+                    and _YEAR_HEAD_WORD_RE.search(lines[idx - 1]))
+
+    for i in range(len(lines)):
+        if not _is_head(i):
+            continue
+        years, year_line = [], None
+        for j in range(i, min(i + 4, len(lines))):
+            found = [int(m.group(1)) for m in _YEAR_TOKEN_RE.finditer(lines[j])]
+            if len(found) >= 2:
+                years, year_line = found, j
+                break
+        if year_line is None or years[0] == years[1]:
+            continue
+        col = 1 if years[1] > years[0] else 0            # 더 늦은 연도의 열
+        unit = None
+        for j in range(max(0, i - 3), year_line + 1):
+            m = _YEAR_UNIT_RE.search(lines[j])
+            if m:
+                unit = (m.group(1) or m.group(2) or m.group(3)).lower()
+                break
+        if unit is None:
+            continue                                     # 단위를 짐작하지 않음
+        scale = 1e6 if unit == "millions" else 1e3
+        for k in range(year_line + 1, min(year_line + 1 + _YEAR_TABLE_ROWS, len(lines))):
+            row = lines[k]
+            if _is_head(k):
+                break                                    # 다음 표 — 여기까지
+            # 항목 이름이 두 줄로 갈라진 경우("Adjusted" / "EBITDA / (loss)" —
+            # NBIS 2026-02-12 실물): 다음 줄에 숫자가 없으면 이름의 나머지로 봅니다.
+            label_row = row
+            nxt = lines[k + 1] if k + 1 < len(lines) else ""
+            if (nxt.strip() and not re.search(r"\d", nxt)
+                    and not _YEAR_SEPARATOR_RE.match(nxt)):
+                first_cell = re.search(r"\s{2,}(?=[(\d$—–-])", row)
+                if first_cell:
+                    label_row = row[:first_cell.start()] + " " + nxt.strip()
+            for field, label_re in _YEAR_LABELS.items():
+                if result[field] is not None:
+                    continue
+                label = label_re.search(label_row)
+                if not label:
+                    continue
+                # 이름 뒤 숫자 칸 — 이름이 두 줄이면 원래 줄의 이름 부분을 넘긴다
+                tail_from = min(label.end(), len(row)) if label_row is row else first_cell.start()
+                # 각주 표시 "(1)"·"(2)" 는 값이 아닙니다 — 전수 비교에서 ALL·KHC·
+                # VTRS 매출이 −100만(= "(1)" 백만)으로 읽힌 결함.
+                cells = [c for c in _YEAR_CELL_RE.findall(row[tail_from:])
+                         if not re.fullmatch(r"\(\d\)", c)]
+                values = [_year_cell_value(c) for c in cells if not c.endswith("%")][:2]   # 3개월 열 두 칸
+                if len(values) < 2 or values[col] is None:
+                    continue
+                result[field] = values[col] if field == "gaap_eps" else values[col] * scale
+        if any(v is not None for v in result.values()):
+            return result
+    return result
+
+
+# 6-K 로 실적을 내는 외국 회사(config.FPI_6K_TICKERS)의 실적 문서 판별 —
+# 6-K 는 공모·배당·계약에도 쓰이므로 제목이 "reports … financial results"
+# 꼴인 문서만 통과시킵니다. 09-02 런 실측: NBIS 6-K 38건 중 실적 보도자료가
+# 아닌 문서(공모 옵션 행사 등)에서 주운 숫자가 행이 됐습니다.
+_FPI_RESULTS_TITLE_RE = re.compile(
+    r"reports?\s+(?:record\s+)?(?:first|second|third|fourth|q[1-4]|full[\s-]+year|fiscal)"
+    r"[^\n]{0,40}?results|(?:financial|quarterly)\s+results\s+for\s+the\s+"
+    r"(?:first|second|third|fourth)\s+quarter|announces?\s+(?:first|second|third|fourth)"
+    r"[\s-]+quarter[^\n]{0,30}?results",
+    re.I,
+)
+
+
+def _fpi_results_document(text: str) -> bool:
+    """6-K 본문 앞부분(제목·첫 문단)에 실적 보도자료 제목이 있는가."""
+    if not text:
+        return False
+    # 제목이 줄바꿈으로 갈라진 실물("second quarter 2026 financial\nresults",
+    # NBIS 2026-08-12) — 앞부분의 공백·줄바꿈을 한 칸으로 고른 뒤 봅니다.
+    head = re.sub(r"\s+", " ", text[:1200])
+    return bool(_FPI_RESULTS_TITLE_RE.search(head))
+
+
+def _effective_start_date(ticker: str, start_date: str | None) -> str:
+    """수집 시작일 — 종목별 시작일(config.TICKER_START_DATE)이 더 늦으면 그것.
+
+    NBIS 는 2024-07 에 Yandex 에서 이름·사업이 바뀌었고 그 전 6-K 는 다른
+    통화·다른 회사의 숫자라 읽지 않습니다.
+    """
+    base = start_date or cfg.HISTORY_START_DATE
+    own = getattr(cfg, "TICKER_START_DATE", {}).get(ticker)
+    return max(base, own) if own else base
+
+
+def parse_press_release(text: str, year_table_priority: bool = False) -> dict:
     """실적 보도자료 텍스트에서 필요한 숫자를 뽑아냅니다.
+
+    year_table_priority: 연도 열 표(전년 열 먼저)를 문장 파서보다 우선할지 —
+    6-K 외국 회사(config.FPI_6K_TICKERS)에서만 True 로 부릅니다(173차).
 
     반환 딕셔너리:
       revenue           매출 (달러)
@@ -2195,6 +2351,18 @@ def parse_press_release(text: str) -> dict:
     # ZETA·TSLA·APP 처럼 논갭 영업이익을 발표하지 않는 회사가 많습니다.
     # 조정 EBITDA 를 챙겨 두었다가, 감가상각비를 빼서 논갭 영업이익을 역산합니다.
     result["adjusted_ebitda"] = find_labeled_value(text, LABELS_ADJUSTED_EBITDA)
+    # 173차 — 연도 열 표(전년 열이 먼저인 표, NBIS 실물).
+    #   year_table_priority=True(6-K 외국 회사): 표 값이 "이름 뒤 첫 숫자"보다
+    #   우선 — 첫 숫자는 전년 값이기 때문.
+    #   그 밖(기본): 문장 파서가 **못 찾은 칸만** 채웁니다. 전수 비교 2,312
+    #   원문에서 우선 적용은 고침(UBER·DASH·APPF·CRWD)과 틀림(GS·ALL·VTRS)이
+    #   섞여 나와 판별할 수 없었으므로, 있던 값은 건드리지 않습니다(없음 > 틀림).
+    year_table = find_values_in_year_column_table(text)
+    for field in ("revenue", "adjusted_ebitda"):        # GAAP EPS 는 XBRL 몫
+        if year_table[field] is None:
+            continue
+        if year_table_priority or result[field] is None:
+            result[field] = year_table[field]
 
     # ① 논갭 GM% — 없으면 GAAP GM%로 대체
     gm = find_labeled_value(text, LABELS_NONGAAP_GM_PCT, is_percent=True)
@@ -2664,8 +2832,10 @@ def fetch_earnings_8k(
     """
     if start_date is None:
         start_date = cfg.HISTORY_START_DATE
+    start_date = _effective_start_date(ticker, start_date)    # 173차 — 종목별 시작일
     if report is None:
         report = new_report(ticker)
+    fpi = ticker in cfg.FPI_6K_TICKERS                          # 173차 — 6-K 실적 문서만
 
     # 표가 과거→현재 열 순서인 회사(TSLA)는 일반 파서가 첫 열(1년 전 값)을
     # 뭅니다 (사고 9). 그래서 이런 회사는 **날짜 열 EPS 전용 부분 파싱**만
@@ -2737,6 +2907,8 @@ def fetch_earnings_8k(
         # 대개 EX-99 첨부라, 표지 판별을 건너뛰는 길로 그대로 들어옵니다.
         if _looks_like_slide_deck(text):
             continue
+        if fpi and not _fpi_results_document(text):
+            continue                  # 173차 — 공모·배당·계약 6-K 는 실적 문서가 아님
 
         # EX-99 첨부(보도자료)를 확보했다면 표지 문구 판별은 건너뜁니다.
         # 표지에는 숫자가 없어 실적발표인데도 탈락하는 경우가 있기 때문입니다.
@@ -2756,7 +2928,8 @@ def fetch_earnings_8k(
                 ),
             }
         else:
-            parsed = parse_press_release(text)
+            # 6-K 종목(NBIS)은 연도 열 표를 문장 파서보다 먼저 믿습니다(173차).
+            parsed = parse_press_release(text, year_table_priority=fpi)
 
         # 보도자료 첨부(EX-99)인데 조정 EPS 를 못 읽었다면 — 파서가 진 것입니다.
         # 그 원문을 진단에 남겨, 배포된 앱의 '측정용 실데이터 저장' 버튼이
@@ -2821,6 +2994,9 @@ def fetch_earnings_8k(
                 "ticker": ticker,
                 "filing_date": filing_date,
                 "period_label": extract_period_label(text, filing_date),
+                # 173차 — 6-K 실적 문서에서 온 행 표시. dataset 의 6-K 격리(172차)
+                # 는 XBRL 자가 없어도 이 표시가 있는 행은 남깁니다.
+                "fpi_results": True if fpi else None,
                 "revenue": parsed["revenue"],
                 "op_income": parsed["op_income"],
                 "gross_margin_pct": parsed["gross_margin_pct"],

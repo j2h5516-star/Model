@@ -615,6 +615,33 @@ def test_6K_종목은_8K와_6K를_함께_훑고_나머지는_8K만_훑는다():
     assert 받은서식["IREN"] == "8-K", 받은서식
 
 
+def test_6K_종목은_실적_문서만_통과하고_이름_변경_이전은_읽지_않는다():
+    """173차 — NBIS 실물: 공모 옵션 행사 6-K 에서 주운 숫자가 행이 됐고,
+    2024-07 Yandex 분할 이전 6-K(다른 통화)도 읽혔다."""
+    sf = cj.sf
+    import inspect
+    실적 = ("Exhibit 99.1\nNebius reports third quarter financial results\n"
+          "Amsterdam, November 11, 2025 - Nebius Group N.V. today announced its unaudited "
+          "financial results for the third quarter ended September 30, 2025.")
+    공모 = ("Exhibit 99.1\nNebius Group announces exercise of the underwriters' option to "
+          "purchase additional Class A shares\nAmsterdam, September 22, 2025 - ...")
+    assert sf._fpi_results_document(실적) is True
+    assert sf._fpi_results_document(공모) is False
+    # 제목이 줄바꿈으로 갈라진 실물(2026-08-12: "financial\nresults")도 실적
+    갈라짐 = "Exhibit 99.1\nNebius reports second quarter 2026 financial\nresults\nAmsterdam, ..."
+    assert sf._fpi_results_document(갈라짐) is True, "줄바꿈 제목을 못 알아봅니다"
+    assert sf._fpi_results_document("") is False
+    assert sf._effective_start_date("NBIS", "2016-09-15") == cfg.TICKER_START_DATE["NBIS"]
+    assert sf._effective_start_date("MU", "2016-09-15") == "2016-09-15"
+    assert sf._effective_start_date("NBIS", "2025-01-01") == "2025-01-01", "더 늦은 쪽을 써야 합니다"
+    src = inspect.getsource(sf.fetch_earnings_8k)
+    assert "_fpi_results_document(text)" in src and "_effective_start_date(ticker" in src, "배선 없음"
+    assert '"fpi_results"' in src, "실적 6-K 행 표시가 없습니다"
+    # 6-K 종목은 연도 열 표를 문장 파서보다 우선 — 이 배선이 없으면 NBIS 매출이
+    # 전년 열(32.1)로 읽힌다(돌연변이 확인에서 실제로 초록불이 남았던 구멍).
+    assert "year_table_priority=fpi" in src, "연도 열 표 우선 배선이 없습니다"
+
+
 def test_SEC_429는_모든_일꾼이_함께_10분_멈춘_뒤_한_번_더_시도한다():
     """170차 — 2026-09-02 런 #66: 20번째 종목부터 378종목이 7분 동안 전부
     429. 429 는 2초 뒤 재시도가 아니라 냉각(10분)이다. 가짜 시계·가짜
