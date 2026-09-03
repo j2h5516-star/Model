@@ -32,6 +32,7 @@ audit_data.py — 재료(수집 데이터) 오염 전수조사 (73차)
 
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 
 # 잣대 사다리 3칸 (measure_engine.yardstick_of 와 같은 순서)
@@ -300,6 +301,50 @@ STREET_QUOTA = 40      # 월가 발표 EPS 와 갈린 조정 EPS 칸 (연간값 
 NEIGHBOR_QUOTA = 25    # 이웃 분기와 어긋난 칸(우리끼리 비교)
 
 
+# 177차 — **이미 받아 둔 원문은 다시 부탁하지 않습니다**
+# ---------------------------------------------------------------------------
+# 2026-09-03 실측: 부탁 목록 119건 중 **105건(88%)의 원문이 이미 저장소에
+# 있었습니다.** 목록은 날마다 똑같은 규칙으로 다시 만들어지므로, 한 번
+# 앞자리를 차지한 공시는 원문을 받은 뒤에도 계속 그 자리에 남습니다.
+# 그래서 새 후보가 들어갈 자리가 하루 14칸뿐이었습니다.
+#
+# 실물 피해: ZETA 는 잣대(조정 EBITDA) 구멍이 12칸인데 두 갈래
+# (구멍 많은 순 · 최신 구멍 순) 어디에도 못 듭니다 — 앞은 2017~2020년
+# 구멍이 많은 종목이, 뒤는 2026년 구멍 종목이 차지하고, ZETA 의 최신
+# 구멍(2025-05-01)은 그 가운데에 끼어 영원히 밀립니다.
+#
+# 부탁 목록은 **원문을 저장만** 하게 하는 것이라(값·사건·판정에 닿지
+# 않습니다) 자리 나누기를 바꾸는 것은 표본을 바꾸지 않습니다.
+RAW_DIR = "data/measure/raw"
+_RAW_NAME_RE = re.compile(r"^(.+?)_(\d{4}-\d{2}-\d{2})(?:_[^_]+)?\.txt$")
+
+
+def 이미_받은_원문(raw_dir: str | None = None) -> set[tuple[str, str]]:
+    """저장소에 원문이 있는 (종목, 발표일) 짝. 폴더가 없으면 빈 집합.
+
+    기본값을 인자 자리에 박지 않고 **부를 때** RAW_DIR 을 읽습니다 —
+    박아 두면 시험이 폴더를 바꿔도 옛 경로를 계속 봅니다(실제로 겪음).
+    """
+    import os
+
+    본 = set()
+    try:
+        이름들 = os.listdir(raw_dir or RAW_DIR)
+    except OSError:
+        return 본
+    for name in 이름들:
+        m = _RAW_NAME_RE.match(name)
+        if m:
+            본.add((m.group(1), m.group(2)))
+    return 본
+
+
+def 받은것_빼기(목록: list[dict], 받음: set[tuple[str, str]]) -> list[dict]:
+    """이미 원문이 있는 부탁을 뺍니다 — 자리를 새 후보에게 넘깁니다."""
+    return [r for r in 목록 or []
+            if (r.get("종목"), str(r.get("발표일") or "")[:10]) not in 받음]
+
+
 def merge_wanted(*목록들: list[dict], limit: int = 60) -> list[dict]:
     """여러 곳에서 모은 부탁 목록을 하나로 합칩니다 (앞엣것이 우선).
 
@@ -345,8 +390,11 @@ def write_wanted(quarters: dict, path: str = WANTED_PATH,
     # tail 은 이미 재료별로 제 몫만큼 잘라서 들어옵니다(refresh_wanted 참조).
     # 이웃 튐도 **제 몫만큼 잘라서** 넣습니다 (150차). 안 자르면 앞 재료가
     # 남은 자리를 다 먹거나, 반대로 이웃 튐이 뒤 재료를 굶깁니다.
+    # 이웃 튐 재료도 이미 받은 원문을 거른 뒤 몫만큼 자릅니다 (177차).
+    받음 = 이미_받은_원문()
     앞 = merge_wanted(extra or [],
-                     wanted_raw_filings(quarters)[:NEIGHBOR_QUOTA],
+                     받은것_빼기(wanted_raw_filings(quarters, limit=400),
+                              받음)[:NEIGHBOR_QUOTA],
                      limit=WANTED_LIMIT)
     목록 = merge_wanted(앞, tail or [],
                       limit=(WANTED_LIMIT + SCALE_QUOTA
@@ -546,28 +594,38 @@ def refresh_wanted(quarters: dict, vendor: dict | None,
     목록에 못 들어갔습니다**(133차 감사에서 실측: 새 종목 0건). 같은 코드를
     로봇도 부를 수 있게 함수로 뺐습니다 — 규칙은 하나도 바꾸지 않았습니다.
     """
+    # 이미 원문을 받아 둔 공시는 **자르기 전에** 뺍니다 (177차). 잘라낸
+    # 뒤에 빼면 그 자리가 빈 채로 남아, 새 후보가 여전히 못 들어옵니다.
+    받음 = 이미_받은_원문()
     바깥: list[dict] = []
     if vendor:
         try:
             import vendor_compare as _vc
-            바깥 = _vc.wanted_from_mismatch(
-                       quarters, vendor, limit=MISMATCH_QUOTA) + \
-                  _vc.wanted_from_street(
-                       quarters, vendor, limit=STREET_QUOTA)
+            # 후보를 넉넉히 받아 **거른 뒤에** 몫만큼 자릅니다 — 그래야
+            # 이미 받은 원문이 그 재료의 몫을 빈자리로 잡아먹지 않습니다.
+            바깥 = 받은것_빼기(
+                       _vc.wanted_from_mismatch(quarters, vendor, limit=400),
+                       받음)[:MISMATCH_QUOTA] + \
+                  받은것_빼기(
+                       _vc.wanted_from_street(quarters, vendor, limit=400),
+                       받음)[:STREET_QUOTA]
         except Exception as exc:      # 부탁 목록이 실패해도 수집은 계속
             progress(f"⚠️ 부탁 목록 재료 실패: {type(exc).__name__}: {str(exc)[:120]}")
     # 재료마다 **제 몫만큼 먼저 잘라서** 넘깁니다. 안 그러면 앞 재료가
     # 뒤 재료의 자리를 먹어 뒤쪽 배관이 영원히 안 돕니다 (135차에 실측한
     # 함정 — 구멍이 0건이었습니다).
-    자릿수 = wanted_from_scale(quarters)[:SCALE_QUOTA]
+    자릿수 = 받은것_빼기(wanted_from_scale(quarters), 받음)[:SCALE_QUOTA]
     # 최신 구멍을 **먼저** 놓습니다 (150차-K). merge_wanted 가 (종목,발표일)
     # 로 겹침을 지우므로 아래 '구멍'과 중복돼도 한 번만 실립니다.
-    신선구멍 = wanted_from_holes(quarters, newest_first=True)[:FRESH_HOLE_QUOTA]
-    구멍 = wanted_from_holes(quarters)[:HOLE_QUOTA]
+    신선구멍 = 받은것_빼기(
+        wanted_from_holes(quarters, newest_first=True, limit=400), 받음
+    )[:FRESH_HOLE_QUOTA]
+    구멍 = 받은것_빼기(wanted_from_holes(quarters, limit=400), 받음)[:HOLE_QUOTA]
     count = write_wanted(quarters, path=path,
                          extra=바깥, tail=자릿수 + 신선구멍 + 구멍)
     progress(f"원문 부탁 목록 {count}건 갱신 "
-             f"(바깥 자 재료 {len(바깥)}건 · 자릿수 어긋남 {len(자릿수)}건 · "
+             f"(이미 받은 원문 {len(받음)}건은 뺌 · "
+             f"바깥 자 재료 {len(바깥)}건 · 자릿수 어긋남 {len(자릿수)}건 · "
              f"최신 구멍 {len(신선구멍)}건 · 잣대 구멍 후보 {len(구멍)}건)")
     return count
 

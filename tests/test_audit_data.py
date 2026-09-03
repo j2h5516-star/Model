@@ -713,6 +713,85 @@ def test_로봇이_부탁목록을_매일_갱신한다():
         "로봇이 부탁 목록을 갱신하지 않습니다"
 
 
+def test_이미_받은_원문은_부탁_목록에서_뺀다():
+    """177차 — 2026-09-03 실측: 부탁 119건 중 105건(88%)의 원문이 이미
+    저장소에 있었다. 목록은 날마다 같은 규칙으로 다시 만들어지므로 한 번
+    앞자리를 차지한 공시가 원문을 받은 뒤에도 자리를 계속 붙들어, 새
+    후보가 하루 14칸밖에 못 들어왔다(ZETA 구멍 12칸이 영원히 밀린 이유)."""
+    import tempfile
+
+    받음 = audit_data.이미_받은_원문("/없는폴더/절대없음")
+    assert 받음 == set(), "폴더가 없으면 빈 집합이어야 합니다"
+
+    with tempfile.TemporaryDirectory() as d:
+        for name in ("AA_2025-01-01.txt", "BB_2025-02-02_부탁.txt",
+                     "CC_2025-03-03_의심정수.txt", "읽지못할이름.txt"):
+            open(os.path.join(d, name), "w").close()
+        받음 = audit_data.이미_받은_원문(d)
+        assert 받음 == {("AA", "2025-01-01"), ("BB", "2025-02-02"),
+                       ("CC", "2025-03-03")}, 받음
+
+    목록 = [{"종목": "AA", "발표일": "2025-01-01"},
+          {"종목": "AA", "발표일": "2025-09-09"},
+          {"종목": "DD", "발표일": "2025-01-01"}]
+    남음 = audit_data.받은것_빼기(목록, {("AA", "2025-01-01")})
+    assert [(r["종목"], r["발표일"]) for r in 남음] == [
+        ("AA", "2025-09-09"), ("DD", "2025-01-01")], 남음
+    assert audit_data.받은것_빼기([], {("AA", "2025-01-01")}) == []
+
+
+def test_부탁목록_갱신이_이미_받은_원문을_거른다():
+    """배선 확인 — 거르기 함수만 만들고 부르지 않으면 안 도는 코드다
+    (150차-C 와 같은 병). 원문이 있는 공시는 목록에 남으면 안 된다."""
+    import json
+    import tempfile
+
+    quarters = _구멍있는종목("ZZ")
+    with tempfile.TemporaryDirectory() as raw, \
+            tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        path = f.name
+        옛 = audit_data.RAW_DIR
+        audit_data.RAW_DIR = raw
+        try:
+            audit_data.refresh_wanted(quarters, None, path=path,
+                                      progress=lambda *a: None)
+            with open(path, encoding="utf-8") as fh:
+                전 = json.load(fh)["목록"]
+            뺄것 = [(r["종목"], str(r["발표일"])[:10]) for r in 전]
+            assert 뺄것, "시험 전제가 깨졌습니다 — 목록이 비었습니다"
+            # 그 공시의 원문을 받아 둔 것처럼 만든다
+            for 종목, 날 in 뺄것:
+                open(os.path.join(raw, f"{종목}_{날}_부탁.txt"), "w").close()
+            말 = []
+            audit_data.refresh_wanted(quarters, None, path=path, progress=말.append)
+            with open(path, encoding="utf-8") as fh:
+                후 = json.load(fh)["목록"]
+            남은 = [(r["종목"], str(r["발표일"])[:10]) for r in 후]
+            assert not set(남은) & set(뺄것), f"이미 받은 원문이 남았습니다: {남은}"
+            assert any("이미 받은 원문" in m for m in 말), 말
+
+            # 이웃 튐 재료(write_wanted 안쪽)도 같이 걸러야 합니다 — 이 갈래는
+            # refresh_wanted 가 아니라 write_wanted 에서 목록에 들어갑니다.
+            값들 = [1.18, 1.22, 5.18, 1.20, 1.21]
+            튐 = {"VZ": [분기(f"Q{i}", adj_eps=v, announced_date=f"2023-0{i + 1}-01")
+                        for i, v in enumerate(값들)]}
+            audit_data.write_wanted(튐, path=path)
+            with open(path, encoding="utf-8") as fh:
+                튄목록 = json.load(fh)["목록"]
+            assert any(r["종목"] == "VZ" for r in 튄목록), 튄목록
+            for r in 튄목록:
+                open(os.path.join(raw, f'{r["종목"]}_{str(r["발표일"])[:10]}.txt'),
+                     "w").close()
+            audit_data.write_wanted(튐, path=path)
+            with open(path, encoding="utf-8") as fh:
+                뒤목록 = json.load(fh)["목록"]
+            assert not any(r["종목"] == "VZ" for r in 뒤목록), \
+                f"이웃 튐 재료가 안 걸러졌습니다: {뒤목록}"
+        finally:
+            audit_data.RAW_DIR = 옛
+            os.unlink(path)
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
