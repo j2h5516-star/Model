@@ -1481,6 +1481,43 @@ def test_이름표_고치기는_한_종목_안에서만_본다():
     assert not [n for n in notes if "분기 이름" in n], notes
 
 
+def test_아직_오지_않은_예정_발표일은_되채우지_않는다():
+    """176차 — 실물 CINF: 스냅샷 발표일 2026-08-25 가 상식 검사에 걸려
+    지워졌고, 그 빈자리를 야후의 **예정일** 2026-10-26(수집일 +54일)이
+    채웠다. 일어나지도 않은 발표는 창 60거래일을 잴 수 없고, 원문 부탁
+    목록도 없는 공시를 영원히 조른다."""
+    분기 = {"가": [{"filing_date": "2026-08-25", "announced_date": None}]}
+    notes: list[str] = []
+    채움 = dataset._recover_announced(분기, {"가": ["2026-10-26"]}, notes,
+                                   오늘="2026-09-02")
+    assert 채움 == 0 and 분기["가"][0]["announced_date"] is None
+    assert any("예정일" in n for n in notes), notes
+    # 지난 날짜는 예전처럼 채운다
+    분기2 = {"가": [{"filing_date": "2026-06-30", "announced_date": None}]}
+    notes2: list[str] = []
+    assert dataset._recover_announced(분기2, {"가": ["2026-07-27"]}, notes2,
+                                     오늘="2026-09-02") == 1
+    assert 분기2["가"][0]["announced_date"] == "2026-07-27"
+    # 오늘을 모르면(None) 예전 동작 그대로 — 부르는 곳이 안 넘겨도 안 깨진다
+    분기3 = {"가": [{"filing_date": "2026-08-25", "announced_date": None}]}
+    assert dataset._recover_announced(분기3, {"가": ["2026-10-26"]}, [],
+                                     오늘=None) == 1
+
+
+def test_build_는_수집일을_넘겨_미래_발표일을_막는다():
+    """배선 확인 — build 가 오늘을 안 넘기면 위 가드가 도는 코드가 아니다."""
+    스냅 = {"saved_at": "2026-09-02T18:05:43+00:00",
+           "benchmark": "SPY",
+           "eps": {"가": [{"filing_date": "2026-08-25", "announced_date": None,
+                          "period_label": "26/08", "revenue": 1e8,
+                          "op_income": 1e7, "adj_eps": 0.5,
+                          "adjusted_ebitda": 2e7, "gaap_eps": 0.4}]},
+           "prices": {"SPY": {"dates": ["2026-08-11", "2026-08-12"],
+                              "close": [500.0, 501.0]}}}
+    ds = dataset.build(스냅, announcements={"가": ["2026-10-26"]})
+    assert ds["quarters"]["가"][0]["announced_date"] is None, "미래 예정일이 들어왔습니다"
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

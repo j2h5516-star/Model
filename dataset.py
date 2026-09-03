@@ -1237,11 +1237,21 @@ def load_announcements(path: str | None = None) -> dict:
     return out
 
 
-def _recover_announced(quarters: dict, 발표: dict, notes: list[str]) -> int:
-    """발표일이 빈 행을 바깥 자의 발표일로 채웁니다. 덮어쓰지 않습니다."""
+def _recover_announced(quarters: dict, 발표: dict, notes: list[str],
+                       오늘: str | None = None) -> int:
+    """발표일이 빈 행을 바깥 자의 발표일로 채웁니다. 덮어쓰지 않습니다.
+
+    `오늘` 보다 뒤의 날짜는 쓰지 않습니다 (176차) — 바깥 자(야후)의
+    발표 기록에는 **아직 오지 않은 예정일**이 섞여 있습니다. 실물 CINF:
+    스냅샷에는 발표일 2026-08-25 가 있었는데 상식 검사(분기끝 뒤 10~70일)에
+    걸려 지워졌고, 그 빈자리를 예정일 **2026-10-26**(수집일보다 54일 뒤)
+    이 채웠습니다. 일어나지도 않은 발표가 사건이 되면 창 60거래일을 잴
+    수 없고, 원문 부탁 목록도 존재하지 않는 공시를 영원히 조릅니다.
+    """
     from datetime import date as _date
 
     채움 = 0
+    막음 = 0
     for ticker, rows in (quarters or {}).items():
         날들 = 발표.get(ticker) or []
         if not 날들:
@@ -1266,6 +1276,9 @@ def _recover_announced(quarters: dict, 발표: dict, notes: list[str]) -> int:
                     사이 = (_date.fromisoformat(날) - 끝).days
                 except ValueError:
                     continue
+                if 오늘 and 날 > 오늘:
+                    막음 += 1
+                    continue           # 아직 오지 않은 예정일 — 사실이 아님
                 if 0 <= 사이 <= ANNOUNCE_WINDOW_DAYS and 날 not in 쓰인날:
                     후보.append(날)
             # 딱 하나일 때만 — 여럿이면 어느 것인지 모르므로 비워 둡니다
@@ -1279,6 +1292,11 @@ def _recover_announced(quarters: dict, 발표: dict, notes: list[str]) -> int:
             f"발표일이 비어 있던 {채움}행을 바깥 자(야후)의 발표일로 "
             f"채웠습니다 — 분기끝 뒤 0~{ANNOUNCE_WINDOW_DAYS}일 안에 "
             "발표 기록이 정확히 하나일 때만. 우리 값은 덮어쓰지 않습니다."
+        )
+    if 막음:
+        notes.append(
+            f"바깥 자의 발표 기록 중 {막음}건은 수집일({오늘}) 보다 뒤라 "
+            "쓰지 않았습니다 — 아직 오지 않은 예정일입니다 (176차)"
         )
     return 채움
 
@@ -1375,7 +1393,9 @@ def build(snapshot: dict, splits: dict | None = None,
     if announcements is None:
         announcements = load_announcements()
     if announcements:
-        _recover_announced(quarters, announcements, notes)
+        # 수집일보다 뒤의 "예정일"을 사실로 쓰지 않도록 오늘을 넘깁니다(176차).
+        _recover_announced(quarters, announcements, notes,
+                           오늘=str(snapshot.get("saved_at") or "")[:10] or None)
     # 액면분할 단위 환산 (112차) — 공식 기록이 있는 종목만.
     # 검사(_clean_quarters) 뒤에 하는 이유: 상한 검사 등은 발표 당시
     # 원문 값 기준이어야 하고, 환산은 그다음의 단위 맞추기이기 때문입니다.
