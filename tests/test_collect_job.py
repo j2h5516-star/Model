@@ -102,6 +102,10 @@ def test_run_writes_snapshot_and_log(tmp_dir="/tmp/claude-0/robot_test"):
         # 159차 — 사라진 회사 검색 결과도 로그까지 실려야 한다.
         assert "사라진회사_검색" in log["per_ticker"][0], log["per_ticker"][0].keys()
         assert "회사번호로_열었음" in log["per_ticker"][0], log["per_ticker"][0].keys()
+        # 174차 — SEC 429 계기도 로그까지 실려야 한다. 172차에 이 칸이 없어
+        # 냉각이 돌았는지 확인할 수 없었다(만들고 배선을 잊은 계기 3번째).
+        assert "sec_429" in log["per_ticker"][0], log["per_ticker"][0].keys()
+        assert log["sec_429_합계"] == 0, log["sec_429_합계"]
         # v3 5단계 — 수집 성공 시 자동 판정도 기록되어야 합니다.
         # (가짜 데이터는 분기 1개뿐이라 사건 0건 → 전 가설 '판정 불가'가 정답)
         assert "verdict" in log, log.keys()
@@ -640,6 +644,47 @@ def test_6K_종목은_실적_문서만_통과하고_이름_변경_이전은_읽�
     # 6-K 종목은 연도 열 표를 문장 파서보다 우선 — 이 배선이 없으면 NBIS 매출이
     # 전년 열(32.1)로 읽힌다(돌연변이 확인에서 실제로 초록불이 남았던 구멍).
     assert "year_table_priority=fpi" in src, "연도 열 표 우선 배선이 없습니다"
+
+
+def test_월간_운영_보고는_분기_실적발표로_치지_않는다():
+    """174차 — IREN 실물: 달마다 내는 "June 2025 Monthly Update" 가 EX-99 첨부
+    길로 통과해 6/30 분기를 차지했다(진짜 발표 08-28 은 버려짐). 발표일이
+    50일 넘게 틀어지면 창 60거래일의 시작점이 통째로 어긋난다."""
+    sf = cj.sf
+    import inspect
+    월간 = ("Exhibit 99.1\n\nJune 2025 Monthly Update 810MW Data Center Capacity\n"
+          "SYDNEY, July 7, 2025 (GLOBE NEWSWIRE) -- IREN Limited today published its "
+          "monthly update. Revenue $65.5m Total Net Electricity Costs $16m")
+    실적 = ("Exhibit 99.1\n\nIREN Reports Q1 FY26 Results\n"
+          "SYDNEY, November 6, 2025 -- IREN Limited today announced financial results for "
+          "the first quarter ended September 30, 2025. Revenue $240.3m")
+    assert sf._looks_like_monthly_update(월간) is True
+    assert sf._looks_like_monthly_update(실적) is False, "진짜 실적발표를 막았습니다"
+    assert sf._looks_like_monthly_update("") is False
+    # 월간 보고 형식이어도 분기 실적 제목이 함께 있으면 막지 않습니다
+    같이 = 월간.replace("Monthly Update 810MW", "Monthly Update — reports first quarter results")
+    assert sf._looks_like_monthly_update(같이) is False
+    # 제목 자리(앞 900자)가 아니라 본문 뒤쪽에 있는 말은 막지 않습니다
+    뒤쪽 = "Exhibit 99.1\n\nIREN Reports FY26 Results\n" + "x" * 1000 + " monthly update"
+    assert sf._looks_like_monthly_update(뒤쪽) is False
+    src = inspect.getsource(sf.fetch_earnings_8k)
+    assert "_looks_like_monthly_update(text)" in src, "월간 보고 차단 배선이 없습니다"
+
+
+def test_실물_IREN_월간_보고와_진짜_실적발표를_가른다():
+    """174차 — 저장소에 있는 실제 원문으로 확인(픽스처가 아니라 실물)."""
+    import os
+    sf = cj.sf
+    뿌리 = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                      "data", "measure", "raw")
+    월간 = os.path.join(뿌리, "IREN_2025-07-07.txt")
+    실적 = os.path.join(뿌리, "IREN_2026-08-27.txt")
+    if not (os.path.exists(월간) and os.path.exists(실적)):
+        return                      # 원문이 없는 환경에서는 건너뜁니다
+    t월 = open(월간, encoding="utf-8", errors="ignore").read()
+    t실 = open(실적, encoding="utf-8", errors="ignore").read()
+    assert sf._looks_like_monthly_update(t월) is True, "실물 월간 보고를 못 걸렀습니다"
+    assert sf._looks_like_monthly_update(t실) is False, "실물 실적발표를 막았습니다"
 
 
 def test_SEC_429는_모든_일꾼이_함께_10분_멈춘_뒤_한_번_더_시도한다():

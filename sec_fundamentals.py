@@ -2907,6 +2907,10 @@ def fetch_earnings_8k(
         # 대개 EX-99 첨부라, 표지 판별을 건너뛰는 길로 그대로 들어옵니다.
         if _looks_like_slide_deck(text):
             continue
+        # 달마다 내는 운영 보고는 분기 실적발표가 아닙니다 (174차, 실물 IREN).
+        # 슬라이드 검사와 마찬가지로 EX-99 첨부 길로도 새지 않게 여기서 막습니다.
+        if _looks_like_monthly_update(text):
+            continue
         if fpi and not _fpi_results_document(text):
             continue                  # 173차 — 공모·배당·계약 6-K 는 실적 문서가 아님
 
@@ -3095,6 +3099,40 @@ _SLIDE_DECK_MIN = 10
 def _looks_like_slide_deck(text: str) -> bool:
     """쪽 번호가 박힌 그림이 여럿이면 투자자 설명회 자료입니다."""
     return len(_SLIDE_SRC_RE.findall(text)) >= _SLIDE_DECK_MIN
+
+
+# 월간 운영 보고(월간 업데이트)를 실적발표와 가르는 표시 (174차)
+# ---------------------------------------------------------------------------
+# 실물 사고: IREN 은 **달마다** 8-K 로 운영 실적을 냅니다("June 2025 Monthly
+# Update"). 그 안에 "Revenue $65.5m" 같은 숫자가 있어 보도자료 첨부(EX-99)
+# 길로 그대로 통과했고, 분기 발표로 짝지어졌습니다:
+#
+#     25Q4(6/30 끝) → 07-07 월간 보고가 차지  (진짜 발표는 08-28)
+#     26Q4(6/30 끝) → 07-20 월간 보고가 차지  (진짜 발표는 08-27)
+#
+# 매출 자체는 XBRL 이 지켜 줬지만 **발표일이 50일 넘게 틀어졌습니다.**
+# 발표일은 이 모델에서 사건이 일어난 날짜(창 60거래일의 시작점)이므로
+# 틀린 발표일은 측정 자체를 어긋나게 합니다.
+#
+# 저장소 원문 2,312건 실측: 앞 900자에 이 표시가 있는 문서는 위 IREN
+# 한 건뿐이었습니다(다른 종목 오탐 0). 실적 제목이 함께 있으면(연간 실적을
+# 월간 보고 형식으로 내는 회사) 막지 않습니다.
+_MONTHLY_UPDATE_RE = re.compile(
+    r"monthly\s+(?:investor\s+|business\s+|operations?\s+|activities\s+)?(?:update|report)"
+    r"|(?:january|february|march|april|may|june|july|august|september|october"
+    r"|november|december)\s+20\d{2}\s+(?:monthly\s+)?update",
+    re.I,
+)
+
+
+def _looks_like_monthly_update(text: str) -> bool:
+    """제목 자리에 '월간 보고' 표시가 있고 분기 실적 제목은 없는 문서인가."""
+    if not text:
+        return False
+    head = re.sub(r"\s+", " ", text[:900])
+    if not _MONTHLY_UPDATE_RE.search(head):
+        return False
+    return not _RESULTS_HINTS_RE.search(head)
 
 
 def _looks_like_earnings(text: str) -> bool:

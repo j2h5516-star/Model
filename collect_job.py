@@ -446,10 +446,16 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
                 "사라진회사_검색": r.get("사라진회사_검색") or {},
                 "회사번호로_열었음": r.get("회사번호로_열었음"),
                 "시간초과": bool(r.get("시간초과")),
+                # 170차 계기 — SEC 가 "너무 잦다"(429)며 막은 횟수. 172차에
+                # 이 칸이 없어 냉각이 실제로 돌았는지 로그로 확인할 수 없었고,
+                # 런이 57분 길어진 이유를 짐작으로만 적었습니다.
+                "sec_429": r.get("sec_429", 0),
                 "note": r.get("note", ""),
             }
             for r in reports
         ],
+        # 런 전체의 429 합계 — 종목별 칸을 다 더하지 않아도 한눈에 보이게.
+        "sec_429_합계": sum(r.get("sec_429", 0) for r in reports),
     }
     files[f"{cfg.MEASURE_DIR}/robot_log.json"] = json.dumps(log, ensure_ascii=False, indent=1)
 
