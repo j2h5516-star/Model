@@ -792,6 +792,64 @@ def test_부탁목록_갱신이_이미_받은_원문을_거른다():
             os.unlink(path)
 
 
+def test_이번_런이_방금_담은_원문도_부탁에서_뺀다():
+    """178차 — 런 #68 실측: 새로 적은 부탁 120건 중 104건이 그 런에서 이미
+    담아 온 것이었다. 로봇은 원문을 files 사전에 모아 두었다가 런 맨 끝에
+    커밋하는데, 부탁 목록 갱신은 그보다 앞에서 디스크만 본다. 그래서 목록이
+    늘 한 런씩 뒤처져 자리 120칸 중 16칸만 새 일이었다."""
+    import json
+    import tempfile
+
+    본 = audit_data.이번런에_담은_원문({
+        "data/measure/raw/AA_2025-01-01.txt": "…",
+        "data/measure/raw/BB_2025-02-02_부탁.txt": "…",
+        "data/measure/snapshot.json": "…",          # 원문이 아닌 파일은 안 셈
+        "data/measure/raw/이상한이름.txt": "…",
+    })
+    assert 본 == {("AA", "2025-01-01"), ("BB", "2025-02-02")}, 본
+    assert audit_data.이번런에_담은_원문(None) == set()
+
+    quarters = _구멍있는종목("ZZ")
+    with tempfile.TemporaryDirectory() as raw, \
+            tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        path = f.name
+        옛 = audit_data.RAW_DIR
+        audit_data.RAW_DIR = raw          # 디스크는 비어 있다
+        try:
+            audit_data.refresh_wanted(quarters, None, path=path,
+                                      progress=lambda *a: None)
+            with open(path, encoding="utf-8") as fh:
+                전 = [(r["종목"], str(r["발표일"])[:10]) for r in json.load(fh)["목록"]]
+            assert 전, "시험 전제가 깨졌습니다 — 목록이 비었습니다"
+            # 같은 것을 이번 런이 담았다고 알려 주면 다시 부탁하지 않는다
+            이번 = {f"data/measure/raw/{종목}_{날}_부탁.txt": "…" for 종목, 날 in 전}
+            audit_data.refresh_wanted(quarters, None, path=path,
+                                      progress=lambda *a: None, files=이번)
+            with open(path, encoding="utf-8") as fh:
+                후 = [(r["종목"], str(r["발표일"])[:10]) for r in json.load(fh)["목록"]]
+            assert not set(후) & set(전), f"방금 담은 원문을 또 부탁했습니다: {후}"
+
+            # 이웃 튐 재료(write_wanted 안쪽)까지 같은 집합을 봐야 합니다 —
+            # refresh_wanted 만 걸러도 이 갈래가 새면 목록은 그대로 뒤처집니다.
+            값들 = [1.18, 1.22, 5.18, 1.20, 1.21]
+            튐 = {"VZ": [분기(f"Q{i}", adj_eps=v, announced_date=f"2023-0{i + 1}-01")
+                        for i, v in enumerate(값들)]}
+            audit_data.refresh_wanted(튐, None, path=path,
+                                      progress=lambda *a: None)
+            with open(path, encoding="utf-8") as fh:
+                튄전 = [(r["종목"], str(r["발표일"])[:10]) for r in json.load(fh)["목록"]]
+            assert any(t == "VZ" for t, _ in 튄전), 튄전
+            이번2 = {f"data/measure/raw/{종목}_{날}.txt": "…" for 종목, 날 in 튄전}
+            audit_data.refresh_wanted(튐, None, path=path,
+                                      progress=lambda *a: None, files=이번2)
+            with open(path, encoding="utf-8") as fh:
+                튄후 = [(r["종목"], str(r["발표일"])[:10]) for r in json.load(fh)["목록"]]
+            assert not set(튄후) & set(튄전), f"이웃 튐 갈래가 샜습니다: {튄후}"
+        finally:
+            audit_data.RAW_DIR = 옛
+            os.unlink(path)
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

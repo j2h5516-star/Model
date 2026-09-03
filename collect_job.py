@@ -283,10 +283,12 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         # 이제 로봇이 매일 다시 적고, **다음 런이 그 원문을 담아 옵니다.**
         try:
             import audit_data
+            # files 를 함께 넘깁니다 (178차) — 이번 런이 방금 담아 온 원문은
+            # 아직 디스크에 없어서, 안 넘기면 같은 공시를 또 부탁합니다.
             audit_data.refresh_wanted(
                 ds["quarters"],
                 vendor_feed.load(f"{cfg.MEASURE_DIR}/vendor.json"),
-                progress=progress)
+                progress=progress, files=files)
         except Exception as exc:
             progress(f"⚠️ 부탁 목록 갱신 실패: {type(exc).__name__}: {str(exc)[:120]}")
         completions = sector_model.completion_events(ds)

@@ -646,6 +646,16 @@ def test_6K_종목은_실적_문서만_통과하고_이름_변경_이전은_읽�
     assert "year_table_priority=fpi" in src, "연도 열 표 우선 배선이 없습니다"
 
 
+def test_부탁목록_갱신에_이번_런의_원문을_넘긴다():
+    """178차 — 안 넘기면 부탁 목록이 한 런 뒤처진다(런 #68 실측: 120칸 중
+    104칸이 그 런에서 이미 담아 온 공시였다)."""
+    import inspect
+    src = inspect.getsource(cj.run)
+    assert "refresh_wanted" in src, "부탁 목록 갱신 배선이 없습니다"
+    조각 = src[src.index("refresh_wanted"):src.index("refresh_wanted") + 400]
+    assert "files=files" in 조각, "이번 런의 원문을 안 넘깁니다"
+
+
 def test_월간_운영_보고는_분기_실적발표로_치지_않는다():
     """174차 — IREN 실물: 달마다 내는 "June 2025 Monthly Update" 가 EX-99 첨부
     길로 통과해 6/30 분기를 차지했다(진짜 발표 08-28 은 버려짐). 발표일이

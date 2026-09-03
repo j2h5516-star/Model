@@ -370,7 +370,8 @@ def merge_wanted(*목록들: list[dict], limit: int = 60) -> list[dict]:
 
 def write_wanted(quarters: dict, path: str = WANTED_PATH,
                  extra: list[dict] | None = None,
-                 tail: list[dict] | None = None) -> int:
+                 tail: list[dict] | None = None,
+                 받음: set | None = None) -> int:
     """로봇이 읽을 '원문 부탁 목록'을 파일로 적고, 건수를 돌려줍니다.
 
     extra 로 바깥 자(야후)와 어긋난 칸을 함께 넘기면 앞자리에 놓습니다.
@@ -391,7 +392,8 @@ def write_wanted(quarters: dict, path: str = WANTED_PATH,
     # 이웃 튐도 **제 몫만큼 잘라서** 넣습니다 (150차). 안 자르면 앞 재료가
     # 남은 자리를 다 먹거나, 반대로 이웃 튐이 뒤 재료를 굶깁니다.
     # 이웃 튐 재료도 이미 받은 원문을 거른 뒤 몫만큼 자릅니다 (177차).
-    받음 = 이미_받은_원문()
+    if 받음 is None:
+        받음 = 이미_받은_원문()
     앞 = merge_wanted(extra or [],
                      받은것_빼기(wanted_raw_filings(quarters, limit=400),
                               받음)[:NEIGHBOR_QUOTA],
@@ -585,8 +587,29 @@ def wanted_from_scale(quarters: dict, limit: int = 40) -> list[dict]:
     return out[:limit]
 
 
+def 이번런에_담은_원문(files: dict | None) -> set[tuple[str, str]]:
+    """이번 런이 **아직 디스크에 안 쓴** 원문의 (종목, 발표일) 짝 (178차).
+
+    로봇은 원문을 `files` 사전에 모아 두었다가 런 **맨 끝**에 커밋합니다.
+    그런데 부탁 목록 갱신은 그보다 앞에서 돌면서 디스크만 봅니다. 그래서
+    **이번 런이 방금 담아 온 원문을 모른 채** 목록을 적어, 같은 공시를
+    한 번 더 부탁했습니다 — 목록이 늘 한 런씩 뒤처졌습니다.
+
+    실측(런 #68, 2026-09-03): 새로 적은 부탁 120건 중 **104건**이 그 런에서
+    이미 담아 온 것이었습니다. 즉 다음 런의 자리 120칸 중 16칸만 새 일이었습니다.
+    """
+    본 = set()
+    for path in (files or {}):
+        name = str(path).rsplit("/", 1)[-1]
+        m = _RAW_NAME_RE.match(name)
+        if m:
+            본.add((m.group(1), m.group(2)))
+    return 본
+
+
 def refresh_wanted(quarters: dict, vendor: dict | None,
-                   path: str = WANTED_PATH, progress=print) -> int:
+                   path: str = WANTED_PATH, progress=print,
+                   files: dict | None = None) -> int:
     """부탁 목록을 다시 적습니다 — **로봇이 매일 부르는 자리** (134차).
 
     115차에 만든 배관은 사람이 audit_data.py 를 직접 돌릴 때만 돌았습니다.
@@ -596,7 +619,8 @@ def refresh_wanted(quarters: dict, vendor: dict | None,
     """
     # 이미 원문을 받아 둔 공시는 **자르기 전에** 뺍니다 (177차). 잘라낸
     # 뒤에 빼면 그 자리가 빈 채로 남아, 새 후보가 여전히 못 들어옵니다.
-    받음 = 이미_받은_원문()
+    # 디스크에 있는 것 + **이번 런이 방금 담은 것**(178차) 둘 다 뺍니다.
+    받음 = 이미_받은_원문() | 이번런에_담은_원문(files)
     바깥: list[dict] = []
     if vendor:
         try:
@@ -621,7 +645,7 @@ def refresh_wanted(quarters: dict, vendor: dict | None,
         wanted_from_holes(quarters, newest_first=True, limit=400), 받음
     )[:FRESH_HOLE_QUOTA]
     구멍 = 받은것_빼기(wanted_from_holes(quarters, limit=400), 받음)[:HOLE_QUOTA]
-    count = write_wanted(quarters, path=path,
+    count = write_wanted(quarters, path=path, 받음=받음,
                          extra=바깥, tail=자릿수 + 신선구멍 + 구멍)
     progress(f"원문 부탁 목록 {count}건 갱신 "
              f"(이미 받은 원문 {len(받음)}건은 뺌 · "
