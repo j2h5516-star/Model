@@ -809,6 +809,12 @@
     "est": 2.39835,
     "act": 2.44,
     "surprise_pct": 1.7
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 3.238,
+    "act": 3.32,
+    "surprise_pct": 2.5
    }
   ],
   "QCOM": [
@@ -1697,6 +1703,12 @@
     "est": 0.31981,
     "act": 0.39,
     "surprise_pct": 21.9
+   },
+   {
+    "quarter": "2026-07-31",
+    "est": 0.44698,
+    "act": 0.62,
+    "surprise_pct": 38.7
    }
   ],
   "OKTA": [

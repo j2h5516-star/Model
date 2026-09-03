@@ -1,0 +1,401 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — SNAP 2023-07-25
+# 출처: https://www.sec.gov/Archives/edgar/data/1564408/000156440823000036/snap-20230725.htm
+
+Document
+
+Exhibit 99.1
+Snap Inc. Announces Second Quarter 2023 Financial Results
+Daily Active Users increased 14% year-over-year to 397 million
+Second quarter revenue was $1,068 million
+Trailing twelve months operating cash flow was $250 million
+Trailing twelve months Free Cash Flow was $81 million
+SANTA MONICA, Calif. – July 25, 2023 – Snap Inc. (NYSE: SNAP) today announced financial results for the quarter ended June 30, 2023.
+“We are excited by the progress we have made delivering increased return on investment for our advertising partners, growing our community to 397 million daily active users, and reaching more than 4 million Snapchat+ subscribers,” said Evan Spiegel, CEO. 
+Q2 2023 Financial Summary
+•Revenue was $1,068 million, compared to $1,111 million in the prior year.
+•Net loss was $377 million, compared to $422 million in the prior year.
+•Adjusted EBITDA was $(38) million, compared to $7 million in the prior year.
+•Operating cash flow was $(82) million, compared to $(124) million in the prior year.
+•Free Cash Flow was $(119) million, compared to $(147) million in the prior year.
+
+                                                                     Three Months Ended June 30,                                                    Percent               Six Months Ended June 30,                                                 Percent
+                                                                                                                                                     Change                                                                                          Change
+2023                                                                                       2022                                                                    2023   2022                                                  
+                                                                     (in thousands, except per share amounts)                                                                                                                                              
+(Unaudited)                                                          (NM = Not Meaningful)                                                                                                                                                                 
+Revenue                                                              $1,067,669                              $1,110,909                            (4)    %               $2,056,277                          $2,173,636                           (5)    %
+Operating loss                                                       $(404,339)                              $(400,940)                            (1)    %               $(769,603)                          $(672,467)                          (14)    %
+Net loss                                                             $(377,308)                              $(422,067)                             11    %               $(705,982)                          $(781,691)                            10    %
+Adjusted EBITDA(1)                                                   $(38,479)                               $7,190                              (635)    %               $(37,666)                           $71,658                            (153)    %
+Net cash provided by (used in) operating activities                  $(81,936)                               $(124,081)                             34    %               $69,166                             $3,378                                     NM
+Free Cash Flow(2)                                                    $(118,879)                              $(147,451)                             19    %               $(15,407)                           $(41,167)                             63    %
+Diluted net loss per share attributable to common stockholders       $(0.24)                                 $(0.26)                                 8    %               $(0.44)                             $(0.48)                                8    %
+Non-GAAP diluted net income (loss) per share(3)                      $(0.02)                                 $(0.02)                                 —    %               $(0.01)                             $(0.04)                               75    %
+(1)See page 10 for reconciliation of net loss to Adjusted EBITDA.
+(2)See page 10 for reconciliation of net cash provided by (used in) operating activities to Free Cash Flow.
+(3)See page 11 for reconciliation of diluted net loss per share to non-GAAP diluted net income (loss) per share.
+Q2 2023 Summary & Key Highlights
+We grew and deepened our engagement with our community:
+•DAUs were 397 million in Q2 2023, an increase of 50 million, or 14% year-over-year.
+•DAUs increased sequentially and year-over-year in each of North America, Europe, and Rest of World.
+•Total time spent watching Spotlight content more than tripled year-over-year, and Spotlight reached more than 400 million monthly active users on average in Q2, an increase of 51% year-over-year.
+•Since launching My AI, our AI-powered chatbot, over 150 million people have sent over 10 billion messages, which we believe makes My AI among the largest consumer chatbots available today.
+•We introduced My AI Snaps for Snapchat+ subscribers, allowing subscribers to send Snaps to My AI and receive an AI-generated Snap back that keeps the conversation going.
+•We expanded our Stories revenue share program to more creators, helping more people build businesses on Snapchat and enabling them to create content for our community.
+•We onboarded new media partners and renewed agreements globally as we continue to grow our local content offering, including ITV in the UK, ProSieben in Germany, Network 18 in India, and ESPN in the Netherlands.
+We are focused on accelerating and diversifying our revenue growth:
+•We are seeing significant adoption of our new 7/0 Pixel Purchase optimization model, which contributed to a more than 40% quarter-over-quarter increase in 7/0 Pixel Purchase conversions.
+•The combination of improvements to our machine learning (ML) infrastructure and systems for ad ranking and optimization have led to more relevant ads and a more than 30% increase in purchase related conversions quarter-over-quarter.
+•We introduced our Event Quality Score system to advertisers to measure the quality and integrity of their data, which we expect will lead to improvement in attribution and advertiser performance.
+•We made fundamental improvements to our privacy-preserving identity graph and modeled conversions, which will strengthen the connection between identity, attribution, and optimization.
+•Snapchat+, our subscription service that offers exclusive, experimental, and pre-release features, reached over 4 million paying subscribers in Q2, one year after launch.
+•We introduced new Snapchat+ features like app icons, custom themes, and Bitmoji pets & cars on the Snap Map.
+•We launched ads in Spotlight for all advertisers globally, allowing brands to reach the Snapchat audience on our newest surface.
+•We are testing My AI monetization with sponsored links that connect our community with partners relevant to their conversation in that moment, while helping brands reach Snapchatters who have indicated potential interest in their offerings.
+•We launched First Story, which enables advertisers to reserve the first video ad between Friend Stories, making First Story the latest offering in our takeover lineup, following First Commercial and First Lens.
+•We made it easier for brands and creators to work together with the US launch of the Snap Star Collab Studio for brands to source, partner, and drive results with Snap Stars.
+2
+
+
+We invested in our augmented reality platform: 
+•We launched Lens Performance Toolkit in Lens Studio, which offers developers a dashboard view of performance-related metrics for Lenses that are in development. 
+•We introduced ML Retouch, our newest retouch feature powered by ML in Lens Studio, which enables Creators to easily switch on the feature for realistic skin retouch and accurate texture.
+•We announced a partnership with Roboflow that enables Lens Studio developers to utilize Roboflow’s ML tools to easily train and bring models directly into SnapML.
+•We launched our first Snap AR Learn Hub, which includes AR courses to teach different AR development concepts in Lens Studio, along with a library of live streams and product tutorials.
+•We partnered with OPI, a beauty brand, on a Lens featuring first-of-its-kind Snap AR tech called Nails Segmentation, which makes the digital nail try-on experience more realistic than ever before.
+•Snapchat and Disney came together in a groundbreaking collaboration at the 2023 Cannes Lions International Festival of Creativity that illustrated how Augmented Reality can enhance storytelling, and brought to life legendary characters and tales in celebration of Disney100.
+•Snapchat’s AR Studio in Paris teamed up with Daft Punk to celebrate the release of Random Access Memories 10th Anniversary Edition by bringing to life “Daft Punk: Memories Unlocked,” a series of new augmented reality experiences for fans around the world.
+•Camera Kit Live was launched to additional venues and music tours, including Duran Duran’s successful arena tour, the Barclays Center in Brooklyn, New York, and the NBA draft.
+•We introduced new advanced Snapchat Lenses built by teams from the Snap AR community including Brick.it which used SnapML to integrate Brick.it’s custom-built ML model, letting Snapchatters scan a pile of toy bricks, identify pieces, and suggest ideas for what can be built.
+•In honor of Juneteenth, Snap Lens Network developer, Andre Elijah Immersive, and Santa Monica History Museum collaborated to show the city’s history in AR – bringing stories out of the museum and into the neighborhood.
+3
+
+
+Q3 Outlook
+As we enter Q3, we anticipate continued robust growth in our global community and, as a result, our financial guidance for Q3 is built on the assumption that DAU will reach 405 million to 406 million in Q3. From a revenue perspective, our business remains in a period of rapid transition as we work to improve our advertising platform, while forward visibility of advertising demand remains limited. Our guidance range for Q3 revenue reflects our best estimate of these factors, with total revenue estimated to be between $1,070 to $1,130 million implying negative 5% to flat year-over-year growth. At this level of revenue, we estimate that Adjusted EBITDA will be between negative $50 million and negative $100 million reflecting estimated infrastructure costs per DAU of $0.79 to $0.84 in Q3, as we continue to invest in ML, AI, and other infrastructure to improve the performance of our ad platform, drive deeper content engagement, and bring innovative product experiences to our community. This forecast also assumes modest sequential headcount growth as we continue to carefully calibrate our operating investments to focus on the inputs most essential to the acceleration of topline growth.
+Conference Call Information
+Snap Inc. will host a conference call to discuss the results at 2:30 p.m. Pacific / 5:30 p.m. Eastern today. The live audio webcast along with supplemental information will be accessible at investor.snap.com. A recording of the webcast will also be available following the conference call.
+Snap Inc. uses its websites (including snap.com and investor.snap.com) as means of disclosing material non-public information and for complying with its disclosure obligation under Regulation FD.
+Definitions
+Free Cash Flow is defined as net cash provided by (used in) operating activities, reduced by purchases of property and equipment.
+Common shares outstanding plus shares underlying stock-based awards includes common shares outstanding, restricted stock units, restricted stock awards, and outstanding stock options.
+Adjusted EBITDA is defined as net income (loss), excluding interest income; interest expense, other income (expense), net; income tax benefit (expense); depreciation and amortization; stock-based compensation expense; payroll and other tax expense related to stock-based compensation; and certain other non-cash or non-recurring items impacting net income (loss) from time to time.
+A Daily Active User (DAU) is defined as a registered Snapchat user who opens the Snapchat application at least once during a defined 24-hour period. We calculate average DAUs for a particular quarter by adding the number of DAUs on each day of that quarter and dividing that sum by the number of days in that quarter.
+Average revenue per user (ARPU) is defined as quarterly revenue divided by the average DAUs.
+A Monthly Active User (MAU) is defined as a registered Snapchat user who opens the Snapchat application at least once during the 30-day period ending on the calendar month-end. We calculate average Monthly Active Users for a particular quarter by calculating the average of the MAUs as of each calendar month-end in that quarter.
+Note: For adjustments and additional information regarding the non-GAAP financial measures and other items discussed, please see “Non-GAAP Financial Measures,” “Reconciliation of GAAP to Non-GAAP Financial Measures,” and “Supplemental Financial Information and Business Metrics.”
+About Snap Inc.
+Snap Inc. is a technology company. We believe the camera presents the greatest opportunity to improve the way people live and communicate. We contribute to human progress by empowering people to express themselves, live in the moment, learn about the world, and have fun together. For more information, visit snap.com.
+4
+
+
+Contact
+Investors and Analysts:
+ir@snap.com
+Press:
+press@snap.com
+Forward-Looking Statements
+This press release contains forward-looking statements within the meaning of Section 27A of the Securities Act of 1933, as amended, or the Securities Act, and Section 21E of the Securities Exchange Act of 1934, as amended, or the Exchange Act, about us and our industry that involve substantial risks and uncertainties. All statements other than statements of historical facts contained in this press release, including statements regarding guidance, our future results of operations or financial condition, future stock repurchase programs or stock dividends, business strategy and plans, user growth and engagement, product initiatives, objectives of management for future operations, and advertiser and partner offerings, are forward-looking statements. In some cases, you can identify forward-looking statements because they contain words such as “anticipate,” “believe,” “contemplate,” “continue,” “could,” “estimate,” “expect,” “going to,” “intend,” “may,” “plan,” “potential,” “predict,” “project,” “should,” “target,” “will,” or “would” or the negative of these words or other similar terms or expressions. We caution you that the foregoing may not include all of the forward-looking statements made in this press release.
+You should not rely on forward-looking statements as predictions of future events. We have based the forward-looking statements contained in this press release primarily on our current expectations and projections about future events and trends, including our financial outlook, macroeconomic uncertainty, and geo-political conflicts, that we believe may continue to affect our business, financial condition, results of operations, and prospects. These forward-looking statements are subject to risks and uncertainties related to: our financial performance; our ability to attain and sustain profitability; our ability to generate and sustain positive cash flow; our ability to attract and retain users, partners, and advertisers; competition and new market entrants; managing our growth and future expenses; compliance with new laws, regulations, and executive actions; our ability to maintain, protect, and enhance our intellectual property; our ability to succeed in existing and new market segments; our ability to attract and retain qualified team members and key personnel; our ability to repay or refinance outstanding debt, or to access additional financing; future acquisitions, divestitures, or investments; and the potential adverse impact of climate change, natural disasters, health epidemics, macroeconomic conditions, and war or other armed conflict, as well as risks, uncertainties, and other factors described in “Risk Factors” and elsewhere in our most recent periodic report filed with the U.S. Securities and Exchange Commission, or SEC, which is available on the SEC’s website at www.sec.gov. Additional information will be made available in our periodic report that will be filed with the SEC for the period covered by this press release and other filings that we make from time to time with the SEC. In addition, any forward-looking statements contained in this press release are based on assumptions that we believe to be reasonable as of this date. We undertake no obligation to update any forward-looking statements to reflect events or circumstances after the date of this press release or to reflect new information or the occurrence of unanticipated events, including future developments related to geo-political conflicts and macroeconomic conditions, except as required by law.
+Non-GAAP Financial Measures
+To supplement our consolidated financial statements, which are prepared and presented in accordance with GAAP, we use certain non-GAAP financial measures, as described below, to understand and evaluate our core operating performance. These non-GAAP financial measures, which may be different than similarly titled measures used by other companies, are presented to enhance investors’ overall understanding of our financial performance and should not be considered a substitute for, or superior to, the financial information prepared and presented in accordance with GAAP.
+We use the non-GAAP financial measure of Free Cash Flow, which is defined as net cash provided by (used in) operating activities, reduced by purchases of property and equipment. We believe Free Cash Flow is an important liquidity measure of the cash that is available, after capital expenditures, for operational expenses and investment in our business and is a key financial indicator used by management. Additionally, we believe that Free Cash Flow is an important measure since we use third-party infrastructure partners to host our services and therefore we do not incur significant capital expenditures to support revenue generating activities. Free Cash Flow is useful to investors as a liquidity measure because it measures our ability to generate or use cash. Once our business needs and obligations are met, cash can be used to maintain a strong balance sheet and invest in future growth.
+5
+
+
+We use the non-GAAP financial measure of Adjusted EBITDA, which is defined as net income (loss); excluding interest income; interest expense; other income (expense), net; income tax benefit (expense); depreciation and amortization; stock-based compensation expense; payroll and other tax expense related to stock-based compensation; and certain other non-cash or non-recurring items impacting net income (loss) from time to time. We believe that Adjusted EBITDA helps identify underlying trends in our business that could otherwise be masked by the effect of the expenses that we exclude in Adjusted EBITDA.
+We use the non-GAAP financial measure of non-GAAP net income (loss), which is defined as net income (loss); excluding amortization of intangible assets; stock-based compensation expense; payroll and other tax expense related to stock-based compensation; certain other non-cash or non-recurring items impacting net income (loss) from time to time; and related income tax adjustments. Non-GAAP net income (loss) and weighted average diluted shares are then used to calculate non-GAAP diluted net income (loss) per share. Similar to Adjusted EBITDA, we believe these measures help identify underlying trends in our business that could otherwise be masked by the effect of the expenses we exclude in the measure.
+We believe that these non-GAAP financial measures provide useful information about our financial performance, enhance the overall understanding of our past performance and future prospects, and allow for greater transparency with respect to key metrics used by our management for financial and operational decision-making. We are presenting these non-GAAP measures to assist investors in seeing our financial performance through the eyes of management, and because we believe that these measures provide an additional tool for investors to use in comparing our core financial performance over multiple periods with other companies in our industry.
+For a reconciliation of these non-GAAP financial measures to the most directly comparable GAAP financial measure, please see “Reconciliation of GAAP to Non-GAAP Financial Measures.”
+Snap Inc., “Snapchat,” and our other registered and common law trade names, trademarks, and service marks are the property of Snap Inc. or our subsidiaries.
+6
+
+
+SNAP INC.
+CONSOLIDATED STATEMENTS OF CASH FLOWS
+(in thousands, unaudited)
+
+                                                                                                                                Three Months Ended June 30,                                         Six Months Ended June 30,
+2023                                                                                                                  2022                                                           2023   2022                             
+Cash flows from operating activities                                                                                                                                                                                         
+Net loss                                                                                           $(377,308)                              $(422,067)                     $(705,982)                          $(781,691)     
+Adjustments to reconcile net loss to net cash provided by (used in) operating activities:                                                                                                                                    
+Depreciation and amortization                                                                          39,688                                  79,291                         74,908                             117,391     
+Stock-based compensation                                                                              317,943                                 318,810                        632,874                             594,254     
+Amortization of debt issuance costs                                                                     1,839                                   1,780                          3,675                               3,193     
+Losses (gains) on debt and equity securities, net                                                     (4,434)                                  12,210                       (15,267)                              91,337     
+Other                                                                                                (16,307)                                   3,079                       (26,703)                               4,204     
+Change in operating assets and liabilities, net of effect of acquisitions:                                                                                                                                                   
+Accounts receivable, net of allowance                                                               (103,629)                                (81,001)                        184,744                              45,026     
+Prepaid expenses and other current assets                                                             (1,098)                                (11,980)                       (14,302)                            (39,158)     
+Operating lease right-of-use assets                                                                    17,817                                  18,299                         35,475                              35,283     
+Other assets                                                                                          (1,275)                                 (7,230)                          (425)                             (7,538)     
+Accounts payable                                                                                        8,426                                 (3,919)                       (28,546)                              51,061     
+Accrued expenses and other current liabilities                                                         52,981                                (14,392)                       (37,210)                            (77,220)     
+Operating lease liabilities                                                                          (17,792)                                (16,499)                       (36,342)                            (34,315)     
+Other liabilities                                                                                       1,213                                   (462)                          2,267                               1,551     
+Net cash provided by (used in) operating activities                                                  (81,936)                               (124,081)                         69,166                               3,378     
+Cash flows from investing activities                                                                                                                                                                                         
+Purchases of property and equipment                                                                  (36,943)                                (23,370)                       (84,573)                            (44,545)     
+Purchases of strategic investments                                                                    (3,290)                                 (6,200)                        (7,770)                             (6,350)     
+Sales of strategic investments                                                                              —                                  63,276                              —                              63,276     
+Cash paid for acquisitions, net of cash acquired                                                     (50,254)                                (11,220)                       (50,254)                            (12,008)     
+Purchases of marketable securities                                                                  (631,218)                               (568,055)                    (1,505,271)                         (1,910,436)     
+Sales of marketable securities                                                                         85,922                                   2,982                         91,273                              12,759     
+Maturities of marketable securities                                                                   611,835                                 554,026                      1,536,158                             896,571     
+Other                                                                                                 (2,451)                                       —                          (124)                             (5,493)     
+Net cash provided by (used in) investing activities                                                  (26,399)                                  11,439                       (20,561)                         (1,006,226)     
+Cash flows from financing activities                                                                                                                                                                                         
+Proceeds from issuance of convertible notes, net of issuance costs                                          —                                       —                              —                           1,483,500     
+Purchase of capped calls                                                                                    —                                       —                              —                           (177,000)     
+Proceeds from the exercise of stock options                                                               382                                   1,388                            411                               3,654     
+Payments of debt issuance costs                                                                             —                                 (3,006)                              —                             (3,006)     
+Deferred payments for acquisitions                                                                  (242,088)                                       —                      (244,116)                                   —     
+Net cash provided by (used in) financing activities                                                 (241,706)                                 (1,618)                      (243,705)                           1,307,148     
+Change in cash, cash equivalents, and restricted cash                                               (350,041)                               (114,260)                      (195,100)                             304,300     
+Cash, cash equivalents, and restricted cash, beginning of period                                    1,578,717                               2,413,283                      1,423,776                           1,994,723     
+Cash, cash equivalents, and restricted cash, end of period                                         $1,228,676                              $2,299,023                     $1,228,676                          $2,299,023     
+Supplemental disclosures                                                                                                                                                                                                     
+Cash paid for income taxes, net                                                                        $6,062                                  $4,848                        $23,065                              $7,484     
+Cash paid for interest                                                                                   $732                                    $551                         $5,153                              $4,005     
+7
+
+
+SNAP INC.
+CONSOLIDATED STATEMENTS OF OPERATIONS
+(in thousands, except per share amounts, unaudited)
+
+                                                                                                                             Three Months Ended June 30,                                           Six Months Ended June 30,
+2023                                                                                                                                                2022                           2023                                 2022
+Revenue                                                                                         $1,067,669                              $1,110,909                     $2,056,277                           $2,173,636      
+Costs and expenses:                                                                                                                                                                                                         
+Cost of revenue                                                                                    496,874                                 446,377                        936,860                              867,274      
+Research and development                                                                           477,663                                 505,037                        932,775                              960,600      
+Sales and marketing                                                                                280,597                                 311,374                        549,030                              553,260      
+General and administrative                                                                         216,874                                 249,061                        407,215                              464,969      
+Total costs and expenses                                                                         1,472,008                               1,511,849                      2,825,880                            2,846,103      
+Operating loss                                                                                   (404,339)                               (400,940)                      (769,603)                            (672,467)      
+Interest income                                                                                     43,144                                   8,331                         81,092                               11,454      
+Interest expense                                                                                   (5,343)                                 (5,549)                       (11,228)                             (10,722)      
+Other income (expense), net                                                                          1,323                                (16,910)                         12,695                             (94,447)      
+Loss before income taxes                                                                         (365,215)                               (415,068)                      (687,044)                            (766,182)      
+Income tax benefit (expense)                                                                      (12,093)                                 (6,999)                       (18,938)                             (15,509)      
+Net loss                                                                                        $(377,308)                              $(422,067)                     $(705,982)                           $(781,691)      
+Net loss per share attributable to Class A, Class B, and Class C common stockholders:                                                                                                                                       
+Basic                                                                                              $(0.24)                                 $(0.26)                        $(0.44)                              $(0.48)      
+Diluted                                                                                            $(0.24)                                 $(0.26)                        $(0.44)                              $(0.48)      
+Weighted average shares used in computation of net loss per share:                                                                                                                                                          
+Basic                                                                                                  1,603,172                               1,632,140                      1,592,365                            1,625,663
+Diluted                                                                                                1,603,172                               1,632,140                      1,592,365                            1,625,663
+8
+
+
+SNAP INC.
+CONSOLIDATED BALANCE SHEETS
+(in thousands, except par value, unaudited)
+
+                                                                                                                                                                                                                                                                                          June 30,                      December 31,
+                                                                                                                                                                                                                                                                                              2023                              2022
+Assets                                                                                                                                                                                                                                                                                                                              
+Current assets                                                                                                                                                                                                                                                                                                                      
+Cash and cash equivalents                                                                                                                                                                                                                                                          $1,228,629                      $1,423,121       
+Marketable securities                                                                                                                                                                                                                                                               2,460,649                       2,516,003       
+Accounts receivable, net of allowance                                                                                                                                                                                                                                                 996,082                       1,183,092       
+Prepaid expenses and other current assets                                                                                                                                                                                                                                             154,178                         134,431       
+Total current assets                                                                                                                                                                                                                                                                4,839,538                       5,256,647       
+Property and equipment, net                                                                                                                                                                                                                                                           330,010                         271,777       
+Operating lease right-of-use assets                                                                                                                                                                                                                                                   348,970                         370,952       
+Intangible assets, net                                                                                                                                                                                                                                                                202,671                         204,480       
+Goodwill                                                                                                                                                                                                                                                                            1,692,061                       1,646,120       
+Other assets                                                                                                                                                                                                                                                                          252,973                         279,562       
+Total assets                                                                                                                                                                                                                                                                       $7,666,223                      $8,029,538       
+Liabilities and Stockholders’ Equity                                                                                                                                                                                                                                                                                                
+Current liabilities                                                                                                                                                                                                                                                                                                                 
+Accounts payable                                                                                                                                                                                                                                                                     $163,604                        $181,774       
+Operating lease liabilities                                                                                                                                                                                                                                                            57,893                          46,485       
+Accrued expenses and other current liabilities                                                                                                                                                                                                                                        716,167                         987,340       
+Total current liabilities                                                                                                                                                                                                                                                             937,664                       1,215,599       
+Convertible senior notes, net                                                                                                                                                                                                                                                       3,745,956                       3,742,520       
+Operating lease liabilities, noncurrent                                                                                                                                                                                                                                               356,929                         386,271       
+Other liabilities                                                                                                                                                                                                                                                                     120,714                         104,450       
+Total liabilities                                                                                                                                                                                                                                                                   5,161,263                       5,448,840       
+Commitments and contingencies                                                                                                                                                                                                                                                                                                       
+Stockholders’ equity                                                                                                                                                                                                                                                                                                                
+Class A non-voting common stock, $0.00001 par value. 3,000,000 shares authorized, 1,412,444 shares issued, 1,361,953 shares outstanding at June 30, 2023, and 3,000,000 shares authorized, 1,371,242 shares issued, 1,319,930 shares outstanding at December 31, 2022.                     14                              13       
+Class B voting common stock, $0.00001 par value. 700,000 shares authorized, 22,539 shares issued and outstanding at June 30, 2023, and 700,000 shares authorized, 22,529 shares issued and outstanding at December 31, 2022.                                                                —                               —       
+Class C voting common stock, $0.00001 par value. 260,888 shares authorized, 231,627 shares issued and outstanding at June 30, 2023 and December 31, 2022.                                                                                                                                   2                               2       
+Treasury stock, at cost. 50,491 and 51,312 shares of Class A non-voting common stock at June 30, 2023 and December 31, 2022, respectively.                                                                                                                                          (492,500)                       (500,514)       
+Additional paid-in capital                                                                                                                                                                                                                                                         13,934,244                      13,309,828       
+Accumulated deficit                                                                                                                                                                                                                                                              (10,920,639)                    (10,214,657)       
+Accumulated other comprehensive income (loss)                                                                                                                                                                                                                                        (16,161)                        (13,974)       
+Total stockholders’ equity                                                                                                                                                                                                                                                          2,504,960                       2,580,698       
+Total liabilities and stockholders’ equity                                                                                                                                                                                                                                         $7,666,223                      $8,029,538       
+9
+
+
+SNAP INC.
+RECONCILIATION OF GAAP TO NON-GAAP FINANCIAL MEASURES
+(in thousands, unaudited)
+
+                                                            Three Months Ended June 30,                                                                     Six Months Ended June 30,
+2023                                                                              2022                                    2023                        2022                           
+Free Cash Flow reconciliation:                                                                                                                                                       
+Net cash provided by (used in) operating activities         $(81,936)                               $(124,081)                         $69,166                            $3,378     
+Less:                                                                                                                                                                                
+Purchases of property and equipment                         (36,943)                                (23,370)                          (84,573)                          (44,545)     
+Free Cash Flow                                              $(118,879)                              $(147,451)                       $(15,407)                         $(41,167)     
+
+                                                                                                        Three Months Ended June 30,                                         Six Months Ended June 30,
+2023                                                                                          2022                                    2023                          2022                             
+Adjusted EBITDA reconciliation:                                                                                                                                                                      
+Net loss                                                                   $(377,308)                              $(422,067)                     $(705,982)                          $(781,691)     
+Add (deduct):                                                                                                                                                                                        
+Interest income                                                              (43,144)                                 (8,331)                       (81,092)                            (11,454)     
+Interest expense                                                                5,343                                   5,549                         11,228                              10,722     
+Other (income) expense, net                                                   (1,323)                                  16,910                       (12,695)                              94,447     
+Income tax (benefit) expense                                                   12,093                                   6,999                         18,938                              15,509     
+Depreciation and amortization                                                  39,688                                  79,291                         74,908                             117,391     
+Stock-based compensation expense                                              317,943                                 318,810                        632,874                             594,254     
+Payroll and other tax expense related to stock-based compensation               8,229                                  10,029                         24,155                              32,480     
+Adjusted EBITDA                                                             $(38,479)                                  $7,190                      $(37,666)                             $71,658     
+Total depreciation and amortization expense by function:
+
+                                                                     Three Months Ended June 30,                                   Six Months Ended June 30,
+2023                                                           2022                                2023                      2022                           
+Depreciation and amortization expense:                                                                                                                      
+Cost of revenue                                 $3,170                              $5,061                     $6,396                           $10,573     
+Research and development                        24,847                              22,362                     48,986                            44,485     
+Sales and marketing                              5,605                              49,061                     10,678                            56,453     
+General and administrative                       6,066                               2,807                      8,848                             5,880     
+Total                                          $39,688                             $79,291                    $74,908                          $117,391     
+10
+
+
+SNAP INC.
+RECONCILIATION OF GAAP TO NON-GAAP FINANCIAL MEASURES (continued)
+(in thousands, except per share amounts, unaudited)
+Total stock-based compensation expense by function:
+
+                                                                      Three Months Ended June 30,                                     Six Months Ended June 30,
+2023                                                          2022                                  2023                        2022                           
+Stock-based compensation expense:                                                                                                                              
+Cost of revenue                                $2,365                                $2,849                       $4,250                            $5,295     
+Research and development                      217,565                               221,650                      437,415                           404,516     
+Sales and marketing                            57,597                                48,577                      112,536                            90,648     
+General and administrative                     40,416                                45,734                       78,673                            93,795     
+Total                                        $317,943                              $318,810                     $632,874                          $594,254     
+
+                                                                                                        Three Months Ended June 30,                                           Six Months Ended June 30,
+2023                                                                                                                           2022                           2023                                 2022
+Non-GAAP net income (loss) reconciliation:                                                                                                                                                             
+Net loss                                                                   $(377,308)                              $(422,067)                     $(705,982)                           $(781,691)      
+Amortization of intangible assets                                              18,405                                  64,134                         36,160                               86,639      
+Stock-based compensation expense                                              317,943                                 318,810                        632,874                              594,254      
+Payroll and other tax expense related to stock-based compensation               8,229                                  10,029                         24,155                               32,480      
+Income tax adjustments                                                          (269)                                   (504)                          (237)                                (565)      
+Non-GAAP net income (loss)                                                  $(33,000)                               $(29,598)                      $(13,030)                            $(68,883)      
+Weighted-average common shares - Diluted                                          1,603,172                               1,632,140                      1,592,365                            1,625,663
+Non-GAAP diluted net income (loss) per share reconciliation:                                                                                                                                           
+Diluted net loss per share                                                    $(0.24)                                 $(0.26)                        $(0.44)                              $(0.48)      
+Non-GAAP adjustment to net loss                                                  0.22                                    0.24                           0.43                                 0.44      
+Non-GAAP diluted net income (loss) per share                                  $(0.02)                                 $(0.02)                        $(0.01)                              $(0.04)      
+11
+
+
+SNAP INC.
+SUPPLEMENTAL FINANCIAL INFORMATION AND BUSINESS METRICS
+(dollars and shares in thousands, except per user amounts, unaudited)
+
+                                                                                                     Q1 2022                       Q2 2022                         Q3 2022                         Q4 2022                         Q1 2023                         Q2 2023
+                                                                                                                                                                                                                                                     (NM = Not Meaningful)
+Cash Flows and Shares                                                                                                                                                                                                                                                     
+Net cash provided by (used in) operating activities                                            $127,459                    $(124,081)                         $55,945                        $125,291                        $151,102                       $(81,936)     
+Net cash provided by (used in) operating activities - YoY (year-over-year)                          (7)    %                       23    %                       (22)    %                       (32)    %                         19    %                         34    %
+Net cash provided by (used in) operating activities - TTM (trailing twelve months)             $283,453                      $260,458                        $244,851                        $184,614                        $208,257                        $250,402     
+Purchases of property and equipment                                                           $(21,175)                     $(23,370)                       $(37,836)                       $(46,925)                       $(47,630)                       $(36,943)     
+Purchases of property and equipment - YoY                                                            95    %                       60    %                         91    %                         91    %                      (125)    %                       (58)    %
+Purchases of property and equipment - TTM                                                     $(80,199)                     $(88,946)                      $(106,946)                      $(129,306)                      $(155,761)                      $(169,334)     
+Free Cash Flow                                                                                 $106,284                    $(147,451)                         $18,109                         $78,366                        $103,472                      $(118,879)     
+Free Cash Flow - YoY                                                                               (16)    %                     (27)    %                       (65)    %                       (51)    %                        (3)    %                         19    %
+Free Cash Flow - TTM                                                                           $203,254                      $171,512                        $137,905                         $55,308                         $52,496                         $81,068     
+Common shares outstanding                                                                     1,632,563                     1,644,974                       1,605,868                       1,574,086                       1,595,205                       1,616,119     
+Common shares outstanding - YoY                                                                       7    %                        4    %                          —    %                        (3)    %                        (2)    %                        (2)    %
+Shares underlying stock-based awards                                                             75,066                        92,105                          94,772                         131,718                         128,218                         149,065     
+Shares underlying stock-based awards - YoY                                                         (32)    %                     (12)    %                          2    %                         59    %                         71    %                         62    %
+Total common shares outstanding plus shares underlying stock-based awards                     1,707,629                     1,737,079                       1,700,640                       1,705,804                       1,723,423                       1,765,184     
+Total common shares outstanding plus shares underlying stock-based awards - YoY                       5    %                        3    %                          —    %                          —    %                          1    %                          2    %
+Results of Operations                                                                                                                                                                                                                                                     
+Revenue                                                                                      $1,062,727                    $1,110,909                      $1,128,476                      $1,299,735                        $988,608                      $1,067,669     
+Revenue - YoY                                                                                        38    %                       13    %                          6    %                        0.1    %                        (7)    %                        (4)    %
+Revenue - TTM                                                                                $4,410,191                    $4,538,992                      $4,599,997                      $4,601,847                      $4,527,728                      $4,484,488     
+Revenue by region (1)                                                                                                                                                                                                                                                     
+North America                                                                                  $758,261                      $785,681                        $811,602                        $880,310                        $639,896                        $686,829     
+North America - YoY                                                                                  37    %                       12    %                          3    %                        (6)    %                       (16)    %                       (13)    %
+North America - TTM                                                                          $3,178,990                    $3,262,936                      $3,287,621                      $3,235,854                      $3,117,489                      $3,018,637     
+Europe                                                                                         $162,132                      $170,097                        $161,396                        $218,552                        $157,760                        $182,109     
+Europe - YoY                                                                                         43    %                       12    %                          5    %                          5    %                        (3)    %                          7    %
+Europe - TTM                                                                                   $676,433                      $694,262                        $702,537                        $712,177                        $707,805                        $719,817     
+Rest of World                                                                                  $142,334                      $155,131                        $155,478                        $200,873                        $190,952                        $198,731     
+Rest of World - YoY                                                                                  38    %                       21    %                         22    %                         28    %                         34    %                         28    %
+Rest of World - TTM                                                                            $554,768                      $581,794                        $609,839                        $653,816                        $702,434                        $746,034     
+Operating loss                                                                               $(271,527)                    $(400,940)                      $(435,242)                      $(287,597)                      $(365,264)                      $(404,339)     
+Operating loss - YoY                                                                                 11    %                    (108)    %                      (141)    %                              NM                       (35)    %                        (1)    %
+Operating loss - Margin                                                                            (26)    %                     (36)    %                       (39)    %                       (22)    %                       (37)    %                       (38)    %
+Operating loss - TTM                                                                         $(669,990)                    $(878,418)                    $(1,132,836)                    $(1,395,306)                    $(1,489,043)                    $(1,492,442)     
+Net income (loss)                                                                            $(359,624)                    $(422,067)                      $(359,502)                      $(288,460)                      $(328,674)                      $(377,308)     
+Net income (loss) - YoY                                                                            (25)    %                    (178)    %                      (400)    %                              NM                          9    %                         11    %
+Net income (loss) - TTM                                                                      $(560,697)                    $(831,100)                    $(1,118,643)                    $(1,429,653)                    $(1,398,703)                    $(1,353,944)     
+Adjusted EBITDA                                                                                 $64,468                        $7,190                         $72,640                        $233,275                            $813                       $(38,479)     
+Adjusted EBITDA - YoY                                                                              3872    %                     (94)    %                       (58)    %                       (29)    %                       (99)    %                      (635)    %
+Adjusted EBITDA - Margin (2)                                                                          6    %                        1    %                          6    %                         18    %                        0.1    %                        (4)    %
+Adjusted EBITDA - TTM                                                                          $682,863                      $572,650                        $471,091                        $377,573                        $313,918                        $268,249     
+(1)Total revenue for geographic reporting is apportioned to each region based on our determination of the geographic location in which advertising impressions are delivered, as this approximates revenue based on user activity. This allocation is consistent with how we determine ARPU.
+(2)We define Adjusted EBITDA margin as Adjusted EBITDA divided by GAAP revenue.
+12
+
+
+SNAP INC.
+SUPPLEMENTAL FINANCIAL INFORMATION AND BUSINESS METRICS (continued)
+(dollars and shares in thousands, except per user amounts, unaudited)
+
+                                                                                                Q1 2022                     Q2 2022                     Q3 2022                     Q4 2022                     Q1 2023                     Q2 2023
+Other                                                                                                                                                                                                                                              
+DAU (in millions)                                                                              332                         347                         363                         375                         383                         397     
+DAU - YoY                                                                                       18    %                     18    %                     19    %                     17    %                     15    %                     14    %
+DAU by region (in millions)                                                                                                                                                                                                                        
+North America                                                                                   98                          99                         100                         100                         100                         101     
+North America - YoY                                                                              5    %                      4    %                      4    %                      3    %                      3    %                      2    %
+Europe                                                                                          84                          86                          88                          92                          93                          94     
+Europe - YoY                                                                                    10    %                     10    %                     11    %                     12    %                     10    %                      9    %
+Rest of World                                                                                  150                         162                         175                         183                         190                         202     
+Rest of World - YoY                                                                             36    %                     35    %                     34    %                     31    %                     27    %                     25    %
+ARPU                                                                                         $3.20                       $3.20                       $3.11                       $3.47                       $2.58                       $2.69     
+ARPU - YoY                                                                                      17    %                    (4)    %                   (11)    %                   (15)    %                   (19)    %                   (16)    %
+ARPU by region                                                                                                                                                                                                                                     
+North America                                                                                $7.77                       $7.93                       $8.13                       $8.77                       $6.37                       $6.83     
+North America - YoY                                                                             31    %                      8    %                    (1)    %                    (9)    %                   (18)    %                   (14)    %
+Europe                                                                                       $1.93                       $1.98                       $1.83                       $2.38                       $1.70                       $1.93     
+Europe - YoY                                                                                    30    %                      2    %                    (5)    %                    (6)    %                   (12)    %                    (2)    %
+Rest of World                                                                                $0.95                       $0.96                       $0.89                       $1.10                       $1.00                       $0.98     
+Rest of World - YoY                                                                              2    %                   (11)    %                    (9)    %                    (2)    %                      6    %                      3    %
+Employees (full-time; excludes part-time, contractors, and temporary personnel)                   6,131                       6,446                       5,706                       5,288                       5,201                       5,286
+Employees - YoY                                                                                 52    %                     38    %                     10    %                    (7)    %                   (15)    %                   (18)    %
+Depreciation and amortization expense                                                                                                                                                                                                              
+Cost of revenue                                                                             $5,512                      $5,061                      $5,548                      $8,114                      $3,226                      $3,170     
+Research and development                                                                    22,123                      22,362                      23,722                      29,834                      24,139                      24,847     
+Sales and marketing                                                                          7,392                      49,061                       4,586                       6,130                       5,073                       5,605     
+General and administrative                                                                   3,073                       2,807                       2,435                       4,413                       2,782                       6,066     
+Total                                                                                      $38,100                     $79,291                     $36,291                     $48,491                     $35,220                     $39,688     
+Depreciation and amortization expense - YoY                                                     62    %                    180    %                     12    %                     39    %                    (8)    %                   (50)    %
+Stock-based compensation expense                                                                                                                                                                                                                   
+Cost of revenue                                                                             $2,446                      $2,849                      $2,745                      $4,248                      $1,885                      $2,365     
+Research and development                                                                   182,866                     221,650                     246,783                     319,447                     219,850                     217,565     
+Sales and marketing                                                                         42,071                      48,577                      43,098                      69,346                      54,939                      57,597     
+General and administrative                                                                  48,061                      45,734                      50,333                      57,533                      38,257                      40,416     
+Total                                                                                     $275,444                    $318,810                    $342,959                    $450,574                    $314,931                    $317,943     
+Stock-based compensation expense - YoY                                                          16    %                     24    %                     14    %                     51    %                     14    %                      —    %
+13
+
+
+
+

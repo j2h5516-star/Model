@@ -1,0 +1,375 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — RMBS 2019-01-28
+# 출처: https://www.sec.gov/Archives/edgar/data/917273/000091727319000003/a8-kq42018earningsrelease.htm
+
+Exhibit
+
+
+Exhibit 99.1
+<img alt="rambuslogonewa01.gif" src="rambuslogonewa01.gif">News Release
+RAMBUS REPORTS FOURTH QUARTER AND FISCAL YEAR 2018 FINANCIAL RESULTS
+
+•   Fourth quarter GAAP revenue of $68.5 million; revenue under ASC 605 would have been $102.0 million, in line with expectations; $35.1 million in cash provided by operating activities
+
+•   Record product revenue in 2018 for IP cores and server DIMM chips with wins at Tier 1 customers in data center and communications segments worldwide
+
+•   CryptoManager platform selected to securely provision Authenta™ secure memory product line at Micron
+SUNNYVALE, Calif. - January 28, 2019 - Rambus Inc. (NASDAQ:RMBS) today reported financial results for the fourth quarter ended December 31, 2018 under GAAP Accounting Standards Codification Topic 606 (“ASC 606”), which superseded the revenue recognition requirements in ASC Topic 605, Revenue Recognition (“ASC 605”) that was previously applicable. Rambus also reported financial results as they would have been presented under ASC 605. This ASC 605 presentation is required under the modified retrospective transition method that Rambus has chosen to adopt under ASC 606. Rambus notes that this presentation allows a more relevant comparability with prior results, which were all reported under ASC 605.
+Luc Seraphin, chief executive officer of Rambus said, “Rambus had a strong fourth quarter and solid year overall, with continued execution from our product teams and record annual revenue for IP cores and server DIMM chips. As we refocus our product portfolio around our core strengths in semiconductor, improve operational efficiency, and continue to generate cash from operations, we align the company for profitable growth.”
+
+Fourth Quarter and Fiscal Year 2018 Financial Highlights                                                                                                                                                                                   
+(In millions, except per share amounts)          Three Months Ended December 31, 2018                                                                   Year Ended December 31, 2018                                                       
+                                                 ASC 606                                                 ASC 605 (1)                                    ASC 606                                      ASC 605 (1)                           
+                                                 GAAP                        Non-GAAP (2)                GAAP                      Non-GAAP (2)         GAAP                Non-GAAP (2)             GAAP                Non-GAAP (2)      
+Revenue                                          $68.5                       $68.5                       $102.0                    $102.0               $231.2              $231.2                   $401.1              $401.1            
+Diluted net income (loss) per share              $(0.02        )             $0.09                       $0.23                     $0.28                $(1.46      )       $(0.06        )          $(0.14      )       $0.92             
+
+(1)   As noted above, Rambus is presenting the financial results under ASC 606 along with the results that would have been applicable under ASC 605. The ASC 605 information should be considered in addition to, not as a substitute for, nor superior to or in isolation from, the financial information prepared in accordance with ASC 606.
+
+(2)   See “Reconciliation of GAAP Forward Looking Estimates to Non-GAAP Forward Looking Estimates” tables included below. Note that the applicable non-GAAP measures are presented and that revenue is solely presented on a GAAP basis.
+Business Review
+For the Rambus IP cores and Server DIMM chipset businesses, 2018 saw sustained technology leadership in the market, growing customer traction and record revenue. Our DDR4 server DIMM chip business met its revenue targets for the quarter and year and continues to gain market share. With an increasing number of OEM qualifications in the existing server platform and more than double for the upcoming advanced performance CPU refresh, the buffer chip remains poised for growth in 2019. In addition to the steady growth in DDR4, we maintain our leadership position for next-generation DDR5 memory buffer chips and are now shipping customer samples at the top-end speeds for both the RCD and DB chips.
+Rambus high-speed IP cores business has been growing at an impressive compound annual growth rate of greater than 50% over the past four years. We continue to gain traction in high-growth, high-performance applications including artificial 
+intelligence, machine learning, graphics, wired switches, and wireless infrastructure. We closed out the year with record revenue fueled by wins with Tier 1 customers in data center and communications segments worldwide. We continued our leadership position in high-end and high-bandwidth SerDes and memory IP cores in advanced process nodes with the tape out of the industry’s first GDDR6 memory PHY in a leading-edge process node. In Q4, we closed a substantial number of design wins with top tier customers worldwide, which sets us up nicely for healthy growth to continue in 2019.
+Moving over to our Cryptography business, 2018 saw the importance of semiconductor device-level security grow in the industry, resulting in increased traction and opportunities for our embedded security cores and provisioning capabilities in market segments like IoT, automotive, networking and government. We launched the programmable CryptoManager Root of Trust, which combines our deep security expertise with a modern open architecture, RISC-V, to create an easy-to-consume, secure processing core and have numerous engagements in the semiconductor ecosystem. In Q4, we announced that our CryptoManager platform will be used to securely provision Micron Authenta™ based secure memory. This is a key milestone as it showcases our ability to combine our device-level provisioning solutions with 3rd-party cores to extend our market share and enable a new level of protection for connected devices.
+
+Quarterly Financial Review - GAAP                                                                                                          Three Months Ended December 31,
+(In millions, except for percentages and per share amounts)                                                                           2018                            2017
+                                                                   As Reported ASC 606              Adjustments (1)            ASC 605 (1)             As Reported ASC 605
+Revenue                                                                                                                                                                   
+Royalties                                                               $45.4                         $31.3                    $76.7                        $77.9         
+Product revenue                                                          11.5                           0.4                     11.9                          8.5         
+Contract and other revenue                                               11.6                           1.8                     13.4                         15.5         
+Total revenue                                                           $68.5                         $33.5                   $102.0                       $101.9         
+Total operating costs and expenses                                      $72.8                            $—                    $72.8                        $86.2         
+Operating income (loss)                                                 $(4.3        )                $33.5                    $29.2                        $15.7         
+Operating margin                                                           (6       )%                   35       %               29     %                     15        %
+Net income (loss)                                                       $(2.0        )                $27.2                    $25.2                       $(36.2        )
+Diluted net income (loss) per share                                    $(0.02        )                $0.25                    $0.23                       $(0.33        )
+Licensing billings (2)                                                  $76.7                            $—                    $76.7                        $76.6         
+Net cash provided by operating activities                               $35.1                            $—                    $35.1                        $59.8         
+
+(1)   As noted above, Rambus is presenting the ASC 606 results together with the adjustments made to reconcile the ASC 606 presentation to the results that would have been applicable under ASC 605. The ASC 605 information should be considered in addition to, not as a substitute for, nor superior to or in isolation from, the financial information prepared in accordance with ASC 606.
+
+(2)   Licensing billings is an operational metric that reflects amounts invoiced to our licensing customers during the period, as adjusted for certain differences.
+
+Quarterly Financial Review - Non-GAAP (1)                                                                                                  Three Months Ended December 31,
+(In millions, except for percentages and per share amounts)                                                                           2018                            2017
+                                                                   As Reported ASC 606              Adjustments (2)            ASC 605 (2)             As Reported ASC 605
+Revenue                                                                                                                                                                   
+Royalties                                                               $45.4                         $31.3                    $76.7                        $77.9         
+Product revenue                                                          11.5                           0.4                     11.9                          8.5         
+Contract and other revenue                                               11.6                           1.8                     13.4                         15.5         
+Total revenue                                                           $68.5                         $33.5                   $102.0                       $101.9         
+Total operating costs and expenses                                      $61.6                            $—                    $61.6                        $68.4         
+Operating income                                                         $6.9                         $33.5                    $40.4                        $33.5         
+Operating margin                                                           10        %                   30       %               40     %                     33        %
+Net income                                                               $9.6                         $20.7                    $30.3                        $21.2         
+Diluted net income per share                                            $0.09                         $0.19                    $0.28                        $0.19         
+
+(1)   See “Reconciliation of GAAP Forward Looking Estimates to Non-GAAP Forward Looking Estimates” tables included below. Note that the applicable non-GAAP measures are presented and that revenue is solely presented on a GAAP basis.
+
+(2)   See note (1) under “Quarterly Financial Review-GAAP” above for a description of the Adjustments and ASC 605 presentations.
+Revenue for the quarter was $68.5 million, above the high end of our expectations, due to the structure of our licensing agreements signed within the quarter. Revenue under ASC 605 would have been $102.0 million, at the mid-point of our expectations. Revenue for the year ended December 31, 2018 under ASC 605 was 6% higher than a year ago excluding the impact of the Lighting Division which was wound down in the first quarter of 2018. We had GAAP total operating costs and expenses of $72.8 million and non-GAAP total operating costs and expenses of $61.6 million, at the bottom of our expectations due to our refocus on our core semiconductor business. We also had GAAP and non-GAAP diluted net income (loss) per share of ($0.02) and $0.09, respectively. Total GAAP and non-GAAP diluted net income per share under ASC 605 would have been $0.23 and $0.28, respectively, at the high end of our expectations.
+For the year ended December 31, 2018, we had GAAP diluted net loss per share under ASC 605 of $0.14. We also had non-GAAP diluted net income per share under ASC 605 of $0.92, which was 35% higher than a year ago.
+Cash, cash equivalents, and marketable securities as of December 31, 2018 were $277.8 million, an increase of $29.6 million from September 30, 2018, mainly due to $35.1 million in cash provided by operating activities. Adjusted EBITDA under ASC 605 for the quarter would have been $43.0 million.
+2019 First Quarter Outlook
+The Company will discuss revenue guidance for the first quarter of 2019 during its upcoming conference call. The following table sets forth first quarter outlook for other measures.
+
+(In millions)                                   GAAP       Non-GAAP (1)
+Total operating costs and expenses         $78 - $74       $66 - $62   
+Interest and other income (expense), net          $3       ($1)        
+Diluted share count                              110   110             
+
+(1)   See “Reconciliation of GAAP Forward Looking Estimates to Non-GAAP Forward Looking Estimates” tables included below.
+For the first quarter of 2019, the Company expects operating costs and expenses to be between $78 million and $74 million. Additionally, the Company expects non-GAAP operating costs and expenses to be between $66 million and $62 million. These expectations also assume non-GAAP interest and other income (expense), net, of ($1 million), tax rate of 24% (refer to non-GAAP financial information below - income tax adjustments) and diluted share count of 110 million, and exclude stock-based compensation expense ($7 million), amortization expense ($5 million) and non-cash interest expense on convertible notes ($2 million).
+Conference Call:
+Rambus management will discuss the results of the quarter during a conference call scheduled for 2:00pm PT today. The call, audio and slides will be available online at investor.rambus.com and a replay will be available for the next week at the following numbers: (855) 859-2056 (domestic) or (404) 537-3406 (international) with ID# 8397247.
+Non-GAAP Financial Information:
+In the commentary set forth above and in the financial statements included in this earnings release, the Company presents the following non-GAAP financial measures: operating costs and expenses, operating margin, operating income (loss), net income (loss) and, diluted net income (loss) per share, presented both under ASC 606 and as they would have been presented under ASC 605. In computing each of these non-GAAP financial measures, the following items were considered as discussed below: stock-based compensation expenses, acquisition-related transaction costs and retention bonus expense, amortization expenses, non-cash interest expense and certain other one-time adjustments. The non-GAAP financial measures disclosed by the Company should not be considered a substitute for, or superior to, financial measures calculated in accordance with GAAP, and the financial results calculated in accordance with GAAP and reconciliations from these results should be carefully evaluated. Management believes the non-GAAP financial measures are appropriate for both its own assessment of, and to show investors, how the Company’s performance compares to other periods. The non-GAAP financial measures used by the Company may be calculated differently from, and therefore may not be comparable to, similarly titled measures used by other companies. Reconciliation from GAAP to non-GAAP results is included in the financial statements contained in this release.
+The Company’s non-GAAP financial measures reflect adjustments based on the following items:
+Stock-based compensation expense. These expenses primarily relate to employee stock options, employee stock purchase plans, and employee non-vested equity stock and non-vested stock units. The Company excludes stock-based compensation expense from its non-GAAP measures primarily because such expenses are non-cash expenses that the Company does not believe are reflective of ongoing operating results. Additionally, given the fact that other companies may grant different amounts and types of equity awards and may use different option valuation assumptions, excluding stock-based compensation expense permits more accurate comparisons of the Company’s results with peer companies.
+Acquisition-related transaction costs and retention bonus expense. These expenses include all direct costs of certain acquisitions and the current periods’ portion of any retention bonus expense associated with the acquisitions. The Company excludes these expenses in order to provide better comparability between periods.
+Restructuring charges. These charges may consist of severance, contractual retention payments, exit costs and other charges and are excluded because such charges are not directly related to ongoing business results and do not reflect expected future operating expenses.
+Amortization expense. The Company incurs expenses for the amortization of intangible assets acquired in acquisitions. The Company excludes these items because these expenses are not reflective of ongoing operating results in the period incurred. These amounts arise from the Company’s prior acquisitions and have no direct correlation to the operation of the Company’s core business.
+Loss on extinguishment of debt. The Company has excluded loss on extinguishment of debt as this represents a cost of refinancing its existing convertible notes and is not a reflection of the Company's ongoing operations.
+Non-cash interest expense on convertible notes. The Company incurs non-cash interest expense related to its convertible notes. The Company excludes non-cash interest expense related to its convertible notes to provide more accurate comparisons of the Company’s results with other peer companies and to more accurately reflect the Company’s ongoing operations.
+Income tax adjustments. For purposes of internal forecasting, planning and analyzing future periods that assume net income from operations, the Company estimates a fixed, long-term projected tax rate of approximately 24 percent for both 2019 and 
+2018, and 35 percent for 2017, which consists of estimated U.S. federal and state tax rates, and excludes tax rates associated with certain items such as withholding tax, tax credits, deferred tax asset valuation allowance and the release of any deferred tax asset valuation allowance. Accordingly, the Company has applied these tax rates to its non-GAAP financial results for all periods in the relevant years to assist the Company’s planning. The Company has provided below a reconciliation of its GAAP provision for income taxes and GAAP effective tax rate to the assumed non-GAAP provision for income taxes and non-GAAP effective tax rate.
+On occasion in the future, there may be other items, such as significant gains or losses from contingencies that the Company may exclude in deriving its non-GAAP financial measures if it believes that doing so is consistent with the goal of providing useful information to investors and management.
+About Rambus Inc.
+Dedicated to making data faster and safer, Rambus creates innovative hardware, software and services that drive technology advancements from the data center to the mobile edge. Our architecture licenses, IP cores, chips, software and services span memory and interfaces, security and emerging technologies to positively impact the modern world. We collaborate with the industry, partnering with leading chip and system designers, foundries and service providers. Integrated into tens of billions of devices and systems, our products power and secure diverse applications, including Big Data, Internet of Things (IoT) security, mobile payments and smart ticketing. For more information, visit rambus.com.
+Forward-Looking Statements
+This release contains forward-looking statements under the Private Securities Litigation Reform Act of 1995 including those relating to Rambus’ expectations regarding product and service offerings, future profit and growth and financial guidance for the first quarter of 2019, including operating costs and expenses, and estimated, fixed, long-term projected tax rates, both on a GAAP and non-GAAP basis as appropriate. Such forward-looking statements are based on current expectations, estimates and projections, management’s beliefs and certain assumptions made by Rambus’ management. Actual results may differ materially. Rambus’ business generally is subject to a number of risks which are described more fully in Rambus’ periodic reports filed with the Securities and Exchange Commission. Rambus undertakes no obligation to update forward-looking statements to reflect events or circumstances after the date hereof.
+Contact:
+Rahul Mathur
+Senior Vice President, Finance and Chief Financial Officer
+Rambus Inc.
+(408) 462-8000
+rmathur@rambus.com
+Source: Rambus Inc.
+Rambus Inc.
+Condensed Consolidated Balance Sheets
+(In thousands)
+(Unaudited)
+
+                                                 December 31, 2018           December 31, 2017
+ASSETS                                                                                        
+Current assets:                                                                               
+Cash and cash equivalents                         $115,924                    $225,844        
+Marketable securities                              161,840                     103,532        
+Accounts receivable                                 50,863                      25,326        
+Unbilled receivables                               176,613                         566        
+Inventories                                          6,772                       5,159        
+Prepaids and other current assets                   15,738                      11,317        
+Total current assets                               527,750                     371,744        
+Intangible assets, net                              59,936                      91,722        
+Goodwill                                           207,178                     209,661        
+Property, plant and equipment, net                  57,028                      54,303        
+Deferred tax assets                                  4,435                     159,099        
+Unbilled receivables, long-term                    497,003                           —        
+Other assets                                         7,825                       4,543        
+Total assets                                    $1,361,155                    $891,072        
+LIABILITIES &amp; STOCKHOLDERS’ EQUITY                                                        
+Current liabilities:                                                                          
+Accounts payable                                    $7,392                      $9,614        
+Accrued salaries and benefits                       16,938                      17,091        
+Deferred revenue                                    19,374                      18,272        
+Income taxes payable, short-term                    16,390                         258        
+Convertible notes, short-term                            —                      78,451        
+Other current liabilities                            9,191                       9,156        
+Total current liabilities                           69,285                     132,842        
+Long-term liabilities:                                                                        
+Convertible notes, long-term                       141,934                     135,447        
+Long-term imputed financing obligation              36,297                      37,262        
+Long-term income taxes payable                      77,280                       3,344        
+Deferred tax liabilities                            18,960                       9,830        
+Other long-term liabilities                          5,287                         763        
+Total long-term liabilities                        279,758                     186,646        
+Total stockholders’ equity                       1,012,112                     571,584        
+Total liabilities and stockholders’ equity      $1,361,155                    $891,072        
+Rambus Inc.
+Condensed Consolidated Statements of Operations
+(In thousands, except per share amounts)
+(Unaudited)
+
+                                                                        Three Months EndedDecember 31,                            Year EndedDecember 31,
+2018                                                                                              2017                    2018                      2017
+Revenue:                                                                                                                                                
+Royalties                                                   $45,430                     $77,861                 $130,452                  $289,594      
+Product revenue                                              11,537                       8,543                   38,690                    36,509      
+Contract and other revenue                                   11,596                      15,487                   62,059                    66,993      
+Total revenue                                                68,563                     101,891                  231,201                   393,096      
+Operating costs and expenses:                                                                                                                           
+Cost of product revenue (1)                                   4,367                       5,901                   18,299                    23,783      
+Cost of contract and other revenue                            6,239                      12,090                   35,402                    55,364      
+Research and development (1)                                 37,395                      39,417                  158,339                   149,135      
+Sales, general and administrative (1)                        24,768                      28,818                  103,911                   110,940      
+Restructuring charges (recoveries)                               (6      )                    —                    2,217                         —      
+Gain from sale of intellectual property                           —                         (54      )                 —                      (533     )
+Total operating costs and expenses                           72,763                      86,172                  318,168                   338,689      
+Operating income (loss)                                      (4,200      )               15,719                  (86,967     )              54,407      
+Interest income and other income (expense), net               7,248                         893                   32,621                     1,384      
+Loss on extinguishment of debt                                    —                      (1,082      )                 —                    (1,082     )
+Interest expense                                             (3,251      )               (3,966      )           (16,282     )             (13,720     )
+Interest and other income (expense), net                      3,997                      (4,155      )            16,339                   (13,418     )
+Income (loss) before income taxes                              (203      )               11,564                  (70,628     )              40,989      
+Provision for income taxes                                    1,815                      47,732                   87,329                    63,851      
+Net loss                                                    $(2,018      )             $(36,168      )         $(157,957     )            $(22,862     )
+Net loss per share:                                                                                                                                     
+Basic                                                        $(0.02      )               $(0.33      )            $(1.46     )              $(0.21     )
+Diluted                                                      $(0.02      )               $(0.33      )            $(1.46     )              $(0.21     )
+Weighted average shares used in per share calculation                                                                                                   
+Basic                                                       108,826                     109,737                  108,450                   110,198      
+Diluted                                                     108,826                     109,737                  108,450                   110,198      
+_________
+(1) Total stock-based compensation expense for the three months and years ended December 31, 2018 and 2017 are presented as follows:
+
+                                                   Three Months Ended December 31,                        Year EndedDecember 31,
+2018                                                     2017                        2018                  2017                 
+Cost of product revenue                      $1                         $25                     $8                     $78      
+Research and development                 $2,920                      $3,137                $12,582                 $12,185      
+Sales, general and administrative        $3,224                      $4,072                 $9,146                 $15,140      
+Rambus Inc.
+Supplemental Annual Financial Review
+(In millions, except per share amounts)
+(Unaudited)
+
+Annual Financial Review - GAAP                                Year Ended December 31,                                                                                  
+(In millions, except for percentages and per share amounts)   2018                                                                                                 2017
+                                                              As Reported ASC 606                  Adjustments (1)           ASC 605 (1)            As Reported ASC 605
+Revenue                                                       $231.2                                $169.9                  $401.1                      $393.1         
+Total operating costs and expenses                            $318.2                                    $—                  $318.2                      $338.7         
+Operating income (loss)                                       $(87.0            )                   $169.9                   $82.9                       $54.4         
+Operating margin                                              (38               )%                      58       %              21     %                    14        %
+Net income (loss)                                             $(157.9           )                   $142.6                  $(15.3     )                $(22.9        )
+Diluted net income (loss) per share                           $(1.46            )                    $1.32                  $(0.14     )                $(0.21        )
+Net cash provided by operating activities                     $87.1                                     $—                   $87.1                      $117.4         
+
+(1)   See note (1) under “Quarterly Financial Review-GAAP” above for a description of the Adjustments and ASC 605 presentations.
+
+Annual Financial Review - Non-GAAP (1)                        Year Ended December 31,                                                                                  
+(In millions, except for percentages and per share amounts)   2018                                                                                                 2017
+                                                              As Reported ASC 606                  Adjustments (2)           ASC 605 (2)            As Reported ASC 605
+Revenue                                                       $231.2                                $169.9                  $401.1                      $393.1         
+Total operating costs and expenses                            $264.8                                    $—                  $264.8                      $269.1         
+Operating income (loss)                                       $(33.6            )                   $169.9                  $136.3                      $124.0         
+Operating margin                                              (15               )%                      49       %              34     %                    32        %
+Net income (loss)                                             $(6.1             )                   $108.4                  $102.3                       $77.5         
+Diluted net income (loss) per share                           $(0.06            )                    $0.98                   $0.92                       $0.68         
+
+(1)   See “Reconciliation of GAAP Forward Looking Estimates to Non-GAAP Forward Looking Estimates” tables included below. Note that the applicable non-GAAP measures are presented and that revenue is solely presented on a GAAP basis.
+
+(2)   See note (1) under “Quarterly Financial Review-GAAP” above for a description of the Adjustments and ASC 605 presentations.
+Rambus Inc.
+Supplemental Revenue and Licensing Billings
+(In thousands)
+(Unaudited)
+
+2018 Revenue under ASC 606                                                                                                                                 
+                                                                                                                      Quarter ended              Year ended
+                                 December 31, 2018               September 30, 2018           June 30, 2018          March 31, 2018       December 31, 2018
+Revenue                                                                                                                                                    
+Royalties                          $45,430                         $33,599                   $30,049                 $21,374               $130,452        
+Product revenue                     11,537                          11,753                     8,087                   7,313                 38,690        
+Contract and other revenue          11,596                          14,402                    18,322                  17,739                 62,059        
+Total revenue                      $68,563                         $59,754                   $56,458                 $46,426               $231,201        
+
+2018 Revenue under ASC 605 and Licensing Billings                                                                                                                
+                                                                                                                            Quarter ended              Year ended
+                                    December 31, 2018                  September 30, 2018           June 30, 2018          March 31, 2018       December 31, 2018
+Revenue                                                                                                                                                          
+Royalties                            $76,717                             $75,704                   $73,626                 $77,174               $303,221        
+Product revenue                       11,867                              11,753                     8,221                   7,556                 39,397        
+Contract and other revenue            13,398                              12,383                    16,973                  15,729                 58,483        
+Total revenue                       $101,982                             $99,840                   $98,820                $100,459               $401,101        
+Licensing billings (1)               $76,717                             $75,374                   $73,210                 $75,924               $301,225        
+
+2017 Revenue under ASC 605 and Licensing Billings                                                                                                                
+                                                                                                                            Quarter ended              Year ended
+                                    December 31, 2017                  September 30, 2017           June 30, 2017          March 31, 2017       December 31, 2017
+Revenue                                                                                                                                                          
+Royalties                            $77,861                             $72,787                   $69,990                 $68,956               $289,594        
+Product revenue                        8,543                               8,661                     8,401                  10,904                 36,509        
+Contract and other revenue            15,487                              17,686                    16,329                  17,491                 66,993        
+Total revenue                       $101,891                             $99,134                   $94,720                 $97,351               $393,096        
+Licensing billings (1)               $76,611                             $71,537                   $72,890                 $68,556               $289,594        
+
+2016 Revenue under ASC 605 and Licensing Billings                                                                                                                
+                                                                                                                            Quarter ended              Year ended
+                                    December 31, 2016                  September 30, 2016           June 30, 2016          March 31, 2016       December 31, 2016
+Revenue                                                                                                                                                          
+Royalties                            $70,604                             $68,298                   $62,835                 $62,877               $264,614        
+Product revenue                       11,746                               7,092                     3,902                   3,312                 26,052        
+Contract and other revenue            15,209                              14,465                     9,764                   6,493                 45,931        
+Total revenue                        $97,559                             $89,855                   $76,501                 $72,682               $336,597        
+Licensing billings (1)               $64,854                             $71,548                   $66,604                 $61,683               $264,689        
+
+(1)   Licensing billings is an operational metric that reflects amounts invoiced to our licensing customers during the period, as adjusted for certain differences.
+Rambus Inc.
+Supplemental Reconciliation of GAAP to Non-GAAP Results
+(In thousands)
+(Unaudited)
+
+                                                                                               Three Months Ended December 31,                                                Year Ended December 31,
+                                                                           ASC 606                                     ASC 605                ASC 606                                         ASC 605
+2018                                                                                                2018                  2017                   2018                    2018                    2017
+Operating costs and expenses                                          $72,763               $72,763               $86,172               $318,168                $318,168                $338,689     
+Adjustments:                                                                                                                                                                                         
+Stock-based compensation expense                                       (6,145    )           (6,145    )           (7,234    )           (21,736    )            (21,736    )            (27,403    )
+Acquisition-related transaction costs and retention bonus expense           —                     —                   (30    )               (70    )                (70    )               (248    )
+Amortization expense                                                   (4,989    )           (4,989    )          (10,526    )           (29,341    )            (29,341    )            (41,962    )
+Restructuring charges (recoveries)                                          6                     6                     —                 (2,217    )             (2,217    )                  —     
+Non-GAAP operating costs and expenses                                 $61,635               $61,635               $68,382               $264,804                $264,804                $269,076     
+Operating income (loss)                                               $(4,200    )          $29,219               $15,719               $(86,967    )            $82,933                 $54,407     
+Adjustments:                                                                                                                                                                                         
+Stock-based compensation expense                                        6,145                 6,145                 7,234                 21,736                  21,736                  27,403     
+Acquisition-related transaction costs and retention bonus expense           —                     —                    30                     70                      70                     248     
+Amortization expense                                                    4,989                 4,989                10,526                 29,341                  29,341                  41,962     
+Restructuring charges (recoveries)                                         (6    )               (6    )                —                  2,217                   2,217                       —     
+Non-GAAP operating income (loss)                                       $6,928               $40,347               $33,509               $(33,603    )           $136,297                $124,020     
+Income (loss) before income taxes                                       $(203    )          $27,068               $11,564               $(70,628    )            $72,037                 $40,989     
+Adjustments:                                                                                                                                                                                         
+Stock-based compensation expense                                        6,145                 6,145                 7,234                 21,736                  21,736                  27,403     
+Acquisition-related transaction costs and retention bonus expense           —                     —                    30                     70                      70                     248     
+Amortization expense                                                    4,989                 4,989                10,526                 29,341                  29,341                  41,962     
+Restructuring charges (recoveries)                                         (6    )               (6    )                —                  2,217                   2,217                       —     
+Loss on extinguishment of debt                                              —                     —                 1,082                      —                       —                   1,082     
+Non-cash interest expense on convertible notes                          1,655                 1,655                 2,255                  9,242                   9,242                   7,579     
+Non-GAAP income (loss) before income taxes                            $12,580               $39,851               $32,691                $(8,022    )           $134,643                $119,263     
+GAAP provision for income taxes                                         1,815                 1,815                47,732                 87,329                  87,329                  63,851     
+Adjustment to GAAP provision for income taxes                           1,204                 7,749               (36,290    )           (89,255    )            (55,015    )            (22,109    )
+Non-GAAP provision for (benefit from) income taxes                      3,019                 9,564                11,442                 (1,926    )             32,314                  41,742     
+Non-GAAP net income (loss)                                             $9,561               $30,287               $21,249                $(6,096    )           $102,329                 $77,521     
+Non-GAAP basic net income (loss) per share                              $0.09                 $0.28                 $0.19                 $(0.06    )              $0.94                   $0.70     
+Non-GAAP diluted net income (loss) per share                            $0.09                 $0.28                 $0.19                 $(0.06    )              $0.92                   $0.68     
+Weighted average shares used in non-GAAP per share calculation:                                                                                                                                      
+Basic                                                                 108,826               108,826               109,737                108,450                 108,450                 110,198     
+Diluted                                                               109,618               109,618               114,341                108,450                 110,837                 113,899     
+Supplemental Reconciliation of GAAP to Non-GAAP Effective Tax Rate (1)
+
+                                                        Three Months Ended December 31,                           Year Ended December 31,
+                                           ASC 606                              ASC 605          ASC 606                          ASC 605
+2018                                                            2018               2017             2018            2018             2017
+GAAP effective tax rate                 (894   )%            7     %          413     %       (124    )%        121    %         156    %
+Adjustment to GAAP effective tax rate    918   %            17     %         (378    )%        148     %        (97   )%        (121   )%
+Non-GAAP effective tax rate               24   %            24     %           35     %         24     %         24    %          35    %
+
+(1)   For purposes of internal forecasting, planning and analyzing future periods that assume net income from operations, the Company estimates a fixed, long-term projected tax rate of approximately 24 percent for 2018 and 35 percent for 2017, which consists of estimated U.S. federal and state tax rates, and excludes tax rates associated with certain items such as withholding tax, tax credits, deferred tax asset valuation allowance and the release of any deferred tax asset valuation allowance. Accordingly, the Company has applied these tax rates to its non-GAAP financial results for all periods in the relevant year to assist the Company’s planning for future periods.
+Rambus Inc.
+Reconciliation of Other GAAP to Non-GAAP Items
+(In thousands, except percentages)
+(Unaudited)
+
+                                                                                         GAAP                                                             Non-GAAP
+                                                              Three Months Ended December 31,                                      Three Months Ended December 31,
+                                      ASC 606                                         ASC 605              ASC 606                                         ASC 605
+2018                                            2018                                     2017                 2018                    2018                    2017
+Revenue (i)                      $68,563                $101,982                $101,891              $68,563                $101,982                $101,891     
+Operating income (loss) (ii)      (4,200    )             29,219                  15,719                6,928                  40,347                  33,509     
+Operating margin (ii/i)               (6   )%   29                  %                 15    %              10    %                 40    %                 33    %
+
+                                                                                           GAAP                                                               Non-GAAP
+                                                                        Year Ended December 31,                                                Year Ended December 31,
+                                        ASC 606                                         ASC 605                ASC 606                                         ASC 605
+2018                                              2018                                     2017                   2018   2018                                     2017
+Revenue (i)                       $231,201                $401,101                $393,096               $231,201                $401,101                $393,096     
+Operating income (loss) (ii)       (86,967    )             82,933                  54,407                (33,603    )            136,297                 124,020     
+Operating margin (ii/i)                (38   )%   21                  %                 14    %               (15   )%   34                  %                 32    %
+
+                                                                                   Three Months Ended December 31,
+                                                                                                           ASC 605
+2018                                                                                     2017                     
+Net income (loss)                                                       $25,253                    $(36,168      )
+Add back:                                                                                                         
+Interest and other income (expense), net                                  2,151                       4,155       
+Provision for income taxes                                                1,815                      47,732       
+Depreciation expense                                                      2,638                       3,304       
+Amortization expense                                                      4,989                      10,526       
+EBITDA (1)                                                              $36,846                     $29,549       
+Adjustments:                                                                                                      
+Stock-based compensation expense                                          6,145                       7,234       
+Acquisition-related transaction costs and retention bonus expense             —          30                       
+Restructuring recoveries                                                     (6      )                    —       
+Adjusted EBITDA (2)                                                     $42,985                     $36,813       
+
+(1)   EBITDA is a non-GAAP measure that management uses to evaluate the cash generating capacity of the company. The most directly comparable GAAP measure is net income (loss). EBITDA is net income (loss) adjusted for net interest and other income (expense), income taxes, and depreciation and amortization. It should not be considered as an alternative to net income computed under GAAP.
+
+(2)   Adjusted EBITDA excludes the impact of other non-GAAP adjustments indicated in the above tables.
+Rambus Inc.
+Reconciliation of GAAP Forward Looking Estimates to Non-GAAP Forward Looking Estimates
+(In millions)
+(Unaudited)
+
+2019 First Quarter Outlook                                                                                                            Three Months Ended March 31, 2019
+                                                                                                                                        Low                        High
+Forward-looking operating costs and expenses                                                                                   $78.1                       $74.1       
+Adjustments:                                                                                                                                                           
+Stock-based compensation expense                                                                                                (6.6      )                 (6.6      )
+Amortization expense                                                                                                            (5.0      )                 (5.0      )
+Forward-looking Non-GAAP operating costs and expenses                                                                          $66.5                       $62.5       
+Forward-looking interest and other income (expense), net                                                                        $3.4                        $3.4       
+Adjustments:                                                                                                                                                           
+Interest income related to significant financing component from fixed-fee patent and technology licensing arrangements          (5.7      )                 (5.7      )
+Non-cash interest expense on convertible notes                                                                                   1.7          1.7                      
+Forward-looking Non-GAAP interest and other income (expense), net                                                              $(0.6      )                $(0.6      )
+
