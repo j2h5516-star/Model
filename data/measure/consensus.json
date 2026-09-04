@@ -3140,6 +3140,33 @@
       "rev_analysts": 31
      }
     }
+   },
+   {
+    "as_of": "2026-09-04",
+    "rows": {
+     "0q": {
+      "avg": 3.238,
+      "low": 3.08,
+      "high": 3.33,
+      "analysts": 38,
+      "year_ago": 1.69,
+      "rev_avg": 29434507200.0,
+      "rev_low": 29195000000.0,
+      "rev_high": 29687000000.0,
+      "rev_analysts": 37
+     },
+     "+1q": {
+      "avg": 3.88103,
+      "low": 3.6,
+      "high": 4.12,
+      "analysts": 36,
+      "year_ago": 1.95,
+      "rev_avg": 34997554200.0,
+      "rev_low": 33427000000.0,
+      "rev_high": 37010000000.0,
+      "rev_analysts": 35
+     }
+    }
    }
   ],
   "QCOM": [
@@ -6652,6 +6679,33 @@
       "rev_low": 905400000.0,
       "rev_high": 945700000.0,
       "rev_analysts": 36
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-04",
+    "rows": {
+     "0q": {
+      "avg": 1.08997,
+      "low": 1.076,
+      "high": 1.16,
+      "analysts": 42,
+      "year_ago": 0.89,
+      "rev_avg": 877598610.0,
+      "rev_low": 872228000.0,
+      "rev_high": 895350000.0,
+      "rev_analysts": 42
+     },
+     "+1q": {
+      "avg": 1.10453,
+      "low": 1.08,
+      "high": 1.16,
+      "analysts": 21,
+      "year_ago": 0.96,
+      "rev_avg": 932242640.0,
+      "rev_low": 927500000.0,
+      "rev_high": 937853280.0,
+      "rev_analysts": 15
      }
     }
    }
@@ -22789,6 +22843,33 @@
       "analysts": 15,
       "year_ago": 2.59,
       "rev_avg": 2535176970.0,
+      "rev_low": 2449000000.0,
+      "rev_high": 2585400000.0,
+      "rev_analysts": 23
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-04",
+    "rows": {
+     "0q": {
+      "avg": 1.78766,
+      "low": 1.66,
+      "high": 1.83811,
+      "analysts": 16,
+      "year_ago": 3.1,
+      "rev_avg": 2459080270.0,
+      "rev_low": 2420579480.0,
+      "rev_high": 2479300000.0,
+      "rev_analysts": 23
+     },
+     "+1q": {
+      "avg": 2.47754,
+      "low": 2.14,
+      "high": 2.72989,
+      "analysts": 15,
+      "year_ago": 2.59,
+      "rev_avg": 2534916100.0,
       "rev_low": 2449000000.0,
       "rev_high": 2585400000.0,
       "rev_analysts": 23

@@ -1,0 +1,748 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — NTAP 2025-08-27
+# 출처: https://www.sec.gov/Archives/edgar/data/1002047/000095017025111700/ntap-20250827.htm
+
+EX-99.1
+
+ 
+Exhibit 99.1
+
+NetApp Reports First Quarter of Fiscal Year 2026 ResultsNet revenues of $1.56 billion for the first quarter
+
+
+News Summary
+•NetApp achieved the #1 market share position in all-flash storage for calendar Q1 2025, as reported by IDC1
+•All-flash array revenue grew 6% year-over-year to $893 million in Q1, for an annualized net revenue run rate2 of $3.6 billion
+•First-party and marketplace Public Cloud storage services revenue grew 33% year-over-year
+•Billings3 of $1.51 billion in the first quarter grew 4% year-over-year, the seventh consecutive quarter of year-over-year growth
+•Record first quarter cash provided by operations of $673 million; record first quarter free cash flow3 of $620 million
+•Record first quarter GAAP operating profit of $309 million; record first quarter non-GAAP operating profit3 of $401 million
+•Returned $404 million to stockholders through share repurchases and cash dividends
+
+SAN JOSE, Calif.—August 27, 2025—NetApp (NASDAQ: NTAP), the intelligent data infrastructure company, today reported financial results for the first quarter of fiscal year 2026 which ended on July 25, 2025.
+"We delivered a solid start to fiscal year 2026 as organizations are increasingly choosing NetApp to build future-proof AI-ready data infrastructure," said George Kurian, Chief Executive Officer. "By helping customers modernize with cutting-edge and cyber resilient storage solutions, we have taken the lead position in the all-flash market. Our unique cloud services facilitate seamless hybrid and multicloud transformations, and we are well-positioned and growing in the emerging enterprise AI opportunity. I am confident in our ability to capitalize on this momentum and deliver sustainable long-term growth.”
+
+
+
+
+
+
+
+
+
+First Quarter of Fiscal Year 2026 Financial Results
+(In millions, except earnings per share and percentages)
+
+GAAP Results
+ 
+                                                    Q1 FY 2026                        Q1 FY 2025   % Change
+Net revenues                                           $ 1,559                           $ 1,541         1%
+Hybrid Cloud segment revenue                           $ 1,398                           $ 1,382         1%
+Public Cloud segment revenue                             $ 161                             $ 159         1%
+Gross profit                                           $ 1,098                           $ 1,098         —%
+Net income                                               $ 233                             $ 248       (6)%
+Earnings per share4                                     $ 1.15                            $ 1.17       (2)%
+Cash provided by operations                              $ 673                             $ 341        97%
+Non-GAAP Results                                                                                           
+                                                    Q1 FY 2026                        Q1 FY 2025   % Change
+Billings                                               $ 1,511                           $ 1,449         4%
+Net revenues                                           $ 1,559                           $ 1,541         1%
+Hybrid Cloud segment revenue                           $ 1,398                           $ 1,382         1%
+Public Cloud segment revenue                             $ 161                             $ 159         1%
+Gross profit3                                          $ 1,108                           $ 1,113         —%
+Net income3                                              $ 314                             $ 330       (5)%
+Earnings per share3                                     $ 1.55                            $ 1.56       (1)%
+Reconciliations between GAAP and Non-GAAP measures are provided below.                                     
+Constant Currency5 — Q1 FY 2026 versus Q1 FY 2025
+•In constant currency, year-over-year, net revenues were flat and billings increased by 3%. 
+•The year-over-year fluctuations of GAAP and Non-GAAP net income presented in the tables above each include a favorable impact of approximately $10 million from foreign currency exchange rate changes. 
+•The year-over-year fluctuations of GAAP and Non-GAAP earnings per share presented in the tables above each include a favorable impact of approximately $0.05 from foreign currency exchange rate changes.
+
+
+Second Quarter of Fiscal Year 2026 Financial Outlook                                                                                           
+The Company provided the following financial guidance for the second quarter of fiscal year 2026:                                              
+Net revenues are expected to be in the range of:                                                                $1.615 billion - $1.765 billion
+                                                                                     GAAP                                              Non-GAAP
+Consolidated gross margins are expected to be in the range of:              69.5% - 70.5%                                         70.5% - 71.5%
+Operating margins are expected to be in the range of:                           22% - 23%                                             28% - 29%
+Earnings per share is expected to be in the range of:                       $1.35 - $1.45                                         $1.84 - $1.94
+ 
+
+ 
+Full Fiscal Year 2026 Financial Outlook                                                                                                 
+The Company provided the following financial guidance for the full fiscal year 2026:                                                    
+Net revenues are expected to be in the range of:                                                         $6.625 billion - $6.875 billion
+                                                                                                       GAAP                     Non-GAAP
+Consolidated gross margins are expected to be in the range of:                                    70% - 71%                    71% - 72%
+Operating margins are expected to be in the range of:                                         22.8% - 23.8%                28.8% - 29.8%
+Earnings per share is expected to be in the range of:                                         $5.72 - $6.02                $7.60 - $7.90
+
+
+Dividend
+
+The next cash dividend of $0.52 per share is to be paid on October 22, 2025, to stockholders of record as of the close of business on October 3, 2025.
+
+
+First Quarter of Fiscal Year 2026 Business Highlights 
+ 
+Leading Product Innovation 
+
+•NetApp introduced NetApp™ AIPod™ Mini with Intel, a cost-effective, scalable AI solution that brings enterprise-grade AI to a wider range of industries. 
+•NetApp announced new cyber-resilience capabilities to help organizations strengthen data security at the storage layer, addressing emerging threats from AI-driven attacks and future quantum risks.
+•NetApp announced the general availability of NetApp ONTAP™ Connector for Amazon Q to securely synchronize enterprise data from ONTAP file systems with Amazon Q Business, empowering employees to access relevant information to generate new content quickly.
+•NetApp launched the BlueXP™ Keystone™ Management System to streamline subscription management with real-time insights, usage tracking, and performance monitoring. 
+•NetApp introduced NetApp Data Infrastructure Insights VM Analyzer to help IT teams quickly pinpoint root causes, reduce incident response times, and shift from reactive troubleshooting to proactive operations in complex virtual environments. 
+•NetApp launched the NetApp Model Context Protocol (MCP) Server for Knowledge Bases, a lightweight, standardized solution that enables generative AI tools to securely and seamlessly access enterprise data as searchable context, eliminating the need for complex custom integrations.
+•NetApp released NetApp Trident™ 25.06, enhancing Kubernetes data management with new features like volume group snapshots, NVMe/TCP support, improved scalability, stronger SMB security, and advanced disaster recovery to support enterprise-grade containerized applications.
+
+
+
+
+Customer and Partner Momentum 
+
+•NetApp announced a collaboration with NVIDIA to integrate the NVIDIA AI Data Platform reference design into NetApp AIPod, accelerating enterprise adoption of agentic AI with secure, governed, and scalable AI data pipelines for RAG and inferencing.
+•NetApp introduced a new enterprise-grade RAG architecture in collaboration with NVIDIA and Microsoft, leveraging Azure NetApp Files and NVIDIA AI Blueprint to overcome scaling challenges and deliver high-performance, secure, and efficient GenAI solutions.
+•NetApp announced the validated reference architecture for NVIDIA Cloud Partners, combining NetApp AFF A90 storage with NVIDIA HGX systems to help service providers deliver secure, scalable, and high-performance AI services across enterprise environments.
+•AWS announced the public preview of Amazon Elastic VMware Service with support for Amazon FSx for NetApp ONTAP, enabling scalable, cost-efficient VMware workload migration to AWS while maintaining operational consistency and enhancing data protection.
+•NetApp announced a partnership with Diskover Data’s platform, integrating its services with NetApp’s data pipeline infrastructure to help companies surface and activate unstructured data, regardless of location.
+•LYME Technology Solutions achieved NetApp Preferred Partner status, enhancing its ability to serve federal agencies with secure data and cloud solutions.
+
+
+Personnel
+•NetApp named Syam Nair as Chief Product Officer, bringing over 25 years of cloud and platform leadership from Salesforce and Microsoft to accelerate innovation in hybrid cloud and AI, and advancing NetApp’s vision for data-driven business growth.
+•NetApp strengthened its North American sales leadership to accelerate growth and expand its AI and data infrastructure footprint with the appointment of Jim Gannon as Vice President of Strategic Sales and Darrin Hands as Vice President of Corporate, Midmarket and SMB Sales. 
+•NetApp appointed Chiharu Saito as President and CEO of NetApp Japan to accelerate growth and deepen customer and partner engagement in the Japanese market.
+ 
+
+Awards and Recognition 
+•NetApp announced that it achieved the #1 market share position in all-flash storage as reported by IDC1, reflecting its continued innovation, customer trust, and leadership in intelligent data infrastructure. 
+•NetApp received the 2025 SE Labs Award for Enterprise Data Protection for its exceptional innovation in cyber resilience, validating NetApp ONTAP ARP/AI, its AI-powered ransomware protection, with 99% detection and zero false positives.
+•NetApp Keystone was named a Leader and Fast Mover in the 2025 GigaOm Sonar Report on Storage as a Service for delivering hybrid multicloud STaaS in a single subscription, offering unified data management, integrated cloud support, and scalable storage for data-intensive workloads.
+•NetApp AFF A90 all-flash storage system achieved the top spot in the SPECstorage Solution 2020_swbuild benchmark, setting a new industry standard for metadata-heavy workloads in software build environments.
+
+ 
+
+•NetApp was named to the Database Trends & Applications 100 list of Companies That Matter Most in Data, recognized for its forward-thinking approach to helping customers unlock the power of data.
+•NetApp was named to the Forbes Global 2000 list, recognized among the world’s largest and most influential public companies based on revenue, profit, assets, and market value. 
+•NetApp was named one of U.S. News & World Report’s Best Public Companies to Work For, recognized across multiple categories including Information Technology, Caregiving, and Best Companies in the West.
+•CRN honored NetApp CEO George Kurian as one of its Most Influential Executives of 2025 as part of the publication’s annual Top 100 Executives Awards.
+•NetApp CMO Gabie Boko was named to the Women We Admire Top 50 Women Chief Marketing Officers list, honored for her visionary leadership in transforming marketing’s role in business growth and customer engagement.
+•Jenni Flinders, SVP of NetApp’s Worldwide Partner Organization, was named to CRN’s 2025 Power 100: Most Powerful Women of the Channel for leading a successful co-selling strategy aligning partner routes with customer segments. 
+
+
+
+Webcast and Conference Call InformationNetApp will host a conference call to discuss these results today at 2:30 p.m. Pacific Time. To access the live webcast of this event, go to the NetApp Investor Relations website at investors.netapp.com. In addition, this press release and other information related to the call will be posted on the Investor Relations website. An audio replay will be available on the website after 4:30 p.m. Pacific Time today.
+
+“Safe Harbor” Statement Under U.S. Private Securities Litigation Reform Act of 1995
+
+This press release contains forward-looking statements within the meaning of the Private Securities Litigation Reform Act of 1995. These statements include, but are not limited to, all of the statements made in the Second Quarter of Fiscal Year 2026 Financial Outlook section and the Full Fiscal Year 2026 Financial Outlook section, and statements about our business, economic and market outlook, financial guidance, our overall future prospects, our ability to build future-proof AI-ready data infrastructures, modernize with cutting-edge cyber resilient storage solutions, deliver cloud services to facilitate seamless hybrid and multicloud transformations, and our ability to deliver increasing results and value for our stakeholders. Actual results may differ materially from these statements for a variety of reasons, including, without limitation, our ability to keep pace with the rapid industry, technological and market trends and changes in the markets in which we operate; our ability to execute our evolved cloud strategy and introduce and gain market acceptance for our products and services; our ability to maintain our customer, partner, supplier and contract manufacturer relationships on favorable terms and conditions; global political, macroeconomic and market conditions, including inflation, fluctuating interest rates, tariffs, changes in trade policy, regulations, monetary policy shifts, recession risks, and foreign
+
+
+exchange volatility and the resulting impact on demand for our products; the impact of new or ongoing geopolitical conflicts and sanctions; adoption or changes to laws, regulations standards or policies affecting our operations, products, services, the storage industry, or AI usage; material cybersecurity and other security breaches; the impact of supply chain disruptions on our business operations, financial performance and results of operations; changes and related uncertainty in U.S. government spending or policy; changes in overall technology spending by our customers; revenue seasonality; changes in laws or regulations, including those relating to privacy, data protection and information security; the timing of orders and their fulfilment; and our ability to manage our gross profit margins, including managing component costs. These and other equally important factors are described in reports and documents we file from time to time with the Securities and Exchange Commission, including the factors described under the sections titled “Risk Factors” in our most recently filed annual report on Form 10-K and quarterly report on Form 10-Q. We disclaim any obligation to update information contained in this press release whether as a result of new information, future events, or otherwise.
+
+###
+
+NetApp, the NetApp logo, and the marks listed at http://www.netapp.com/TM are trademarks of NetApp, Inc. All other marks are the property of their respective owners.
+
+
+Footnotes
+
+1IDC Worldwide Quarterly Enterprise Storage Systems Tracker, Worldwide Quarterly Enterprise Storage Systems Tracker, June 2025.
+2All-flash array annualized net revenue run rate is determined by products and services revenue for the current quarter, multiplied by 4.
+3Refer to “NetApp Usage of Non-GAAP Financial Information” section below for explanations of consolidated non-GAAP gross margins, non-GAAP operating profit, non-GAAP operating margins, non-GAAP net income, non-GAAP net income per share, free cash flow and billings.
+4GAAP net income per share and non-GAAP net income per share are calculated using the diluted number of shares.
+5Refer to the Constant Currency section below for an explanation of constant currency growth rates and the impact of foreign currency exchange rate changes on year-over-year fluctuations, as provided for certain financial measures.
+
+
+NetApp Usage of Non-GAAP Financial Information
+
+
+
+To supplement NetApp’s condensed consolidated financial statement information presented in accordance with generally accepted accounting principles in the United States (GAAP), NetApp provides investors with certain non-GAAP measures, including, but not limited to, historical non-GAAP gross margins, non-GAAP operating profit, non-GAAP operating margins, non-GAAP operating results, non-GAAP net income, non-GAAP effective tax rate, free cash flow, billings, and historical and projected non-GAAP earnings per diluted share.
+
+NetApp believes that the presentation of its non-GAAP measures, when shown in conjunction with the corresponding GAAP measures, provides useful information to investors and management regarding financial and business trends relating to its financial condition and results of operations. NetApp’s management uses non-GAAP measures in making operating decisions because it believes that the measurements provide meaningful supplemental information regarding NetApp’s ongoing operational performance.
+
+NetApp believes that the presentation of non-GAAP gross margins, non-GAAP operating profit, non-GAAP operating margins, non-GAAP effective tax rate, non-GAAP net income, and non-GAAP earnings per share data, provides investors with supplemental metrics that assist in understanding current results and future prospects, earnings and profitability that are complementary to GAAP metrics. Each of these Non-GAAP metrics is defined as the applicable GAAP metric adjusted to exclude the items defined in A through I below, as applicable, while our Non-GAAP effective tax rate and Non-GAAP net income also reflect a non-GAAP tax provision, as described in item J below, instead of our GAAP tax provision. Non-GAAP net income per share is computed as non-GAAP net income divided by the diluted number of shares for the applicable period.
+
+NetApp believes that the presentation of free cash flow, which it defines as the net cash provided by operating activities less cash used to acquire property and equipment, to be a liquidity measure that provides useful information to management and investors because it reflects cash that can be used to, among other things, invest in its business, make strategic acquisitions, repurchase common stock, and pay dividends on its common stock. As free cash flow is not a measure of liquidity calculated in accordance with GAAP, free cash flow should be considered in addition to, but not as a substitute for, the analysis provided in the statement of cash flows.
+
+NetApp approximates billings by adding net revenues as reported on our Condensed Consolidated Statements of Operations for the period to the change in total deferred revenue and financed unearned services revenue as reported on our Condensed Consolidated Statements of Cash Flows for the same period. Billings is a performance measure that NetApp believes provides useful information to management and investors because it approximates the amounts under purchase orders received by us during a given period that have been billed.
+
+
+
+Non-GAAP financial measures are used to: (1) measure company performance against historical results, (2) facilitate comparisons to our competitors’ operating results and (3) allow greater transparency with respect to information used by management in financial and operational decision making.
+
+NetApp excludes the following items from its non-GAAP measures when applicable:
+
+A. Amortization of intangible assets. NetApp records amortization of intangible assets that were acquired in connection with its business combinations. The amortization of intangible assets varies depending on the level of acquisition activity. Management finds it useful to exclude these charges to assess the appropriate level of various operating expenses to assist in budgeting, planning and forecasting future periods and in measuring operational performance.
+
+B. Stock-based compensation expenses. NetApp excludes stock-based compensation expenses from its non-GAAP measures primarily because the amount can fluctuate based on variables unrelated to the performance of the underlying business. While management views stock-based compensation as a key element of our employee retention and long-term incentives, we do not view it as an expense to be used in evaluating operational performance in any given period.
+
+C. Litigation settlements. NetApp may periodically incur charges or benefits related to litigation settlements. NetApp excludes these charges and benefits, when significant, because it does not believe they are reflective of ongoing business and operating results.
+
+D. Acquisition-related expenses. NetApp excludes acquisition-related expenses, including (a) due diligence, legal and other one-time integration charges and (b) write down of assets acquired that NetApp does not intend to use in its ongoing business, from its non-GAAP measures, primarily because they are not related to our ongoing business or cost base and, therefore, are less useful for future planning and forecasting.
+
+E. Restructuring charges. These charges consist of restructuring charges that are incurred based on the particular facts and circumstances of restructuring decisions, including employment and contractual settlement terms, and other related charges, and can vary in size and frequency. We therefore exclude them in our assessment of operational performance.
+
+F. Asset impairments. These are non-cash charges to write down assets when there is an indication that the asset has become impaired. Management finds it useful to exclude these non-cash charges due to the unpredictability of these events in its assessment of operational performance.
+
+
+
+G. Gains/losses on the sale or derecognition of assets. These are gains/losses from the sale of our properties and other transactions in which we transfer and/or lose control of assets to a third party. This is inclusive of third-party advisory, legal and other costs that result directly from and are essential to a sale transaction and that would not have been incurred had the decision to sell not been made. Management believes that these transactions do not reflect the results of our underlying, ongoing business and, therefore, are less useful for future planning and forecasting.
+
+H. Gains/losses on the sale of investments in equity securities. These are gains/losses from the sale of our investment in certain equity securities. Typically, such investments are sold as a result of a change in control of the underlying businesses. Management believes that these transactions do not reflect the results of our underlying, ongoing business and, therefore, are less useful for future planning and forecasting.
+
+I. Debt extinguishment costs. NetApp excludes certain non-recurring expenses incurred as a result of the early extinguishment of debt. Management believes such non-recurring costs do not reflect the results of its underlying, ongoing business and, therefore, are less useful for future planning and forecasting.
+
+J. Income tax adjustments. NetApp’s non-GAAP tax provision is based upon a projected annual non-GAAP effective tax rate for the first three quarters of the fiscal year and an actual non-GAAP tax provision for the fourth quarter of the fiscal year. The non-GAAP tax provision also excludes, when applicable, (a) tax charges or benefits in the current period that relate to one or more prior fiscal periods that are a result of events such as changes in tax legislation, authoritative guidance, income tax audit settlements, statute lapses and/or court decisions, (b) tax charges or benefits that are attributable to unusual or non-recurring book and/or tax accounting method changes, (c) tax charges or benefits that are a result of a non-routine foreign cash repatriation, (d) tax charges or benefits that are a result of infrequent restructuring of the Company’s tax structure, (e) tax charges or benefits that are a result of a change in valuation allowance, and (f) tax charges or benefits resulting from the integration of intellectual property from acquisitions. Management believes that the use of non-GAAP tax provisions provides a more meaningful measure of the Company’s operational performance.
+
+Non-GAAP measures are not in accordance with, or an alternative for, measures prepared in accordance with GAAP, and may be different from non-GAAP measures used by other companies. In addition, non-GAAP measures are not based on any comprehensive set of accounting rules or principles. NetApp believes that non-GAAP measures have limitations in that they do not reflect all of the amounts associated with the Company’s results of operations as determined in accordance with GAAP and that these measures should only be used to evaluate the Company’s results of operations in conjunction with the corresponding GAAP measures. NetApp management compensates for these limitations by analyzing current and projected results on a GAAP basis as well as a non-GAAP basis. The presentation of non-GAAP financial information is not
+
+
+meant to be considered in isolation or as a substitute for the directly comparable financial measures prepared in accordance with generally accepted accounting principles in the United States. The non-GAAP financial measures are meant to supplement, and be viewed in conjunction with, GAAP financial measures. A detailed reconciliation of our non-GAAP to GAAP results can be found herein.
+
+
+Constant Currency
+
+In periods in which the impacts of foreign currency exchange rate changes are significant, NetApp presents certain constant currency growth rates or quantifies the impact of foreign currency exchange rate changes on year-over-year fluctuations, including for net revenues, billings, and earnings. This constant currency information assumes the same foreign currency exchange rates that were in effect for the comparable prior-year period were used in translation of the current period results.
+
+
+About NetApp
+
+NetApp is the intelligent data infrastructure company, combining unified data storage, integrated data services, and CloudOps solutions to turn a world of disruption into opportunity for every customer. NetApp creates silo-free infrastructure, harnessing observability and AI to enable the industry’s best data management. As the only enterprise-grade storage service natively embedded in the world’s biggest clouds, our data storage delivers seamless flexibility. In addition, our data services create a data advantage through superior cyber resilience, governance, and application agility. Our CloudOps solutions provide continuous optimization of performance and efficiency through observability and AI. No matter the data type, workload, or environment, with NetApp you can transform your data infrastructure to realize your business possibilities.
+Learn more at www.netapp.com or follow us on X, LinkedIn, Facebook, and Instagram.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+NETAPP, INC.
+CONDENSED CONSOLIDATED BALANCE SHEETS
+(In millions)
+(Unaudited)
+
+
+                                                                       July 25, 2025      April 25, 2025
+ASSETS                                                                                                  
+Current assets:                                                                                         
+Cash, cash equivalents and investments                                        $3,324              $3,846
+Accounts receivable                                                              787               1,246
+Inventories                                                                      133                 186
+Other current assets                                                             443                 573
+Total current assets                                                           4,687               5,851
+Property and equipment, net                                                      570                 563
+Goodwill and purchased intangible assets, net                                  2,771               2,766
+Other non-current assets                                                       1,651               1,643
+Total assets                                                                  $9,679             $10,823
+LIABILITIES AND STOCKHOLDERS' EQUITY                                                                    
+Current liabilities:                                                                                    
+Accounts payable                                                                $404                $511
+Accrued expenses                                                                 895               1,122
+Current portion of long-term debt                                                  —                 750
+Short-term deferred revenue and financed unearned services revenue             2,270               2,279
+Total current liabilities                                                      3,569               4,662
+Long-term debt                                                                 2,485               2,485
+Other long-term liabilities                                                      394                 379
+Long-term deferred revenue and financed unearned services revenue              2,256               2,257
+Total liabilities                                                              8,704               9,783
+Stockholders' equity                                                             975               1,040
+Total liabilities and stockholders' equity                                    $9,679             $10,823
+
+
+
+NETAPP, INC.
+CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS
+(In millions, except per share amounts)
+(Unaudited)
+
+
+                                                                                       Three Months Ended
+                                                      July 25, 2025               July 26, 2024          
+Revenues:                                                                                                
+Product                                                        $654                        $669          
+Services                                                        905                         872          
+Net revenues                                                  1,559                       1,541          
+Cost of revenues:                                                                                        
+Cost of product                                                 302                         269          
+Cost of services                                                159                         174          
+Total cost of revenues                                          461                         443          
+Gross profit                                                  1,098                       1,098          
+Operating expenses:                                                                                      
+Sales and marketing                                             461                         471          
+Research and development                                        242                         252          
+General and administrative                                       84                          75          
+Restructuring charges                                             2                          17          
+Acquisition-related expense                                       —                           1          
+Total operating expenses                                        789                         816          
+Income from operations                                          309                         282          
+Other (expense) income, net                                      (5    )                     17          
+Income before income taxes                                      304                         299          
+Provision for income taxes                                       71                          51          
+Net income                                                     $233                        $248          
+Net income per share:                                                                                    
+Basic                                                         $1.16                       $1.20          
+Diluted                                                       $1.15                       $1.17          
+Shares used in net income per share calculations:                                                        
+Basic                                                           201                         206          
+Diluted                                                         203                         212          
+
+
+
+NETAPP, INC.
+CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS
+(In millions)
+(Unaudited)
+
+
+                                                                                                           Three Months Ended    
+                                                                                  July 25, 2025                 July 26, 2024    
+Cash flows from operating activities:                                                                                            
+Net income                                                                                 $233                          $248    
+Adjustments to reconcile net income to net cash                                                                                  
+provided by operating activities:                                                                                                
+Depreciation and amortization                                                                51                            63    
+Non-cash operating lease cost                                                                11                            10    
+Stock-based compensation                                                                     83                            85    
+Deferred income taxes                                                                         9                           (17   )
+Other items, net                                                                             46                           (19   )
+Changes in assets and liabilities, net of acquisitions of                                                                        
+businesses:                                                                                                                      
+Accounts receivable                                                                         466                           335    
+Inventories                                                                                  54                           (29   )
+Accounts payable                                                                           (107     )                     (77   )
+Accrued expenses                                                                           (240     )                    (221   )
+Deferred revenue and financed unearned services revenue                                     (48     )                     (92   )
+Long-term taxes payable                                                                       2                             4    
+Changes in other operating assets and liabilities, net                                      113                            51    
+Net cash provided by operating activities                                                   673                           341    
+Cash flows from investing activities:                                                                                            
+Purchases of investments, net                                                              (143     )                     (10   )
+Purchases of property and equipment                                                         (53     )                     (41   )
+Other investing activities, net                                                              15                             —    
+Net cash used in investing activities                                                      (181     )                     (51   )
+Cash flows from financing activities:                                                                                            
+Proceeds from issuance of common stock under employee stock award plans                      54                            55    
+Payments for taxes related to net share settlement of stock awards                          (57     )                     (97   )
+Repurchase of common stock                                                                 (300     )                    (400   )
+Repayments and extinguishment of debt                                                      (750     )                       —    
+Dividends paid                                                                             (104     )                    (107   )
+Other financing activities, net                                                               —                             1    
+Net cash used in financing activities                                                    (1,157     )                    (548   )
+Effect of exchange rate changes on cash, cash equivalents and restricted cash                 7                             8    
+Net change in cash, cash equivalents and restricted cash                                   (658     )                    (250   )
+Cash, cash equivalents and restricted cash:                                                                                      
+Beginning of period                                                                       2,749                         1,909    
+End of period                                                                            $2,091                        $1,659    
+
+
+
+
+
+
+
+ 
+NETAPP, INC.                                                                                                                         
+SUPPLEMENTAL DATA                                                                                                                    
+(In millions except net income per share, percentages, DSO, DPO and Inventory Turns)                                                 
+(Unaudited)                                                                                                                          
+Revenues by Segment                                                                                                                  
+                                                              Q1'FY26                                                     Q1'FY25    
+Product                                                          $654                                                        $669    
+Support                                                           647                                                         631    
+Professional and Other Services                                    97                                                          82    
+Hybrid Cloud Segment Net Revenues                               1,398                                                       1,382    
+Public Cloud Segment Net Revenues                                 161                                                         159    
+Net Revenues                                                   $1,559                                                      $1,541    
+Gross Profit by Segment                                                                                                              
+                                                              Q1'FY26                                                     Q1'FY25    
+Product                                                          $353                                                        $401    
+Support                                                           597                                                         581    
+Professional and Other Services                                    29                                                          18    
+Hybrid Cloud Segment Gross Profit                                 979                                                       1,000    
+Public Cloud Segment Gross Profit                                 129                                                         113    
+Total Segments Gross Profit                                     1,108                                                       1,113    
+Amortization of Intangible Assets                                  (3           )                                              (8   )
+Stock-based Compensation                                           (7           )                                              (7   )
+Unallocated Cost of Revenues                                      (10           )                                             (15   )
+Gross Profit                                                   $1,098                                                      $1,098    
+Gross Margin by Segment                                                                                                              
+                                                              Q1'FY26                                                     Q1'FY25    
+Product                                                          54.0           %                                            59.9   %
+Support                                                          92.3           %                                            92.1   %
+Professional and Other Services                                  29.9           %                                            22.0   %
+Hybrid Cloud Segment Gross Margin                                70.0           %                                            72.4   %
+Public Cloud Segment Gross Margin                                80.1           %                                            71.1   %
+
+
+Geographic Mix                                                 
+                        % of Q1 FY'26         % of Q1 FY'25    
+                              Revenue               Revenue    
+Americas                           51   %                50   %
+Americas Commercial                43   %                39   %
+U.S. Public Sector                  8   %                11   %
+EMEA                               32   %                33   %
+Asia Pacific                       17   %                17   %
+
+
+Pathways Mix                                            
+               % of Q1 FY'26         % of Q1 FY'25      
+               Revenue               Revenue            
+Direct         24                %   22                %
+Indirect       76                %   78                %
+
+
+
+ 
+Non-GAAP Income from Operations, Income before Income Taxes &amp; Effective Tax Rate                                
+                                                                                         Q1'FY26         Q1'FY25    
+Non-GAAP Income from Operations                                                             $401            $399    
+% of Net Revenues                                                                           25.7   %        25.9   %
+Non-GAAP Income before Income Taxes                                                         $396            $416    
+Non-GAAP Effective Tax Rate                                                                 20.7   %        20.7   %
+Non-GAAP Net Income                                                                                                 
+                                                                                         Q1'FY26         Q1'FY25    
+Non-GAAP Net Income                                                                         $314            $330    
+Non-GAAP Weighted Average Common Shares Outstanding, Diluted                                 203             212    
+Non-GAAP Net Income per Share, Diluted                                                     $1.55           $1.56    
+
+
+Select Balance Sheet Items                                                                                                                                                                             
+                                                                            Q1'FY26                                                                                   Q1'FY25                          
+Deferred Revenue and Financed Unearned Services Revenue                     $4,526                                                                                    $4,169                           
+DSO (days)                                                                  46                                                                                        40                               
+DPO (days)                                                                  80                                                                                        90                               
+Inventory Turns                                                             14                                                                                        8                                
+Days sales outstanding (DSO) is defined as accounts receivable divided by net revenues, multiplied by the number of days in the quarter.                                                               
+Days payables outstanding (DPO) is defined as accounts payable divided by cost of revenues, multiplied by the number of days in the quarter.                                                           
+Inventory turns is defined as annualized cost of revenues divided by net inventories.                                                                                                                  
+
+
+Select Cash Flow Statement Items                                                                                                                                                             
+                                                                                        Q1'FY26                                                                                   Q1'FY25    
+Net Cash Provided by Operating Activities                                                  $673                                                                                      $341    
+Purchases of Property and Equipment                                                         $53                                                                                       $41    
+Free Cash Flow                                                                             $620                                                                                      $300    
+Free Cash Flow as % of Net Revenues                                                        39.8                 %                                                                    19.5   %
+Free cash flow is a non-GAAP measure and is defined as net cash provided by operating activities less purchases of property and equipment.                                                   
+Some items may not add or recalculate due to rounding.                                                                                                                                       
+
+
+
+ 
+NETAPP, INC.                                                                                                           
+RECONCILIATION OF GAAP TO NON-GAAP                                                                                     
+INCOME STATEMENT INFORMATION                                                                                           
+(In millions, except net income per share amounts)                                                                     
+                                                                    Q1'FY26                                 Q1'FY25    
+NET INCOME                                                             $233                                    $248    
+Adjustments:                                                                                                           
+Amortization of intangible assets                                         6                                      14    
+Stock-based compensation                                                 83                                      85    
+Restructuring charges                                                     2                                      17    
+Acquisition-related expense                                               —                                       1    
+Gains/losses on the sale or derecognition of assets                       1                                       —    
+Income tax effects                                                      (11       )                             (35   )
+NON-GAAP NET INCOME                                                    $314                                    $330    
+COST OF REVENUES                                                       $461                                    $443    
+Adjustments:                                                                                                           
+Amortization of intangible assets                                        (3       )                              (8   )
+Stock-based compensation                                                 (7       )                              (7   )
+NON-GAAP COST OF REVENUES                                              $451                                    $428    
+COST OF PRODUCT REVENUES                                               $302                                    $269    
+Adjustments:                                                                                                           
+Stock-based compensation                                                 (1       )                              (1   )
+NON-GAAP COST OF PRODUCT REVENUES                                      $301                                    $268    
+COST OF SERVICES REVENUES                                              $159                                    $174    
+Adjustments:                                                                                                           
+Amortization of intangible assets                                        (3       )                              (8   )
+Stock-based compensation                                                 (6       )                              (6   )
+NON-GAAP COST OF SERVICES REVENUES                                     $150                                    $160    
+GROSS PROFIT                                                         $1,098                                  $1,098    
+Adjustments:                                                                                                           
+Amortization of intangible assets                                         3                                       8    
+Stock-based compensation                                                  7                                       7    
+NON-GAAP GROSS PROFIT                                                $1,108                                  $1,113    
+
+
+
+
+
+ 
+NETAPP, INC.                                                                                                           
+RECONCILIATION OF GAAP TO NON-GAAP                                                                                     
+INCOME STATEMENT INFORMATION                                                                                           
+(In millions, except net income per share amounts)                                                                     
+                                                                    Q1'FY26                                 Q1'FY25    
+SALES AND MARKETING EXPENSES                                           $461                                    $471    
+Adjustments:                                                                                                           
+Amortization of intangible assets                                        (3       )                              (6   )
+Stock-based compensation                                                (34       )                             (35   )
+NON-GAAP SALES AND MARKETING EXPENSES                                  $424                                    $430    
+RESEARCH AND DEVELOPMENT EXPENSES                                      $242                                    $252    
+Adjustments:                                                                                                           
+Stock-based compensation                                                (25       )                             (31   )
+NON-GAAP RESEARCH AND DEVELOPMENT EXPENSES                             $217                                    $221    
+GENERAL AND ADMINISTRATIVE EXPENSES                                     $84                                     $75    
+Adjustments:                                                                                                           
+Stock-based compensation                                                (17       )                             (12   )
+Gains/losses on the sale or derecognition of assets                      (1       )                               —    
+NON-GAAP GENERAL AND ADMINISTRATIVE EXPENSES                            $66                                     $63    
+RESTRUCTURING CHARGES                                                    $2                                     $17    
+Adjustments:                                                                                                           
+Restructuring charges                                                    (2       )                             (17   )
+NON-GAAP RESTRUCTURING CHARGES                                           $—                                      $—    
+ACQUISITION-RELATED EXPENSE                                              $—                                      $1    
+Adjustments:                                                                                                           
+Acquisition-related expense                                               —                                      (1   )
+NON-GAAP ACQUISITION-RELATED EXPENSE                                     $—                                      $—    
+OPERATING EXPENSES                                                     $789                                    $816    
+Adjustments:                                                                                                           
+Amortization of intangible assets                                        (3       )                              (6   )
+Stock-based compensation                                                (76       )                             (78   )
+Restructuring charges                                                    (2       )                             (17   )
+Acquisition-related expense                                               —                                      (1   )
+Gains/losses on the sale or derecognition of assets                      (1       )                               —    
+NON-GAAP OPERATING EXPENSES                                            $707                                    $714    
+
+
+
+
+ 
+NETAPP, INC.                                                                                                           
+RECONCILIATION OF GAAP TO NON-GAAP                                                                                     
+INCOME STATEMENT INFORMATION                                                                                           
+(In millions, except net income per share amounts)                                                                     
+                                                                    Q1'FY26                                 Q1'FY25    
+INCOME FROM OPERATIONS                                                 $309                                    $282    
+Adjustments:                                                                                                           
+Amortization of intangible assets                                         6                                      14    
+Stock-based compensation                                                 83                                      85    
+Restructuring charges                                                     2                                      17    
+Acquisition-related expense                                               —                                       1    
+Gains/losses on the sale or derecognition of assets                       1                                       —    
+NON-GAAP INCOME FROM OPERATIONS                                        $401                                    $399    
+INCOME BEFORE INCOME TAXES                                             $304                                    $299    
+Adjustments:                                                                                                           
+Amortization of intangible assets                                         6                                      14    
+Stock-based compensation                                                 83                                      85    
+Restructuring charges                                                     2                                      17    
+Acquisition-related expense                                               —                                       1    
+Gains/losses on the sale or derecognition of assets                       1                                       —    
+NON-GAAP INCOME BEFORE INCOME TAXES                                    $396                                    $416    
+PROVISION FOR INCOME TAXES                                              $71                                     $51    
+Adjustments:                                                                                                           
+Income tax effects                                                       11                                      35    
+NON-GAAP PROVISION FOR INCOME TAXES                                     $82                                     $86    
+NET INCOME PER SHARE                                                  $1.15                                   $1.17    
+Adjustments:                                                                                                           
+Amortization of intangible assets                                      0.03                                    0.07    
+Stock-based compensation                                               0.41                                    0.40    
+Restructuring charges                                                  0.01                                    0.08    
+Income tax effects                                                    (0.05       )                           (0.17   )
+NON-GAAP NET INCOME PER SHARE                                         $1.55                                   $1.56    
+
+
+RECONCILIATION OF GAAP TO NON-GAAP                                                   
+GROSS MARGIN                                                                         
+($ in millions)                                                                      
+                                            Q1'FY26                       Q1'FY25    
+Gross margin-GAAP                              70.4     %                    71.3   %
+Cost of revenues adjustments                    0.7     %                     0.9   %
+Gross margin-Non-GAAP                          71.1     %                    72.2   %
+GAAP cost of revenues                          $461                          $443    
+Cost of revenues adjustments:                                                        
+Amortization of intangible assets                (3     )                      (8   )
+Stock-based compensation                         (7     )                      (7   )
+Non-GAAP cost of revenues                      $451                          $428    
+Net revenues                                 $1,559                        $1,541    
+
+
+
+ 
+RECONCILIATION OF GAAP TO NON-GAAP                                                       
+PRODUCT GROSS MARGIN                                                                     
+($ in millions)                                                                          
+                                                Q1'FY26                       Q1'FY25    
+Product gross margin-GAAP                          53.8     %                    59.8   %
+Cost of product revenues adjustments                0.2     %                     0.1   %
+Product gross margin-Non-GAAP                      54.0     %                    59.9   %
+GAAP cost of product revenues                      $302                          $269    
+Cost of product revenues adjustments:                                                    
+Stock-based compensation                             (1     )                      (1   )
+Non-GAAP cost of product revenues                  $301                          $268    
+Product revenues                                   $654                          $669    
+
+
+RECONCILIATION OF GAAP TO NON-GAAP                                                        
+SERVICES GROSS MARGIN                                                                     
+($ in millions)                                                                           
+                                                 Q1'FY26                       Q1'FY25    
+Services gross margin-GAAP                          82.4     %                    80.0   %
+Cost of services revenues adjustments                1.0     %                     1.7   %
+Services gross margin-Non-GAAP                      83.4     %                    81.7   %
+GAAP cost of services revenues                      $159                          $174    
+Cost of services revenues adjustments:                                                    
+Amortization of intangible assets                     (3     )                      (8   )
+Stock-based compensation                              (6     )                      (6   )
+Non-GAAP cost of services revenues                  $150                          $160    
+Services revenues                                   $905                          $872    
+
+
+RECONCILIATION OF GAAP TO NON-GAAP                                                                     
+OPERATING MARGIN                                                                                       
+($ in millions)                                                                                        
+                                                              Q1'FY26                       Q1'FY25    
+Operating margin-GAAP                                            19.8     %                    18.3   %
+Adjustments:                                                      5.9     %                     7.6   %
+Operating margin-Non-GAAP                                        25.7     %                    25.9   %
+GAAP income from operations                                      $309                          $282    
+Income from operations adjustments:                                                                    
+Amortization of intangible assets                                   6                            14    
+Stock-based compensation                                           83                            85    
+Restructuring charges                                               2                            17    
+Acquisition-related expense                                         —                             1    
+Gains/losses on the sale or derecognition of assets                 1                             —    
+Non-GAAP income from operations                                  $401                          $399    
+Net revenues                                                   $1,559                        $1,541    
+
+
+
+ 
+RECONCILIATION OF GAAP TO NON-GAAP                                              
+EFFECTIVE TAX RATE                                                              
+                                    Q1'FY26                        Q1'FY25      
+GAAP effective tax rate             23.4         %                 17.1        %
+Adjustments:                                                                    
+Income tax effects                        (2.7   )%                3.6         %
+Non-GAAP effective tax rate         20.7         %                 20.7        %
+
+
+RECONCILIATION OF NET CASH PROVIDED BY OPERATING ACTIVITIES                                                          
+TO FREE CASH FLOW (NON-GAAP)                                                                                         
+(In millions)                                                                                                        
+                                                     Q1'FY26                                      Q1'FY25            
+Net cash provided by operating activities            $673                                         $341               
+Purchases of property and equipment                           (53      )                                   (41      )
+Free cash flow                                       $620                                         $300               
+
+
+RECONCILIATION OF NET REVENUES                                                                                          
+TO BILLINGS (NON-GAAP)                                                                                                  
+(In millions)                                                                                                           
+                                                                             Q1'FY26                       Q1'FY25      
+Net revenues                                                                 $1,559                        $1,541       
+Change in deferred revenue and financed unearned services revenue*                 (48   )                       (92   )
+Billings                                                                     $1,511                        $1,449       
+* As reported on our Condensed Consolidated Statements of Cash Flows                                                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+NETAPP, INC.                                                          
+RECONCILIATION OF GAAP GUIDANCE TO NON-GAAP                           
+SECOND QUARTER FISCAL 2026                                            
+                                                        Second Quarter
+                                                        Fiscal 2026   
+Gross Margin - GAAP Guidance                            69.5% - 70.5% 
+Adjustments:                                                          
+Cost of revenues adjustments                            1%            
+Gross Margin - Non-GAAP Guidance                        70.5% - 71.5% 
+                                                        Second Quarter
+                                                        Fiscal 2026   
+Operating Margin - GAAP Guidance                        22% - 23%     
+Adjustments:                                                          
+Stock-based compensation expense                        6%            
+Operating Margin - Non-GAAP Guidance                    28% - 29%     
+
+ Some items may not add or recalculate due to rounding.
+
+
+
+NETAPP, INC.                                                                   
+RECONCILIATION OF GAAP GUIDANCE TO NON-GAAP                                    
+EXPRESSED AS EARNINGS PER SHARE                                                
+SECOND QUARTER FISCAL 2026                                                     
+                                                                 Second Quarter
+                                                                 Fiscal 2026   
+GAAP Guidance - Net Income Per Share                             $1.35 - $1.45 
+Adjustments of Specific Items to Net Income                                    
+Per Share for the Second Quarter Fiscal 2026:                                  
+Amortization of intangible assets                                $0.03         
+Stock-based compensation expense                                 $0.49         
+Income tax effects                                               ($0.03)       
+Total Adjustments                                                $0.49         
+Non-GAAP Guidance - Net Income Per Share                         $1.84 - $1.94 
+
+ Some items may not add or recalculate due to rounding.
+
+
+
+
+
+NETAPP, INC.                                                          
+RECONCILIATION OF GAAP GUIDANCE TO NON-GAAP                           
+FISCAL 2026                                                           
+                                                           Fiscal 2026
+Gross Margin - GAAP Guidance                                 70% - 71%
+Adjustments:                                                          
+Cost of revenues adjustments                                        1%
+Gross Margin - Non-GAAP Guidance                             71% - 72%
+                                                           Fiscal 2026
+Operating Margin - GAAP Guidance                         22.8% - 23.8%
+Adjustments:                                                          
+Stock-based compensation expense                                    6%
+Operating Margin - Non-GAAP Guidance                     28.8% - 29.8%
+
+Some items may not add or recalculate due to rounding.
+
+
+NETAPP, INC.                                                                 
+RECONCILIATION OF GAAP GUIDANCE TO NON-GAAP                                  
+EXPRESSED AS EARNINGS PER SHARE                                              
+FISCAL 2026                                                                  
+                                                               Fiscal 2026   
+GAAP Guidance - Net Income Per Share                           $5.72 - $6.02 
+Adjustments of Specific Items to Net Income                                  
+Per Share for Fiscal 2026:                                                   
+Amortization of intangible assets                              $0.10         
+Stock-based compensation expense                               $1.87         
+Restructuring charges                                          $0.01         
+Income tax effects                                             ($0.10)       
+Total Adjustments                                              $1.88         
+Non-GAAP Guidance - Net Income Per Share                       $7.60 - $7.90 
+
+Some items may not add or recalculate due to rounding.
+
+Contacts:
+
+(Press)
+Kenya Hayes
+1 703 589 7595
+kenya.hayes@netapp.com
+
+(Investors)
+Kris Newton
+1 408 822 3312
+kris.newton@netapp.com
+
+
