@@ -850,6 +850,50 @@ def test_이번_런이_방금_담은_원문도_부탁에서_뺀다():
             os.unlink(path)
 
 
+def test_다_쓴_재료의_빈_몫이_다른_재료에게_넘어간다():
+    """179차 — 2026-09-05 실측: 야후 어긋남 후보가 2건(몫 30)·자릿수 0건
+    (몫 10)만 남아 **빈 몫 38칸이 그냥 사라졌다**. 그날 목록이 상한 132칸인데
+    91건뿐이었다. 135차의 '제 몫을 먼저' 는 굶는 재료를 지키는 규칙이지
+    끝난 재료가 자리를 붙들라는 규칙이 아니다."""
+    import json
+    import tempfile
+
+    # 구멍이 아주 많은 종목 — 몫(15+12)보다 훨씬 많은 후보를 낸다.
+    # 잣대가 정해지려면 값이 8칸 이상 있어야 한다(measure_engine.yardstick_of).
+    날짜 = [f"20{y}-{m:02d}-15" for y in (17, 18, 19, 20, 21, 22, 23, 24)
+           for m in (1, 4, 7, 10)]
+    rows = []
+    for i, 날 in enumerate(날짜):
+        값있음 = i < 8 or i == len(날짜) - 1
+        rows.append(분기(날[:7], announced_date=날,
+                        adj_eps=(1.0 + i * 0.1) if 값있음 else None))
+    quarters = {f"T{n}": [dict(r) for r in rows] for n in range(40)}
+
+    with tempfile.TemporaryDirectory() as raw, \
+            tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        path = f.name
+        옛 = audit_data.RAW_DIR
+        audit_data.RAW_DIR = raw
+        try:
+            audit_data.refresh_wanted(quarters, None, path=path,
+                                      progress=lambda *a: None)
+            with open(path, encoding="utf-8") as fh:
+                목록 = json.load(fh)["목록"]
+            몫합 = audit_data.HOLE_QUOTA + audit_data.FRESH_HOLE_QUOTA
+            assert len(목록) > 몫합, (
+                f"빈 몫이 안 넘어갔습니다 — {len(목록)}건 (몫 합계 {몫합})")
+            # 상한을 넘지는 않는다
+            상한 = (audit_data.WANTED_LIMIT + audit_data.SCALE_QUOTA
+                   + audit_data.FRESH_HOLE_QUOTA + audit_data.HOLE_QUOTA)
+            assert len(목록) <= 상한, (len(목록), 상한)
+            # 겹치는 (종목, 발표일) 은 없어야 한다
+            열쇠 = [(r["종목"], str(r["발표일"])[:10]) for r in 목록]
+            assert len(열쇠) == len(set(열쇠)), "같은 공시를 두 번 적었습니다"
+        finally:
+            audit_data.RAW_DIR = 옛
+            os.unlink(path)
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

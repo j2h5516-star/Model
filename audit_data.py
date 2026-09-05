@@ -621,36 +621,55 @@ def refresh_wanted(quarters: dict, vendor: dict | None,
     # 뒤에 빼면 그 자리가 빈 채로 남아, 새 후보가 여전히 못 들어옵니다.
     # 디스크에 있는 것 + **이번 런이 방금 담은 것**(178차) 둘 다 뺍니다.
     받음 = 이미_받은_원문() | 이번런에_담은_원문(files)
-    바깥: list[dict] = []
+    # 재료마다 아직 **못 받은** 후보 전부를 먼저 모읍니다. 몫만큼 자르는
+    # 것은 그다음입니다 — 남는 자리를 다른 재료에게 넘기려면 나머지가
+    # 필요하기 때문입니다(179차, 아래 설명).
+    후보: dict[str, list[dict]] = {}
     if vendor:
         try:
             import vendor_compare as _vc
-            # 후보를 넉넉히 받아 **거른 뒤에** 몫만큼 자릅니다 — 그래야
-            # 이미 받은 원문이 그 재료의 몫을 빈자리로 잡아먹지 않습니다.
-            바깥 = 받은것_빼기(
-                       _vc.wanted_from_mismatch(quarters, vendor, limit=400),
-                       받음)[:MISMATCH_QUOTA] + \
-                  받은것_빼기(
-                       _vc.wanted_from_street(quarters, vendor, limit=400),
-                       받음)[:STREET_QUOTA]
+            후보["야후"] = 받은것_빼기(
+                _vc.wanted_from_mismatch(quarters, vendor, limit=800), 받음)
+            후보["월가"] = 받은것_빼기(
+                _vc.wanted_from_street(quarters, vendor, limit=800), 받음)
         except Exception as exc:      # 부탁 목록이 실패해도 수집은 계속
             progress(f"⚠️ 부탁 목록 재료 실패: {type(exc).__name__}: {str(exc)[:120]}")
+    후보["자릿수"] = 받은것_빼기(wanted_from_scale(quarters, limit=800), 받음)
+    # 최신 구멍을 **먼저** 놓습니다 (150차-K). merge_wanted 가 (종목,발표일)
+    # 로 겹침을 지우므로 아래 '구멍'과 중복돼도 한 번만 실립니다.
+    후보["최신구멍"] = 받은것_빼기(
+        wanted_from_holes(quarters, newest_first=True, limit=800), 받음)
+    후보["구멍"] = 받은것_빼기(wanted_from_holes(quarters, limit=800), 받음)
+
     # 재료마다 **제 몫만큼 먼저 잘라서** 넘깁니다. 안 그러면 앞 재료가
     # 뒤 재료의 자리를 먹어 뒤쪽 배관이 영원히 안 돕니다 (135차에 실측한
     # 함정 — 구멍이 0건이었습니다).
-    자릿수 = 받은것_빼기(wanted_from_scale(quarters), 받음)[:SCALE_QUOTA]
-    # 최신 구멍을 **먼저** 놓습니다 (150차-K). merge_wanted 가 (종목,발표일)
-    # 로 겹침을 지우므로 아래 '구멍'과 중복돼도 한 번만 실립니다.
-    신선구멍 = 받은것_빼기(
-        wanted_from_holes(quarters, newest_first=True, limit=400), 받음
-    )[:FRESH_HOLE_QUOTA]
-    구멍 = 받은것_빼기(wanted_from_holes(quarters, limit=400), 받음)[:HOLE_QUOTA]
+    바깥 = 후보.get("야후", [])[:MISMATCH_QUOTA] + 후보.get("월가", [])[:STREET_QUOTA]
+    자릿수 = 후보["자릿수"][:SCALE_QUOTA]
+    신선구멍 = 후보["최신구멍"][:FRESH_HOLE_QUOTA]
+    구멍 = 후보["구멍"][:HOLE_QUOTA]
+
+    # ⚠️ **다 쓴 재료가 자리를 붙들고 있으면 안 됩니다** (179차).
+    #    2026-09-05 실측 — 아직 못 받은 후보가 재료마다 이렇게 갈렸습니다:
+    #        야후 어긋남 2 (몫 30) · 자릿수 0 (몫 10)  ← 사실상 다 받았다
+    #        월가 213 · 이웃 튐 335 · 구멍 316 · 최신 구멍 277
+    #    그런데 몫은 고정이라 **빈 몫 38칸이 그냥 사라졌습니다.** 그날 목록이
+    #    132칸 상한인데 91건뿐이었던 것이 그 자국입니다.
+    #    135차의 "제 몫을 먼저 떼어 준다"는 **굶는 재료를 지키려는 규칙**이지,
+    #    **끝난 재료가 자리를 붙들라는 규칙이 아닙니다.** 그래서 몫을 다 준
+    #    뒤 남는 자리를 아직 후보가 남은 재료에게 넘깁니다 — 순서는 등록된
+    #    우선순위 그대로(틀린 값 먼저, 없는 값 나중).
+    예비 = (후보.get("월가", [])[STREET_QUOTA:]
+           + 후보["최신구멍"][FRESH_HOLE_QUOTA:]
+           + 후보["구멍"][HOLE_QUOTA:])
+
     count = write_wanted(quarters, path=path, 받음=받음,
-                         extra=바깥, tail=자릿수 + 신선구멍 + 구멍)
+                         extra=바깥, tail=자릿수 + 신선구멍 + 구멍 + 예비)
     progress(f"원문 부탁 목록 {count}건 갱신 "
              f"(이미 받은 원문 {len(받음)}건은 뺌 · "
              f"바깥 자 재료 {len(바깥)}건 · 자릿수 어긋남 {len(자릿수)}건 · "
-             f"최신 구멍 {len(신선구멍)}건 · 잣대 구멍 후보 {len(구멍)}건)")
+             f"최신 구멍 {len(신선구멍)}건 · 잣대 구멍 후보 {len(구멍)}건 · "
+             f"남는 자리 예비 {len(예비)}건)")
     return count
 
 
