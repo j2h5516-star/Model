@@ -509,6 +509,65 @@ def test_snapshot_rows_carry_dollar_guidance_fields():
     assert row["guid_ebitda_mid"] == 105.0e6, row
 
 
+def test_오늘_못_받은_종목은_지난_값을_이어_쓴다():
+    """180차 — 2026-09-06 런 #71: SEC 가 132종목을 429 로 막았고 129종목의
+    캐시가 만료돼 빈 목록이 됐다. 스냅샷이 그대로 덮여 분기 행 15,194 →
+    10,281(-4,913, 32%)이 사라졌는데, 절반 미만이라 커밋 안전판에도 안
+    걸렸다. 지난 값은 우리가 전에 수집한 사실이므로 지우지 않는다."""
+    지난 = {"eps": {"TEST": _fake_quarters(), "빈종목": []}}
+    files, summary = measure_store.build_files(
+        ["TEST", "빈종목"],
+        {"TEST": _fake_daily(), cfg.BENCHMARK: _fake_daily()},
+        [],
+        load_quarters=lambda t: None,          # 오늘은 아무것도 못 받았다
+        previous=지난,
+    )
+    snap = _snapshot(files)
+    assert snap["eps"]["TEST"] == 지난["eps"]["TEST"], "지난 값을 잃었습니다"
+    assert snap["이월"] == ["TEST"], snap["이월"]
+    assert "이어 씀 1종목" in summary, summary
+    # 지난 값도 없으면 예전처럼 빈 목록 (없는 것을 지어내지 않는다)
+    assert snap["eps"]["빈종목"] == []
+    assert "빈종목" not in snap["이월"]
+
+    # 오늘 받은 값이 있으면 지난 값을 쓰지 않는다
+    새값 = _fake_quarters()[:1]
+    files2, _ = measure_store.build_files(
+        ["TEST"], {"TEST": _fake_daily(), cfg.BENCHMARK: _fake_daily()}, [],
+        load_quarters=lambda t: 새값, previous=지난)
+    snap2 = _snapshot(files2)
+    assert len(snap2["eps"]["TEST"]) == 1, "오늘 값이 있는데 지난 값을 썼습니다"
+    assert snap2["이월"] == []
+
+    # 지난 스냅샷을 안 넘기면 예전 동작 그대로
+    files3, _ = measure_store.build_files(
+        ["TEST"], {"TEST": _fake_daily(), cfg.BENCHMARK: _fake_daily()}, [],
+        load_quarters=lambda t: None)
+    assert _snapshot(files3)["eps"]["TEST"] == []
+
+
+def test_수집로봇이_지난_스냅샷을_넘긴다():
+    """배선 확인 — 안 넘기면 위 보호가 도는 코드가 아니다."""
+    import inspect
+
+    import collect_job as cj
+    src = inspect.getsource(cj.run)
+    assert "previous=" in src and "load_previous_snapshot" in src, "배선 없음"
+
+
+def test_지난_스냅샷_읽기는_파일이_없거나_깨져도_안_죽는다():
+    import tempfile
+
+    assert measure_store.load_previous_snapshot("/없는곳/snapshot.json") == {}
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        f.write("{망가진 json")
+        path = f.name
+    try:
+        assert measure_store.load_previous_snapshot(path) == {}
+    finally:
+        os.unlink(path)
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

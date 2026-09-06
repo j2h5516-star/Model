@@ -183,7 +183,12 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         progress("⛔ 절반 이상 실패 — 오늘 데이터로 덮어쓰지 않습니다 (종료코드 1)")
         return 1
 
-    files, summary = measure_store.build_files(tickers, daily_map, reports)
+    # 지난 스냅샷을 **덮어쓰기 전에** 읽어 넘깁니다 (180차) — 오늘 SEC 가
+    # 막은 종목은 어제 받은 값을 그대로 이어 씁니다. 지우지 않을 뿐,
+    # 값을 고치지는 않습니다.
+    files, summary = measure_store.build_files(
+        tickers, daily_map, reports,
+        previous=measure_store.load_previous_snapshot())
 
     # 수집물 전체 건강검진 (108차) — **값을 바꾸지 않고 세기만** 합니다.
     #

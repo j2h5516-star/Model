@@ -140,12 +140,27 @@ def price_rows(daily_df) -> dict:
     }
 
 
+def load_previous_snapshot(path: str | None = None) -> dict:
+    """지난 런이 남긴 스냅샷 (없거나 깨졌으면 빈 dict). 180차."""
+    import json as _json
+
+    if path is None:
+        path = f"{cfg.MEASURE_DIR}/snapshot.json"
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = _json.load(f)
+    except Exception:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
 def build_files(
     tickers: list[str],
     daily_map: dict,
     reports: list[dict],
     load_quarters=None,
     now=None,
+    previous: dict | None = None,
 ) -> tuple[dict[str, str], str]:
     """저장소에 커밋할 파일들을 만듭니다.
 
@@ -172,12 +187,33 @@ def build_files(
 
     eps: dict[str, list[dict]] = {}
     missing_eps: list[str] = []
+    carried: list[str] = []          # 오늘 못 받아 지난 값을 이어 쓴 종목 (180차)
     for ticker in tickers:
         try:
             quarters = load_quarters(ticker)
         except Exception:
             quarters = None
         rows = eps_rows(quarters)
+        # ⚠️ **오늘 못 받았다고 어제 받은 것을 지우지 않습니다** (180차).
+        #
+        #    2026-09-06 런 #71 실측: SEC 가 132종목을 429(너무 잦음)로 막았고
+        #    그중 129종목이 뼈대 조회부터 실패했습니다. 그 종목의 캐시는
+        #    하루가 지나 만료(CACHE_TTL_DAYS=1)돼 여기서 빈 목록이 됐고,
+        #    스냅샷이 그대로 덮여 **분기 행 15,194 → 10,281 (-4,913, 32%)**
+        #    가 사라졌습니다. 절반 미만이라 커밋 안전판(success_enough)에도
+        #    걸리지 않았습니다 — 화면과 판정이 조용히 3분의 2 표본으로
+        #    돌았습니다.
+        #
+        #    지난 스냅샷의 행은 **우리가 전에 수집한 사실 그대로**입니다.
+        #    고치거나 지어내는 것이 아니라, 오늘 못 물어봤다는 이유로
+        #    버리지 않는 것뿐입니다. 이월한 종목은 아래 "이월" 칸과 요약에
+        #    남겨 감추지 않습니다(정직화).
+        if not rows:
+            지난행 = (previous or {}).get("eps", {}).get(ticker) or []
+            if 지난행:
+                eps[ticker] = 지난행
+                carried.append(ticker)
+                continue
         eps[ticker] = rows          # 없으면 빈 목록 그대로 — 창작 금지
         if not rows:
             missing_eps.append(ticker)
@@ -202,6 +238,9 @@ def build_files(
         "benchmark": cfg.BENCHMARK,
         "eps": eps,
         "prices": prices,
+        # 오늘 못 받아 **지난 스냅샷의 값을 그대로 이어 쓴** 종목 (180차).
+        # 값을 고친 것이 아니라 지우지 않은 것입니다 — 감추지 않고 적습니다.
+        "이월": carried,
     }
 
     files: dict[str, str] = {
@@ -249,6 +288,8 @@ def build_files(
 
     summary_parts = [
         f"조정 EPS 시계열 {len(tickers) - len(missing_eps)}종목",
+    ] + ([f"지난 값 이어 씀 {len(carried)}종목 (오늘 SEC 에서 못 받음)"]
+         if carried else []) + [
         f"일봉 {len(prices)}종목(기준지수 포함)",
         f"파싱 실패 원문 {raw_count}건",
     ]
