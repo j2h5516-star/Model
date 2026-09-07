@@ -1,0 +1,965 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — DLR 2026-02-05
+# 출처: https://www.sec.gov/Archives/edgar/data/1297996/000110465926010887/dlr-20260205x8k.htm
+
+Exhibit 99.1
+​
+
+​
+<img alt="Graphic" src="dlr-20260205xex99d1001.jpg">​
+
+
+
+​   Financial Supplement
+------------------------
+​
+
+​
+​
+
+                                                Overview                                                  PAGE
+--------------------------------------------------------------------------------------------------------------
+​                                                                                                         ​   
+Corporate Information                                                                                     3   
+​                                                                                                         ​   
+Key Quarterly Financial Data                                                                              5   
+​                                                                                                         ​   
+Consolidated Statements of Operations                                                                     ​   
+​                                                                                                         ​   
+Earnings Release                                                                                          7   
+​                                                                                                         ​   
+2026 Outlook                                                                                              10  
+​                                                                                                         ​   
+Consolidated Quarterly Statements of Operations                                                           12  
+​                                                                                                         ​   
+Funds From Operations and Core Funds From Operations                                                      13  
+​                                                                                                         ​   
+Adjusted Funds From Operations                                                                            14  
+​                                                                                                         ​   
+Balance Sheet Information                                                                                 ​   
+​                                                                                                         ​   
+Consolidated Balance Sheets                                                                               15  
+​                                                                                                         ​   
+Components of Net Asset Value                                                                             16  
+​                                                                                                         ​   
+Debt Maturities                                                                                           17  
+​                                                                                                         ​   
+Debt Analysis and Covenant Compliance                                                                     18  
+​                                                                                                         ​   
+Internal Growth                                                                                           ​   
+​                                                                                                         ​   
+Same-Capital Operating Trend Summary                                                                      19  
+​                                                                                                         ​   
+Summary of Leasing Activity - Signed                                                                      20  
+​                                                                                                         ​   
+Summary of Leasing Activity - Renewed                                                                     21  
+​                                                                                                         ​   
+Lease Expirations - By Size                                                                               22  
+​                                                                                                         ​   
+Top 20 Customers by Annualized Rent                                                                       23  
+​                                                                                                         ​   
+Occupancy Analysis                                                                                        24  
+​                                                                                                         ​   
+External Growth                                                                                           ​   
+​                                                                                                         ​   
+Development Lifecycle                                                                                     25  
+​                                                                                                         ​   
+Construction Projects in Progress                                                                         26  
+​                                                                                                         ​   
+Historical Capital Expenditures and Investments in Real Estate                                            27  
+​                                                                                                         ​   
+Acquisitions / Dispositions / Joint Ventures                                                              28  
+​                                                                                                         ​   
+Unconsolidated Entities                                                                                   29  
+​                                                                                                         ​   
+Additional Information                                                                                    ​   
+​                                                                                                         ​   
+Reconciliation of Earnings Before Interest, Taxes, Depreciation &amp; Amortization and Financial Ratios   30  
+​                                                                                                         ​   
+Management Statements on Non-GAAP Measures                                                                31  
+​                                                                                                         ​   
+Forward-Looking Statements                                                                                33  
+​
+​
+​
+
+​
+
+
+
+​   Financial Supplement
+------------------------
+​
+
+Corporate Profile
+Digital Realty Trust, Inc. (“Digital Realty” or the “company”) owns, acquires, develops, and operates data centers through its operating partnership subsidiary, Digital Realty Trust, L.P. (the “operating partnership”). The company is focused on providing data center, colocation, and interconnection solutions for domestic and international customers across a variety of industry verticals ranging from cloud and information technology services, communications and social networking to financial services, manufacturing, energy, healthcare, and consumer products. As of December 31, 2025, the company’s 310 data centers, including 89 data centers held as investments in unconsolidated entities, contain applications and operations critical to the day-to-day operations of technology industry and corporate enterprise data center customers. Digital Realty’s portfolio is comprised of approximately 43.2 million square feet, excluding approximately 9.7 million square feet of space under active development and 4.7 million square feet of space held for future development, located throughout North America, Europe, South America, Asia, Australia, and Africa. For additional information, please visit the company’s website at digitalrealty.com.
+​
+
+               ​                                                       ​                                    
+------------------------------------------------------------------------------------------------------------
+Corporate HeadquartersAustin, TX   Senior ManagementPresident &amp; Chief Executive Officer: Andrew P. Power
+Website: digitalrealty.com         Chief Financial Officer: Matthew R. Mercier                              
+                                   Chief Investment Officer: Gregory S. Wright                              
+                                   Chief Technology Officer: Christopher L. Sharp                           
+                                   Chief Revenue Officer: Colin M. McLean                                   
+​
+Investor Relations
+To request more information or to be added to our e-mail distribution list, please visit the Investor Relations section of our website at https://investor.digitalrealty.com.
+​
+Analyst Coverage
+
+      BMO                                             ​                                                ​                      ​                                  
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+​                     ​                     BMO Capital                 BNP Paribas             ​                     ​                                          
+BofA Securities   ​   Barclays          ​   Markets                 ​   Exane               ​   Citigroup         ​   Citizens JMP        ​   Deutsche Bank      
+Michael Funk      ​   Brendan Lynch     ​   Ari Klein               ​   Nate Crossett       ​   Michael Rollins   ​   Greg Miller         ​   Benjamin Soff      
+(646) 855-5664    ​   (212) 526-9428    ​   (212) 885-4103          ​   (646) 725-3716      ​   (212) 816-1116    ​   (212) 699-2917      ​   (212) 250-3716     
+​                 ​   ​                 ​   ​                       ​   ​                   ​   ​                 ​   ​                   ​   ​                  
+Evercore ISI      ​   Goldman Sachs     ​   Green Street Advisors   ​   Guggenheim          ​   HSBC              ​   Jefferies           ​   J.P. Morgan        
+Irvin Liu         ​   Michael Ng        ​   David Guarino           ​   Joseph Osha         ​   Phani Kanumuri    ​   Jonathan Petersen   ​   Richard Choe       
+(415) 800-0183    ​   (212) 902-8618    ​   (949) 640-8780          ​   (415) 852-6468      ​   (240) 709-8135    ​   (212) 284-1705      ​   (212) 662-6708     
+​                 ​   ​                 ​   ​                       ​   ​                   ​   ​                 ​   ​                   ​   ​                  
+KeyBanc           ​   Mizuho Group      ​   MoffettNathanson        ​   Morgan Stanley      ​   Oppenheimer       ​   Raymond James       ​   RBC Capital Markets
+Brandon Nispel    ​   Vikram Malhotra   ​   Nick Del Deo            ​   Cameron McVeigh     ​   Timothy Horan     ​   Frank Louthan       ​   Jonathan Atkin     
+(503) 821-3871    ​   (212) 282-3827    ​   (212) 519-0025          ​   (212) 761-4209      ​   (212) 667-8137    ​   (404) 442-5867      ​   (415) 633-8589     
+​                 ​   ​                 ​   ​                       ​   ​                   ​   ​                 ​   ​                   ​   ​                  
+Scotiabank        ​   Stifel            ​   TD Cowen                ​   Truist Securities   ​   UBS               ​   Wells Fargo         ​   Wolfe Research     
+Maher Yaghi       ​   Erik Rasmussen    ​   Michael Elias           ​   Anthony Hau         ​   John Hodulik      ​   Eric Luebchow       ​   Andrew Rosivach    
+(437) 995-5548    ​   (212) 271-3461    ​   (646) 562-1358          ​   (212) 303-4176      ​   (212) 713-4226    ​   (312) 630-2386      ​   (646) 582-9250     
+​                 ​   ​                 ​   ​                       ​   ​                   ​   ​                 ​   ​                   ​   ​                  
+​
+This Earnings Press Release and Supplemental Information package supplements the information provided in our quarterly and annual reports filed with the U.S. Securities and Exchange Commission. Additional information about Digital Realty and our business is also available on our website at digitalrealty.com. 
+Upcoming Conference Schedule 
+
+        ​                                                 ​                                                  ​        
+----------------------------------------------------------------------------------------------------------------------
+February 25, 2026   Wolfe Fifth Annual Real Estate Conference                                        Virtual          
+March 2 - 3, 2026   Citi's 2026 Global Property CEO Conference                                       Hollywood, FL    
+March 2, 2026       Morgan Stanley Technology, Media &amp; Telecom Conference                        San Francisco, CA
+March 3, 2026       Raymond James &amp; Associates’ 47th Annual Institutional Investors Conference   Orlando, FL      
+March 9, 2026       Deutsche Bank's 34th Annual Media, Internet &amp; Telecom Conference             Palm Beach, FL   
+​
+Webcasts for these events are available through the Digital Realty Investor Relations website when possible. Please check our website for additional information. 
+
+3
+
+
+
+
+​   Financial Supplement
+------------------------
+​
+
+Stock Listing Information
+The stock of Digital Realty Trust, Inc. is traded primarily on the New York Stock Exchange under the following symbols:
+
+      Common Stock:         ​    DLR  
+--------------------------------------
+Series J Preferred Stock:   ​   DLRPRJ
+Series K Preferred Stock:   ​   DLRPRK
+Series L Preferred Stock:   ​   DLRPRL
+​
+Symbols may vary by stock quote provider.
+Credit Ratings
+
+ Standard &amp; Poor’s     ​    ​             ​         
+--------------------------------------------------------
+Corporate Credit Rating:   ​   BBB+   (Stable Outlook)  
+Preferred Stock:           ​   BBB-   ​                 
+​                          ​   ​      ​                 
+Moody’s                    ​   ​      ​                 
+Issuer Rating:             ​   Baa2   (Positive Outlook)
+Preferred Stock:           ​   Baa3   ​                 
+​                          ​   ​      ​                 
+Fitch                      ​   ​      ​                 
+Issuer Default Rating:     ​   BBB    (Stable Outlook)  
+Preferred Stock:           ​   BB+    ​                 
+​
+These credit ratings may not reflect the potential impact of risks relating to the structure or trading of the company’s securities and are provided solely for informational purposes. Credit ratings are not recommendations to buy, hold or sell any security, and may be revised or withdrawn at any time by the issuing rating agency at its sole discretion. The company does not undertake any obligation to maintain the ratings or to advise of any change in ratings. Each agency’s rating should be evaluated independently of any other agency’s rating. An explanation of the significance of the ratings may be obtained from each of the rating agencies. 
+​
+Common Stock Price Performance
+The following summarizes recent activity of Digital Realty’s common stock (DLR):
+
+                           ​                                ​     ​          ​         ​     ​          ​         ​     ​          ​         ​     ​          ​         ​     ​          ​        ​
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​                                                          ​     Three Months Ended                                                                                                                
+​                                                          ​     31-Dec-25            ​     30-Sep-25            ​     30-Jun-25            ​     31-Mar-25            ​     31-Dec-24            ​
+High price                                                 ​                $182.48   ​                $182.00   ​                $178.85   ​                $187.74   ​                $198.00    
+Low price                                                  ​ ​   ​          $146.23   ​ ​   ​          $159.22   ​ ​   ​          $129.95   ​ ​   ​          $139.27   ​ ​   ​          $155.16   ​
+Closing price, end of quarter                              ​     ​          $154.71   ​     ​          $172.88   ​     ​          $174.33   ​     ​          $143.29   ​     ​          $177.33   ​
+Average daily trading volume (1)                           ​     ​            1,826   ​     ​            1,520   ​     ​            2,034   ​     ​            2,529   ​     ​            1,911   ​
+Indicated dividend per common share (2)                    ​     ​            $4.88   ​     ​            $4.88   ​     ​            $4.88   ​     ​            $4.88   ​     ​            $4.88   ​
+Closing annual dividend yield, end of quarter              ​     ​             3.2%   ​     ​             2.8%   ​     ​             2.8%   ​     ​             3.4%   ​     ​             2.8%   ​
+Shares and units outstanding, end of quarter (1) (3)       ​     ​          349,746   ​     ​          349,244   ​     ​          346,644   ​     ​          343,092   ​     ​          342,772   ​
+Closing market value of shares and units outstanding (4)   ​     ​      $54,109,204   ​     ​      $60,377,303   ​     ​      $60,430,449   ​     ​      $49,161,653   ​     ​      $60,783,759   ​
+​
+
+(1)   Shares or shares and units in thousands.
+----------------------------------------------
+
+(2)   On an annualized basis.
+-----------------------------
+
+(3)   As of December 31, 2025, the total number of shares and units includes 343,557 shares of common stock, 4,045 common units held by third parties and 2,144 common units and vested and unvested long-term incentive units held by directors, officers and others and excludes all shares of common stock potentially issuable upon conversion of our series J, series K and series L cumulative redeemable preferred stock upon certain change of control transactions.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(4)   Dollars in thousands as of the end of the quarter.
+--------------------------------------------------------
+​
+This Earnings Press Release and Supplemental Information package supplements the information provided in our quarterly and annual reports filed with the U.S. Securities and Exchange Commission. Additional information about us and our data centers is also available on our website at digitalrealty.com. 
+​
+​
+​
+
+4
+
+
+
+Key Quarterly Financial Data   Financial Supplement
+---------------------------------------------------
+​
+
+​
+​
+​
+​
+
+                                ​                                      ​      ​          ​          ​      ​          ​          ​      ​          ​          ​      ​          ​          ​      ​          ​     
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Shares and Units at End of Quarter                                   ​ ​ ​   31-Dec-25            ​ ​ ​   30-Sep-25            ​ ​ ​   30-Jun-25            ​ ​ ​   31-Mar-25            ​ ​ ​   31-Dec-24         
+Common shares outstanding                                                    ​          343,557           ​          343,041           ​          340,372           ​          336,743           ​          336,637
+Common partnership units outstanding                                         ​            6,189           ​            6,203           ​            6,272           ​            6,349           ​            6,135
+Total Shares and Units                                                       ​          349,746           ​          349,244           ​          346,644           ​          343,092           ​          342,772
+​                                                                    ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​
+Enterprise Value                                                             ​                ​           ​                ​           ​                ​           ​                ​           ​                ​
+Market value of common equity (1)                                    ​       ​      $54,109,204   ​       ​      $60,377,303   ​       ​      $60,430,449   ​       ​      $49,161,653   ​       ​      $60,783,759
+Liquidation value of preferred equity                                ​                  755,000   ​                  755,000   ​                  755,000   ​                  755,000   ​                  755,000
+Total debt at balance sheet carrying value                           ​               18,402,135   ​               18,225,434   ​               18,452,148   ​               17,016,279   ​               16,714,377
+Total Enterprise Value                                               ​       ​      $73,266,339   ​       ​      $79,357,737   ​       ​      $79,637,597   ​       ​      $66,932,932   ​       ​      $78,253,136
+Total debt / total enterprise value                                  ​                    25.1%   ​                    23.0%   ​                    23.2%   ​                    25.4%   ​                    21.4%
+Debt-plus-preferred-to-total-enterprise-value                        ​       ​            26.1%   ​       ​            23.9%   ​       ​            24.1%   ​       ​            26.6%   ​       ​            22.3%
+​                                                                    ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​
+Selected Balance Sheet Data                                          ​                        ​   ​                        ​   ​                        ​   ​                        ​   ​                        ​
+Investments in real estate (before depreciation)                     ​       ​      $39,855,116   ​       ​      $39,374,646   ​       ​      $38,613,260   ​       ​      $35,693,166   ​       ​      $35,401,912
+Total Assets                                                         ​               49,410,468   ​               48,728,634   ​               48,714,995   ​               45,080,562   ​               45,283,616
+Total Liabilities                                                    ​               24,564,494   ​               23,739,412   ​               23,853,149   ​               21,902,406   ​               22,107,836
+​                                                                    ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​
+Selected Operating Data                                              ​                        ​   ​                        ​   ​                        ​   ​                        ​   ​                        ​
+Total operating revenues                                             ​       ​       $1,634,671   ​       ​       $1,577,234   ​       ​       $1,493,150   ​       ​       $1,407,637   ​       ​       $1,435,862
+Total operating expenses                                             ​                1,522,047   ​                1,438,813   ​                1,281,453   ​                1,211,887   ​                1,291,540
+Net income                                                           ​                   96,111   ​                   63,713   ​                1,046,946   ​                  106,395   ​                  185,688
+Net income / (loss) available to common stockholders                 ​                   88,466   ​                   57,631   ​                1,021,975   ​                   99,793   ​                  179,388
+​                                                                    ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​
+Financial Ratios                                                     ​                        ​   ​                        ​   ​                        ​   ​                        ​   ​                        ​
+EBITDA (2)                                                           ​       ​         $688,758   ​       ​         $679,912   ​       ​       $1,605,408   ​       ​         $658,400   ​       ​         $746,578
+Adjusted EBITDA (3)                                                  ​                  856,836   ​                  867,807   ​                  823,319   ​                  791,156   ​                  751,276
+Net Debt-to-Adjusted EBITDA (4)                                      ​                     4.9x   ​                     4.9x   ​                     5.1x   ​                     5.1x   ​                     4.8x
+Interest expense                                                     ​                  116,516   ​                  113,584   ​                  109,383   ​                   98,464   ​                  104,742
+Fixed charges (5)                                                    ​                  161,479   ​                  156,687   ​                  148,957   ​                  138,739   ​                  149,364
+Interest coverage ratio (6)                                          ​                     4.8x   ​                     4.9x   ​                     5.0x   ​                     5.3x   ​                     4.5x
+Fixed charge coverage ratio (7)                                      ​                     4.5x   ​                     4.6x   ​                     4.7x   ​                     4.9x   ​                     4.2x
+​                                                                    ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​
+Profitability Measures                                               ​                        ​   ​                        ​   ​                        ​   ​                        ​   ​                        ​
+Net income / (loss) per common share - basic                         ​       ​            $0.26   ​       ​            $0.17   ​       ​            $3.03   ​       ​            $0.30   ​       ​            $0.54
+Net income / (loss) per common share - diluted                       ​       ​            $0.24   ​       ​            $0.15   ​       ​            $2.94   ​       ​            $0.27   ​       ​            $0.51
+Funds from operations (FFO) / diluted share and unit (8)             ​       ​            $1.89   ​       ​            $1.65   ​       ​            $1.75   ​       ​            $1.67   ​       ​            $1.61
+Core funds from operations (Core FFO) / diluted share and unit (8)   ​       ​            $1.86   ​       ​            $1.89   ​       ​            $1.87   ​       ​            $1.77   ​       ​            $1.73
+Adjusted funds from operations (AFFO) / diluted share and unit (9)   ​       ​            $1.34   ​       ​            $1.76   ​       ​            $1.68   ​       ​            $1.78   ​       ​            $1.36
+Dividends per share and common unit                                  ​       ​            $1.22   ​       ​            $1.22   ​       ​            $1.22   ​       ​            $1.22   ​       ​            $1.22
+Diluted FFO payout ratio (8) (10)                                    ​                    64.5%   ​                    73.8%   ​                    69.6%   ​                    73.2%   ​                    75.6%
+Diluted Core FFO payout ratio (8) (11)                               ​                    65.6%   ​                    64.7%   ​                    65.2%   ​                    68.8%   ​                    70.7%
+Diluted AFFO payout ratio (9) (12)                                   ​                    90.9%   ​                    69.2%   ​                    72.8%   ​                    68.6%   ​                    89.5%
+​                                                                    ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​   ​       ​                ​
+Portfolio Statistics                                                 ​                        ​   ​                        ​   ​                        ​   ​                        ​   ​                        ​
+Buildings (13)                                                       ​       ​              329   ​       ​              330   ​       ​              330   ​       ​              328   ​       ​              328
+Data Centers (13)                                                    ​       310                  ​       311                  ​       310                  ​       308                  ​       308               
+Cross-connects (13) (14)                                             ​                  232,500   ​                  231,000   ​                  229,000   ​                  228,000   ​                  227,000
+Net rentable square feet, excluding development space (13)           ​                   43,208   ​                   42,706   ​                   42,529   ​                   41,778   ​                   41,326
+Occupancy at end of quarter (15)                                     ​                    84.7%   ​                    84.8%   ​                    84.8%   ​                    84.0%   ​                    84.1%
+Occupied square footage (13)                                         ​                   36,582   ​                   36,197   ​                   36,073   ​                   35,100   ​                   34,741
+Space under active development (16)                                  ​                    9,679   ​                   10,230   ​                    9,848   ​                    9,463   ​                    8,904
+Space held for development (17)                                      ​                    4,696   ​                    4,758   ​                    4,616   ​                    5,062   ​                    4,686
+Weighted average remaining lease term (years) (18)                   ​       5.0                  ​       5.0                  ​       5.1                  ​       4.9                  ​       4.8               
+Same-capital occupancy at end of quarter (15) (19)                   ​                    83.7%   ​                    83.7%   ​                    83.7%   ​                    83.4%   ​                    83.5%
+​
+​
+
+5
+
+
+
+Key Quarterly Financial Data   Financial Supplement
+---------------------------------------------------
+​
+
+
+(1)   The market value of common equity is based on the closing stock price at the end of the quarter and assumes 100% redemption of the limited partnership units in our operating partnership, including common units and vested and unvested long-term incentive units, for shares of our common stock on a one-for-one basis. Excludes shares of common stock potentially issuable upon conversion of our series J, series K and series L cumulative redeemable preferred stock upon certain change of control transactions, as applicable.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(2)   EBITDA is calculated as earnings before interest expense, loss on debt extinguishment and modifications, tax expense, and depreciation and amortization. For a discussion of EBITDA, see page 31. For a reconciliation of net income available to common stockholders to EBITDA, see page 30.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(3)   Adjusted EBITDA is EBITDA excluding (i) unconsolidated entities real estate related depreciation &amp; amortization, (ii) unconsolidated entities interest and tax expense, (iii) severance, equity acceleration and legal expenses, (iv) transaction and integration expenses, (v) gain (loss) on sale / deconsolidation, (vi) provision for impairment, (vii) other non-core adjustments, net, (viii) noncontrolling interests, (ix) preferred stock dividends, and (x) gain on / issuance costs associated with redeemed preferred stock. For a discussion of Adjusted EBITDA, see page 31. For a reconciliation of net income available to common stockholders to Adjusted EBITDA, see page 30.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(4)   Net Debt to Adjusted EBITDA is calculated as total debt at balance sheet carrying value (see page 5), plus finance lease obligations, plus our share of unconsolidated entities debt at carrying value, less cash and cash equivalents (including our share of unconsolidated entities cash), divided by the product of Adjusted EBITDA (including our pro rata share of unconsolidated entities EBITDA), multiplied by four.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(5)   Fixed charges consist of GAAP interest expense, capitalized interest, scheduled debt principal payments and preferred stock dividends.
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+(6)   Interest coverage ratio is Adjusted EBITDA (including our pro rata share of unconsolidated entities EBITDA), divided by GAAP interest expense plus capitalized interest (including our share of unconsolidated entities interest expense).
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(7)   Fixed charge coverage ratio is Adjusted EBITDA (including our pro rata share of unconsolidated entities EBITDA), divided by fixed charges (including our share of unconsolidated entities fixed charges).
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(8)   For definitions and discussion of FFO and Core FFO, see page 31. For reconciliations of net income available to common stockholders to FFO and Core FFO, see page 13.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(9)   For a definition and discussion of AFFO, see page 31. For a reconciliation of Core FFO to AFFO, see page 14.
+------------------------------------------------------------------------------------------------------------------
+
+(10)   Diluted FFO payout ratio is dividends declared per common share and unit divided by diluted FFO per share and unit.
+--------------------------------------------------------------------------------------------------------------------------
+
+(11)   Diluted Core FFO payout ratio is dividends declared per common share and unit divided by diluted Core FFO per share and unit.
+------------------------------------------------------------------------------------------------------------------------------------
+
+(12)   Diluted AFFO payout ratio is dividends declared per common share and unit divided by diluted AFFO per share and unit.
+----------------------------------------------------------------------------------------------------------------------------
+
+(13)   Includes buildings held as investments in unconsolidated entities. Excludes buildings held for sale and contribution.
+----------------------------------------------------------------------------------------------------------------------------
+
+(14)   Represents approximate amounts.
+--------------------------------------
+
+(15)   Occupancy and same-capital occupancy exclude space under active development and space held for development. Occupancy represents our consolidated portfolio in addition to our managed portfolio of unconsolidated entities and non-managed unconsolidated entities. For some of our buildings, we calculate occupancy based on factors in addition to contractually leased square feet, including available power, required support space and common area. Excludes buildings held for sale and contribution.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(16)   Space under active development includes current Base Building and Data Centers projects in progress. Excludes buildings held for sale and contribution.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(17)   Space held for development includes space held for future Data Center development and excludes space under active development. Excludes buildings held for sale and contribution.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(18)   Weighted average remaining lease term excludes renewal options and is weighted by net rentable square feet.
+------------------------------------------------------------------------------------------------------------------
+
+(19)   Represents buildings owned as of December 31, 2023, with less than 5% of total rentable square feet under development. Excludes buildings that were undergoing, or were expected to undergo, development activities in 2024-2025, buildings classified as held for sale and contribution, and buildings sold or contributed to joint ventures for all periods presented. Prior period results have been adjusted to reflect current same-capital pool.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​
+​
+​
+​
+​
+​
+
+6
+
+
+
+Digital Realty Trust   Financial Supplement
+-------------------------------------------
+​
+
+Digital Realty Reports Fourth Quarter 2025 Results
+Austin, TX — February 5, 2026 — Digital Realty (NYSE: DLR), the largest global provider of cloud- and carrier-neutral data center, colocation and interconnection solutions, announced today financial results for the fourth quarter of 2025. All per share results are presented on a fully diluted basis. 
+Highlights
+
+◾   Reported net income available to common stockholders of $0.24 per share in 4Q25, compared to $0.51 in 4Q24
+--------------------------------------------------------------------------------------------------------------
+
+◾   Reported FFO per share of $1.89 in 4Q25, compared to $1.61 in 4Q24
+----------------------------------------------------------------------
+
+◾   Reported Core FFO per share of $1.86 in 4Q25, compared to $1.73 in 4Q24; reported Constant-Currency Core FFO per share of $1.81 in 4Q25
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+◾   Reported rental rate increases on renewal leases of 6.1% on a cash basis in 4Q25
+------------------------------------------------------------------------------------
+
+◾   Signed total bookings during 4Q25 that are expected to generate $400 million of annualized GAAP rental revenue at 100% share; at Digital Realty’s share, total bookings were $175 million, including a $96 million contribution from the 0-1 megawatt plus interconnection category
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+◾   Reported a backlog of $817 million of annualized GAAP base rent, at Digital Realty’s share, at the end of 2025
+------------------------------------------------------------------------------------------------------------------
+
+◾   Introduced 2026 Core FFO per share outlook of $7.90 - $8.00 on a reported and Constant-Currency basis
+---------------------------------------------------------------------------------------------------------
+​
+Financial Results
+Digital Realty reported revenues of $1.6 billion in the fourth quarter of 2025, a 4% increase from the previous quarter and a 14% increase from the same quarter last year. 
+The company delivered net income of $96 million in the fourth quarter of 2025, as well as net income available to common stockholders of $88 million and $0.24 per share, compared to $0.15 per share in the previous quarter and $0.51 per share in the same quarter last year. 
+Digital Realty generated Adjusted EBITDA of $857 million in the fourth quarter of 2025, a 1% decrease from the previous quarter and a 14% increase over the same quarter last year. 
+The company reported Funds From Operations (FFO) of $658 million in the fourth quarter of 2025, or $1.89 per share, compared to $1.65 per share in the previous quarter and $1.61 per share in the same quarter last year. 
+Excluding certain items that do not represent core expenses or revenue streams, Digital Realty delivered Core FFO per share of $1.86 in the fourth quarter of 2025, compared to $1.89 per share in the previous quarter and $1.73 per share in the same quarter last year. Digital Realty delivered Constant-Currency Core FFO per share of $1.81 in the fourth quarter of 2025 and $7.29 per share for the twelve-month period ended December 31, 2025.
+“Digital Realty delivered strong financial results in 2025, with robust top‑line growth, record leasing across our 0‑1 megawatt plus interconnection offering, and a substantial backlog that provides clear revenue visibility into 2026 and beyond,” said Digital Realty President and CEO Andy Power. “The evolution of our private capital strategy is enabling us to efficiently scale development while maintaining a flexible balance sheet positioned for growth. At the same time, we’re expanding the PlatformDIGITAL footprint to meet rising global demand. Together, these initiatives strengthen our ability to support our customers’ cloud and AI roadmaps while driving long term value for shareholders.”
+​
+Leasing Activity
+In the fourth quarter, Digital Realty signed total bookings that are expected to generate $400 million of annualized GAAP rental revenue, at 100% share; at Digital Realty’s share, total bookings were $175 million, including a $77 million contribution from the 0-1 megawatt category and a $19 million contribution from interconnection.
+The weighted-average lag between new leases signed during the fourth quarter of 2025 and the contractual commencement date was eight months. The backlog of signed-but-not-commenced leases at quarter-end was $817 million of annualized GAAP base rent, at Digital Realty’s share.
+In addition, Digital Realty also signed renewal leases representing $269 million of annualized cash rental revenue during the quarter. Rental rates on renewal leases signed during the fourth quarter of 2025 increased 6.1% on a cash basis and 12.0% on a GAAP basis. 
+​
+
+7
+
+
+
+Digital Realty Trust   Financial Supplement
+-------------------------------------------
+​
+
+New leases signed during the fourth quarter of 2025 at Digital Realty’s share are summarized by region and product as follows:
+​
+
+            ​                 ​        ​         ​         ​           ​            ​        ​         ​        ​         ​         ​        ​         ​   
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+​                           ​ ​ ​   Annualized GAAP      ​ ​ ​                ​   ​ ​ ​   ​               ​   ​ ​ ​       ​ ​ ​   ​ ​ ​   ​         ​      
+​                           ​       Base Rent                ​      Square Feet   ​       GAAP Base Rent          ​           ​   ​       GAAP Base Rent   
+Americas                    ​       (in thousands)           ​   (in thousands)   ​       per Square Foot         ​   Megawatts   ​       per Kilowatt     
+0-1 MW                      ​       ​          $39,317                      112   ​       ​            $351                12.2   ​       ​         $269   
+&gt; 1 MW                   ​       ​           64,759                      207   ​       ​             313                29.0   ​       ​         186    
+Other (1)                   ​       ​              385                        7   ​       ​              53                   —   ​       ​         —      
+Total                       ​       ​         $104,461                      326   ​       ​            $320                41.2   ​       ​         $211   
+​                           ​       ​                ​       ​                ​   ​       ​               ​       ​           ​   ​       ​         ​      
+EMEA (2)                    ​       ​                ​                        ​   ​       ​               ​                   ​   ​       ​         ​      
+0-1 MW                      ​       ​          $30,107                       89   ​       ​            $337                 8.4   ​       ​         $300   
+&gt; 1 MW                   ​       ​            5,585                       21   ​       ​             266                 2.3   ​       ​         199    
+Other (1)                   ​       ​              291                        1   ​       ​             289                   —   ​       ​         —      
+Total                       ​       ​          $35,982                      111   ​       ​            $323                10.7   ​       ​         $278   
+​                           ​       ​                ​       ​                ​   ​       ​               ​       ​           ​   ​       ​         ​      
+Asia Pacific (2)            ​       ​                ​                        ​   ​       ​               ​                   ​   ​       ​         ​      
+0-1 MW                      ​       ​           $7,693                       17   ​       ​            $443                 2.2   ​       ​         $286   
+&gt; 1 MW                   ​       ​            7,643                       42   ​       ​             181                 4.5   ​       ​         142    
+Other (1)                   ​       ​               46                        1   ​       ​              45                   —   ​       ​         —      
+Total                       ​       ​          $15,382                       61   ​       ​            $254                 6.7   ​       ​         $190   
+​                           ​       ​                ​       ​                ​   ​       ​               ​       ​           ​   ​       ​         ​      
+All Regions (2)             ​       ​                ​                        ​   ​       ​               ​                   ​   ​       ​         ​      
+0-1 MW                      ​       ​          $77,118                      219   ​       ​            $352                22.8   ​       ​         $282   
+&gt; 1 MW                   ​       ​           77,987                      270   ​       ​             289                35.9   ​       ​         181    
+Other (1)                   ​       ​              722                        9   ​       ​              78                   —   ​       ​         —      
+Total                       ​       ​         $155,826                      498   ​       ​            $313                58.6   ​       ​         $220   
+​                           ​       ​                ​       ​                ​   ​       ​               ​       ​           ​   ​       ​         ​      
+Interconnection             ​       ​          $18,890                      N/A   ​       ​             N/A                 N/A   ​       ​         N/A    
+​                           ​       ​                ​       ​                ​   ​       ​               ​       ​           ​   ​       ​         ​      
+Grand Total at DLR Share    ​       ​         $174,716                      498   ​       ​            $313                58.6   ​       ​         $220   
+​                           ​       ​                ​       ​                ​   ​       ​               ​       ​           ​   ​       ​         ​      
+Grand Total at 100% Share   ​       ​         $400,330                    1,291   ​       ​            $294               159.1   ​       ​         $198   
+​
+Note: Totals may not foot due to rounding differences. 
+
+(1)   Other includes Powered Base Building® shell capacity as well as storage and office space within fully improved data center facilities.
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+(2)   Based on quarterly average exchange rates during the three months ended December 31, 2025.
+------------------------------------------------------------------------------------------------
+Investment Activity
+During the fourth quarter, Digital Realty sold a non-core data center in the Dallas metro area for gross proceeds of approximately $33 million, as previously disclosed.
+​
+Digital Realty acquired the following:
+
+●   Two parcels of land totaling approximately 20 acres in the Portland metro area, one acquired in the fourth quarter and the other in January, that are expected to support up to 85 megawatts of IT capacity for approximately $23.6 million; and
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+●   A building and land in Lisbon, Portugal which can support up to 2.4 megawatts of IT capacity for approximately €7.1 million or $8.3 million, marking Digital Realty's entry into the Portugal market.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​
+Further, Digital Realty Mivne established a new joint venture with MedOne Ltd., the leading data center operator in Israel. The joint venture acquired approximately 2.5 acres of land in Petah Tikvah, the primary connectivity hub in Israel, with the intention of developing an 18-megawatt campus for ILS90 million, or $29 million at 100% share. Digital Realty’s share of the land was $7.1 million.
+​
+Additionally, Digital Realty contributed an incremental 40% interest in five operating data centers to its 
+Digital Realty DC Partners NA Fund, increasing the Fund's stake to 80% at year end. Digital Realty received approximately $427 million of additional proceeds as a result of the contribution.
+​
+Subsequent to quarter end, Digital Realty announced an agreement to acquire the TelcoHub 1 data center located in Cyberjaya, Malaysia, one of Greater Kuala Lumpur’s most established data center hubs. TelcoHub 1 is an operational 1.5 megawatt data center that is one of Malaysia's leading connectivity hubs. In conjunction with this transaction, Digital Realty also agreed to acquire adjacent land that can support up to 14 megawatts of IT capacity, providing clear capacity for future expansion. The transactions are expected to close in the first half of 2026, subject to customary closing conditions.
+​
+
+8
+
+
+
+Digital Realty Trust   Financial Supplement
+-------------------------------------------
+​
+
+Balance Sheet
+​
+Digital Realty had approximately $18.4 billion of total debt outstanding as of December 31, 2025, comprised of $17.5 billion of unsecured debt and approximately $0.9 billion of secured debt and other debt. At the end of the fourth quarter of 2025, net debt-to-Adjusted EBITDA was 4.9x, debt-plus-preferred-to-total enterprise value was 26.1% and fixed charge coverage was 4.5x.
+​
+In October, the company sold 0.4 million shares of common stock under its At-The-Market (ATM) equity issuance program at a weighted average price of $175.68 per share, for net proceeds of approximately $77 million.
+​
+In November, Digital Realty issued €600 million of 3.750% notes due 2033 and €800 million of 4.250% notes due 2037, for aggregate net proceeds of approximately €1.4 billion ($1.6 billion). 
+​
+In December, Digital Realty repaid early €1.075 billion ($1.3 billion) in aggregate principal amount of its 2.500% senior notes due 2026.
+​
+​
+​
+​
+​
+​
+​
+​
+
+9
+
+
+
+Digital Realty Trust   Financial Supplement
+-------------------------------------------
+​
+
+​
+2026 Outlook
+
+Digital Realty introduced its 2026 Core FFO per share outlook on a reported and Constant-Currency basis of $7.90 - $8.00. The assumptions underlying the outlook are summarized in the following table. 
+
+                         ​                              ​               ​           
+------------------------------------------------------------------------------------
+​                                                      ​ ​                     As of
+Top-Line and Cost Structure                            ​            February 5, 2026
+Total revenue                                          ​     $6.600 - $6.700 billion
+Net non-cash rent adjustments (1)                      ​         ($90 - $95 million)
+Adjusted EBITDA                                        ​     $3.600 - $3.700 billion
+G&amp;A                                                ​         $610 - $620 million
+​                                                      ​                           ​
+Internal Growth                                        ​                           ​
+Rental rates on renewal leases                         ​                           ​
+Cash basis                                             ​                 6.0% - 8.0%
+GAAP basis                                             ​                8.5% - 10.5%
+Year-end portfolio occupancy (2)                       ​               +50 - 100 bps
+"Same-Capital" cash NOI growth (3)                     ​                 4.0% - 5.0%
+​                                                      ​                           ​
+Foreign Exchange Rates                                 ​                           ​
+U.S. Dollar / Pound Sterling                           ​               $1.30 - $1.35
+U.S. Dollar / Euro                                     ​               $1.13 - $1.18
+​                                                      ​                           ​
+External Growth                                        ​                           ​
+Dispositions / Joint Venture Capital                   ​                           ​
+Dollar volume                                          ​       $500 - $1,000 million
+Cap rate                                               ​                0.0% - 10.0%
+Development                                            ​                           ​
+CapEx (Net of Partner Contributions) (4)               ​     $3,250 - $3,750 million
+Average stabilized yields                              ​                      10.0%+
+Enhancements and other non-recurring CapEx (5)         ​           $30 - $35 million
+Recurring CapEx + capitalized leasing costs (6)        ​         $400 - $425 million
+​                                                      ​                           ​
+Balance Sheet                                          ​                           ​
+Long-term debt issuance                                ​                           ​
+Dollar amount                                          ​     $1,000 - $1,500 million
+Pricing                                                ​                 4.0% - 4.5%
+Timing                                                 ​                    Mid-Year
+​                                                      ​                           ​
+Net income per diluted share                           ​               $2.55 - $2.65
+Real estate depreciation and (gain) / loss on sale     ​               $4.90 - $4.90
+Funds From Operations / share (NAREIT-Defined)         ​               $7.45 - $7.55
+Non-core expenses and revenue streams                  ​               $0.45 - $0.45
+Core Funds From Operations / share                     ​               $7.90 - $8.00
+Foreign currency translation adjustments               ​               $0.00 - $0.00
+Constant-Currency Core Funds From Operations / share   ​               $7.90 - $8.00
+​
+
+(1)   Net non-cash rent adjustments represent the sum of straight-line rental revenue and straight-line rental expense, as well as the amortization of above- and below-market leases (i.e., ASC 805 adjustments).
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(2)   Year-end portfolio occupancy guidance based on IT load (kW).
+------------------------------------------------------------------
+
+(3)   The “Same-Capital” pool includes properties owned as of December 31, 2024 with less than 5% of total rentable square feet under development. It excludes properties that were undergoing, or were expected to undergo, development activities in 2025-2026, properties classified as held for sale and contribution, and properties sold or contributed to joint ventures for all periods presented. The 2026 “Same-Capital” cash NOI growth outlook is presented on a constant currency basis.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(4)   Excludes land acquisitions and includes Digital Realty’s share of joint venture and fund contributions. Figure is net of joint venture and fund partners’ share of contributions.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(5)   Other non-recurring CapEx represents costs incurred to enhance the capacity or marketability of operating properties, such as network fiber initiatives and software development costs.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(6)   Recurring CapEx represents non-incremental improvements required to maintain current revenues, including second-generation tenant improvements and leasing commissions.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​
+Note: The company does not provide a reconciliation for non-GAAP estimates on a forward-looking basis, where it is unable to provide a meaningful or accurate calculation or estimation of reconciling items, and the information is not available without unreasonable effort. Please see Non-GAAP Financial Measures in this document for further discussion.
+
+10
+
+
+
+Digital Realty Trust   Financial Supplement
+-------------------------------------------
+​
+
+​
+Non-GAAP Financial Measures
+This document contains non-GAAP financial measures, including FFO, Core FFO, Constant Currency Core FFO, Adjusted FFO, Net Operating Income (NOI), “Same-Capital” Cash NOI and Adjusted EBITDA. A reconciliation from U.S. GAAP net income available to common stockholders to FFO, a reconciliation from FFO to Core FFO, a reconciliation from Core FFO to Adjusted FFO, a reconciliation from NOI to Cash NOI, and definitions of FFO, Core FFO, Constant Currency Core FFO, Adjusted FFO, NOI and “Same-Capital” Cash NOI are included as an attachment to this document. A reconciliation from U.S. GAAP net income available to common stockholders to Adjusted EBITDA, a definition of Adjusted EBITDA and definitions of net debt-to-Adjusted EBITDA, debt-plus-preferred-to-total enterprise value, cash NOI, and fixed charge coverage ratio are included as an attachment to this document.
+The company does not provide a reconciliation for non-GAAP estimates on a forward-looking basis, where it is unable to provide a meaningful or accurate calculation or estimation of reconciling items and the information is not available without unreasonable effort. This is due to the inherent difficulty of forecasting the timing and/or amount of various items that would impact net income attributable to common stockholders per diluted share, which is the most directly comparable forward-looking GAAP financial measure. This includes, for example, external growth factors, such as dispositions, and balance sheet items such as debt issuances, that have not yet occurred, are out of the company's control and/or cannot be reasonably predicted. For the same reasons, the company is unable to address the probable significance of the unavailable information. Forward-looking non-GAAP financial measures provided without the most directly comparable GAAP financial measures may vary materially from the corresponding GAAP financial measures.
+Investor Conference Call
+Prior to Digital Realty’s investor conference call at 5:00 p.m. ET / 4:00 p.m. CT on February 5, 2026, a presentation will be posted to the Investors section of the company’s website at https://investor.digitalrealty.com. The presentation is designed to accompany the discussion of the company’s fourth quarter 2025 financial results and operating performance. The conference call will feature President & Chief Executive Officer Andy Power and Chief Financial Officer Matt Mercier. 
+A live webcast of the call will be available on the Investors section of Digital Realty’s website at https://investor.digitalrealty.com. The webcast will be archived until February 5, 2027 and the replay will be available shortly after the conclusion of the live event.
+About Digital Realty
+Digital Realty brings companies and data together by delivering the full spectrum of data center, colocation and interconnection solutions. PlatformDIGITAL®, the company’s global data center platform, provides customers with a secure data meeting place and a proven Pervasive Datacenter Architecture (PDx®) solution methodology for powering innovation and efficiently managing Data Gravity challenges. Digital Realty gives its customers access to the connected data communities that matter to them with a global data center footprint of 300+ facilities in 55+ metros across 30+ countries on six continents. To learn more about Digital Realty, please visit digitalrealty.com or follow us on LinkedIn and X.
+​
+Contact Information
+Matt Mercier
+Chief Financial Officer
+Digital Realty
+​
+Jordan Sadler / Jim Huseby 
+Investor Relations 
+Digital Realty 
+(214) 231-1350
+​
+​
+​
+​
+​
+​
+​
+​
+
+11
+
+
+
+Consolidated Quarterly Statements of Operations   Financial Supplement
+----------------------------------------------------------------------
+​
+
+​
+​
+​
+​
+​
+
+                             ​                                 ​   ​       ​        ​   ​       ​        ​   ​       ​        ​   ​       ​        ​   ​       ​        ​   ​    ​        ​          ​      ​        ​     
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​                                                              ​   ​                                                                               Three Months Ended   ​   ​   Twelve Months Ended                        
+​                                                              ​   ​    31-Dec-25   ​   ​    30-Sep-25   ​   ​    30-Jun-25   ​   ​    31-Mar-25   ​   ​    31-Dec-24   ​   ​   ​      31-Dec-25   ​ ​ ​   ​      31-Dec-24
+Rental revenues                                                ​   ​   $1,074,703   ​   ​   $1,045,708   ​   ​   $1,003,550   ​   ​     $960,526   ​   ​     $958,892   ​   ​   ​     $4,084,487   ​       ​     $3,722,646
+Tenant reimbursements - Utilities                              ​   ​      356,084   ​   ​      332,681   ​   ​      294,503   ​   ​      271,189   ​   ​      302,664   ​   ​   ​      1,254,457   ​       ​      1,158,623
+Tenant reimbursements - Other                                  ​   ​       34,406   ​   ​       37,302   ​   ​       37,355   ​   ​       42,177   ​   ​       38,591   ​   ​   ​        151,240   ​       ​        158,612
+Interconnection and other                                      ​   ​      123,414   ​   ​      120,399   ​   ​      121,952   ​   ​      112,969   ​   ​      112,360   ​   ​   ​        478,734   ​       ​        442,591
+Fee income                                                     ​   ​       45,692   ​   ​       36,398   ​   ​       34,427   ​   ​       20,643   ​   ​       23,316   ​   ​   ​        137,160   ​       ​         64,888
+Other                                                          ​   ​          372   ​   ​        4,746   ​   ​        1,363   ​   ​          133   ​   ​           40   ​   ​   ​          6,614   ​       ​          7,608
+Total Operating Revenues                                       ​   ​   $1,634,671   ​   ​   $1,577,234   ​   ​   $1,493,150   ​   ​   $1,407,637   ​   ​   $1,435,862   ​   ​   ​     $6,112,692   ​       ​     $5,554,968
+​                                                              ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​   ​              ​   ​       ​              ​
+Utilities                                                      ​   ​     $398,185   ​   ​     $375,627   ​   ​     $339,288   ​   ​     $313,385   ​   ​     $337,534   ​   ​   ​     $1,426,485   ​       ​     $1,333,416
+Rental property operating                                      ​   ​      295,948   ​   ​      278,292   ​   ​      267,724   ​   ​      238,600   ​   ​      273,104   ​   ​   ​      1,080,564   ​       ​        984,921
+Property taxes                                                 ​   ​       50,791   ​   ​       51,823   ​   ​       49,570   ​   ​       48,856   ​   ​       46,044   ​   ​   ​        201,040   ​       ​        182,453
+Insurance                                                      ​   ​        4,711   ​   ​        4,508   ​   ​        4,946   ​   ​        4,483   ​   ​        6,007   ​   ​   ​         18,648   ​       ​         18,325
+Depreciation and amortization                                  ​   ​      493,458   ​   ​      497,002   ​   ​      461,167   ​   ​      443,009   ​   ​      455,355   ​   ​   ​      1,894,636   ​       ​      1,771,797
+General and administration                                     ​   ​      159,283   ​   ​      139,911   ​   ​      133,755   ​   ​      121,112   ​   ​      124,470   ​   ​   ​        554,061   ​       ​        473,521
+Severance, equity acceleration and legal expenses              ​   ​        4,937   ​   ​        1,794   ​   ​        2,262   ​   ​        2,428   ​   ​        2,346   ​   ​   ​         11,421   ​       ​          6,502
+Transaction and integration expenses                           ​   ​       36,083   ​   ​       86,559   ​   ​       22,546   ​   ​       39,902   ​   ​       11,797   ​   ​   ​        185,090   ​       ​         93,902
+Provision for impairment                                       ​   ​       78,553   ​   ​            —   ​   ​            —   ​   ​            —   ​   ​       22,881   ​   ​   ​         78,553   ​       ​        191,184
+Other expenses                                                 ​   ​           98   ​   ​        3,297   ​   ​          195   ​   ​          112   ​   ​       12,002   ​   ​   ​          3,702   ​       ​         27,083
+Total Operating Expenses                                       ​   ​   $1,522,047   ​   ​   $1,438,813   ​   ​   $1,281,453   ​   ​   $1,211,887   ​   ​   $1,291,540   ​   ​   ​     $5,454,200   ​       ​     $5,083,104
+​                                                              ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​   ​              ​   ​       ​              ​
+Operating Income                                               ​   ​     $112,624   ​   ​     $138,421   ​   ​     $211,697   ​   ​     $195,750   ​   ​     $144,322   ​   ​   ​       $658,492   ​       ​       $471,864
+​                                                              ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​   ​              ​   ​       ​              ​
+Equity in earnings / (loss) of unconsolidated entities         ​   ​        4,659   ​   ​     (16,944)   ​   ​     (12,062)   ​   ​      (7,640)   ​   ​     (36,201)   ​   ​   ​       (31,987)   ​       ​      (120,138)
+Gain / (loss) on sale of investments                           ​   ​       42,865   ​   ​       19,780   ​   ​      931,830   ​   ​        1,111   ​   ​      144,885   ​   ​   ​        995,586   ​       ​        595,825
+Interest and other income / (expense), net                     ​   ​       42,797   ​   ​       47,735   ​   ​       37,747   ​   ​       32,773   ​   ​       44,517   ​   ​   ​        161,052   ​       ​        154,243
+Interest (expense)                                             ​   ​    (116,516)   ​   ​    (113,584)   ​   ​    (109,383)   ​   ​     (98,464)   ​   ​    (104,742)   ​   ​   ​      (437,947)   ​       ​      (452,836)
+Income tax benefit / (expense)                                 ​   ​        9,673   ​   ​     (11,695)   ​   ​     (12,883)   ​   ​     (17,135)   ​   ​      (4,928)   ​   ​   ​       (32,040)   ​       ​       (54,760)
+Gain (loss) on debt extinguishment and modifications           ​   ​            9   ​   ​            —   ​   ​            —   ​   ​            —   ​   ​      (2,165)   ​   ​   ​              9   ​       ​        (5,871)
+Net Income                                                     ​   ​      $96,111   ​   ​      $63,713   ​   ​   $1,046,946   ​   ​     $106,395   ​   ​     $185,688   ​   ​   ​     $1,313,165   ​       ​       $588,327
+​                                                              ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​   ​              ​   ​       ​              ​
+Net (income) / loss attributable to noncontrolling interests   ​   ​        2,536   ​   ​        4,099   ​   ​     (14,790)   ​   ​        3,579   ​   ​        3,881   ​   ​   ​        (4,576)   ​       ​         14,163
+Net Income Attributable to Digital Realty Trust, Inc.          ​   ​      $98,647   ​   ​      $67,812   ​   ​   $1,032,156   ​   ​     $109,974   ​   ​     $189,569   ​   ​   ​     $1,308,589   ​       ​       $602,490
+​                                                              ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​   ​              ​   ​       ​              ​
+Preferred stock dividends                                      ​   ​     (10,181)   ​   ​     (10,181)   ​   ​     (10,181)   ​   ​     (10,181)   ​   ​     (10,181)   ​   ​   ​       (40,724)   ​       ​       (40,725)
+Net Income / (Loss) Available to Common Stockholders           ​   ​      $88,466   ​   ​      $57,631   ​   ​   $1,021,975   ​   ​      $99,793   ​   ​     $179,388   ​   ​   ​     $1,267,865   ​       ​       $561,766
+​                                                              ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​   ​              ​   ​       ​              ​
+Weighted-average shares outstanding - basic                    ​   ​      343,493   ​   ​      341,370   ​   ​      337,589   ​   ​      336,683   ​   ​      333,376   ​   ​   ​        339,807   ​       ​        323,336
+Weighted-average shares outstanding - diluted                  ​   ​      351,570   ​   ​      349,234   ​   ​      345,734   ​   ​      344,721   ​   ​      340,690   ​   ​   ​        347,810   ​       ​        331,547
+Weighted-average fully diluted shares and units                ​   ​      357,430   ​   ​      355,165   ​   ​      351,691   ​   ​      350,632   ​   ​      346,756   ​   ​   ​        353,720   ​       ​        337,697
+​                                                              ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​            ​   ​   ​   ​              ​   ​       ​              ​
+Net income / (loss) per share - basic                          ​   ​        $0.26   ​   ​        $0.17   ​   ​        $3.03   ​   ​        $0.30   ​   ​        $0.54   ​   ​   ​          $3.73   ​       ​          $1.74
+Net income / (loss) per share - diluted                        ​   ​        $0.24   ​   ​        $0.15   ​   ​        $2.94   ​   ​        $0.27   ​   ​        $0.51   ​   ​   ​          $3.58   ​       ​          $1.61
+​
+​
+​
+​
+
+12
+
+
+
+Funds From Operations and Core Funds From Operations   Financial Supplement
+---------------------------------------------------------------------------
+​
+
+
+                                    ​                                       ​   ​       ​       ​   ​       ​       ​   ​       ​        ​   ​       ​       ​   ​       ​       ​   ​    ​        ​         ​     ​        ​     
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​                                                                           ​   Three Months Ended                                                                               ​   ​   Twelve Months Ended                      
+Reconciliation of Net Income to Funds From Operations (FFO)                 ​   ​   31-Dec-25   ​   ​   30-Sep-25   ​   ​    30-Jun-25   ​   ​   31-Mar-25   ​   ​   31-Dec-24   ​   ​   ​      31-Dec-25   ​     ​      31-Dec-24
+​                                                                           ​   ​           ​   ​   ​           ​   ​   ​            ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Net Income / (Loss) Available to Common Stockholders                        ​   ​     $88,466   ​   ​     $57,631   ​   ​   $1,021,975   ​   ​     $99,793   ​   ​    $179,388   ​   ​   ​     $1,267,865   ​     ​       $561,766
+Adjustments:                                                                ​   ​           ​   ​   ​           ​   ​   ​            ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Noncontrolling interest in operating partnership                            ​   ​       2,000   ​   ​       2,000   ​   ​       21,000   ​   ​       3,000   ​   ​       4,000   ​   ​   ​         28,000   ​     ​         12,700
+Real estate related depreciation and amortization (1)                       ​   ​     484,260   ​   ​     487,182   ​   ​      451,050   ​   ​     432,652   ​   ​     445,462   ​   ​   ​      1,855,144   ​     ​      1,730,059
+Reconciling items related to noncontrolling interests                       ​   ​    (22,753)   ​   ​    (22,888)   ​   ​     (21,038)   ​   ​    (19,480)   ​   ​    (19,531)   ​   ​   ​       (86,159)   ​     ​       (64,612)
+Unconsolidated entities real estate related depreciation and amortization   ​   ​      70,260   ​   ​      65,922   ​   ​       59,172   ​   ​      55,861   ​   ​      49,463   ​   ​   ​        251,215   ​     ​        192,931
+(Gain) / loss on real estate transactions                                   ​   ​    (42,865)   ​   ​    (19,780)   ​   ​    (931,830)   ​   ​     (1,111)   ​   ​   (137,047)   ​   ​   ​      (995,586)   ​     ​      (596,904)
+Provision for impairment                                                    ​   ​      78,553   ​   ​           —   ​   ​            —   ​   ​           —   ​   ​      22,881   ​   ​   ​         78,553   ​     ​        191,185
+Funds From Operations                                                       ​   ​    $657,921   ​   ​    $570,067   ​   ​     $600,329   ​   ​    $570,715   ​   ​    $544,616   ​   ​   ​     $2,399,032   ​     ​     $2,027,122
+​                                                                           ​   ​           ​   ​   ​           ​   ​   ​            ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Weighted-average shares and units outstanding - basic                       ​   ​     349,354   ​   ​     347,301   ​   ​      343,546   ​   ​     342,594   ​   ​     339,442   ​   ​   ​        345,717   ​     ​        329,485
+Weighted-average shares and units outstanding - diluted (2) (3)             ​   ​     357,430   ​   ​     355,165   ​   ​      351,691   ​   ​     350,632   ​   ​     346,756   ​   ​   ​        353,720   ​     ​        337,697
+​                                                                           ​   ​           ​   ​   ​           ​   ​   ​            ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Funds From Operations per share - basic                                     ​   ​       $1.88   ​   ​       $1.64   ​   ​        $1.75   ​   ​       $1.67   ​   ​       $1.60   ​   ​   ​          $6.94   ​     ​          $6.15
+​                                                                           ​   ​           ​   ​   ​           ​   ​   ​            ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Funds From Operations per share - diluted (2) (3)                           ​   ​       $1.89   ​   ​       $1.65   ​   ​        $1.75   ​   ​       $1.67   ​   ​       $1.61   ​   ​   ​          $6.96   ​     ​          $6.14
+​
+​
+​
+​
+​
+
+                               ​                                  ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​    ​        ​         ​     ​        ​     
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​                                                                 ​   Three Months Ended                                                                              ​   ​   Twelve Months Ended                      
+Reconciliation of FFO to Core FFO                                 ​   ​   31-Dec-25   ​   ​   30-Sep-25   ​   ​   30-Jun-25   ​   ​   31-Mar-25   ​   ​   31-Dec-24   ​   ​   ​      31-Dec-25   ​     ​      31-Dec-24
+​                                                                 ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Funds From Operations                                             ​   ​    $657,921   ​   ​    $570,067   ​   ​    $600,329   ​   ​    $570,715   ​   ​    $544,616   ​   ​   ​     $2,399,032   ​     ​     $2,027,122
+Other non-core revenue adjustments (4)                            ​   ​    (10,633)   ​   ​     (4,746)   ​   ​       4,228   ​   ​     (1,925)   ​   ​       4,537   ​   ​   ​       (13,076)   ​     ​       (30,339)
+Transaction and integration expenses                              ​   ​      36,083   ​   ​      86,559   ​   ​      22,546   ​   ​      39,902   ​   ​      11,797   ​   ​   ​        185,090   ​     ​         93,902
+Gain (loss) on debt extinguishment and modifications              ​   ​         (9)   ​   ​           —   ​   ​           —   ​   ​           —   ​   ​       2,165   ​   ​   ​            (9)   ​     ​          5,871
+Severance, equity acceleration and legal expenses (5)             ​   ​       4,937   ​   ​       1,794   ​   ​       2,262   ​   ​       2,428   ​   ​       2,346   ​   ​   ​         11,421   ​     ​          6,502
+(Gain) / Loss on FX and derivatives revaluation                   ​   ​    (16,295)   ​   ​         252   ​   ​       8,827   ​   ​     (2,064)   ​   ​       7,127   ​   ​   ​        (9,280)   ​     ​         74,464
+Other non-core expense adjustments (6)                            ​   ​    (21,794)   ​   ​       2,075   ​   ​       5,092   ​   ​       (702)   ​   ​      14,229   ​   ​   ​       (15,329)   ​     ​         37,671
+Core Funds From Operations                                        ​   ​    $650,210   ​   ​    $656,001   ​   ​    $643,284   ​   ​    $608,354   ​   ​    $586,816   ​   ​   ​     $2,557,849   ​     ​     $2,215,194
+​                                                                 ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Weighted-average shares and units outstanding - diluted (2) (3)   ​   ​     349,740   ​   ​     347,700   ​   ​     343,909   ​   ​     343,050   ​   ​     339,982   ​   ​   ​        346,086   ​     ​        329,899
+​                                                                 ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Core Funds From Operations per share - diluted (2)                ​   ​       $1.86   ​   ​       $1.89   ​   ​       $1.87   ​   ​       $1.77   ​   ​       $1.73   ​   ​   ​          $7.39   ​     ​          $6.71
+​
+​
+
+                         ​                            ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​    ​        ​         ​     ​        ​     
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+(1)                                                   ​   Three Months Ended                                                                              ​   ​   Twelve Months Ended                      
+Real Estate Related Depreciation &amp; Amortization   ​   ​   31-Dec-25   ​   ​   30-Sep-25   ​   ​   30-Jun-25   ​   ​   31-Mar-25   ​   ​   31-Dec-24   ​   ​   ​      31-Dec-25   ​     ​      31-Dec-24
+​                                                     ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Depreciation and amortization per income statement    ​   ​    $493,458   ​   ​    $497,002   ​   ​    $461,167   ​   ​    $443,009   ​   ​    $455,355   ​   ​   ​     $1,894,636   ​     ​     $1,771,798
+Non-real estate depreciation                          ​   ​     (9,198)   ​   ​     (9,820)   ​   ​    (10,117)   ​   ​    (10,356)   ​   ​     (9,894)   ​   ​   ​       (39,492)   ​     ​       (41,739)
+Real Estate Related Depreciation &amp; Amortization   ​   ​    $484,260   ​   ​    $487,182   ​   ​    $451,050   ​   ​    $432,652   ​   ​    $445,462   ​   ​   ​     $1,855,144   ​     ​     $1,730,059
+​
+
+(2)   Certain of Teraco's minority indirect shareholders have the right to put their shares in an upstream parent company of Teraco to Digital Realty in exchange for cash or the equivalent value of shares of Digital Realty common stock, or a combination thereof. U.S. GAAP requires Digital Realty to assume the put right is settled in shares for purposes of calculating diluted EPS. This same approach was utilized to calculate FFO/share. The potential future dilutive impact associated with this put right will be excluded from Core FFO and AFFO until settlement occurs – causing diluted share count to be higher for FFO than for Core FFO and AFFO. When calculating diluted FFO, Teraco related noncontrolling interest is added back to the FFO numerator as the denominator assumes all shares have been put back to Digital Realty.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                ​                    ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​    ​        ​        ​     ​        ​    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​                                    ​   Three Months Ended                                                                              ​   ​   Twelve Months Ended                    
+​                                    ​   ​   31-Dec-25   ​   ​   30-Sep-25   ​   ​   30-Jun-25   ​   ​   31-Mar-25   ​   ​   31-Dec-24   ​   ​   ​     31-Dec-25   ​     ​     31-Dec-24
+Teraco noncontrolling share of FFO   ​   ​     $18,240   ​   ​     $17,018   ​   ​     $15,850   ​   ​     $13,286   ​   ​     $14,905   ​   ​   ​       $64,394   ​     ​       $46,954
+Teraco related minority interest     ​   ​     $18,240   ​   ​     $17,018   ​   ​     $15,850   ​   ​     $13,286   ​   ​     $14,905   ​   ​   ​       $64,394   ​     ​       $46,954
+​
+
+(3)   For all periods presented, we have excluded the effect of dilutive series J, series K and series L preferred stock, as applicable, that may be converted into common stock upon the occurrence of specified change in control transactions as described in the articles supplementary governing the series J, series K and series L preferred stock, as applicable, which we consider highly improbable. See above for calculations of FFO and the share count detail section that follows the reconciliation of Core FFO to AFFO for calculations of weighted average common stock and units outstanding. For definitions and discussion of FFO and Core FFO, see the Definitions section.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(4)   Includes deferred rent adjustments related to a customer bankruptcy, development fees included in gains, lease termination fees and gain on sale of equity investment included in other income.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(5)   Relates to severance and other charges related to the departure of company executives and integration-related severance.
+------------------------------------------------------------------------------------------------------------------------------
+
+(6)   Includes write-offs associated with bankrupt or terminated customers, non-recurring legal and insurance expenses, impact of foreign tax rate changes and adjustments to reflect our proportionate share of transaction costs associated with noncontrolling interests.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ ​
+​
+
+13
+
+
+
+Adjusted Funds From Operations (AFFO)   Financial Supplement
+------------------------------------------------------------
+​
+
+​
+​
+
+                             ​                                ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​    ​        ​         ​     ​        ​     
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​                                                             ​   Three Months Ended                                                                              ​   ​   Twelve Months Ended                      
+Reconciliation of Core FFO to AFFO                            ​   ​   31-Dec-25   ​   ​   30-Sep-25   ​   ​   30-Jun-25   ​   ​   31-Mar-25   ​   ​   31-Dec-24   ​   ​   ​      31-Dec-25   ​     ​      31-Dec-24
+​                                                             ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Core FFO available to common stockholders and unitholders     ​   ​    $650,210   ​   ​    $656,001   ​   ​    $643,284   ​   ​    $608,354   ​   ​    $586,816   ​   ​   ​     $2,557,849   ​     ​     $2,215,194
+Adjustments:                                                  ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Non-real estate depreciation                                  ​   ​       9,198   ​   ​       9,820   ​   ​      10,117   ​   ​      10,356   ​   ​       9,894   ​   ​   ​         39,492   ​     ​         41,739
+Amortization of deferred financing costs                      ​   ​       6,781   ​   ​       6,565   ​   ​       6,451   ​   ​       6,548   ​   ​       5,697   ​   ​   ​         26,345   ​     ​         21,198
+Amortization of debt discount/premium                         ​   ​       1,341   ​   ​       1,293   ​   ​       1,251   ​   ​       1,125   ​   ​       1,324   ​   ​   ​          5,010   ​     ​          5,805
+Non-cash stock-based compensation expense                     ​   ​      17,327   ​   ​      18,174   ​   ​      18,026   ​   ​      16,700   ​   ​      13,386   ​   ​   ​         70,227   ​     ​         55,468
+Straight-line rental revenue                                  ​   ​    (34,351)   ​   ​    (33,351)   ​   ​    (23,698)   ​   ​     (9,692)   ​   ​    (18,242)   ​   ​   ​      (101,092)   ​     ​       (25,513)
+Straight-line rental expense                                  ​   ​        (97)   ​   ​       (271)   ​   ​       (475)   ​   ​       (160)   ​   ​       (136)   ​   ​   ​        (1,003)   ​     ​          3,447
+Above- and below-market rent amortization                     ​   ​       (972)   ​   ​       (864)   ​   ​       (752)   ​   ​       (706)   ​   ​       (269)   ​   ​   ​        (3,294)   ​     ​        (3,555)
+Deferred tax (benefit) / expense                              ​   ​    (26,184)   ​   ​      18,187   ​   ​    (30,714)   ​   ​       (517)   ​   ​    (15,048)   ​   ​   ​       (39,228)   ​     ​       (37,834)
+Leasing compensation and internal lease commissions           ​   ​      14,644   ​   ​      15,013   ​   ​      14,721   ​   ​      13,405   ​   ​      10,505   ​   ​   ​         57,783   ​     ​         45,233
+Recurring capital expenditures (1)                            ​   ​   (168,539)   ​   ​    (77,998)   ​   ​    (62,083)   ​   ​    (35,305)   ​   ​   (130,245)   ​   ​   ​      (343,925)   ​     ​      (305,712)
+​                                                             ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+AFFO available to common stockholders and unitholders (2)     ​   ​    $469,358   ​   ​    $612,569   ​   ​    $576,127   ​   ​    $610,108   ​   ​    $463,682   ​   ​   ​     $2,268,164   ​     ​     $2,015,471
+​                                                             ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Weighted-average shares and units outstanding - basic         ​   ​     349,354   ​   ​     347,301   ​   ​     343,546   ​   ​     342,594   ​   ​     339,442   ​   ​   ​        345,717   ​     ​        329,485
+Weighted-average shares and units outstanding - diluted (3)   ​   ​     349,740   ​   ​     347,700   ​   ​     343,909   ​   ​     343,050   ​   ​     339,982   ​   ​   ​        346,086   ​     ​        329,899
+​                                                             ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+AFFO per share - diluted (3)                                  ​   ​       $1.34   ​   ​       $1.76   ​   ​       $1.68   ​   ​       $1.78   ​   ​       $1.36   ​   ​   ​          $6.55   ​     ​          $6.11
+​                                                             ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Dividends per share and common unit                           ​   ​       $1.22   ​   ​       $1.22   ​   ​       $1.22   ​   ​       $1.22   ​   ​       $1.22   ​   ​   ​          $4.88   ​     ​          $4.88
+​                                                             ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​              ​   ​     ​              ​
+Diluted AFFO Payout Ratio                                     ​   ​       90.9%   ​   ​       69.2%   ​   ​       72.8%   ​   ​       68.6%   ​   ​       89.5%   ​   ​   ​          74.5%   ​     ​          79.9%
+​
+​
+
+                            ​                                ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​       ​       ​   ​    ​        ​        ​     ​        ​    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​                                                            ​   Three Months Ended                                                                              ​   ​   Twelve Months Ended                    
+Share Count Detail                                           ​   ​   31-Dec-25   ​   ​   30-Sep-25   ​   ​   30-Jun-25   ​   ​   31-Mar-25   ​   ​   31-Dec-24   ​   ​   ​     31-Dec-25   ​     ​     31-Dec-24
+​                                                            ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​           ​   ​   ​   ​             ​   ​     ​             ​
+Weighted Average Common Stock and Units Outstanding          ​   ​     349,354   ​   ​     347,301   ​   ​     343,546   ​   ​     342,594   ​   ​     339,442   ​   ​   ​       345,717   ​     ​       329,485
+Add: Effect of dilutive securities                           ​   ​         386   ​   ​         399   ​   ​         362   ​   ​         456   ​   ​         540   ​   ​   ​           369   ​     ​           413
+Weighted Avg. Common Stock and Units Outstanding - diluted   ​   ​     349,740   ​   ​     347,700   ​   ​     343,909   ​   ​     343,050   ​   ​     339,982   ​   ​   ​       346,086   ​     ​       329,899
+​
+
+(1)   Recurring capital expenditures represent non-incremental building improvements required to maintain current revenues, including second-generation tenant improvements and external leasing commissions. Recurring capital expenditures do not include acquisition costs contemplated when underwriting the purchase of a building, costs which are incurred to bring a building up to Digital Realty’s operating standards, or internal leasing commissions.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(2)   For a definition and discussion of AFFO, see the Definitions section. For a reconciliation of net income available to common stockholders to FFO and Core FFO, see above.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(3)   For all periods presented, we have excluded the effect of dilutive series J, series K and series L preferred stock, as applicable, that may be converted into common stock upon the occurrence of specified change in control transactions as described in the articles supplementary governing the series J, series K and series L preferred stock, as applicable, which we consider highly improbable. See above for calculations of FFO and for calculations of weighted average common stock and units outstanding.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​
+​
+​
+​
+​
+​
+​
+
+14
+
+
+
+Consolidated Balance Sheets   Financial Supplement
+--------------------------------------------------
+​
+
+​
+​
+
+                                ​                                                      ​                       ​          ​        ​    ​          ​        ​    ​          ​        ​    ​          ​        ​    ​          ​     
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+​                                                                   ​                                         31-Dec-25            ​   30-Sep-25            ​   30-Jun-25            ​   31-Mar-25            ​   31-Dec-24         
+Assets                                                              ​                                         ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Investments in real estate:                                                                                   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Real estate                                                                                                   ​      $31,359,298   ​   ​      $30,194,891   ​   ​      $29,836,218   ​   ​      $27,947,964   ​   ​      $27,558,993
+Construction in progress                                                                                      ​        4,976,785   ​   ​        5,422,338   ​   ​        5,080,701   ​   ​        4,973,266   ​   ​        5,164,334
+Land held for future development                                                                              ​           91,130   ​   ​           66,668   ​   ​           73,665   ​   ​           69,089   ​   ​           38,785
+Investments in Real Estate                                                                                    ​      $36,427,213   ​   ​      $35,683,897   ​   ​      $34,990,583   ​   ​      $32,990,319   ​   ​      $32,762,112
+Accumulated depreciation and amortization                                                                     ​      (9,993,596)   ​   ​      (9,665,380)   ​   ​      (9,341,719)   ​   ​      (8,856,535)   ​   ​      (8,641,331)
+Net Investments in Properties                                                                                 ​      $26,433,617   ​   ​      $26,018,517   ​   ​      $25,648,865   ​   ​      $24,133,784   ​   ​      $24,120,781
+Investment in unconsolidated entities                                                                         ​        3,427,903   ​   ​        3,690,749   ​   ​        3,622,677   ​   ​        2,702,847   ​   ​        2,639,800
+Net Investments in Real Estate                                                                                ​      $29,861,520   ​   ​      $29,709,266   ​   ​      $29,271,542   ​   ​      $26,836,631   ​   ​      $26,760,582
+​                                                                   ​                                         ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Operating lease right-of-use assets, net                                                                      ​       $1,135,645   ​   ​       $1,167,398   ​   ​       $1,180,657   ​   ​       $1,165,924   ​   ​       $1,178,853
+Cash and cash equivalents                                                                                     ​        3,451,647   ​   ​        3,299,703   ​   ​        3,554,126   ​   ​        2,321,885   ​   ​        3,870,891
+Accounts and other receivables, net (1)                                                                       ​        1,358,895   ​   ​        1,496,105   ​   ​        1,586,146   ​   ​        1,373,521   ​   ​        1,257,464
+Deferred rent, net                                                                                            ​          750,907   ​   ​          710,624   ​   ​          681,375   ​   ​          641,290   ​   ​          642,456
+Goodwill                                                                                                      ​        9,711,953   ​   ​        9,647,754   ​   ​        9,636,513   ​   ​        9,174,165   ​   ​        8,929,431
+Customer relationship value, deferred leasing costs and other intangibles, net                                ​        2,134,698   ​   ​        2,080,898   ​   ​        2,171,318   ​   ​        2,124,989   ​   ​        2,178,054
+Assets held for sale and contribution                               ​                                         ​          349,826   ​   ​          116,624   ​   ​          139,993   ​   ​          953,236   ​   ​                —
+Other assets                                                                                                  ​          655,377   ​   ​          500,262   ​   ​          493,325   ​   ​          488,921   ​   ​          465,885
+Total Assets                                                                                                  ​      $49,410,468   ​   ​      $48,728,634   ​   ​      $48,714,995   ​   ​      $45,080,562   ​   ​      $45,283,616
+​                                                                                                             ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Liabilities and Equity                                                                                        ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Global unsecured revolving credit facilities, net                                                             ​         $899,090   ​   ​       $1,152,042   ​   ​         $567,699   ​   ​       $1,096,931   ​   ​       $1,611,308
+Unsecured term loans, net                                                                                     ​          439,536   ​   ​          438,933   ​   ​          440,788   ​   ​          404,335   ​   ​          386,903
+Unsecured senior notes, net of discount                                                                       ​       16,194,441   ​   ​       15,808,565   ​   ​       16,641,367   ​   ​       14,744,063   ​   ​       13,962,852
+Secured and other debt, net of discount                                                                       ​          869,068   ​   ​          825,894   ​   ​          802,294   ​   ​          770,950   ​   ​          753,314
+Operating lease liabilities                                                                                   ​        1,253,217   ​   ​        1,285,067   ​   ​        1,298,085   ​   ​        1,281,572   ​   ​        1,294,219
+Accounts payable and other accrued liabilities                                                                ​        2,600,979   ​   ​        2,377,726   ​   ​        2,310,882   ​   ​        1,927,611   ​   ​        2,056,215
+Deferred tax liabilities                                                                                      ​        1,124,724   ​   ​        1,151,374   ​   ​        1,137,305   ​   ​        1,109,294   ​   ​        1,084,562
+Accrued dividends and distributions                                                                           ​          428,337   ​   ​                —   ​   ​                —   ​   ​                —   ​   ​          418,661
+Security deposits and prepaid rents                                                                           ​          754,920   ​   ​          699,528   ​   ​          653,640   ​   ​          559,768   ​   ​          539,802
+Obligations associated with assets held for sale and contribution   ​                                         ​              182   ​   ​              283   ​   ​            1,089   ​   ​            7,882   ​   ​                —
+Total Liabilities                                                                                             ​      $24,564,494   ​   ​      $23,739,412   ​   ​      $23,853,149   ​   ​      $21,902,406   ​   ​      $22,107,836
+​                                                                                                             ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Redeemable noncontrolling interests                                                                           ​        1,498,975   ​   ​        1,535,972   ​   ​        1,505,889   ​   ​        1,459,322   ​   ​        1,433,185
+​                                                                                                             ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Equity                                                                                                        ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Preferred Stock: $0.01 par value per share, 110,000 shares authorized:                                        ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Series J Cumulative Redeemable Preferred Stock (2)                                                            ​         $193,540   ​   ​         $193,540   ​   ​         $193,540   ​   ​         $193,540   ​   ​         $193,540
+Series K Cumulative Redeemable Preferred Stock (3)                                                            ​          203,264   ​   ​          203,264   ​   ​          203,264   ​   ​          203,264   ​   ​          203,264
+Series L Cumulative Redeemable Preferred Stock (4)                                                            ​          334,886   ​   ​          334,886   ​   ​          334,886   ​   ​          334,886   ​   ​          334,886
+Common Stock: $0.01 par value per share, 502,000 shares authorized (5)                                        ​            3,406   ​   ​            3,400   ​   ​            3,374   ​   ​            3,338   ​   ​            3,337
+Additional paid-in capital                                                                                    ​       29,350,487   ​   ​       29,182,332   ​   ​       28,720,826   ​   ​       28,091,661   ​   ​       28,079,738
+Dividends in excess of earnings                                                                               ​      (6,690,722)   ​   ​      (6,358,501)   ​   ​      (5,997,607)   ​   ​      (6,604,217)   ​   ​      (6,292,085)
+Accumulated other comprehensive (loss), net                                                                   ​        (469,198)   ​   ​        (533,891)   ​   ​        (543,756)   ​   ​        (926,874)   ​   ​      (1,182,283)
+Total Stockholders' Equity                                                                                    ​      $22,925,663   ​   ​      $23,025,030   ​   ​      $22,914,527   ​   ​      $21,295,598   ​   ​      $21,340,397
+​                                                                                                             ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Noncontrolling Interests                                                                                      ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Noncontrolling interest in operating partnership                                                              ​         $415,456   ​   ​         $420,280   ​   ​         $431,000   ​   ​         $415,956   ​   ​         $396,099
+Noncontrolling interest in consolidated entities                                                              ​            5,880   ​   ​            7,940   ​   ​           10,430   ​   ​            7,280   ​   ​            6,099
+​                                                                                                             ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Total Noncontrolling Interests                                                                                ​         $421,336   ​   ​         $428,220   ​   ​         $441,430   ​   ​         $423,236   ​   ​         $402,198
+​                                                                                                             ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Total Equity                                                                                                  ​      $23,346,999   ​   ​      $23,453,250   ​   ​      $23,355,957   ​   ​      $21,718,834   ​   ​      $21,742,595
+​                                                                                                             ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​   ​   ​                ​
+Total Liabilities and Equity                                                                                  ​      $49,410,468   ​   ​      $48,728,634   ​   ​      $48,714,995   ​   ​      $45,080,562   ​   ​      $45,283,616
+​
+
+(1)   Net of allowance for doubtful accounts of $86,351 and $59,224 as of December 31, 2025 and December 31, 2024, respectively.
+--------------------------------------------------------------------------------------------------------------------------------
+
+(2)   Series J Cumulative Redeemable Preferred Stock, 5.250%, $200,000 liquidation preference ($25.00 per share), 8,000 shares issued and outstanding as of December 31, 2025 and December 31, 2024.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(3)   Series K Cumulative Redeemable Preferred Stock, 5.850%, $210,000 liquidation preference ($25.00 per share), 8,400 shares issued and outstanding as of December 31, 2025 and December 31, 2024.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(4)   Series L Cumulative Redeemable Preferred Stock, 5.200%, $345,000 liquidation preference ($25.00 per share), 13,800 shares issued and outstanding as of December 31, 2025 and December 31, 2024.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(5)   Common Stock: 343,557 and 336,637 shares issued and outstanding as of December 31, 2025 and December 31, 2024, respectively.
+----------------------------------------------------------------------------------------------------------------------------------
+​
+​
+​
+​
+​
+​
+​
+
+15
+
+
+
+Components of Net Asset Value (NAV) (1)   Financial Supplement
+--------------------------------------------------------------
+44
+
+​
+​
+
+                                     ​                                        ​   ​        ​     
+-------------------------------------------------------------------------------------------------
+Consolidated Properties Cash Net Operating Income (NOI)(2), Annualized (3)    ​   ​             ​
+Network-Dense                                                                 ​   ​    $1,178,813
+Campus                                                                        ​   ​     1,957,833
+Other (4)                                                                     ​   ​        77,358
+Total Cash NOI, Annualized                                                    ​   ​    $3,214,004
+less: Partners' share of consolidated JVs                                     ​   ​      (84,721)
+Acquisitions / dispositions / expirations                                     ​   ​     (142,880)
+FY 2026 backlog cash NOI and 4Q25 carry-over (stabilized) (5)                 ​   ​       359,005
+Total Consolidated Cash NOI, Annualized                                       ​   ​    $3,345,408
+​                                                                             ​   ​             ​
+Digital Realty's Pro Rata Share of Unconsolidated Entities Cash NOI (3) (6)   ​   ​      $361,940
+​                                                                             ​   ​             ​
+Other Income                                                                  ​   ​             ​
+Development and Management Fees (net), Annualized                             ​   ​      $182,769
+​                                                                             ​   ​             ​
+Other Assets                                                                  ​   ​             ​
+Pre-stabilized inventory, at cost (7)                                         ​   ​      $480,686
+Land held for development                                                     ​   ​        91,130
+Develo

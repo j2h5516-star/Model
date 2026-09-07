@@ -1,0 +1,745 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — T 2021-07-22
+# 출처: https://www.sec.gov/Archives/edgar/data/732717/000073271721000059/t-20210722.htm
+
+t-20210722
+
+UNITED STATES
+SECURITIES AND EXCHANGE COMMISSION
+WASHINGTON, D.C. 20549
+______________________________________________________
+FORM 8-K
+______________________________________________________
+CURRENT REPORT
+Pursuant to Section 13 or 15(d)
+of the Securities Exchange Act of 1934
+Date of report (Date of earliest event reported) July 22, 2021
+______________________________________________________
+AT&T INC.
+(Exact Name of Registrant as Specified in Charter)
+______________________________________________________
+
+Delaware                                                                001-08610                 43-1301883
+(State or Other Jurisdiction                                          (Commission              (IRS Employer
+of Incorporation)                                                    File Number)        Identification No.)
+208 S. Akard St., Dallas, Texas(Address of Principal Executive Offices)                      75202(Zip Code)
+Registrant’s telephone number, including area code (210) 821-4105
+(Former Name or Former Address, if Changed Since Last Report)
+Check the appropriate box below if the Form 8-K filing is intended to simultaneously satisfy the filing obligation of the registrant under any of the following provisions (see General Instruction A.2. below):
+
+☐        Written communications pursuant to Rule 425 under the Securities Act (17 CFR 230.425)                       
+☐        Soliciting material pursuant to Rule 14a-12 under the Exchange Act (17 CFR 240.14a-12)                      
+☐        Pre-commencement communications pursuant to Rule 14d-2(b) under the Exchange Act (17 CFR 240-14d-2(b))      
+☐        Pre-commencement communications pursuant to Rule 13e-4(c) under the Exchange Act (17 CFR 240.13e-4(c))      
+Securities Registered Pursuant to Section 12(b) of the Act
+
+Title of each class                                                                                                     Trading           Name of each exchange      
+                                                                                                                        Symbol(s)         on which registered        
+Common Shares (Par Value $1.00 Per Share)                                                                               T                 New York Stock Exchange    
+Depositary Shares, each representing a 1/1000th interest in a share of 5.000% Perpetual Preferred Stock, Series A       T PRA             New York Stock Exchange    
+Depositary Shares, each representing a 1/1000th interest in a share of 4.750% Perpetual Preferred Stock, Series C       T PRC             New York Stock Exchange    
+AT&amp;T Inc. 2.650% Global Notes due December 17, 2021                                                                 T 21B             New York Stock Exchange    
+AT&amp;T Inc. 1.450% Global Notes due June 1, 2022                                                                      T 22B             New York Stock Exchange    
+AT&amp;T Inc. 2.500% Global Notes due March 15, 2023                                                                    T 23              New York Stock Exchange    
+AT&amp;T Inc. 2.750% Global Notes due May 19, 2023                                                                      T 23C             New York Stock Exchange    
+
+Title of each class                                                  TradingSymbol(s)        Name of each exchange      
+                                                                                             on which registered        
+AT&amp;T Inc. Floating Rate Global Notes due September 5, 2023       T 23D                   New York Stock Exchange    
+AT&amp;T Inc. 1.050% Global Notes due September 5, 2023              T 23E                   New York Stock Exchange    
+AT&amp;T Inc. 1.300% Global Notes due September 5, 2023              T 23A                   New York Stock Exchange    
+AT&amp;T Inc. 1.950% Global Notes due September 15, 2023             T 23F                   New York Stock Exchange    
+AT&amp;T Inc. 2.400% Global Notes due March 15, 2024                 T 24A                   New York Stock Exchange    
+AT&amp;T Inc. 3.500% Global Notes due December 17, 2025              T 25                    New York Stock Exchange    
+AT&amp;T Inc. 0.250% Global Notes due March 4, 2026                  T 26E                   New York Stock Exchange    
+AT&amp;T Inc. 1.800% Global Notes due September 5, 2026              T 26D                   New York Stock Exchange    
+AT&amp;T Inc. 2.900% Global Notes due December 4, 2026               T 26A                   New York Stock Exchange    
+AT&amp;T Inc. 1.600% Global Notes due May 19, 2028                   T 28C                   New York Stock Exchange    
+AT&amp;T Inc. 2.350% Global Notes due September 5, 2029              T 29D                   New York Stock Exchange    
+AT&amp;T Inc. 4.375% Global Notes due September 14, 2029             T 29B                   New York Stock Exchange    
+AT&amp;T Inc. 2.600% Global Notes due December 17, 2029              T 29A                   New York Stock Exchange    
+AT&amp;T Inc. 0.800% Global Notes due March 4, 2030                  T 30B                   New York Stock Exchange    
+AT&amp;T Inc. 2.050% Global Notes due May 19, 2032                   T 32A                   New York Stock Exchange    
+AT&amp;T Inc. 3.550% Global Notes due December 17, 2032              T 32                    New York Stock Exchange    
+AT&amp;T Inc. 5.200% Global Notes due November 18, 2033              T 33                    New York Stock Exchange    
+AT&amp;T Inc. 3.375% Global Notes due March 15, 2034                 T 34                    New York Stock Exchange    
+AT&amp;T Inc. 2.450% Global Notes due March 15, 2035                 T 35                    New York Stock Exchange    
+AT&amp;T Inc. 3.150% Global Notes due September 4, 2036              T 36A                   New York Stock Exchange    
+AT&amp;T Inc. 2.600% Global Notes due May 19, 2038                   T 38C                   New York Stock Exchange    
+AT&amp;T Inc. 1.800% Global Notes due September 14, 2039             T 39B                   New York Stock Exchange    
+AT&amp;T Inc. 7.000% Global Notes due April 30, 2040                 T 40                    New York Stock Exchange    
+AT&amp;T Inc. 4.250% Global Notes due June 1, 2043                   T 43                    New York Stock Exchange    
+AT&amp;T Inc. 4.875% Global Notes due June 1, 2044                   T 44                    New York Stock Exchange    
+AT&amp;T Inc. 4.000% Global Notes due June 1, 2049                   T 49A                   New York Stock Exchange    
+AT&amp;T Inc. 4.250% Global Notes due March 1, 2050                  T 50                    New York Stock Exchange    
+AT&amp;T Inc. 3.750% Global Notes due September 1, 2050              T 50A                   New York Stock Exchange    
+AT&amp;T Inc. 5.350% Global Notes due November 1, 2066               TBB                     New York Stock Exchange    
+AT&amp;T Inc. 5.625% Global Notes due August 1, 2067                 TBC                     New York Stock Exchange    
+Indicate by check mark whether the registrant is an emerging growth company as defined in Rule 405 of the Securities Act of 1933 (§230.405 of this chapter) or Rule 12b-2 of the Securities Exchange Act of 1934 (§240.12b-2 of this chapter).
+Emerging growth company  ☐
+If an emerging growth company, indicate by check mark if the registrant has elected not to use the extended transition period for complying with any new or revised financial accounting standards provided pursuant to Section 13(a) of the Exchange Act.  ☐
+Item 8.01 Other Events.
+Throughout this document, AT&T Inc. is referred to as “we” or “AT&T.” AT&T is a holding company whose subsidiaries and affiliates operate worldwide in the telecommunications, media and technology industries. 
+Overview
+We announced on July 22, 2021 that second-quarter 2021 net income attributable to common stock totaled $1.5 billion, or $0.21 per diluted share. Second-quarter 2021 income per diluted share included amounts totaling to $4.9 billion, or $0.68 per share, resulting from the following significant items: $(0.52) per share from the impairment of Vrio net assets in our Latin America segment, $(0.12) per share for the amortization of merger-related intangible assets and $(0.04) per share of other charges, including an actuarial loss on remeasurement of our pension benefit plan assets and obligations. The results compare with a reported net income attributable to common stock of $1.2 billion, or $0.17 per diluted share, in the second quarter of 2020. 
+Operating revenues in the second quarter of 2021 were $44.0 billion, up 7.6 percent from the second quarter of 2020, driven by higher content, Direct-to-Consumer (DTC) subscription, and advertising revenues at our WarnerMedia segment, Mobility equipment and service revenue growth and gains in broadband service in our Communications segment and growth in wireless operations and improvements in foreign exchange impacts in Mexico. These increases were partially offset by declines in our Video business and lower Business Wireline service revenues. Operating revenues were also impacted by the fourth-quarter 2020 sale of our wireless and wireline operations in Puerto Rico and the U.S. Virgin Islands. 
+Operating expenses in the second quarter of 2021 were $40.8 billion, up 9.0 percent. Expenses reflect a noncash impairment charge of $4.6 billion resulting from our assessment of the recoverability of the net assets of Vrio, including approximately $2.1 billion of historical currency translation adjustments. On July 20, 2021, we signed an agreement to sell our Latin America video operations, Vrio, and classified the business as held-for-sale at June 30, 2021. Second-quarter expenses also include increased domestic wireless equipment costs, higher sports-related programming costs, and additional DTC programming and marketing costs. Partially offsetting these expense increases were severance charges in the prior-year quarter and lower video costs in the current year. Expenses were also offset by lower depreciation and amortization expense, largely due to the lower cost basis of long-lived assets resulting from video impairments taken in the fourth quarter of 2020 and ceasing depreciation and amortization on held-for-sale assets.
+Operating income in the second quarter was $3.3 billion compared to $3.5 billion in the comparable 2020 period, and AT&T’s second-quarter operating income margin was 7.4 percent, compared to 8.6 percent in the comparable 2020 period.
+Cash from operating activities in the second quarter of 2021 was $10.9 billion, down $1.1 billion when compared to 2020, reflecting increased cash spend for content and taxes. Total cash paid for WarnerMedia's content investment in the second quarter of 2021 was $5.3 billion ($2.4 billion higher than the prior-year comparable period). Capital expenditures in the second quarter of 2021 were $4.0 billion, and when including $1.3 billion cash paid for vendor financing, gross capital investment was $5.3 billion. 
+Segment Summary
+We analyze our segments based on, among other things, segment contribution, which consists of operating income, excluding acquisition-related costs and other significant items, and equity in net income (loss) of affiliates for investments managed within each segment. Our reportable segments are: Communications, WarnerMedia and Latin America. 
+Communications
+Our Communications segment consists of our Mobility, Business Wireline and Consumer Wireline business units. 
+Second-quarter 2021 operating revenues were $28.1 billion, up 6.1 percent versus second-quarter 2020, with segment operating contribution of $7.3 billion, down 2.0 percent versus the year-ago quarter. The Communications segment operating income margin was 26.1 percent, compared to 28.3 percent in the year-earlier quarter.
+Mobility
+Mobility revenues for the second quarter of 2021 were $18.9 billion, up 10.4 percent versus the second quarter of 2020, driven by equipment revenue growth from the sale of higher-priced smartphones and a mix of higher priced postpaid smartphones and higher sales of postpaid data devices, and service revenue growth in subscribers and slight improvements in international roaming revenues. Mobility operating expenses totaled $12.9 billion, up 14.0 percent versus the second quarter of 2020 due to increased equipment expense, higher network and technology costs, increased commissions and cost deferral amortization and higher costs associated with bundling HBO Max. Expense increases were partially offset by lower support costs. Mobility’s operating income margin was 31.7 percent compared to 33.9 percent in the year-ago quarter.
+In our Mobility business unit, during the second quarter of 2021, we reported a net gain of 5.5 million wireless subscribers. At June 30, 2021, wireless subscribers totaled 191.6 million (including approximately 2.5 million FirstNet connections) compared to 171.4 million at June 30, 2020. 
+During the second quarter, total phone net adds (postpaid and prepaid) were 963,000 with total net adds by subscriber category as follows:
+•Postpaid subscriber net adds were 1,156,000, with phone net adds of 789,000 and additions from wearables more than offsetting losses in tablet and non-tablet computing devices.
+•Prepaid subscriber net adds were 297,000, with phone net adds of 174,000. 
+•Reseller net losses were 125,000. 
+•Connected device net adds were 4.2 million, 2.5 million of which were primarily attributable to wholesale connected cars.
+For the quarter ended June 30, 2021, postpaid phone-only ARPU decreased 0.4 percent versus the year-earlier quarter. 
+Postpaid phone-only churn was 0.69 percent compared to 0.84 percent in the second quarter of 2020. Total postpaid churn was 0.87 percent compared to 1.05 percent in the year-ago quarter. 
+Business Wireline
+Business Wireline revenues for the second quarter of 2021 were $6.1 billion, down 4.0 percent versus the year-ago quarter, primarily due to lower demand for legacy voice and data services in the current year and higher demand for pandemic-related connectivity in the prior-year. Business Wireline operating expenses totaled $5.0 billion, down 0.3 percent when compared to the second quarter of 2020. Business Wireline operating income margin was 17.3 percent compared to 20.5 percent in the year-earlier quarter.
+Consumer Wireline
+Consumer Wireline revenues for the second quarter of 2021 were $3.1 billion, up 2.9 percent versus the year-ago quarter, driven by growth in Broadband (high-speed internet) revenues attributable to an increase in fiber customers and pricing. Partially offsetting the increase was declines in legacy voice and data, and other service and equipment revenues. Consumer Wireline operating expenses totaled $2.9 billion, up 7.3 percent versus the second quarter of 2020, largely driven by HBO Max bundling costs, higher customer support costs and depreciation. These expense increases were partially offset by lower cost deferral amortization expense, reflecting updates to expected subscriber lives. Consumer Wireline operating income margin was 9.2 percent compared to 12.9 percent in the year-earlier quarter.
+At June 30, 2021, Consumer Wireline had approximately 14.2 million broadband connections compared to 13.9 million at June 30, 2020. During the second quarter, broadband subscribers had net adds of 28,000 (including fiber broadband net adds of 246,000).
+WarnerMedia
+WarnerMedia revenues for the second quarter of 2021 were $8.8 billion, up 30.7 percent versus the year-ago quarter, driven by higher content and other, subscription and advertising revenues, reflecting the partial recovery from prior-year impacts of the pandemic. Content and other revenues increased driven by higher third-party TV production and theatrical. Subscription revenues increased due to growth of DTC domestic HBO Max and HBO subscribers after the launch of HBO Max in the year-ago quarter. DTC subscription revenues were $2.0 billion in the second quarter of 2021, versus $1.4 billion in the year-ago quarter. Advertising revenues improved when compared to the prior year resulting from the return of the NBA and strength in news. 
+WarnerMedia operating expenses totaled $7.1 billion, up 47.3 percent when compared to the second quarter of 2020, driven by higher programming and marketing costs for HBO Max; higher film and programming, including sports costs; and marketing. Direct costs supporting DTC revenues were $1.9 billion in the second quarter of 2021, versus $1.4 billion in the year-ago quarter.
+WarnerMedia segment operating contribution was $1.7 billion, down 9.0 percent. The WarnerMedia segment operating income margin was 19.2 percent, compared to 28.4 percent in the year-earlier quarter.
+Latin America
+Our Latin America segment consists of our Vrio and Mexico business units and is subject to foreign currency fluctuations. 
+Second-quarter 2021 operating revenues were $1.4 billion, up 16.6 percent versus the prior year, reflecting growth in the Mexico wireless operations and improvements in foreign exchange impacts. Segment operating contribution was $(152) million, versus $(201) million in the comparable 2020 period. The Latin America operating income margin was (10.7) percent, compared to (17.0) percent in the year-earlier quarter.
+Vrio
+Video service revenues were $749 million, down 0.4 percent versus the prior year, due to foreign exchange impacts. Operating expenses were $774 million, down 1.8 percent. Vrio’s operating income margin was (3.3) percent, compared to (4.8) percent in the year-earlier quarter.
+We had approximately 10.3 million Latin America video connections at June 30, 2021 compared to 10.7 million at June 30, 2020. During the second quarter of 2021, video net losses were 239,000. 
+Mexico
+Revenues were $688 million, up 43.3 percent when compared to the second quarter of 2020, primarily due to increased service and equipment revenues driven by COVID-19 related store closures in the prior year and improvements in foreign exchange impacts. Operating expenses were $817 million, up 25.1 percent, driven by foreign exchange rates. Mexico’s operating income margin was (18.8) percent, compared to (36.0) percent in the year-earlier quarter.
+We had approximately 19.0 million Mexican wireless subscribers at June 30, 2021 compared to 18.0 million at June 30, 2020. During the second quarter of 2021, we had postpaid net adds of 20,000 and prepaid net adds of 54,000. 
+Supplemental Discussions
+As a supplemental discussion of our operating results, for comparison purposes, we are providing Video results, which are reported in Corporate and Other.
+Video
+Video revenues for the second quarter of 2021 were $6.6 billion, down 5.4 percent versus the year-ago quarter, reflecting continued declines in video subscribers. Video operating expenses totaled $5.4 billion, down 15.3 percent versus the second quarter of 2020, driven by lower depreciation and amortization expense, a decline in content costs resulting from fewer subscribers and lower bad debt expense. The decrease in depreciation expense was due to the lower cost basis of long-lived assets resulting from impairments taken in the fourth-quarter of 2020 and ceasing depreciation on held-for-sale Video assets.  Video's operating income margin was 18.3 percent compared to 8.8 percent in the year-earlier quarter.
+At June 30, 2021, Video had approximately 15.4 million premium video connections compared to 17.7 million at June 30, 2020. During the second quarter of 2021, premium TV video subscribers had a net loss of 473,000 versus a net loss of 887,000 in the comparable 2020 period. 
+CAUTIONARY LANGUAGE CONCERNING FORWARD-LOOKING STATEMENTS
+Information set forth in this filing contains financial estimates and other forward-looking statements that are subject to risks and uncertainties. A discussion of factors that may affect future results is contained in AT&T’s filings with the Securities and Exchange Commission. AT&T disclaims any obligation to update or revise statements contained in this filing based on new information or otherwise.
+Item 9.01 Financial Statements and Exhibits.
+The following exhibits are furnished as part of this report:
+
+      (d)                                                                                        Exhibits
+                 99.1                     AT&amp;T Inc. selected financial statements and operating data.
+                 99.2                                 Discussion and reconciliation of non-GAAP measures.
+                  104         Cover Page Interactive Data File (embedded within the Inline XBRL document)
+Signature
+Pursuant to the requirements of the Securities Exchange Act of 1934, the Registrant has duly caused this report to be signed on its behalf by the undersigned hereunto duly authorized.
+
+                           AT&amp;T INC.                                                                 
+Date: July 22, 2021        By: /s/ Debra L. Dial . Debra L. Dial Senior Vice President and Controller    
+
+Document
+
+
+AT&amp;T Inc.                                                                                                                                                                                      
+Financial Data                                                                                                                                                                                     
+Consolidated Statements of Income                                                                                                                                                                  
+Dollars in millions except per share amounts                                                                                                                                                       
+Unaudited                                                                                                        Second Quarter          Percent                  Six-Month Period          Percent
+2021                                                                                                                       2020           Change             2021             2020           Change
+Operating Revenues                                                                                                                                                                                 
+Service                                                                                           $38,956          $37,051              5.1    %     $77,460          $75,934              2.0    %
+Equipment                                                                                           5,089            3,899             30.5    %      10,524            7,795             35.0    %
+Total Operating Revenues                                                                           44,045           40,950              7.6    %      87,984           83,729              5.1    %
+Operating Expenses                                                                                                                                                                                 
+Cost of revenues                                                                                                                                                                                   
+Equipment                                                                                           5,341            3,978             34.3    %      10,897            8,070             35.0    %
+Broadcast, programming and operations                                                               7,603            5,889             29.1    %      15,141           12,643             19.8    %
+Other cost of revenues (exclusive ofdepreciation and amortization shownseparately below)            8,155            8,116              0.5    %      16,148           16,458            (1.9)    %
+Selling, general and administrative                                                                 9,361            9,831            (4.8)    %      18,743           18,591              0.8    %
+Asset impairments and abandonments                                                                  4,555            2,319             96.4    %       4,555            2,442             86.5    %
+Depreciation and amortization                                                                       5,761            7,285           (20.9)    %      11,570           14,507           (20.2)    %
+Total Operating Expenses                                                                           40,776           37,418              9.0    %      77,054           72,711              6.0    %
+Operating Income                                                                                    3,269            3,532            (7.4)    %      10,930           11,018            (0.8)    %
+Interest Expense                                                                                    1,684            2,041           (17.5)    %       3,554            4,059           (12.4)    %
+Equity in Net Income (Loss) of Affiliates                                                              41             (10)                —    %          93             (16)                —    %
+Other Income (Expense) — Net                                                                          999            1,017            (1.8)    %       5,220            1,820                —    %
+Income Before Income Taxes                                                                          2,625            2,498              5.1    %      12,689            8,763             44.8    %
+Income Tax Expense                                                                                    751              935           (19.7)    %       2,873            2,237             28.4    %
+Net Income                                                                                          1,874            1,563             19.9    %       9,816            6,526             50.4    %
+Less: Net Income Attributable to                                                                    (304)            (282)            (7.8)    %       (696)            (635)            (9.6)    %
+Noncontrolling Interest                                                                                                                                                                            
+Net Income Attributable to AT&amp;T                                                                $1,570           $1,281             22.6    %      $9,120           $5,891             54.8    %
+Less: Preferred Stock Dividends                                                                      (56)             (52)            (7.7)    %       (106)             (84)           (26.2)    %
+Net Income Attributable                                                                            $1,514           $1,229             23.2    %      $9,014           $5,807             55.2    %
+to Common Stock                                                                                                                                                                                    
+Basic Earnings Per Share Attributable                                                               $0.21            $0.17             23.5    %       $1.25            $0.81             54.3    %
+to Common Stock                                                                                                                                                                                    
+Weighted Average Common                                                                             7,168            7,145              0.3    %       7,165            7,166                —    %
+Shares Outstanding (000,000)                                                                                                                                                                       
+Diluted Earnings Per Share Attributable                                                             $0.21            $0.17             23.5    %       $1.25            $0.81             54.3    %
+to Common Stock                                                                                                                                                                                    
+Weighted Average Common                                                                             7,200            7,170              0.4    %       7,194            7,192                —    %
+Shares Outstanding with Dilution (000,000)                                                                                                                                                         
+1
+
+
+
+AT&amp;T Inc.                                                                                                                               
+Financial Data                                                                                                                              
+Consolidated Balance Sheets                                                                                                                 
+Dollars in millions                                                                                                                         
+Unaudited                                                                                         Jun. 30,                          Dec. 31,
+2021                                                                                                                                    2020
+Assets                                                                                                                                      
+Current Assets                                                                                                                              
+Cash and cash equivalents                                                                     $11,869                            $9,740     
+Accounts receivable – net of related allowances for credit loss of $843 and $1,221             15,771                            20,215     
+Inventories                                                                                     2,810                             3,695     
+Prepaid and other current assets                                                               32,419                            18,358     
+Total current assets                                                                           62,869                            52,008     
+Noncurrent Inventories and Theatrical Film and Television Production Costs                     16,271                            14,752     
+Property, Plant and Equipment – Net                                                           123,591                           127,315     
+Goodwill                                                                                      134,626                           135,259     
+Licenses – Net                                                                                 87,962                            93,840     
+Trademarks and Trade Names – Net                                                               22,276                            23,297     
+Distribution Networks – Net                                                                    12,875                            13,793     
+Other Intangible Assets – Net                                                                  12,736                            15,386     
+Investments in and Advances to Equity Affiliates                                                1,853                             1,780     
+Operating Lease Right-Of-Use Assets                                                            24,390                            24,714     
+Deposits on Wireless Licenses                                                                  23,663                                 —     
+Other Assets                                                                                   21,598                            23,617     
+Total Assets                                                                                 $544,710                          $525,761     
+Liabilities and Stockholders’ Equity                                                                                                        
+Current Liabilities                                                                                                                         
+Debt maturing within one year                                                                 $24,016                            $3,470     
+Accounts payable and accrued liabilities                                                       49,429                            50,051     
+Advanced billings and customer deposits                                                         4,932                             6,176     
+Dividends payable                                                                               3,749                             3,741     
+Total current liabilities                                                                      82,126                            63,438     
+Long-Term Debt                                                                                155,767                           153,775     
+Deferred Credits and Other Noncurrent Liabilities                                                                                           
+Deferred income taxes                                                                          61,732                            60,472     
+Postemployment benefit obligation                                                              14,876                            18,276     
+Operating lease liabilities                                                                    21,637                            22,202     
+Other noncurrent liabilities                                                                   28,726                            28,358     
+Total deferred credits and other noncurrent liabilities                                       126,971                           129,308     
+Stockholders’ Equity                                                                                                                        
+Preferred stock                                                                                     —                                 —     
+Common stock                                                                                    7,621                             7,621     
+Additional paid-in capital                                                                    129,941                           130,175     
+Retained earnings                                                                              38,947                            37,457     
+Treasury stock                                                                               (17,332)                          (17,910)     
+Accumulated other comprehensive income                                                          3,119                             4,330     
+Noncontrolling interest                                                                        17,550                            17,567     
+Total stockholders’ equity                                                                    179,846                           179,240     
+Total Liabilities and Stockholders’ Equity                                                   $544,710                          $525,761     
+2
+
+
+
+AT&amp;T Inc.                                                                                                                                       
+Financial Data                                                                                                                                      
+Consolidated Statements of Cash Flows                                                                                                               
+Dollars in millions                                                                                                                                 
+Unaudited                                                                                                                           Six-Month Period
+2021                                                                                                                                            2020
+Operating Activities                                                                                                                                
+Net income                                                                                        $9,816                                $6,526      
+Adjustments to reconcile net income to net cash provided by operating activities:                                                                   
+Depreciation and amortization                                                                     11,570                                14,507      
+Amortization of film and television costs                                                          6,256                                 3,985      
+Undistributed earnings from investments in equity affiliates                                          15                                    64      
+Provision for uncollectible accounts                                                                 596                                 1,199      
+Deferred income tax expense                                                                        1,772                                   653      
+Net (gain) loss on investments, net of impairments                                                 (237)                                 (705)      
+Pension and postretirement benefit expense (credit)                                              (1,899)                               (1,495)      
+Actuarial (gain) loss on pension and postretirement benefits                                     (2,647)                                     —      
+Asset impairments and abandonments                                                                 4,555                                 2,442      
+Changes in operating assets and liabilities:                                                                                                        
+Receivables                                                                                        1,415                                 2,522      
+Other current assets, inventories and theatrical film and television production costs            (6,985)                               (5,592)      
+Accounts payable and other accrued liabilities                                                   (4,298)                               (3,847)      
+Equipment installment receivables and related sales                                                  811                                   226      
+Deferred customer contract acquisition and fulfillment costs                                         410                                   322      
+Postretirement claims and contributions                                                            (207)                                 (228)      
+Other - net                                                                                        (106)                                   346      
+Total adjustments                                                                                 11,021                                14,399      
+Net Cash Provided by Operating Activities                                                         20,837                                20,925      
+Investing Activities                                                                                                                                
+Capital expenditures                                                                             (7,992)                               (9,432)      
+Acquisitions, net of cash acquired                                                              (23,169)                               (1,174)      
+Dispositions                                                                                         635                                   347      
+Other - net                                                                                        (105)                                  (19)      
+Net Cash Used in Investing Activities                                                           (30,631)                              (10,278)      
+Financing Activities                                                                                                                                
+Net change in short-term borrowings with original maturities of three months or less                  76                                   498      
+Issuance of other short-term borrowings                                                           16,440                                 8,440      
+Repayment of other short-term borrowings                                                           (857)                               (5,975)      
+Issuance of long-term debt                                                                         9,097                                21,060      
+Repayment of long-term debt                                                                      (1,155)                              (17,284)      
+Payment of vendor financing                                                                      (2,994)                               (1,354)      
+Issuance of preferred stock                                                                            —                                 3,869      
+Purchase of treasury stock                                                                         (185)                               (5,480)      
+Issuance of treasury stock                                                                            85                                    84      
+Dividends paid                                                                                   (7,571)                               (7,474)      
+Other - net                                                                                      (1,036)                               (2,295)      
+Net Cash Provided by (Used in) Financing Activities                                               11,900                               (5,911)      
+Net increase in cash and cash equivalents and restricted cash                                      2,106                                 4,736      
+Cash and cash equivalents and restricted cash beginning of year                                    9,870                                12,295      
+Cash and Cash Equivalents and Restricted Cash End of Period                                      $11,976                               $17,031      
+3
+
+
+
+AT&amp;T Inc.                                                                                                                                                  
+Consolidated Supplementary Data                                                                                                                                
+Supplementary Financial Data                                                                                                                                   
+Dollars in millions except per share amounts                                                                                                                   
+Unaudited                                                                    Second Quarter          Percent                  Six-Month Period          Percent
+2021                                                                                   2020           Change             2021             2020           Change
+Capital expenditures                                                                                                                                           
+Purchase of property and equipment                             $3,926           $4,434           (11.5)    %      $7,898           $9,372           (15.7)    %
+Interest during construction - capital expenditures                33               32              3.1    %          94               60             56.7    %
+Total Capital Expenditures                                     $3,959           $4,466           (11.4)    %      $7,992           $9,432           (15.3)    %
+Acquisition, net of cash acquired                                                                                                                              
+Business acquisitions                                             $18             $125           (85.6)    %         $26             $128           (79.7)    %
+Spectrum acquisitions                                              10              949           (98.9)    %      22,886            1,046                —    %
+Interest during construction - spectrum                           257                —                —    %         257                —                —    %
+Total Acquisitions                                               $285           $1,074           (73.5)    %     $23,169           $1,174                —    %
+Cash Paid for Programming and Produced Film/TV                 $5,261           $2,897             81.6    %      $9,769           $7,219             35.3    %
+Content                                                                                                                                                        
+Dividends Declared per Common Share                             $0.52            $0.52                —    %       $1.04            $1.04                —    %
+End of Period Common Shares Outstanding                                                                            7,140            7,125              0.2    %
+(000,000)                                                                                                                                                      
+Debt Ratio                                                                                                          50.0    %        46.6    %         340   BP
+Total Employees                                                                                                  226,840          243,350            (6.8)    %
+4
+
+
+COMMUNICATIONS SEGMENT
+The Communications segment provides wireless and wireline telecom and broadband services to consumers located in the U.S. and businesses globally. The Communications segment contains three reporting units: Mobility, Business Wireline, and Consumer Wireline.Results have been recast to remove the Video business, instead reporting those results in Corporate and Other.
+
+Segment Results                                                                                                                                 
+Dollars in millions                                                                                                                             
+Unaudited                                                     Second Quarter          Percent                  Six-Month Period          Percent
+2021                                                                    2020           Change             2021             2020           Change
+Segment Operating Revenues                                                                                                                      
+Mobility                                       $18,936          $17,149             10.4    %     $37,970          $34,551              9.9    %
+Business Wireline                                6,052            6,305            (4.0)    %      12,098           12,571            (3.8)    %
+Consumer Wireline                                3,140            3,051              2.9    %       6,238            6,162              1.2    %
+Total Segment Operating Revenues                28,128           26,505              6.1    %      56,306           53,284              5.7    %
+Segment Operating Contribution                                                                                                                  
+Mobility                                         6,002            5,805              3.4    %      12,004           11,593              3.5    %
+Business Wireline                                1,050            1,290           (18.6)    %       2,108            2,383           (11.5)    %
+Consumer Wireline                                  288              393           (26.7)    %         593              913           (35.0)    %
+Total Segment Operating Contribution            $7,340           $7,488            (2.0)    %     $14,705          $14,889            (1.2)    %
+
+Supplementary Operating Data                                                                                                                 
+Subscribers and connections in thousands                                                                                                     
+Unaudited                                                                                                           June 30,   Percent       
+                                                                              2021                                      2020   Change        
+Broadband Connections                                                                                                                        
+IP                                                                                              14,988           14,548              3.0   % 
+DSL                                                                           493                                   653        (24.5)      % 
+Total Broadband Connections                                                                     15,481           15,201              1.8   % 
+Voice Connections                                                                                                                            
+Network Access Lines                                                                             6,691            7,878        (15.1)      % 
+U-verse VoIP Connections                                                                         3,559            4,058        (12.3)      % 
+Total Retail Voice Connections                                                                  10,250           11,936        (14.1)      % 
+                                                             Second Quarter   Percent                       Six-Month Period   Percent       
+2021                                                                   2020   Change                   2021             2020   Change        
+Broadband Net Additions                                                                                                                      
+IP                                                   80           (79)        —         %          170            (111)        —           % 
+DSL                                                (34)           (35)            2.9   %         (73)             (77)              5.2   % 
+Total Broadband Net Additions                        46          (114)        —         %           97            (188)        —           % 
+5
+
+
+Mobility
+Mobility provides nationwide wireless service and equipment.    
+
+Mobility Results                                                                                                                               
+Dollars in millions                                                                                                                            
+Unaudited                                                        Second Quarter        Percent                  Six-Month Period        Percent
+2021                                                                       2020         Change             2021             2020         Change
+Operating Revenues                                                                                                                             
+Service                                           $14,346          $13,669            5.0    %     $28,394          $27,637            2.7    %
+Equipment                                           4,590            3,480           31.9    %       9,576            6,914           38.5    %
+Total Operating Revenues                           18,936           17,149           10.4    %      37,970           34,551            9.9    %
+Operating Expenses                                                                                                                             
+Operations and support                             10,911            9,332           16.9    %      21,929           18,901           16.0    %
+Depreciation and amortization                       2,023            2,012            0.5    %       4,037            4,057          (0.5)    %
+Total Operating Expenses                           12,934           11,344           14.0    %      25,966           22,958           13.1    %
+Operating Income                                    6,002            5,805            3.4    %      12,004           11,593            3.5    %
+Equity in Net Income (Loss) of Affiliates               —                —              —    %           —                —              —    %
+Operating Contribution                             $6,002           $5,805            3.4    %     $12,004          $11,593            3.5    %
+Operating Income Margin                              31.7    %        33.9    %     (220)   BP        31.6    %        33.6    %     (200)   BP
+Supplementary Operating Data                                                                                                                   
+Subscribers and connections in thousands                                                                                                       
+Unaudited                                                                                                               June 30,        Percent
+                                                                                                           2021             2020         Change
+Mobility Subscribers                                                                                                                           
+Postpaid                                                                                            79,059           74,919            5.5    %
+Postpaid phone                                                                                      65,503           62,882            4.2    %
+Prepaid                                                                                             18,681           18,008            3.7    %
+Reseller                                                                                             6,406            6,718          (4.6)    %
+Connected Devices                                                                                   87,500           71,762           21.9    %
+Total Mobility Subscribers                                                                         191,646          171,407           11.8    %
+                                                                 Second Quarter        Percent                  Six-Month Period        Percent
+2021                                                                       2020         Change             2021             2020         Change
+Mobility Net Additions                                                                                                                         
+Postpaid Phone Net Additions                          789            (151)              —    %       1,384               12              —    %
+Total Phone Net Additions                             963             (16)              —    %       1,765              104              —    %
+Postpaid                                            1,156            (154)              —    %       1,979            (127)              —    %
+Prepaid                                               297              165           80.0    %         576              120              —    %
+Reseller                                            (125)             (58)              —    %       (193)            (248)           22.2    %
+Connected Devices                                   4,209            2,255           86.7    %       6,726            5,773           16.5    %
+Total Mobility Net Additions                        5,537            2,208              —    %       9,088            5,518           64.7    %
+Postpaid Churn                                       0.87    %        1.05    %        (18) BP        0.90    %        1.06    %        (16) BP
+Postpaid Phone-Only Churn                            0.69    %        0.84    %        (15) BP        0.73    %        0.85    %        (12) BP
+6
+
+
+Business Wireline
+Business Wireline provides advanced IP-based services, as well as traditional data services to business customers.Results have been recast to characterize revenues as either service or equipment, consistent with the way we are managing the business unit. 
+
+Business Wireline Results                                                                                                                          
+Dollars in millions                                                                                                                                
+Unaudited                                                        Second Quarter          Percent                  Six-Month Period          Percent
+2021                                                                       2020           Change             2021             2020           Change
+Operating Revenues                                                                                                                                 
+Service                                            $5,860           $6,101            (4.0)    %     $11,732          $12,192            (3.8)    %
+Equipment                                             192              204            (5.9)    %         366              379            (3.4)    %
+Total Operating Revenues                            6,052            6,305            (4.0)    %      12,098           12,571            (3.8)    %
+Operating Expenses                                                                                                                                 
+Operations and support                              3,709            3,714            (0.1)    %       7,419            7,601            (2.4)    %
+Depreciation and amortization                       1,293            1,301            (0.6)    %       2,571            2,587            (0.6)    %
+Total Operating Expenses                            5,002            5,015            (0.3)    %       9,990           10,188            (1.9)    %
+Operating Income                                    1,050            1,290           (18.6)    %       2,108            2,383           (11.5)    %
+Equity in Net Income (Loss) of Affiliates               —                —                —    %           —                —                —    %
+Operating Contribution                             $1,050           $1,290           (18.6)    %      $2,108           $2,383           (11.5)    %
+Operating Income Margin                              17.3    %        20.5    %       (320)   BP        17.4    %        19.0    %       (160)   BP
+
+7
+
+
+Consumer Wireline
+Consumer Wireline provides broadband, including fiber, and voice communication services primarily to residential customers.Results have been recast to refine the allocation of shared infrastructure and deferred customer acquisition costs between Consumer Wireline and Video.
+
+Consumer Wireline Results                                                                                                                          
+Dollars in millions                                                                                                                                
+Unaudited                                                        Second Quarter          Percent                  Six-Month Period          Percent
+2021                                                                       2020           Change             2021             2020           Change
+Operating Revenues                                                                                                                                 
+Broadband                                          $2,266           $2,092              8.3    %      $4,471           $4,201              6.4    %
+Legacy voice and data services                        504              560           (10.0)    %       1,023            1,141           (10.3)    %
+Other service and equipment                           370              399            (7.3)    %         744              820            (9.3)    %
+Total Operating Revenues                            3,140            3,051              2.9    %       6,238            6,162              1.2    %
+Operating Expenses                                                                                                                                 
+Operations and support                              2,083            1,928              8.0    %       4,114            3,807              8.1    %
+Depreciation and amortization                         769              730              5.3    %       1,531            1,442              6.2    %
+Total Operating Expenses                            2,852            2,658              7.3    %       5,645            5,249              7.5    %
+Operating Income                                      288              393           (26.7)    %         593              913           (35.0)    %
+Equity in Net Income (Loss) of Affiliates               —                —                —    %           —                —                —    %
+Operating Contribution                               $288             $393           (26.7)    %        $593             $913           (35.0)    %
+Operating Income Margin                               9.2    %        12.9    %       (370)   BP         9.5    %        14.8    %       (530)   BP
+Supplementary Operating Data                                                                                                                       
+Subscribers and connections in thousands                                                                                                           
+Unaudited                                                                                                                 June 30,          Percent
+                                                                                                             2021             2020           Change
+Broadband Connections                                                                                                                              
+Total Broadband and DSL Connections                                                                   14,174           13,944              1.6    %
+Fiber Broadband Connections                                                                            5,432            4,321             25.7    %
+Voice Connections                                                                                                                                  
+Retail Consumer Switched Access Lines                                                                  2,631            3,096           (15.0)    %
+U-verse Consumer VoIP Connections                                                                      2,965            3,480           (14.8)    %
+Total Retail Consumer Voice Connections                                                                5,596            6,576           (14.9)    %
+                                                                 Second Quarter          Percent                  Six-Month Period          Percent
+2021                                                                       2020           Change             2021             2020           Change
+Broadband Net Additions                                                                                                                            
+Total Broadband and DSL Net Additions                  28            (102)                —    %          74            (175)                —    %
+Fiber Broadband Net Additions                         246              225              9.3    %         481              434             10.8    %
+8
+
+
+Business Solutions
+As a supplemental presentation to our Communications segment operating results, we are providing a view of our AT&T Business Solutions results which includes both wireless and fixed operations. This combined view presents a complete profile of the entire business customer relationship and underscores the importance of mobile solutions to serving our business customers. Results have been recast to conform to the current period's classification of revenues.
+
+Business Solutions Results                                                                                                                       
+Dollars in millions                                                                                                                              
+Unaudited                                                        Second Quarter          Percent                  Six-Month Period        Percent
+2021                                                                       2020           Change             2021             2020         Change
+Operating Revenues                                                                                                                               
+Wireless service                                   $2,025           $1,885              7.4    %      $3,994           $3,834            4.2    %
+Wireline service                                    5,860            6,101            (4.0)    %      11,732           12,192          (3.8)    %
+Wireless equipment                                    781              585             33.5    %       1,571            1,295           21.3    %
+Wireline equipment                                    192              204            (5.9)    %         366              379          (3.4)    %
+Total Operating Revenues                            8,858            8,775              0.9    %      17,663           17,700          (0.2)    %
+Operating Expenses                                                                                                                               
+Operations and support                              5,663            5,360              5.7    %      11,212           11,006            1.9    %
+Depreciation and amortization                       1,638            1,621              1.0    %       3,252            3,230            0.7    %
+Total Operating Expenses                            7,301            6,981              4.6    %      14,464           14,236            1.6    %
+Operating Income                                    1,557            1,794           (13.2)    %       3,199            3,464          (7.7)    %
+Equity in Net Income (Loss) of Affiliates               —                —                —    %           —                —              —    %
+Operating Contribution                             $1,557           $1,794           (13.2)    %      $3,199           $3,464          (7.7)    %
+Operating Income Margin                              17.6    %        20.4    %       (280)   BP        18.1    %        19.6    %     (150)   BP
+9
+
+
+WARNERMEDIA SEGMENT
+The WarnerMedia segment develops, produces and distributes feature films, television, gaming and other content in various physical and digital formats globally. WarnerMedia content is distributed through basic networks, Direct-to-Consumer (DTC) or theatrical, TV content and games licensing. Segment results also include Xandr advertising and Otter Media Holdings. Additional information is provided as part of the earnings material on the company’s Investor Relations website.
+
+Segment Results                                                                                                                                  
+Dollars in millions                                                                                                                              
+Unaudited                                                        Second Quarter          Percent                  Six-Month Period        Percent
+2021                                                                       2020           Change             2021             2020         Change
+Segment Operating Revenues                                                                                                                       
+Subscription                                       $3,961           $3,265             21.3    %      $7,791           $6,665           16.9    %
+Content and other                                   3,091            2,292             34.9    %       6,050            5,192           16.5    %
+Advertising                                         1,739            1,171             48.5    %       3,476            2,636           31.9    %
+Total Segment Operating Revenues                    8,791            6,728             30.7    %      17,317           14,493           19.5    %
+Direct Costs                                                                                                                                     
+Programming                                         4,154            2,375             74.9    %       7,928            5,457           45.3    %
+Marketing                                             983              545             80.4    %       1,833            1,095           67.4    %
+Other                                                 854              820              4.1    %       1,667            1,595            4.5    %
+General and administrative                            943              916              2.9    %       1,909            2,114          (9.7)    %
+Depreciation and amortization                         165              164              0.6    %         328              325            0.9    %
+Total Operating Expenses                            7,099            4,820             47.3    %      13,665           10,586           29.1    %
+Operating Income                                    1,692            1,908           (11.3)    %       3,652            3,907          (6.5)    %
+Equity in Net Income (Loss) of Affiliates              47                4                —    %         117               19              —    %
+Total Segment Operating Contribution               $1,739           $1,912            (9.0)    %      $3,769           $3,926          (4.0)    %
+10
+
+
+LATIN AMERICA SEGMENT
+The Latin America segment provides entertainment and wireless service outside of the U.S. Our international subsidiaries conduct business in their local currency and operating results are converted to U.S. dollars using official exchange rates. The Latin America segment contains two business units: Vrio and Mexico.
+
+Segment Results                                                                                                                             
+Dollars in millions                                                                                                                         
+Unaudited                                                     Second Quarter        Percent                  Six-Month Period        Percent
+2021                                                                    2020         Change             2021             2020         Change
+Segment Operating Revenues                                                                                                                  
+Vrio                                              $749             $752          (0.4)    %      $1,492           $1,639          (9.0)    %
+Mexico                                             688              480           43.3    %       1,319            1,183           11.5    %
+Total Segment Operating Revenues                 1,437            1,232           16.6    %       2,811            2,822          (0.4)    %
+Segment Operating Contribution                                                                                                              
+Vrio                                              (23)             (28)           17.9    %        (62)             (67)            7.5    %
+Mexico                                           (129)            (173)           25.4    %       (263)            (318)           17.3    %
+Total Segment Operating Contribution            $(152)           $(201)           24.4    %      $(325)           $(385)           15.6    %
+Vrio
+Vrio provides entertainment services to customers utilizing satellite technology in Latin America and the Caribbean.
+
+Vrio Results                                                                                                                                   
+Dollars in millions                                                                                                                            
+Unaudited                                                    Second Quarter          Percent                  Six-Month Period          Percent
+2021                                                                   2020           Change             2021             2020           Change
+Operating Revenues                                 $749           $752            (0.4)    %      $1,492           $1,639            (9.0)    %
+Operating Expenses                                                                                                                             
+Operations and support                              660            661            (0.2)    %       1,321            1,444            (8.5)    %
+Depreciation and amortization                       114            127           (10.2)    %         231              274           (15.7)    %
+Total Operating Expenses                            774            788            (1.8)    %       1,552            1,718            (9.7)    %
+Operating Income (Loss)                            (25)           (36)             30.6    %        (60)             (79)             24.1    %
+Equity in Net Income (Loss) of Affiliates             2              8           (75.0)    %         (2)               12                —    %
+Operating Contribution                            $(23)          $(28)             17.9    %       $(62)            $(67)              7.5    %
+Operating Income Margin                           (3.3)    %     (4.8)    %         150   BP       (4.0)    %       (4.8)    %          80   BP
+Supplementary Operating Data                                                                                                                   
+Subscribers and connections in thousands                                                                                                       
+Unaudited                                                                                                             June 30,          Percent
+                                                                                                         2021             2020           Change
+Vrio Video Subscribers                                                                            10,320           10,664            (3.2)    %
+                                                             Second Quarter          Percent                  Six-Month Period          Percent
+2021                                                                   2020           Change             2021             2020           Change
+Vrio Video Net Additions                          (239)          (312)             23.4    %       (622)            (426)           (46.0)    %
+11
+
+
+Mexico
+Mexico provides wireless services and equipment to customers in Mexico.
+
+Mexico Results                                                                                                                                   
+Dollars in millions                                                                                                                              
+Unaudited                                                        Second Quarter        Percent                  Six-Month Period          Percent
+2021                                                                       2020         Change             2021             2020           Change
+Operating Revenues                                                                                                                               
+Wireless service                                     $447             $345           29.6    %        $886             $812              9.1    %
+Wireless equipment                                    241              135           78.5    %         433              371             16.7    %
+Total Operating Revenues                              688              480           43.3    %       1,319            1,183             11.5    %
+Operating Expenses                                                                                                                               
+Operations and support                                667              538           24.0    %       1,287            1,252              2.8    %
+Depreciation and amortization                         150              115           30.4    %         295              249             18.5    %
+Total Operating Expenses                              817              653           25.1    %       1,582            1,501              5.4    %
+Operating Income (Loss)                             (129)            (173)           25.4    %       (263)            (318)             17.3    %
+Equity in Net Income (Loss) of Affiliates               —                —              —    %           —                —                —    %
+Operating Contribution                             $(129)           $(173)           25.4    %      $(263)           $(318)             17.3    %
+Operating Income Margin                            (18.8)    %      (36.0)    %     1,720   BP      (19.9)    %      (26.9)    %         700   BP
+Supplementary Operating Data                                                                                                                     
+Subscribers and connections in thousands                                                                                                         
+Unaudited                                                                                                               June 30,          Percent
+                                                                                                           2021             2020           Change
+Mexico Wireless Subscribers                                                                                                                      
+Postpaid                                                                                             4,745            4,771            (0.5)    %
+Prepaid                                                                                             13,810           12,777              8.1    %
+Reseller                                                                                               491              425             15.5    %
+Total Mexico Wireless Subscribers                                                                   19,046           17,973              6.0    %
+                                                                 Second Quarter        Percent                  Six-Month Period          Percent
+2021                                                                       2020         Change             2021             2020           Change
+Mexico Wireless Net Additions                                                                                                                    
+Postpaid                                               20            (191)              —    %          49            (332)                —    %
+Prepaid                                                54            (915)              —    %          52            (807)                —    %
+Reseller                                              (9)               21              —    %           2               53           (96.2)    %
+Total Mexico Wireless Net Additions                    65          (1,085)              —    %         103          (1,086)                —    %
+12
+
+
+Video
+As a supplemental presentation, we are providing a view of our Video business that is included in Corporate and Other. Video provides video, including over-the-top (OTT) services and also sells advertising on video distribution platforms. Results have been recast to refine the allocation of shared infrastructure and deferred customer acquisition costs between Video and Consumer Wireline.
+
+Video Results                                                                                                                                                                                                                                      
+Dollars in millions                                                                                                                                                                                                                                
+Unaudited                                                                                        Second Quarter                          Percent                                                  Six-Month Period                          Percent
+2021                                                                                                       2020                           Change                             2021                             2020                           Change
+Operating Revenues                                                                                                                                                                                                                                 
+Service                                                      $6,607                           $6,979                            (5.3)          %               $13,291                          $14,376                            (7.5)          %
+Equipment                                                        32                               42                           (23.8)          %                    73                               52                             40.4          %
+Total Operating Revenues                                      6,639                            7,021                            (5.4)          %                13,364                           14,428                            (7.4)          %
+Operating Expenses                                                                                                                                                                                                                                 
+Operations and support                                        5,275                            5,809                            (9.2)          %                10,935                           11,829                            (7.6)          %
+Depreciation and amortization1                                  148                              593                           (75.0)          %                   312                            1,184                           (73.6)          %
+Total Operating Expenses                                      5,423                            6,402                           (15.3)          %                11,247                           13,013                           (13.6)          %
+Operating Income                                              1,216                              619                             96.4          %                 2,117                            1,415                             49.6          %
+Equity in Net Income (Loss) of Affiliates                         —                                —                                —          %                     —                                —                                —          %
+Operating Contribution                                       $1,216                             $619                             96.4          %                $2,117                           $1,415                             49.6          %
+Operating Income Margin                                        18.3          %                   8.8          %                   950         BP                  15.8          %                   9.8          %                   600         BP
+1Includes depreciation on assets that support AT&amp;T U-verse products that provide both video and broadband services to customers over a shared network infrastructure.                                                                          
+Supplementary Operating Data                                                                                                                                                                                                                       
+Subscribers and connections in thousands                                                                                                                                                                                                           
+Unaudited                                                                                                                                                                                                 June 30,                          Percent
+                                                                                                                                                                             2021                             2020                           Change
+Premium TV Connections                                                                                                                                          15,412                           17,712                           (13.0)          %
+                                                                                                 Second Quarter                          Percent                                                  Six-Month Period                          Percent
+2021                                                                                                       2020                           Change                             2021                             2020                           Change
+Premium TV Net Additions                                      (473)                            (887)                             46.7          %               (1,093)                          (1,784)                             38.7          %
+13
+
+
+SUPPLEMENTAL SEGMENT RECONCILIATION
+
+Three Months Ended                                                                                                                                                             
+Dollars in millions                                                                                                                                                            
+Unaudited                                                                                                                                                                      
+June 30, 2021                                                                                                                                                                  
+                                             Revenues        Operations           EBITDA         Depreciation            Operating           Equity in Net              Segment
+                                                            and Support                                   and        Income (Loss)        Income (Loss) of         Contribution
+                                                               Expenses                          Amortization                                   Affiliates                     
+Communications                                                                                                                                                                 
+Mobility                                 $18,936          $10,911            $8,025             $2,023               $6,002                     $—                $6,002       
+Business Wireline                          6,052            3,709             2,343              1,293                1,050                      —                 1,050       
+Consumer Wireline                          3,140            2,083             1,057                769                  288                      —   288                       
+Total Communications                      28,128           16,703            11,425              4,085                7,340                      —                 7,340       
+WarnerMedia                                8,791            6,934             1,857                165                1,692                     47                 1,739       
+Latin America                                                                                                                                                                  
+Vrio                                         749              660                89                114                 (25)                      2                  (23)       
+Mexico                                       688              667                21                150                (129)                      —                 (129)       
+Total Latin America                        1,437            1,327               110                264                (154)                      2                 (152)       
+Segment Total                             38,356           24,964            13,392              4,514                8,878                    $49                $8,927       
+Corporate and Other                                                                                                                                                            
+Corporate                                    361            1,160             (799)                 30                (829)                                                    
+Video                                      6,639            5,275             1,364                148                1,216                                                    
+Acquisition-related items                      —                —                 —              1,069              (1,069)                                                    
+Certain significant items                      —            4,555           (4,555)                  —              (4,555)                                                    
+Eliminations and consolidations          (1,311)            (939)             (372)                  —                (372)                                                    
+AT&amp;T Inc.                            $44,045          $35,015            $9,030             $5,761               $3,269                                                    
+14
+
+
+
+Three Months Ended                                                                                                                                                                                                                
+Dollars in millions                                                                                                                                                                                                               
+Unaudited                                                                                                                                                                                                                         
+June 30, 2020                                                                                                                                                                                                                     
+                                             Revenues        Operations and Support Expenses           EBITDA       Depreciation and Amortization       Operating Income (Loss)           Equity in Net       Segment Contribution
+                                                                                                                                                                                       Income (Loss) of                           
+                                                                                                                                                                                             Affiliates                           
+Communications                                                                                                                                                                                                                    
+Mobility                                 $17,149                         $9,332                   $7,817                       $2,012                          $5,805                        $—                    $5,805         
+Business Wireline                          6,305                          3,714                    2,591                        1,301                           1,290                         —                     1,290         
+Consumer Wireline                          3,051                          1,928                    1,123                          730                             393                         —   393                             
+Total Communications                      26,505                         14,974                   11,531                        4,043                           7,488                         —                     7,488         
+WarnerMedia                                6,728                          4,656                    2,072                          164                           1,908                         4                     1,912         
+Latin America                                                                                                                                                                                                                     
+Vrio                                         752                            661                       91                          127                            (36)                         8                      (28)         
+Mexico                                       480                            538                     (58)                          115                           (173)                         —                     (173)         
+Total Latin America                        1,232                          1,199                       33                          242                           (209)                         8                     (201)         
+Segment Total                             34,465                         20,829                   13,636                        4,449                           9,187                       $12                    $9,199         
+Corporate and Other                                                                                                                                                                                                               
+Corporate                                    589                          1,069                    (480)                           99                           (579)                                                             
+Video                                      7,021                          5,809                    1,212                          593                             619                                                             
+Acquisition-related items                      —                            211                    (211)                        2,145                         (2,356)                                                             
+Certain significant items                      —                          3,084                  (3,084)                            —                         (3,084)                                                             
+Eliminations and consolidations          (1,125)                          (869)                    (256)                          (1)                           (255)                                                             
+AT&amp;T Inc.                            $40,950                        $30,133                  $10,817                       $7,285                          $3,532                                                             
+15
+
+
+SUPPLEMENTAL SEGMENT RECONCILIATION
+
+Six Months Ended                                                                                                                                                               
+Dollars in millions                                                                                                                                                            
+Unaudited                                                                                                                                                                      
+June 30, 2021                                                                                                                                                                  
+                                             Revenues        Operations           EBITDA         Depreciation            Operating           Equity in Net              Segment
+                                                            and Support                                   and        Income (Loss)        Income (Loss) of         Contribution
+                                                               Expenses                          Amortization                                   Affiliates                     
+Communications                                                                                                                                                                 
+Mobility                                 $37,970          $21,929           $16,041             $4,037              $12,004                     $—               $12,004       
+Business Wireline                         12,098            7,419             4,679              2,571                2,108                      —                 2,108       
+Consumer Wireline                          6,238            4,114             2,124              1,531                  593                      —   593                       
+Total Communications                      56,306           33,462            22,844              8,139               14,705                      —                14,705       
+WarnerMedia                               17,317           13,337             3,980                328                3,652                    117                 3,769       
+Latin America                                                                                                                                                                  
+Vrio                                       1,492            1,321               171                231                 (60)                    (2)                  (62)       
+Mexico                                     1,319            1,287                32                295                (263)                      —                 (263)       
+Total Latin America                        2,811            2,608               203                526                (323)                    (2)                 (325)       
+Segment Total                             76,434           49,407            27,027              8,993               18,034                   $115               $18,149       
+Corporate and Other                                                                                                                                                            
+Corporate                                    787            2,373           (1,586)                 65              (1,651)                                                    
+Video                                     13,364           10,935             2,429                312                2,117                                                    
+Acquisition-related items                      —               37              (37)              2,200              (2,237)                                                    
+Certain significant items                      —            4,612           (4,612)                  —              (4,612)                                                    
+Eliminations and consolidations          (2,601)          (1,880)             (721)                  —                (721)                                                    
+AT&amp;T Inc.                            $87,984          $65,484           $22,500            $11,570              $10,930                                                    
+16
+
+
+
+Six Months Ended                                                                                                                                                                                                                  
+Dollars in millions                                                                                                                                                                                                               
+Unaudited                                                                                                                                                                                                                         
+June 30, 2020                                                                                                                                                                                                                     
+                                             Revenues        Operations and Support Expenses           EBITDA       Depreciation and Amortization       Operating Income (Loss)           Equity in Net       Segment Contribution
+                                                                                                                                                                                       Income (Loss) of                           
+                                                                                                                                                                                             Affiliates                           
+Communications                                                                                                                                                                                                                    
+Mobility                                 $34,551                        $18,901                  $15,650                       $4,057                         $11,593                        $—                   $11,593         
+Business Wireline                         12,571                          7,601                    4,970                        2,587                           2,383                         —                     2,383         
+Consumer Wireline                          6,162                          3,807                    2,355                        1,442                             913                         —   913                             
+Total Communications                      53,284                         30,309                   22,975                        8,086                          14,889                         —                    14,889         
+WarnerMedia                               14,493                         10,261                    4,232                          325                           3,907                        19                     3,926         
+Latin America                                                                                                                                                                                                                     
+Vrio                                       1,639                          1,444                      195                          274                            (79)                        12                      (67)         
+Mexico                                     1,183                          1,252                     (69)                          249                           (318)                         —                     (318)         
+Total Latin America                        2,822                          2,696                      126                          523                           (397)                        12                     (385)         
+Segment Total                             70,599                         43,266                   27,333                        8,934                          18,399                       $31                   $18,430         
+Corporate and Other                                                                                                                                                                                                               
+Corporate                                  1,123                          2,081                    (958)                          189                         (1,147)                                                             
+Video                                     14,428                         11,829                    2,599                        1,184                           1,415                                                             
+Acquisition-related items                      —                            393                    (393)                        4,201                         (4,594)                                                             
+Certain significant items                      —                          2,426                  (2,426)                            —                         (2,426)                                                             
+Eliminations and consolidations          (2,421)                        (1,791)                    (630)                          (1)                           (629)                                                             
+AT&amp;T Inc.                            $83,729                        $58,204                  $25,525                      $14,507                         $11,018                                                             
+17
+
+
+
+

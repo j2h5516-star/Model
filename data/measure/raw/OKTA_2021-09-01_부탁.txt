@@ -1,0 +1,330 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — OKTA 2021-09-01
+# 출처: https://www.sec.gov/Archives/edgar/data/1660134/000166013421000019/okta-20210901.htm
+
+Document
+
+Okta Announces Strong Second Quarter Results
+•Q2 revenue grew 57% year-over-year; subscription revenue grew 59% year-over-year 
+•Remaining performance obligations (RPO) grew 57% year-over-year to $2.24 billion 
+•Increases revenue and operating profit outlook for fiscal 2022
+SAN FRANCISCO – September 1, 2021 – Okta, Inc. (Nasdaq: OKTA), the leading independent identity provider, today announced financial results for its second quarter ended July 31, 2021. 
+"In our first quarter as a combined company with Auth0, we're off to a fantastic start," said Todd McKinnon, Chief Executive Officer and co-founder of Okta. "Execution remained sharp with strong demand for Okta's workforce and customer identity solutions, as well as Auth0's developer-centric identity solutions. As organizations advance on their journey of improving their customers' digital experience, adopting zero-trust security environments, and deploying more cloud applications, they continue to turn to Okta to deliver an unmatched array of modern identity solutions to meet these challenges." 
+Second Quarter Fiscal 2022 Financial Highlights:
+•Revenue: Total revenue was $316 million, an increase of 57% year-over-year. Subscription revenue was $303 million, an increase of 59% year-over-year. On an Okta standalone basis (excluding $38 million attributable to Auth0), total revenue grew 39%.
+•Remaining Performance Obligations (RPO): RPO, or subscription backlog, was $2.24 billion, an increase of 57% year-over-year. Current RPO, which is contracted subscription revenue expected to be recognized over the next 12 months, was $1.10 billion, up 60% compared to the second quarter of fiscal 2021. On an Okta standalone basis (excluding Auth0), RPO and current RPO increased 42% and 43% year-over-year, respectively. 
+•Calculated Billings: Total calculated billings, net of acquired deferred revenue, was $362 million, an increase of 83% year-over-year. Calculated billings includes the effect of billings process improvements that were enacted at the end of the first quarter of fiscal 2022. Excluding these changes, calculated billings would have been $345 million, an increase of 74% year-over-year. On an Okta standalone basis, excluding Auth0 and the effect of the billings process improvements, calculated billings increased 47% year-over-year. 
+•GAAP Operating Loss: GAAP operating loss was $263 million, or 83% of total revenue, compared to a GAAP operating loss of $45 million, or 23% of total revenue, in the second quarter of fiscal 2021. 
+•Non-GAAP Operating Income/Loss: Non-GAAP operating loss was $25 million, or 8% of total revenue, compared to non-GAAP operating income of $6 million, or 3% of total revenue, in the second quarter of fiscal 2021. 
+•GAAP Net Loss: GAAP net loss was $277 million, compared to a GAAP net loss of $60 million in the second quarter of fiscal 2021. GAAP net loss per share was $1.83, compared to a GAAP net loss per share of $0.48 in the second quarter of fiscal 2021. GAAP net loss and GAAP net loss per share include $150 million and $0.99, respectively, attributable to Auth0. 
+1
+
+
+•Non-GAAP Net Income/Loss: Non-GAAP net loss was $16 million, compared to non-GAAP net income of $10 million in the second quarter of fiscal 2021. Non-GAAP basic and diluted net loss per share was $0.11, compared to non-GAAP basic net income per share of $0.08 and non-GAAP diluted net income per share of $0.07 in the second quarter of fiscal 2021. 
+•Cash Flow: Net cash used in operations was $3 million, or (1)% of total revenue, compared to net cash provided by operations of $11 million, or 5% of total revenue, in the second quarter of fiscal 2021. Free cash flow was negative $4 million, or (1)% of total revenue, compared to $7 million, or 3% of total revenue, in the second quarter of fiscal 2021. 
+•Cash, cash equivalents, and short-term investments were $2.47 billion at July 31, 2021. 
+The section titled "Non-GAAP Financial Measures" below contains a description of the non-GAAP financial measures, and reconciliations between GAAP and non-GAAP information are contained in the tables below.
+Financial Outlook: 
+Okta's financial outlook for the third quarter and full year fiscal 2022 includes the expected contribution from the acquisition of Auth0, net of purchase accounting adjustments. The acquisition closed on May 3, 2021.
+For the third quarter of fiscal 2022, the Company expects: 
+•Total revenue of $325 million to $327 million, representing a growth rate of 50% year-over-year; 
+•Non-GAAP operating loss of $35 million to $34 million; and 
+•Non-GAAP net loss per share of $0.25 to $0.24, assuming weighted-average shares outstanding of approximately 153 million.
+For the full year fiscal 2022, the Company now expects:
+•Total revenue of $1.243 billion to $1.250 billion, representing a growth rate of 49% to 50% year-over-year; 
+•Non-GAAP operating loss of $119 million to $114 million; and 
+•Non-GAAP net loss per share of $0.77 to $0.74, assuming weighted-average shares outstanding of approximately 147 million.
+These statements are forward-looking and actual results may differ materially. Refer to the Forward-Looking Statements safe harbor below for information on the factors that could cause our actual results to differ materially from these forward-looking statements. 
+Okta has not reconciled its expectations as to non-GAAP operating loss and non-GAAP net loss per share to their most directly comparable GAAP measures because certain items are out of Okta’s control or cannot be reasonably predicted. Accordingly, reconciliations for forward-looking non-GAAP operating loss and non-GAAP net loss per share are not available without unreasonable effort.
+2
+
+
+Conference Call Information:
+Okta will host a live video webcast at 2:00 p.m. Pacific Time on September 1, 2021 to discuss the results and outlook. The news release with the financial results will be accessible from the Company’s website at investor.okta.com prior to the conference call. The live video webcast of the conference call will be accessible from the Okta investor relations website at investor.okta.com.
+Supplemental Financial and Other Information:
+Supplemental financial and other information can be accessed through the Company’s investor relations website at investor.okta.com. 
+Non-GAAP Financial Measures:
+This press release and the accompanying tables contain the following non-GAAP financial measures: non-GAAP gross profit, non-GAAP gross margin, non-GAAP operating income (loss), non-GAAP operating margin, non-GAAP net income (loss), non-GAAP net margin, non-GAAP net income (loss) per share, basic and diluted, free cash flow, free cash flow margin, current calculated billings and calculated billings. Certain of these non-GAAP financial measures exclude stock-based compensation, non-cash charitable contributions, amortization of acquired intangibles, acquisition and integration-related expenses, amortization of debt discount and debt issuance costs and loss on early extinguishment and conversion of debt.
+Okta believes that non-GAAP financial information, when taken collectively with GAAP financial measures, may be helpful to investors because it provides consistency and comparability with past financial performance and assists in comparisons with other companies, some of which use similar non-GAAP financial information to supplement their GAAP results. The non-GAAP financial information is presented for supplemental informational purposes only, and should not be considered a substitute for financial information presented in accordance with GAAP, and may be different from similarly-titled non-GAAP measures used by other companies. 
+The principal limitation of these non-GAAP financial measures is that they exclude significant expenses that are required by GAAP to be recorded in the Company’s financial statements. In addition, they are subject to inherent limitations as they reflect the exercise of judgment by the Company's management about which expenses are excluded or included in determining these non-GAAP financial measures. A reconciliation is provided below for each non-GAAP financial measure to the most directly comparable financial measure stated in accordance with GAAP.
+Okta encourages investors to review the related GAAP financial measures and the reconciliation of these non-GAAP financial measures to their most directly comparable GAAP financial measures, which it includes in press releases announcing quarterly financial results, including this press release, and not to rely on any single financial measure to evaluate the Company’s business. 
+3
+
+
+Forward-Looking Statements: This press release contains "forward-looking statements" within the meaning of the "safe harbor" provisions of the Private Securities Litigation Reform Act of 1995, including but not limited to, statements regarding our financial outlook, business strategy and plans, market trends and market size, opportunities and positioning and expected benefits that will be derived from the Auth0 transaction. These forward-looking statements are based on current expectations, estimates, forecasts and projections. Words such as "expect," "anticipate," "should," "believe," "hope," "target," "project," "goals," "estimate," "potential," "predict," "may," "will," "might," "could," "intend," "shall" and variations of these terms and similar expressions are intended to identify these forward-looking statements, although not all forward-looking statements contain these identifying words. Forward-looking statements are subject to a number of risks and uncertainties, many of which involve factors or circumstances that are beyond our control. For example, the market for our products may develop more slowly than expected or than it has in the past; our results of operations may fluctuate more than expected; there may be significant fluctuations in our results of operations and cash flows related to our revenue recognition or otherwise; the impact of COVID-19, related public health measures and any associated economic downturn on our business and results of operations may be more than we expect; a network or data security incident that allows unauthorized access to our network or data or our customers’ data could damage our reputation; we could experience interruptions or performance problems associated with our technology, including a service outage; we may not be able to pay off our convertible senior notes when due; global economic conditions could deteriorate; we may not achieve expected synergies and efficiencies of operations between Okta and Auth0, and we may not be able to successfully integrate the companies. Further information on potential factors that could affect our financial results is included in our most recent Quarterly Report on Form 10-Q and our other filings with the Securities and Exchange Commission. The forward-looking statements included in this press release represent our views only as of the date of this press release and we assume no obligation and do not intend to update these forward-looking statements.
+4
+
+
+About Okta
+Okta is the leading independent identity provider. The Okta Identity Cloud enables organizations to securely connect the right people to the right technologies at the right time. With more than 7,000 pre-built integrations to applications and infrastructure providers, Okta provides simple and secure access to people and organizations everywhere, giving them the confidence to reach their full potential. More than 13,050 organizations, including JetBlue, Nordstrom, Siemens, Slack, Takeda, Teach for America, and Twilio, trust Okta to help protect the identities of their workforces and customers.
+Okta uses its investor.okta.com website as a means of disclosing material non-public information, announcing upcoming investor conferences and for complying with its disclosure obligations under Regulation FD. Accordingly, you should monitor our investor relations website in addition to following our press releases, SEC filings and public conference calls and webcasts.
+Investor Contact:    
+Dave Gennarelli 
+investor@okta.com
+Media Contact:
+Adam Simons
+press@okta.com
+5
+
+
+OKTA, INC. 
+CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS 
+(In thousands, except per share data) 
+(unaudited)
+
+                                                                                                                      Three Months Ended                                             Six Months Ended
+                                                                                                                                July 31,                                                     July 31,
+2021                                                                                                     2020                              2021                         2020                         
+Revenue:                                                                                                                                                                                             
+Subscription                                                                             $303,121                          $190,689                      $543,179                        $364,470    
+Professional services and other                                                            12,379                             9,757                        23,327                          18,835    
+Total revenue                                                                             315,500                           200,446                       566,506                         383,305    
+Cost of revenue:                                                                                                                                                                                     
+Subscription(1)                                                                            84,457                            39,501                       136,855                          76,658    
+Professional services and other(1)                                                         16,649                            11,646                        30,374                          22,975    
+Total cost of revenue                                                                     101,106                            51,147                       167,229                          99,633    
+Gross profit                                                                              214,394                           149,299                       399,277                         283,672    
+Operating expenses:                                                                                                                                                                                  
+Research and development(1)                                                               122,407                            53,866                       191,270                         102,360    
+Sales and marketing(1)                                                                    198,350                            98,322                       344,871                         202,365    
+General and administrative(1)                                                             157,077                            42,499                       217,257                          76,534    
+Total operating expenses                                                                  477,834                           194,687                       753,398                         381,259    
+Operating loss                                                                          (263,440)                          (45,388)                     (354,121)                        (97,587)    
+Interest expense                                                                         (22,872)                          (16,931)                      (45,632)                        (27,695)    
+Interest income and other, net                                                              2,211                             3,960                         6,566                           8,859    
+Loss on early extinguishment and conversion of debt                                          (43)                           (2,174)                         (179)                         (2,174)    
+Interest and other, net                                                                  (20,704)                          (15,145)                      (39,245)                        (21,010)    
+Loss before provision for (benefit from) income taxes                                   (284,144)                          (60,533)                     (393,366)                       (118,597)    
+Provision for (benefit from) income taxes                                                 (7,462)                             (433)                       (7,452)                           (835)    
+Net loss                                                                               $(276,682)                         $(60,100)                    $(385,914)                      $(117,762)    
+Net loss per share, basic and diluted                                                     $(1.83)                           $(0.48)                       $(2.72)                         $(0.94)    
+Weighted-average shares used to compute net loss per share, basic and diluted             151,357                           126,319                       141,720                         124,922    
+(1) Amounts include stock-based compensation expense as follows (in thousands): 
+
+                                                                              Three Months Ended                                       Six Months Ended
+                                                                                        July 31,                                               July 31,
+2021                                                               2020                            2021                       2020                     
+Cost of subscription revenue                        $13,138                          $5,164                     $20,388                      $9,139    
+Cost of professional services and other               3,161                           2,000                       5,503                       3,811    
+Research and development                             53,332                          14,953                      73,425                      26,888    
+Sales and marketing                                  41,288                          13,165                      62,354                      24,325    
+General and administrative                           76,795                          13,112                      90,156                      21,959    
+Total stock-based compensation expense             $187,714                         $48,394                    $251,826                     $86,122    
+6
+
+
+OKTA, INC. 
+CONDENSED CONSOLIDATED BALANCE SHEETS 
+(In thousands) 
+(unaudited)
+
+                                                                         July 31,                    January 31,
+                                                                             2021                           2021
+Assets                                                                                                          
+Current assets:                                                                                                 
+Cash and cash equivalents                                           $225,265                      $434,607      
+Short-term investments                                             2,243,638                     2,121,584      
+Accounts receivable, net of allowances                               238,478                       194,818      
+Deferred commissions                                                  54,526                        45,949      
+Prepaid expenses and other current assets                            115,251                        81,609      
+Total current assets                                               2,877,158                     2,878,567      
+Property and equipment, net                                           61,858                        62,783      
+Operating lease right-of-use assets                                  146,492                       149,604      
+Deferred commissions, noncurrent                                     129,671                       108,555      
+Intangible assets, net                                               337,786                        27,009      
+Goodwill                                                           5,338,116                        48,023      
+Other assets                                                          41,014                        24,256      
+Total assets                                                      $8,932,095                    $3,298,797      
+Liabilities and stockholders' equity                                                                            
+Current liabilities:                                                                                            
+Accounts payable                                                      $9,414                        $8,557      
+Accrued expenses and other current liabilities                        80,463                        53,729      
+Accrued compensation                                                  85,126                        71,906      
+Convertible senior notes, net                                         15,723                       908,684      
+Deferred revenue                                                     721,808                       502,738      
+Total current liabilities                                            912,534                     1,545,614      
+Convertible senior notes, net, noncurrent                          1,772,511                       857,387      
+Operating lease liabilities, noncurrent                              171,141                       179,518      
+Deferred revenue, noncurrent                                          15,489                        10,860      
+Other liabilities, noncurrent                                         18,230                        11,375      
+Total liabilities                                                  2,889,905                     2,604,754      
+Stockholders’ equity:                                                                                           
+Preferred stock                                                            —                             —      
+Class A common stock                                                      15                            12      
+Class B common stock                                                       1                             1      
+Additional paid-in capital                                         7,391,169                     1,656,096      
+Accumulated other comprehensive income                                 4,375                         5,390      
+Accumulated deficit                                              (1,353,370)                     (967,456)      
+Total stockholders’ equity                                         6,042,190                       694,043      
+Total liabilities and stockholders' equity                        $8,932,095                    $3,298,797      
+7
+
+
+OKTA, INC. 
+SUMMARY OF CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS
+(In thousands) 
+(unaudited)
+
+                                                                                                                                         Six Months Ended July 31,
+2021                                                                                                                                                          2020
+Cash flows from operating activities:                                                                                                                             
+Net loss                                                                                                       $(385,914)                          $(117,762)     
+Adjustments to reconcile net loss to net cash provided by operating activities:                                                                                   
+Stock-based compensation                                                                                          251,826                              86,106     
+Depreciation, amortization and accretion                                                                           44,903                              12,691     
+Amortization of debt discount and issuance costs                                                                   42,780                              26,330     
+Amortization of deferred commissions                                                                               25,135                              18,077     
+Deferred income taxes                                                                                            (11,506)                             (1,915)     
+Non-cash charitable contributions                                                                                   3,663                               2,417     
+Loss on early extinguishment and conversion of debt                                                                   179                               2,174     
+Other, net                                                                                                        (5,561)                               1,435     
+Changes in operating assets and liabilities:                                                                                                                      
+Accounts receivable                                                                                              (14,798)                              18,626     
+Deferred commissions                                                                                             (55,102)                            (30,332)     
+Prepaid expenses and other assets                                                                                     718                             (7,622)     
+Operating lease right-of-use assets                                                                                10,732                               8,972     
+Accounts payable                                                                                                  (2,044)                                 810     
+Accrued compensation                                                                                              (6,507)                              15,045     
+Accrued expenses and other liabilities                                                                             10,092                             (3,131)     
+Operating lease liabilities                                                                                      (13,489)                             (7,663)     
+Deferred revenue                                                                                                  158,360                              25,369     
+Net cash provided by operating activities                                                                          53,467                              49,627     
+Cash flows from investing activities:                                                                                                                             
+Capitalization of internal-use software costs                                                                       (378)                             (2,326)     
+Purchases of property and equipment                                                                               (4,034)                            (10,669)     
+Purchases of securities available for sale and other                                                            (923,620)                         (1,029,281)     
+Proceeds from maturities and redemption of securities available for sale                                          763,607                             280,395     
+Proceeds from sales of securities available for sale and other                                                        906                              89,620     
+Payments for business acquisition, net of cash acquired                                                         (148,042)                                   —     
+Net cash used in investing activities                                                                           (311,561)                           (672,261)     
+Cash flows from financing activities:                                                                                                                             
+Proceeds from issuance of convertible senior notes, net of issuance costs                                               —                           1,135,418     
+Payments for repurchases and conversions of convertible senior notes                                                 (15)                               (181)     
+Proceeds from hedges related to convertible senior notes                                                                2                             195,046     
+Payments for warrants related to convertible senior notes                                                               —                           (175,399)     
+Purchases of capped calls related to convertible senior notes                                                           —                           (133,975)     
+Proceeds from stock option exercises                                                                               31,829                              27,517     
+Proceeds from shares issued in connection with employee stock purchase plan                                        17,417                              12,821     
+Net cash provided by financing activities                                                                          49,233                           1,061,247     
+Effects of changes in foreign currency exchange rates on cash, cash equivalents and restricted cash                   193                                 578     
+Net increase (decrease) in cash, cash equivalents and restricted cash                                           (208,668)                             439,191     
+Cash, cash equivalents and restricted cash at beginning of period                                                 448,630                             531,953     
+Cash, cash equivalents and restricted cash at end of period                                                      $239,962                            $971,144     
+8
+
+
+OKTA, INC.
+Reconciliation of GAAP to Non-GAAP Data
+(In thousands, except percentages and per share data)
+(unaudited)
+Non-GAAP Gross Profit and Non-GAAP Gross Margin 
+We define Non-GAAP gross profit and Non-GAAP gross margin as GAAP gross profit and GAAP gross margin, adjusted for stock-based compensation expense included in cost of revenue, amortization of acquired intangibles and acquisition and integration-related expenses. 
+
+                                                                                                        Three Months Ended                                         Six Months Ended
+                                                                                                                  July 31,                                                 July 31,
+2021                                                                                                                  2020                       2021                          2020
+Gross profit                                                               $214,394                          $149,299                    $399,277                      $283,672    
+Add:                                                                                                                                                                               
+Stock-based compensation expense included in cost of revenue(1)              16,299                             7,164                      25,891                        12,950    
+Amortization of acquired intangibles                                         10,128                             1,594                      11,721                         3,187    
+Acquisition and integration-related expenses(2)                                 658                                 —                         658                             —    
+Non-GAAP gross profit                                                      $241,479                          $158,057                    $437,547                      $299,809    
+Gross margin                                                                     68    %                           74    %                     70   %                        74   %
+Non-GAAP gross margin                                                            77    %                           79    %                     77   %                        78   %
+(1) See table in footnote (1) to the condensed consolidated statements of operations above for breakdown of stock-based compensation expense by line item.
+(2) Acquisition and integration-related expenses include transaction costs and other non-recurring incremental costs incurred through the one-year anniversary of transaction close.
+Non-GAAP Operating Income (Loss) and Non-GAAP Operating Margin 
+We define Non-GAAP operating income (loss) and Non-GAAP operating margin as GAAP operating loss and GAAP operating margin, adjusted for stock-based compensation expense, non-cash charitable contributions, amortization of acquired intangibles and acquisition and integration-related expenses.
+
+                                                                                        Three Months Ended                                           Six Months Ended
+                                                                                                  July 31,                                                   July 31,
+2021                                                                                                  2020                         2021   2020                       
+Operating loss                                           $(263,440)                         $(45,388)                    $(354,121)                     $(97,587)    
+Add:                                                                                                                                                                 
+Stock-based compensation expense(1)                         187,714                            48,394                       251,826                        86,122    
+Non-cash charitable contributions                             1,639                             1,881                         3,663                         2,417    
+Amortization of acquired intangibles                         19,998                             1,594                        21,591                         3,187    
+Acquisition and integration-related expenses(2)              29,550                                 —                        36,604                             —    
+Non-GAAP operating income (loss)                          $(24,539)                            $6,481                     $(40,437)                      $(5,861)    
+Operating margin                                               (83)    %                         (23)    %                     (63)   %                      (25)   %
+Non-GAAP operating margin                                       (8)    %                            3    %                      (7)   %                       (2)   %
+(1) See table in footnote (1) to the condensed consolidated statements of operations above for breakdown of stock-based compensation expense by line item.
+(2) Acquisition and integration-related expenses include transaction costs and other non-recurring incremental costs incurred through the one-year anniversary of transaction close.
+Non-GAAP Net Income (Loss), Non-GAAP Net Margin and Non-GAAP Net Income (Loss) Per Share, Basic and Diluted
+We define Non-GAAP net income (loss) and Non-GAAP net margin as GAAP net loss and GAAP net margin, 
+9
+
+
+adjusted for stock-based compensation expense, non-cash charitable contributions, amortization of acquired intangibles, acquisition and integration-related expenses, amortization of debt discount and debt issuance costs and loss on early extinguishment and conversion of debt.
+We define Non-GAAP net income (loss) per share, basic, as Non-GAAP net income (loss) divided by GAAP weighted-average shares used to compute net loss per share, basic and diluted.
+We define Non-GAAP net income (loss) per share, diluted, as Non-GAAP net income (loss) divided by GAAP weighted-average shares used to compute net loss per share, basic and diluted adjusted for the potentially dilutive effect of (i) employee equity incentive plans, excluding the impact of unrecognized stock-based compensation expense, and (ii) convertible senior notes outstanding and related warrants. In addition, Non-GAAP net income (loss) per share, diluted, includes the anti-dilutive impact of the Company’s note hedge and capped call agreements on convertible senior notes outstanding. Accordingly, the Company did not record any adjustments to Non-GAAP net income (loss) for the potential impact of the convertible senior notes outstanding under the if-converted method.
+
+                                                                                                                                        Three Months Ended                                             Six Months Ended
+                                                                                                                                                  July 31,                                                     July 31,
+2021                                                                                                                                                  2020                         2021                            2020
+Net loss                                                                                                 $(276,682)                         $(60,100)                    $(385,914)                      $(117,762)    
+Add:                                                                                                                                                                                                                   
+Stock-based compensation expense(1)                                                                         187,714                            48,394                       251,826                          86,122    
+Non-cash charitable contributions                                                                             1,639                             1,881                         3,663                           2,417    
+Amortization of acquired intangibles                                                                         19,998                             1,594                        21,591                           3,187    
+Acquisition and integration-related expenses(2)                                                              29,550                                 —                        36,604                               —    
+Amortization of debt discount and debt issuance costs                                                        21,449                            15,973                        42,780                          26,330    
+Loss on early extinguishment and conversion of debt                                                              43                             2,174                           179                           2,174    
+Non-GAAP net income (loss)                                                                                $(16,289)                            $9,916                     $(29,271)                          $2,468    
+Net margin                                                                                                     (88)    %                         (30)    %                     (68)   %                        (31)   %
+Non-GAAP net margin                                                                                             (5)    %                            5    %                      (5)   %                           1   %
+Weighted-average shares used to compute net loss per share, basic and diluted                               151,357                           126,319                       141,720                         124,922    
+Non-GAAP weighted-average effect of potentially dilutive securities                                               —                            15,936                             —                          16,281    
+Non-GAAP weighted-average shares used to compute non-GAAP net income (loss) per share, diluted              151,357                           142,255                       141,720                         141,203    
+Net loss per share, basic and diluted                                                                       $(1.83)                           $(0.48)                       $(2.72)                         $(0.94)    
+Non-GAAP net income (loss) per share, basic                                                                 $(0.11)                             $0.08                       $(0.21)                           $0.02    
+Non-GAAP net income (loss) per share, diluted                                                               $(0.11)                             $0.07                       $(0.21)                           $0.02    
+(1)    See table in footnote (1) to the condensed consolidated statements of operations above for breakdown of stock-based compensation expense by line item.
+(2) Acquisition and integration-related expenses include transaction costs and other non-recurring incremental costs incurred through the one-year anniversary of transaction close.
+10
+
+
+OKTA, INC.
+Reconciliation of GAAP to Non-GAAP Financial Measures
+(In thousands, except percentages)
+(unaudited)
+Free Cash Flow and Free Cash Flow Margin
+We define Free cash flow as net cash provided by operating activities, less cash used for purchases of property and equipment and capitalized internal-use software costs. Free cash flow margin is calculated as Free cash flow divided by total revenue.
+
+                                                                                          Three Months Ended                                                Six Months Ended
+                                                                                                    July 31,                                                        July 31,
+2021                                                                                                                        2020                            2021                            2020
+Net cash provided by (used in) operating activities              $(2,608)                                            $10,930                         $53,467                         $49,627    
+Less:                                                                                                                                                                                           
+Purchases of property and equipment                                 (775)                                            (2,739)                         (4,034)                        (10,669)    
+Capitalization of internal-use software costs                       (368)                                            (1,326)                           (378)                         (2,326)    
+Free cash flow                                                   $(3,751)                                             $6,865                         $49,055                         $36,632    
+Net cash used in investing activities                          $(463,466)                                         $(722,865)                      $(311,561)                      $(672,261)    
+Net cash provided by financing activities                         $33,054                                         $1,047,080                         $49,233                      $1,061,247    
+Free cash flow margin                                                 (1)    %                                             3   %                           9   %                          10   %
+Calculated Billings 
+We define Calculated billings as total revenue plus the change in deferred revenue, net of acquired deferred revenue, and less the change in unbilled receivables, net of acquired unbilled receivables, in the period.
+
+                                                                                            Three Months Ended                                         Six Months Ended
+                                                                                                      July 31,                                                 July 31,
+2021                                                                           2020                              2021                       2020                       
+Total revenue                                                  $315,500                          $200,446                    $566,506                      $383,305    
+Add:                                                                                                                                                                   
+Unbilled receivables, current (beginning of period)                 894                             1,121                       2,604                         1,026    
+Acquired unbilled receivables, current                            2,327                                 —                       2,327                             —    
+Deferred revenue, current (end of period)                       721,808                           391,246                     721,808                       391,246    
+Less:                                                                                                                                                                  
+Unbilled receivables, current (end of period)                   (3,409)                           (2,113)                     (3,409)                       (2,113)    
+Deferred revenue, current (beginning of period)               (613,167)                         (392,121)                   (502,738)                     (365,236)    
+Acquired deferred revenue, current                             (60,522)                                 —                    (60,522)                             —    
+Current calculated billings                                     363,431                           198,579                     726,576                       408,228    
+Add:                                                                                                                                                                   
+Deferred revenue, noncurrent (end of period)                     15,489                             5,574                      15,489                         5,574    
+Less:                                                                                                                                                                  
+Deferred revenue, noncurrent (beginning of period)             (11,745)                           (6,070)                    (10,860)                       (6,214)    
+Acquired deferred revenue, noncurrent                           (4,817)                                 —                     (4,817)                             —    
+Calculated billings                                            $362,358                          $198,083                    $726,388                      $407,588    
+11
+
+
+
+

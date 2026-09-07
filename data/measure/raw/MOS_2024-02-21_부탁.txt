@@ -1,0 +1,470 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — MOS 2024-02-21
+# 출처: https://www.sec.gov/Archives/edgar/data/1285785/000200403224000003/mos-20240221.htm
+
+mos-20240221
+
+
+
+UNITED STATES 
+SECURITIES AND EXCHANGE COMMISSION 
+Washington, D.C. 20549 
+
+
+
+FORM 8-K
+
+
+
+CURRENT REPORT 
+Pursuant to Section 13 or 15(d) of the 
+Securities Exchange Act of 1934 
+Date of Report (Date of earliest event reported): February 21, 2024
+
+
+
+THE MOSAIC COMPANY 
+(Exact name of registrant as specified in its charter) 
+ 
+
+
+
+Delaware                            001-32327            20-1026454              
+(State or other jurisdiction        (Commission          (IRS Employer           
+of incorporation)                   File Number)         Identification No.)     
+
+101 East Kennedy Blvd.                                33602          
+Suite 2500                                         
+Tampa,                     Florida                 
+(Address of principal executive offices)              (Zip Code)     
+Registrant’s telephone number, including area code: (800) 918-8270
+Not applicable 
+(Former Name or Former Address, if Changed Since Last Report) 
+
+
+Check the appropriate box below if the Form 8-K filing is intended to simultaneously satisfy the filing obligation of the registrant under any of the following provisions (see General Instruction A.2. below): 
+☐                                                                       Written communications pursuant to Rule 425 under the Securities Act (17 CFR 230.425)                                                                                                                                
+☐                                                                       Soliciting material pursuant to Rule 14a-12 under the Exchange Act (17 CFR 240.14a-12)                                                                                                                               
+☐                                                                       Pre-commencement communications pursuant to Rule 14d-2(b) under the Exchange Act (17 CFR 240.14d-2(b))                                                                                                               
+☐                                                                       Pre-commencement communications pursuant to Rule 13e-4(c) under the Exchange Act (17 CFR 240.13e-4(c))                                                                                                               
+Securities registered pursuant to Section 12(b) of the Act                                                                                                                                                                                                                                   
+Title of each class                                                                                                                             Trading Symbol(s)                                                       Name of each exchange on which registered                            
+Common Stock, par value $0.01 per share                                                                                                         MOS                                                                     New York Stock Exchange                                              
+Indicate by check mark whether the registrant is an emerging growth company as defined in Rule 405 of the Securities Act of 1933 or Rule 12b-2 of the Securities Exchange Act of 1934.                                                                                                       
+☐                                                                       Emerging growth company                                                                                                                                                                                              
+If an emerging growth company, indicate by check mark if the registrant has elected not to use the extended transition period for complying with any new or revised financial accounting standards provided pursuant to Section 13(a) of the Exchange Act. ¨                                 
+
+
+
+Item 2.02.        Results of Operations and Financial Condition.     
+The following information is being “furnished” in accordance with General Instruction B.2. of Form 8-K and shall not be deemed “filed” for purposes of Section 18 of the Securities Exchange Act of 1934, as amended (the “Exchange Act”), or otherwise subject to the liabilities of that section, nor shall it be deemed to be incorporated by reference in any filing under the Securities Act of 1933, as amended (the “Securities Act”), or the Exchange Act, except as expressly set forth by specific reference in such filing:
+Furnished herewith as Exhibit 99.1 and incorporated by reference herein is the text of The Mosaic Company’s (“Mosaic,” and Mosaic and its subsidiaries, individually or in any combination, “we,” “us” or “our”) announcement regarding its earnings and results of operations for the quarter and full year ended December 31, 2023, as presented in a press release issued on February 21, 2024.
+Furnished herewith as Exhibit 99.2 and incorporated by reference herein is certain performance data for the period ended December 31, 2023 to be published on Mosaic’s website. 
+
+Item 9.01.        Financial Statements and Exhibits.     
+(d) Exhibits.
+Reference is made to the Exhibit Index hereto with respect to the exhibits furnished herewith. The following exhibits are being “furnished” in accordance with General Instruction B.2. of Form 8-K and shall not be deemed “filed” for purposes of Section 18 of the Exchange Act, or otherwise subject to the liabilities of that section, nor shall they be deemed to be incorporated by reference in any filing under the Securities Act or the Exchange Act, except as expressly set forth by specific reference in such filing.
+
+    Exhibit No.   Description                                                                                                                                                             
+           99.1   Press release, dated February 21, 2024, of The Mosaic Company regarding its earnings and results of operations for the quarter and full year ended December 31, 2023    
+           99.2   Performance data for the period ended December 31, 2023                                                                                                                 
+SIGNATURES
+Pursuant to the requirements of the Securities Exchange Act of 1934, the registrant has duly caused this report to be signed on its behalf by the undersigned hereunto duly authorized.
+
+
+                              THE MOSAIC COMPANY                                                      
+Date: February 21, 2024       By:                           /s/ Philip E. Bauer                       
+                              Name:                         Philip E. Bauer                           
+                              Title:                        Senior Vice President, General Counsel    
+                                                            and Corporate Secretary                   
+
+Document
+
+     Exhibit 99.1
+ 
+The Mosaic Company101 E. Kennedy Blvd., Suite 2500Tampa, FL 33602www.mosaicco.com      
+
+For Immediate Release                                                                                                                                                            
+InvestorsJoan Tong863-640-0826joan.tong@mosaicco.com        Jason Tremblay813-775-4226jason.tremblay@mosaicco.com       MediaBen Pratt813-775-4206benjamin.pratt@mosaicco.com    
+THE MOSAIC COMPANY REPORTS FOURTH QUARTER AND FULL YEAR 2023 RESULTS 
+•Full year net income of $1.2 billion, adjusted EBITDA(1) of $2.8 billion
+•2023 cash from operations of $2.4 billion, free cash flow(1) of $795 million
+•Returned $1.1 billion to shareholders through share repurchases and dividends in 2023 and completed refinancing of $900 million in debt
+•Responding to current potash market conditions by curtailing production from the Colonsay mine
+TAMPA, FL, February 21, 2024 - The Mosaic Company (NYSE: MOS) today reported net income of $1.2 billion and diluted earnings per share (EPS) of $3.50 for full year 2023. Adjusted EBITDA(1) for the year was $2.8 billion and adjusted diluted EPS(1) was $3.57.
+The company reported fourth quarter net income of $365 million and diluted EPS of $1.11. Adjusted EBITDA(1) totaled $646 million for the quarter and adjusted diluted EPS(1) was $0.71.
+"Mosaic successfully navigated a highly dynamic market in 2023. We delivered strong free cash flow and returned significant capital to shareholders while reinvesting in the business" said Bruce Bodine, President and CEO. "Looking into 2024, Mosaic expects to continue to benefit from a strong phosphates market, and is well positioned to deliver solid results as we optimize our low cost potash operations. In addition, we are focused on improving our phosphates production level, expanding our portfolio of value-added products, growing our leading presence in Brazil, and enhancing the overall efficiency of our operations". 
+Highlights:
+•Full year revenues declined 28 percent year-over-year to $13.7 billion, reflecting the impact of lower selling prices. The gross margin rate in 2023 was 16 percent, down from 30 percent in 2022.
+•Net Income in 2023 totaled $1.2 billion, declining 67 percent from 2022. Adjusted EBITDA(1) in 2023 totaled $2.8 billion, a decline of 56 percent from 2022. Cash flows from operating activities totaled $2.4 billion and Free Cash Flow(1) totaled $795 million.
+•Potash operating earnings were $1.2 billion in 2023, down from $2.8 billion in the prior year. Adjusted EBITDA(1) totaled $1.5 billion in 2023, down from $3.1 billion last year. We completed the development of Esterhazy K3, which is the largest and one of the most efficient and low-cost potash complexes in the world. Canpotex's port at Portland, Oregon returned to normal operation in December after being idled since April 2023. In response to current market conditions, Mosaic will be curtailing its production from its Colonsay mine. 
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+*Free cash flow is defined as cash from operations minus total capital expenditures and adjusted for working capital financing.
+1
+
+
+•Phosphate operating earnings were $375 million in 2023, compared to $1.3 billion in 2022. Adjusted EBITDA(1) totaled $1.2 billion in 2023, down from $2.2 billion in the prior year. Segment results reflect the impact of lower prices and production challenges due to weather-related events and repairs of our sulfuric acid facilities in Louisiana, partially offset by lower raw material prices. Phosphate prices stabilized in the second quarter of 2023 and rose in the second half of the year. 
+•Mosaic Fertilizantes operating earnings were $75 million in 2023, down from $910 million in 2022. Adjusted EBITDA(1) totaled $327 million in 2023, down from $1.0 billion last year. In the second quarter of 2023, we finished the destocking of high-priced inventory which negatively impacted our first half 2023 results. Distribution business margin per tonne came in above the $30-$40 annual normalized range in the fourth quarter.
+Capital Allocation Strategy
+Mosaic remains committed to a disciplined capital allocation strategy.
+•Mosaic returned $1.1 billion of capital to shareholders in 2023, including share repurchases totaling $756 million, and increased the dividend by 10 percent in December 2023. Capital returns exceeded free cash flow due to cash received from other sources, including the sale of Streamsong Resort. 
+•Mosaic is committed to maintaining a strong balance sheet that is sustainable through our industry's normal business cycle. Mosaic refinanced $900 million of debt obligations with a $500 million term loan, and a $400 million bond issuance which closed in December. 
+•Mosaic remains committed to returning excess cash to shareholders in 2024 through a combination of dividends and share repurchases. 
+•Total capital expenditures are expected to be approximately $1.2 billion for 2024, about $200 million below the 2023 level. Mosaic continues to focus on high-returning investments with modest capital requirements. 
+Segment Analysis 
+
+Potash                                                     Q4 2023        Q4 2022           2023           2022
+Sales Volumes - million tonnes*                                2.6            1.9            8.9            8.1
+MOP Selling Price(2)                                          $243           $581           $308           $632
+Gross Margin (GAAP) per tonne                                  $99           $289           $137           $351
+Adjusted Gross Margin (non-GAAP) per tonne(1)                  $99           $289           $137           $351
+Operating Earnings - millions                                 $222           $497         $1,152         $2,768
+Segment Adjusted EBITDA(1) - millions                         $322           $597         $1,471         $3,117
+*Tonnes = finished product tonnes
+(2)Average per tonne MOP selling price (fob mine)
+The Potash segment reported net sales of $3.2 billion in 2023, down from $5.2 billion in 2022, reflecting lower prices. Gross margin per tonne was $137, down from $351 last year.
+Sales volumes increased from 8.1 million tonnes in 2022 to 8.9 million tonnes in 2023. Despite logistics challenges, fourth quarter sales volumes came in well within our guidance range.
+Sales volumes in the first quarter are expected to be 2.0-2.2 million tonnes with realized mine-gate MOP prices in the range of $225-$250 per tonne. 
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+2
+
+
+
+Phosphate                                                  Q4 2023        Q4 2022           2023           2022
+Sales Volumes - million tonnes*                                1.6            1.6            7.0            6.6
+DAP Selling Price(3)                                          $552           $722           $573           $804
+Gross Margin (GAAP) per tonne                                  $88           $148           $100           $268
+Adjusted Gross Margin (non-GAAP) per tonne(1)                 $106           $167           $109           $274
+Operating Earnings (Loss) - millions                           $21           $145           $375         $1,347
+Segment Adjusted EBITDA(1) - millions                         $259           $348         $1,227         $2,219
+*Tonnes = finished product tonnes
+(3)Average DAP Selling Price (fob plant) 
+Net sales in the Phosphate segment decreased to $4.7 billion in 2023, down from $6.2 billion in 2022, driven by lower selling prices in 2023. Sales volumes increased from 6.6 million tonnes in 2022 to 7.0 million tonnes, while production volume of finished phosphates totaled 6.6 million, down from 6.7 million.
+The average realized selling price decreased to $646 per tonne in 2023, from $913 in 2022. Gross margin per tonne was $100 in 2023, compared to $268 in 2022, and adjusted gross margin per tonne(1) decreased to $109 in 2023 from $274 in the prior year, reflecting lower phosphate prices which were partially offset by the decrease in raw material costs. 
+Sales volumes in the first quarter are expected to be 1.6-1.8 million tonnes with DAP prices on an FOB basis averaging $580-$605 per tonne. Stripping margins are expected to stay elevated. 
+
+Mosaic Fertilizantes                              Q4 2023        Q4 2022        2023           2022
+Sales Volumes - million tonnes*                       2.2            2.5         9.7            9.4
+Finished Product Selling Price                       $552           $773        $587           $878
+Gross Margin (GAAP) per tonne                         $44            $11         $22           $111
+Adjusted Gross Margin per tonne(1)                    $45            $12         $24           $111
+Operating Earnings - millions                         $50          $(20)         $75           $910
+Segment Adjusted EBITDA(1) - millions                $111            $29        $327         $1,049
+*Tonnes = finished product tonnes
+Mosaic Fertilizantes reported net sales of $5.7 billion in 2023, down from $8.3 billion in the prior year, reflecting lower prices. The gross margin per tonne, which averaged $22 in 2023, down from $111 in 2022, was negatively impacted by lower prices, inflationary cost pressures and high-priced inventory. The destocking of high-priced inventory was complete in the second quarter of 2023 and margin per tonne of the distribution business in the fourth quarter was above the historical normalized annual range of $30-$40 per tonne. 
+The distribution business typically sells more nitrogen products in the first quarter of each year, which historically generate lower and less consistent margins. As such, we expect first quarter margin per tonne will be below the historical normalized annual range. We expect distribution margin per tonne in a twelve-month period ended March 31, 2024 to be within the normalized annual range. 
+Other
+Full-year selling, general and administrative expenses were $501 million in 2023 compared with $498 million in 2022.
+Mosaic recognized strong earnings from equity investments of $60 million, reflecting contribution from the company’s share of the MWSPC joint venture in Saudi Arabia. 
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+3
+
+
+The reported effective tax rate for 2023 was 13.3 percent, and 26.9 percent excluding discrete items. Cash taxes paid in 2023 were $386 million.
+In 2023, net cash provided by operating activities was $2.4 billion and capital expenditures were $1.4 billion.
+2024 Market Outlook 
+Global grain and oilseed markets are expected to remain tight in 2024. Crop production, threatened by geopolitical unrest, weather extremes and reduced fertilization, is struggling to keep up with strong demand driven by secular demographic changes and growing consumption from renewable fuels. As a result, global stocks-to-use ratios for grains and oilseeds are expected to remain under pressure for the foreseeable future. Today's healthy agriculture back drop and favorable economics will continue to incentivize growers to maximize yields and apply fertilizers.
+These demand factors are especially promising for the phosphate market as they are expected to be matched by tight global supply well into 2024. China's exports are expected to remain capped as domestic agriculture and industrial demand is prioritized over fertilizer exports. Firm phosphate prices and low raw material prices suggest that stripping margins will stay elevated for the foreseeable future. 
+In North America, after a long Fall application season and solid winter fill activities, demand strength continues into the Spring planting season. Brazil shipments are expected to remain solid in 2024 as barter ratio are favorable and growers need to replenish soil nutrients. In India, grower demand is strong and growers are waiting for higher government subsidy rates. 
+Potash demand for North America is expected to remain robust in 2024, and demand in Southeast Asia and Brazil is expected to improve as the year progresses. Supply appears adequate to meet that demand in the near term. 
+2024 Modeling Assumptions
+The Company provides the following modeling assumptions for the full year 2024: 
+
+Modeling Assumptions                                         Full Year 2024
+Total Capital Expenditures                               $1.1 - 1.2 billion
+Depreciation, Depletion &amp; Amortization              $960 - $990 million
+Selling, General, and Administrative Expense            $470 - $500 million
+Net Interest Expense                                    $140 - $160 million
+Effective tax rate                                              High 20’s %
+Cash tax rate                                                    Mid 20's %
+Sensitivities Table Using 2023 Cost Structure 
+The Company provided the following sensitivities to price and foreign exchange rates to help investors anticipate the potential impact of movements in these factors. 
+
+Sensitivity                                                Full year adj. EBITDA impact(1)       2023 Actual
+Average MOP Price / tonne (fob mine)(5)              $10/mt price change = $60 million (4)              $308
+Average DAP Price / tonne (fob plant)(5)                 $10/mt price change = $70 million              $573
+Average BRL / USD                                   0.10 change, unhedged = $10 million(6)              5.00
+(4) Includes impact of Canadian Resource Tax
+(5) Approximately 20% of DAP price sensitivity impact is expected to be in the Mosaic Fertilizantes segment.; approximately 5% of the MOP price sensitivity impact is expected to be in the Mosaic Fertilizantes segment.
+(6) The company hedged about 50 percent of the annual sensitivity. Over longer periods of time, inflation is expected to offset a portion of currency benefits.
+4
+
+
+About The Mosaic Company
+The Mosaic Company is one of the world's leading producers and marketers of concentrated phosphate and potash crop nutrients. Mosaic is a single-source provider of phosphate and potash fertilizers and feed ingredients for the global agriculture industry. More information on the company is available at www.mosaicco.com.
+Mosaic will conduct a conference call on Thursday, February 22, 2024, at 11:00 a.m. Eastern Time to discuss fourth quarter and full year 2023 earnings results. A simultaneous webcast of the conference call may be accessed through Mosaic’s website at www.mosaicco.com/investors. This webcast will be available up to one year from the time of the earnings call.
+This release contains forward-looking statements within the meaning of the Private Securities Litigation Reform Act of 1995. Such statements may include, but are not limited to, statements about proposed or pending common dividends, special dividends, share repurchases, future transactions or strategic plans and other statements about future financial and operating results. Such statements are based upon the current beliefs and expectations of The Mosaic Company’s management and are subject to significant risks and uncertainties. These risks and uncertainties include, but are not limited to: political and economic instability and changes in government policies in countries in which we have operations; the predictability and volatility of, and customer expectations about, agriculture, fertilizer, raw material, energy and transportation markets that are subject to competitive and other pressures and economic and credit market conditions; the level of inventories in the distribution channels for crop nutrients; the effect of future product innovations or development of new technologies on demand for our products; changes in foreign currency and exchange rates; international trade risks and other risks associated with Mosaic’s international operations and those of joint ventures in which Mosaic participates, including the performance of the Wa’ad Al Shamal Phosphate Company (also known as MWSPC), the future success of current plans for MWSPC and any future changes in those plans; difficulties with realization of the benefits of our natural gas based pricing ammonia supply agreement with CF Industries, Inc., including the risk that the cost savings initially anticipated from the agreement may not be fully realized over its term or that the price of natural gas or ammonia during the term are at levels at which the pricing is disadvantageous to Mosaic; customer defaults; the effects of Mosaic’s decisions to exit business operations or locations; changes in government policy; changes in environmental and other governmental regulation, including expansion of the types and extent of water resources regulated under federal law, carbon taxes or other greenhouse gas regulation, implementation of numeric water quality standards for the discharge of nutrients into Florida waterways or efforts to reduce the flow of excess nutrients into the Mississippi River basin, the Gulf of Mexico or elsewhere; further developments in judicial or administrative proceedings, or complaints that Mosaic’s operations are adversely impacting nearby farms, business operations or properties; difficulties or delays in receiving, increased costs of or challenges to necessary governmental permits or approvals or increased financial assurance requirements; resolution of global tax audit activity; the effectiveness of Mosaic’s processes for managing its strategic priorities; adverse weather conditions affecting operations in Central Florida, the Mississippi River basin, the Gulf Coast of the United States, Canada or Brazil, and including potential hurricanes, excess heat, cold, snow, rainfall or drought; actual costs of various items differing from management’s current estimates, including, among others, asset retirement, environmental remediation, reclamation or other environmental regulation, Canadian resources taxes and royalties, or the costs of the MWSPC; reduction of Mosaic’s available cash and liquidity, and increased leverage, due to its use of cash and/or available debt capacity to fund financial assurance requirements and strategic investments; brine inflows at Mosaic’s potash mines; other accidents and disruptions involving Mosaic’s operations, including potential mine fires, floods, explosions, seismic events, sinkholes or releases of hazardous or volatile chemicals; and risks associated with cyber security, including reputational loss; as well as other risks and uncertainties reported from time to time in The Mosaic Company’s reports filed with the Securities and Exchange Commission. Actual results may differ from those set forth in the forward-looking statements. The declarations and payment of future dividends and special dividends remain at the discretion of the Board of Directors.
+###
+Non-GAAP Financial Measures
+This press release includes the presentation and discussion of non-GAAP diluted net earnings per share guidance, or adjusted EPS, non-GAAP gross margin per tonne, or adjusted gross margin per tonne, non-GAAP adjusted EBITDA, and free cash flow, collectively referred to as non-GAAP financial measures. Generally, a non-GAAP financial measure is a supplemental numerical measure of a company's performance, financial position or cash flows that either excludes or includes amounts that are not normally excluded or included in the most directly comparable measure calculated and presented in accordance with U.S. generally accepted accounting principles, or GAAP. Non-GAAP financial measures should not be considered as substitutes for, or superior to, measures of financial performance prepared in accordance with GAAP. In addition, because non-GAAP measures are not determined in accordance with GAAP, they are thus susceptible to varying interpretations and calculations and may not be comparable to other similarly titled measures of other companies. Adjusted metrics, including adjusted EPS, adjusted gross margin, and adjusted EBITDA are calculated by excluding the impact of notable items from the GAAP measure. Notable items impact on gross margin and EBITDA is pretax. Notable items impact on diluted net earnings per share is calculated as the notable item amount plus income tax effect, based on expected annual effective tax rate, divided by diluted weighted average shares. Management believes that these adjusted measures provide securities analysts, investors, management and others with useful supplemental information regarding our performance by excluding certain items that may not be indicative of, or are unrelated to, our core operating results. Free Cash Flow is defined as net cash provided by operating activities less capital expenditures and adjusted for changes in working capital financing. Management utilizes these adjusted measures in analyzing 
+and assessing Mosaic’s overall performance and financial trends, for financial and operating decision-making, and to forecast and plan for future periods. These adjusted measures also assist our management in comparing our and our competitors' operating results. We are not providing forward looking guidance for U.S. GAAP reported diluted net earnings per share, gross margin per tonne, or a quantitative reconciliation of forward-looking adjusted EPS, adjusted gross margin and adjusted EBITDA because we are unable to predict with reasonable certainty our notable items without unreasonable effort. Historically, our notable items have included, but are not limited to, foreign currency transaction gain or loss, unrealized gain or loss on derivatives, acquisition-related fees, discrete tax items, contingencies and certain other gains or losses. These items are uncertain, depend on various factors, and could have a material impact on U.S. GAAP reported results for the guidance period. Reconciliations for Non-GAAP financial measures contained in this press release are found below. Reconciliations for current and historical periods beginning with the quarter ended March 31, 2022 for consolidated adjusted EPS and adjusted EBITDA, as well as segment adjusted EBITDA and adjusted gross margin per tonne are provided in the Selected Calendar Quarter Financial Information performance data for the related periods. This information is being furnished under Exhibit 99.2 of the Form 8-K and available on our website at www.mosaicco.com in the “Financial Information - Quarterly Earnings” section under the “Investors” tab.
+For the three months ended December 31, 2023, the Company reported the following notable items which, combined, positively impacted earnings per share by $0.40: 
+
+                                                                                                                                                      Amount                    Tax effect                 EPS impact
+Description                                           Segment                    Line item                                                     (in millions)                 (in millions)                (per share)
+Foreign currency transaction gain (loss)              Consolidated               Foreign currency transaction gain (loss)                         $79                         $(16)                       $0.20      
+Unrealized gain (loss) on derivatives                 Corporate and Other        Cost of goods sold                              40                                             (7)                        0.10      
+Closed and indefinitely idled facility costs          Phosphate                  Other operating income (expense)                                 (9)                             2                      (0.03)      
+FX functional currency                                Mosaic Fertilizantes       Cost of goods sold                                               (3)                             1                      (0.01)      
+Realized gain (loss) on RCRA Trust Securities         Phosphate                  Other non-operating income (expense)                             (7)                             2                      (0.02)      
+ARO Adjustment                                        Phosphate                  Other operating income (expense)                                 (4)                             1                      (0.01)      
+Environmental reserve                                 Phosphate                  Other operating income (expense)                                (64)                            11                      (0.16)      
+Land reclamation                                      Phosphate                  Cost of goods sold                                              (28)                             5                      (0.07)      
+ARO adjustment                                        Potash                     Other operating income (expense)                                (10)                             2                      (0.02)      
+Tax law change                                        Mosaic Fertilizantes       (Provision for) benefit from income taxes                          —                           136                        0.42      
+Total Notable Items                                                                                                                              $(6)                          $137                       $0.40      
+7
+
+
+For the three months ended December 31, 2022, the Company reported the following notable items which, combined, negatively impacted earnings per share by $0.22: 
+
+                                                                                                                                                      Amount                    Tax effect                 EPS impact
+Description                                           Segment                    Line item                                                     (in millions)                 (in millions)                (per share)
+Foreign currency transaction gain (loss)              Consolidated               Foreign currency transaction gain (loss)                         $75                         $(18)                       $0.16      
+Unrealized gain (loss) on derivatives                 Corporate and Other        Cost of goods sold                                                14                           (4)                        0.03      
+Closed and indefinitely idled facility costs          Phosphate                  Other operating income (expense)                                (11)                             3                      (0.03)      
+FX functional currency                                Mosaic Fertilizantes       Cost of goods sold                                               (1)                             —                           —      
+Fixed asset write-off                                 Phosphate                  Other operating income (expense)                                 (6)                             2                      (0.01)      
+ARO Adjustment                                        Potash                     Other operating income (expense)                                   3                           (1)                        0.01      
+Discrete tax items                                    Consolidated               (Provision for) benefit from income taxes                          —                           (9)                      (0.03)      
+Realized gain (loss) on RCRA Trust Securities         Phosphates                 Other non-operating income (expense)                            (20)                             5                      (0.04)      
+Environmental reserve                                 Phosphates                 Other operating income (expense)                                (44)                            11                      (0.09)      
+Hurricane Ian idle costs                              Phosphates                 Cost of goods sold                                              (30)                             8                      (0.07)      
+Insurance proceeds                                    Phosphates                 Other operating income (expense)                                   5                           (1)                        0.01      
+Pension plan termination settlement                   Consolidated               Other non-operating income (expense)                            (42)                            10                      (0.09)      
+Environmental reserve                                 Potash                     Other operating income (expense)                                (28)                             7                      (0.06)      
+Lease termination and severance                       Corporate and Other        Other operating income (expense)                                 (4)                             1                      (0.01)      
+Total Notable Items                                                                                                                             $(89)                           $14                     $(0.22)      
+
+8
+
+
+Condensed Consolidated Statements of Earnings
+(in millions, except per share amounts)
+ 
+The Mosaic Company         (unaudited)    
+
+
+                                                                                                      Three months ended December 31,                                                 Years ended
+                                                                                                                                                                                     December 31,
+                                                                                           2023                                  2022                          2023                          2022
+Net sales                                                                        $3,149.5                              $4,481.3                       $13,696.1                     $19,125.2    
+Cost of goods sold                                                                2,590.0                               3,512.9                        11,485.5                      13,369.4    
+Gross margin                                                                        559.5                                 968.4                         2,210.6                       5,755.8    
+Selling, general and administrative expenses                                        123.0                                 132.9                           500.5                         498.0    
+Other operating expenses                                                            158.0                                 134.9                           372.0                         472.5    
+Operating earnings                                                                  278.5                                 700.6                         1,338.1                       4,785.3    
+Interest expense, net                                                              (34.9)                                (33.8)                         (129.4)                       (137.8)    
+Foreign currency transaction gain (loss)                                             91.0                                  75.1                           194.0                          97.5    
+Other (expense) income                                                             (10.7)                                (64.7)                          (76.8)                       (102.5)    
+Earnings from consolidated companies before income taxes                            323.9                                 677.2                         1,325.9                       4,642.5    
+Provision for (benefit from) income taxes                                          (43.8)                                 206.0                           177.0                       1,224.3    
+Earnings from consolidated companies                                                367.7                                 471.2                         1,148.9                       3,418.2    
+Equity in net earnings of nonconsolidated companies                                   0.3                                  57.3                            60.3                         196.0    
+Net earnings including noncontrolling interests                                     368.0                                 528.5                         1,209.2                       3,614.2    
+Less: Net earnings attributable to noncontrolling interests                           2.7                                   5.3                            44.3                          31.4    
+Net earnings attributable to Mosaic                                                $365.3                                $523.2                        $1,164.9                      $3,582.8    
+Diluted net earnings per share attributable to Mosaic                               $1.11                                 $1.52                           $3.50                        $10.06    
+Diluted weighted average number of shares outstanding                               327.7                                 343.8                           333.2                         356.0    
+
+
+9
+
+
+Condensed Consolidated Balance Sheets
+(in millions, except per share amounts)
+
+The Mosaic Company         (unaudited)    
+
+                                                                                                                                                                                                                                                                   December 31, 2023                   December 31, 2022
+Assets                                                                                                                                                                                                                                                                                                                  
+Current assets:                                                                                                                                                                                                                                                                                                         
+Cash and cash equivalents                                                                                                                                                                                                                                             $348.8                              $735.4        
+Receivables, net                                                                                                                                                                                                                                                     1,269.2                             1,699.9        
+Inventories                                                                                                                                                                                                                                                          2,523.2                             3,543.1        
+Other current assets                                                                                                                                                                                                                                                   603.8                               578.2        
+Total current assets                                                                                                                                                                                                                                                 4,745.0                             6,556.6        
+Property, plant and equipment, net                                                                                                                                                                                                                                  13,585.4                            12,678.7        
+Investments in nonconsolidated companies                                                                                                                                                                                                                               909.0                               885.9        
+Goodwill                                                                                                                                                                                                                                                             1,138.6                             1,116.3        
+Deferred income taxes                                                                                                                                                                                                                                                1,079.2                               752.3        
+Other assets                                                                                                                                                                                                                                                         1,575.6                             1,396.2        
+Total assets                                                                                                                                                                                                                                                       $23,032.8                           $23,386.0        
+Liabilities and Equity                                                                                                                                                                                                                                                                                                  
+Current liabilities:                                                                                                                                                                                                                                                                                                    
+Short-term debt                                                                                                                                                                                                                                                       $399.7                              $224.9        
+Current maturities of long-term debt                                                                                                                                                                                                                                   130.1                               985.3        
+Structured accounts payable arrangements                                                                                                                                                                                                                               399.9                               751.2        
+Accounts payable                                                                                                                                                                                                                                                     1,166.9                             1,292.5        
+Accrued liabilities                                                                                                                                                                                                                                                  1,777.1                             2,279.9        
+Total current liabilities                                                                                                                                                                                                                                            3,873.7                             5,533.8        
+Long-term debt, less current maturities                                                                                                                                                                                                                              3,231.6                             2,411.9        
+Deferred income taxes                                                                                                                                                                                                                                                1,065.5                             1,010.1        
+Other noncurrent liabilities                                                                                                                                                                                                                                         2,429.2                             2,236.0        
+Equity:                                                                                                                                                                                                                                                                                                                 
+Preferred stock, $0.01 par value, 15,000,000 shares authorized, none issued and outstanding as of December 31, 2023 and 2022                                                                                                                                               —                                   —        
+Common stock, $0.01 par value, 1,000,000,000 shares authorized, 393,875,241 shares issued and 324,103,141 shares outstanding as of December 31, 2023, 391,964,464 shares issued and 339,071,423 shares outstanding as of December 31, 2022                               3.2                                 3.4        
+Capital in excess of par value                                                                                                                                                                                                                                             —                                   —        
+Retained earnings                                                                                                                                                                                                                                                   14,241.9                            14,203.4        
+Accumulated other comprehensive loss                                                                                                                                                                                                                               (1,954.9)                           (2,152.2)        
+Total Mosaic stockholders’ equity                                                                                                                                                                                                                                   12,290.2                            12,054.6        
+Non-controlling interests                                                                                                                                                                                                                                              142.6                               139.6        
+Total equity                                                                                                                                                                                                                                                        12,432.8                            12,194.2        
+Total liabilities and equity                                                                                                                                                                                                                                       $23,032.8                           $23,386.0        
+10
+
+
+ Condensed Consolidated Statements of Cash Flows
+(in millions, except per share amounts)
+
+The Mosaic Company         (unaudited)    
+
+                                                                                                               Three months ended December 31,                                                 Years ended
+                                                                                                                                                                                              December 31,
+                                                                                                    2023                                  2022                          2023                          2022
+Cash Flows from Operating Activities:                                                                                                                                                                     
+Net cash provided by operating activities                                                   $538.1                                $955.7                        $2,407.2                      $3,935.8    
+Cash Flows from Investing Activities:                                                                                                                                                                     
+Capital expenditures                                                                       (358.9)                               (340.5)                       (1,402.4)                     (1,247.3)    
+Purchases of available-for-sale securities - restricted                                    (201.1)                               (302.9)                       (1,240.8)                       (762.5)    
+Proceeds from sale of available-for-sale securities - restricted                             197.4                                 298.4                         1,209.1                         743.0    
+Proceeds from sale of business                                                                   —                                     —                           158.4                             —    
+Acquisition of business                                                                          —                                     —                          (41.0)                             —    
+Other                                                                                          0.4                                   1.9                           (0.5)                           7.2    
+Net cash used in investing activities                                                      (362.2)                               (343.1)                       (1,317.2)                     (1,259.6)    
+Cash Flows from Financing Activities:                                                                                                                                                                     
+Payments of short-term debt                                                              (3,070.1)                             (1,602.6)                       (9,832.0)                     (1,761.2)    
+Proceeds from issuance of short-term debt                                                  3,170.0                               1,827.7                        10,007.1                       1,980.5    
+Payments from inventory financing arrangement                                                    —                               (200.5)                         (601.4)                     (1,651.5)    
+Proceeds from inventory financing arrangement                                                    —                                     —                           601.4                       1,348.8    
+Payments of structured accounts payable arrangements                                       (422.3)                               (332.5)                       (1,432.9)                     (1,476.6)    
+Proceeds from structured accounts payable arrangements                                       214.2                                 439.9                         1,048.2                       1,460.5    
+Payments of long-term debt                                                                 (950.5)                               (565.8)                         (995.3)                       (610.3)    
+Proceeds from issuance of long-term debt                                                     900.0                                     —                           900.0                             —    
+Collections of transferred receivables                                                           —                               1,068.5                         1,468.6                       2,352.1    
+Payments of transferred receivables                                                              —                             (1,069.7)                       (1,468.6)                     (2,433.2)    
+Repurchases of stock                                                                       (150.0)                                (64.0)                         (756.0)                     (1,665.2)    
+Cash dividends paid                                                                         (65.1)                                (51.1)                         (351.6)                       (197.7)    
+Dividends paid to non-controlling interest                                                  (17.8)                                (21.3)                          (41.5)                        (38.0)    
+Other                                                                                       (19.1)                                 (1.6)                          (26.5)                          13.1    
+Net cash used in financing activities                                                      (410.7)                               (573.0)                       (1,480.5)                     (2,678.7)    
+Effect of exchange rate changes on cash                                                      (6.2)                                 (8.0)                           (2.8)                        (29.7)    
+Net change in cash, cash equivalents and restricted cash                                   (241.0)                                  31.6                         (393.3)                        (32.2)    
+Cash, cash equivalents and restricted cash—beginning of year                                 601.8                                 722.5                           754.1                         786.3    
+Cash, cash equivalents and restricted cash—end of year                                      $360.8                                $754.1                          $360.8                        $754.1    
+11
+
+
+
+                                                                                                                                                                                        Years ended December 31,
+2023                                                                                                                                                                                                        2022
+Reconciliation of cash, cash equivalents and restricted cash reported within the consolidated balance sheets to the consolidated statements of cash flows:                                                      
+Cash and cash equivalents                                                                                                                                            $348.8                          $735.4     
+Restricted cash in other current assets                                                                                                                                 8.6                             8.2     
+Restricted cash in other assets                                                                                                                                         3.4                            10.5     
+Total cash, cash equivalents and restricted cash shown in the statement of cash flows                                                                                $360.8                          $754.1     
+12
+
+
+Reconciliation of Non-GAAP Financial Measures
+Earnings Per Share Calculation
+
+
+                                                                                                    Three months ended                                                 Years ended
+                                                                                                          December 31,                                                December 31,
+                                                                                  2023                            2022                          2023                          2022
+Net earnings attributed to Mosaic                                          $365.3                          $523.2                       $1,164.9                      $3,582.8    
+Basic weighted average number of shares outstanding                         326.1                           340.3                          331.3                         352.4    
+Dilutive impact of share-based awards                                         1.6                             3.5                            1.9                           3.6    
+Diluted weighted average number of shares outstanding                       327.7                           343.8                          333.2                         356.0    
+Basic net earnings per share                                                $1.12                           $1.54                          $3.52                        $10.17    
+Diluted net earnings per share                                              $1.11                           $1.52                          $3.50                        $10.06    
+Notable items impact on earnings per share                                $(0.40)                           $0.22                          $0.07                         $0.95    
+Adjusted earnings per share                                                 $0.71                           $1.74                          $3.57                        $11.01    
+ Free Cash Flow
+
+                                                                                        Year ended
+                                                                                      December 31,
+                                                2023                                          2022
+Net cash provided by operating activities                   $2,407                      $3,936    
+Capital expenditures                                       (1,402)                     (1,247)    
+Working capital financing(a)                                 (210)                        (95)    
+Free cash flow                                                $795                      $2,594    
+(a)  Includes net proceeds (payments) from inventory financing arrangements, structured accounts payable arrangements and commercial paper borrowings.
+
+13
+
+
+Reconciliation of Non-GAAP Financial Measures
+
+Consolidated Earnings (in millions)                                                               Three months ended December 31,                    Year ended
+                                                                                                                                                   December 31,
+                                                                                                                             2023                          2023
+Consolidated net earnings attributable to Mosaic                                                                $365                              $1,165       
+Less: Consolidated interest expense, net                                                                        (35)                               (129)       
+Plus: Consolidated depreciation, depletion and amortization                                                      257                                 960       
+Plus: Accretion expense                                                                                           27                                  96       
+Plus: Share-based compensation expense                                                                             6                                  33       
+Plus: Consolidated provision for (benefit from) income taxes                                                    (44)                                 176       
+Less: Equity in net earnings of nonconsolidated companies, net of dividends                                        —                                  35       
+Plus: Notable items not included above                                                                             —                                 237       
+Adjusted EBITDA                                                                                                 $646                              $2,761       
+
+                                                                                   Three months ended December 31,                                  Years ended December 31,
+Potash Earnings (in millions)                                             2023                                2022                      2023                            2022
+Operating Earnings                                                  $222                                $497                     $1,152                          $2,768     
+Plus: Depreciation, Depletion and Amortization                        89                                  73                        299                             307     
+Plus: Accretion Expense                                                3                                   2                          9                               8     
+Plus: Foreign Exchange Gain (Loss)                                    41                                   6                         41                            (19)     
+Plus: Other Non Operating Income                                     (2)                                   —                       (45)                               —     
+Plus: Notable Items                                                 (31)                                  19                         15                              53     
+Adjusted EBITDA                                                     $322                                $597                     $1,471                          $3,117     
+
+                                                                                                     Three months ended December 31,                                  Years ended December 31,
+Phosphate Earnings (in millions)                                                            2023                                2022                      2023                            2022
+Operating Earnings                                                                     $21                                $145                       $375                          $1,347     
+Plus: Depreciation, Depletion and Amortization                                         124                                 111                        486                             485     
+Plus: Accretion Expense                                                                 19                                  15                         67                              55     
+Plus: Foreign Exchange Gain (Loss)                                                     (1)                                 (4)                        (1)                             (8)     
+Plus: Other Non Operating Income (Expense)                                             (9)                                 (9)                       (16)                            (32)     
+Plus: Dividends from equity investments                                                  —                                   —                         25                               —     
+Less: Earnings (Loss) from Consolidated Noncontrolling Interests                         2                                   5                         47                              32     
+Plus: Notable Items                                                                    107                                  95                        338                             404     
+Adjusted EBITDA                                                                       $259                                $348                     $1,227                          $2,219     
+14
+
+
+Reconciliation of Non-GAAP Financial Measures
+
+                                                                                                     Three months ended December 31,                                Years ended December 31,
+Mosaic Fertilizantes (in millions)                                                          2023                                2022                    2023                            2022
+Operating Earnings                                                                     $50                               $(20)                      $75                            $910     
+Plus: Depreciation, Depletion and Amortization                                          41                                  45                      165                             125     
+Plus: Accretion Expense                                                                  5                                   5                       20                              17     
+Plus: Foreign Exchange Gain (Loss)                                                      32                                  38                       80                               8     
+Plus: Other Non Operating Income (Expense)                                             (1)                                 (1)                      (4)                             (4)     
+Less: Earnings (Loss) from Consolidated Noncontrolling Interests                         —                                   —                      (2)                             (1)     
+Plus: Notable Items                                                                   (16)                                (38)                     (11)                             (8)     
+Adjusted EBITDA                                                                       $111                                 $29                     $327                          $1,049     
+
+                                                                 Three months ended December 31,                              Years ended December 31,
+Potash Earnings (in millions)       2023                       2022                                2023                    2022                       
+Gross Margin / tonne                               $99                                $289                     $137                          $351     
+Notable items in gross margin                        —                                   —                        —                             —     
+Adjusted gross margin / tonne                      $99                                $289                     $137                          $351     
+
+                                                                       Three months ended December 31,                              Years ended December 31,
+Phosphates Earnings (in millions)                             2023                                2022                    2023                          2022
+Gross Margin / tonne                                     $88                                $148                     $100                          $268     
+Notable items in gross margin                             18                                  19                        9                             6     
+Adjusted gross margin / tonne                           $106                                $167                     $109                          $274     
+
+                                                                                Three months ended December 31,                              Years ended December 31,
+Mosaic Fertilizantes Earnings (in millions)                            2023                                2022                    2023   2022                       
+Gross Margin / tonne                                              $44                                 $11                      $22                          $111     
+Notable items in gross margin                                       1                                   1                        2                             —     
+Adjusted gross margin / tonne                                     $45                                 $12                      $24                          $111     
+15
+
+
+
+
