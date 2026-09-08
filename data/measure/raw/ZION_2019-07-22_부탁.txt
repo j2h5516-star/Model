@@ -1,0 +1,779 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — ZION 2019-07-22
+# 출처: https://www.sec.gov/Archives/edgar/data/109380/000010938019000173/zion-201906308xkcoverpage.htm
+
+Document
+
+
+UNITED STATES
+SECURITIES AND EXCHANGE COMMISSION
+Washington, D.C. 20549
+
+FORM 8-K
+
+CURRENT REPORT
+Pursuant to Section 13 OR 15(d) of the Securities Exchange Act of 1934
+Date of Report (Date of earliest event reported): July 22, 2019
+ZIONS BANCORPORATION, NATIONAL ASSOCIATION
+(Exact name of registrant as specified in its charter)
+
+United States of America                                         001-12307                  87-0189025                       
+(State or other jurisdiction of Incorporation or organization)   (Commission File Number)   (IRS Employer Identification No.)
+
+
+One South Main,             Salt Lake City,             Utah             84133     
+(Address of principal executive offices)                                 (Zip Code)
+Registrant’s telephone number, including area code      (801) 844-7637             
+
+(Former name or former address, if changed since last report.)                                                                                                                         
+Check the appropriate box below if the Form 8-K filing is intended to simultaneously satisfy the filing obligation of the registrant under any of the following provisions:            
+¨                              Written communications pursuant to Rule 425 under the Securities Act (17 CFR 230.425)                                                                   
+¨                              Soliciting material pursuant to Rule 14a-12 under the Exchange Act (17 CFR 240.14a-12)                                                                  
+¨                              Pre-commencement communications pursuant to Rule 14d-2(b) under the Exchange Act (17 CFR 240.14d-2(b))                                                  
+¨                              Pre-commencement communications pursuant to Rule 13e-4(c) under the Exchange Act (17 CFR 240.13a-4(c))                                                  
+
+Title of Each Class                                                                                                                                   Trading Symbol   Name of Each Exchange on Which Registered
+Common Stock, par value $0.001                                                                                                                        ZION             The NASDAQ Stock Market LLC              
+Warrants to Purchase Common Stock (expiring May 22, 2020)                                                                                             ZIONW            The NASDAQ Stock Market LLC              
+Depositary Shares each representing a 1/40th ownership interest in a share of Series A Floating-Rate Non-Cumulative Perpetual Preferred Stock         ZB/A             New York Stock Exchange                  
+Depositary Shares each representing a 1/40th ownership interest in a share of Series G Fixed/Floating-Rate Non-Cumulative Perpetual Preferred Stock   ZB/G             New York Stock Exchange                  
+Depositary Shares each representing a 1/40th ownership interest in a share of Series H 5.75% Non-Cumulative Perpetual Preferred Stock                 ZB/H             New York Stock Exchange                  
+6.95% Fixed-to-Floating Rate Subordinated Notes due September 15, 2028                                                                                ZBK              New York Stock Exchange                  
+Indicate by check mark whether the registrant is an emerging growth company as defined in Rule 405 of the Securities Act of 1933 (§230.405 of this chapter) or Rule 12b-2 of the Securities Exchange Act of 1934 (§240.12b-2 of this chapter).
+ Emerging growth company ¨
+If an emerging growth company, indicate by check mark if the registrant has elected not to use the extended transition period for complying with any new or revised financial accounting standards provided pursuant to Section 13(a) of the Exchange act. ¨
+
+Item 2.02    Results of Operations and Financial Condition.
+On July 22, 2019, Zions Bancorporation, National Association (“the Bank”) announced its financial results for the quarter ended June 30, 2019 and its intent to host a conference call to discuss such results at 5:30 p.m. Eastern Time on July 22, 2019. The press release announcing the financial results for the quarter ended June 30, 2019 is furnished as Exhibit 99.1 and incorporated herein by reference. A presentation to be used in conjunction with the conference call regarding the Company’s second quarter financial results is furnished as Exhibit 99.2 and incorporated herein by reference.
+The information in this Current Report on Form 8-K, including the exhibits, is furnished pursuant to Item 2.02 and shall not be deemed “filed” for the purposes of Section 18 of the Securities Exchange Act of 1934, as amended, or otherwise subject to the liabilities under that Section. Furthermore, the information in this Current Report on Form 8-K, including the exhibits, shall not be deemed to be incorporated by reference into the filings of the Company under the Securities Act of 1933, as amended.
+Item 9.01    Financial Statements and Exhibits.
+(d)    Exhibits.
+The following exhibits are furnished as part of this Current Report on Form 8-K:
+Exhibit 99.1Press Release dated July 22, 2019 (furnished herewith).
+Exhibit 99.2Earnings Release Presentation dated July 22, 2019 (furnished herewith).
+SIGNATURES
+Pursuant to the requirements of the Securities Exchange Act of 1934, the registrant has duly caused this report to be signed on its behalf by the undersigned hereunto duly authorized.
+ 
+
+                      ZIONS BANCORPORATION, NATIONAL ASSOCIATION                                         
+                      By:                     /s/ Paul E. Burdiss                                        
+                                              Name: Paul E. Burdiss                                      
+                                              Title: Executive Vice President and Chief Financial Officer
+Date: July 22, 2019                                                                                      
+
+
+
+Exhibit
+
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 1
+July 22, 2019
+
+
+Zions Bancorporation, N.A. 
+One South Main             
+Salt Lake City, UT 84133   
+July 22, 2019              
+www.zionsbancorporation.com
+Second Quarter 2019 Financial Results: FOR IMMEDIATE RELEASE 
+
+
+Investor and Media Contact: James Abbott (801) 844-7637
+
+
+
+Zions Bancorporation, N.A. Reports: 2Q19 Net Earnings¹ of $189 million, diluted EPS of $0.99
+compared with 2Q18 Net Earnings¹ of $187 million, diluted EPS of $0.89,                     
+and 1Q19 Net Earnings¹ of $205 million, diluted EPS of $1.04                                
+SECOND QUARTER RESULTS
+
+$0.99                               $189 million     3.54%                         10.8%              
+Earnings per diluted common share   Net Earnings 1   Net interest margin (“NIM”)   Common EquityTier 1
+
+SECOND QUARTER HIGHLIGHTS²                                                                                                                                                                                                    
+Net Interest Income and NIM   •                                                                                                                  Net interest income was $569 million, up 4%                                  
+•                             NIM was 3.54%, compared with 3.56%                                                                              
+•                             Average noninterest-bearing deposits declined to $23.1 billion, compared with $23.6 billion                     
+Operating Performance         •                                                                                                                  Pre-provision net revenue ("PPNR") was $284 million, up 5%                   
+•                             Adjusted PPNR³ was $294 million, up 9%                                                                          
+•                             Noninterest expense was $424 million, up less than 1%                                                           
+•                             Adjusted noninterest expense³ was $423 million, up less than 1%                                                 
+•                             Efficiency ratio³ was 59.0%, compared with 60.9%                                                                
+Loans and Credit Quality      •                                                                                                                  Net loans and leases were $48.6 billion, up $3.4 billion, or 7%              
+•                             Classified loans were $770 million, down 19%; and nonperforming assets were $253 million, down 27%              
+•                             Provision for credit losses was $21 million, compared with $12 million                                          
+•                             Net charge-offs of 0.12% of average loans, compared with net credit recoveries of 0.11% of average loans        
+Capital Returns               •                                                                                                                  Return on average tangible common equity³ was 12.7%, compared with 12.4%     
+•                             Common stock repurchases of $275 million, 5.8 million shares, or 3.2% of shares outstanding as of March 31, 2019
+•                             Common dividend increased to $0.30 per share from $0.24 per share                                               
+Notable Items                 •                                                                                                                  Derivative valuation loss of $6 million on client-related interest rate swaps
+
+
+CEO COMMENTARY                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+Harris H. Simmons, Chairman and CEO, commented, “Net earnings available to common shareholders was up only slightly from last year, reflecting relatively strong loan growth coupled with margin compression resulting from a challenging interest rate environment. Second quarter earnings per share of $0.99 increased 11% from the prior year period, largely the result of a share count that was 9% lower than last year.” Mr. Simmons continued, “Operating expenses continued to be well controlled, rising less than 1% from the prior year’s second quarter, and credit quality remained very clean with annualized net charge-offs totaling only 0.12% of average loans and leases, as economic conditions remain strong throughout the western United States.”
+OPERATING PERFORMANCE3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+ <img alt="chart-5ae33f078f735a9a86da01.jpg" src="chart-5ae33f078f735a9a86da01.jpg" style="height:266px;width:180px;"/><img alt="chart-be761f3e826d57d8aa4a01.jpg" src="chart-be761f3e826d57d8aa4a01.jpg" style="height:266px;width:180px;"/>
+
+
+
+¹ Net Earnings is net earnings applicable to common shareholders.                                                                             
+² Comparisons noted in the bullet points are calculated for the current quarter versus the same prior-year period, unless otherwise specified.
+³ For information on non-GAAP financial measures and the reasons for which the Bank presents these numbers, see pages 16-19.                  
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 2
+July 22, 2019
+
+Comparisons noted in the sections below are calculated for the current quarter versus the same prior-year period, unless otherwise specified. Growth rates of 100% or more are rendered as not meaningful as they are generally reflective of a low initial starting point.
+RESULTS OF OPERATIONS
+
+Net Interest Income and Margin                                                                                                                                           
+                                                                                                                                 2Q19 - 1Q19                  2Q19 - 2Q18
+(In millions)                                                         2Q19              1Q19              2Q18                   $         %                   $        %
+Interest and fees on loans                                        $581              $570              $514             $11             2   %         $67           13   %
+Interest on money market investments                                 8                 9                 7              (1   )       (11   )           1           14    
+Interest on securities                                              95                96                85              (1   )        (1   )          10           12    
+Total interest income                                              684               675               606               9             1              78           13    
+Interest on deposits                                                66                57                29               9            16              37           NM    
+Interest on short and long-term borrowings                          49                42                29               7            17              20           69    
+Total interest expense                                             115                99                58              16            16              57           98    
+Net interest income                                               $569              $576              $548             $(7   )        (1   )         $21            4    
+                                                                                                                           bps                           bps             
+Yield on interest-earning assets                                  4.24   %          4.31   %          3.93   %          (7   )                        31                 
+Rate paid on total deposits and interest-bearing liabilities      0.75   %          0.67   %          0.40   %           8                            35                 
+Cost of total deposits                                            0.49   %          0.43   %          0.22   %           6                            27                 
+Net interest margin                                               3.54   %          3.68   %          3.56   %         (14   )                        (2   )             
+Net interest income increased $21 million, or 4%, to $569 million in the second quarter of 2019 from $548 million in the second quarter of 2018. Total interest income increased $78 million primarily due to a $67 million increase in interest and fees on loans, resulting from growth across all loan segments. Interest expense increased $57 million primarily due to increases in the rate paid on deposits and short and long-term borrowings, reflecting the increase in short-term interest rates, in addition to a $1.7 billion, or 32%, increase in average short and long-term borrowings.
+The yield on interest earning assets was 4.24%, a decrease of 7 basis points compared with the first quarter of 2019, and an increase of 31 basis points compared with the second quarter of 2018. When adjusted for interest recoveries of $1 million in the second quarters of 2019 and 2018, respectively, using $1 million per loan as the reporting threshold, the yield on interest earning assets for each of those periods would be 1 basis point lower. During the first quarter of 2019 the Bank did not experience any interest income recoveries of at least $1 million per loan. 
+The rate paid on total deposits and interest-bearing liabilities increased to 0.75% for the second quarter of 2019, from 0.67% for the first quarter of 2019, and 0.40% for the second quarter of 2018. The total annualized cost of total deposits for the second quarter of 2019 was 0.49%, compared with 0.43% for the first quarter of 2019, and 0.22% for the second quarter of 2018.
+The net interest margin decreased to 3.54% in the second quarter of 2019, compared with 3.68% in the first quarter of 2019, and 3.56% in the same prior year period primarily due to the increase in the cost of deposits and a decline in loan yields, both of which were due to changes in portfolio composition and competitive pricing pressure. 
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 3
+July 22, 2019
+
+
+Noninterest Income                                                                                                                                      
+                                                                                                               2Q19 - 1Q19                   2Q19 - 2Q18
+(In millions)                                         2Q19              1Q19              2Q18                  $   %                       $          %
+Service charges and fees on deposit accounts       $41               $40               $42             $1            3   %        $(1   )        (2   )%
+Other service charges, commissions and fees         58                54                55              4            7              3             5     
+Wealth management and trust income                  13                13                14              —           —              (1   )        (7   ) 
+Loan sales and servicing income                      9                 5                 7              4           80              2            29     
+Capital markets and foreign exchange                 9                 8                 7              1           13              2            29     
+Customer-related fees                              130               120               125             10            8              5             4     
+Dividends and other investment income                9                 9                11              —           —              (2   )       (18   ) 
+Securities gains (losses), net                      (3   )             1                 1             (4   )       NM             (4   )        NM     
+Other                                               (4   )             2                 1             (6   )       NM            $(5   )        NM     
+Total noninterest income                          $132              $132              $138             $—           —             $(6   )        (4   ) 
+Total noninterest income for the second quarter of 2019 decreased by $6 million, or 4%, to $132 million from $138 million for the second quarter of 2018. Customer-related fees increased $5 million, which was largely attributable to an increase of $3 million in other service charges, commissions and fees as a result of increased lending activity, including syndication fees. Other noninterest income decreased by $5 million, primarily due to a $6 million valuation adjustment on client-related interest rate swaps in the second quarter of 2019. As a result of the decline in interest rates during the second quarter of 2019, these client-related interest rate swaps significantly increased in value, resulting in a larger exposure to the Bank and a $6 million valuation adjustment.
+
+Noninterest Expense                                                                                                                               
+                                                                                            2Q19 - 1Q19                                2Q19 - 2Q18
+(In millions)                                   2Q19             1Q19             2Q18      $                       %                  $         %
+Salaries and employee benefits              $274             $287             $266          $(13      )       (5   )%         $8             3   %
+Occupancy, net                                32               33               32          (1        )       (3   )           —             —    
+Furniture, equipment and software, net        35               32               32                3            9               3             9    
+Other real estate expense, net                 —               (1   )            —                1           NM               —            NM    
+Credit-related expense                         8                6                7                2           33               1            14    
+Professional and legal services               13               11               14                2           18              (1   )        (7   )
+Advertising                                    5                5                7          —                  —              (2   )       (29   )
+FDIC premiums                                  6                6               14          —                  —              (8   )       (57   )
+Other                                         51               51               49          —                  —               2             4    
+Total noninterest expense                   $424             $430             $421          $(6       )       (1   )          $3             1    
+Adjusted noninterest expense 1              $423             $431             $420          $(8       )       (2   )          $3             1    
+
+1   For information on non-GAAP financial measures, see pages 16-19.
+Noninterest expense for the second quarter of 2019 was $424 million, an increase of less than 1%, when compared with $421 million for the second quarter of 2018. Salaries and employee benefits increased $8 million, primarily due to a $7 million increase in base salaries resulting from annual salary merit increases and employee headcount and a $3 million decline in deferred salaries. The increase was partially offset by a $2 million decrease in incentive compensation. Furniture, equipment and software, net, increased by $3 million primarily due to increased 
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 4
+July 22, 2019
+
+amortization of capitalized software related to our Core Transformation Project to replace our commercial loan systems.
+The aforementioned increases in noninterest expense were offset by a $8 million decrease in FDIC premiums. The decrease in FDIC premiums is primarily due to the elimination of the FDIC surcharge for large banks because the required Deposit Insurance Fund reserve ratio has been met.
+Our efficiency ratio was 59.0% in the second quarter of 2019, compared with 60.2% in the first quarter of 2019, and 60.9% in the second quarter of 2018. Adjusted noninterest expense for the second quarter of 2019 increased $3 million, or less than 1%, to $423 million, compared with $420 million for the same prior year period. For information on non-GAAP financial measures, including differences between noninterest expense and adjusted noninterest expense, see pages 16-19.
+
+Income Taxes                           
+Our effective income tax rate was 22.7% for the second quarter of 2019, compared with 22.3% for the first quarter of 2019 and 22.1% for the second quarter of 2018. 
+BALANCE SHEET ANALYSIS 
+
+Asset Quality                                                                                                                                                                                  
+                                                                                                                                                    2Q19 - 1Q19                     2Q19 - 2Q18
+(In millions)                                                                             2Q19              1Q19               2Q18            bps                           bps               
+Ratio of nonperforming assets to loans and leases and other real estate owned         0.52   %          0.50   %          0.77    %          2                           (25   )               
+Annualized ratio of net loan and lease charge-offs (recoveries) to average loans      0.12   %             —   %         (0.11   )%         12                            23                   
+Ratio of allowance for loan losses to loans and leases, at period end                 1.03   %          1.04   %          1.08    %         (1   )                        (5   )               
+                                                                                                                                                     $   %                         $          %
+Classified loans                                                                      $770              $729              $947             $41            6   %        $(177   )       (19   )%
+Nonperforming assets                                                                   253               240               347              13            5              (94   )       (27    )
+Net loan and lease charge-offs (recoveries)                                             14                 —               (12    )         14           NM               26            NM     
+Provision for credit losses                                                             21                 4                12              17           NM                9            75    %
+Asset quality improved when compared with the same prior year period. Nonperforming assets declined 27% from the second quarter of 2018, largely due to continued improvements in the oil and gas-related portfolio. The ratio of nonaccrual loans and accruing loans past due 90 days or more to loans and leases was 0.54%, compared with 0.77% in the second quarter of 2018, a reflection of a relatively benign credit environment and continued disciplined underwriting.
+The Bank recorded a $21 million provision for credit losses during the second quarter of 2019, compared with $4 million during the first quarter of 2019, and $12 million for the second quarter of 2018. The increased provision for credit losses reflects loan growth, increased net charge-offs, and an increase in the qualitative portion related to 
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 5
+July 22, 2019
+
+general economic indicators. The allowance for loan losses was $503 million at June 30, 2019, compared with $490 million at June 30, 2018, or 1.03% and 1.08% of loans and leases, respectively. 
+
+Loans and Leases                                                                                                                                                         
+                                                                                                                              2Q19 - 1Q19                     2Q19 - 2Q18
+(In millions)                                                2Q19                1Q19                2Q18                       $       %                       $       %
+Loans held for sale                                      $105                 $69                 $84                 $36          52   %             $21          25   %
+Loans and leases:                                                                                                                                                        
+Commercial                                             25,107              24,598              23,245                 509           2               1,862           8    
+Commercial real estate                                 11,827              11,530              10,973                 297           3                 854           8    
+Consumer                                               11,683              11,478              11,012                 205           2                 671           6    
+Loans and leases, net of unearned income and fees      48,617              47,606              45,230               1,011           2               3,387           7    
+Less allowance for loan losses                            503       497                 490                             6           1                  13           3    
+Loans held for investment, net of allowance           $48,114             $47,109             $44,740              $1,005           2              $3,374           8    
+Loans and leases, net of unearned income and fees, increased $3.4 billion, or 7%, to $48.6 billion at June 30, 2019 from $45.2 billion at June 30, 2018. Within commercial loans, municipal and commercial and industrial loans increased $671 million and $749 million, respectively. Term commercial real estate loans increased $447 million. The growth in consumer loans was primarily due to a $579 million increase in 1-4 family residential loans. Unfunded lending commitments and letters of credit increased to $23.3 billion at June 30, 2019, compared with $21.2 billion at June 30, 2018.
+
+Deposits and Borrowed Funds                                                                                                                                                        
+                                                                                                                                      2Q19 - 1Q19                       2Q19 - 2Q18
+(In millions)                                                      2Q19                1Q19                2Q18                       $         %                       $         %
+Noninterest-bearing demand                                  $22,947             $23,259             $24,007               $(312   )       (1   )%         $(1,060   )       (4   )%
+Interest-bearing:                                                                                                                                                                  
+Savings and money market                                     26,470              26,348              25,562                 122            —                  908            4     
+Time                                                          4,915               4,928               4,011                 (13   )        —                  904           23     
+Total deposits                                              $54,332             $54,535             $53,580               $(203   )        —                 $752            1     
+Borrowed funds:                                                                                                                                                                    
+Federal funds purchased and other short-term borrowings      $6,023              $4,944              $4,158               1,079           22                1,865           45     
+Long-term debt                                               $1,236              $1,228                $383                   8            1                  853                NM
+Total borrowed funds                                         $7,259              $6,172              $4,541              $1,087           18               $2,718           60     
+Total deposits increased by $0.8 billion, or 1%, in the second quarter of 2019 to $54.3 billion, while noninterest bearing deposits decreased $1.1 billion, or 4%, over the same period. Average total deposits increased to $54.3 billion for the second quarter of 2019, compared with $52.9 billion for the second quarter of 2018. Average noninterest bearing deposits declined 2% to $23.1 billion for the second quarter of 2019, compared with $23.6 billion for the second quarter of 2018, and were 42% and 45% of average total deposits, respectively, for the same periods. 
+Total borrowed funds increased $2.7 billion, in the second quarter of 2019 to $7.3 billion, from $4.5 billion in the second quarter of 2018. Average borrowed funds increased to $7.0 billion for the second quarter of 2019, compared 
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 6
+July 22, 2019
+
+with $5.3 billion for the second quarter of 2018. The increase in both end of period and average borrowed funds reflects recent loan growth, which has exceeded deposit growth.
+
+Shareholders’ Equity                                                                                                                                                                                        
+                                                                                                                                                                 2Q19 - 1Q19                     2Q19 - 2Q18
+(In millions)                                                                                    2Q19                1Q19                2Q18                     $   %                          $   %      
+Shareholders’ equity:                                                                                                                                                                                       
+Preferred stock                                                                              $566                $566                $566                $—           —    %            $—           —    % 
+Common stock and additional paid-in capital                                                 3,271               3,541               4,231              (270   )       (8   )          (960   )       (23)   
+Retained earnings                                                                           3,737               3,603               3,139               134            4               598           19     
+Accumulated other comprehensive income (loss)                                                  25                (122   )            (315   )           147           NM               340           NM     
+Total shareholders' equity                                                                 $7,599              $7,588              $7,621               $11           —               $(22   )       —      
+Capital distributions:                                                                                                                                                                                      
+Common dividends paid                                                                         $54                 $56                 $47                (2   )       (4   )             7           15     
+Bank common stock repurchased                                                                 275                 275                 120                 —           —                155           NM     
+Total capital distributed to common shareholders                                              329                 331                 167                (2   )       (1   )           162           97     
+Capital distributed as a percentage of net earnings applicable to common shareholders         174   %             161   %              89   %                                                               
+During the second quarter of 2019, the Bank’s common stock dividend was $0.30 per share, compared with $0.24 per share in the second quarter of 2018. Common stock repurchases during the current quarter totaled $275 million, or 5.8 million shares, which is equivalent to 3.2% of common stock outstanding as of March 31, 2019. During the last four quarters, the Bank repurchased $985 million, or 20.0 million shares, of common stock which is equivalent to 10.2% of common stock outstanding as of June 30, 2018. As of June 30, 2019, the Bank had 29.3 million ZIONW warrants outstanding with a strike price of $34.41 per share that expire on May 22, 2020.
+Common stock and additional paid-in capital decreased $960 million, or 23%, from the second quarter of 2018, primarily due to the previously mentioned share repurchases. Accumulated other comprehensive income improved $340 million from a negative $315 million as of June 30, 2018, to $25 million as of June 30, 2019. The improvement was primarily a result of fair value increases of the available-for-sale securities due to changes in interest rates.
+Tangible book value per common share increased to $34.02 at June 30, 2019, compared with $30.91 at June 30, 2018 primarily due to a 9.4% decrease in common shares outstanding over the same period. Basel III common equity tier 1 (“CET1”) capital was $6.0 billion at June 30, 2019 and $6.4 billion at June 30, 2018. The estimated Basel III CET1 capital ratio was 10.8% at June 30, 2019 compared with 12.2% at June 30, 2018. For information on non-GAAP financial measures, see pages 16-19. 
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 7
+July 22, 2019
+
+Supplemental Presentation and Conference Call
+Zions has posted a supplemental presentation to its website, which will be used to discuss these second quarter results at 5:30 p.m. ET this afternoon (July 22, 2019). Media representatives, analysts, investors and the public are invited to join this discussion by calling (253) 237-1247 (domestic and international) and entering the passcode 3068219 or via on-demand webcast. A link to the webcast will be available on the Zions Bancorporation website at zionsbancorporation.com. The webcast of the conference call will also be archived and available for 30 days. 
+About Zions Bancorporation, N.A. 
+Zions Bancorporation, N.A. is one of the nation's premier financial services companies with total assets of $70 billion. Zions operates under local management teams and distinct brands in 11 western states: Arizona, California, Colorado, Idaho, Nevada, New Mexico, Oregon, Texas, Utah, Washington and Wyoming. The Bank is a national leader in Small Business Administration lending and public finance advisory services. The Bank has been the recipient of many local and national awards, primarily reflecting its strong customer service and products. The Bank has a strong commitment to the communities in which it operates. In addition, Zions is included in the S&P 500 and NASDAQ Financial 100 indices. Investor information and links to local banking brands can be accessed at zionsbancorporation.com.
+Forward-Looking Information
+This earnings release includes “forward-looking statements” as that term is defined in the Private Securities Litigation Reform Act of 1995. These statements are based on management’s current expectations regarding future events or determinations, all of which are subject to known and unknown risks, uncertainties and other factors that may cause our actual results, performance or achievements, market trends, industry results or regulatory outcomes to differ materially from those expressed or implied by such forward-looking statements. 
+Without limiting the foregoing, the words “anticipates,” “believes,” “can,” “continue,” “could,” “estimates,” “expects,” “intends,” “may,” “might,” “plans,” “projects,” “should,” “would,” “targets,” “will” and the negative thereof and similar words and expressions are intended to identify forward-looking statements. Forward-looking statements by their nature address matters that are, to different degrees, uncertain, such as statements about future financial and operating results. Actual results and outcomes may differ materially from those presented, either expressed or implied, in the release. Important risk factors that may cause such material differences include, but are not limited to, the Bank’s ability to meet operating leverage goals; the rate of change of interest-sensitive assets and liabilities relative to changes in benchmark interest rates; the ability of the Bank to upgrade its core deposit system and implement new digital products in order to remain competitive; risks associated with information security, such as systems breaches and failures; and legislative, regulatory and economic developments. These risks, as well as other factors, are discussed in the Bank’s most recent Annual Report on Form 10-K and Quarterly Report on Form 10-Q, filed with the Securities and Exchange Commission (SEC) and available at the SEC’s Internet site (https://www.sec.gov/). In addition, you may obtain documents filed with the SEC by the Bank free of charge by contacting: 
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 8
+July 22, 2019
+
+Investor Relations, Zions Bancorporation, N.A., One South Main Street, 11th Floor, Salt Lake City, Utah 84133, (801) 844-7637. 
+Except as required by law, Zions Bancorporation, N.A. specifically disclaims any obligation to update any factors or to publicly announce the result of revisions to any of the forward-looking statements included herein to reflect future events or developments.
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 9
+July 22, 2019
+
+FINANCIAL HIGHLIGHTS
+(Unaudited)
+
+                                                                                                                                                                            Three Months Ended
+(In millions, except share, per share, and ratio data)                                   June 30,             March 31,             December 31,            September 30,             June 30,
+                                                                                             2019                  2019                     2018                     2018                 2018
+BALANCE SHEET 1                                                                                                                                                                               
+Loans held for investment, net of allowance                                          $48,114              $47,109                 $46,219                  $45,330                $44,740     
+Total assets                                                                          70,065               69,195                  68,746                   66,731                 66,457     
+Deposits                                                                              54,332               54,535                  54,101                   53,785                 53,580     
+Total shareholders’ equity                                                             7,599                7,588                   7,578                    7,553                  7,621     
+STATEMENT OF INCOME                                                                                                                                                                           
+Net earnings applicable to common shareholders                                          $189                 $205                    $217                     $215                   $187     
+Net interest income                                                                      569                  576                     576                      565                    548     
+Taxable-equivalent net interest income 2                                                 576                  582                     582                      570                    553     
+Total noninterest income                                                                 132                  132                     140                      136                    138     
+Total noninterest expense                                                                424                  430                     420                      420                    421     
+Adjusted pre-provision net revenue 2                                                     294                  285                     305                      291                    270     
+Provision for credit losses                                                               21                    4                       6                      (11      )              12     
+SHARE AND PER COMMON SHARE AMOUNTS                                                                                                                                                            
+Net earnings per diluted common share                                                  $0.99                $1.04                   $1.08                    $1.04                  $0.89     
+Dividends                                                                               0.30                 0.30                    0.30                     0.30                   0.24     
+Book value per common share 1                                                          39.75                38.47                   37.39                    36.36                  36.11     
+Tangible book value per common share 1, 2                                              34.02                32.92                   31.97                    31.08                  30.91     
+Weighted average share price                                                           46.11                47.71                   46.61                    52.80                  55.19     
+Weighted average diluted common shares outstanding (in thousands)                    189,098              195,241                 199,048                  205,765                209,247     
+Common shares outstanding (in thousands) 1                                           176,935              182,513                 187,554                  192,169                195,392     
+SELECTED RATIOS AND OTHER DATA                                                                                                                                                                
+Return on average assets                                                                1.14    %            1.26     %              1.34      %              1.33      %            1.19    %
+Return on average common equity                                                         10.8    %            11.9     %              12.4      %              12.1      %            10.6    %
+Return on average tangible common equity 2                                              12.7    %            13.9     %              14.5      %              14.2      %            12.4    %
+Net interest margin                                                                     3.54    %            3.68     %              3.67      %              3.63      %            3.56    %
+Cost of total deposits, annualized                                                      0.49    %            0.43     %              0.35      %              0.28      %            0.22    %
+Efficiency ratio 2                                                                      59.0    %            60.2     %              57.8      %              58.8      %            60.9    %
+Effective tax rate                                                                      22.7    %            22.3     %              22.1      %              23.6      %            22.1    %
+Ratio of nonperforming assets to loans and leases and other real estate owned           0.52    %            0.50     %              0.55      %              0.64      %            0.77    %
+Annualized ratio of net loan and lease charge-offs (recoveries) to average loans        0.12    %               —     %             (0.07     )%             (0.01     )%           (0.11   )%
+Ratio of total allowance for credit losses to loans and leases outstanding 1            1.16    %            1.17     %              1.18      %              1.17      %            1.21    %
+Full-time equivalent employees                                                        10,326               10,204                  10,201                   10,143                 10,217     
+CAPITAL RATIOS AND DATA 1                                                                                                                                                                     
+Common equity tier 1 capital                                                          $5,987               $6,124                  $6,245                   $6,331                 $6,360     
+Risk-weighted assets                                                                  55,427               54,404                  53,591                   52,493                 52,012     
+Tangible common equity ratio                                                             8.7    %             8.8     %               8.9      %               9.1      %             9.2    %
+Common equity tier 1 capital ratio                                                      10.8    %            11.3     %              11.7      %              12.1      %            12.2    %
+Tier 1 leverage ratio                                                                    9.5    %             9.9     %              10.3      %              10.5      %            10.5    %
+Tier 1 risk-based capital ratio                                                         11.8    %            12.3     %              12.7      %              13.1      %            13.3    %
+Total risk-based capital ratio                                                          13.0    %            13.5     %              13.9      %              14.6      %            14.8    %
+
+1   At period end.
+
+2   For information on non-GAAP financial measures, see pages 16-19.
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 10
+July 22, 2019
+
+CONSOLIDATED BALANCE SHEETS
+(Unaudited)
+
+(In millions, shares in thousands)                                                                  June 30,             March 31,             December 31,            September 30,              June 30,
+                                                                                                        2019                  2019                     2018                     2018                  2018
+                                                                                                 (Unaudited)           (Unaudited)                                       (Unaudited)           (Unaudited)
+ASSETS                                                                                                                                                                                                    
+Cash and due from banks                                                                           $538                  $536                    $614                     $517                   $468      
+Money market investments:                                                                                                                                                                                 
+Interest-bearing deposits                                                                          634                   702                     619                      590                    698      
+Federal funds sold and security resell agreements                                                  620                   438                   1,461                      560                    558      
+Investment securities:                                                                                                                                                                                    
+Held-to-maturity1, at amortized cost                                                               695                   764                     774                      751                    878      
+Available-for-sale, at fair value                                                               14,672                14,904                  14,737                   14,625                 14,627      
+Trading account, at fair value                                                                     148                   316                     106                      176                    207      
+Total investment securities                                                                     15,515                15,984                  15,617                   15,552                 15,712      
+Loans held for sale                                                                                105                    69                      93                       61                     84      
+Loans and leases, net of unearned income and fees                                               48,617                47,606                  46,714                   45,810                 45,230      
+Less allowance for loan losses                                                                     503                   497                     495                      480                    490      
+Loans held for investment, net of allowance                                                     48,114                47,109                  46,219                   45,330                 44,740      
+Other noninterest-bearing investments                                                            1,056                   993                   1,046                    1,027                  1,054      
+Premises, equipment and software, net                                                            1,133                 1,125                   1,124                    1,111                  1,099      
+Goodwill and intangibles                                                                         1,014                 1,014                   1,015                    1,015                  1,015      
+Other real estate owned                                                                              5                     6                       4                        4                      5      
+Other assets                                                                                     1,331                 1,219                     934                      964                  1,024      
+Total assets                                                                                   $70,065               $69,195                 $68,746                  $66,731                $66,457      
+LIABILITIES AND SHAREHOLDERS’ EQUITY                                                                                                                                                                      
+Deposits:                                                                                                                                                                                                 
+Noninterest-bearing demand                                                                     $22,947               $23,259                 $23,645                  $24,067                $24,007      
+Interest-bearing:                                                                                                                                                                                         
+Savings and money market                                                                        26,470                26,348                  26,120                   25,462                 25,562      
+Time                                                                                             4,915                 4,928                   4,336                    4,256                  4,011      
+Total deposits                                                                                  54,332                54,535                  54,101                   53,785                 53,580      
+Federal funds purchased and other short-term borrowings                                          6,023                 4,944                   5,653                    3,780                  4,158      
+Long-term debt                                                                                   1,236                 1,228                     724                      879                    383      
+Reserve for unfunded lending commitments                                                            60                    59                      57                       58                     58      
+Other liabilities                                                                                  815                   841                     633                      676                    657      
+Total liabilities                                                                               62,466                61,607                  61,168                   59,178                 58,836      
+Shareholders’ equity:                                                                                                                                                                                     
+Preferred stock, without par value; authorized 4,400 shares                                        566                   566                     566                      566                    566      
+Common stock2 ($0.001 par value; authorized 350,000 shares) and additional paid-in capital       3,271                 3,541                   3,806                    4,052                  4,231      
+Retained earnings                                                                                3,737                 3,603                   3,456                    3,296                  3,139      
+Accumulated other comprehensive income (loss)                                                       25                  (122     )              (250      )              (361      )            (315     )
+Total shareholders’ equity                                                                       7,599                 7,588                   7,578                    7,553                  7,621      
+Total liabilities and shareholders’ equity                                                     $70,065               $69,195                 $68,746                  $66,731                $66,457      
+1 Held-to-maturity (approximate fair value)                                                        698                   762                     767                      734                    866      
+2 Common stock (issued and outstanding)                                                        176,935               182,513                 187,554                  192,169                195,392      
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 11
+July 22, 2019
+
+CONSOLIDATED STATEMENTS OF INCOME
+(Unaudited)
+                                                                                                                                                                                    Three Months Ended
+(In millions, except share and per share amounts)                                                June 30,             March 31,             December 31,            September 30,             June 30,
+                                                                                                     2019                  2019                     2018                     2018                 2018
+Interest income:                                                                                                                                                                                      
+Interest and fees on loans                                                         $581                              $570                    $555                     $537                   $514     
+Interest on money market investments                                                  8                                 9                       8                        8                      7     
+Interest on securities                                                               95                                96                      93                       86                     85     
+Total interest income                                                               684                               675                     656                      631                    606     
+Interest expense:                                                                                                                                                                                     
+Interest on deposits                                                                 66                                57                      48                       38                     29     
+Interest on short- and long-term borrowings                                          49                                42                      32                       28                     29     
+Total interest expense                                                              115                                99                      80                       66                     58     
+Net interest income                                                                 569                               576                     576                      565                    548     
+Provision for credit losses:                                                                                                                                                                          
+Provision for loan losses                                                            20                                 2                       7                      (11      )               5     
+Provision for unfunded lending commitments                                            1                                 2                      (1      )                 —                      7     
+Total provision for credit losses                                                    21                                 4                       6                      (11      )              12     
+Net interest income after provision for loan losses                                 548                               572                     570                      576                    536     
+Noninterest income:                                                                                                                                                                                   
+Service charges and fees on deposit accounts                                         41                                40                      41                       42                     42     
+Other service charges, commissions and fees                                          58                                54                      59                       59                     55     
+Wealth management and trust income                                                   13                                13                      13                       12                     14     
+Loan sales and servicing income                                                       9                                 5                       6                        5                      7     
+Capital markets and foreign exchange                                                  9                                 8                       9                        7                      7     
+Customer-related fees                                                               130                               120                     128                      125                    125     
+Dividends and other investment income                                                 9                                 9                      10                       11                     11     
+Securities gains (losses), net                                                       (3                 )               1                       2                       (1      )               1     
+Other                                                                                (4                 )               2                       —                        1                      1     
+Total noninterest income                                                            132                               132                     140                      136                    138     
+Noninterest expense:                                                                                                                                                                                  
+Salaries and employee benefits                                                      274                               287                     270                      264                    266     
+Occupancy, net                                                                       32                                33                      35                       33                     32     
+Furniture, equipment and software, net                                               35                                32                      31                       30                     32     
+Other real estate expense, net                                                        —                                (1     )                 —                        1                      —     
+Credit-related expense                                                                8                                 6                       6                        5                      7     
+Professional and legal services                                                      13                                11                      15                       12                     14     
+Advertising                                                                           5                                 5                       6                        8                      7     
+FDIC premiums                                                                         6                                 6                       6                       18                     14     
+Other                                                                                51                                51                      51                       49                     49     
+Total noninterest expense                                                           424                               430                     420                      420                    421     
+Income before income taxes                                                          256                               274                     290                      292                    253     
+Income taxes                                                                         58                                61                      64                       69                     56     
+Net income                                                                          198                               213                     226                      223                    197     
+Preferred stock dividends                                                            (9                 )              (8     )                (9      )                (8      )             (10    )
+Net earnings applicable to common shareholders                                     $189                              $205                    $217                     $215                   $187     
+Weighted average common shares outstanding during the period:                                                                                                                                         
+Basic shares (in thousands)                                                     179,156                           184,767                 189,169                  192,973                195,583     
+Diluted shares (in thousands)                                                   189,098                           195,241                 199,048                  205,765                209,247     
+Net earnings per common share:                                                                                                                                                                        
+Basic                                                                             $1.05                             $1.10                   $1.14                    $1.11                  $0.95     
+Diluted                                                                            0.99                              1.04                    1.08                     1.04                   0.89     
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 12
+July 22, 2019
+
+Loan Balances Held for Investment by Portfolio Type 
+(Unaudited)
+
+(In millions)                                             June 30,             March 31,             December 31,            September 30,             June 30,
+                                                              2019                  2019                     2018                     2018                 2018
+Commercial:                                                                                                                                                    
+Commercial and industrial                             $14,883              $14,758                 $14,513                  $14,096                $14,134     
+Leasing                                                   337                  312                     327                      332                    358     
+Owner occupied                                          7,828                7,754                   7,661                    7,548                  7,365     
+Municipal                                               2,059                1,774                   1,661                    1,563                  1,388     
+Total commercial                                       25,107               24,598                  24,162                   23,539                 23,245     
+Commercial real estate:                                                                                                                                        
+Construction and land development                       2,609                2,343                   2,186                    2,295                  2,202     
+Term                                                    9,218                9,187                   8,939                    8,752                  8,771     
+Total commercial real estate                           11,827               11,530                  11,125                   11,047                 10,973     
+Consumer:                                                                                                                                                      
+Home equity credit line                                 2,929                2,884                   2,937                    2,884                  2,825     
+1-4 family residential                                  7,440                7,294                   7,176                    7,039                  6,861     
+Construction and other consumer real estate               644                  636                     643                      644                    661     
+Bankcard and other revolving plans                        502                  489                     491                      483                    490     
+Other                                                     168                  175                     180                      174                    175     
+Total consumer                                         11,683               11,478                  11,427                   11,224                 11,012     
+Loans and leases, net of unearned income and fees     $48,617              $47,606                 $46,714                  $45,810                $45,230     
+Nonperforming Assets 
+(Unaudited)
+
+(In millions)                                                                                    June 30,             March 31,             December 31,            September 30,           June 30,
+                                                                                                     2019                  2019                     2018                     2018               2018
+Nonaccrual loans1                                                                               $248                 $234                    $252                     $288                 $342     
+Other real estate owned                                                                            5                    6                       4                        4                    5     
+Total nonperforming assets                                                                      $253                 $240                    $256                     $292                 $347     
+Ratio of nonperforming assets to loans1 and leases and other real estate owned                  0.52    %            0.50     %              0.55      %              0.64      %          0.77    %
+Accruing loans past due 90 days or more                                                          $17                   $8                     $10                      $12                   $5     
+Ratio of accruing loans past due 90 days or more to loans1 and leases                           0.03    %            0.02     %              0.02      %              0.03      %          0.01    %
+Nonaccrual loans and accruing loans past due 90 days or more                                    $265                 $242                    $262                     $300                 $347     
+Ratio of nonaccrual loans and accruing loans past due 90 days or more to loans1 and leases      0.54    %            0.51     %              0.56      %              0.65      %          0.77    %
+Accruing loans past due 30-89 days                                                               $99                 $142                     $65                      $87                 $119     
+Restructured loans included in nonaccrual loans                                                   79                   76                      90                       90                   77     
+Restructured loans on accrual                                                                     97                   98                     112                      114                  104     
+Classified loans                                                                                 770                  729                     698                      784                  947     
+1 Includes loans held for sale.
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 13
+July 22, 2019
+
+Allowance for Credit Losses 
+(Unaudited)
+
+                                                                                                                                                                                  Three Months Ended
+(In millions)                                                                                    June 30,             March 31,             December 31,            September 30,           June 30,
+                                                                                                     2019                  2019                     2018                     2018               2018
+Allowance for Loan Losses                                                                                                                                                                           
+Balance at beginning of period                                                                  $497                 $495                    $480                     $490                 $473     
+Provision for loan losses                                                                         20                    2                       7                      (11      )             5     
+Loan and lease charge-offs                                                                        23                   12                      13                       17                   13     
+Less: Recoveries                                                                                   9                   12                      21                       18                   25     
+Net loan and lease charge-offs (recoveries)                                                       14                    —                      (8      )                (1      )           (12    )
+Balance at end of period                                                                        $503                 $497                    $495                     $480                 $490     
+Ratio of allowance for loan losses to loans1 and leases, at period end                          1.03    %            1.04     %              1.06      %              1.05      %          1.08    %
+Ratio of allowance for loan losses to nonaccrual loans1 at period end                            203    %             212     %               201      %               167      %           143    %
+Annualized ratio of net loan and lease charge-offs (recoveries) to average loans                0.12    %               —     %             (0.07     )%             (0.01     )%         (0.11   )%
+Reserve for Unfunded Lending Commitments                                                                                                                                                            
+Balance at beginning of period                                                                   $59                  $57                     $58                      $58                  $51     
+Provision for unfunded lending commitments                                                         1                    2                      (1      )                 —                    7     
+Balance at end of period                                                                         $60                  $59                     $57                      $58                  $58     
+Allowance for Credit Losses                                                                                                                                                                         
+Allowance for loan losses                                                                       $503                 $497                    $495                     $480                 $490     
+Reserve for unfunded lending commitments                                                          60                   59                      57                       58                   58     
+Total allowance for credit losses                                                               $563                 $556                    $552                     $538                 $548     
+Ratio of total allowance for credit losses to loans1 and leases outstanding, at period end      1.16    %            1.17     %              1.18      %              1.17      %          1.21    %
+1 Does not include loans held for sale.
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 14
+July 22, 2019
+
+Nonaccrual Loans by Portfolio Type
+(Unaudited)
+
+(In millions)                                     June 30,             March 31,             December 31,            September 30,           June 30,
+                                                      2019                  2019                     2018                     2018               2018
+Loans held for sale                                $—                   $—                      $6                       $—                   $—     
+Commercial:                                                                                                                                          
+Commercial and industrial                         $85                  $72                     $82                     $112                 $142     
+Leasing                                             1                    1                       2                        2                    7     
+Owner occupied                                     69                   69                      67                       66                   63     
+Municipal                                           1                    1                       1                        1                    1     
+Total commercial                                  156                  143                     152                      181                  213     
+Commercial real estate:                                                                                                                              
+Construction and land development                   1                    1                       —                        —                    5     
+Term                                               31                   32                      38                       46                   53     
+Total commercial real estate                       32                   33                      38                       46                   58     
+Consumer:                                                                                                                                            
+Home equity credit line                            12                   11                      13                       13                   14     
+1-4 family residential                             44                   45                      42                       47                   56     
+Construction and other consumer real estate         4                    2                       —                        —                    1     
+Bankcard and other revolving plans                  —                    —                       1                        1                    —     
+Other                                               —                    —                       —                        —                    —     
+Total consumer                                     60                   58                      56                       61                   71     
+Total nonaccrual loans                           $248                 $234                    $252                     $288                 $342     
+Net Charge-Offs by Portfolio Type
+(Unaudited)
+
+(In millions)                                 June 30,                March 31,      December 31,            September 30,           June 30,    
+                                              2019                         2019      2018                    2018                    2018        
+Commercial:                                                                                                                                      
+Commercial and industrial                     $13                      $1            $(10          )         $(3           )         $(10      ) 
+Leasing                                       —                         —            —                       —                       —           
+Owner occupied                                —                         1            —                       (1            )         —           
+Municipal                                     —                         —            —                       —                       —           
+Total commercial                              13                        2            (10           )         (4            )         (10       ) 
+Commercial real estate:                                                                                                                          
+Construction and land development             —                         —            (1            )         (2            )         (1        ) 
+Term                                          —                        (2     )      —                                 4             (2        ) 
+Total commercial real estate                  —                        (2     )      (1            )                   2             (3        ) 
+Consumer:                                                                                                                                        
+Home equity credit line                       —                        (1     )      —                       (1            )         (1        ) 
+1-4 family residential                        (1        )              (1     )      —                       —                       —           
+Construction and other consumer real estate   —                         —            —                       —                       —           
+Bankcard and other revolving plans            1                         1                      2                       2                   2     
+Other                                         1                         1                      1             —                       —           
+Total consumer loans                          1                         —                      3                       1                   1     
+Total net charge-offs (recoveries)            $14                      $—            $(8           )         $(1           )         $(12      ) 
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 15
+July 22, 2019
+
+CONSOLIDATED AVERAGE BALANCE SHEETS, YIELDS AND RATES
+(Unaudited) 
+                                                                                                                                                                                                            Three Months Ended
+                                                                                                           June 30, 2019                                     March 31, 2019                                      June 30, 2018
+(In millions)                                                               Average balance          Averageyield/rate 1             Average balance                Average             Average balance                Average
+                                                                                                                                                               yield/rate 1                                       yield/rate 1
+ASSETS                                                                                                                                                                                                                        
+Money market investments                                                 $1,261                         2.64           %              $1,268                  2.73        %              $1,317                  2.02        %
+Securities:                                                                                                                                                                                                                   
+Held-to-maturity                                                            687                         3.69           %                 829                  3.72        %                 780                  3.60        %
+Available-for-sale                                                       14,750                         2.43           %              14,724                  2.49        %              14,745                  2.14        %
+Trading account                                                             172                         4.48           %                 107                  4.52        %                 179                  4.06        %
+Total securities                                                         15,609                         2.51           %              15,660                  2.57        %              15,704                  2.23        %
+Loans held for sale                                                          71                         2.18           %                  63                  1.70        %                  72                  4.18        %
+Loans held for investment:2                                                                                                                                                                                                   
+Commercial                                                               24,977                         4.94           %              24,427                  5.05        %              23,275                  4.68        %
+Commercial real estate                                                   11,777                         5.22           %              11,335                  5.31        %              11,075                  4.94        %
+Consumer                                                                 11,570                         4.28           %              11,409                  4.30        %              10,892                  3.98        %
+Total loans held for investment                                          48,324                         4.85           %              47,171                  4.93        %              45,242                  4.57        %
+Total interest-earning assets                                            65,265                         4.24           %              64,162                  4.31        %              62,335                  3.93        %
+Cash and due from banks                                                     592                                                          554                                                546                               
+Allowance for loan losses                                                  (496           )                                             (499       )                                       (480       )                       
+Goodwill and intangibles                                                  1,014                                                        1,014                                              1,016                               
+Other assets                                                              3,480                                                        3,353                                              3,088                               
+Total assets                                                            $69,855                                                      $68,584                                            $66,505                               
+LIABILITIES AND SHAREHOLDERS’ EQUITY                                                                                                                                                                                          
+Interest-bearing deposits:                                                                                                                                                                                                    
+Savings and money market                                                $26,262                         0.63           %             $26,021                  0.54        %             $25,479                  0.26        %
+Time                                                                      5,025                         2.02           %               4,674                  1.90        %               3,807                  1.27        %
+Total interest-bearing deposits                                          31,287                         0.85           %              30,695                  0.75        %              29,286                  0.39        %
+Borrowed funds:                                                                                                                                                                                                               
+Federal funds purchased and other short-term borrowings                   5,795                         2.53           %               5,289                  2.57        %               4,927                  1.92        %
+Long-term debt                                                            1,230                         3.84           %                 880                  4.08        %                 383                  5.77        %
+Total borrowed funds                                                      7,025                         2.76           %               6,169                  2.78        %               5,310                  2.19        %
+Total interest-bearing funds                                             38,312                         1.20                          36,864                  1.09                       34,596                  0.67         
+Noninterest-bearing deposits                                             23,060                                                       23,221                                             23,610                               
+Other liabilities                                                           929                                                          928                                                661                               
+Total liabilities                                                        62,301                                                       61,013                                             58,867                               
+Shareholders’ equity:                                                                                                                                                                                                         
+Preferred equity                                                            566                                                          566                                                566                               
+Common equity                                                             6,988                                                        7,005                                              7,072                               
+Total shareholders’ equity                                                7,554                                                        7,571                                              7,638                               
+Total liabilities and shareholders’ equity                              $69,855                                                      $68,584                                            $66,505                               
+Spread on average interest-bearing funds                                                                3.04           %                                      3.22        %                                      3.26        %
+Impact of net noninterest-bearing sources of funds                                                      0.50                                                  0.46                                               0.30         
+Net interest margin                                                                                     3.54                                                  3.68                                               3.56         
+Memo: total cost of deposits                                                                            0.49                                                  0.43                                               0.22         
+Memo: total deposits and interest-bearing liabilities                    61,372                         0.75           %              60,085                  0.67        %              58,206                  0.40        %
+1 Rates are calculated using amounts in thousands and taxable-equivalent rates used where applicable. 
+2 Net of unearned income and fees, net of related costs. Loans include nonaccrual and restructured loans.
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 16
+July 22, 2019
+
+GAAP to Non-GAAP Reconciliations
+(Unaudited)
+This press release presents non-GAAP financial measures, in addition to GAAP financial measures, to provide investors with additional information. The adjustments to reconcile from the applicable GAAP financial measures to the non-GAAP financial measures are presented in the following schedules. The Bank considers these adjustments to be relevant to ongoing operating results and provide a meaningful base for period-to-period and company-to-company comparisons. These non-GAAP financial measures are used by management to assess the performance and financial position of the Bank and for presentations of Bank performance to investors. The Bank further believes that presenting these non-GAAP financial measures will permit investors to assess the performance of the Bank on the same basis as that applied by management.
+Non-GAAP financial measures have inherent limitations, and are not required to be uniformly applied by individual entities. Although non-GAAP financial measures are frequently used by stakeholders to evaluate a company, they have limitations as an analytical tool and should not be considered in isolation or as a substitute for analysis of results reported under GAAP.
+The following are non-GAAP financial measures presented in this press release and a discussion of the reasons for which management uses these non-GAAP measures:
+Tangible Book Value per Common Share – this schedule also includes “tangible common equity.” Tangible book value per common share is a non-GAAP financial measure that management believes provides additional useful information about the level of tangible equity in relation to outstanding shares of common stock. Management believes the use of ratios that utilize tangible equity provides additional useful information to management and others about capital adequacy because they present measures of those assets that can generate income.
+
+(In millions, except shares and per share amounts)                 June 30,         March 31,         December 31,        September 30,         June 30,
+                                                                       2019              2019                 2018                 2018             2018
+Tangible Book Value per Common Share                                                                                                                    
+Total shareholders’ equity (GAAP)                               $7,599           $7,588              $7,578               $7,553             $7,621     
+Preferred stock                                                   (566    )        (566     )          (566      )          (566      )        (566    )
+Goodwill and intangibles                                        (1,014    )      (1,014     )        (1,015      )        (1,015      )      (1,015    )
+Tangible common equity (non-GAAP)                    (a)        $6,019           $6,008              $5,997               $5,972             $6,040     
+Common shares outstanding (in thousands)             (b)       176,935          182,513             187,554              192,169            195,392     
+Tangible book value per common share (non-GAAP)      (a/b)      $34.02           $32.92              $31.97               $31.08             $30.91     
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 17
+July 22, 2019
+
+GAAP to Non-GAAP Reconciliations
+(Unaudited)
+Return on Average Tangible Common Equity – this schedule also includes “net earnings applicable to common shareholders, excluding the effects of the adjustments, net of tax” and “average tangible common equity.” Return on average tangible common equity is a non-GAAP financial measure that management believes provides useful information to management and others about the Bank’s use of shareholders’ equity. Management believes the use of ratios that utilize tangible equity provides additional useful information because they present measures of those assets that can generate income.
+
+                                                                                                                                                                                                                                  Three Months Ended
+(Dollar amounts in millions)                                                                                                                   June 30,             March 31,             December 31,            September 30,             June 30,
+                                                                                                                                                   2019                  2019                     2018                     2018                 2018
+Return on Average Tangible Common Equity                                                                                                                                                                                                            
+Net earnings applicable to common shareholders (GAAP)                                                                                         $189                 $205                    $217                     $215                   $187     
+Adjustments, net of tax:                                                                                                                                                                                                                            
+Amortization of core deposit and other intangibles                                                                                               —                    —                       —                        —                      —     
+Net earnings applicable to common shareholders, excluding the effects of the adjustments, net of tax (non-GAAP)   (a)                         $189                 $205                    $217                     $215                   $187     
+Average common equity (GAAP)                                                                                                                $6,988               $7,005                  $6,938                   $7,024                 $7,072     
+Average goodwill and intangibles                                                                                                            (1,014    )          (1,014     )            (1,015      )            (1,015      )          (1,016    )
+Average tangible common equity (non-GAAP)                                                                         (b)                       $5,974               $5,991                  $5,923                   $6,009                 $6,056     
+Number of days in quarter                                                                                         (c)                           91                   90                      92                       92                     91     
+Number of days in year                                                                                            (d)                          365                  365                     365                      365                    365     
+Return on average tangible common equity (non-GAAP)                                                               (a/b/c)*d                   12.7    %            13.9     %              14.5      %              14.2      %            12.4    %
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 18
+July 22, 2019
+
+GAAP to Non-GAAP Reconciliations 
+(Unaudited)
+Efficiency Ratio – this schedule also includes “adjusted noninterest expense,” “taxable-equivalent net interest income,” “adjusted taxable-equivalent revenue,” “pre-provision net revenue (PPNR)” and “adjusted PPNR).” The methodology of determining the efficiency ratio may differ among companies. Management makes adjustments to exclude certain items as identified in the subsequent schedules which it believes allows for more consistent comparability among periods. Management believes the efficiency ratio provides useful information regarding the cost of generating revenue. Adjusted noninterest expense provides a measure as to how well the Bank is managing its expenses, and adjusted PPNR enables management and others to assess the Bank’s ability to generate capital to cover credit losses through a credit cycle. Taxable-equivalent net interest income allows management to assess the comparability of revenue arising from both taxable and tax-exempt sources.
+Adjusted Pre-Provision Net Revenue per Common Share – this schedule uses “adjusted PPNR” as calculated in the efficiency ratio, which is divided by the weighted average diluted common shares for the period. As mentioned previously, Management believes that adjusted PPNR enables management and others to assess the Bank’s ability to generate capital to cover credit losses through a credit cycle. Dividing this amount by the weighted average diluted common shares outstanding provides a shareholder’s perspective of PPNR growth. 
+
+                                                                                                                                                                  Three Months Ended
+(In millions)                                                                  June 30,             March 31,             December 31,            September 30,             June 30,
+                                                                                   2019                  2019                     2018                     2018                 2018
+Efficiency Ratio                                                                                                                                                                    
+Noninterest expense (GAAP)                                   (a)              $424                 $430                    $420                     $420                   $421     
+Adjustments:                                                                                                                                                                        
+Severance costs                                              1                                        —                       2                        2                      1     
+Other real estate expense, net                                                   —                   (1     )                 —                        1                      —     
+Restructuring costs                                                              —                    —                       —                        1                      —     
+Total adjustments                                            (b)                 1                   (1     )                 2                        4                      1     
+Adjusted noninterest expense (non-GAAP)                      (a-b)=(c)        $423                 $431                    $418                     $416                   $420     
+Net interest income (GAAP)                                   (d)              $569                 $576                    $576                     $565                   $548     
+Fully taxable-equivalent adjustments                         (e)                 7                    6                       6                        5                      5     
+Taxable-equivalent net interest income (non-GAAP)            (d+e)=(f)         576                  582                     582                      570                    553     
+Noninterest income (GAAP)                                    (g)               132                  132                     140                      136                    138     
+Combined income (non-GAAP)                                   (f+g)=(h)         708                  714                     722                      706                    691     
+Adjustments:                                                                                                                                                                        
+Fair value and nonhedge derivative loss                                         (6    )              (3     )                (3      )                 —                      —     
+Securities gains (losses), net                                                  (3    )               1                       2                       (1      )               1     
+Total adjustments                                            (i)                (9    )              (2     )                (1      )                (1      )               1     
+Adjusted taxable-equivalent revenue (non-GAAP)               (h-i)=(j)        $717                 $716                    $723                     $707                   $690     
+Pre-provision net revenue (PPNR) (non-GAAP)                  (h)-(a)          $284                 $284                    $302                     $286                   $270     
+Adjusted PPNR (non-GAAP)                                     (j-c)=(k)         294                  285                     305                      291                    270     
+Efficiency ratio (non-GAAP)                                  (c/j)            59.0    %            60.2     %              57.8      %              58.8      %            60.9    %
+Adjusted PPNR per common share                                                                                                                                                      
+Adjusted PPNR (non-GAAP)                                     (k)               294                  285                     305                      291                    270     
+Weighted average diluted shares outstanding (in thousands)   (l)           189,098              195,241                 199,048                  205,765                209,247     
+Adjusted PPNR per common share (non-GAAP)                    (k)/(l)          1.55                 1.46                    1.53                     1.41                   1.29     
+- more -
+
+ZIONS BANCORPORATION, N.A.
+Press Release – Page 19
+July 22, 2019
+
+
+                                                                                             Six Months Ended
+(In millions)                                                                  June 30,              June 30,
+                                                                                   2019                  2018
+Efficiency Ratio                                                                                             
+Noninterest expense (GAAP)                                   (a)              $854                  $840     
+Adjustments:                                                                                                 
+Severance costs                                              1                                        (1    )
+Other real estate expense                                                       (1    )                1     
+Debt extinguishment cost                                                         —                     —     
+Amortization of core deposit and other intangibles           1                                         1     
+Restructuring costs                                                              —                     —     
+Total adjustments                                            (b)                 1                     1     
+Adjusted noninterest expense (non-GAAP)                      (a-b)=(c)        $853                  $839     
+Net interest income (GAAP)                                   (d)            $1,145                $1,090     
+Fully taxable-equivalent adjustments                         (e)                13                    10     
+Taxable-equivalent net interest income (non-GAAP)            (d+e)=(f)       1,158                 1,100     
+Noninterest income (GAAP)                                    (g)               264                   276     
+Combined income (non-GAAP)                                   (f+g)=(h)       1,422                 1,376     
+Adjustments:                                                                                                 
+Fair value and nonhedge derivative income (loss)                                (8    )                2     
+Securities gains (losses), net                                                  (2    )                1     
+Total adjustments                                            (i)               (10    )                3     
+Adjusted taxable-equivalent revenue (non-GAAP)               (h-i)=(j)      $1,432                $1,373     
+Pre-provision net revenue (PPNR)                             (h)-(a)          $568                  $536     
+Adjusted PPNR (non-GAAP)                                     (j-c)=(k)         579                   534     
+Efficiency ratio (non-GAAP)                                  (c/j)            59.6    %             61.1    %
+Adjusted PPNR per common share                                                                               
+Adjusted PPNR (non-GAAP)                                     (k)               579                   534     
+Weighted average diluted shares outstanding (in thousands)   (l)           192,206               209,859     
+Adjusted PPNR per common share (non-GAAP)                    (k)/(l)          3.01                  2.54     
+# # #
+
+

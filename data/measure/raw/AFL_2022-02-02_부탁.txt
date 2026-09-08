@@ -1,0 +1,354 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — AFL 2022-02-02
+# 출처: https://www.sec.gov/Archives/edgar/data/4977/000000497722000005/afl-20220202.htm
+
+Document
+
+
+<img alt="g247539tx_pg36.jpg" src="g247539tx_pg36.jpg">News Release
+FOR IMMEDIATE RELEASE
+Aflac Incorporated Announces Fourth Quarter Results,
+Reports Fourth Quarter Net Earnings of $1.0 Billion,
+Reiterates Increase in First Quarter Cash Dividend of 21.2%
+COLUMBUS, Ga. - February 2, 2022 - Aflac Incorporated (NYSE: AFL) today reported its fourth quarter results.
+Total revenues were $5.4 billion in the fourth quarter of 2021, compared with $5.9 billion in the fourth quarter of 2020. Net earnings were $1.0 billion, or $1.57 per diluted share, compared with $951 million, or $1.35 per diluted share a year ago.
+Net earnings in the fourth quarter of 2021 included pretax adjusted net investment gains* of $246 million, or $0.37 per diluted share, compared with pretax adjusted net investment gains of $268 million, or $0.38 per diluted share a year ago, which are excluded from adjusted earnings*. The adjusted net investment gains were driven by an increase in the fair value of equity securities of $181 million, including a $198 million gain from Trupanion; net gains from certain derivatives and foreign currency activities of $39 million; and net gains from sales and redemptions of $34 million, partially offset by an increase in the allowance associated with the company's estimate of current expected credit losses (CECL) of $7 million. 
+The average yen/dollar exchange rate* in the fourth quarter of 2021 was 113.70, or 8.0% weaker than the average rate of 104.57 in the fourth quarter of 2020. For the full year, the average exchange rate was 109.79, or 2.7% weaker than the rate of 106.86 a year ago.
+Total investments and cash at the end of December 2021 were $143.0 billion, compared with $149.8 billion at December 31, 2020. In the fourth quarter, Aflac Incorporated deployed $625 million in capital to repurchase 11.1 million of its common shares. For the full year, Aflac Incorporated deployed $2.3 billion in capital to repurchase 43.3 million of its common shares. At the end of December 2021, the company had 55.8 million remaining shares authorized for repurchase. 
+Shareholders’ equity was $33.3 billion, or $50.99 per share, at December 31, 2021, compared with $33.6 billion, or $48.46 per share, at December 31, 2020. Shareholders’ equity at the end of the fourth quarter included a net unrealized gain on investment securities and derivatives of $9.6 billion, compared with a net unrealized gain of $10.3 billion at December 31, 2020. Shareholders’ equity at the end of the fourth quarter also included an unrealized foreign currency translation loss of $2.0 billion, compared with an unrealized foreign currency translation loss of $1.1 billion at December 31, 2020. The annualized return on average shareholders’ equity in the fourth quarter was 12.4% and 12.9% for the full year.
+Adjusted earnings in the fourth quarter were $850 million, compared with $755 million in the fourth quarter of 2020, reflecting an increase of 12.6%. Adjusted earnings included variable investment income from alternative investments, which was $0.13 per share above return expectations. Adjusted earnings per diluted share* increased 19.6% to $1.28 in the quarter. The weaker yen/dollar exchange rate impacted adjusted earnings per diluted share by $0.05. 
+For the full year of 2021, total revenues were down 0.2% to $22.1 billion, compared with $22.1 billion for the full year of 2020. Net earnings were $4.3 billion, or $6.39 per diluted share, compared with $4.8 billion, or $6.67 per diluted share, for the full year of 2020. Adjusted earnings for the full year of 2021 were $4.0 billion, or $5.94 per diluted share, compared with $3.6 billion, or $4.96 per diluted share, in 2020. Adjusted earnings included variable investment income from alternative investments, which was $0.40 per share above return expectations. Excluding the negative impact of $0.06 per share from the weaker yen/dollar exchange rate, adjusted earnings per diluted share increased 21.0% to $6.00 for the full year of 2021.
+
+Shareholders’ equity excluding AOCI (or adjusted book value*) was $25.9 billion, or $39.65 per share at December 31, 2021, compared with $24.6 billion, or $35.56 per share, at December 31, 2020. The annualized adjusted return on equity excluding foreign currency impact* in the fourth quarter was 13.6% and 16.1% for the full year. 
+AFLAC JAPAN
+In yen terms, Aflac Japan's net earned premiums were ¥319.3 billion for the quarter, or 4.3% lower than a year ago, mainly due to limited-pay products reaching paid-up status and constrained sales from the impact of pandemic conditions. Adjusted net investment income increased 16.8% to ¥87.7 billion, mainly due to higher alternative and floating rate income as well as lower hedge costs. Total adjusted revenues in yen declined 0.4% to ¥408.1 billion. Pretax adjusted earnings in yen for the quarter increased 17.9% on a reported basis to ¥100.9 billion, due to continued favorable claim trends and higher net investment income. Pretax adjusted earnings increased 12.9% on a currency-neutral basis. The pretax adjusted profit margin for the Japan segment was 24.7%, compared with 20.9% a year ago. The increase in the profit margin is largely due to continued improvements in incurred benefits and adjusted net investment income.
+For the full year, net earned premiums in yen were ¥1.3 trillion, or 3.9% lower than a year ago. Adjusted net investment income increased 17.6% to ¥333.0 billion. Total adjusted revenues in yen were down 0.2% to ¥1.6 trillion. Pretax adjusted earnings were ¥412.1 billion, or 18.5% higher than a year ago. 
+In dollar terms, net earned premiums decreased 12.1% to $2.8 billion in the fourth quarter. Adjusted net investment income increased 6.9% to $771 million. Total adjusted revenues declined by 8.5% to $3.6 billion. Pretax adjusted earnings increased 8.0% to $887 million. 
+For the full year, net earned premiums in dollars were $11.9 billion, or 6.4% lower than a year ago. Adjusted net investment income increased 14.0% to $3.0 billion. Total adjusted revenues were down 2.9% to $14.9 billion. Pretax adjusted earnings were $3.8 billion, or 15.0% higher than a year ago.
+For the quarter, total new annualized premium sales (sales) increased 1.1% to ¥14.6 billion, or $128 million, reflecting a gradual increase in face-to-face sales activity following an intermittent recovery in pandemic conditions. For the full year, total sales increased 7.7% to ¥54.8 billion, or $499 million. 
+AFLAC U.S.
+Aflac U.S. net earned premiums declined 1.3% to $1.4 billion in the fourth quarter, mainly due to constrained sales over the past year. Adjusted net investment income increased 8.2% to $197 million primarily due to higher variable net investment income. As a result, total adjusted revenues were up 0.1% to $1.6 billion. Pretax adjusted earnings were $261 million, 39.6% higher than a year ago, which was driven by lower incurred benefits and higher adjusted net investment income. The pretax adjusted profit margin for the U.S. segment was 16.1%, compared with 11.6% a year ago. 
+For the full year, net earned premiums declined 2.5% to $5.6 billion. Adjusted net investment income increased 7.0% to $754 million. Total adjusted revenues were down 1.2% to $6.5 billion. Pretax adjusted earnings were $1.5 billion, or 16.6% higher than a year ago.
+Aflac U.S. sales increased 19.6% in the quarter to $464 million. For the full year, total new sales increased 16.9% to $1.3 billion. Sales for both the quarter and the year reflected improvements from prior year periods that were more severely impacted by pandemic conditions. 
+CORPORATE AND OTHER 
+For the quarter, total adjusted revenues decreased 138.0% to a negative $35 million, due to a $117 million decline in adjusted net investment income, primarily due to the impact of federal tax credit investments as tax benefits are recognized in a corresponding lower income tax expense; lower yields; and lower hedge income. Pretax adjusted earnings were a loss of $155 million, compared with a loss of $47 million a year ago, primarily reflecting lower adjusted net investment income.
+
+For the full year, total adjusted revenues decreased 54.4% to $175 million, primarily due to a $193 million decrease in adjusted net investment income. Pretax adjusted earnings were a loss of $298 million, compared with a loss of $115 million a year ago.
+DIVIDEND
+The board of directors declared the first quarter dividend of $0.40 per share, payable on March 1, 2022 to shareholders of record at the close of business on February 16, 2022. 
+OUTLOOK 
+Commenting on the company’s results, Chairman and Chief Executive Officer Daniel P. Amos stated: "The company generated strong earnings for the year, largely supported by the continuation of low benefit ratios associated with pandemic conditions and better-than-expected returns from alternative investments. While we saw improvements in the quarter for both the United States and Japan, we continue to remain cautiously optimistic in the face of ongoing pandemic conditions.
+"Looking at our operations in Japan, I am encouraged by the 7.7% sales increase for the year, which included the first quarter introduction of our medical product EVER Prime and the September launch of our new nursing care product. However, we continued to navigate evolving pandemic conditions in Japan, including various states of emergency that may impact our ability to meet face-to-face with customers, which continues to be key to a recovery in sales. 
+"In the U.S., I am pleased with the 16.9% sales increase for the year. At the same time, I am encouraged by reports of new small business formation and the resiliency of larger businesses. Our sales in the fourth quarter reflect increased face-to-face sales opportunities. We continue to work toward reinforcing our position and generating stronger sales in 2022, realizing we may face headwinds from pandemic conditions. 
+"As always, we are committed to prudent liquidity and capital management. This includes maintaining strong capital ratios on behalf of our policyholders in both the U.S. and Japan. It goes without saying that we treasure our record of dividend growth. Coming off our 39th consecutive year of dividend increases, I am pleased with the board’s decision to increase the quarterly dividend by 21.2% in the first quarter, as we announced in November. Our dividend track record is supported by the strength of our capital and cash flows. At the same time, we remain in the market repurchasing shares with a tactical approach and focused on integrating the growth investments we have made in our platform. By doing so, we look to emerge from this period in a continued position of strength and leadership."
+*See Non-U.S. GAAP Financial Measures section for an explanation of foreign exchange and its impact on the financial statements and definitions of the non-U.S. GAAP financial measures used in this earnings release, as well as a reconciliation of such non-U.S. GAAP financial measures to the most comparable U.S. GAAP financial measures.
+ABOUT AFLAC INCORPORATED
+Aflac Incorporated (NYSE: AFL) is a Fortune 500 company helping provide protection to more than 50 million people through its subsidiaries in Japan and the U.S., where it is a leading supplemental insurer by paying cash fast when policyholders get sick or injured. For more than six decades, insurance policies of Aflac Incorporated's subsidiaries have given policyholders the opportunity to focus on recovery, not financial stress. In the U.S., Aflac is the number one provider of voluntary/worksite insurance products. Aflac Life Insurance Japan is the leading provider of medical and cancer insurance in Japan, where it insures 1 in 4 households. In 2021, Aflac Incorporated was proud to be included as one of the World's Most Ethical Companies by Ethisphere for the 15th consecutive year, Fortune’s list of World's Most Admired Companies for the 20th time, and in the Dow Jones Sustainability North America Index. In 2021, Aflac Incorporated also became a signatory of the Principles for Responsible Investment (PRI), and in 2022, Bloomberg’s Gender-Equality Index included Aflac Incorporated for the third consecutive year. To find out how to get help with expenses health insurance doesn't cover, get to know us at aflac.com or aflac.com/espanol. Investors may learn more about Aflac Incorporated and its commitment to ESG and social responsibility at investors.aflac.com under "Sustainability." 
+A copy of Aflac’s Financial Analysts Briefing (FAB) supplement for the quarter can be found on the “Investors” page at aflac.com. 
+Aflac Incorporated will webcast its quarterly conference call via the “Investors” page of aflac.com at 8:00 a.m. (ET) on Thursday, February 3, 2022.
+Note: Tables within this document may not foot due to rounding.
+
+
+AFLAC INCORPORATED AND SUBSIDIARIES CONDENSED INCOME STATEMENT                                                                                                    
+(UNAUDITED – IN MILLIONS, EXCEPT FOR SHARE AND PER-SHARE AMOUNTS)                                                                                                 
+THREE MONTHS ENDED DECEMBER 31,                                                       2021                                2020                            % Change
+Total revenues                                                                $5,433                              $5,913                               (8.1)     %
+Benefits and claims, net                                                       2,581                               2,974                              (13.2)      
+Total acquisition and operating expenses                                       1,619                               1,723                               (6.0)      
+Earnings before income taxes                                                   1,233                               1,216                                 1.4      
+Income taxes                                                                     194                                 265                                          
+Net earnings                                                                  $1,039                                $951                                 9.3     %
+Net earnings per share – basic                                                 $1.58                               $1.36                                16.2     %
+Net earnings per share – diluted                                                1.57                                1.35                                16.3      
+Shares used to compute earnings per share (000):                                                                                                                  
+Basic                                                                        659,100                             701,016                               (6.0)     %
+Diluted                                                                      662,512                             703,859                               (5.9)      
+Dividends paid per share                                                       $0.33                               $0.28                                17.9     %
+
+
+AFLAC INCORPORATED AND SUBSIDIARIES CONDENSED INCOME STATEMENT                                                                                                    
+(UNAUDITED – IN MILLIONS, EXCEPT FOR SHARE AND PER-SHARE AMOUNTS)                                                                                                 
+TWELVE MONTHS ENDED DECEMBER 31,                                                      2021   2020                                                         % Change
+Total revenues                                                               $22,106                             $22,147                               (0.2)     %
+Benefits and claims, net                                                      10,576                              11,796                              (10.3)      
+Total acquisition and operating expenses                                       6,208                               6,192                                 0.3      
+Earnings before income taxes                                                   5,322                               4,159                                28.0      
+Income taxes                                                                     997                               (619)                                          
+Net earnings                                                                  $4,325                              $4,778                               (9.5)     %
+Net earnings per share – basic                                                 $6.42                               $6.69                               (4.0)     %
+Net earnings per share – diluted                                                6.39         6.67                                                      (4.2)      
+Shares used to compute earnings per share (000):                                                                                                                  
+Basic                                                                        673,617                             713,702                               (5.6)     %
+Diluted                                                                      676,729                             716,192                               (5.5)      
+Dividends paid per share                                                       $1.32                               $1.12                                17.9     %
+
+
+AFLAC INCORPORATED AND SUBSIDIARIES CONDENSED BALANCE SHEET                                                                                       
+(UNAUDITED – IN MILLIONS, EXCEPT FOR SHARE AMOUNTS)                                                                                               
+DECEMBER 31,                                       2021                              2020                                                 % Change
+Assets:                                                                                                                                           
+Total investments and cash                                           $142,978                          $149,753                         (4.5)    %
+Deferred policy acquisition costs                                       9,525                            10,441                         (8.8)     
+Other assets                                                            5,039                             4,892                           3.0     
+Total assets                                                         $157,542                          $165,086                         (4.6)    %
+Liabilities and shareholders’ equity:                                                                                                             
+Policy liabilities                                                   $105,072                          $114,391                         (8.1)    %
+Notes payable and lease obligations                                     7,956                             7,899                           0.7     
+Other liabilities                                                      11,261                             9,237                          21.9     
+Shareholders’ equity                                                   33,253                            33,559                         (0.9)     
+Total liabilities and shareholders’ equity                           $157,542                          $165,086                         (4.6)    %
+Shares outstanding at end of period (000)                             652,132                           692,454                         (5.8)    %
+
+NON-U.S. GAAP FINANCIAL MEASURES
+This document includes references to the Company’s financial performance measures which are not calculated in accordance with United States generally accepted accounting principles (U.S. GAAP) (non-U.S. GAAP). The financial measures exclude items that the Company believes may obscure the underlying fundamentals and trends in insurance operations because they tend to be driven by general economic conditions and events or related to infrequent activities not directly associated with insurance operations.
+Due to the size of Aflac Japan, where the functional currency is the Japanese yen, fluctuations in the yen/dollar exchange rate can have a significant effect on reported results. In periods when the yen weakens, translating yen into dollars results in fewer dollars being reported. When the yen strengthens, translating yen into dollars results in more dollars being reported. Consequently, yen weakening has the effect of suppressing current period results in relation to the comparable prior period, while yen strengthening has the effect of magnifying current period results in relation to the comparable prior period. A significant portion of the Company’s business is conducted in yen and never converted into dollars but translated into dollars for U.S. GAAP reporting purposes, which results in foreign currency impact to earnings, cash flows and book value on a U.S. GAAP basis. Management evaluates the Company's financial performance both including and excluding the impact of foreign currency translation to monitor, respectively, cumulative currency impacts on book value and the currency-neutral operating performance over time. The average yen/dollar exchange rate is based on the published MUFG Bank, Ltd. telegraphic transfer middle rate (TTM).
+ The company defines the non-U.S. GAAP financial measures included in this earnings release as follows:
+•Adjusted earnings are adjusted revenues less benefits and adjusted expenses. Adjusted earnings per share (basic or diluted) are the adjusted earnings for the period divided by the weighted average outstanding shares (basic or diluted) for the period presented. The adjustments to both revenues and expenses account for certain items that cannot be predicted or that are outside management’s control. Adjusted revenues are U.S. GAAP total revenues excluding adjusted net investment gains and losses. Adjusted expenses are U.S. GAAP total acquisition and operating expenses including the impact of interest cash flows from derivatives associated with notes payable but excluding any nonrecurring or other items not associated with the normal course of the Company’s insurance operations and that do not reflect the Company's underlying business performance. Management uses adjusted earnings and adjusted earnings per diluted share to evaluate the financial performance of the Company’s insurance operations on a consolidated basis and believes that a presentation of these financial measures is vitally important to an understanding of the underlying profitability drivers and trends of the Company’s insurance business. The most comparable U.S. GAAP financial measures for adjusted earnings and adjusted earnings per share (basic or diluted) are net earnings and net earnings per share, respectively.
+•Adjusted earnings excluding current period foreign currency impact are computed using the average foreign currency exchange rate for the comparable prior-year period, which eliminates fluctuations driven solely by foreign currency exchange rate changes. Adjusted earnings per diluted share excluding current period foreign currency impact is adjusted earnings excluding current period foreign currency impact divided by the weighted average outstanding diluted shares for the period presented. The Company considers adjusted earnings excluding current period foreign currency impact and adjusted earnings per diluted share excluding current period foreign currency impact important because a significant portion of the Company's business is conducted in Japan and foreign exchange rates are outside management’s control; therefore, the Company believes it is important to understand the impact of translating foreign currency (primarily Japanese yen) into U.S. dollars. The most comparable U.S. GAAP financial measures for adjusted earnings excluding current period foreign currency impact and adjusted earnings per diluted share excluding current period foreign currency impact are net earnings and net earnings per share, respectively.
+•Adjusted return on equity is adjusted earnings divided by average shareholders’ equity, excluding accumulated other comprehensive income (AOCI). Management uses adjusted return on equity to evaluate the financial performance of the Company’s insurance operations on a consolidated basis and believes that a presentation of this financial measure is vitally important to an understanding of the underlying profitability drivers and trends of the Company’s insurance business. The Company considers adjusted return on equity important as it excludes components of AOCI, which fluctuate due to market movements that are outside management's control. The most comparable U.S. GAAP financial measure for adjusted return on equity is return on average equity (ROE) as determined using net earnings and average total shareholders’ equity.
+•Adjusted return on equity excluding foreign currency impact is adjusted earnings excluding the current period foreign currency impact divided by average shareholders’ equity, excluding AOCI. The Company considers adjusted return on equity excluding foreign currency impact important as it excludes changes in foreign currency and components of AOCI, which fluctuate due to market movements that are outside management's control. The most comparable U.S. GAAP financial measure for adjusted return on equity excluding foreign currency impact is ROE as determined using net earnings and average total shareholders’ equity.
+•Amortized hedge costs/income represent costs/income incurred or recognized as a result of using foreign currency derivatives to hedge certain foreign exchange risks in the Company's Japan segment or in Corporate and other. These amortized hedge costs/ income are estimated at the inception of the derivatives based on the specific terms of each contract and are recognized on a straight-line basis over the term of the hedge. The Company believes that amortized hedge costs/income measure the periodic currency risk management costs/income related to hedging certain foreign currency exchange risks and are an important component of net investment income. There is no comparable U.S. GAAP financial measure for amortized hedge costs/ income.
+
+•Adjusted book value is the U.S. GAAP book value (representing total shareholders’ equity), less AOCI as recorded on the U.S. GAAP balance sheet. Adjusted book value per common share is adjusted book value at the period end divided by the ending outstanding common shares for the period presented. The Company considers adjusted book value and adjusted book value per common share important as they exclude AOCI, which fluctuates due to market movements that are outside management’s control. The most comparable U.S. GAAP financial measures for adjusted book value and adjusted book value per common share are total book value and total book value per common share, respectively.
+•Adjusted book value including unrealized foreign currency translation gains and losses is adjusted book value plus unrealized foreign currency translation gains and losses. Adjusted book value including unrealized foreign currency translation gains and losses per common share is adjusted book value plus unrealized foreign currency translation gains and losses at the period end divided by the ending outstanding common shares for the period presented. The Company considers adjusted book value including unrealized foreign currency translation gains and losses, and its related per share financial measure, important as they exclude certain components of AOCI, which fluctuate due to market movements that are outside management's control; however, it includes the impact of foreign currency as a result of the significance of Aflac’s Japan operation. The most comparable U.S. GAAP financial measures for adjusted book value including unrealized foreign currency translation gains and losses and adjusted book value including unrealized foreign currency translation gains and losses per common share are total book value and total book value per common share, respectively.
+•Adjusted net investment income is net investment income adjusted for i) amortized hedge cost/income related to foreign currency exposure management strategies and certain derivative activity, and ii) net interest cash flows from foreign currency and interest rate derivatives associated with certain investment strategies, which are reclassified from net investment gains and losses to net investment income. The Company considers adjusted net investment income important because it provides a more comprehensive understanding of the costs and income associated with the Company’s investments and related hedging strategies. The most comparable U.S. GAAP financial measure for adjusted net investment income is net investment income. 
+•Adjusted net investment gains and losses are net investment gains and losses adjusted for i) amortized hedge cost/income related to foreign currency exposure management strategies and certain derivative activity, ii) net interest cash flows from foreign currency and interest rate derivatives associated with certain investment strategies, which are both reclassified to net investment income, and iii) the impact of interest cash flows from derivatives associated with notes payable, which is reclassified to interest expense as a component of total adjusted expenses. The Company considers adjusted net investment gains and losses important as it represents the remainder amount that is considered outside management’s control, while excluding the components that are within management’s control and are accordingly reclassified to net investment income and interest expense. The most comparable U.S. GAAP financial measure for adjusted net investment gains and losses is net investment gains and losses.
+
+
+RECONCILIATION OF NET EARNINGS TO ADJUSTED EARNINGS                                                                                                 
+(UNAUDITED – IN MILLIONS, EXCEPT FOR PER-SHARE AMOUNTS)                                                                                             
+THREE MONTHS ENDED DECEMBER 31,                                                   2021                            2020                      % Change
+Net earnings                                                               $1,039                            $951                           9.3    %
+Items impacting net earnings:                                                                                                                       
+Adjusted net investment (gains) losses                                      (246)                           (268)                                   
+Other and non-recurring (income) loss                                           6                              13                                   
+Income tax (benefit) expense on items excluded                                 50                              52                                   
+from adjusted earnings                                                                                                                              
+Tax valuation allowance release 3                                               —                               7                                   
+Adjusted earnings                                                             850                             755                          12.6    %
+Current period foreign currency impact 1                                       30                                  N/A                              
+Adjusted earnings excluding current period foreign                           $880                            $755                          16.6    %
+currency impact 2                                                                                                                                   
+Net earnings per diluted share                                              $1.57                           $1.35                          16.3    %
+Items impacting net earnings:                                                                                                                       
+Adjusted net investment (gains) losses                                     (0.37)                          (0.38)                                   
+Other and non-recurring (income) loss                                        0.01                            0.02                                   
+Income tax (benefit) expense on items excluded                               0.08                            0.07                                   
+from adjusted earnings                                                                                                                              
+Tax valuation allowance release 3                                               —                            0.01                                   
+Adjusted earnings per diluted share                                          1.28                            1.07                          19.6    %
+Current period foreign currency impact 1                                     0.05                                  N/A                              
+Adjusted earnings per diluted share excluding                               $1.33                           $1.07                          24.3    %
+current period foreign currency impact 2                                                                                                            
+1    Prior period foreign currency impact reflected as “N/A” to isolate change for current period only.
+2    Amounts excluding current period foreign currency impact are computed using the average foreign currency exchange rate for the comparable prior-year period, which eliminates fluctuations driven solely by foreign currency exchange rate changes.
+3    Tax expense for 2020 represents a return-to-provision adjustment to the release of valuation allowances on deferred tax benefits related to foreign tax credits.
+
+
+RECONCILIATION OF NET EARNINGS TO ADJUSTED EARNINGS                                                                                                 
+(UNAUDITED – IN MILLIONS, EXCEPT FOR PER-SHARE AMOUNTS)                                                                                             
+TWELVE MONTHS ENDED DECEMBER 31,                                                  2021                            2020                      % Change
+Net earnings                                                               $4,325                          $4,778                         (9.5)    %
+Items impacting net earnings:                                                                                                                       
+Adjusted net investment (gains) losses                                      (462)                             229                                   
+Other and non-recurring (income) loss                                          73                              28                                   
+Income tax (benefit) expense on items excluded                                 83                            (72)                                   
+from adjusted earnings                                                                                                                              
+Tax valuation allowance release 3                                               —                         (1,411)                                   
+Adjusted earnings                                                           4,019                           3,552                          13.1    %
+Current period foreign currency impact 1                                       38                                  N/A                              
+Adjusted earnings excluding current period foreign                         $4,057                          $3,552                          14.2    %
+currency impact 2                                                                                                                                   
+Net earnings per diluted share                                              $6.39                           $6.67                         (4.2)    %
+Items impacting net earnings:                                                                                                                       
+Adjusted net investment (gains) losses                                     (0.68)                            0.32                                   
+Other and non-recurring (income) loss                                        0.11                            0.04                                   
+Income tax (benefit) expense on items excluded                               0.12                          (0.10)                                   
+from adjusted earnings                                                                                                                              
+Tax valuation allowance release 3                                               —                          (1.97)                                   
+Adjusted earnings per diluted share                                          5.94                            4.96                          19.8    %
+Current period foreign currency impact 1                                     0.06                                  N/A                              
+Adjusted earnings per diluted share excluding                               $6.00                           $4.96                          21.0    %
+current period foreign currency impact 2                                                                                                            
+1 Prior period foreign currency impact reflected as “N/A” to isolate change for current period only.
+2    Amounts excluding current period foreign currency impact are computed using the average foreign currency exchange rate for the comparable prior-year period, which eliminates fluctuations driven solely by foreign currency exchange rate changes.
+3    Tax benefit recognized in 2020 represents the release of valuation allowances on deferred tax benefits related to foreign tax credits.
+
+
+RECONCILIATION OF NET INVESTMENT (GAINS) LOSSES TO ADJUSTED NET INVESTMENT (GAINS) LOSSES                                                                                                                                        
+(UNAUDITED – IN MILLIONS)                                                                                                                                                                                                        
+THREE MONTHS ENDED DECEMBER 31,                                                                                                          2021                                      2020                        % Change          
+Net investment (gains) losses                                                                                                   $(243)                                    $(256)                               (5.1)         %   
+Items impacting net investment (gains) losses:                                                                                                                                                                                   
+Amortized hedge costs                                                                                                             (21)                                      (51)                                                 
+Amortized hedge income                                                                                                              11                                        19                                                 
+Net interest cash flows from derivatives associated with certain investment strategies                                             (7)                                         5                                                 
+Interest rate component of the change in fair value of foreign currency swaps on notes payable1                                     14                                        13                                                 
+Adjusted net investment (gains) losses                                                                                          $(246)                                    $(268)                               (8.2)         %   
+1    Amounts are included with interest expenses that are a component of adjusted expenses.
+
+RECONCILIATION OF NET INVESTMENT INCOME TO ADJUSTED NET INVESTMENT INCOME                                                                                                                             
+(UNAUDITED – IN MILLIONS)                                                                                                                                                                             
+THREE MONTHS ENDED DECEMBER 31,                                                              2021                                                             2020                     % Change       
+Net investment income                                                                                               $910                                $968                           (6.0)       %  
+Items impacting net investment income:                                                                                                                                                                
+Amortized hedge costs                                                                                               (21)                                (51)                                          
+Amortized hedge income                                                                       11                                                           19                                          
+Net interest cash flows from derivatives associated with certain investment strategies                               (7)                                   5                                          
+Adjusted net investment income                                                                                      $893                                $941                           (5.1)       %  
+
+
+RECONCILIATION OF NET INVESTMENT (GAINS) LOSSES TO ADJUSTED NET INVESTMENT (GAINS) LOSSES                                                                                                                                        
+(UNAUDITED – IN MILLIONS)                                                                                                                                                                                                        
+TWELVE MONTHS ENDED DECEMBER 31,                                                                                                         2021                                      2020                        % Change          
+Net investment (gains) losses                                                                                                   $(468)                                      $270                               (273.3)       %   
+Items impacting net investment (gains) losses:                                                                                                                                                                                   
+Amortized hedge costs                                                                                                             (76)                                     (206)                                                 
+Amortized hedge income                                                                                                              57                                        97                                                 
+Net interest cash flows from derivatives associated with certain investment strategies                                            (30)                                        12                                                 
+Interest rate component of the change in fair value of foreign currency swaps on notes payable1                                     55                                        56                                                 
+Adjusted net investment (gains) losses                                                                                          $(462)                                      $229                               (301.7)       %   
+1    Amounts are included with interest expenses that are a component of adjusted expenses.
+
+RECONCILIATION OF NET INVESTMENT INCOME TO ADJUSTED NET INVESTMENT INCOME                                                                                                                             
+(UNAUDITED – IN MILLIONS)                                                                                                                                                                             
+TWELVE MONTHS ENDED DECEMBER 31,                                                             2021                                                             2020                     % Change       
+Net investment income                                                                                             $3,818                              $3,638         4.9                           %  
+Items impacting net investment income:                                                                                                                                                                
+Amortized hedge costs                                                                                               (76)                               (206)                                          
+Amortized hedge income                                                                       57                                                           97                                          
+Net interest cash flows from derivatives associated with certain investment strategies                              (30)                                  12                                          
+Adjusted net investment income                                                                                    $3,769                              $3,541         6.4                           %  
+
+
+RECONCILIATION OF U.S. GAAP BOOK VALUE TO ADJUSTED BOOK VALUE                                                                                                                                                        
+(UNAUDITED - IN MILLIONS, EXCEPT FOR SHARE AND PER-SHARE AMOUNTS)                                                                                                                                                    
+DECEMBER 31,                                                                                                                             2021                                2020                            % Change
+U.S. GAAP book value                                                                                                            $33,253                             $33,559                                          
+Less:                                                                                                                                                                                                                
+Unrealized foreign currency translation gains (losses)                                                                          (2,013)                             (1,109)                                          
+Unrealized gains (losses) on securities and derivatives                                                                           9,572                              10,327                                          
+Pension liability adjustment                                                                                                      (166)                               (284)                                          
+Total AOCI                                                                                                                        7,393                               8,934                                          
+Adjusted book value                                                                                                             $25,860                             $24,625                                          
+Add:                                                                                                                                                                                                                 
+Unrealized foreign currency translation gains (losses)                                                                          (2,013)                             (1,109)                                          
+Adjusted book value including unrealized foreign currency translation gains (losses)                                            $23,847                             $23,516                                          
+Number of outstanding shares at end of period (000)                                                                             652,132                             692,454                                          
+U.S. GAAP book value per common share                                                                                            $50.99                              $48.46                                 5.2     %
+Less:                                                                                                                                                                                                                
+Unrealized foreign currency translation gains (losses) per common share                                                          (3.09)                              (1.60)                                          
+Unrealized gains (losses) on securities and derivatives per common share                                                          14.68                               14.91                                          
+Pension liability adjustment per common share                                                                                    (0.25)                              (0.41)                                          
+Total AOCI per common share                                                                                                       11.34                               12.90                                          
+Adjusted book value per common share                                                                                             $39.65                              $35.56                                11.5     %
+Add:                                                                                                                                                                                                                 
+Unrealized foreign currency translation gains (losses) per common share                                                          (3.09)                              (1.60)                                          
+Adjusted book value including unrealized foreign currency translation gains (losses) per common share                            $36.57                              $33.96                                 7.7     %
+
+
+RECONCILIATION OF U.S. GAAP RETURN ON EQUITY (ROE) TO ADJUSTED ROE                                                                                                   
+(EXCLUDING IMPACT OF FOREIGN CURRENCY)                                                                                                                               
+THREE MONTHS ENDED DECEMBER 31,                                                                                        2021                                      2020
+U.S. GAAP ROE - Net earnings1                                                                                   12.4      %                               11.5      %
+Impact of excluding unrealized foreign currency translation gains (losses)                                     (0.9)                                     (0.6)       
+Impact of excluding unrealized gains (losses) on securities and derivatives                                      4.6                                       4.6       
+Impact of excluding pension liability adjustment                                                               (0.1)                                     (0.1)       
+Impact of excluding AOCI                                                                                         3.6                                       3.9       
+U.S. GAAP ROE - less AOCI                                                                                       16.1                                      15.5       
+Differences between adjusted earnings and net earnings2                                                        (2.9)                                     (3.2)       
+Adjusted ROE - reported                                                                                         13.1                                      12.3       
+Less: Impact of foreign currency3                                                                              (0.5)                                              N/A
+Adjusted ROE, excluding impact of foreign currency                                                              13.6                                      12.3       
+1    U.S. GAAP ROE is calculated by dividing net earnings (annualized) by average shareholders' equity. 
+2    See separate reconciliation of net income to adjusted earnings.
+3    Impact of foreign currency is calculated by restating all foreign currency components of the income statement to the weighted average foreign currency exchange rate for the comparable prior year period. The impact is the difference of the restated adjusted earnings compared to reported adjusted earnings. For comparative purposes, only current period income is restated using the weighted average prior period exchange rate, which eliminates the foreign currency impact for the current period. This allows for equal comparison of this financial measure.
+
+
+RECONCILIATION OF U.S. GAAP RETURN ON EQUITY (ROE) TO ADJUSTED ROE                                                                                                   
+(EXCLUDING IMPACT OF FOREIGN CURRENCY)                                                                                                                               
+TWELVE MONTHS ENDED DECEMBER 31,                                                                                       2021                                      2020
+U.S. GAAP ROE - Net earnings1                                                                                   12.9      %                               15.3      %
+Impact of excluding unrealized foreign currency translation gains (losses)                                     (0.8)                                     (0.9)       
+Impact of excluding unrealized gains (losses) on securities and derivatives                                      5.1                                       6.2       
+Impact of excluding pension liability adjustment                                                               (0.1)                                     (0.2)       
+Impact of excluding AOCI                                                                                         4.2                                       5.1       
+U.S. GAAP ROE - less AOCI                                                                                       17.1                                      20.3       
+Differences between adjusted earnings and net earnings2                                                        (1.2)                                     (5.2)       
+Adjusted ROE - reported                                                                                         15.9                                      15.1       
+Less: Impact of foreign currency3                                                                              (0.2)                                              N/A
+Adjusted ROE, excluding impact of foreign currency                                                              16.1                                      15.1       
+1    U.S. GAAP ROE is calculated by dividing net earnings (annualized) by average shareholders' equity. 
+2    See separate reconciliation of net income to adjusted earnings.
+3    Impact of foreign currency is calculated by restating all foreign currency components of the income statement to the weighted average foreign currency exchange rate for the comparable prior year period. The impact is the difference of the restated adjusted earnings compared to reported adjusted earnings. For comparative purposes, only current period income is restated using the weighted average prior period exchange rate, which eliminates the foreign currency impact for the current period. This allows for equal comparison of this financial measure.
+
+
+EFFECT OF FOREIGN CURRENCY ON ADJUSTED RESULTS1                                                                                  
+(SELECTED PERCENTAGE CHANGES, UNAUDITED)                                                                                         
+THREE MONTHS ENDED DECEMBER 31, 2021                                 Including                          ExcludingCurrencyChanges2
+                                                                      Currency                                                   
+                                                                       Changes                                                   
+Net earned premiums3                                               (8.8)     %                                   (3.5)          %
+Adjusted net investment income4                                    (5.1)     %                                   (2.3)           
+Total benefits and expenses                                       (10.5)                                         (5.2)           
+Adjusted earnings                            12.6                                                                 16.6           
+Adjusted earnings per diluted share          19.6                                                                 24.3           
+1Refer to previously defined adjusted earnings and adjusted earnings per diluted share.
+2Amounts excluding currency changes were determined using the same foreign currency exchange rate for the current period as the comparable period in the prior year, which eliminates dollar-based fluctuations driven solely from currency rate changes. 
+3Net of reinsurance
+4Refer to previously defined adjusted net investment income.
+
+
+EFFECT OF FOREIGN CURRENCY ON ADJUSTED RESULTS1                                                                                  
+(SELECTED PERCENTAGE CHANGES, UNAUDITED)                                                                                         
+TWELVE MONTHS ENDED DECEMBER 31, 2021                                Including                          ExcludingCurrencyChanges2
+                                                                      Currency                                                   
+                                                                       Changes                                                   
+Net earned premiums3                                               (5.2)     %                                   (3.5)          %
+Adjusted net investment income4                                      6.4     %                                     7.4           
+Total benefits and expenses                                        (7.0)                                         (5.2)           
+Adjusted earnings                                                   13.1                                          14.2           
+Adjusted earnings per diluted share                                 19.8                                          21.0           
+1Refer to previously defined adjusted earnings and adjusted earnings per diluted share.
+2Amounts excluding currency changes were determined using the same foreign currency exchange rate for the current period as the comparable period in the prior year, which eliminates dollar-based fluctuations driven solely from currency rate changes.
+3Net of reinsurance
+4Refer to previously defined adjusted net investment income.
+
+FORWARD-LOOKING INFORMATION 
+The Private Securities Litigation Reform Act of 1995 provides a “safe harbor” to encourage companies to provide prospective information, so long as those informational statements are identified as forward-looking and are accompanied by meaningful cautionary statements identifying important factors that could cause actual results to differ materially from those included in the forward-looking statements. The company desires to take advantage of these provisions. This document contains cautionary statements identifying important factors that could cause actual results to differ materially from those projected herein, and in any other statements made by company officials in communications with the financial community and contained in documents filed with the Securities and Exchange Commission (SEC). Forward-looking statements are not based on historical information and relate to future operations, strategies, financial results or other developments. Furthermore, forward-looking information is subject to numerous assumptions, risks and uncertainties. In particular, statements containing words such as “expect,” “anticipate,” “believe,” “goal,” “objective,” “may,” “should,” “estimate,” “intends,” “projects,” “will,” “assumes,” “potential,” “target,” "outlook" or similar words as well as specific projections of future results, generally qualify as forward-looking. Aflac undertakes no obligation to update such forward-looking statements.
+The company cautions readers that the following factors, in addition to other factors mentioned from time to time, could cause actual results to differ materially from those contemplated by the forward-looking statements: 
+•difficult conditions in global capital markets and the economy, including those caused by COVID-19
+•defaults and credit downgrades of investments
+•exposure to significant interest rate risk
+•concentration of business in Japan 
+•limited availability of acceptable yen-denominated investments
+•foreign currency fluctuations in the yen/dollar exchange rate
+•differing judgments applied to investment valuations
+•significant valuation judgments in determination of expected credit losses recorded on the Company's investments
+•decreases in the Company's financial strength or debt ratings
+•decline in creditworthiness of other financial institutions
+•concentration of the Company's investments in any particular single-issuer or sector
+•the effects of COVID-19 and its variants (both known and emerging), and any resulting economic effects and government interventions, on the Company's business and financial results
+•the Company's ability to attract and retain qualified sales associates, brokers, employees, and distribution partners
+•deviations in actual experience from pricing and reserving assumptions
+•ability to continue to develop and implement improvements in information technology systems
+•interruption in telecommunication, information technology and other operational systems, or a failure to maintain the security, confidentiality or privacy of sensitive data residing on such systems
+
+•subsidiaries' ability to pay dividends to the Parent Company
+•inherent limitations to risk management policies and procedures
+•the operational risks of third party vendors
+•tax rates applicable to the Company may change
+•failure to comply with restrictions on policyholder privacy and information security
+•extensive regulation and changes in law or regulation by governmental authorities
+•competitive environment and ability to anticipate and respond to market trends
+•catastrophic events, including, but not limited to, as a result of climate change, epidemics, pandemics (such as the coronavirus COVID-19), tornadoes, hurricanes, earthquakes, tsunamis, war or other military action, terrorism or other acts of violence, and damage incidental to such events
+•ability to protect the Aflac brand and the Company's reputation
+•ability to effectively manage key executive succession
+•changes in accounting standards
+•level and outcome of litigation
+•allegations or determinations of worker misclassification in the United States
+
+
+Analyst and investor contact - David A. Young, 706.596.3264 or 800.235.2667 or dyoung@aflac.com
+Media contact - Ines Gutzmer, 762.207.7601 or igutzmer@aflac.com 
+
+

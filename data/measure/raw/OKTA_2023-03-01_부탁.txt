@@ -1,0 +1,337 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — OKTA 2023-03-01
+# 출처: https://www.sec.gov/Archives/edgar/data/1660134/000166013423000009/okta-20230227.htm
+
+Document
+
+Okta Announces Fourth Quarter And Fiscal Year 2023 Financial Results
+•Q4 revenue grew 33% year-over-year; subscription revenue grew 34% year-over-year 
+•Current remaining performance obligations (cRPO) grew 25% year-over-year to $1.68 billion
+•Record operating cash flow of $76 million and free cash flow of $72 million
+SAN FRANCISCO – March 1, 2023 – Okta, Inc. (Nasdaq: OKTA), the leading independent identity provider, today announced financial results for its fourth quarter and fiscal year ended January 31, 2023. 
+“We’re pleased with our fourth quarter financial performance and the continued improvement of our go-to-market execution,” said Todd McKinnon, Chief Executive Officer and co-founder of Okta. “Identity remains a top priority for organizations around the world and Okta is the only independent and neutral platform that brings market leading solutions for both workforce and customer identity at scale. Despite an evolving macroeconomic environment, we’re more excited than ever to advance our leadership position in a massive market as Okta delivers on non-GAAP profitable growth.” 
+Fourth Quarter Fiscal 2023 Financial Highlights:
+•Revenue: Total revenue was $510 million, an increase of 33% year-over-year. Subscription revenue was $495 million, an increase of 34% year-over-year.
+•RPO: RPO, or subscription backlog, was $3.01 billion, an increase of 12% year-over-year. cRPO, which is contracted subscription revenue expected to be recognized over the next 12 months, was $1.68 billion, up 25% compared to the fourth quarter of fiscal 2022. 
+•Calculated Billings: Total calculated billings was $710 million, an increase of 18% year-over-year. 
+•GAAP Operating Loss: GAAP operating loss was $157 million, or (31)% of total revenue, compared to a GAAP operating loss of $214 million, or (56)% of total revenue, in the fourth quarter of fiscal 2022. 
+•Non-GAAP Operating Income/Loss: Non-GAAP operating income was $46 million, or 9% of total revenue, compared to non-GAAP operating loss of $24 million, or (6)% of total revenue, in the fourth quarter of fiscal 2022. 
+•GAAP Net Loss: GAAP net loss was $153 million, compared to a GAAP net loss of $241 million in the fourth quarter of fiscal 2022. GAAP net loss per share was $0.95, compared to a GAAP net loss per share of $1.56 in the fourth quarter of fiscal 2022.
+•Non-GAAP Net Income/Loss: Non-GAAP net income was $52 million, compared to non-GAAP net loss of $29 million in the fourth quarter of fiscal 2022. Non-GAAP basic and diluted net income per share was $0.33 and $0.30, respectively, compared to non-GAAP basic and diluted net loss per share of $0.18 in the fourth quarter of fiscal 2022. 
+•Cash Flow: Net cash provided by operations was $76 million, or 15% of total revenue, compared to net cash provided by operations of $14 million, or 4% of total revenue, in the fourth quarter of fiscal 2022. Free cash flow was $72 million, or 14% of total revenue, compared to $5 million, or 1% of total revenue, in the fourth quarter of fiscal 2022. 
+•Cash, cash equivalents, and short-term investments were $2.58 billion at January 31, 2023.
+1
+
+
+Full Year Fiscal 2023 Financial Highlights:
+•Revenue: Total revenue was $1.86 billion, an increase of 43% year-over-year. Subscription revenue was $1.79 billion, an increase of 44% year-over-year.
+•Calculated Billings: Total calculated billings were $2.12 billion, an increase of 24% year-over-year. 
+•Operating Loss: GAAP operating loss was $812 million, or (44)% of total revenue, compared to a GAAP operating loss of $768 million, or (59)% of total revenue for fiscal 2022. Non-GAAP operating loss was $10 million, or (1)% of total revenue, compared to non-GAAP operating loss of $74 million, or (6)% of total revenue for fiscal 2022.
+•GAAP Net Loss: GAAP net loss was $815 million, compared to a GAAP net loss of $848 million for fiscal 2022. GAAP net loss per share was $5.16, compared to a GAAP net loss per share of $5.73 for fiscal 2022. 
+•Non-GAAP Net Loss: Non-GAAP net loss was $7 million, compared to non-GAAP net loss of $68 million for fiscal 2022. Non-GAAP basic and diluted net loss per share was $0.04, compared to non-GAAP basic and diluted net loss per share of $0.46 for fiscal 2022.
+•Cash Flow: Net cash provided by operations was $86 million, or 5% of total revenue, compared to $104 million, or 8% of total revenue, for fiscal 2022. Free cash flow was $65 million, or 3% of total revenue, compared to $87 million, or 7% of total revenue, for fiscal 2022.
+The section titled "Non-GAAP Financial Measures" below contains a description of the non-GAAP financial measures, and reconciliations between GAAP and non-GAAP information are contained in the tables below.
+Financial Outlook: 
+For the first quarter of fiscal 2024, the Company expects: 
+•Total revenue of $509 million to $511 million, representing a growth rate of 23% year-over-year; 
+•Current RPO of $1.675 billion to $1.685 billion, representing a growth rate of 19% year-over-year;
+•Non-GAAP operating income of $18 million to $20 million; and 
+•Non-GAAP diluted net income per share of $0.11 to $0.12, assuming diluted weighted-average shares outstanding of approximately 178 million and a non-GAAP tax rate of 26%.
+For the full year fiscal 2024, the Company now expects:
+•Total revenue of $2.155 billion to $2.170 billion, representing a growth rate of 16% to 17% year-over-year; 
+•Non-GAAP operating income of $136 million to $145 million; and 
+•Non-GAAP diluted net income per share of $0.74 to $0.79, assuming diluted weighted-average shares outstanding of approximately 180 million and a non-GAAP tax rate of 26%.
+These statements are forward-looking and actual results may differ materially. Refer to the Forward-Looking Statements safe harbor below for information on the factors that could cause our actual results to differ materially from these forward-looking statements. 
+2
+
+
+Okta has not reconciled its expectations as to non-GAAP operating income and non-GAAP net income per share to their most directly comparable GAAP measures because certain items are out of Okta’s control or cannot be reasonably predicted. Accordingly, reconciliations for forward-looking non-GAAP operating income and non-GAAP net income per share are not available without unreasonable effort.
+Webcast Information:
+Okta will host a live video webcast at 2:00 p.m. Pacific Time on March 1, 2023 to discuss the results and outlook. The news release with the financial results will be accessible from the Company’s website at investor.okta.com prior to the webcast. The live video webcast will be accessible from the Okta investor relations website at investor.okta.com.
+Supplemental Financial and Other Information:
+Supplemental financial and other information can be accessed through the Company’s investor relations website at investor.okta.com. 
+Non-GAAP Financial Measures:
+This press release and the accompanying tables contain the following non-GAAP financial measures: non-GAAP gross profit, non-GAAP gross margin, non-GAAP operating income (loss), non-GAAP operating margin, non-GAAP net income (loss), non-GAAP net margin, non-GAAP net income (loss) per share, basic and diluted, non-GAAP tax rate, free cash flow, free cash flow margin, current calculated billings and calculated billings. Certain of these non-GAAP financial measures exclude stock-based compensation, non-cash charitable contributions, amortization of acquired intangibles, acquisition and integration-related expenses, restructuring costs related to severance and termination benefits and lease impairments in connection with the closing of certain leased facilities, amortization of debt discount, amortization of debt issuance costs and loss on early extinguishment of debt. Acquisition and integration-related expenses include transaction costs and other non-recurring incremental costs incurred through the one-year anniversary of the transaction close.
+We periodically reassess the components of our non-GAAP adjustments for changes in how we evaluate our performance, changes in how we make financial and operational decisions, and consider the use of these measures by our competitors and peers to ensure the adjustments remain relevant and meaningful. In fiscal 2023, we updated our definition of non-GAAP operating income (loss) and non-GAAP operating margin to include restructuring costs related to severance and termination benefits and lease impairments in connection with the closing of certain leased facilities.
+Based on our financial outlook for the first quarter of and full year fiscal 2024, we will utilize a fixed long-term projected tax rate of 26% in our computation of the non-GAAP income tax provision effective February 1, 2023. The non-GAAP tax rate could be subject to change for a variety of reasons, including changes in tax laws and regulations, significant changes in our geographic earnings mix, or other changes to our strategy or business 
+3
+
+
+operations. We will periodically reevaluate the projected long-term tax rate, as necessary, for significant events, based on our ongoing analysis of relevant tax law changes, material changes in the forecasted geographic earnings mix, and any significant acquisitions.
+Okta believes that non-GAAP financial information, when taken collectively with GAAP financial measures, may be helpful to investors because it provides consistency and comparability with past financial performance and assists in comparisons with other companies, some of which use similar non-GAAP financial information to supplement their GAAP results. The non-GAAP financial information is presented for supplemental informational purposes only, and should not be considered a substitute for financial information presented in accordance with GAAP, and may be different from similarly-titled non-GAAP measures used by other companies. 
+The principal limitation of these non-GAAP financial measures is that they exclude significant expenses that are required by GAAP to be recorded in the Company’s financial statements. In addition, they are subject to inherent limitations as they reflect the exercise of judgment by the Company's management about which expenses are excluded or included in determining these non-GAAP financial measures. A reconciliation is provided below for each non-GAAP financial measure to the most directly comparable financial measure stated in accordance with GAAP.
+Okta encourages investors to review the related GAAP financial measures and the reconciliation of these non-GAAP financial measures to their most directly comparable GAAP financial measures, which it includes in press releases announcing quarterly financial results, including this press release, and not to rely on any single financial measure to evaluate the Company’s business. 
+4
+
+
+Forward-Looking Statements: This press release contains "forward-looking statements" within the meaning of the "safe harbor" provisions of the Private Securities Litigation Reform Act of 1995, including but not limited to, statements regarding our financial outlook, business strategy and plans, market trends and market size, opportunities and positioning. These forward-looking statements are based on current expectations, estimates, forecasts and projections. Words such as "expect," "anticipate," "should," "believe," "hope," "target," "project," "goals," "estimate," "potential," "predict," "may," "will," "might," "could," "intend," "shall" and variations of these terms and similar expressions are intended to identify these forward-looking statements, although not all forward-looking statements contain these identifying words. Forward-looking statements are subject to a number of risks and uncertainties, many of which involve factors or circumstances that are beyond our control. For example, the market for our products may develop more slowly than expected or than it has in the past; there may be significant fluctuations in our results of operations and cash flows related to our revenue recognition or otherwise; we may not achieve expected synergies and efficiencies of operations between Okta and Auth0, and we may not be able to successfully integrate the companies; global economic conditions could worsen; a network or data security incident that allows unauthorized access to our network or data or our customers’ data could damage our reputation and cause us to incur significant costs; we could experience interruptions or performance problems associated with our technology, including a service outage; the impact of COVID-19, related public health measures and any associated economic downturn on our business and results of operations may be more than we expect; and we may not be able to pay off our convertible senior notes when due. Further information on potential factors that could affect our financial results is included in our most recent Quarterly Report on Form 10-Q and our other filings with the Securities and Exchange Commission. The forward-looking statements included in this press release represent our views only as of the date of this press release and we assume no obligation and do not intend to update these forward-looking statements.
+5
+
+
+About Okta
+Okta is the World’s Identity Company. As the leading independent Identity partner, we free everyone to safely use any technology—anywhere, on any device or app. The most trusted brands trust Okta to enable secure access, authentication, and automation. With flexibility and neutrality at the core of our Okta Workforce Identity and Customer Identity Clouds, business leaders and developers can focus on innovation and accelerate digital transformation, thanks to customizable solutions and more than 7,000 pre-built integrations. We’re building a world where Identity belongs to you. Learn more at okta.com.
+Okta uses its investor.okta.com website as a means of disclosing material non-public information, announcing upcoming investor conferences and for complying with its disclosure obligations under Regulation FD. Accordingly, you should monitor our investor relations website in addition to following our press releases, SEC filings and public conference calls and webcasts.
+Investor Contact:    
+Dave Gennarelli 
+investor@okta.com
+Media Contact:
+Kyrk Storer
+press@okta.com
+6
+
+
+OKTA, INC. 
+CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS 
+(dollars in millions, shares in thousands, except per share data) 
+(unaudited)
+
+                                                                                                                Three Months Ended                                       Twelve Months Ended
+                                                                                                                       January 31,                                               January 31,
+2023                                                                                                                          2022                      2023                            2022
+Revenue:                                                                                                                                                                                    
+Subscription                                                                             $495                            $369                    $1,794                          $1,249     
+Professional services and other                                                            15                              14                        64                              51     
+Total revenue                                                                             510                             383                     1,858                           1,300     
+Cost of revenue:                                                                                                                                                                            
+Subscription(1)                                                                           119                             102                       464                             329     
+Professional services and other(1)                                                         20                              17                        82                              67     
+Total cost of revenue                                                                     139                             119                       546                             396     
+Gross profit                                                                              371                             264                     1,312                             904     
+Operating expenses:                                                                                                                                                                         
+Research and development(1)                                                               154                             147                       620                             469     
+Sales and marketing(1)                                                                    259                             222                     1,066                             771     
+General and administrative(1)                                                             100                             109                       409                             432     
+Restructuring and other charges                                                            15                               —                        29                               —     
+Total operating expenses                                                                  528                             478                     2,124                           1,672     
+Operating loss                                                                          (157)                           (214)                     (812)                           (768)     
+Interest expense                                                                          (2)                            (22)                      (11)                            (91)     
+Interest income and other, net                                                             10                               1                        22                               9     
+Interest and other, net                                                                     8                            (21)                        11                            (82)     
+Loss before provision for (benefit from) income taxes                                   (149)                           (235)                     (801)                           (850)     
+Provision for (benefit from) income taxes                                                   4                               6                        14                             (2)     
+Net loss                                                                               $(153)                          $(241)                    $(815)                          $(848)     
+Net loss per share, basic and diluted                                                 $(0.95)                         $(1.56)                   $(5.16)                         $(5.73)     
+Weighted-average shares used to compute net loss per share, basic and diluted         160,038                         154,720                   158,023                         148,036     
+(1) Amounts include stock-based compensation expense as follows: 
+
+                                                                        Three Months Ended                                   Twelve Months Ended
+                                                                               January 31,                                           January 31,
+2023                                                                                  2022                    2023                          2022
+Cost of subscription revenue                        $17                           $16                     $69                           $49     
+Cost of professional services and other               3                             2                      14                            12     
+Research and development                             66                            63                     275                           193     
+Sales and marketing                                  40                            34                     159                           136     
+General and administrative                           38                            42                     160                           176     
+Total stock-based compensation expense             $164                          $157                    $677                          $566     
+7
+
+
+OKTA, INC. 
+CONDENSED CONSOLIDATED BALANCE SHEETS 
+(dollars in millions) 
+(unaudited)
+
+                                                          January 31,                January 31,
+2023                                                                                        2022
+Assets                                                                                          
+Current assets:                                                                                 
+Cash and cash equivalents                                  $264                       $260      
+Short-term investments                                    2,316                      2,242      
+Accounts receivable, net of allowances                      481                        398      
+Deferred commissions                                         92                         75      
+Prepaid expenses and other current assets                    76                         66      
+Total current assets                                      3,229                      3,041      
+Property and equipment, net                                  59                         65      
+Operating lease right-of-use assets                         122                        148      
+Deferred commissions, noncurrent                            210                        191      
+Intangible assets, net                                      241                        317      
+Goodwill                                                  5,400                      5,401      
+Other assets                                                 46                         43      
+Total assets                                             $9,307                     $9,206      
+Liabilities and stockholders' equity                                                            
+Current liabilities:                                                                            
+Accounts payable                                            $12                        $20      
+Accrued expenses and other current liabilities              112                         90      
+Accrued compensation                                         99                        144      
+Convertible senior notes, net                                 —                         16      
+Deferred revenue                                          1,242                        973      
+Total current liabilities                                 1,465                      1,243      
+Convertible senior notes, net, noncurrent                 2,193                      1,816      
+Operating lease liabilities, noncurrent                     142                        171      
+Deferred revenue, noncurrent                                 18                         23      
+Other liabilities, noncurrent                                23                         31      
+Total liabilities                                         3,841                      3,284      
+Stockholders’ equity:                                                                           
+Preferred stock                                               —                          —      
+Class A common stock                                          —                          —      
+Class B common stock                                          —                          —      
+Additional paid-in capital                                7,974                      7,750      
+Accumulated other comprehensive loss                       (33)                       (12)      
+Accumulated deficit                                     (2,475)                    (1,816)      
+Total stockholders’ equity                                5,466                      5,922      
+Total liabilities and stockholders' equity               $9,307                     $9,206      
+8
+
+
+OKTA, INC. 
+SUMMARY OF CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS
+(dollars in millions) 
+(unaudited)
+
+                                                                                                                                Twelve Months Ended January 31,
+2023                                                                                                                                                    2022(1)
+Cash flows from operating activities:                                                                                                                          
+Net loss                                                                                                       $(815)                              $(848)      
+Adjustments to reconcile net loss to net cash provided by operating activities:                                                                                
+Stock-based compensation                                                                                          677                                 566      
+Depreciation, amortization and accretion                                                                          114                                 108      
+Amortization of debt discount and issuance costs                                                                    6                                  86      
+Amortization of deferred commissions                                                                               84                                  57      
+Deferred income taxes                                                                                               7                                 (6)      
+Non-cash charitable contributions                                                                                   4                                   7      
+Lease impairment charges                                                                                           14                                   —      
+Net gain on strategic investments                                                                                 (1)                                 (8)      
+Other, net                                                                                                          3                                   2      
+Changes in operating assets and liabilities:                                                                                                                   
+Accounts receivable                                                                                              (87)                               (175)      
+Deferred commissions                                                                                            (122)                               (171)      
+Prepaid expenses and other assets                                                                                (13)                                 (7)      
+Operating lease right-of-use assets                                                                                27                                  23      
+Accounts payable                                                                                                  (6)                                   7      
+Accrued compensation                                                                                             (44)                                  50      
+Accrued expenses and other liabilities                                                                              8                                  21      
+Operating lease liabilities                                                                                      (34)                                (24)      
+Deferred revenue                                                                                                  264                                 416      
+Net cash provided by operating activities                                                                          86                                 104      
+Cash flows from investing activities:                                                                                                                          
+Capitalization of internal-use software costs                                                                     (9)                                 (4)      
+Purchases of property and equipment                                                                              (12)                                (13)      
+Purchases of securities available for sale and other                                                          (1,411)                             (1,847)      
+Proceeds from maturities and redemption of securities available for sale                                        1,308                               1,482      
+Proceeds from sales of securities available for sale and other                                                      —                                 230      
+Purchases of intangible assets                                                                                    (2)                                   —      
+Payments for business acquisitions, net of cash acquired                                                          (4)                               (215)      
+Net cash used in investing activities                                                                           (130)                               (367)      
+Cash flows from financing activities:                                                                                                                          
+Proceeds from stock option exercises                                                                               17                                  53      
+Proceeds from shares issued in connection with employee stock purchase plan                                        31                                  36      
+Net cash provided by financing activities                                                                          48                                  89      
+Effects of changes in foreign currency exchange rates on cash, cash equivalents and restricted cash               (6)                                 (2)      
+Net decrease in cash, cash equivalents and restricted cash                                                        (2)                               (176)      
+Cash, cash equivalents and restricted cash at beginning of period                                                 273                                 449      
+Cash, cash equivalents and restricted cash at end of period                                                      $271                                $273      
+(1) The condensed consolidated statement of cash flows for the prior period has been adjusted to conform to current period presentation. These reclassifications had no impact on the aggregate cash flow classifications as previously reported.
+9
+
+
+OKTA, INC.
+Reconciliation of GAAP to Non-GAAP Data
+(dollars in millions, shares in thousands, except per share data)
+(unaudited)
+Non-GAAP Gross Profit and Non-GAAP Gross Margin 
+We define Non-GAAP gross profit and Non-GAAP gross margin as GAAP gross profit and GAAP gross margin, adjusted for stock-based compensation expense included in cost of revenue, amortization of acquired intangibles and acquisition and integration-related expenses. Acquisition and integration-related expenses include transaction costs and other non-recurring incremental costs incurred through the one-year anniversary of the transaction close. 
+
+                                                                                             Three Months Ended                                       Twelve Months Ended
+                                                                                                    January 31,                                               January 31,
+2023                                                                                                       2022                      2023                            2022
+Gross profit                                                            $371                          $264                    $1,312                            $904     
+Add:                                                                                                                                                                     
+Stock-based compensation expense included in cost of revenue              20                            18                        83                              61     
+Amortization of acquired intangibles                                      13                            12                        46                              34     
+Acquisition and integration-related expenses                               —                             —                         1                               2     
+Non-GAAP gross profit                                                   $404                          $294                    $1,442                          $1,001     
+Gross margin                                                              73    %                       69    %                   71    %                         70    %
+Non-GAAP gross margin                                                     79    %                       77    %                   78    %                         77    %
+Non-GAAP Operating Income (Loss) and Non-GAAP Operating Margin 
+We define Non-GAAP operating income (loss) and Non-GAAP operating margin as GAAP operating loss and GAAP operating margin, adjusted for stock-based compensation expense, non-cash charitable contributions, amortization of acquired intangibles, acquisition and integration-related expenses and restructuring costs related to severance and termination benefits and lease impairments in connection with the closing of certain leased facilities. Acquisition and integration-related expenses include transaction costs and other non-recurring incremental costs incurred through the one-year anniversary of the transaction close.
+In fiscal 2023, we updated our definition of Non-GAAP operating income (loss) and Non-GAAP operating margin to include restructuring costs as defined in the preceding paragraph.
+
+                                                                               Three Months Ended                                       Twelve Months Ended
+                                                                                      January 31,                                               January 31,
+2023                                                                                         2022                      2023                            2022
+Operating loss                                        $(157)                          $(214)                    $(812)                          $(768)     
+Add:                                                                                                                                                       
+Stock-based compensation expense                         164                             157                       677                             566     
+Non-cash charitable contributions                          2                               2                         4                               8     
+Amortization of acquired intangibles                      22                              22                        85                              64     
+Acquisition and integration-related expenses               —                               9                         7                              56     
+Restructuring costs                                       15                               —                        29                               —     
+Non-GAAP operating income (loss)                         $46                           $(24)                     $(10)                           $(74)     
+Operating margin                                        (31)    %                       (56)    %                 (44)    %                       (59)    %
+Non-GAAP operating margin                                  9    %                        (6)    %                  (1)    %                        (6)    %
+10
+
+
+Non-GAAP Net Income (Loss), Non-GAAP Net Margin and Non-GAAP Net Income (Loss) Per Share, Basic and Diluted
+We define Non-GAAP net income (loss) and Non-GAAP net margin as GAAP net loss and GAAP net margin, adjusted for stock-based compensation expense, non-cash charitable contributions, amortization of acquired intangibles, acquisition and integration-related expenses, amortization of debt discount, amortization of debt issuance costs and restructuring costs related to severance and termination benefits and lease impairments in connection with the closing of certain leased facilities. Acquisition and integration-related expenses include transaction costs and other non-recurring incremental costs incurred through the one-year anniversary of the transaction close.
+In fiscal 2023, we updated our definition of Non-GAAP net income (loss) and Non-GAAP net margin to include restructuring costs as defined in the preceding paragraph.
+We define Non-GAAP net income (loss) per share, basic, as Non-GAAP net income (loss) divided by GAAP weighted-average shares used to compute net loss per share, basic and diluted.
+We define Non-GAAP net income (loss) per share, diluted, as Non-GAAP net income (loss) divided by GAAP weighted-average shares used to compute net loss per share, basic and diluted adjusted for the potentially dilutive effect of (i) employee equity incentive plans, excluding the impact of unrecognized stock-based compensation expense, and (ii) convertible senior notes outstanding and related warrants. In addition, Non-GAAP net income (loss) per share, diluted, includes the impact of our note hedge and capped call agreements on convertible senior notes outstanding, as applicable. The note hedge and capped call agreements are intended to offset potential dilution to our Class A common stock upon any conversion or settlement of the convertible senior notes under certain circumstances. Accordingly, we did not record any adjustments for the potential impact of the convertible senior notes outstanding under the if-converted method.
+
+                                                                                                                                  Three Months Ended                                       Twelve Months Ended
+                                                                                                                                         January 31,                                               January 31,
+2023                                                                                                                                            2022                      2023                            2022
+Net loss                                                                                                 $(153)                          $(241)                    $(815)                          $(848)     
+Add:                                                                                                                                                                                                          
+Stock-based compensation expense                                                                            164                             157                       677                             566     
+Non-cash charitable contributions                                                                             2                               2                         4                               8     
+Amortization of acquired intangibles                                                                         22                              22                        85                              64     
+Acquisition and integration-related expenses                                                                  —                               9                         7                              56     
+Amortization of debt discount and debt issuance costs                                                         2                              22                         6                              86     
+Restructuring costs                                                                                          15                               —                        29                               —     
+Non-GAAP net income (loss)                                                                                  $52                           $(29)                      $(7)                           $(68)     
+Net margin                                                                                                 (30)    %                       (63)    %                 (44)    %                       (65)    %
+Non-GAAP net margin                                                                                          10    %                        (7)    %                    —    %                        (5)    %
+Weighted-average shares used to compute net loss per share, basic and diluted                           160,038                         154,720                   158,023                         148,036     
+Non-GAAP weighted-average effect of potentially dilutive securities                                      13,988                               —                         —                               —     
+Non-GAAP weighted-average shares used to compute non-GAAP net income (loss) per share, diluted          174,026                         154,720                   158,023                         148,036     
+Net loss per share, basic and diluted                                                                   $(0.95)                         $(1.56)                   $(5.16)                         $(5.73)     
+Non-GAAP net income (loss) per share, basic                                                               $0.33                         $(0.18)                   $(0.04)                         $(0.46)     
+Non-GAAP net income (loss) per share, diluted                                                             $0.30                         $(0.18)                   $(0.04)                         $(0.46)     
+11
+
+
+OKTA, INC.
+Reconciliation of GAAP to Non-GAAP Financial Measures
+(dollars in millions, except percentages)
+(unaudited)
+Free Cash Flow and Free Cash Flow Margin
+We define Free cash flow as net cash provided by operating activities, less cash used for purchases of property and equipment, net of sales proceeds, and capitalized internal-use software costs. Free cash flow margin is calculated as Free cash flow divided by total revenue.
+
+                                                                                Three Months Ended                                       Twelve Months Ended
+                                                                                       January 31,                                               January 31,
+2023                                                                                          2022                      2023                            2022
+Net cash provided by operating activities                 $76                             $14                       $86                            $104     
+Less:                                                                                                                                                       
+Purchases of property and equipment                       (3)                             (7)                      (12)                            (13)     
+Capitalization of internal-use software costs             (1)                             (2)                       (9)                             (4)     
+Free cash flow                                            $72                              $5                       $65                             $87     
+Net cash used in investing activities                   $(83)                          $(157)                    $(130)                          $(367)     
+Net cash provided by financing activities                 $14                             $31                       $48                             $89     
+Free cash flow margin                                      14    %                          1    %                    3    %                          7    %
+Calculated Billings 
+We define Calculated Billings as total revenue plus the change in deferred revenue, net of acquired deferred revenue, and less the change in unbilled receivables, net of acquired unbilled receivables, in the period.
+
+                                                                                      Three Months Ended                                       Twelve Months Ended
+                                                                                             January 31,                                               January 31,
+2023                                                                                                2022                      2023                            2022
+Total revenue                                                    $510                          $383                    $1,858                          $1,300     
+Add:                                                                                                                                                              
+Deferred revenue, current (end of period)                       1,242                           973                     1,242                             973     
+Unbilled receivables, current (beginning of period)                 5                             5                         3                               3     
+Acquired unbilled receivables, current                              —                             —                         —                               2     
+Less:                                                                                                                                                             
+Deferred revenue, current (beginning of period)               (1,045)                         (760)                     (973)                           (503)     
+Unbilled receivables, current (end of period)                     (2)                           (3)                       (2)                             (3)     
+Acquired deferred revenue, current                                  —                             —                         —                            (61)     
+Current Calculated Billings                                       710                           598                     2,128                           1,711     
+Add:                                                                                                                                                              
+Deferred revenue, noncurrent (end of period)                       18                            23                        18                              23     
+Less:                                                                                                                                                             
+Deferred revenue, noncurrent (beginning of period)               (18)                          (18)                      (23)                            (11)     
+Acquired deferred revenue, noncurrent                               —                             —                         —                             (5)     
+Calculated Billings                                              $710                          $603                    $2,123                          $1,718     
+12
+
+
+
+

@@ -1,0 +1,372 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — GTLB 2025-03-03
+# 출처: https://www.sec.gov/Archives/edgar/data/1653482/000162828025009422/gtlb-20250228.htm
+
+Document
+
+
+Exhibit 99.1      
+GitLab Reports Fourth Quarter and Full Fiscal Year 2025 Financial Results 
+Fourth Quarter Fiscal Year 2025 Highlights:
+•Total revenue of $211.4 million, up 29% year-over-year
+•GAAP operating margin of (7)%; non-GAAP operating margin of 18%
+•Operating cash flow of $63.2 million and non-GAAP adjusted free cash flow of $62.1 million
+Fiscal Year 2025 Highlights:
+•Total revenue of $759.2 million, up 31% year-over-year
+•GAAP operating margin of (18)%; non-GAAP operating margin of 10%
+•Operating cash flow of $(64.0) million and non-GAAP adjusted free cash flow of $120.0 million
+San Francisco (March 03, 2025) -All-Remote-GitLab Inc. (NASDAQ: GTLB), the most comprehensive AI-powered DevSecOps platform, today reported financial results for its fourth quarter and full fiscal year of 2025, ended January 31, 2025.
+“This quarter’s results demonstrate the power of GitLab’s innovative DevSecOps platform,” said Bill Staples, GitLab chief executive officer. “AI is fundamentally changing the software development landscape. With the GitLab platform and GitLab Duo, customers can leverage AI that fully takes advantage of the GitLab platform which ensures their software quality, security, privacy, compliance, and governance requirements are met to deliver secure software faster.”
+“We reported a very strong fourth quarter for fiscal year 2025 highlighted by 29% year-over-year revenue growth and meaningful operating margin expansion,” said Brian Robins, GitLab chief financial officer. “In particular, we saw significant demand from our enterprise customers who see GitLab as their trusted DevSecOps partner, helping them to deliver on some of their most complex software demands.” 
+GitLab Names Chief Revenue Officer
+GitLab announced that Ian Steward will join the company as Chief Revenue Officer (CRO), effective May 3, 2025. Steward joins from Tricentis, where he serves as CRO. He has spent his career driving revenue growth with a strong analytical and operational bias. He brings a wealth of experience working with developers and IT organizations to help them realize value. 
+Interim CRO, and Chief Marketing and Strategy Officer Ashley Kramer will remain in her roles through the end of Q1 FY26, enabling a smooth transition. We are grateful for Ashley’s many contributions over the past three years and wish her continued success.
+GitLab Appoints New Member to Board of Directors
+The company announced the appointment of David Henshall to its board of directors on March 3, 2025. Henshall will also join the board’s Audit Committee. Henshall served as President and Chief Executive Officer and as a member of the board of directors of Citrix Systems, Inc., from 2017 to 2021. Prior to this role, he served in various other roles at Citrix, including Chief Financial Officer and Chief Operating Officer, during his 18-year tenure at the company. For more information on GitLab’s Board of Directors, please visit https://about.gitlab.com/company/team/board-of-directors/.
+Fourth Quarter Fiscal Year 2025 Financial Highlights (in millions, except per share data and percentages):
+
+                                   Q4 FY 2025                 Q4 FY 2024            Y/Y Change     
+Revenue                          $211.4                     $163.8                         29   %  
+GAAP Gross margin                    89     %                   90     %                           
+Non-GAAP Gross margin                91     %                   92     %                           
+
+
+
+GAAP Operating margin                                                         (7)   %                 (21)   %             
+Non-GAAP Operating margin                                                      18   %   8                    %             
+GAAP Operating loss                                                       $(15.4)                  $(34.9)         $19.5
+Non-GAAP Operating income                                                   $37.4                    $13.2         $24.2
+GAAP Net income (loss) attributable to GitLab                               $10.8                  $(36.9)         $47.7
+Non-GAAP Net income attributable to GitLab                                  $56.7                    $25.0         $31.7
+GAAP Net income (loss) per share attributable to GitLab, basic              $0.07                  $(0.24)         $0.31
+GAAP Net income (loss) per share attributable to GitLab, diluted            $0.06                  $(0.24)         $0.30
+Non-GAAP Net income per share attributable to GitLab, basic                 $0.35                    $0.16         $0.19
+Non-GAAP Net income per share attributable to GitLab, diluted               $0.33                    $0.15         $0.18
+GAAP net cash provided by operating activities                              $63.2                    $24.9         $38.3
+Non-GAAP adjusted free cash flow                                            $62.1                    $24.5         $37.6
+Fiscal Year 2025 Financial Highlights (in millions, except per share data and percentages):
+
+                                                                              FY 2025                     FY 2024                 Y/Y Change
+Revenue                                                                   $759.2                      $579.9        31                     %
+GAAP Gross margin                                                             89    %                     90    %                           
+Non-GAAP Gross margin                                                         91    %                     91    %                           
+GAAP Operating margin                                                       (18)    %                   (32)    %                           
+Non-GAAP Operating margin                                                     10    %                  (0.2)    %                           
+GAAP Operating loss                                                     $(138.8)                    $(187.4)                     $48.6      
+Non-GAAP Operating income (loss)                                           $77.6                      $(1.4)                     $79.0      
+GAAP Net loss attributable to GitLab                                      $(2.4)                    $(425.7)                    $423.3      
+Non-GAAP Net income attributable to GitLab                                $124.8                       $32.6                     $92.2      
+GAAP Net loss per share attributable to GitLab, basic                    $(0.02)                     $(2.76)                     $2.74      
+GAAP Net loss per share attributable to GitLab, diluted                  $(0.02)                     $(2.76)                     $2.74      
+Non-GAAP Net income per share attributable to GitLab, basic                $0.78                       $0.21                     $0.57      
+Non-GAAP Net income per share attributable to GitLab, diluted              $0.74                       $0.20                     $0.54      
+GAAP net cash provided by (used in) operating activities                 $(64.0)                       $35.0                   $(99.0)      
+Non-GAAP adjusted free cash flow                                          $120.0                       $33.4                     $86.6      
+A reconciliation between GAAP and non-GAAP financial measures is contained in this release under the section titled “Non-GAAP Financial Measures.”
+
+
+Additional Financial Highlights:
+•Customers with more than $5,000 of ARR reached 9,893, an increase of 15% year-over-year.
+•Customers with more than $100,000 of ARR reached 1,229, an increase of 29% year-over-year.
+•Customers with more than $1M of ARR increased to 123, up 28% from Q4 of fiscal year 2024.
+•Dollar-Based Net Retention Rate was 123%.
+•Total RPO grew 40% year-over-year to $945.0 million, while cRPO grew 35% to $579.2 million.
+Business Highlights:
+•Announced the general availability of GitLab Duo Self-Hosted, which allows customers to maintain full control over their data privacy, security, and the deployment of LLMs.
+•Announced the private beta of GitLab Duo Workflow. 
+•Recognized as a Gartner® Peer Insights™ Customers’ Choice in the 2025 Voice of the Customer for DevOps Platforms Report1.
+•Named Ian Steward as Chief Revenue Officer (CRO), effective May 3, 2025.
+•Announced the appointment of David Henshall to GitLab’s board of directors. 
+First Quarter and Fiscal Year 2026 Financial Outlook
+This afternoon’s first quarter and fiscal year 2026 financial outlook applies a new 22% long-term non-GAAP projected tax rate. This rate reflects the new location of GitLab’s intellectual property in the U.S. following the conclusion of our bilateral advance pricing agreement. It does not imply an incremental increase in our actual cash taxes paid. This rate could change for various reasons including significant changes in our geographic earnings mix, tax law or tax rate changes in the jurisdictions in which we operate.
+For the first quarter and fiscal year 2026, GitLab Inc. expects (in millions, except share and per share data):
+
+                                                                                                                                                                                      Q1 FY 2026 Guidance        FY 2026 Guidance
+Revenue                                                                                                                                                                                   $212.0 - $213.0             $936 - $942
+Non-GAAP operating income                                                                                                                                                                   $21.0 - $22.0             $109 - $114
+Non-GAAP diluted net income per share assuming approximately 172 million and 173 million weighted average shares outstanding during Q1 FY 2026 and FY 2026, respectively.                   $0.14 - $0.15           $0.68 - $0.72
+These statements are forward-looking and actual results may differ materially as a result of many factors. Refer to the Forward-Looking Statements safe harbor below for information on the factors that could cause our actual results to differ materially from these forward-looking statements.
+A reconciliation of GAAP to non-GAAP financial measures has been provided in the financial statement tables included in this press release. An explanation of these measures is also included below in Non-GAAP Financial Measures. We have not provided the most directly comparable GAAP financial guidance measures because certain items are out of our control or cannot be reasonably predicted. Accordingly, a reconciliation of non-GAAP guidance for operating income (loss) and net income (loss) per share to the corresponding GAAP measures is not available.
+__________
+1 Gartner®, Voice of the Customer for DevOps Platforms, Peer Contributors, 24 February 2025
+GARTNER is a registered trademark and service mark of Gartner, Inc. and/or its affiliates in the U.S. and internationally, and PEER INSIGHTS is a registered trademark of Gartner, Inc. and/or its affiliates and are used herein with permission. All rights reserved.
+Gartner Peer Insights content consists of the opinions of individual end users based on their own experiences, and should not be construed as statements of fact, nor do they represent the views of Gartner or its affiliates. Gartner does not endorse any vendor, product or service depicted in this content nor makes any warranties, expressed or implied, with respect to this content, about its accuracy or completeness, including any warranties of merchantability or fitness for a particular purpose.
+
+
+The Gartner content described herein (the “Gartner Content”) represents research opinion or viewpoints published, as part of a syndicated subscription service, by Gartner, Inc. ("Gartner"), and is not a representation of fact. Gartner Content speaks as of its original publication date (and not as of the date of this Earnings Press Release), and the opinions expressed in the Gartner Content are subject to change without notice.
+Revision of Previously Issued Financial Statements:
+
+Certain prior period amounts included in this release have been revised. During the current reporting period, the Company identified certain prior period adjustments, including with respect to the recognition and presentation of liabilities incurred at the formation of our GitLab Information Technology (Hubei) Co., LTD Joint Venture in China (“JiHu”), for the FY 2023, FY 2024 and FY 2025 quarterly and annual financial statements. These revisions were not material to the prior periods and do not affect revenue, loss from operations, non-GAAP operating income, or non-GAAP net income. A quantification of the impact of these adjustments on each financial statement line item will be included in the Company's Annual Report on Form 10-K for the year ended January 31, 2025.
+Conference Call Information 
+GitLab will host a conference call today, March 03, 2025, at 1:30 p.m. (PT) / 4:30 p.m. (ET) to discuss its fourth quarter and full fiscal year 2025 financial results and its guidance for the first quarter and full fiscal year 2026. Interested parties may register for the call in advance by visiting https://bit.ly/4ggCwB0. A live webcast of this conference call will be available on GitLab’s investor relations website (ir.gitlab.com), and a replay will also be archived on the website for one year.
+About GitLab
+GitLab is the most comprehensive AI-powered DevSecOps platform for software innovation. GitLab enables organizations to increase developer productivity, improve operational efficiency, reduce security and compliance risk, and accelerate digital transformation. More than 50 million registered users and more than 50% of the Fortune 100 trust GitLab to ship better, more secure software faster.
+
+
+Non-GAAP Financial Measures
+GitLab believes non-GAAP measures are useful in evaluating its operating performance. GitLab uses this supplemental information to evaluate its ongoing operations and for internal planning and forecasting purposes. GitLab believes that non-GAAP financial information, when taken collectively with its GAAP financial information, may be helpful to investors because it provides consistency and comparability with past financial performance. However, non-GAAP financial information is presented for supplemental informational purposes only, has limitations as an analytical tool, and should not be considered in isolation or as a substitute for financial information presented in accordance with GAAP. Reconciliations of non-GAAP financial measures to the most directly comparable financial results as determined in accordance with GAAP are included at the end of this press release following the accompanying financial data. We define non-GAAP financial measures as GAAP measures, excluding certain items such as stock-based compensation expense, amortization of acquired intangible assets, foreign exchange (gain) loss, equity method investment loss and impairment, acquisition related expenses, changes in the fair value of acquisition related contingent consideration, charitable donation of common stock, restructuring charges, a non-recurring income tax adjustment related to bilateral advance pricing agreement (“BAPA”) negotiations, non-recurring charges associated with the formation of our GitLab Information Technology (Hubei) Co., LTD Joint Venture in China (“JiHu”), and other expenses that the Company believes are not indicative of its ongoing operations. Shares used for net income per share on a non-GAAP basis include incremental dilutive shares related to restricted stock units, options, and shares issuable under GitLab Inc.’s 2021 Employee Stock Purchase Plan that are anti-dilutive on a GAAP basis. A reconciliation of non-GAAP guidance measures to corresponding GAAP measures is not available on a forward-looking basis without unreasonable effort due to the uncertainty of expenses that may be incurred in the future. Investors are encouraged to review the related GAAP financial measures and the reconciliation of these non-GAAP financial measures to their most directly comparable GAAP financial measures and not rely on any single financial measure to evaluate our business.
+Adjusted Free Cash Flow
+Adjusted free cash flow is a non-GAAP financial measure that we calculate as net cash provided by operating activities less cash used for purchases of property and equipment, plus any non-recurring income tax payments related to BAPA, plus any non-recurring payments related to the formation of JiHu. We believe that adjusted free cash flow is a useful indicator of liquidity that provides information to management and investors about the amount of cash generated from our operations that, after the investments in property and equipment, any non-recurring income tax payments related to BAPA, and any non-recurring payments related to the formation of JiHu, can be used for strategic initiatives, including investing in our business, and strengthening our financial position. One limitation of adjusted free cash flow is that it does not reflect our future contractual commitments. Additionally, adjusted free cash flow does not represent the total increase or decrease in our cash balance for a given period.
+Forward-Looking Statements
+This press release and the accompanying earnings call contain “forward-looking statements” within the meaning of Section 27A of the Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934. Although we believe that the expectations reflected in the forward-looking statements contained in this release and the accompanying earnings call are reasonable, they are subject to known and unknown risks, uncertainties, assumptions and other factors that may cause actual results or outcomes to be materially different from any future results or outcomes expressed or implied by the forward-looking statements. These risks, uncertainties, assumptions, and other factors include, but are not limited to the following:
+• our ability to effectively manage our growth;
+• our revenue growth rate in the future;
+• our ability to achieve and sustain profitability, our business, financial condition, and operating results;
+• security and privacy breaches;
+
+
+• intense competition in our markets and loss of market share to our competitors;
+• our ability to respond to rapid technological changes;
+• the market for our services may not grow;
+• a decline in our customer renewals and expansions;
+• fluctuations in our operating results;
+• our incorporation of artificial intelligence features into our products;
+• our transparency;
+• our publicly available company Handbook;
+• customers staying on our free self-managed or SaaS product offering;
+• our ability to accurately predict the long-term rate of customer subscription renewals or adoption, or the impact of these renewals and adoption;
+• our hiring model;
+• the effects of ongoing armed conflict in different regions of the world on our business; and
+• general economic conditions (including changes in interest rates, inflation, uncertainty of the federal budget, increased volatility in the capital markets, and instability in the global banking sector) and slow or negative growth of our markets.
+Further information on these and additional risks, uncertainties, and other factors that could cause actual outcomes and results to differ materially from those included in or contemplated by the forward-looking statements contained in this release are included under the caption “Risk Factors” and elsewhere in the filings and reports we make with the Securities and Exchange Commission. We do not undertake any obligation to update or release any revisions to any forward-looking statement or to report any events or circumstances after the date of this press release or to reflect the occurrence of unanticipated events, except as required by law.
+Operating Metrics
+Annual Recurring Revenue (“ARR”): We define annual recurring revenue as the annual run-rate revenue of subscription agreements, including our self-managed and SaaS offerings but excluding professional services, from all customers as measured on the last day of a given month. We calculate ARR by taking the monthly recurring revenue (“MRR”) and multiplying it by 12. MRR for each month is calculated by aggregating, for all customers during that month, monthly revenue from committed contractual amounts of subscriptions, including our self-managed license, self-managed subscription, and SaaS subscription offerings but excluding professional services.
+Dollar-Based Net Retention Rate: We calculate Dollar-Based Net Retention Rate as of a period end by starting with our customers as of the 12 months prior to such period end (“Prior Period ARR”). We then calculate the ARR from these customers as of the current period end (“Current Period ARR”). The calculation of Current Period ARR includes any upsells, price adjustments, user growth within a customer, contraction, and attrition. We then divide the total Current Period ARR by the total Prior Period ARR to arrive at the Dollar-Based Net Retention Rate.
+
+
+GitLab Inc.
+Condensed Consolidated Balance Sheets
+(in thousands, except per share data)
+(unaudited)
+
+                                                                                                                                                                                                                                                     January 31, 2025(1)                 January 31, 2024(1)
+ASSETS                                                                                                                                                                                                                                                                                                      
+CURRENT ASSETS:                                                                                                                                                                                                                                                                                             
+Cash and cash equivalents                                                                                                                                                                                                                              $227,649                            $287,996         
+Short-term investments                                                                                                                                                                                                                                  764,728                             748,289         
+Accounts receivable, net of allowance for doubtful accounts of $991 and $673 as of January 31, 2025 and January 31, 2024, respectively                                                                                                                  264,565                             166,731         
+Deferred contract acquisition costs, current                                                                                                                                                                                                             38,964                              32,300         
+Prepaid expenses and other current assets                                                                                                                                                                                                                40,411                              49,143         
+Total current assets                                                                                                                                                                                                                                  1,336,317                           1,284,459         
+Property and equipment, net                                                                                                                                                                                                                               4,013                               2,954         
+Operating lease right-of-use assets                                                                                                                                                                                                    381                                 405                              
+Goodwill                                                                                                                                                                                                                                                 16,139                               8,145         
+Intangible assets, net                                                                                                                                                                                                                                   17,834                               1,733         
+Deferred contract acquisition costs, non-current                                                                                                                                                                                                         20,142                              19,317         
+Other non-current assets                                                                                                                                                                                                                                  4,437                               4,390         
+TOTAL ASSETS                                                                                                                                                                                                                                         $1,399,263                          $1,321,403         
+LIABILITIES AND STOCKHOLDERS’ EQUITY                                                                                                                                                                                                                                                                        
+CURRENT LIABILITIES:                                                                                                                                                                                                                                                                                        
+Accounts payable                                                                                                                                                                                                                                         $7,519                              $1,738         
+Accrued expenses and other current liabilities                                                                                                                                                                                                           50,788                             301,262         
+Accrued compensation and benefits                                                                                                                                                                                                                        40,233                              35,809         
+Deferred revenue, current                                                                                                                                                                                                                               442,599                             338,348         
+Total current liabilities                                                                                                                                                                                                                               541,139                             677,157         
+Deferred revenue, non-current                                                                                                                                                                                                                            26,369                              23,794         
+Other non-current liabilities                                                                                                                                                                                                                             6,557                              14,060         
+TOTAL LIABILITIES                                                                                                                                                                                                                                       574,065                             715,011         
+STOCKHOLDERS’ EQUITY:                                                                                                                                                                                                                                                                                       
+Preferred stock, $0.0000025 par value; 50,000 shares authorized as of January 31, 2025 and January 31, 2024; no shares issued and outstanding as of January 31, 2025 and January 31, 2024                                                                     —                                   —         
+Class A Common stock, $0.0000025 par value; 1,500,000 shares authorized as of January 31, 2025 and January 31, 2024; 144,444 and 114,670 shares issued and outstanding as of January 31, 2025 and January 31, 2024, respectively                              —                                   —         
+Class B Common stock, $0.0000025 par value; 250,000 shares authorized as of January 31, 2025 and January 31, 2024; 19,469 and 42,887 shares issued and outstanding as of January 31, 2025 and January 31, 2024, respectively                                  —                                   —         
+Additional paid-in capital                                                                                                                                                                                                                            1,952,031                           1,718,661         
+Accumulated deficit                                                                                                                                                                                                                                 (1,163,722)                         (1,161,288)         
+Accumulated other comprehensive income (loss)                                                                                                                                                                                                           (8,508)                               2,398         
+Total GitLab stockholders’ equity                                                                                                                                                                                                                       779,801                             559,771         
+Noncontrolling interests                                                                                                                                                                                                                                 45,397                              46,621         
+TOTAL STOCKHOLDERS’ EQUITY                                                                                                                                                                                                                              825,198                             606,392         
+TOTAL LIABILITIES AND STOCKHOLDERS’ EQUITY                                                                                                                                                                                                           $1,399,263                          $1,321,403         
+__________
+(1) As of January 31, 2025 and January 31, 2024, the consolidated balance sheet includes assets of the consolidated variable interest entity, GitLab Information Technology (Hubei) Co., LTD (“JiHu”), of $46.5 million and $51.2 million, respectively, and liabilities of $10.3 million and $10.1 million, respectively. The assets of JiHu can be used only to settle obligations of JiHu and creditors of JiHu do not have recourse against the general credit of GitLab Inc.
+
+
+GitLab Inc.
+Condensed Consolidated Statements of Operations
+(in thousands, except per share data)
+(unaudited)
+
+                                                                                                                                                                   Three Months Ended January 31,                                        Fiscal Year Ended January 31,
+2025                                                                                                                                                          2024                                  2025                         2024                                 
+Revenue:                                                                                                                                                                                                                                                              
+Subscription—self-managed and SaaS                                                                                                           $185,562                              $142,026                     $675,179                                $506,306      
+License—self-managed and other                                                                                                                 25,869                                21,753                       84,070                                  73,600      
+Total revenue                                                                                                                                 211,431                               163,779                      759,249                                 579,906      
+Cost of revenue:                                                                                                                                                                                                                                                      
+Subscription—self-managed and SaaS                                                                                                             17,277                                12,165                       64,916                                  45,486      
+License—self-managed and other                                                                                                                  5,592                                 3,824                       20,224                                  14,222      
+Total cost of revenue                                                                                                                          22,869                                15,989                       85,140                                  59,708      
+Gross profit                                                                                                                                  188,562                               147,790                      674,109                                 520,198      
+Operating expenses:                                                                                                                                                                                                                                                   
+Sales and marketing                                                                                                                            98,753                                90,762                      384,295                                 356,393      
+Research and development                                                                                                                       62,885                                52,388                      239,652                                 200,840      
+General and administrative                                                                                                                     42,370                                39,523                      188,985                                 150,405      
+Total operating expenses                                                                                                                      204,008                               182,673                      812,932                                 707,638      
+Loss from operations                                                                                                                         (15,446)                              (34,883)                    (138,823)                               (187,440)      
+Interest income                                                                                                                                10,292                                11,813                       47,735                                  39,114      
+Other income (expense), net                                                                                                                     4,017                              (11,451)                        9,187                                (12,241)      
+Loss before income taxes and loss from equity method investment                                                                               (1,137)                              (34,521)                     (81,901)                               (160,567)      
+Loss from equity method investment, net of tax                                                                                                      —                               (1,416)                            —                                 (3,824)      
+Provision for (benefit from) income taxes                                                                                                    (11,344)                                 2,035                     (76,674)                                 265,145      
+Net income (loss)                                                                                                                             $10,207                             $(37,972)                     $(5,227)                              $(429,536)      
+Net loss attributable to noncontrolling interest                                                                                                (577)                               (1,104)                      (2,793)                                 (3,859)      
+Net income (loss) attributable to GitLab                                                                                                      $10,784                             $(36,868)                     $(2,434)                              $(425,677)      
+Net income (loss) per share attributable to GitLab Class A and Class B common stockholders:                                                                                                                                                                           
+Basic                                                                                                                                           $0.07                               $(0.24)                      $(0.02)                                 $(2.76)      
+Diluted                                                                                                                                         $0.06                               $(0.24)                      $(0.02)                                 $(2.76)      
+Weighted-average shares used to compute net income (loss) per share attributable to GitLab Class A and Class B common stockholders:                                                                                                                                   
+Basic                                                                                                                                         163,055                               156,601                      160,580                                 154,283      
+Diluted                                                                                                                                       170,094                               156,601                      160,580                                 154,283      
+
+
+GitLab Inc.
+Condensed Consolidated Statements of Cash Flows
+(in thousands)
+(unaudited)
+
+                                                                                                                                                          Three Months Ended January 31,                                        Fiscal Year Ended January 31,
+2025                                                                                                                                                                                2024                         2025   2024                                 
+CASH FLOWS FROM OPERATING ACTIVITIES:                                                                                                                                                                                                                        
+Net income (loss), including amounts attributable to noncontrolling interest                                                         $10,207                             $(37,972)                     $(5,227)                              $(429,536)      
+Adjustments to reconcile net loss to net cash provided by (used in) operating activities:                                                                                                                                                                    
+Stock-based compensation expense                                                                                                      46,636                                43,017                      185,899                                 163,049      
+Change in fair value of acquisition related contingent consideration                                                                       —                                     —                        3,750                                       —      
+Charitable donation of common stock                                                                                                    2,956                                 2,675                       11,827                                  10,700      
+Amortization of intangible assets                                                                                                      2,195                                   521                        8,126                                   2,167      
+Depreciation expense                                                                                                                     499                                 1,039                        2,860                                   4,368      
+Amortization of deferred contract acquisition costs                                                                                   14,064                                12,397                       49,714                                  43,463      
+Loss from equity method investment                                                                                                         —                                   776                            —                                   3,824      
+Impairment of equity method investment                                                                                                     —                                 8,858                            —                                   8,858      
+Net amortization of premiums or discounts on short-term investments                                                                  (3,813)                               (5,988)                     (16,746)                                (20,349)      
+Unrealized foreign exchange loss (gain), net                                                                                         (4,083)                                 4,194                      (9,526)                                   4,833      
+Other non-cash expense, net                                                                                                              162                                 1,013                          930                                   1,330      
+Changes in assets and liabilities:                                                                                                                                                                                                                           
+Accounts receivable                                                                                                                 (67,991)                              (31,050)                     (99,649)                                (36,341)      
+Prepaid expenses and other current assets                                                                                              5,927                              (15,722)                        8,424                                (23,688)      
+Deferred contract acquisition costs                                                                                                 (22,421)                              (21,340)                     (58,127)                                (53,100)      
+Other non-current assets                                                                                                             (1,034)                                   865                        (183)                                   (309)      
+Accounts payable                                                                                                                       5,472                               (3,219)                        5,505                                 (3,443)      
+Accrued expenses and other current liabilities                                                                                      (16,647)                                13,090                    (257,261)                                 259,445      
+Accrued compensation and benefits                                                                                                     13,558                                12,331                        4,743                                  15,173      
+Deferred revenue                                                                                                                      74,240                                50,189                      108,743                                  79,347      
+Other non-current liabilities                                                                                                          3,295                              (10,821)                      (7,773)                                   5,249      
+Net cash provided by (used in) operating activities                                                                                   63,222                                24,853                     (63,971)                                  35,040      
+CASH FLOWS FROM INVESTING ACTIVITIES:                                                                                                                                                                                                                        
+Purchases of short-term investments                                                                                                (204,304)                             (242,021)                    (707,698)                               (815,697)      
+Proceeds from maturities of short-term investments                                                                                   183,520                               207,028                      708,382                                 734,007      
+Purchases of property and equipment                                                                                                  (1,157)                                 (329)                      (3,765)                                 (1,598)      
+Payments for business combination, net of cash acquired                                                                                    —                                     —                     (20,210)                                       —      
+Payments for asset acquisition                                                                                                             —                                     —                      (7,660)                                       —      
+Escrow payment related to business combination, after acquisition date                                                                     —                                     —                            —                                 (2,500)      
+Other investing activities                                                                                                                 —                                 (450)                          457                                   (450)      
+Net cash used in investing activities                                                                                               (21,941)                              (35,772)                     (30,494)                                (86,238)      
+CASH FLOWS FROM FINANCING ACTIVITIES:                                                                                                                                                                                                                        
+Proceeds from the issuance of common stock upon exercise of stock options, including early exercises, net of repurchases               6,069                                 9,810                       23,964                                  32,302      
+Issuance of common stock under employee stock purchase plan                                                                            5,624                                 5,182                       13,556                                  12,933      
+Settlement of acquisition related contingent cash consideration                                                                            —                                     —                      (4,900)                                       —      
+Net cash provided by financing activities                                                                                             11,693                                14,992                       32,620                                  45,235      
+Impact of foreign exchange on cash and cash equivalents                                                                              (1,957)                               (1,386)                        1,498                                 (3,943)      
+Net increase (decrease) in cash and cash equivalents                                                                                  51,017                                 2,687                     (60,347)                                 (9,906)      
+
+
+
+Cash and cash equivalents at beginning of period             176,632       285,309       287,996       297,902
+Cash and cash equivalents at end of period                  $227,649      $287,996      $227,649      $287,996
+
+
+GitLab Inc.
+Reconciliation of GAAP to Non-GAAP
+(in thousands, except per share data)
+(unaudited)
+
+                                                                                                          Three Months Ended January 31,                                          Fiscal Year Ended January 31,
+2025                                                                                                                                2024                           2025                                    2024
+Gross profit on GAAP basis                                                          $188,562                              $147,790                       $674,109                                $520,198      
+Gross margin on GAAP basis                                                                89     %                              90     %                       89     %                                90     %
+Stock-based compensation expense                                                       1,998                                 1,640                          7,922                                   6,400      
+Amortization of acquired intangibles                                                   2,195                                   521                          8,126                                   2,067      
+Restructuring charges                                                                      —                                     —                              —                                     463      
+Gross profit on non-GAAP basis                                                      $192,755                              $149,951                       $690,157                                $529,128      
+Gross margin on non-GAAP basis                                                            91     %                              92     %                       91     %                                91     %
+Sales and marketing on GAAP basis                                                    $98,753                               $90,762                       $384,295                                $356,393      
+Stock-based compensation expense                                                    (18,664)                              (17,184)                       (72,954)                                (68,766)      
+Restructuring charges                                                                      —                                 (188)                        (1,126)                                 (3,811)      
+Sales and marketing on non-GAAP basis                                                $80,089                               $73,390                       $310,215                                $283,816      
+Research and development on GAAP basis                                               $62,885                               $52,388                       $239,652                                $200,840      
+Stock-based compensation expense                                                    (15,478)                              (13,887)                       (58,312)                                (50,804)      
+Restructuring charges                                                                      —                                     —                          (393)                                 (2,119)      
+Research and development on non-GAAP basis                                           $47,407                               $38,501                       $180,947                                $147,917      
+General and administrative on GAAP basis                                             $42,370                               $39,523                       $188,985                                $150,405      
+Stock-based compensation expense                                                    (10,496)                              (10,306)                       (46,711)                                (37,079)      
+Amortization of acquired intangibles                                                       —                                     —                              —                                   (100)      
+Restructuring charges                                                                      —                                     —                          (377)                                 (1,634)      
+Charitable donation of common stock                                                  (2,957)                               (2,675)                       (11,828)                                (10,700)      
+Changes in the fair value of acquisition related contingent consideration                  —                                     —                        (3,750)                                       —      
+Acquisition related expenses                                                           (391)                               (1,314)                        (3,240)                                 (1,314)      
+Other non-recurring charges (1)                                                        (646)                                 (404)                        (1,730)                                   (817)      
+General and administrative on non-GAAP basis                                         $27,880                               $24,824                       $121,349                                 $98,761      
+Loss from operations on GAAP basis                                                 $(15,446)                             $(34,883)                     $(138,823)                              $(187,440)      
+Stock-based compensation expense                                                      46,636                                43,017                        185,899                                 163,049      
+Amortization of acquired intangibles                                                   2,195                                   521                          8,126                                   2,167      
+Restructuring charges                                                                      —                                   188                          1,896                                   8,027      
+Charitable donation of common stock                                                    2,957                                 2,675                         11,828                                  10,700      
+Changes in the fair value of acquisition related contingent consideration                  —                                     —                          3,750                                       —      
+Acquisition related expenses                                                             391                                 1,314                          3,240                                   1,314      
+Other non-recurring charges (1)                                                          646                                   404                          1,730                                     817      
+Income (loss) from operations on non-GAAP basis                                      $37,379                               $13,236                        $77,646                                $(1,366)      
+Other income (expense), net on GAAP basis                                             $4,017                             $(11,451)                         $9,187                               $(12,241)      
+Impairment of equity method investment                                                     —                                 8,858                              —                                   8,858      
+Foreign exchange gains (losses), net                                                 (3,860)                                 2,611                        (9,416)                                   2,871      
+Other non-recurring charges (1)                                                         $173                                  $173                           $690                                    $701      
+Other income, net on non-GAAP basis                                                     $330                                  $191                           $461                                    $189      
+Net income (loss) attributable to GitLab common stockholders on GAAP basis           $10,784                             $(36,868)                       $(2,434)                              $(425,677)      
+Stock-based compensation expense                                                      46,636                                43,017                        185,899                                 163,049      
+Amortization of acquired intangibles                                                   2,195                                   521                          8,126                                   2,167      
+Restructuring charges                                                                      —                                   188                          1,896                                   8,027      
+
+
+
+Charitable donation of common stock                                                  2,957                2,675        11,828      10,700
+Changes in the fair value of acquisition related contingent consideration                —                    —         3,750           —
+Acquisition related expenses                                                           391                1,314         3,240       1,314
+Impairment of equity method investment                                                   —                8,858             —       8,858
+Loss from equity method investment, net of tax                                           —                1,416             —       3,824
+Foreign exchange gains (losses), net                                               (3,860)                2,611       (9,416)       2,871
+Income tax adjustment (1)                                                          (3,222)                  735      (80,468)     255,947
+Other non-recurring charges (1)                                                        819                  577         2,420       1,518
+Net income attributable to GitLab common stockholders on non-GAAP basis            $56,700              $25,044      $124,841     $32,598
+GAAP net income (loss) per share, basic                                              $0.07              $(0.24)       $(0.02)     $(2.76)
+GAAP net income (loss) per share, diluted                                            $0.06              $(0.24)       $(0.02)     $(2.76)
+Non-GAAP net income per share, basic                                                 $0.35                $0.16         $0.78       $0.21
+Non-GAAP net income per share, diluted                                               $0.33                $0.15         $0.74       $0.20
+Shares used in per share calculation - basic on GAAP basis                         163,055              156,601       160,580     154,283
+Effect of dilutive securities                                                        7,039                8,820         7,909       8,182
+Shares used in per share calculation - diluted on non-GAAP basis                   170,094              165,421       168,489     162,465
+(1) Other non-recurring charges and income tax adjustment consist primarily of one-time charges associated with the formation of Jihu and BAPA negotiations.
+
+
+GitLab Inc.
+Reconciliation of GAAP Cash Flow from Operating Activities to Adjusted Free Cash Flow
+(in thousands)
+(unaudited)
+
+                                                                                    Three Months Ended January 31,                                    Fiscal Year Ended January 31,
+2025                                                                             2024                                2025                         2024                             
+Computation of adjusted free cash flow (1)                                                                                                                                         
+GAAP net cash provided by (used in) operating activities         $63,222                             $24,853                    $(63,971)                             $35,040      
+Less: Purchases of property and equipment                        (1,157)                               (329)                      (3,765)                             (1,598)      
+Add: Income tax payments related to BAPA                               —                                   —                      187,735                                   —      
+Non-GAAP adjusted free cash flow                                 $62,065                             $24,524                     $119,999                             $33,442      
+(1) No non-recurring payments related to the formation of JiHu were recorded during the periods presented.
+
+
+Media Contact: 
+Lisa Boughner
+VP, Global Communications 
+GitLab Inc. 
+press@gitlab.com
+Investor Contact: 
+Kelsey Turcotte
+VP, Investor Relations
+GitLab Inc.
+ir@gitlab.com
+
+
