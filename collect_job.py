@@ -115,9 +115,33 @@ def write_files(files: dict[str, str], progress=print) -> None:
         progress(f"기록: {path} ({len(content):,}자)")
 
 
+# 181차 — **날마다 순서를 돌립니다** (SEC 가 늘 같은 종목만 굶기지 않게)
+# ---------------------------------------------------------------------------
+# 2026-09-06·09-08 두 런에서 SEC 가 429(너무 잦음)로 막은 종목이 **완전히
+# 같은 116개**였습니다. 우연이 아니라 자리 탓입니다 — 막힌 종목의 자리는
+# 목록 283~402번(뒤쪽 120칸의 97%)이었습니다. 앞에서부터 훑다가 한도에
+# 걸리면 **뒤쪽은 언제나 뒤쪽**이라 영원히 못 받습니다.
+#
+#   막힌 종목 처리시간 중앙값 6.0초 (= 조회하자마자 거절)
+#   성공 종목            83.6초
+#
+# 180차의 이월 장치가 값을 지켜 주지만, 같은 종목이 계속 굶으면 그 값은
+# 날마다 하루씩 낡습니다. 그래서 **시작 자리를 날마다 옮깁니다.**
+# 값·판정·표본을 건드리지 않고 묻는 차례만 바꾸는 것이라 안전합니다.
+def rotate_tickers(tickers: list[str], day: int) -> list[str]:
+    """날짜에 따라 시작 자리를 옮긴 목록. 같은 날은 늘 같은 순서입니다."""
+    if not tickers:
+        return []
+    offset = day % len(tickers)
+    return list(tickers[offset:]) + list(tickers[:offset])
+
+
 def run(tickers: list[str] | None = None, progress=print) -> int:
     if tickers is None:
         tickers = list(cfg.TICKERS)
+        # 날짜로 시작 자리를 옮깁니다 (181차) — 부르는 쪽이 목록을 직접
+        # 넘겼을 때는 그 순서를 존중해 건드리지 않습니다.
+        tickers = rotate_tickers(tickers, datetime.now(timezone.utc).timetuple().tm_yday)
     progress(f"수집 로봇 시작 — {len(tickers)}종목 · {datetime.now(timezone.utc).isoformat()}")
 
     # 8-K 훑기에 시간 예산을 겁니다 (94차 — 10년 확장 안전장치).

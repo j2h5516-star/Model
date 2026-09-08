@@ -646,6 +646,27 @@ def test_6K_종목은_실적_문서만_통과하고_이름_변경_이전은_읽�
     assert "year_table_priority=fpi" in src, "연도 열 표 우선 배선이 없습니다"
 
 
+def test_종목_순서를_날마다_돌린다():
+    """181차 — 09-06·09-08 두 런에서 SEC 가 막은 종목이 **완전히 같은
+    116개**였다. 자리 탓이다(283~402번, 뒤쪽 120칸의 97%). 앞에서부터
+    훑다가 한도에 걸리면 뒤쪽은 언제나 뒤쪽이라 영원히 못 받는다."""
+    import inspect
+    목록 = ["A", "B", "C", "D", "E"]
+    assert cj.rotate_tickers(목록, 0) == 목록
+    assert cj.rotate_tickers(목록, 2) == ["C", "D", "E", "A", "B"]
+    assert cj.rotate_tickers(목록, 5) == 목록, "한 바퀴 돌면 제자리"
+    assert cj.rotate_tickers(목록, 7) == ["C", "D", "E", "A", "B"], "나머지로 돈다"
+    assert cj.rotate_tickers([], 3) == []
+    # 종목을 잃거나 더하지 않는다
+    for day in range(12):
+        assert sorted(cj.rotate_tickers(목록, day)) == sorted(목록), day
+    # 뒤쪽 종목이 날에 따라 앞자리로 온다 (굶지 않는다)
+    앞자리 = {cj.rotate_tickers(목록, d)[0] for d in range(5)}
+    assert 앞자리 == set(목록), 앞자리
+    src = inspect.getsource(cj.run)
+    assert "rotate_tickers(" in src, "배선 없음"
+
+
 def test_부탁목록_갱신에_이번_런의_원문을_넘긴다():
     """178차 — 안 넘기면 부탁 목록이 한 런 뒤처진다(런 #68 실측: 120칸 중
     104칸이 그 런에서 이미 담아 온 공시였다)."""
