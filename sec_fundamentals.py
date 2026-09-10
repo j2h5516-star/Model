@@ -508,6 +508,46 @@ def _scan_labeled_value(
                     break
                 value, number_start, number_end, had_word_scale, num_end = parsed
 
+                # 이름 글자에 **딱 붙은** 한두 자리 숫자는 값이 아니라
+                # **각주 번호**입니다 (182차-C — 실물 ZETA).
+                #
+                #     •Adjusted EBITDA1 of $46.7 million, increased 53% Y/Y
+                #                     ↑ 이 1 을 값으로 읽고 있었습니다
+                #
+                # 회사가 논갭 지표에 각주를 달면(맨 아래 "1 Adjusted EBITDA
+                # is a non-GAAP measure…") 그 번호가 이름 바로 뒤에 붙습니다.
+                # 값 1 은 $10만 미만이라 뒷단 검사에서 버려지고, 그 결과
+                # **잣대 칸이 통째로 비었습니다** — 제타는 조정 EBITDA 가
+                # 주 잣대라 종목 전체가 측정에서 빠졌습니다.
+                #
+                # 각주는 두 꼴로 붙습니다. 둘 다 걸러야 합니다:
+                #     "Adjusted EBITDA1 of $46.7 million"        ← 맨 숫자 (ZETA)
+                #     "Adjusted EBITDA(1)(2)      2.3     x"     ← 괄호 (VZ)
+                #
+                # ⚠️ 괄호 꼴이 더 위험합니다. 회계 표기에서 괄호는 **음수**를
+                #    뜻하므로 (1) 이 −1 로 읽히고, 표 단위(백만)가 곱해지면
+                #    **−$100만**이 됩니다. 이 값은 "너무 작다" 검사(10만 미만)를
+                #    빠져나가 그대로 저장됩니다 — 없음보다 나쁩니다.
+                #    실측: 맨 숫자만 고쳤더니 VZ 7건이 없음 → −$100만이 됐습니다.
+                #
+                # 가려내는 법 — **지금 훑는 자리부터** 숫자 끝까지의 글자 그대로를
+                # 봅니다(각주가 (1)(2) 처럼 잇달아 붙어도 하나씩 벗겨집니다).
+                # 세 가지가 동시에 맞아야 각주로 봅니다(하나라도 어긋나면 값):
+                #   ① 여는 괄호 하나를 뺀 나머지가 숫자뿐이다 — 사이에 공백·`$`
+                #      가 끼면 그것은 값입니다 ("Adjusted EBITDA 5" 의 5 는 값,
+                #      "Adjusted EBITDA (1,234)" 의 −1,234 도 값)
+                #   ② 한두 자리다 — 각주 번호는 1~99 입니다
+                #      ("Adjusted EBITDA46,713" 처럼 표에서 공백이 눌려 붙은
+                #       진짜 값, "…EBITDA123" 같은 세 자리는 걸리지 않습니다)
+                #   ③ 뒤에 단위 낱말이 없다 — 각주 번호에 million 이 붙지
+                #      않습니다 ("Adjusted EBITDA5 million" 의 5 는 값)
+                붙은글자 = text[search_from:num_end]
+                각주숫자 = 붙은글자[1:] if 붙은글자.startswith("(") else 붙은글자
+                if (각주숫자.isdigit() and len(각주숫자) <= 2
+                        and not had_word_scale):
+                    search_from = number_end
+                    continue
+
                 # 숫자 바로 뒤가 퍼센트 표기인지 확인.
                 # ⚠️ "%" 기호뿐 아니라 "percent" 같은 낱말도 봐야 합니다.
                 #    ("gross margin of 82 percent" 의 82를 금액으로 채택해

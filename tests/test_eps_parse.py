@@ -1936,6 +1936,95 @@ def test_연도_열_표는_단위나_연도가_없으면_읽지_않는다():
     assert sf.find_values_in_year_column_table(같은연도)["revenue"] is None
 
 
+# ── 각주 번호를 값으로 읽던 결함 (182차-C, 실물 ZETA) ────────────────
+#
+# 회사가 논갭 지표에 각주를 달면 이름 바로 뒤에 번호가 붙습니다.
+#   "•Adjusted EBITDA1 of $46.7 million"
+# 파서는 저 1 을 값으로 읽었고, $10만 미만이라 뒷단 검사에서 버려져
+# **잣대 칸이 통째로 비었습니다.** 제타는 조정 EBITDA 가 주 잣대라
+# 종목 전체가 측정에서 빠졌습니다.
+각주_보도자료 = """Zeta Announces Second Quarter 2025 Financial Results
+
+•Revenue of $264.4 million, increased 36% Y/Y.
+•Adjusted EBITDA1 of $46.7 million, increased 53% Y/Y compared to $30.5 million in 1Q'24.
+•Adjusted EBITDA margin1 of 17.7%, compared to 15.6% in 1Q'24.
+
+—————————————
+1 Adjusted EBITDA and Adjusted EBITDA margin are not measures of financial
+performance prepared in accordance with GAAP.
+"""
+
+
+def test_이름에_붙은_각주_번호를_값으로_읽지_않는다():
+    값 = sf.find_labeled_value(각주_보도자료, sf.LABELS_ADJUSTED_EBITDA)
+    assert 값 == 46_700_000, f"각주 1 을 값으로 읽었습니다: {값}"
+
+
+def test_각주가_없으면_예전처럼_읽는다():
+    """고침이 멀쩡한 문서를 건드리지 않는지 — 각주만 뗀 같은 글."""
+    맨글 = 각주_보도자료.replace("EBITDA1", "EBITDA").replace("margin1", "margin")
+    assert sf.find_labeled_value(맨글, sf.LABELS_ADJUSTED_EBITDA) == 46_700_000
+
+
+def test_이름에_붙은_진짜_값은_각주로_오해하지_않는다():
+    """표에서 공백이 눌려 이름과 값이 붙은 경우 — 쉼표·소수점이 있으면 값입니다."""
+    표 = "Adjusted EBITDA46,713\n"
+    assert sf.find_labeled_value(표, sf.LABELS_ADJUSTED_EBITDA) == 46_713
+
+    # 세 자리 이상 정수도 각주 번호가 아닙니다 (각주는 한두 자리)
+    표2 = "Adjusted EBITDA123\n"
+    assert sf.find_labeled_value(표2, sf.LABELS_ADJUSTED_EBITDA) == 123
+
+
+괄호각주_보도자료 = """Verizon Reports Fourth-Quarter 2024 Results
+
+Consolidated adjusted EBITDA1 was $11.9 billion in fourth-quarter 2024.
+
+Net unsecured debt to Adjusted EBITDA(1)(2)                    2.3     x
+"""
+
+
+def test_괄호로_붙은_각주도_값으로_읽지_않는다():
+    """회계 표기에서 괄호는 음수라 (1) 이 −1 이 되고, 표 단위가 곱해지면
+    −$100만이 됩니다. '너무 작다' 검사(10만 미만)를 빠져나가 그대로
+    저장되므로 **없음보다 나쁩니다** (실물 VZ 7건)."""
+    값 = sf.find_labeled_value(괄호각주_보도자료, sf.LABELS_ADJUSTED_EBITDA)
+    assert 값 == 11_900_000_000, f"괄호 각주를 값으로 읽었습니다: {값}"
+
+
+def test_잇달아_붙은_각주도_전부_건너뛴다():
+    """(1)(2) 처럼 두 개가 붙어도 하나씩 벗겨져야 합니다."""
+    글 = "Adjusted EBITDA(1)(2) of $8.5 billion\n"
+    assert sf.find_labeled_value(글, sf.LABELS_ADJUSTED_EBITDA) == 8_500_000_000
+
+
+def test_공백을_두고_적힌_괄호는_진짜_음수다():
+    """각주는 이름에 딱 붙습니다. 공백이 있으면 회계식 음수(진짜 값)입니다."""
+    글 = "Adjusted EBITDA (1,234)\n"
+    assert sf.find_labeled_value(글, sf.LABELS_ADJUSTED_EBITDA) == -1234
+
+
+def test_사이가_떨어져_있으면_한자리라도_값이다():
+    """각주는 이름 글자에 **딱 붙습니다**. 공백이나 $ 가 끼면 그것은 값입니다."""
+    assert sf.find_labeled_value("Adjusted EBITDA 5\n", sf.LABELS_ADJUSTED_EBITDA) == 5
+    assert sf.find_labeled_value("Adjusted EBITDA $7\n", sf.LABELS_ADJUSTED_EBITDA) == 7
+
+
+def test_뒤에_단위_낱말이_붙으면_각주가_아니다():
+    """각주 번호에는 million 이 따라오지 않습니다 — 단위가 붙었으면 값입니다."""
+    assert sf.find_labeled_value("Adjusted EBITDA5 million\n",
+                                 sf.LABELS_ADJUSTED_EBITDA) == 5_000_000
+
+
+def test_각주가_붙어도_이번_분기_값을_고른다():
+    """실물 ZETA 4분기 보도자료 — 분기 $70.4M · 연간 $193.0M 이 함께 실림."""
+    글 = 각주_보도자료.replace(
+        "•Adjusted EBITDA1 of $46.7 million, increased 53% Y/Y compared to $30.5 million in 1Q'24.",
+        "•Adjusted EBITDA1 of $70.4 million, increased 57% Y/Y from $44.8 million in 4Q'23.\n"
+        "•Full year Adjusted EBITDA1 of $193.0 million, an increase of 49%.")
+    assert sf.find_labeled_value(글, sf.LABELS_ADJUSTED_EBITDA) == 70_400_000
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
