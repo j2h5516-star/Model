@@ -2125,6 +2125,80 @@ def test_파서가_분기열_표시를_남긴다():
     assert p.get("adj_eps_분기열") is True
 
 
+# ── SEC 에 회사 이름을 직접 물어보는 길 (183차-C) ──────────────────
+#
+# 왜 필요한가: edgartools 색인은 SEC 의 **지금 티커표**에서 만들어져,
+# 인수·합병으로 상장이 끝난 회사는 이름으로도 안 나옵니다(160차 실측).
+# 이 환경에서 다시 확인 — 꾸러미의 company_tickers.parquet 10,365행에
+# HES·X·DFS·HOLX·CFLT 는 없습니다. SEC 자신은 갖고 있으므로 직접 묻습니다.
+#
+# ⚠️ 개발 환경에서는 SEC 가 막혀 언제나 실패로 기록됩니다. 그래서
+#    **가짜 응답을 끼워** 읽는 부분이 실제로 도는 것을 증명합니다
+#    (인수인계 규칙: 새 코드 경로는 실제로 실행됨을 증명한다).
+SEC_검색응답 = """<?xml version="1.0" encoding="ISO-8859-1" ?>
+<feed>
+ <entry>
+  <content type="text/xml">
+   <company-info>
+    <cik>0000859737</cik>
+    <conformed-name>HOLOGIC INC</conformed-name>
+   </company-info>
+  </content>
+  <link href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0000859737&amp;type=10-K"/>
+ </entry>
+</feed>"""
+
+
+def test_SEC_이름검색이_번호를_읽어_온다(monkeypatch=None):
+    import edgar.httprequests as hr
+    옛함수 = hr.download_text
+    hr.download_text = lambda *a, **k: SEC_검색응답
+    옛신원 = sf._ensure_identity
+    sf._ensure_identity = lambda: None
+    try:
+        나온다 = sf._SEC_이름검색("Hologic Inc")
+    finally:
+        hr.download_text = 옛함수
+        sf._ensure_identity = 옛신원
+    번호들 = [x[1] for x in 나온다]
+    assert "0000859737" in 번호들, 나온다
+    assert any("HOLOGIC" in x[0].upper() for x in 나온다), 나온다
+
+
+def test_SEC_이름검색이_실패해도_수집을_멈추지_않는다():
+    """SEC 가 막힌 개발 환경·일시 장애에서도 예외를 밖으로 내보내지 않습니다."""
+    import edgar.httprequests as hr
+    옛함수 = hr.download_text
+    def 터짐(*a, **k):
+        raise RuntimeError("접속 막힘")
+    hr.download_text = 터짐
+    옛신원 = sf._ensure_identity
+    sf._ensure_identity = lambda: None
+    try:
+        나온다 = sf._SEC_이름검색("Hologic Inc")
+    finally:
+        hr.download_text = 옛함수
+        sf._ensure_identity = 옛신원
+    assert 나온다[0][0] == "SEC검색실패", 나온다
+    assert "RuntimeError" in 나온다[0][1], 나온다
+
+
+def test_사라진회사_찾아보기가_SEC직접_결과를_함께_적는다():
+    """배선 시험 — 로그에 실려야 사람이 보고 번호를 넣을 수 있습니다."""
+    옛 = sf._SEC_이름검색
+    sf._SEC_이름검색 = lambda name: [["HOLOGIC INC", "0000859737", ""]]
+    try:
+        report = {}
+        out = sf.사라진회사_찾아보기("HOLX", report)
+    finally:
+        sf._SEC_이름검색 = 옛
+    assert out["SEC직접"] == [["HOLOGIC INC", "0000859737", ""]], out
+    assert report["사라진회사_검색"]["SEC직접"], report
+
+    # 이름표에 없는 티커는 아무 일도 하지 않습니다 (SEC 를 두드리지도 않음)
+    assert sf.사라진회사_찾아보기("NVDA") == {}
+
+
 def test_분기열_표시가_행까지_옮겨진다():
     """배선 시험 — 파서가 남긴 표시가 **행**에 실려야 정제가 볼 수 있습니다.
     (178차: 배선만 빠져도 시험이 초록불이던 사고를 되풀이하지 않기 위해)"""

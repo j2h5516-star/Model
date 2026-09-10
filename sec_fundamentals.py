@@ -2803,10 +2803,59 @@ def 사라진회사_찾아보기(ticker: str, report: dict | None = None) -> dic
             찾음.append([str(row.company), str(row.cik), str(row.ticker)])
     except Exception as exc:      # 검색이 깨져도 수집 전체를 멈추지 않습니다
         찾음 = [["검색실패", f"{type(exc).__name__}: {str(exc)[:80]}", ""]]
-    out = {"이름": name, "찾음": 찾음}
+    out = {"이름": name, "찾음": 찾음, "SEC직접": _SEC_이름검색(name)}
     if report is not None:
         report["사라진회사_검색"] = out
     return out
+
+
+# SEC 회사 이름 검색 (183차-C) — **로봇에서만 실제로 돕니다.**
+#
+# 왜 필요한가: 위 `find_company` 는 edgartools 가 들고 다니는 색인을 보는데,
+# 그 색인은 SEC 의 **지금 티커표**에서 만들어집니다. 인수·합병으로 상장이
+# 끝난 회사는 티커표에서 빠지므로 이름으로도 안 나옵니다 — 160차에 실측한
+# 그대로입니다(엉뚱한 회사가 나왔습니다). 이 환경에서 다시 확인했습니다:
+# 꾸러미의 company_tickers.parquet 10,365행에 HES·X·DFS·HOLX·CFLT 는 없습니다.
+#
+# 그런데 **SEC 자신**은 그 회사들을 그대로 갖고 있습니다(공시는 회사번호로
+# 영원히 남습니다). 로봇은 SEC 에 붙을 수 있으므로 직접 물어봅니다.
+#
+# ⚠️ 찾은 번호를 **쓰지 않습니다 — 적어 오기만 합니다.** 사람이 로그에서
+#    보고 config.TICKER_CIK 에 넣습니다(짐작 전에 계기 — 106·157차 규칙).
+#
+# 왜 이것이 측정의 정직성 문제인가: 인수되어 사라진 회사를 조용히 빼고
+# 재면 **살아남은 것만 재는 편향**이 생깁니다. 빠진 줄 모르는 것이
+# 가장 나쁩니다(config.TICKER_CIK 머리말과 같은 이유).
+_SEC_회사검색_URL = (
+    "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany"
+    "&company={이름}&type=10-K&dateb=&owner=include&count=5&output=atom"
+)
+_CIK_RE = re.compile(r"CIK=(\d{5,10})", re.I)
+_CONFORMED_RE = re.compile(r"<conformed-name>([^<]+)</conformed-name>", re.I)
+
+
+def _SEC_이름검색(name: str) -> list[list[str]]:
+    """SEC 에 회사 이름을 직접 물어 (이름, 번호) 를 적어 옵니다.
+
+    개발 환경에서는 SEC 가 막혀 있어 **언제나 실패로 기록**됩니다.
+    그것이 정상입니다 — 이 길은 로봇(깃허브 서버)에서만 실제로 돕니다.
+    실패해도 수집 전체를 멈추지 않습니다.
+    """
+    try:
+        from urllib.parse import quote
+
+        from edgar.httprequests import download_text
+
+        _ensure_identity()          # SEC 는 신원 없는 요청을 막습니다(403)
+        글 = download_text(_SEC_회사검색_URL.format(이름=quote(name)))
+    except Exception as exc:
+        return [["SEC검색실패", f"{type(exc).__name__}: {str(exc)[:80]}", ""]]
+    번호 = _CIK_RE.findall(글 or "")
+    이름들 = _CONFORMED_RE.findall(글 or "")
+    나온다: list[list[str]] = []
+    for i, n in enumerate(번호[:5]):
+        나온다.append([이름들[i] if i < len(이름들) else "", n, ""])
+    return 나온다 or [["결과없음", "", ""]]
 
 
 def new_report(ticker: str) -> dict:
