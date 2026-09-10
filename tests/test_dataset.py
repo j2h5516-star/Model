@@ -336,6 +336,38 @@ def test_cumulative_value_in_quarterly_slot_is_dropped():
     assert any("누적" in n for n in result["notes"]), result["notes"]
 
 
+def test_보도자료_분기열이_확인해_준_값은_누적으로_버리지_않는다():
+    """183차 — 회사가 조정표에서 스스로 '분기 열'이라고 가른 값은 둡니다.
+
+    왜 필요한가(182차-D 실측): 이 그물이 버린 145칸 중 96칸이 **4분기**이고
+    96칸이 **조정 EPS**(주 잣대)다. 4분기는 회사가 10-K 를 내 XBRL 3개월
+    값이 없어 살려 주는 자(_점프가_XBRL로_뒷받침됨)가 서지 않는다.
+
+    실물 CRDO 25Q4 — 조정 EPS 0.35 는 직전 4분기 합 0.43 과 거의 같지만
+    원문 조정표에는 분기 열 $0.35 · 연간 열 $0.70 로 갈라져 있다.
+    산수로는 못 가르고 회사가 갈라 놓은 것을 읽어야 한다.
+    """
+    def 만들기(표시):
+        rows = []
+        for i, value in enumerate([2.4, 2.5, 2.4, 2.6, 2.5, 2.5, 10.22, 2.6]):
+            r = quarter_row(
+                filing_date=f"2024-{(i % 12) + 1:02d}-28",
+                announced_date=f"2024-{(i % 12) + 1:02d}-28",
+                revenue=1_000_000.0 + i * 1_000,
+                period_label=f"Q{i}", adj_eps=value)
+            if i == 6 and 표시:
+                r["adj_eps_분기열"] = True
+            rows.append(r)
+        return dataset.build(make_snapshot(eps={"AAA": rows}))
+
+    있음 = [r["adj_eps"] for r in 만들기(True)["quarters"]["AAA"]]
+    assert 10.22 in 있음, f"분기 열이 확인해 준 값을 버렸습니다: {있음}"
+
+    # 표시가 없으면(옛 수집물) 예전과 똑같이 버립니다 — 짝 시험
+    없음 = [r["adj_eps"] for r in 만들기(False)["quarters"]["AAA"]]
+    assert 10.22 not in 없음, f"표시가 없는데 살렸습니다: {없음}"
+
+
 def test_growth_quarter_is_not_mistaken_for_cumulative():
     """빠르게 크는 회사의 정상 분기를 누적으로 오인하면 안 됩니다.
 

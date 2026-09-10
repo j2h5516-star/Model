@@ -607,6 +607,21 @@ def _one_cumulative_pass(ticker: str, rows: list[dict], notes: list[str]) -> boo
                 if _점프가_XBRL로_뒷받침됨(rows[index], rows[prev_index],
                                           field, value, prev_value):
                     continue
+                # 183차 — **보도자료 조정표의 분기 열**이 이 값을 확인해
+                # 주면 둡니다. 4분기는 회사가 10-K 를 내 XBRL 3개월 값이
+                # 없으므로 위 자가 서지 않고, 그래서 빨리 크는 회사의
+                # 4분기가 통째로 버려지고 있었습니다(182차-D: 버린 145칸
+                # 중 96칸이 4분기·96칸이 조정 EPS).
+                #
+                # 실물 CRDO 25Q4 — 원문에 열 이름이 이렇게 적혀 있습니다:
+                #     ┌ Three Months Ended ┐ ┌ Year Ended ┐
+                #       $0.35  $0.25  $0.07   $0.70  $0.09
+                # 0.35 는 분기 열, 연간은 0.70 이다. 산수로는 못 가르지만
+                # (0.35 ≈ 직전 4분기 합 0.43) 회사가 스스로 갈라 놓았다.
+                #
+                # 표시가 없으면(옛 수집물 포함) 예전과 똑같이 버립니다.
+                if rows[index].get(f"{field}_분기열"):
+                    continue
                 notes.append(
                     f"{ticker} {rows[index].get('period_label', '?')}: "
                     f"{field}={value} 는 직전 4분기 합 {total:.2f} 과 거의 같고 "

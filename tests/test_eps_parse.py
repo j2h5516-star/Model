@@ -2025,6 +2025,128 @@ def test_각주가_붙어도_이번_분기_값을_고른다():
     assert sf.find_labeled_value(글, sf.LABELS_ADJUSTED_EBITDA) == 70_400_000
 
 
+# ── 값이 조정표의 '분기 열'에서 왔는지 (183차) ────────────────────────
+#
+# 왜 필요한가: 정제의 누적값 그물이 **빨리 크는 회사의 4분기**를 버린다.
+# 실물 CRDO 25Q4 조정 EPS 0.35 는 직전 4분기 합 0.43 과 거의 같아
+# "연간값"으로 판정되지만, 원문에는 분기 열 0.35 · 연간 열 0.70 이
+# 나란히 적혀 있다. 산수로는 못 가르고 회사가 갈라 놓은 것을 읽어야 한다.
+CRDO_조정표 = """Credo Technology Group Holding Ltd
+Reconciliations from GAAP to Non-GAAP Results (Unaudited)
+(In thousands, except percentages and per share amounts)
+
+                                             Three Months Ended                              Year Ended
+                            May 3, 2025      February 1, 2025    April 27, 2024     May 3, 2025    April 27, 2024
+Non-GAAP diluted net income per share  $0.35            $0.25             $0.07          $0.70          $0.09
+"""
+
+# 실물 NRG — **부문 설명 문장**은 표의 행이 아니다. 이름이 줄 가운데 있다.
+NRG_부문문장 = """($ in millions)                        Three Months Ended                    Nine Months Ended
+Adjusted EBITDA                        $1,055           $987            $2,887      $2,458
+Texas: Third quarter Adjusted EBITDA was $584 million, $32 million higher than 2023.
+"""
+
+# 실물 NRG — **가이던스 범위**는 숫자가 둘 다 분기 쪽에 몰려 있다
+NRG_가이던스 = """($ in millions)                        Three Months Ended                    Twelve Months Ended
+Adjusted EBITDA                        $3,725 - $3,975
+"""
+
+
+def test_조정표의_분기_열에_있는_값을_확인해_준다():
+    assert sf._표에서_분기값과_같은가(
+        CRDO_조정표, sf.LABELS_ADJUSTED_EPS, 0.35, True) is True
+
+
+def test_연간_열의_값은_분기값으로_확인해_주지_않는다():
+    """0.70 은 연간 열에 있으므로 분기값이라고 말하면 안 됩니다."""
+    assert sf._표에서_분기값과_같은가(
+        CRDO_조정표, sf.LABELS_ADJUSTED_EPS, 0.70, True) is False
+
+
+def test_표에_없는_값은_확인해_주지_않는다():
+    assert sf._표에서_분기값과_같은가(
+        CRDO_조정표, sf.LABELS_ADJUSTED_EPS, 1.23, True) is False
+
+
+def test_부문_설명_문장은_표의_행이_아니다():
+    """이름이 줄 가운데 있으면 설명글입니다 (실물 NRG 'Texas: … $584 million')."""
+    assert sf._표에서_분기값과_같은가(
+        NRG_부문문장, sf.LABELS_ADJUSTED_EBITDA, 584_000_000, False) is False
+    # 같은 표의 진짜 분기값은 확인해 줍니다
+    assert sf._표에서_분기값과_같은가(
+        NRG_부문문장, sf.LABELS_ADJUSTED_EBITDA, 1_055_000_000, False) is True
+
+
+def test_연간_열이_비어_있으면_표의_행으로_보지_않는다():
+    """전망 범위 줄은 숫자 둘이 다 분기 쪽에 몰려 있습니다 (실물 NRG)."""
+    assert sf._표에서_분기값과_같은가(
+        NRG_가이던스, sf.LABELS_ADJUSTED_EBITDA, 3_725_000_000, False) is False
+
+
+def test_표_머리가_없으면_모른다고_한다():
+    글 = "Non-GAAP diluted net income per share of $0.35 in the quarter.\n"
+    assert sf._표에서_분기값과_같은가(글, sf.LABELS_ADJUSTED_EPS, 0.35, True) is False
+
+
+ELV_날짜머리표 = (
+    "(In millions)          Three Months Ended December 31        Twelve Months Ended December 31\n"
+    "Non-GAAP diluted net income per share          $5.14                          $25.98\n")
+
+
+def test_머리글이_날짜까지_이어지는_표에서도_분기값을_찾는다():
+    """실물 ELV 꼴 — 'Ended' 에서 끊으면 열 경계가 왼쪽으로 밀려
+    분기값 5.14 가 연간 쪽으로 넘어가 버립니다."""
+    assert sf._표에서_분기값과_같은가(
+        ELV_날짜머리표, sf.LABELS_ADJUSTED_EPS, 5.14, True) is True
+    assert sf._표에서_분기값과_같은가(
+        ELV_날짜머리표, sf.LABELS_ADJUSTED_EPS, 25.98, True) is False
+
+
+두_표 = (
+    "(A)                 Three Months Ended          Year Ended\n"
+    "Adjusted EBITDA          $1,055                   $2,887\n"
+    "\n"
+    "(B)      Three Months Ended     Year Ended\n"
+    "Adjusted EBITDA   $9        $2,000       $77\n")
+
+
+def test_아래에_있는_다른_표의_줄을_끌어다_쓰지_않는다():
+    """머리글 하나는 **자기 표만** 다스립니다. 아래 표의 열 자리는 다릅니다 —
+    A 의 경계로 B 의 줄을 읽으면 B 의 연간값 2,000 이 분기값이 됩니다."""
+    assert sf._표에서_분기값과_같은가(
+        두_표, sf.LABELS_ADJUSTED_EBITDA, 2_000_000_000, False) is False
+    assert sf._표에서_분기값과_같은가(
+        두_표, sf.LABELS_ADJUSTED_EBITDA, 1_055_000_000, False) is True
+
+
+def test_파서가_분기열_표시를_남긴다():
+    p = sf.parse_press_release(CRDO_조정표)
+    assert p["adj_eps"] == 0.35
+    assert p.get("adj_eps_분기열") is True
+
+
+def test_분기열_표시가_행까지_옮겨진다():
+    """배선 시험 — 파서가 남긴 표시가 **행**에 실려야 정제가 볼 수 있습니다.
+    (178차: 배선만 빠져도 시험이 초록불이던 사고를 되풀이하지 않기 위해)"""
+    for 칸 in ("adj_eps", "gaap_eps", "adjusted_ebitda"):
+        press = {칸: 1.23 if 칸 != "adjusted_ebitda" else 1_230_000.0,
+                 f"{칸}_분기열": True}
+        row = {}
+        sf._apply_press_to_row(row, press)
+        assert row.get(f"{칸}_분기열") is True, f"{칸} 표시가 행에 안 실렸습니다: {row}"
+
+    # 표시가 없으면 행에도 없어야 합니다
+    row = {}
+    sf._apply_press_to_row(row, {"adj_eps": 1.23})
+    assert "adj_eps_분기열" not in row, row
+
+
+def test_분기열_표시는_확인_안_되면_안_남긴다():
+    글 = "Non-GAAP diluted net income per share of $0.35 in the quarter.\n"
+    p = sf.parse_press_release(글)
+    assert p.get("adj_eps_분기열") is None
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

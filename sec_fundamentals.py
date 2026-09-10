@@ -618,6 +618,118 @@ def _scan_labeled_value(
 
 
 # ---------------------------------------------------------------------------
+# 값이 조정표의 **분기 열**에서 온 것인지 (183차)
+# ---------------------------------------------------------------------------
+#
+# 왜 필요한가 (182차-D 에서 잰 것):
+#   정제의 누적값 그물이 **빨리 크는 회사의 4분기**를 버린다. 크리도
+#   25Q4 조정 EPS 0.35 는 직전 4분기 합 0.43 과 거의 같아 "연간값이
+#   잘못 들어왔다"고 판정되지만, 원문에는 이렇게 적혀 있다:
+#
+#       ┌── Three Months Ended ──┐  ┌── Year Ended ──┐
+#         $0.35    $0.25   $0.07     $0.70    $0.09
+#
+#   0.35 는 분기 열, 연간은 0.70 이다. 산수로는 못 가른다 —
+#   **회사가 스스로 갈라 놓은 것**을 읽어야 한다.
+#
+# 표 머리는 자기 무리의 **마지막 열 끝**에 맞춰 적힌다. 실측(CRDO):
+# "Three Months Ended" 가 137에서 끝나고 분기 날짜 세 개가 68·104·137에서,
+# "Year Ended" 가 199에서 끝나고 연간 날짜 두 개가 166·199에서 끝난다.
+# 그래서 **숫자가 끝나는 자리**로 두 무리를 가를 수 있다.
+_분기머리_RE = re.compile(
+    r"(?:Three|Thirteen)\s+Months?\s+Ended|Quarter\s+Ended", re.I)
+_연간머리_RE = re.compile(
+    r"(?:Twelve|Fifty[-\s]?Two|Nine|Six)\s+Months?\s+Ended|Year\s+Ended", re.I)
+_표_최대줄 = 40                  # 머리글 하나가 다스리는 표의 최대 줄 수
+
+
+def _머리끝(줄: str, 끝: int) -> int:
+    """머리글이 끝나는 진짜 자리.
+
+    ⚠️ "Three Months Ended" 로만 재면 짧습니다 — 실물 ELV 는
+    "Three Months Ended **December 31**" 이라 날짜까지가 한 머리글입니다.
+    글자 사이가 **한 칸**이면 같은 머리글, **두 칸 이상**이면 열이 바뀐
+    것으로 봅니다(표는 열 사이를 넓게 띄웁니다).
+    """
+    while 끝 + 1 < len(줄) and 줄[끝] == " " and 줄[끝 + 1] not in " \t":
+        다음 = 끝 + 1
+        while 다음 < len(줄) and 줄[다음] not in " \t":
+            다음 += 1
+        끝 = 다음
+    return 끝
+
+
+# 값이 표가 아니라 **머리기사 문장**에서 올 때가 많습니다.
+#   "…non-GAAP diluted net income per share of $0.35"   ← 표 머리가 없음
+# 이때는 열을 알 수 없지만, 같은 문서 **아래쪽 조정표**가 그 값을 분기 열에
+# 그대로 싣고 있으면 분기값임이 확인됩니다. 값이 **일치**해야 하므로,
+# 가이던스 범위·부문 값·각주 같은 남의 숫자는 걸리지 않습니다
+# (182차-D 에서 헐거운 대조가 실패한 이유가 이것입니다).
+_표숫자_RE = re.compile(r"\$?\(?-?[\d,]+\.?\d*\)?")
+
+
+def _표에서_분기값과_같은가(text: str, label_patterns: list[str],
+                            value: float, per_share: bool) -> bool:
+    """조정표의 **분기 열**에 이 값과 같은 숫자가 있으면 True (183차)."""
+    if value is None:
+        return False
+    줄들 = text.split("\n")
+    이름들 = [re.compile(p, re.I) for p in label_patterns]
+
+    def 숫자들(줄: str):
+        """(끝자리, 값) 목록. 회계식 괄호는 음수로 읽습니다."""
+        나온다 = []
+        for m in _표숫자_RE.finditer(줄):
+            글자 = m.group(0)
+            if not re.search(r"\d", 글자):
+                continue
+            try:
+                수 = float(글자.strip("$()").replace(",", ""))
+            except ValueError:
+                continue
+            if "(" in 글자:
+                수 = -수
+            나온다.append((m.end(), 수))
+        return 나온다
+
+    for i, 줄 in enumerate(줄들):
+        분, 연 = _분기머리_RE.search(줄), _연간머리_RE.search(줄)
+        if not (분 and 연 and 분.end() < 연.start()):
+            continue
+        분끝, 연끝 = _머리끝(줄, 분.end()), _머리끝(줄, 연.end())
+        # ⚠️ 이 머리글이 **다스리는 표 안에서만** 봅니다. 창을 넓게 잡았더니
+        #    23줄 아래 **다른 표**(가이던스)의 줄을 물었습니다(실물 NRG:
+        #    "Adjusted EBITDA  $3,725 - $3,975" 는 전망 범위입니다).
+        #    빈 줄이 두 번 이어지거나 다른 표 머리가 나오면 거기서 멈춥니다.
+        for 아랫줄 in 줄들[i + 1:i + _표_최대줄]:
+            if _분기머리_RE.search(아랫줄) or _연간머리_RE.search(아랫줄):
+                break                      # 다음 표가 시작됐습니다
+            # ⚠️ 표의 **행**은 이름이 줄 맨 앞에서 시작합니다. 문장 가운데
+            #    이름이 나오면 그것은 설명글이지 표가 아닙니다 — 실물 NRG:
+            #    "Texas: Third quarter Adjusted EBITDA was $584 million…" 은
+            #    **부문** 값인데 표 행으로 잘못 읽혀 살아날 뻔했습니다.
+            앞여백 = len(아랫줄) - len(아랫줄.lstrip())
+            if not any((m := r.search(아랫줄)) and m.start() - 앞여백 <= 3
+                       for r in 이름들):
+                continue
+            수들 = 숫자들(아랫줄)
+            분기칸 = [v for 끝, v in 수들 if 끝 <= 분끝]
+            연간칸 = [v for 끝, v in 수들 if 분끝 < 끝 <= 연끝 + 4]
+            # ⚠️ **연간 열에도 숫자가 있어야** 진짜 조정표 줄입니다.
+            #    전망 범위 줄은 숫자 둘이 다 분기 쪽에 몰려 있습니다(NRG).
+            if not (분기칸 and 연간칸):
+                continue
+            for 수 in 분기칸:
+                for 배 in ((1.0,) if per_share else (1.0, 1e3, 1e6)):
+                    큰 = abs(value)
+                    if 큰 == 0:
+                        continue
+                    if abs(수 * 배 - value) <= max(0.005, 큰 * 0.001):
+                        return True
+    return False
+
+
+# ---------------------------------------------------------------------------
 # 보도자료에서 찾을 항목 이름들 (회사마다 표기가 달라 여러 변형을 준비)
 # ---------------------------------------------------------------------------
 
@@ -2391,6 +2503,16 @@ def parse_press_release(text: str, year_table_priority: bool = False) -> dict:
     # ZETA·TSLA·APP 처럼 논갭 영업이익을 발표하지 않는 회사가 많습니다.
     # 조정 EBITDA 를 챙겨 두었다가, 감가상각비를 빼서 논갭 영업이익을 역산합니다.
     result["adjusted_ebitda"] = find_labeled_value(text, LABELS_ADJUSTED_EBITDA)
+
+    # 183차 — 이 값이 조정표의 **분기 열**에서 확인되는지 표시해 둡니다.
+    # 정제의 누적값 그물이 빨리 크는 회사의 4분기를 버리는 것을 막는 근거로
+    # 씁니다(182차-D). 확인되지 않으면 표시를 남기지 않습니다(모름 = 예전대로).
+    for _칸, _이름들, _주당 in (("adj_eps", LABELS_ADJUSTED_EPS, True),
+                                ("gaap_eps", LABELS_GAAP_EPS, True),
+                                ("adjusted_ebitda", LABELS_ADJUSTED_EBITDA, False)):
+        if result.get(_칸) is not None and _표에서_분기값과_같은가(
+                text, _이름들, result[_칸], _주당):
+            result[f"{_칸}_분기열"] = True
     # 173차 — 연도 열 표(전년 열이 먼저인 표, NBIS 실물).
     #   year_table_priority=True(6-K 외국 회사): 표 값이 "이름 뒤 첫 숫자"보다
     #   우선 — 첫 숫자는 전년 값이기 때문.
@@ -4348,11 +4470,15 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
         )
     if press.get("adjusted_ebitda") is not None:
         row["adjusted_ebitda"] = press["adjusted_ebitda"]
+        if press.get("adjusted_ebitda_분기열"):
+            row["adjusted_ebitda_분기열"] = True      # 183차
     # 주당순이익은 점수에 쓰지 않고 '이익의 질' 검사에만 씁니다(1단계).
     # 논갭 영업이익을 못 찾은 분기에서도 이 둘은 잡히는 경우가 많으므로
     # op_income 성공 여부와 무관하게 따로 옮겨 둡니다.
     if press.get("adj_eps") is not None:
         row["adj_eps"] = press["adj_eps"]
+        if press.get("adj_eps_분기열"):
+            row["adj_eps_분기열"] = True                    # 183차
     # GAAP EPS — **XBRL 우선, 없으면 보도자료** (99차, 92차 매출과 같은 설계)
     #
     # 야후를 심판으로 갈린 칸을 셌더니 **XBRL 61 : 보도자료 2** 였다
@@ -4373,6 +4499,8 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
     #    89차의 실수를 되풀이하지 않는다. 남은 결함으로 기록만 한다.
     if row.get("gaap_eps") is None and press.get("gaap_eps") is not None:
         row["gaap_eps"] = press["gaap_eps"]
+        if press.get("gaap_eps_분기열"):
+            row["gaap_eps_분기열"] = True                   # 183차
     # 매출 — **XBRL 우선, 없으면 보도자료** (92차, 91차 승부 결과 반영)
     #
     # 91차에 야후를 심판으로 셌더니 갈린 98칸에서 **XBRL 98 : 보도자료 0**
