@@ -1,0 +1,393 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — SRE 2025-02-25
+# 출처: https://www.sec.gov/Archives/edgar/data/1032208/000103220825000008/sempra-20250225.htm
+
+Document
+
+Exhibit 99.1
+<img alt="sempra.jpg" src="sempra.jpg">NEWS RELEASE
+
+Media Contact:             Katie Nieri             
+                           Sempra                  
+                           (877) 340-8875          
+                           media@sempra.com        
+Financial Contact:         Jenell McKay            
+                           Sempra                  
+                           (877) 736-7727          
+                           investor@sempra.com     
+Sempra Reports 2024 Financial
+and Business Results
+•Raises Five-Year Capital Plan to $56B
+•Targets 2025 FID for Port Arthur LNG Phase 2
+•Adjusts 2025 EPS Guidance to $4.30 to $4.70
+•Issues 2026 EPS Guidance of $4.80 to $5.30
+•Increases Long-Term EPS Growth Rate to 7% to 9% 
+SAN DIEGO, Feb. 25, 2025 — Sempra (NYSE: SRE) today reported full-year 2024 earnings, prepared in accordance with Generally Accepted Accounting Principles (GAAP), of $2.82 billion or $4.42 per diluted share, compared to full-year 2023 GAAP earnings of $3.03 billion or $4.79 per diluted share. On an adjusted basis, the company’s full-year 2024 earnings were $2.97 billion or $4.65 per diluted share, compared to $2.92 billion or $4.61 per diluted share in 2023.
+“With the reset of our guidance in 2025, we are setting a new foundation for a decisive decade of growth,” said Jeffrey W. Martin, chairman and CEO of Sempra. “We are also announcing a record five-year capital plan of $56 billion and raising the company’s long-term EPS growth rate to 7%-9%. Over half of planned capital expenditures are earmarked for Texas, where significant new investments are needed to expand and modernize the energy grid. This is consistent with Sempra’s 2030 aspirations of producing over 50% of its earnings from the State of Texas.” 
+<img alt="a16830seearningscall_qurtl.jpg" src="a16830seearningscall_qurtl.jpg">The company also reported fourth-quarter 2024 GAAP earnings of $665 million or $1.04 per diluted share, compared to fourth-quarter 2023 GAAP earnings of $737 million or $1.16 per diluted share. On an adjusted basis, the company’s fourth-quarter 2024 earnings were $960 million or $1.50 per diluted share, compared to $719 million or $1.13 per diluted share in fourth-quarter 2023.
+The reported financial results reflect certain significant items as described on an after-tax basis in the following table of GAAP earnings, reconciled to adjusted earnings, for the fourth quarter and full-year 2024 and 2023.
+
+         (Dollars and shares in millions, except EPS)                                                                                                                                                                              Three months ended December 31,                                  Years ended December 31,
+2024                                                                                                                                                                                                                                        2023                       2024                            2023                 
+         GAAP Earnings                                                                                                                                                                                              $665                                $737                     $2,817                          $3,030     
+         Impact from regulatory disallowances                                                                                                                                                                        104                                   —                        104                               —     
+         Retroactive impact of 2024 General Rate Case Final Decision for the first nine months of 2024                                                                                                              (22)                                   —                          —                               —     
+         Equity losses from write-off of rate base disallowances resulting from Public Utility Commission of Texas' final order in Oncor Electric Delivery Company LLC's comprehensive base rate review                —                                   —                          —                              44     
+         Impact from foreign currency and inflation on monetary positions in Mexico                                                                                                                                 (84)                                  69                      (262)                             235     
+         Net unrealized losses (gains) on derivatives                                                                                                                                                                 13                                (47)                         26                           (366)     
+         Net unrealized (gains) losses on interest rate swaps related to Port Arthur LNG Phase 1 project                                                                                                            (30)                                   —                       (30)                              17     
+         Impact from foreign tax credit valuation allowance                                                                                                                                                          330                                   —                        330                               —     
+         Earnings from investment in RBS Sempra Commodities LLP                                                                                                                                                     (16)                                (40)                       (16)                            (40)     
+         Adjusted Earnings(1)                                                                                                                                                                                       $960                                $719                     $2,969                          $2,920     
+         Diluted Weighted-Average Common Shares Outstanding                                                                                                                                                          641                                 634                        638                             633     
+         GAAP EPS                                                                                                                                                                                                  $1.04                               $1.16                      $4.42                           $4.79     
+         Adjusted EPS(1)                                                                                                                                                                                           $1.50                               $1.13                      $4.65                           $4.61     
+1) See Table A for information regarding non-GAAP financial measures.
+Progress at Sempra’s Three Growth Platforms
+Sempra's three growth platforms – Sempra California, Sempra Texas and Sempra Infrastructure – deliver energy to nearly 40 million consumers across some of the world's most significant economic markets.
+“Last year we made great strides in improving safety, operations and customer service across all three business lines,” said Martin. “Building out the scope and scale of our business means continued investments in innovation and technology to drive value to our customers in the form of improved safety, service quality, and affordability.”
+Sempra Texas 
+Led by Oncor Electric Delivery Company LLC (Oncor), Sempra Texas is executing on a significant growth campaign in the country’s fastest growing energy market. Oncor’s new five-year capital plan of $36 billion represents a 50% increase over last year’s five-year plan, driven by a portfolio of diverse investment opportunities across both geography and customer mix. Oncor is contemplating filing a comprehensive base rate review later this year.
+In 2024, Oncor invested close to $4.7 billion to support the growing needs of its customers. Over $2 billion of transmission projects were placed into service by Oncor in 2024, including placement of over 75 substation projects and over 45 switching station projects. In 2024, Oncor built, rebuilt or upgraded approximately 4,300 miles of transmission and distribution lines. In 2024, Oncor saw a 27% increase in new transmission interconnection requests as compared to 2023, the majority of which are from large commercial and industrial customers. At the end of 2024, Oncor had a diverse set of large commercial and industrial customers 
+representing 137 gigawatts of potential load active in its interconnection queue, representing an approximate 250% increase from 2023.
+Oncor’s first System Resiliency Plan (SRP) was approved by the Public Utility Commission of Texas (PUCT) in November. Under the SRP, Oncor plans to invest nearly $3 billion of capital expenditures and over $500 million in incremental operations and maintenance expenses, with the majority of the spend to occur between the years 2025 through 2027, to help reduce the impact and duration of severe weather outages and address other physical and cybersecurity improvements to the electric grid. 
+Sempra California
+Serving roughly 25 million consumers, Sempra California is a dual-utility platform focused on connecting people to safe, reliable and cleaner energy. In 2024, demand for electricity reached an all-time high of 5,032 megawatts in San Diego Gas & Electric’s (SDGE) service territory, highlighting the growing importance of continued investments in the energy grid to deliver new sources of energy to the California market.
+In 2024, SDGE opened a new state-of-the-art Wildfire and Climate Resiliency Center dedicated to risk mitigation and enhancing the company’s capabilities in wildfire and climate resilience, representing Sempra California’s continued focus on extending its position as a leader in community safety through proactive mitigation of wildfire risk.
+In December, Sempra California’s regulated utilities received a final decision from the California Public Utilities Commission (CPUC) on their general rate cases, which improves visibility to utility investments through 2027. Also in December, the CPUC determined that maintaining natural gas storage levels at Southern California Gas Company’s Aliso Canyon storage facility is currently critical for the continued reliability of California’s electric grid and natural gas system, as well as consumer affordability.
+Sempra Infrastructure 
+In 2024, Sempra Infrastructure reached commercial operations on both the Gasoducto Rosarito pipeline expansion and Topolobampo Terminal and made progress advancing five significant construction projects while further strengthening its ability to capitalize on growing demand for cleaner and more secure energy in global markets.
+Cameron LNG Phase 1 continues to deliver superior production of liquefied natural gas (LNG) and loaded nearly 200 cargoes in 2024. As the company executes the ongoing development and construction of its LNG portfolio, Energía Costa Azul LNG Phase 1 continues to target the start-up of commercial operations in spring of 2026, and construction at Port Arthur LNG Phase 1 remains on time and on budget. 
+The Port Arthur LNG Phase 2 development project is receiving strong commercial interest. Sempra Infrastructure continues to hold substantial, active discussions with world-class companies for participation in the Phase 2 project, which is already anchored by a non-binding HOA for LNG offtake and a proposed equity investment with a subsidiary of Saudi Aramco, as well as a fixed-price engineering, procurement and 
+construction contract with Bechtel Energy. The company is targeting a final investment decision in 2025, pending the execution of definitive commercial agreements, obtaining permits and securing financing, among other factors.
+Capital Plan Growth
+Sempra is forecasting a company-record five-year 2025-2029 capital plan of approximately $56 billion, which represents a 16% increase from its prior plan, with over 90% of projected capital expenditures focused on regulated utility investments in Texas and California. 
+“Our team is excited about our new five-year capital plan, which is designed to help meet the energy needs of customers today and tomorrow, while significantly expanding our projected utility rate base by roughly 10% annually,” said Karen Sedgwick, executive vice president and chief financial officer of Sempra. “When considering the long-term trends in Sempra’s core markets, we are confident there will be significant opportunities to deploy incremental capital through the end of the decade and beyond.”
+Earnings Guidance
+Due to recent and planned regulatory matters and the backdrop of a higher-cost environment, Sempra is revising its full-year 2025 earnings-per-common share (EPS) guidance range to $4.30 to $4.70. Sempra is also issuing full-year 2026 EPS guidance of $4.80 to $5.30. Using 2025 as the foundation for the company’s future growth, 2026 guidance represents a 12% year-over-year increase from the midpoint of 2025 guidance. The company is also increasing its projected long-term EPS growth rate to 7% to 9%. 
+Common and Preferred Dividends 
+Sempra’s board of directors declared a $0.645 per share quarterly dividend on the company's common stock, which is payable April 15, 2025, to common stock shareholders of record at the close of business on March 20, 2025. The declared quarterly dividend represents an increase of the company's common stock dividend to $2.58 per share, on an annualized basis, from $2.48 per share in 2024.
+Additionally, Sempra’s board of directors declared a semi-annual dividend of $24.375 per share on the company’s 4.875% Fixed-Rate Reset Cumulative Redeemable Perpetual Preferred Stock, Series C. The preferred stock dividends will be payable April 15, 2025, to preferred stock shareholders of record at the close of business on April 1, 2025.
+Non-GAAP Financial Measures
+Non-GAAP financial measures include Sempra’s adjusted earnings and adjusted EPS. See Table A for additional information regarding these non-GAAP financial measures.
+Internet Broadcast
+Sempra will broadcast a live discussion of its earnings results over the internet today at 12 p.m. ET with the company’s senior management. Access is available by logging onto the Investors section of the company’s 
+website, sempra.com/investors. The webcast will be available on replay a few hours after its conclusion at sempra.com/investors.
+About Sempra
+Sempra is a leading North American energy infrastructure company focused on delivering energy to nearly 40 million consumers. As owner of one of the largest energy networks on the continent, Sempra is electrifying and improving the energy resilience of some of the world's most significant economic markets, including California, Texas, Mexico and global energy markets. The company is recognized as a leader in sustainable business practices and for its high-performance culture focused on safety and operational excellence, as demonstrated by Sempra's inclusion in the Dow Jones Sustainability Index North America. More information about Sempra is available at sempra.com and on social media @Sempra.
+###
+This press release contains forward-looking statements within the meaning of the Private Securities Litigation Reform Act of 1995. Forward-looking statements are based on assumptions about the future, involve risks and uncertainties, and are not guarantees. Future results may differ materially from those expressed or implied in any forward-looking statement. These forward-looking statements represent our estimates and assumptions only as of the date of this press release. We assume no obligation to update or revise any forward-looking statement as a result of new information, future events or otherwise.
+In this press release, forward-looking statements can be identified by words such as “believe,” “expect,” “intend,” “anticipate,” “contemplate,” “plan,” “estimate,” “project,” “forecast,” “envision,” “should,” “could,” “would,” “will,” “confident,” “may,” “can,” “potential,” “possible,” “proposed,” “in process,” “construct,” “develop,” “opportunity,” “preliminary,” “initiative,” “target,” “outlook,” “optimistic,” “poised,” “positioned,” “maintain,” “continue,” “progress,” “advance,” “goal,” “aim,” “commit,” or similar expressions, or when we discuss our guidance, priorities, strategies, goals, vision, mission, projections, intentions or expectations.
+Factors, among others, that could cause actual results and events to differ materially from those expressed or implied in any forward-looking statement include: California wildfires, including potential liability for damages regardless of fault and any inability to recover all or a substantial portion of costs from insurance, the wildfire fund established by California Assembly Bill 1054, rates from customers or a combination thereof; decisions, denials of cost recovery, audits, investigations, inquiries, ordered studies, regulations, denials or revocations of permits, consents, approvals or other authorizations, renewals of franchises, and other actions, including the failure to honor contracts and commitments, by the (i) California Public Utilities Commission (CPUC), Comisión Reguladora de Energía, U.S. Department of Energy, U.S. Federal Energy Regulatory Commission, U.S. Internal Revenue Service, Public Utility Commission of Texas and other regulatory bodies and (ii) U.S., Mexico and states, counties, cities and other jurisdictions therein and in other countries where we do business; the success of business development efforts, construction projects, acquisitions, divestitures, and other significant transactions, including risks related to (i) being able to make a final investment decision, (ii) completing construction projects or other transactions on schedule and budget, (iii) realizing anticipated benefits from any of these efforts if completed, (iv) obtaining third-party consents and approvals and (v) third parties honoring their contracts and commitments; changes to our capital expenditure plans and their potential impact on rate base or other growth; litigation, arbitration, property disputes and other proceedings, and changes (i) to laws and regulations, including those related to tax and the energy industry in Mexico, (ii) due to the results of elections, and (iii) in trade and other foreign policy, including the imposition of tariffs by the U.S. and foreign countries; cybersecurity threats, including by state and state-sponsored actors, of ransomware or other attacks on our systems or the systems of third parties with which we conduct business, including the energy grid or other energy infrastructure; the availability, uses, sufficiency, and cost of capital resources and our ability to borrow money or otherwise raise capital on favorable terms and meet our obligations, which can be affected by, among other things, (i) actions by credit rating agencies to downgrade our credit ratings or place those ratings on negative outlook, (ii) instability in the capital markets, and (iii) fluctuating interest rates and inflation; the impact on affordability of San Diego Gas & Electric Company’s (SDG&E) and Southern California Gas Company’s (SoCalGas) customer rates and their cost of capital and on SDG&E’s, SoCalGas’ and Sempra Infrastructure’s ability to pass through higher costs to customers due to (i) volatility in inflation, interest rates and commodity prices, (ii) with respect to SDG&E’s and SoCalGas’ businesses, the cost of meeting the demand for lower carbon and reliable energy in California, and (iii) with respect to Sempra Infrastructure’s business, volatility in foreign currency exchange rates; the impact of climate policies, laws, rules, regulations, trends and required disclosures, including actions to reduce or eliminate reliance on natural gas, increased uncertainty in the political or regulatory environment for California natural gas distribution companies, the risk of nonrecovery for stranded assets, and uncertainty related to emerging technologies; weather, natural disasters, pandemics, accidents, equipment failures, explosions, terrorism, information system outages or other events, such as work stoppages, that disrupt our operations, damage our facilities or systems, cause the release of harmful materials or fires or subject us to liability for damages, fines and penalties, some of which may not be recoverable through regulatory mechanisms or insurance or may impact our ability to obtain satisfactory levels of affordable insurance; the availability of electric power, natural gas and natural gas storage capacity, including disruptions caused by failures in the transmission grid or pipeline and storage systems or limitations on the injection and withdrawal of natural gas from storage facilities; Oncor Electric Delivery Company LLC’s (Oncor) ability to reduce or eliminate its quarterly dividends due to regulatory and governance requirements and commitments, including by actions of Oncor’s independent directors or a minority member director; and other uncertainties, some of which are difficult to predict and beyond our control. 
+These risks and uncertainties are further discussed in the reports that Sempra has filed with the U.S. Securities and Exchange Commission (SEC). These reports are available through the EDGAR system free-of-charge on the SEC's website, www.sec.gov, and on Sempra’s website, www.sempra.com. Investors should not rely unduly on any forward-looking statements.
+Sempra Infrastructure, Sempra Infrastructure Partners, Sempra Texas, Sempra Texas Utilities, Oncor and Infraestructura Energética Nova, S.A.P.I. de C.V. (IEnova) are not the same companies as the California utilities, SDG&E or SoCalGas, and Sempra Infrastructure, Sempra Infrastructure Partners, Sempra Texas, Sempra Texas Utilities, Oncor and IEnova are not regulated by the CPUC.
+None of the website references in this press release are active hyperlinks, and the information contained on, or that can be accessed through, any such website is not, and shall not be deemed to be, part of this document.
+
+SEMPRA                                                                                                                                                                                  
+Table A                                                                                                                                                                                 
+CONSOLIDATED STATEMENTS OF OPERATIONS                                                                                                                                                   
+(Dollars in millions, except per share amounts; shares in thousands)                                                                                                                    
+                                                                                               Three months ended December 31,                                               Years ended
+                                                                                                                                                                            December 31,
+2024                                                                                                                      2023                      2024(1)                      2023(1)
+REVENUES                                                                                                                                                                                
+Utilities:                                                                                                                                                                              
+Natural gas                                                                   $2,343                              $1,935                        $7,141                       $9,495     
+Electric                                                                       1,027                               1,003                         4,296                        4,334     
+Energy-related businesses                                                        388                                 553                         1,748                        2,891     
+Total revenues                                                                 3,758                               3,491                        13,185                       16,720     
+EXPENSES AND OTHER INCOME                                                                                                                                                               
+Utilities:                                                                                                                                                                              
+Cost of natural gas                                                            (342)                               (465)                       (1,132)                      (3,719)     
+Cost of electric fuel and purchased power                                       (18)                                  10                         (245)                        (375)     
+Energy-related businesses cost of sales                                         (83)                               (111)                         (380)                        (548)     
+Operation and maintenance                                                    (1,465)                             (1,500)                       (5,336)                      (5,458)     
+Depreciation and amortization                                                  (626)                               (576)                       (2,437)                      (2,227)     
+Franchise fees and other taxes                                                 (178)                               (168)                         (693)                        (677)     
+Other (expense) income, net                                                     (58)                                  56         136                          131                       
+Interest income                                                                   14                                  29         61                           89                        
+Interest expense                                                               (105)                               (314)                       (1,049)                      (1,309)     
+Income before income taxes and equity earnings                                   897                                 452                         2,110                        2,627     
+Income tax (expense) benefit                                                   (282)                                   9                         (219)                        (490)     
+Equity earnings                                                                  374                                 395                         1,609                        1,481     
+Net income                                                                       989                                 856                         3,500                        3,618     
+Earnings attributable to noncontrolling interests                              (313)                               (108)                         (638)                        (543)     
+Preferred dividends                                                             (11)                                (11)                          (44)                         (44)     
+Preferred dividends of subsidiary                                                  —                                   —                           (1)                          (1)     
+Earnings attributable to common shares                                          $665                                $737                        $2,817                       $3,030     
+Basic earnings per common share (EPS):                                                                                                                                                  
+Earnings                                                                       $1.05                               $1.17                         $4.44                        $4.81     
+Weighted-average common shares outstanding                                   635,144                             631,284                       633,795                      630,296     
+Diluted EPS:                                                                                                                                                                            
+Earnings                                                                       $1.04                               $1.16                         $4.42                        $4.79     
+Weighted-average common shares outstanding                                   641,395                             634,228                       637,943                      632,733     
+(1)     Derived from audited financial statements.
+SEMPRA
+Table A (Continued)
+RECONCILIATION OF SEMPRA ADJUSTED EARNINGS TO SEMPRA GAAP EARNINGS
+Sempra Adjusted Earnings and Adjusted EPS exclude items (after the effects of income taxes and, if applicable, noncontrolling interests (NCI)) in 2024 and 2023 as follows:
+Three months ended December 31, 2024:
+▪$(104) million impact from regulatory disallowances at Sempra California consisting of:
+▪$(89) million charge from the Federal Energy Regulatory Commission (FERC) order finding that the Electric Transmission Owner Formula Rate, effective June 1, 2019 (TO5), adder refund provision has been triggered, requiring Sempra California to refund customers the California Independent System Operator (California ISO) adder retroactively from June 1, 2019
+▪$(15) million impairment from disallowed capital costs in the 2024 General Rate Case Final Decision (2024 GRC FD)
+▪$22 million impact from the retroactive application of the 2024 GRC FD for the first nine months of 2024 at Sempra California
+▪$84 million impact from foreign currency and inflation on our monetary positions in Mexico
+▪$(13) million net unrealized losses on commodity derivatives
+▪$30 million net unrealized gains on interest rate swaps related to the initial phase of the Port Arthur LNG liquefaction project (PA LNG Phase 1 project)
+▪$(330) million income tax expense in 2024 from changes to a valuation allowance against foreign tax credits that were carried forward from the implementation of the Tax Cuts and Jobs Act of 2017 (TCJA)
+▪$16 million equity earnings from investment in RBS Sempra Commodities LLP from the substantial dissolution of the partnership
+Three months ended December 31, 2023:
+▪$(69) million impact from foreign currency and inflation on our monetary positions in Mexico
+▪$47 million net unrealized gains on commodity derivatives
+▪$40 million equity earnings from investment in RBS Sempra Commodities LLP based on a legal settlement
+Year ended December 31, 2024:
+▪$(104) million impact from regulatory disallowances at Sempra California consisting of:
+▪$(89) million charge from the FERC order finding that the TO5 adder refund provision has been triggered, requiring Sempra California to refund customers the California ISO adder retroactively from June 1, 2019
+▪$(15) million impairment from disallowed capital costs in the 2024 GRC FD
+▪$262 million impact from foreign currency and inflation on our monetary positions in Mexico
+▪$(26) million net unrealized losses on commodity derivatives
+▪$30 million net unrealized gains on interest rate swaps related to the PA LNG Phase 1 project
+▪$(330) million income tax expense in 2024 from changes to a valuation allowance against foreign tax credits that were carried forward from the implementation of the TCJA
+▪$16 million equity earnings from investment in RBS Sempra Commodities LLP from the substantial dissolution of the partnership
+Year ended December 31, 2023:
+▪$(44) million equity losses from investment in Oncor Electric Delivery Holdings Company LLC (Oncor Holdings) related to a write-off of rate base disallowances resulting from the Public Utility Commission of Texas' (PUCT) final order in Oncor Electric Delivery Company LLC's (Oncor) comprehensive base rate review
+▪$(235) million impact from foreign currency and inflation on our monetary positions in Mexico
+▪$366 million net unrealized gains on commodity derivatives
+▪$(17) million net unrealized losses on a contingent interest rate swap related to the PA LNG Phase 1 project
+▪$40 million equity earnings from investment in RBS Sempra Commodities LLP based on a legal settlement
+Sempra Adjusted Earnings and Adjusted EPS are non-GAAP financial measures (GAAP represents generally accepted accounting principles in the United States of America). These non-GAAP financial measures exclude significant items that are generally not related to our ongoing business activities and/or are infrequent in nature. These non-GAAP financial measures also exclude the impact from foreign currency and inflation on our monetary positions in Mexico and net unrealized gains and losses on commodity and interest rate derivatives, which we expect to occur in future periods, and which can vary significantly from one period to the next. Exclusion of these items is useful to management and investors because it provides a meaningful comparison of the performance of Sempra’s business operations to prior and future periods. Non-GAAP financial measures are supplementary information that should be considered in addition to, but not as a substitute for, the information prepared in accordance with GAAP. The table below reconciles for historical periods these non-GAAP financial measures to Sempra GAAP Earnings and GAAP EPS, which we consider to be the most directly comparable financial measures calculated in accordance with GAAP.
+SEMPRA
+Table A (Continued)
+
+RECONCILIATION OF ADJUSTED EARNINGS TO GAAP EARNINGS AND ADJUSTED EPS TO GAAP EPS                                                                                                                                                                                                                                                                                                                                                                                              
+(Dollars in millions, except per share amounts; shares in thousands)                                                                                                                                                                                                                                                                                                                                                                                                           
+                                                                                                                                                                             Pretax amount        Income tax (benefit) expense(1)        Non-controlling interests         Earnings                      Diluted EPS                    Pretax amount   Income tax expense (benefit)(1)        Non-controlling interests              Earnings                      Diluted EPS
+                                                                                                                                                                                                                                                                                Three months ended December 31, 2024                                                                                                                       Three months ended December 31, 2023
+Sempra GAAP Earnings and GAAP EPS                                                                                                                                                                                                                                         $665                           $1.04                                                                                                                       $737                           $1.16      
+Excluded items:                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                        Impact from regulatory disallowances                                                                                                                   $140                            $(36)                                 $—                    104                            0.16                              $—          $—                                     $—                                       —                               —      
+                        Retroactive impact of 2024 GRC FD for the first nine months of 2024                                                                                    (30)                                8                                  —                   (22)                          (0.03)                               —          —                                      —                                        —                               —      
+                        Impact from foreign currency and inflation on monetary positions in Mexico                                                                                2                            (125)                                 39                   (84)                          (0.13)                              22   80                                            (33)                  69                                              0.10      
+                        Net unrealized losses (gains) on commodity derivatives                                                                                                   27                              (5)                                (9)                     13                            0.02                            (92)   16                               29                                                 (47)                          (0.07)      
+                        Net unrealized gains on interest rate swaps related to PA LNG Phase 1 project                                                                         (212)                               11                                171                   (30)                          (0.05)                               —          —                                      —                                        —                               —      
+                        Impact from foreign tax credit valuation allowance                                                                                                        —                              330                                  —                    330                            0.52                               —          —                                      —                                        —                               —      
+                        Earnings from investment in RBS Sempra Commodities LLP                                                                                                 (19)                                3                                  —                   (16)                          (0.03)                            (40)          —                                      —                                     (40)                          (0.06)      
+Sempra Adjusted Earnings and Adjusted EPS                                                                                                                                                                                                                                 $960                           $1.50                                                                                                                       $719                           $1.13      
+Weighted-average common shares outstanding, diluted                                                                                                                                                                                                                                                    641,395                                                                                                                                                    634,228      
+                                                                                                                                                                                                                                                                                        Year ended December 31, 2024                                                                                                                               Year ended December 31, 2023
+Sempra GAAP Earnings and GAAP EPS                                                                                                                                                                                                                                       $2,817                           $4.42                                                                                                                     $3,030                           $4.79      
+Excluded items:                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                        Impact from regulatory disallowances                                                                                                                   $140                            $(36)                                 $—                    104                            0.16                              $—          $—                                     $—                                       —                               —      
+                        Equity losses from write-off of rate base disallowances resulting from PUCT's final order in Oncor's comprehensive base rate review                       —                                —                                  —                      —                               —                               —          —                                      —                     44                                              0.07      
+                        Impact from foreign currency and inflation on monetary positions in Mexico                                                                             (50)                            (336)                                124                  (262)                          (0.41)                              62   283                                           (110)                 235                                             0.36      
+                        Net unrealized losses (gains) on commodity derivatives                                                                                                   51                              (8)                               (17)                     26                            0.04                           (722)   144                              212                                               (366)                          (0.58)      
+                        Net unrealized (gains) losses on interest rate swaps related to PA LNG Phase 1 project                                                                (212)                               11                                171                   (30)                          (0.05)                              33          (6)                                    (10)                  17                                              0.03      
+                        Impact from foreign tax credit valuation allowance                                                                                                        —                              330                                  —                    330                            0.52                               —          —                                      —                                        —                               —      
+                        Earnings from investment in RBS Sempra Commodities LLP                                                                                                 (19)                                3                                  —                   (16)                          (0.03)                            (40)          —                                      —                                     (40)                          (0.06)      
+Sempra Adjusted Earnings and Adjusted EPS                                                                                                                                                                                                                               $2,969                           $4.65                                                                                                                     $2,920                           $4.61      
+Weighted-average common shares outstanding, diluted                                                                                                                                                                                                                                                    637,943                                                                                                                                                    632,733      
+(1)    Except for adjustments that are solely income tax, income taxes on pretax amounts were primarily calculated based on applicable statutory tax rates. We record equity losses from our investment in Oncor Holdings net of income tax. We did not record an income tax expense for the equity earnings from our investment in RBS Sempra Commodities LLP in 2023 because, even though a portion may be deductible under United Kingdom tax law, it is not probable that the deduction will reduce United Kingdom taxes.
+
+SEMPRA                                                                                                    
+Table B                                                                                                   
+CONSOLIDATED BALANCE SHEETS                                                                               
+(Dollars in millions)                                                                                     
+                                                                                              December 31,
+                                                                   2024(1)                         2023(1)
+ASSETS                                                                                                    
+Current assets:                                                                                           
+Cash and cash equivalents                                      $1,565                            $236     
+Restricted cash                                                    21                              49     
+Accounts receivable – trade, net                                1,983                           2,151     
+Accounts receivable – other, net                                  397                             561     
+Due from unconsolidated affiliates                                 13                              31     
+Income taxes receivable                                            90                              94     
+Inventories                                                       559                             482     
+Prepaid expenses                                                  255                             273     
+Regulatory assets                                                  60                             226     
+Fixed-price contracts and other derivatives                        91                             122     
+Greenhouse gas allowances                                         217                           1,189     
+Other current assets                                               34                              56     
+Total current assets                                            5,285                           5,470     
+Other assets:                                                                                             
+Restricted cash                                                     3                             104     
+Regulatory assets                                               3,937                           3,771     
+Greenhouse gas allowances                                         845                             301     
+Nuclear decommissioning trusts                                    875                             872     
+Dedicated assets in support of certain benefit plans              585                             549     
+Deferred income taxes                                             172                             129     
+Right-of-use assets – operating leases                          1,177                             723     
+Investment in Oncor Holdings                                   15,400                          14,266     
+Other investments                                               2,534                           2,244     
+Goodwill                                                        1,602                           1,602     
+Other intangible assets                                           292                             318     
+Wildfire fund                                                     262                             269     
+Other long-term assets                                          1,749                           1,603     
+Total other assets                                             29,433                          26,751     
+Property, plant and equipment, net                             61,437                          54,960     
+Total assets                                                  $96,155                         $87,181     
+(1)    Derived from audited financial statements.
+
+SEMPRA                                                                                                                            
+Table B (Continued)                                                                                                               
+CONSOLIDATED BALANCE SHEETS                                                                                                       
+(Dollars in millions)                                                                                                             
+                                                                                                                      December 31,
+                                                                                           2024(1)                         2023(1)
+LIABILITIES AND EQUITY                                                                                                            
+Current liabilities:                                                                                                              
+Short-term debt                                                                        $2,016                          $2,342     
+Accounts payable – trade                                                                2,238                           2,211     
+Accounts payable – other                                                                  208                             224     
+Due to unconsolidated affiliates                                                            —                               5     
+Dividends and interest payable                                                            773                             691     
+Accrued compensation and benefits                                                         558                             526     
+Regulatory liabilities                                                                    141                             553     
+Current portion of long-term debt and finance leases                                    2,274                             975     
+Greenhouse gas obligations                                                                217                           1,189     
+Other current liabilities                                                               1,251                           1,374     
+Total current liabilities                                                               9,676                          10,090     
+Long-term debt and finance leases                                                      31,558                          27,759     
+Deferred credits and other liabilities:                                                                                           
+Due to unconsolidated affiliates                                                          352                             307     
+Regulatory liabilities                                                                  3,817                           3,739     
+Greenhouse gas obligations                                                                506                               —     
+Pension and other postretirement benefit plan obligations, net of plan assets             168                             407     
+Deferred income taxes                                                                   5,845                           5,254     
+Asset retirement obligations                                                            3,737                           3,642     
+Deferred credits and other                                                              2,708                           2,329     
+Total deferred credits and other liabilities                                           17,133                          15,678     
+Equity:                                                                                                                           
+Sempra shareholders’ equity                                                            31,222                          28,675     
+Preferred stock of subsidiary                                                              20                              20     
+Other noncontrolling interests                                                          6,546                           4,959     
+Total equity                                                                           37,788                          33,654     
+Total liabilities and equity                                                          $96,155                         $87,181     
+(1) Derived from audited financial statements.
+
+SEMPRA                                                                                                                                    
+Table C                                                                                                                                   
+CONSOLIDATED STATEMENTS OF CASH FLOWS                                                                                                     
+(Dollars in millions)                                                                                                                     
+                                                                                                                  Years ended December 31,
+                                                                                               2024(1)                             2023(1)
+CASH FLOWS FROM OPERATING ACTIVITIES                                                                                                      
+Net income                                                                                $3,500                              $3,618      
+Adjustments to reconcile net income to net cash provided by operating activities             926                                 853      
+Net change in working capital components                                                   (462)                               1,429      
+Distributions from investments                                                             1,093                                 912      
+Changes in other noncurrent assets and liabilities, net                                    (150)                               (594)      
+Net cash provided by operating activities                                                  4,907                               6,218      
+CASH FLOWS FROM INVESTING ACTIVITIES                                                                                                      
+Expenditures for property, plant and equipment                                           (8,215)                             (8,397)      
+Expenditures for investments                                                               (988)                               (382)      
+Distributions from investments                                                                 9                                   —      
+Purchases of nuclear decommissioning and other trust assets                                (889)                               (610)      
+Proceeds from sales of nuclear decommissioning and other trust assets                        942                                 661      
+Other                                                                                         23                                  12      
+Net cash used in investing activities                                                    (9,118)                             (8,716)      
+CASH FLOWS FROM FINANCING ACTIVITIES                                                                                                      
+Common dividends paid                                                                    (1,499)                             (1,483)      
+Preferred dividends paid                                                                    (44)                                (44)      
+Issuances of common stock, net                                                             1,219                                 145      
+Repurchases of common stock                                                                 (43)                                (32)      
+Issuances of debt (maturities greater than 90 days)                                        8,674                               7,669      
+Payments on debt (maturities greater than 90 days) and finance leases                    (3,339)                             (6,294)      
+(Decrease) increase in short-term debt, net                                                (557)                                 552      
+Advances from unconsolidated affiliates                                                       85                                  31      
+Proceeds from sales of noncontrolling interests, net                                           —                               1,219      
+Distributions to noncontrolling interests                                                  (297)                               (730)      
+Contributions from noncontrolling interests                                                1,235                               1,570      
+Termination of interest rate and settlement of cross-currency swaps                           46                                (99)      
+Other                                                                                       (56)                                (85)      
+Net cash provided by financing activities                                                  5,424                               2,419      
+Effect of exchange rate changes on cash, cash equivalents and restricted cash               (13)                                   6      
+Increase (decrease) in cash, cash equivalents and restricted cash                          1,200                                (73)      
+Cash, cash equivalents and restricted cash, January 1                                        389                                 462      
+Cash, cash equivalents and restricted cash, December 31                                   $1,589                                $389      
+(1) Derived from audited financial statements.
+
+SEMPRA                                                                                                                                                                            
+Table D                                                                                                                                                                           
+SEGMENT EARNINGS (LOSSES) AND CAPITAL EXPENDITURES                                                                                                                                
+(Dollars in millions)                                                                                                                                                             
+                                                                                   Three months ended December 31,                                                     Years ended
+                                                                                                                                                                      December 31,
+2024                                                                             2023                                                      2024(1)                         2023(1)
+EARNINGS (LOSSES) ATTRIBUTABLE TO COMMON SHARES                                                                                                                                   
+Sempra California                                                   $701                                $500                           $1,846                          $1,747     
+Sempra Texas Utilities                                               135         146                                 781                             694                          
+Sempra Infrastructure                                                259         131                                 911                             877                          
+Segment earnings attributable to common shares                     1,095         777                                                    3,538                           3,318     
+Parent and other                                                   (430)                                (40)                            (721)                           (288)     
+Sempra earnings attributable to common shares                       $665                                $737                           $2,817                          $3,030     
+CAPITAL EXPENDITURES FOR PROPERTY, PLANT AND EQUIPMENT                                                                                                                            
+Sempra California                                                 $1,424                              $1,216                           $4,753                          $4,560     
+Sempra Infrastructure                                              1,026                               1,107                            3,459                           3,832     
+Segment totals                                                     2,450                               2,323                            8,212                           8,392     
+Parent and other                                                       —                                   —         3                               5                            
+Total Sempra                                                      $2,450                              $2,323                           $8,215                          $8,397     
+CAPITAL EXPENDITURES FOR INVESTMENTS                                                                                                                                              
+Sempra Texas Utilities                                              $398                                 $97                             $976                            $367     
+Sempra Infrastructure                                                  2         4                                   12                              15                           
+Total Sempra                                                        $400                                $101                             $988                            $382     
+(1) Derived from audited financial statements.
+
+SEMPRA                                                                                                                                                                                                                           
+Table D (Continued)                                                                                                                                                                                                              
+RECONCILIATION OF SEMPRA'S CAPITAL PLAN TO PROJECTED FUTURE CAPITAL EXPENDITURES                                                                                                                                                 
+(Dollars in billions)                                                                                                                                                                                                            
+                                                                                                Sempra California                                              Sempra               Sempra Infrastructure            Total Sempra
+                                                                                                                                                      Texas Utilities                                                            
+                                                                                                Capital Plan for 2025 – 2029(1)                                                                                                  
+Projected future capital expenditures for PP&amp;E and investments – GAAP                       $22.4                                                            $8.1                               $10.9                   $41.4
+Capital expenditures to unconsolidated entities(2)                                              —                                                               (8.1)                                   —                   (8.1)
+Capital expenditures at unconsolidated entities(3)                                              —                                                                29.1                                 0.1                    29.2
+Capital expenditures attributable to NCI owners(4)                                              —                                                                   —                               (7.0)                   (7.0)
+Capital Plan                                                                                    $22.4                                                           $29.1                                $4.0                   $55.5
+Percentage of projected future capital expenditures for PP&amp;E and investments – GAAP         54                      %                              20           %                      26           %             100       %
+Percentage of Capital Plan                                                                      40                      %                              53           %                       7           %             100       %
+                                                                                                Capital Plan for 2024 – 2028(1)                                                                                                  
+Projected future capital expenditures for PP&amp;E and investments – GAAP                       $24.1                                                            $3.4                               $12.9                   $40.4
+Capital expenditures to unconsolidated entities(2)                                              —                                                               (3.4)                                   —                   (3.4)
+Capital expenditures at unconsolidated entities(3)                                              —                                                                19.5                                 0.1                    19.6
+Capital expenditures attributable to NCI owners(4)                                              —                                                                   —                               (8.6)                   (8.6)
+Capital Plan                                                                                    $24.1                                                           $19.5                                $4.4                   $48.0
+Percentage of projected future capital expenditures for PP&amp;E and investments – GAAP         60                      %                               8           %                      32           %             100       %
+Percentage of Capital Plan                                                                      50                      %                              41           %                       9           %             100       %
+Projected future capital expenditures for PP&amp;E and investments growth rate – GAAP (2024 – 2028 to 2025 – 2029)                                                                                                      2       %
+Capital Plan growth rate (2024 – 2028 to 2025 – 2029)                                                                                                                                                                  16       %
+(1)     All projects in progress and future projects are subject to a number of risks and uncertainties. Sempra's Capital Plan and expectations regarding potential increases to its capital requirements are based on a number of assumptions, the failure of which to be accurate could materially impact Sempra's actual Capital Plan. Sempra’s Capital Plan is considered by management to be an operating measure.
+(2) Represents Sempra's projected future capital contributions to unconsolidated equity method investees.
+(3) Represents Sempra's proportionate ownership interest in projected capital expenditures at unconsolidated equity method investees.
+(4) Represents NCI's proportionate ownership interest in projected capital expenditures at Sempra and at unconsolidated equity method investees.
+
+SEMPRA                                                                                                                                                                                
+Table E                                                                                                                                                                               
+OTHER OPERATING STATISTICS                                                                                                                                                            
+                                                                                                  Three months ended December 31,                                    Years ended or at
+                                                                                                                                                                          December 31,
+2024                                                                                                                         2023                     2024                        2023
+UTILITIES                                                                                                                                                                             
+Sempra California                                                                                                                                                                     
+Gas sales (Bcf)(1)                                                                   95                                  89                        349                         369    
+Transportation (Bcf)(1)                                                             141                                 150                        560                         588    
+Total deliveries (Bcf)(1)                                                           236                                 239                        909                         957    
+Total gas customer meters (thousands)                                                                                                            7,132                       7,078    
+Electric sales (millions of kWhs)(1)                                                754                                 974                      3,207                       4,619    
+Community Choice Aggregation and Direct Access (millions of kWhs)                 3,461                               3,227                     13,484                      12,228    
+Total deliveries (millions of kWhs)(1)                                            4,215                               4,201                     16,691                      16,847    
+Total electric customer meters (thousands)                                                                                                       1,532                       1,517    
+Oncor(2)                                                                                                                                                                              
+Total deliveries (millions of kWhs)                                              38,827                              35,906                    162,691                     156,477    
+Total electric customer meters (thousands)                                                                                                       4,046                       3,969    
+Ecogas México, S. de R.L. de C.V.                                                                                                                                                     
+Natural gas sales (Bcf)                                                               1                                   1                          4                           4    
+Natural gas customer meters (thousands)                                                                                                            163                         157    
+ENERGY-RELATED BUSINESSES                                                                                                                                                             
+Sempra Infrastructure                                                                                                                                                                 
+Termoeléctrica de Mexicali (millions of kWhs)                                       964                               1,064                      3,675                       3,086    
+Wind and solar (millions of kWhs)(1)                                                594                                 610                      2,888                       3,135    
+(1) Includes intercompany sales.
+(2) Includes 100% of the electric deliveries and customer meters of Oncor, in which we hold an indirect 80.25% interest through our investment in Oncor Holdings.
+
+

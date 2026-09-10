@@ -22865,6 +22865,33 @@
       "rev_analysts": 5
      }
     }
+   },
+   {
+    "as_of": "2026-09-10",
+    "rows": {
+     "0q": {
+      "avg": 1.12296,
+      "low": 0.99602,
+      "high": 1.35,
+      "analysts": 9,
+      "year_ago": 1.15,
+      "rev_avg": 14760667170.0,
+      "rev_low": 13827130000.0,
+      "rev_high": 15791345000.0,
+      "rev_analysts": 8
+     },
+     "+1q": {
+      "avg": 1.10903,
+      "low": 0.979,
+      "high": 1.22,
+      "analysts": 7,
+      "year_ago": 0.97,
+      "rev_avg": 14556956850.0,
+      "rev_low": 14197000000.0,
+      "rev_high": 14843200000.0,
+      "rev_analysts": 5
+     }
+    }
    }
   ],
   "CSX": [
