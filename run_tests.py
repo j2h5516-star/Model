@@ -39,6 +39,7 @@ TEST_FILES = [
     "tests/test_web_build.py",   # 웹앱 데이터 빌더 (132차 — null 정직·판정 옮겨 적기)
     "tests/test_screen_verify.py",   # 화면↔데이터 정합성 (150차-N — 화면이 거짓말하지 않는가)
     "tests/test_collect_one.py",     # 한 종목 즉시 수집 (150차-O — 판정 표본 보호가 핵심)
+    "tests/test_workflows.py",       # 로봇 일정표 (182차 — 한글 이름표로 3주간 안 돌던 사고)
 ]
 
 if __name__ == "__main__":

@@ -18,6 +18,16 @@
 # ⚠️ collect_one 과 마찬가지로 **판정 표본(data/measure)은 건드리지
 #    않습니다.** 궁금해서 부른 종목을 표본에 넣으면 "결과를 보고 종목을
 #    고르는 것"이 되어 사전 등록이 무너집니다(헌법 2조).
+#
+# ⚠️⚠️ 182차 — **이름표(id)와 환경변수 이름은 반드시 영문으로.**
+#    이 파일은 만든 날(2026-08-25)부터 60번의 푸시 내내 깃허브가 아예
+#    읽지 못해 한 번도 돌지 않았습니다. 단계 이름표를 `id: 코드` 처럼
+#    한글로 적었기 때문입니다. 깃허브는 id 를 영문/숫자/_/- 로만 받고,
+#    못 읽으면 **오류를 알려 주는 대신** 일감 0개짜리 빈 실패를 남깁니다.
+#    (그래서 "실패"라고만 보이고 무엇이 잘못인지 아무 데도 안 적힙니다.)
+#    셸도 마찬가지입니다 — `${제목#…}` 은 bash 가 이름으로 인정하지
+#    않습니다. **눈에 보이는 설명(name·주석)만 한글로 씁니다.**
+#    tests/test_workflows.py 가 이 규칙을 지킵니다.
 
 name: collect-request
 
@@ -48,11 +58,11 @@ jobs:
       # 안전장치 ③ — 제목에서 종목 코드만 꺼내 **모양을 검사**합니다.
       # 셸에 그대로 넣지 않고 환경변수를 거쳐 받습니다(명령 끼워넣기 차단).
       - name: 종목 코드 꺼내기
-        id: 코드
+        id: ticker
         env:
-          제목: ${{ github.event.issue.title }}
+          TITLE: ${{ github.event.issue.title }}
         run: |
-          RAW="${제목#수집:}"
+          RAW="${TITLE#수집:}"
           TICKER="$(printf '%s' "$RAW" | tr -d '[:space:]' | tr '[:lower:]' '[:upper:]')"
           if ! printf '%s' "$TICKER" | grep -qE '^[A-Z][A-Z.-]{0,7}$'; then
             echo "종목 코드 모양이 아닙니다: '$TICKER'"
@@ -63,7 +73,7 @@ jobs:
           echo "ok=true" >> "$GITHUB_OUTPUT"
 
       - name: 모양이 아니면 알려 주고 끝
-        if: steps.코드.outputs.ok != 'true'
+        if: steps.ticker.outputs.ok != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -72,14 +82,14 @@ jobs:
           gh issue close "${{ github.event.issue.number }}"
 
       - uses: actions/setup-python@v5
-        if: steps.코드.outputs.ok == 'true'
+        if: steps.ticker.outputs.ok == 'true'
         with:
           python-version: "3.11"
           cache: pip
 
       # 매일 수집이 쌓아 둔 공시 원문 캐시를 **읽기만** 합니다.
       - name: 공시 원문 캐시 복원 (읽기 전용)
-        if: steps.코드.outputs.ok == 'true'
+        if: steps.ticker.outputs.ok == 'true'
         uses: actions/cache/restore@v4
         with:
           path: data/raw8k
@@ -88,29 +98,29 @@ jobs:
             raw8k-v1-
 
       - name: 의존성 설치
-        if: steps.코드.outputs.ok == 'true'
+        if: steps.ticker.outputs.ok == 'true'
         run: pip install -r requirements.txt
 
       - name: 시작했다고 알리기
-        if: steps.코드.outputs.ok == 'true'
+        if: steps.ticker.outputs.ok == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" \
-            --body "🤖 ${{ steps.코드.outputs.ticker }} 수집을 시작했습니다. 앱 화면은 그대로 두시면 자료가 도착할 때 저절로 열립니다."
+            --body "🤖 ${{ steps.ticker.outputs.ticker }} 수집을 시작했습니다. 앱 화면은 그대로 두시면 자료가 도착할 때 저절로 열립니다."
 
       - name: 한 종목 수집
-        if: steps.코드.outputs.ok == 'true'
-        id: 수집
+        if: steps.ticker.outputs.ok == 'true'
+        id: collect
         env:
           SEC_IDENTITY: ${{ secrets.SEC_IDENTITY }}
-          TICKER: ${{ steps.코드.outputs.ticker }}
+          TICKER: ${{ steps.ticker.outputs.ticker }}
         run: python collect_one.py "$TICKER"
 
       - name: 변경분 커밋
-        if: always() && steps.코드.outputs.ok == 'true'
+        if: always() && steps.ticker.outputs.ok == 'true'
         env:
-          TICKER: ${{ steps.코드.outputs.ticker }}
+          TICKER: ${{ steps.ticker.outputs.ticker }}
         run: |
           git config user.name "수집 로봇"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -138,13 +148,13 @@ jobs:
           fi
 
       - name: 끝났다고 알리고 요청장 닫기
-        if: always() && steps.코드.outputs.ok == 'true'
+        if: always() && steps.ticker.outputs.ok == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TICKER: ${{ steps.코드.outputs.ticker }}
-          결과: ${{ steps.수집.outcome }}
+          TICKER: ${{ steps.ticker.outputs.ticker }}
+          RESULT: ${{ steps.collect.outcome }}
         run: |
-          if [ "$결과" = "success" ]; then
+          if [ "$RESULT" = "success" ]; then
             MSG="✅ $TICKER 수집을 마쳤습니다. 앱에서 1~2분 뒤 보입니다(페이지가 다시 만들어지는 시간). 이 종목은 **가설 판정 표본에는 쓰이지 않습니다** — 궁금해서 부른 종목을 표본에 넣으면 사전 등록이 무너지기 때문입니다."
           else
             MSG="⚠️ $TICKER 수집이 끝까지 가지 못했습니다. 받은 데까지는 저장했습니다. 실행 기록: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
