@@ -2119,6 +2119,65 @@ def test_아래에_있는_다른_표의_줄을_끌어다_쓰지_않는다():
         두_표, sf.LABELS_ADJUSTED_EBITDA, 1_055_000_000, False) is True
 
 
+전망표_뒤따름 = (
+    "                                 Three Months Ended                     Twelve Months Ended\n"
+    "Diluted earnings per share - GAAP     $4.63          $2.19          $24.73         $17.98\n"
+    "\n"
+    "\n"
+    "Financial Guidance Summary\n"
+    "Diluted earnings per share - GAAP    $24.73          Greater than 8.2% or better\n")
+
+
+def test_빈_줄_두_번이면_표가_끝난_것으로_본다():
+    """실물 ELV — 실적표 아래 **두 줄을 띄우고** 전망표가 이어집니다.
+    전망표의 '$24.73' 은 그 회사의 **연간** GAAP EPS 라 분기값으로 확인해
+    주면 안 됩니다. 머리글이 새로 나오지 않으므로 빈 줄이 유일한 경계입니다.
+
+    (이 규칙은 한 번 지웠다가 되살린 것입니다 — 처음엔 돌연변이가 초록불로
+     살아남아 '근거 없는 검사'로 보고 지웠는데, 183차-D 에서 머리글 자를
+     넓히자 실물 ELV 가 정확히 이 자리에서 뚫렸습니다.)"""
+    assert sf._표에서_분기값과_같은가(
+        전망표_뒤따름, sf.LABELS_GAAP_EPS, 24.73, True) is False
+    # 같은 표의 진짜 분기값은 확인해 줍니다
+    assert sf._표에서_분기값과_같은가(
+        전망표_뒤따름, sf.LABELS_GAAP_EPS, 4.63, True) is True
+
+
+# 머리글 표현은 회사마다 다릅니다 (183차-D 실측 — 좁은 자로는 전부 놓쳤습니다)
+머리글_변형 = [
+    ("AAL 숫자 표기",       "3 Months Ended",           "12 Months Ended"),
+    ("CGNX 붙임표·소문자",   "Three-months Ended",       "Twelve-months Ended"),
+    ("ALGM Period 가 끼어듦", "Three-Month Period Ended", "Nine-Month Period Ended"),
+    ("AXP 복수형",          "Quarters Ended",           "Years Ended"),
+]
+
+
+def _조정표(분기표현, 연간표현):
+    """실제 표처럼 **열을 맞춰** 만듭니다.
+
+    표 머리는 자기 무리의 마지막 열 끝에 맞춰 적히므로, 머리글의 끝이
+    그 무리 마지막 값의 끝과 같아지도록 자리를 맞춥니다.
+    """
+    이름 = "Diluted earnings per share - GAAP"
+    끝자리 = [60, 76, 100, 116]          # 분기 두 칸 · 연간 두 칸
+    값 = ["$1.10", "$0.90", "$4.40", "$3.60"]
+    줄 = 이름
+    for 끝, v in zip(끝자리, 값):
+        줄 = 줄.ljust(끝 - len(v)) + v
+    머리 = "".ljust(76 - len(분기표현)) + 분기표현
+    머리 = 머리.ljust(116 - len(연간표현)) + 연간표현
+    return 머리 + "\n" + 줄 + "\n"
+
+
+def test_회사마다_다른_머리글_표현을_모두_읽는다():
+    for 이름, 분기표현, 연간표현 in 머리글_변형:
+        글 = _조정표(분기표현, 연간표현)
+        assert sf._표에서_분기값과_같은가(글, sf.LABELS_GAAP_EPS, 1.10, True) is True, \
+            f"{이름}: 분기값 1.10 을 못 찾았습니다\n{글}"
+        assert sf._표에서_분기값과_같은가(글, sf.LABELS_GAAP_EPS, 4.40, True) is False, \
+            f"{이름}: 연간값 4.40 을 분기값이라고 했습니다\n{글}"
+
+
 def test_파서가_분기열_표시를_남긴다():
     p = sf.parse_press_release(CRDO_조정표)
     assert p["adj_eps"] == 0.35

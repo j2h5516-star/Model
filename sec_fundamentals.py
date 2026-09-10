@@ -636,10 +636,19 @@ def _scan_labeled_value(
 # "Three Months Ended" 가 137에서 끝나고 분기 날짜 세 개가 68·104·137에서,
 # "Year Ended" 가 199에서 끝나고 연간 날짜 두 개가 166·199에서 끝난다.
 # 그래서 **숫자가 끝나는 자리**로 두 무리를 가를 수 있다.
+#
+# ⚠️ 머리글 표현은 회사마다 다릅니다. 저장 원문에서 실제로 본 것들
+#    (183차-D 실측 — 좁은 자로는 이 넷을 전부 놓쳤습니다):
+#      "3 Months Ended"           숫자로 적음        (AAL)
+#      "Three-months Ended"       붙임표·소문자      (CGNX)
+#      "Three-Month Period Ended" Period 가 끼어듦   (ALGM)
+#      "Quarters EndedMarch 31,"  복수형·공백 없음   (AXP)
 _분기머리_RE = re.compile(
-    r"(?:Three|Thirteen)\s+Months?\s+Ended|Quarter\s+Ended", re.I)
+    r"(?:Three|Thirteen|3|13)[-\s]+Months?(?:\s+Period)?\s+Ended"
+    r"|Quarters?\s*Ended", re.I)
 _연간머리_RE = re.compile(
-    r"(?:Twelve|Fifty[-\s]?Two|Nine|Six)\s+Months?\s+Ended|Year\s+Ended", re.I)
+    r"(?:Twelve|Fifty[-\s]?Two|Nine|Six|12|52|9|6)[-\s]+Months?"
+    r"(?:\s+Period)?\s+Ended|Years?\s*Ended", re.I)
 _표_최대줄 = 40                  # 머리글 하나가 다스리는 표의 최대 줄 수
 
 
@@ -701,7 +710,20 @@ def _표에서_분기값과_같은가(text: str, label_patterns: list[str],
         #    23줄 아래 **다른 표**(가이던스)의 줄을 물었습니다(실물 NRG:
         #    "Adjusted EBITDA  $3,725 - $3,975" 는 전망 범위입니다).
         #    빈 줄이 두 번 이어지거나 다른 표 머리가 나오면 거기서 멈춥니다.
+        빈줄 = 0
         for 아랫줄 in 줄들[i + 1:i + _표_최대줄]:
+            # ⚠️ **빈 줄이 두 번 이어지면 표가 끝난 것**입니다 (183차-D 실물 ELV).
+            #    실적표 아래 두 줄을 띄우고 "Financial Guidance Summary" 라는
+            #    **전망표**가 이어지는데, 거기 "GAAP EPS  $24.73  Greater than
+            #    8.2% or better" 가 있습니다. 24.73 은 그 회사의 **연간** GAAP
+            #    EPS 라 분기값으로 확인해 주면 안 됩니다. 머리글이 새로 안 나오면
+            #    빈 줄이 유일한 경계입니다.
+            if not 아랫줄.strip():
+                빈줄 += 1
+                if 빈줄 >= 2:
+                    break
+                continue
+            빈줄 = 0
             if _분기머리_RE.search(아랫줄) or _연간머리_RE.search(아랫줄):
                 break                      # 다음 표가 시작됐습니다
             # ⚠️ 표의 **행**은 이름이 줄 맨 앞에서 시작합니다. 문장 가운데
