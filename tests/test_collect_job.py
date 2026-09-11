@@ -106,6 +106,12 @@ def test_run_writes_snapshot_and_log(tmp_dir="/tmp/claude-0/robot_test"):
         # 냉각이 돌았는지 확인할 수 없었다(만들고 배선을 잊은 계기 3번째).
         assert "sec_429" in log["per_ticker"][0], log["per_ticker"][0].keys()
         assert log["sec_429_합계"] == 0, log["sec_429_합계"]
+        # 183차-F — 짝 못 찾은 8-K 날짜도 로그까지 실려야 한다.
+        #   150차-AA 부터 계산되고 있었는데 **로그로 안 나오고 있었다**
+        #   (만들고 배선을 잊은 계기 4번째). 은행 뼈대를 넣을지 판단하려면
+        #   "채울 값이 대기 중인가"를 봐야 하고, 그 답이 이 칸에 있다.
+        assert "unpaired_press" in log["per_ticker"][0], log["per_ticker"][0].keys()
+        assert "unpaired_dates" in log["per_ticker"][0], log["per_ticker"][0].keys()
         # v3 5단계 — 수집 성공 시 자동 판정도 기록되어야 합니다.
         # (가짜 데이터는 분기 1개뿐이라 사건 0건 → 전 가설 '판정 불가'가 정답)
         assert "verdict" in log, log.keys()
