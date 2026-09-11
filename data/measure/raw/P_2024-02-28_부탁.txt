@@ -1,0 +1,408 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — P 2024-02-28
+# 출처: https://www.sec.gov/Archives/edgar/data/1474432/000162828024007577/pstg-20240228.htm
+
+Document
+
+Exhibit 99.1
+
+Pure Storage Announces Fiscal Fourth Quarter and Full Year 2024 Financial Results
+FY24 TCV sales growth of Evergreen//One and Evergreen//Flex offerings exceeding 100%
+Q4 RPO growing 31% year-over-year
+SANTA CLARA, Calif. – February 28, 2024 – Today Pure Storage (NYSE: PSTG), the IT pioneer that delivers the world's most advanced data storage technology and services, announced financial results for its fiscal fourth quarter and full year 2024 ended February 4, 2024.
+"Our data platform strategy is revolutionizing the storage industry. It helps enterprises and service providers unify fragmented data environments into a seamless, modern, and efficient system—a system performance-ready for artificial intelligence,” said Charles Giancarlo, Chairman and CEO, Pure Storage. “And this can all be done now with Flash reliability, performance and economics, even at hard disk system price levels."
+Fourth Quarter and Full Year Financial Highlights
+•Q4 revenue $789.8 million, a decrease of 3% year-over-year
+•Full-year revenue $2.8 billion, up 3% year-over-year
+•Q4 subscription services revenue $328.9 million, up 24% year-over-year
+•Full-year subscription services revenue $1.2 billion, up 26% year-over-year
+•Q4 subscription annual recurring revenue (ARR) $1.4 billion, up 25% year-over-year
+•Remaining performance obligations (RPO) $2.3 billion, up 31% year-over-year
+•Q4 GAAP gross margin 72.0%; non-GAAP gross margin 73.7%
+•Full-year GAAP gross margin 71.4%; non-GAAP gross margin 73.2%
+•Q4 GAAP operating income $57.4 million; non-GAAP operating income $157.8 million
+•Full-year GAAP operating income $53.6 million; non-GAAP operating income $458.4 million
+•Q4 GAAP operating margin 7.3%; non-GAAP operating margin 20.0%
+•Full-year GAAP operating margin 1.9%; non-GAAP operating margin 16.2%
+•Q4 operating cash flow $244.4 million; free cash flow $200.9 million
+•Full-year operating cash flow $677.7 million; free cash flow $482.6 million
+•Total cash, cash equivalents, and marketable securities $1.5 billion
+•Returned approximately $21.4 million and $135.7 million in Q4 and FY24, respectively, to stockholders through share repurchases of 0.6 million shares and 4.7 million shares, respectively.
+•Authorized incremental share repurchases of up to an additional $250 million under its stock repurchase program.
+“We closed FY24 delivering strong RPO growth, and exceeded our revenue and operating margin guidance in Q4,” said Kevan Krysler, Chief Financial Officer, Pure Storage. “Looking to FY25, we expect double-digit revenue growth and strong growth of RPO, fueled by our highly differentiated data storage platform, and strength of our Evergreen and Portworx consumption and subscription offerings.”
+1
+
+
+Full Year Company Highlights
+•Strong Subscription Services Momentum: Pure Storage set a new industry standard in FY24 with eight total service level agreements (SLAs) across its Evergreen portfolio, including the first and only Paid Power & Rack commitment for Evergreen//One and Evergreen//Flex, in addition to first-of-its-kind energy efficiency and ransomware recovery guarantees. 
+•Market-Leading Platform Innovation: In FY24, Pure Storage introduced the cost-optimized E//Family with FlashBlade//E, followed by FlashArray//E, enabling customers to leverage flash storage for any workload. Additionally, Pure delivered its largest ever performance, efficiency, and security advancements with the next generation FlashArray//X and FlashArray//C, expanded its strategic partnership with Microsoft with the introduction of Pure Cloud Block Store for Azure VMware Solution, and delivered the first and only native, unified block and file experience purpose-built for flash storage with the GA of File Services for FlashArray.
+•AI Customer Impact: Among the first enterprise data storage vendors to receive the NVIDIA DGX BasePOD certification, and delivering critical validated designs with key alliance partners, Pure Storage continued to add to its 100+ customers across a wide variety of AI use cases, including self-driving cars, financial services, genomics, gaming, manufacturing, and many more.
+•Industry Recognition and Accolades: In FY24, Pure Storage was recognized as a leader for the tenth consecutive year in the Gartner Magic Quadrant for Primary Storage, and the third consecutive year in the Gartner Magic Quadrant for Distributed File Systems and Object Storage. Additionally, Pure Storage was named a leader in the inaugural IDC MarketSpace: Worldwide Container Data Management 2023 Vendor Assessment.
+First Quarter and FY25 Guidance
+Q1 and FY25 revenue and revenue growth rates are reflective of continuing outperformance and increased momentum in Evergreen//One Storage-as-a-Service.
+
+Q1FY25                                    
+Revenue                              $680M
+Revenue YoY Growth Rate              15.4%
+Non-GAAP Operating Income             $68M
+Non-GAAP Operating Margin              10%
+
+FY25                                                                                                                          
+Revenue                                                                                                                  $3.1B
+Revenue YoY Growth Rate                                                                                                  10.5%
+TCV Sales for Evergreen//One &amp; Evergreen//Flex Subscription Service Offerings                                        $600M
+TCV Sales for Evergreen//One &amp; Evergreen//Flex Subscription Service Offerings YoY Growth Rate            Approximately 50%
+Non-GAAP Operating Income                                                                                                $532M
+Non-GAAP Operating Margin                                                                                                  17%
+These statements are forward-looking and actual results may differ materially. Refer to the Forward Looking Statements section below for information on the factors that could cause our actual results to differ materially from these statements. Pure has not reconciled its guidance for non-GAAP operating income and non-GAAP operating margin to their most directly comparable GAAP measures because certain items that impact these measures are not within Pure’s control and/or cannot be reasonably predicted. Accordingly, reconciliations of these non-GAAP financial measures guidance to the corresponding GAAP measures are not available without unreasonable effort.
+2
+
+
+Share Repurchase Authorization
+Pure's audit committee has approved incremental share repurchases of up to an additional $250 million under its stock repurchase program, in addition to the $145 million remaining under the existing program authorization. The authorization allows Pure to repurchase shares of its Class A common stock opportunistically and will be funded from available working capital. Repurchases may be made at management's discretion from time to time on the open market through privately negotiated transactions, transactions structured through investment banking institutions, block purchase techniques, 10b5-1 trading plans, or a combination of the foregoing. The repurchase program does not have an expiration date, does not obligate Pure to acquire any of its common stock, and may be suspended or discontinued by the company at any time without prior notice.
+Conference Call Information
+Pure will host a teleconference to discuss the fiscal fourth quarter and full year 2024 results at 2:00 pm PT today, February 28, 2024. A live audio broadcast of the conference call will be available on the Pure Storage Investor Relations website. Pure will also post its earnings presentation and prepared remarks to this website concurrent with this release. 
+A replay will be available following the call on the Pure Storage Investor Relations website or for two weeks at 1-800-770-2030 (or 1-647-362-9199 for international callers) with passcode 5667482.
+Additionally, Pure is scheduled to participate at the following investor conferences:
+KeyBanc Capital Markets Emerging Technology Summit
+Date: Tuesday, March 5, 2024
+Time: 11:30 a.m. PT / 2:30 p.m. ET
+Chief Financial Officer Kevan Krysler and Chief Technology Officer Rob Lee
+Morgan Stanley Technology, Media & Telecom Conference
+Date: Wednesday, March 6, 2024
+Time: 10:15 a.m. PT / 1:15 p.m. ET
+Chairman and CEO Charles Giancarlo and Chief Financial Officer Kevan Krysler
+The presentations will be webcast live and archived on Pure's Investor Relations website at investor.purestorage.com.
+----
+About Pure Storage
+Pure Storage (NYSE: PSTG) uncomplicates data storage, forever. Pure delivers a cloud experience that empowers every organization to get the most from their data while reducing the complexity and expense of managing the infrastructure behind it. Pure’s commitment to providing true storage as-a-service gives customers the agility to meet changing data needs at speed and scale, whether they are deploying traditional workloads, modern applications, containers, or more. Pure believes it can make a significant impact in reducing data center emissions worldwide through its environmental sustainability efforts, including designing products and solutions that enable customers to reduce their carbon and energy footprint. And with the highest Net Promoter Score in the industry, Pure's ever-expanding list of customers are among the happiest in the world. For more information, visit www.purestorage.com.
+Analyst Recognition
+Leader in the 2023 Gartner Magic Quadrant for Primary Storage
+Leader in the 2023 Gartner Magic Quadrant for Distributed File Systems & Object Storage
+3
+
+
+Connect with Pure 
+Blog 
+LinkedIn
+Twitter 
+Facebook 
+Pure Storage, the Pure P Logo, Portworx, and the marks on the Pure Trademark List at www.purestorage.com/legal/productenduserinfo.html are trademarks of Pure Storage, Inc. Other names are trademarks of their respective owners. 
+Forward Looking Statements
+This press release contains forward-looking statements regarding our products, business and operations, including but not limited to our views relating to future period financial and business results, demand for our products and subscription services, including Evergreen//One, our technology and product strategy, specifically customer priorities around sustainability, the benefits to our customers of using our products, our ability to perform during current macro conditions and expand market share, our sustainability goals and benefits, the timing and magnitude of large orders, the impact of inflation, economic or supply chain disruptions, our expectations regarding our product and technology differentiation, including the E//Family, new customer acquisition, the continued success of the Portworx technology, and other statements regarding our products, business, operations and results. Forward-looking statements are subject to known and unknown risks and uncertainties and are based on potentially inaccurate assumptions that could cause actual results to differ materially from those expected or implied by the forward-looking statements. 
+Actual results may differ materially from the results predicted, and reported results should not be considered as an indication of future performance. The potential risks and uncertainties that could cause actual results to differ from the results predicted include, among others, those risks and uncertainties included under the caption "Risk Factors" and elsewhere in our filings and reports with the U.S. Securities and Exchange Commission, which are available on our Investor Relations website at investor.purestorage.com and on the SEC website at www.sec.gov. Additional information is also set forth in our Annual Report on Form 10-K for the year ended February 5, 2023. All information provided in this release and in the attachments is as of February 28, 2024, and Pure undertakes no duty to update this information unless required by law.
+Key Performance Metrics
+Subscription ARR is a key business metric that refers to total annualized contract value of all active subscription agreements on the last day of the quarter, plus on-demand revenue for the quarter multiplied by four.
+Total Contract Value (TCV) Sales, or bookings, of Pure's Evergreen//One and Evergreen//Flex offerings is an operating metric, representing the value of orders received and/or expected to be received during the fiscal year.
+Non-GAAP Financial Measures
+To supplement our unaudited condensed consolidated financial statements, which are prepared and presented in accordance with GAAP, Pure uses the following non-GAAP financial measures: non-GAAP gross profit, non-GAAP gross margin, non-GAAP operating income (loss), non-GAAP operating margin, non-GAAP net income (loss), non-GAAP net income (loss) per share, and free cash flow.
+4
+
+
+We use these non-GAAP financial measures for financial and operational decision-making and as a means to evaluate period-to-period comparisons. Our management believes that these non-GAAP financial measures provide meaningful supplemental information regarding our performance and liquidity by excluding certain expenses and expenditures such as stock-based compensation expense, payments to former shareholders of acquired companies, payroll tax expense related to stock-based activities, amortization of debt issuance costs related to debt, amortization of intangible assets acquired from acquisitions, acquisition-related transaction and integration expenses, restructuring costs related to severance and termination benefits, and costs associated with the impairment and early exit of certain leased facilities that may not be indicative of our ongoing core business operating results. Pure believes that both management and investors benefit from referring to these non-GAAP financial measures in assessing our performance and when analyzing historical performance and liquidity and planning, forecasting, and analyzing future periods. The presentation of these non-GAAP financial measures is not meant to be considered in isolation or as a substitute for our financial results prepared in accordance with GAAP, and our non-GAAP measures may be different from non-GAAP measures used by other companies.
+For a reconciliation of these non-GAAP financial measures to GAAP measures, please see the tables captioned "Reconciliations of non-GAAP results of operations to the nearest comparable GAAP measures" and "Reconciliation from net cash provided by operating activities to free cash flow," included at the end of this release.
+Contacts
+Paul Ziots – Investor Relations, Pure Storage
+ir@purestorage.com
+Rena Fallstrom – Global Communications, Pure Storage
+pr@purestorage.com
+###
+5
+
+
+PURE STORAGE, INC.
+Condensed Consolidated Balance Sheets
+(in thousands, unaudited)
+ 
+                                                                                                             At the End of Fiscal
+                                                                  2024                          2023                             
+Assets                                                                                                                           
+Current assets:                                                                                                                  
+Cash and cash equivalents                                                       $702,536                            $580,854     
+Marketable securities                                                            828,557                           1,001,352     
+Accounts receivable, net of allowance of $1,060 and $1,057                       662,179                             612,491     
+Inventory                                                                         42,663                              50,152     
+Deferred commissions, current                                                     88,712                              68,617     
+Prepaid expenses and other current assets                                        173,407                             161,391     
+Total current assets                                                           2,498,054                           2,474,857     
+Property and equipment, net                                                      352,604                             272,445     
+Operating lease right-of-use assets                                              129,942                             158,912     
+Deferred commissions, non-current                                                215,620                             177,239     
+Intangible assets, net                                                            33,012                              49,222     
+Goodwill                                                                         361,427                             361,427     
+Restricted cash                                                                    9,595                              10,544     
+Other assets, non-current                                                         55,506                              38,814     
+Total assets                                                                  $3,655,760                          $3,543,460     
+Liabilities and stockholders' equity                                                                                             
+Current liabilities:                                                                                                             
+Accounts payable                                                                 $82,757                             $67,121     
+Accrued compensation and benefits                                                250,257                             232,636     
+Accrued expenses and other liabilities                                           135,755                             123,749     
+Operating lease liabilities, current                                              44,668                              33,707     
+Deferred revenue, current                                                        852,247                             718,149     
+Debt, current                                                                          —                             574,506     
+Total current liabilities                                                      1,365,684                           1,749,868     
+Long-term debt                                                                   100,000                                   —     
+Operating lease liabilities, non-current                                         123,201                             142,473     
+Deferred revenue, non-current                                                    742,275                             667,501     
+Other liabilities, non-current                                                    54,506                              42,385     
+Total liabilities                                                              2,385,666                           2,602,227     
+Stockholders’ equity:                                                                                                            
+Common stock and additional paid-in capital                                    2,749,627                           2,493,799     
+Accumulated other comprehensive loss                                             (3,782)                            (15,504)     
+Accumulated deficit                                                          (1,475,751)                         (1,537,062)     
+Total stockholders' equity                                                     1,270,094                             941,233     
+Total liabilities and stockholders' equity                                    $3,655,760                          $3,543,460     
+6
+
+
+PURE STORAGE, INC.
+Condensed Consolidated Statements of Operations
+(in thousands, except per share data, unaudited)
+ 
+                                                                                         Fourth Quarter of Fiscal                                            Fiscal Year Ended
+                                                      2024                        2023                              2024                         2023                         
+Revenue:                                                                                                                                                                      
+Product                                                           $460,891                          $545,108                    $1,622,869                      $1,792,153    
+Subscription services                                              328,914                           265,099                     1,207,752                         961,281    
+Total revenue                                                      789,805                           810,207                     2,830,621                       2,753,434    
+Cost of revenue:                                                                                                                                                              
+Product (1)                                                        128,842                           174,471                       472,430                         569,793    
+Subscription services (1)                                           92,459                            74,419                       337,000                         285,995    
+Total cost of revenue                                              221,301                           248,890                       809,430                         855,788    
+Gross profit                                                       568,504                           561,317                     2,021,191                       1,897,646    
+Operating expenses:                                                                                                                                                           
+Research and development (1)                                       186,841                           185,557                       736,764                         692,528    
+Sales and marketing (1)                                            248,136                           246,480                       945,021                         883,609    
+General and administrative (1)                                      59,299                            64,696                       252,243                         237,996    
+Restructuring, impairment and other (2)                             16,846                                 —                        33,612                               —    
+Total operating expenses                                           511,122                           496,733                     1,967,640                       1,814,133    
+Income from operations                                              57,382                            64,584                        53,551                          83,513    
+Other income (expense), net                                         13,416                            16,705                        37,035                           8,295    
+Income before provision for income taxes                            70,798                            81,289                        90,586                          91,808    
+Income tax provision                                                 5,360                             6,818                        29,275                          18,737    
+Net income                                                         $65,438                           $74,471                       $61,311                         $73,071    
+Net income per share attributable to common                          $0.21                             $0.25                         $0.20                           $0.24    
+stockholders, basic                                                                                                                                                           
+Net income per share attributable to common                          $0.20                             $0.22                         $0.19                           $0.23    
+stockholders, diluted                                                                                                                                                         
+Weighted-average shares used in computing net                      317,731                           303,614                       311,831                         299,478    
+income per share attributable to common                                                                                                                                       
+stockholders, basic                                                                                                                                                           
+Weighted-average shares used in computing net                      332,014                           339,699                       332,568                         339,184    
+income per share attributable to common                                                                                                                                       
+stockholders, diluted                                                                                                                                                         
+(1) Includes stock-based compensation expense as follows:
+ 
+Cost of revenue -- product                         $2,614      $2,791        $9,670       $10,245
+Cost of revenue -- subscription services            6,065       5,652        25,412        22,630
+Research and development                           41,069      41,212       167,294       161,694
+Sales and marketing                                18,863      17,767        74,746        72,507
+General and administrative                          7,573      15,081        54,305        60,541
+Total stock-based compensation expense            $76,184     $82,503      $331,427      $327,617
+(2) Includes expenses for severance and termination benefits related to workforce realignment and lease impairment and abandonment charges associated with cease-use of our former corporate headquarters.
+7
+
+
+PURE STORAGE, INC.
+Condensed Consolidated Statements of Cash Flows
+(in thousands, unaudited)
+ 
+                                                                                                                             Fourth Quarter of Fiscal                                        Fiscal Year Ended
+                                                                                          2024                        2023                              2024                                              2023
+Cash flows from operating activities                                                                                                                                                                          
+Net income                                                                                             $65,438                           $74,471                     $61,311                       $73,071    
+Adjustments to reconcile net income to net cash provided by operating activities:                                                                                                                             
+Depreciation and amortization                                                                           32,856                            28,164                     124,416                       100,432    
+Stock-based compensation expense                                                                        76,184                            82,503                     331,427                       327,617    
+Lease impairment and abandonment charges                                                                     —                                 —                      16,766                             —    
+Other                                                                                                    7,403                             4,882                       1,559                         7,355    
+Changes in operating assets and liabilities, net of effects of acquisition:                                                                                                                                   
+Accounts receivable, net                                                                              (25,728)                         (176,940)                    (49,687)                      (70,724)    
+Inventory                                                                                                1,532                             5,722                       6,810                      (10,619)    
+Deferred commissions                                                                                  (39,415)                          (10,724)                    (58,476)                           451    
+Prepaid expenses and other assets                                                                     (45,355)                            24,584                    (25,669)                      (31,580)    
+Operating lease right-of-use assets                                                                      8,230                             7,740                      35,499                        33,813    
+Accounts payable                                                                                      (20,376)                          (29,611)                      13,468                       (7,075)    
+Accrued compensation and other liabilities                                                              96,074                            89,823                      43,317                        72,084    
+Operating lease liabilities                                                                           (10,434)                           (5,020)                    (31,891)                      (33,359)    
+Deferred revenue                                                                                        98,016                           137,432                     208,872                       305,768    
+Net cash provided by operating activities                                                              244,425                           233,026                     677,722                       767,234    
+Cash flows from investing activities                                                                                                                                                                          
+Purchases of property and equipment(1)                                                                (43,570)                          (60,229)                   (195,161)                     (158,139)    
+Acquisition, net of cash acquired                                                                            —                                 —                           —                       (1,989)    
+Purchases of marketable securities                                                                   (119,776)                         (409,306)                   (471,501)                     (501,435)    
+Sales of marketable securities                                                                           6,558                             6,155                      59,053                         6,155    
+Maturities of marketable securities and other                                                          114,956                            81,700                     610,855                       433,995    
+Net cash provided by (used in) investing activities                                                   (41,832)                         (381,680)                       3,246                     (221,413)    
+Cash flows from financing activities                                                                                                                                                                          
+Net proceeds from exercise of stock options                                                              6,866                             5,647                      39,770                        24,778    
+Proceeds from issuance of common stock under employee stock purchase plan                                    —                                 —                      45,089                        39,965    
+Proceeds from borrowings                                                                                     —                                 —                     106,890                             —    
+Principal payments on borrowings and finance lease obligations                                         (1,617)                           (1,095)                   (586,199)                     (257,240)    
+Tax withholding on equity awards                                                                      (13,402)                           (3,471)                    (29,984)                      (19,601)    
+Repurchases of common stock                                                                           (21,460)                          (67,504)                   (135,801)                     (219,068)    
+Net cash used in financing activities                                                                 (29,613)                          (66,423)                   (560,235)                     (431,166)    
+Net increase (decrease) in cash and cash equivalents and restricted cash                               172,980                         (215,077)                     120,733                       114,655    
+Cash, cash equivalents and restricted cash, beginning of period                                        539,151                           806,475                     591,398                       476,743    
+Cash, cash equivalents and restricted cash, end of period                                             $712,131                          $591,398                    $712,131                      $591,398    
+(1) Includes capitalized internal-use software costs of $3.7 million and $3.2 million for the fourth quarter of fiscal 2024 and 2023 and $19.4 million and $13.7 million for fiscal 2024 and 2023.
+8
+
+
+Reconciliations of non-GAAP results of operations to the nearest comparable GAAP measures
+The following table presents non-GAAP gross margins by revenue source before certain items (in thousands except percentages, unaudited):
+
+                                                                                                                                      Fourth Quarter of Fiscal                                                                                                                    Fourth Quarter of Fiscal
+2024                                                                                                                                                                                                                                                                                                  2023
+                                          GAAP                       GAAP                 Adjustment                           Non-                       Non-                        GAAP                       GAAP                 Adjustment                           Non-                       Non-
+                                       results                      gross                                                      GAAP                       GAAP                     results                      gross                                                      GAAP                       GAAP
+                                                               margin (a)                                                   results                      gross                                             margin (a)                                                   results                      gross
+                                                                                                                                                    margin (b)                                                                                                                                  margin (b)
+                                                                                        $2,614         (c)                                                                                                                          $2,791         (c)                                                    
+                                                                                            58         (d)                                                                                                                              37         (d)                                                    
+                                                                                           177         (e)                                                                                                                               —                                                                
+                                                                                             —                                                                                                                                         292         (f)                                                    
+                                                                                         3,306         (g)                                                                                                                           3,306         (g)                                                    
+Gross profit --                  $332,049                      72.0     %               $6,155                        $338,204                      73.4     %               $370,637                      68.0     %               $6,426                        $377,063                      69.2     %
+product                                                                                                                                                                                                                                                                                                   
+                                                                                        $6,065         (c)                                                                                                                          $5,652         (c)                                                    
+                                                                                           276         (d)                                                                                                                             159         (d)                                                    
+                                                                                           985         (e)                                                                                                                               —                                                                
+                                                                                             —                                                                                                                                         306         (f)                                                    
+                                                                                             —                                                                                                                                          16         (h)                                                    
+Gross profit --                  $236,455                      71.9     %               $7,326                        $243,781                      74.1     %               $190,680                      71.9     %               $6,133                        $196,813                      74.2     %
+subscription services                                                                                                                                                                                                                                                                                     
+                                                                                        $8,679         (c)                                                                                                                          $8,443         (c)                                                    
+                                                                                           334         (d)                                                                                                                             196         (d)                                                    
+                                                                                         1,162         (e)                                                                                                                               —                                                                
+                                                                                             —                                                                                                                                         598         (f)                                                    
+                                                                                         3,306         (g)                                                                                                                           3,306         (g)                                                    
+                                                                                             —                                                                                                                                          16         (h)                                                    
+Total gross profit               $568,504                      72.0     %              $13,481                        $581,985                      73.7     %               $561,317                      69.3     %              $12,559                        $573,876                      70.8     %
+(a) GAAP gross margin is defined as GAAP gross profit divided by revenue.
+(b) Non-GAAP gross margin is defined as non-GAAP gross profit divided by revenue.
+(c) To eliminate stock-based compensation expense.
+(d) To eliminate payroll tax expense related to stock-based activities.
+(e) To eliminate expenses for severance and termination benefits related to workforce realignment.
+(f) To eliminate duplicate lease costs during the transition of our corporate headquarters.
+(g) To eliminate amortization expense of acquired intangible assets.
+(h) To eliminate payments to former shareholders of acquired company.
+9
+
+
+The following table presents non-GAAP gross margins by revenue source before certain items (in thousands except percentages, unaudited):
+
+                                                                                                                                                                                                Fiscal Year Ended
+2024                                                                                                                                                                                                             
+                                                     GAAP results                  GAAP gross margin (a)                 Adjustment                                               Non-                       Non-
+                                                                                                                                                                                  GAAP                       GAAP
+                                                                                                                                                                               results                      gross
+                                                                                                                                                                                                       margin (b)
+                                                                                                                       $9,670                  (c)                                                               
+                                                                                                                          415                  (d)                                                               
+                                                                                                                          402                  (e)                                                               
+                                                                                                                          177                  (f)                                                               
+                                                                                                                       13,224                  (g)                                                               
+Gross profit -- product                         $1,150,439                                70.9         %              $23,888                                          $1,174,327                      72.4     %
+                                                                                                                      $25,412                  (c)                                                               
+                                                                                                                        1,424                  (d)                                                               
+                                                                                                                          413                  (e)                                                               
+                                                                                                                          985                  (f)                                                               
+                                                                                                                           18                  (h)                                                               
+Gross profit -- subscription services             $870,752                                72.1         %              $28,252                                            $899,004                      74.4     %
+                                                                                                                      $35,082                  (c)                                                               
+                                                                                                                        1,839                  (d)                                                               
+                                                                                                                          815                  (e)                                                               
+                                                                                                                        1,162                  (f)                                                               
+                                                                                                                       13,224                  (g)                                                               
+                                                                                                                          $18                  (h)                                                               
+Total gross profit                              $2,021,191                                71.4         %              $52,140                                          $2,073,331                      73.2     %
+(a) GAAP gross margin is defined as GAAP gross profit divided by revenue.
+(b) Non-GAAP gross margin is defined as non-GAAP gross profit divided by revenue.
+(c) To eliminate stock-based compensation expense.
+(d) To eliminate payroll tax expense related to stock-based activities.
+(e) To eliminate duplicate lease costs during the transition of our corporate headquarters.
+(f) To eliminate expenses for severance and termination benefits related to workforce realignment.
+(g) To eliminate amortization expense of acquired intangible assets.
+(h) To eliminate payments to former shareholders of acquired company.
+10
+
+
+The following table presents certain non-GAAP consolidated results before certain items (in thousands, except per share amounts and percentages, unaudited):
+
+                                                                                                                                                                                Fourth Quarter of Fiscal                                                                                                                    Fourth Quarter of Fiscal
+2024                                                                                                                                                                                                       2023                                                                                                                                     
+                                                                                  GAAP                       GAAP                   Adjustment                           Non-                       Non-                      GAAP                       GAAP                   Adjustment                           Non-                       Non-
+                                                                               results                  operating                                                        GAAP                       GAAP                   results                  operating                                                        GAAP                       GAAP
+                                                                                                       margin (a)                                                     results                  operating                                           margin (a)                                                     results                  operating
+                                                                                                                                                                                              margin (b)                                                                                                                                  margin (b)
+                                                                                                                                 $76,184               (c)                                                                                                                   $82,503         (c)                                                    
+                                                                                                                                       —                                                                                                                                         888         (d)                                                    
+                                                                                                                                   2,722               (e)                                                                                                                     1,799         (e)                                                    
+                                                                                                                                   3,536               (f)                                                                                                                     3,839         (f)                                                    
+                                                                                                                                       —                                                                                                                                       5,004         (g)                                                    
+                                                                                                                                  18,009               (h)                                                                                                                         —                                                                
+Operating income                                                          $57,382                       7.3   %                 $100,451                        $157,833                      20.0   %                $64,584                       8.0   %                  $94,033                        $158,617                      19.6   %  
+                                                                                                                                 $76,184               (c)                                                                                                                   $82,503         (c)                                                    
+                                                                                                                                       —                                                                                                                                         888         (d)                                                    
+                                                                                                                                   2,722               (e)                                                                                                                     1,799         (e)                                                    
+                                                                                                                                   3,536               (f)                                                                                                                     3,839         (f)                                                    
+                                                                                                                                       —                                                                                                                                       5,004         (g)                                                    
+                                                                                                                                  18,009               (h)                                                                                                                         —                                                                
+                                                                                                                                     154               (i)                                                                                                                       804         (i)                                                    
+                                                                                                                                       —                                                                                                                                         357         (j)                                                    
+Net income                                                                $65,438                                               $100,605                        $166,043                                              $74,471                                                $95,194                        $169,665                                
+Net income per share -- diluted                                             $0.20                                                                                  $0.50                                                $0.22                                                                                  $0.53                                
+Weighted-average shares used in per share calculation -- diluted               332,014                                                       —                        332,014                                         339,699                                               (21,884)         (k)                  317,815                           
+(a) GAAP operating margin is defined as GAAP operating income divided by revenue.
+(b) Non-GAAP operating margin is defined as non-GAAP operating income divided by revenue.
+(c) To eliminate stock-based compensation expense.
+(d) To eliminate payments to former shareholders of acquired company.
+(e) To eliminate payroll tax expense related to stock-based activities.
+(f) To eliminate amortization expense of acquired intangible assets.
+(g) To eliminate duplicate lease costs during the transition of our corporate headquarters.
+(h) To eliminate expenses for severance and termination benefits related to workforce realignment.
+(i) To eliminate amortization expense of debt issuance costs related to our debt.
+(j) To eliminate net loss from legal settlement in connection with a facility abandoned in the second quarter of fiscal 2021.
+(k) To exclude the dilutive effect from convertible note due to the related capped call hedge.
+11
+
+
+The following table presents certain non-GAAP consolidated results before certain items (in thousands, except per share amounts and percentages, unaudited):
+
+                        Fiscal Year Ended                                                                                                                                                            
+2024                                                                                                                                                                                                 
+                        GAAP results                       GAAP operating margin (a)                   Adjustment               Non- GAAP results                      Non- GAAP operating margin (b)
+                                                                                                   $331,427         (c)                                                                              
+                                                                                                      2,341         (d)                                                                              
+                                                                                                     14,648         (e)                                                                              
+                                                                                                      6,687         (f)                                                                              
+                                                                                                     16,766         (g)                                                                              
+                                                                                                     18,009         (h)                                                                              
+                                                                                                    $14,930         (i)                                                                              
+Operating income        $53,551                                       1.9          %               $404,808                     $458,359                                            16.2            %
+(a) GAAP operating margin is defined as GAAP operating income divided by revenue.
+(b) Non-GAAP operating margin is defined as non-GAAP operating income divided by revenue.
+(c) To eliminate stock-based compensation expense.
+(d) To eliminate payments to former shareholders of acquired company.
+(e) To eliminate payroll tax expense related to stock-based activities.
+(f) To eliminate duplicate lease costs during the transition of our corporate headquarters.
+(g) To eliminate lease impairment and abandonment charges associated with cease-use of our former corporate headquarters.
+(h) To eliminate expenses for severance and termination benefits related to workforce realignment.
+(i) To eliminate amortization expense of acquired intangible assets.
+12
+
+
+Reconciliation from net cash provided by operating activities to free cash flow (in thousands except percentages, unaudited):
+
+                                                                                      Fourth Quarter of Fiscal                                                 Fiscal Year Ended
+                                                   2024                                                   2023   2024                                     2023                  
+Net cash provided by operating activities                      $244,425                          $233,026                             $677,722                      $767,234    
+Less: purchases of property and equipment(1)                   (43,570)                          (60,229)                            (195,161)                     (158,139)    
+Free cash flow (non-GAAP)                                      $200,855                          $172,797                             $482,561                      $609,095    
+(1) Includes capitalized internal-use software costs of $3.7 million and $3.2 million for the fourth quarter of fiscal 2024 and 2023 and $19.4 million and $13.7 million for fiscal 2024 and 2023.
+13
+
+
+
+

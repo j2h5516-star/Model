@@ -1,0 +1,440 @@
+# 잣대값 파싱 실패 원문 — YELP 2017-06-16
+# 출처: https://www.sec.gov/Archives/edgar/data/1345016/000120677417001852/yelp3263131-8ka.htm
+
+
+
+INDEPENDENT AUDITORS’ REPORT
+ To the Board of Directors and Shareholders of Turnstyle Analytics Inc.,
+ We have audited the accompanying consolidated balance sheets of Turnstyle Analytics Inc., as of December 31, 2016 and 2015, and the related consolidated statements of loss and comprehensive loss, changes in stockholders’ deficit, and cash flows for the years then ended.
+ Management’s Responsibility for the Financial Statements
+ Management is responsible for the preparation and fair presentation of these consolidated financial statements in accordance with accounting principles generally accepted in the United States of America; this includes the design, implementation, and maintenance of internal control relevant to the preparation and fair presentation of consolidated financial statements that are free from material misstatement, whether due to fraud or error.
+ Auditors’ Responsibility
+ Our responsibility is to express an opinion on these consolidated financial statements based on our audits. We conducted our audits in accordance with auditing standards generally accepted in the United States of America. Those standards require that we plan and perform the audits to obtain reasonable assurance about whether the consolidated financial statements are free from material misstatement.
+ An audit involves performing procedures to obtain audit evidence about the amounts and disclosures in the financial statements. The procedures selected depend on the auditor’s judgment, including the assessment of the risks of material misstatement of the financial statements, whether due to fraud or error. In making those risk assessments, the auditor considers internal control relevant to the entity’s preparation and fair presentation of the financial statements in order to design audit procedures that are appropriate in the circumstances, but not for the purpose of expressing an opinion on the effectiveness of the entity’s internal control. Accordingly, we express no such opinion. An audit also includes evaluating the appropriateness of accounting policies used and the reasonableness of significant accounting estimates made by management, as well as evaluating the overall presentation of the financial statements. 
+ We believe that the audit evidence we have obtained is sufficient and appropriate to provide a basis for our audit opinion. 
+ Opinion
+ In our opinion, the consolidated financial statements referred to above present fairly,in all material respects,the financial position of Turnstyle Analytics Inc. as at December 31, 2016 and 2015,and the results of its operations and its cash flows for the years then ended in accordance with accounting principles generally accepted in the United States of America. 
+  
+Chartered Professional
+Accountants           
+Licensed Public       
+Accountants           
+ Mississauga, OntarioJune 3, 2017
+ <img alt="None" src="yelp3263131-ex991x1x2.jpg">
+Turnstyle Analytics Inc. CONSOLIDATED BALANCE SHEET
+ 
+                                                          December 31,        December 31,
+------------------------------------------------------------------------------------------
+                                                     2016                2015             
+Assets                                                                                    
+Current assets:                                                                           
+Cash                                                          $294,544            $146,411
+and cash equivalents                                                                      
+Accounts receivable (net of allowance for doubtful                                        
+accounts                                                                                  
+of $98,779 and                                                                            
+$26,523 at December 31, 2016 and December                                                 
+31, 2015,                                                      238,020             101,689
+respectively)                                                                             
+Inventory                                                            -              42,548
+Prepaid expenses                                                20,179              15,773
+and other current assets                                                                  
+Total current assets                                           552,743             306,421
+Property and                                                    19,358              18,692
+equipment, net                                                                            
+Capitalized                                                    258,740                   -
+development costs                                                                         
+Total assets                                                  $830,841            $325,113
+Liabilities and                                                                           
+Stockholders' Equity                                                                      
+Current liabilities:                                                                      
+Accounts payable and accrued liabilities                      $260,986             $70,586
+Deferred                                                        76,212              42,750
+revenue                                                                                   
+Current portion                                                222,723                   -
+promissory notes                                                                          
+Short-term portion                                           1,438,854             488,439
+of Convertible Debentures                                                                 
+Total current liabilities                                    1,998,775             601,775
+Long-term portion                                              185,603                   -
+of promissory notes                                                                       
+Long-term portion                                              905,172           1,522,297
+of Convertible Debentures                                                                 
+Total liabilities                                            3,089,550           2,124,072
+Share                                                          895,148             344,558
+Capital                                                                                   
+Contributed                                                    540,419             327,696
+Surplus                                                                                   
+Retained Earnings                                          (3,914,324)         (2,737,741)
+and Equity                                                                                
+Accumulated Other                                              220,048             266,528
+Comprehensive Income                                                                      
+Total stockholders' equity                                 (2,258,709)         (1,798,959)
+Total liabilities and stockholders' equity                    $830,841            $325,113
+ See notes to consolidated financial statements. 
+
+Turnstyle Analytics Inc. CONSOLIDATED STATEMENTS OF LOSS AND COMPREHENSIVE LOSS 
+ 
+                                                          Year Ended December        
+                                                                  31,                
+-------------------------------------------------------------------------------------
+                                              2016                               2015
+Net                                                 $1,062,511               $220,353
+revenue                                                                              
+Costs and expenses:                                                                  
+Cost of                                                363,978                214,183
+revenue                                                                              
+Selling, General                                       551,112                474,454
+and Administration                                                                   
+Salaries and                                           938,705                876,153
+Benefits                                                                             
+Stock-Based                                            212,723                231,165
+Compensation                                                                         
+Depreciation and                                        45,641                  5,678
+Amortization                                                                         
+Foreign Exchange                                         6,294                     92
+Loss                                                                                 
+Interest Expense on                                    120,641                 97,330
+Promissory Notes and Convertible Debentures                                          
+Total costs and expenses                             2,239,094              1,899,055
+Loss                                               (1,176,583)            (1,678,702)
+from operations                                                                      
+Provision for                                                -                      -
+income taxes                                                                         
+Net                                                (1,176,583)            (1,678,702)
+loss                                                                                 
+Other Comprehensive Loss (Income):                                                   
+Foreign Currency Translation Adjustment               (46,480)                224,129
+Net                                                (1,223,063)            (1,454,573)
+and Comprehensive Loss                                                               
+ See notes to consolidated financial statements. 
+
+Turnstyle Analytics Inc.CONSOLIDATED STATEMENTS OF STOCKHOLDERS' DEFICITFOR THE YEARS ENDED DECEMBER 31, 2016 and 2015
+ 
+                                                                  Contributed   Accumulated Other                       Total    
+                                                                                                                    Stockholders’
+---------------------------------------------------------------------------------------------------------------------------------
+                                                   Common Stock   Surplus       Comprehensive Loss   Deficit              Deficit
+                                       Shares          Amount                                                                    
+At December 31, 2014                3,874,552          $142,485   $96,531       $42,399              ($1,059,039)      ($777,624)
+Conversion of debentures              336,026          202,073    -             -                    -                    202,073
+Stock-Based Compensation                    -          -          231,165       -                    -                    231,165
+Comprehensive loss for the period           -          -          -             224,129              (1,678,702)      (1,454,573)
+At December 31, 2015                4,210,578          344,558    327,696       266,528              (2,737,741)      (1,798,959)
+Exercise of options                    12,115          19,714     -             -                    -                     19,714
+Stock-Based Compensation                    -          -          212,723       -                    -                    212,723
+Share cancellation                  (125,000)          -          -             -                    -                          -
+Conversion of debentures              418,213          530,876    -             -                    -                    530,876
+Comprehensive loss for the period           -          -          -             (46,480)             (1,176,583)      (1,223,063)
+At December 31, 2016                4,515,906          $895,148   $540,419      $220,048             ($3,914,324)    ($2,258,709)
+ See notes to consolidated financial statements. 
+
+Turnstyle Analytics Inc. CONSOLIDATED STATEMENTS OF CASH FLOWS 
+ 
+                                                                   2016                2015      
+-------------------------------------------------------------------------------------------------
+OPERATING ACTIVITIES:                                                                            
+Net                                                              ($1,176,583)        ($1,678,702)
+loss                                                                                             
+Adjustments to reconcile net loss to net cash provided by                                        
+operating                                                                                        
+activities:                                                                                      
+Depreciation and amortization                                          45,641               5,678
+Interest Expense                                                      120,641              97,330
+Provision for doubtful accounts and sales returns                      64,532              27,526
+Stock-based compensation                                              212,723             231,165
+Other non-cash expenses                                                50,000                   -
+Changes in operating assets and liabilities:                                                     
+Accounts receivable                                                 (135,601)            (66,623)
+Prepaid expenses and other assets                                      40,533            (63,246)
+Accounts payable, accrued expenses and other                          190,980              64,765
+liabilities                                                                                      
+Deferred revenue                                                       32,750              46,360
+Net                                                                 (554,384)         (1,335,747)
+cash provided by operating activities                                                            
+INVESTING ACTIVITIES:                                                                            
+Purchases of property, equipment and software                         (8,752)            (19,291)
+Net                                                                   (8,752)            (19,291)
+cash used in investing activities                                                                
+FINANCING ACTIVITIES:                                                                            
+Repayment of Convertible Debentures                                  (38,656)            (50,054)
+Proceeds from issuance of Convertible Debentures                      740,523           1,549,340
+Net                                                                   701,867           1,499,286
+cash provided by financing activities                                                            
+EFFECT OF FOREIGN EXCHANGE ON CASH                                      9,402            (34,257)
+FLOWS                                                                                            
+CHANGE IN CASH AND CASH EQUIVALENTS                                   148,133             109,991
+CASH AND CASH                                                         146,411              36,420
+EQUIVALENTS—Beginning of period                                                                  
+CASH AND CASH EQUIVALENTS—End of                                     $294,544            $146,411
+period                                                                                           
+SUPPLEMENTAL DISCLOSURES OF NON-CASH INVESTING AND                                               
+FINANCING ACTIVITIES                                                                             
+Conversion of debentures                                              530,876             202,073
+Exercise of options                                                    19,714                   -
+ See notes to consolidated financial statements. 
+
+Turnstyle Analytics Inc. NOTES TO CONSOLIDATED FINANCIAL STATEMENTSYEARS ENDED DECEMBER 31, 2016 and 2015 
+ 1. ORGANIZATION AND DESCRIPTION OF BUSINESS 
+ Turnstyle Analytics Inc. was incorporated in Ontario, Canada on June 12, 2012. Except where specifically noted or the context otherwise requires, the use of terms such as the "Company" and "Turnstyle" in these Notes to Consolidated Financial Statements refers to Turnstyle and its subsidiary. 
+ Turnstyle is a marketing platform that utilizes guest Wi-Fi to retain and reward customers. Turnstyle enables restaurants and retailers to learn actionable insights about on-premises customer behavior and send real-time promotions to customers without requiring customers to download a mobile app. Turnstyle manages thousands of locations in 40+ countries. Businesses of all sizes use the Turnstyle platform to engage with consumers on premise at the critical moment when they are deciding where to spend their money. 
+ The Company consists of Turnstyle Analytics Inc. and a single wholly-owned entity, Turnstyle America Inc., which was incorporated on December 6, 2016. The financial results of the subsidiary were immaterial and are included within the consolidated financial statements of the Company presented herein. 
+ Basis of Presentation—The consolidated financial statements have been prepared in accordance with accounting principles generally accepted in the United States of America ("GAAP"). All intercompany balances and transactions have been eliminated in consolidation.
+ Certain Significant Risks and Uncertainties—The Company operates in a dynamic industry and, accordingly, can be affected by a variety of factors. For example, the Company's management believes that changes in any of the following areas could have a significant negative impact on the Company in terms of its future financial position, results of operations or cash flows: rates of revenue growth; traffic to the Company's WiFi network; popularity and usage of WiFi as a means of connectivity; industry competition; qualified employees and key personnel; intellectual property infringement and other claims; and changes in government regulation affecting the Company's business, among other things. 
+ The Company has had continued losses, accumulated deficit, negative cash flows from operations, and negative working capital, the Company has been dependent upon the ongoing availability of financing in the form of its Convertible Debenture offerings. Subsequent to year end, the Company was acquired by Yelp Inc. (note 11), a publicly listed entity, as a result of the acquisition, and with the support and significant resources of a larger public company, management believes that the use of the going concern concept is appropriate. 
+ 2. SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES 
+ Use of Estimates—The preparation of the Company's consolidated financial statements in conformity with GAAP requires management to make estimates and assumptions that affect the reported amounts of assets and liabilities and disclosure of contingent assets and liabilities at the date of the consolidated financial statements and the reported amounts of income and expenses during the reporting period. These estimates are based on information available as of the date of the consolidated financial statements; therefore, actual results could differ from management's estimates. Significant estimates include: assessment of useful lives and impairment analysis of property and equipment and application development costs, valuation of stock-based compensation, allowance for doubtful accounts and valuation of convertible debentures.
+ Foreign Currency Translation—The consolidated financial statements are measured using the currency of the United States of America (“U.S. Dollars” or “USD”) as the reporting currency. The Company’s functional currency is the Canadian dollar, accordingly, assets and liabilities are translated at exchange rates in effect as of the balance sheet date. Revenues and expenses are translated at average exchange rates in effect during the year. Translation adjustments are recorded within accumulated other comprehensive loss, a separate component of stockholders' equity. References to Canadian dollar are denoted with “C$” otherwise all figures presented are stated in U.S. Dollars.
+ Cash and Cash Equivalents—The Company considers all highly liquid investments, such as treasury bills, commercial paper, certificates of deposit and money market instruments with maturities of three months or less at the time of acquisition to be cash equivalents. Cash and cash equivalents primarily consist of amounts held in highly liquid deposit accounts with major financial institutions. 
+ Concentrations of Credit Risk—Financial instruments that potentially subject the Company to concentration of credit risk consist primarily of cash and cash equivalents and accounts receivable. The Company places its cash and cash equivalents with major financial institutions, which management assesses to be of high credit quality, in order to limit the exposure of each investment.
+
+Credit risk with respect to accounts receivable is dispersed due to the Company's large number of customers. In addition, the Company's credit risk is mitigated by the relatively short collection period. Collateral is not required for accounts receivable. The Company maintains an allowance for doubtful accounts receivable balances. The allowance is based upon historical loss patterns, the number of days that billings are past due and an evaluation of the potential risk of loss associated with delinquent accounts. When new information becomes available to indicate that the estimate provided as the allowance was incorrect, an adjustment, which is considered a change in the estimate, is made. The fair value of accounts receivable approximates their carrying value. 
+ The following table presents the changes in the allowance for doubtful accounts: 
+  
+                                       2016           2015    
+--------------------------------------------------------------
+Allowance for doubtful accounts:                              
+Balance, beginning                      $26,523             $-
+of period                                                     
+Add: bad debt                            72,256         26,523
+expense                                                       
+Less: write-offs,                             -              -
+net of recoveries                                             
+Balance, end of period                  $98,779        $26,523
+ Property and Equipment —Property and equipment are stated at cost less accumulated depreciation and amortization. Depreciation is computed using the straight-line method over the estimated useful lives of the assets, which are approximately three to five years. 
+ Application Development Costs - The Company capitalizes its costs associated with application development and internal-use software. The Company capitalizes these costs when preliminary development efforts are successfully completed, management has authorized and committed project funding and it is probable that the project will be completed and the software will be used as intended. Such costs are amortized on a straight-line basis over the estimated useful life of the related asset, which is generally three years. Costs incurred prior to meeting these criteria, together with costs incurred for training and maintenance, are expensed as incurred. Costs incurred for enhancements that are expected to result in additional material functionality are capitalized and amortized over the estimated useful life of the upgrades.
+ The Company capitalized $258,740 and $0 in application development and internal-use software costs during the years ended December 31, 2016 and 2015, respectively, which are included in Capitalized development costs, net on the consolidated balance sheet. Amortization expense related to website and internal-use software was $36,391 and $0 for the years ended December 31, 2016 and 2015, respectively.
+ Future amortization expense: 
+  
+  Year Ending December     Application
+          31,                 Costs   
+--------------------------------------
+                    2017       $73,513
+                    2018        95,129
+                    2019        50,353
+                    2020        39,745
+       Total Application      $258,740
+Development Amortization              
+ Impairment of Long-Lived Assets and Long-Lived Assets to Be Disposed of—The Company evaluates its long-lived assets for impairment whenever events or changes in circumstances indicate that the carrying amount of such assets may not be recoverable. Recoverability of assets to be held and used is measured by a comparison of the carrying amount of an asset to future undiscounted net cash flows expected to be generated by the asset. If such assets are considered to be impaired, the impairment to be recognized is measured as the amount by which the carrying amount of the assets exceeds the fair value of the assets. Assets to be disposed of are reported at the lower of the carrying amount or fair value less costs to sell.
+ Revenue Recognition—The Company generates revenue from its application subscription and associated transactions. The Company recognizes revenue when all of the following conditions are met: there is persuasive evidence of an arrangement, service has been provided to the customer, collection of the fees is reasonably assured and the amount of fees to be paid by the customer are fixed or determinable. Payments received in advance of services being rendered are recorded as deferred revenue and recognized over the requisite service period.
+ Application Subscription. The Company sells as a subscription service with contracts typically lasting between 3 – 36 month periods. Revenue from subscription services is recognized monthly over the life of the contract. 
+ Associated Transactions. To utilize the Turnstyle platform, clients need to have compatible hardware. When clients do not have compatible hardware, the Company sells an applicable wireless access point to the vendor. Revenue from the sale of such hardware is recognized as at the commencement date of the contract.
+
+The Company allocates arrangement consideration in multiple-deliverable arrangements at the inception of the arrangement to all deliverables or those packages in which all components of the package are delivered at the same time, based on the relative selling price method in accordance with the selling price hierarchy, which includes: (1) vendor-specific objective evidence ("VSOE") if available; (2) third-party evidence ("TPE") if VSOE is not available; and (3) best estimate of selling price ("BESP") if neither VSOE nor TPE is available. 
+ VSOE—The Company determines VSOE based on its historical pricing and discounting practices for the specific product or service when sold separately. In determining VSOE, the Company requires that a substantial majority of the standalone selling prices for these services fall within a reasonably narrow price range; however, the Company has not historically sold a large volume of transactions on a standalone basis. As a result, the Company has not been able to establish VSOE for any of its advertising products. 
+ TPE—When VSOE cannot be established for deliverables in multiple element arrangements, the Company applies judgment with respect to whether it can establish a selling price based on TPE. TPE is determined based on competitor prices for similar deliverables when sold separately. Generally, the Company's go-to-market strategy differs from that of its peers and its offerings contain a significant level of differentiation such that the comparable pricing of services cannot be obtained. Furthermore, the Company is unable to reliably determine what similar competitor services' selling prices are on a standalone basis. As a result, the Company has not been able to establish selling price based on TPE. 
+ BESP—When it is unable to establish selling price using VSOE or TPE, the Company uses BESP in its allocation of arrangement consideration. The objective of BESP is to determine the price at which the Company would transact a sale if the service were sold on a standalone basis. BESP is generally used to allocate the selling price to deliverables in the Company's multiple element arrangements. The Company determines BESP for deliverables by considering multiple factors including, but not limited to, prices it charges for similar offerings, market conditions, competitive landscape and pricing practices. The Company limits the amount of allocable arrangement consideration to amounts that are fixed or determinable and that are not contingent on future performance or future deliverables. The Company will regularly review BESP. Changes in assumptions or judgments or changes to elements in the arrangement could cause a material increase or decrease in the amount of revenue that the Company reports in a particular period. 
+ Company's cost of revenue primarily consists of web hosting, internet service costs and other costs associated with the day to day maintenance of the Company Application. 
+ Stock-Based Compensation—The Company accounts for stock-based employee compensation plans under the fair value recognition and measurement provisions in accordance with applicable accounting standards, which require all stock-based payments to employees, including grants of stock options, to be measured based on the grant-date fair value of the awards.
+ Stock-based compensation expense is recorded net of estimated forfeitures in the Company's consolidated statements of income and, accordingly, is recorded for only those stock-based awards that the Company expects to vest. The Company estimates the forfeiture rate based on historical forfeitures of equity awards and adjusts the rate to reflect changes in facts and circumstances, if any. The Company will revise its estimated forfeiture rate if actual forfeitures differ from its initial estimates. 
+ Promotional Expenses—Promotional expenses are expensed as incurred. Total promotional expenses incurred were $149,409 and $60,696 for the years ended December 31, 2016 and 2015, respectively. 
+ Comprehensive Income (Loss)—The Company reports by major components and, as a single total, the change in its net assets during the period from non-owner sources. Comprehensive income (loss) consists of net income (loss) and accumulated other comprehensive income (loss), which includes certain changes in equity that are excluded from net income (loss). Specifically, it includes foreign currency translation adjustments.
+ Income Taxes—The Company records income taxes using the asset and liability method, which requires the recognition of deferred tax assets and liabilities for the expected future tax consequences of events that have been recognized in the Company's financial statements or tax returns. In estimating future tax consequences, generally all expected future events other than enactments or changes in the tax law or rates are considered. 
+ The Company provides for tax contingencies whenever it is deemed probable that a tax asset has been impaired or a tax liability has been incurred for events such as tax claims or changes in tax laws. Tax contingencies are based upon their technical merits, relative tax law and the specific facts and circumstances as of each reporting period. Changes in facts and circumstances could result in material changes to the amounts recorded for such tax contingencies. 
+ The Company recognizes a tax benefit from an uncertain tax position only if it is more likely than not that the tax position will be sustained on examination by the taxing authorities based on the technical merits of the position. The tax benefits recognized in the financial statements from such a position are then measured based on the largest benefit that has a greater than 50% likelihood of being realized upon ultimate settlement. 
+
+Recent Accounting Pronouncements Not Yet Effective—In May 2014, FASB issued Accounting Standards Update No. 2014-09, "Revenue from Contracts with Customers" ("ASU 2014-09"), which amended the existing accounting standards for revenue recognition. ASU 2014-09 establishes principles for recognizing revenue upon the transfer of promised goods or services to customers, in an amount that reflects the consideration expected to be received in exchange for those goods or services. The new standard requires that reporting companies disclose the nature, amount, timing and uncertainty of revenue and cash flows arising from contracts with customers. On July 9, 2015, FASB agreed to delay the effective date by one year and, accordingly, the new standard is effective for the Company beginning in the first quarter of 2018. Early adoption is permitted, but not before the original effective date of the standard. The new standard is required to be applied retrospectively to each prior reporting period presented or retrospectively with the cumulative effect of initially applying it recognized at the date of initial application. The Company has not yet selected a transition method nor has it determined the impact of the new standard on its consolidated financial statements.
+ In August 2014, FASB issued Accounting Standards Update No. 2014-15, "Presentation of Financial Statements — Going Concern (Subtopic 205-40)." The new guidance addresses management's responsibility to evaluate whether there is substantial doubt about an entity's ability to continue as a going concern and to provide related footnote disclosures. Management's evaluation should be based on relevant conditions and events that are known and reasonably knowable at the date that the financial statements are issued. The standard will be effective for the first interim period within annual reporting periods beginning after December 31, 2016. Early adoption is permitted. The Company adoption of the standard did not have a material impact on the Company’s consolidated financial statements. 
+ In April 2015, FASB issued Accounting Standards Update No. 2015-05, "Customer's Accounting for Fees Paid in a Cloud Computing Arrangement" ("ASU 2015-05"). ASU 2015-05 provides guidance to customers about whether a cloud computing arrangement includes a software license. If a cloud computing arrangement includes a software license, then the customer should account for the software license element of the arrangement consistent with the acquisition of other software licenses. If a cloud computing arrangement does not include a software license, the customer should account for the arrangement as a service contract. The guidance did not change GAAP for customer's accounting for service contracts. The standard was effective for the first interim period within annual reporting periods beginning after December 31, 2015. The adoption of the standard did not have a material impact on the Company’s consolidated financial statements. 
+ In June 2015, FASB issued Accounting Standards Update No. 2015-10, "Technical Corrections and Improvements" ("ASU 201510"). ASU 2015-10 amends a wide range of Accounting Standards Codification topics to make clarifying changes, correct unintended application of guidance and make minor changes that are not expected to have a significant effect on current accounting practice or create a significant administrative cost on most entities. The Company does not anticipate that the adoption of ASU 2015-10 will have a material impact on its consolidated financial statements and related disclosures. 
+ In May 2017, FASB issued Accounting Standards Update No. 2017-09, Compensation—Stock Compensation (Topic 718) ("ASU 201709"). ASU 2017-09 provides clarity in order to reduce both (1) diversity in practice and (2) cost and complexity when applying the guidance in Topic 718, Compensation—Stock Compensation, to a change to the terms or conditions of a share-based payment award. An entity may change the terms or conditions of a share-based payment award for many different reasons and effect of change can vary significantly. ASU 2017-09 reduces this complexity. The Company does not anticipate that the adoption of ASU 2017-09 will have a material impact on its consolidated financial statements and related disclosures. 
+ In November 2016, FASB issued Accounting Standards Update No. 2016-18, " Restricted Cash a consensus of the FASB Emerging Issues Task Force" ("ASU 201618"). ASU 2016-18 recognizes the diversity in the classification and presentation of changes in restricted cash on the statement of cash flows under Topic 230, Statement of Cash Flows. Entities classify transfers between cash and restricted cash as operating, investing, or financing activities, or as a combination of those activities, in the statement of cash flows. Also, some entities present direct cash receipts into, and direct cash payments made from, a bank account that holds restricted cash as cash inflows and cash outflows, while others disclose those cash flows as noncash investing or financing activities. The Company does not anticipate that the adoption of ASU 2016-18 will have a material impact on its consolidated financial statements and related disclosures. 
+ In November 2016, FASB issued Accounting Standards Update No. 2016-17, " Interests Held through Related Parties That Are under Common Control " ("ASU 201617"). ASU 2016-17 amends the consolidation guidance on how a reporting entity that is the single decision maker of a VIE should treat indirect interests in the entity held through related parties that are under common control with the reporting entity when determining whether it is the primary beneficiary of that VIE under ASU 2015-02. The primary beneficiary of a VIE is the reporting entity that has a controlling financial interest in a VIE and, therefore, consolidates the VIE. A reporting entity has an indirect interest in a VIE if it has a direct interest in a related party that, in turn, has a direct interest in the VIE. The Company does not anticipate that the adoption of ASU 2016-17 will have a material impact on its consolidated financial statements and related disclosures. 
+ In November 2016, FASB issued Accounting Standards Update No. 2016-15, " Classification of Certain Cash Receipts and Cash Payments " ("ASU 201615"). ASU 2016-15 provides various updates to recognize the diversity in practice in how certain cash receipts and cash payments are presented and classified in the statement of cash flows under Topic 230, Statement of Cash Flows, and other Topics. This Update addresses eight specific cash flow issues with the objective of reducing the existing diversity in practice.. The Company does not anticipate that the adoption of ASU 2016-15 will have a material impact on its consolidated financial statements and related disclosures. 
+ In March 2016, FASB issued Accounting Standards Update No. 2016-09, Compensation—Stock Compensation (Topic 718)("ASU 201609"). ASU 2016-09 was issued as a simplification initiative. The objective of the simplification initiative is to identify, evaluate, and improve areas of generally accepted accounting principles (GAAP) for which cost and complexity can be reduced while maintaining or improving the usefulness of the information provided to users of financial statements. The areas for simplification in this Update were identified through outreach for the Simplification Initiative, pre-agenda research for the Private Company Council, and the August 2014 Post-Implementation Review Report on FASB Statement No. 123(R), Share-Based Payment. The Company does not anticipate that the adoption of ASU 2017-09 will have a material impact on its consolidated financial statements and related disclosures. 
+
+In February 2016, FASB issued Accounting Standards Update No. 2016-02, “Leases (Topic 842)" ("ASU 201602"). ASU 2016-02 was issued to increase transparency and comparability among organizations by recognizing lease assets and lease liabilities on the balance sheet and disclosing key information about leasing arrangements. To meet that objective, the FASB is amending the FASB Accounting Standards Codification® and creating Topic 842, Leases. This Update, along with IFRS 16, Leases, are the results of the FASB’s and the International Accounting Standards Board’s (IASB’s) efforts to meet that objective and improve financial reporting. The Company does not anticipate that the adoption of ASU 2016-02 will have a material impact on its consolidated financial statements and related disclosures. 
+ In January 2016, FASB issued Accounting Standards Update No. 2016-01, “Financial Instruments—Overall (Subtopic 825-10)" ("ASU 201601"). The amendments in ASU 2016-01 make targeted improvements to generally accepted accounting principles (GAAP). The Company does not anticipate that the adoption of ASU 2016-01 will have a material impact on its consolidated financial statements and related disclosures. 
+ 3. CASH AND CASH EQUIVALENTS 
+ Cash and cash equivalents as of December 31, 2016 and 2015 consists entirely of cash and $nil cash equivalents. 
+ 4. PROPERTY AND EQUIPMENT, NET 
+ Property and equipment, net as of December 31, 2016 and 2015 consist of the following: 
+  
+                                             December 31,        December 31,
+-----------------------------------------------------------------------------
+                                        2016                2015             
+Computer equipment                                $24,951             $19,393
+Furniture and fixtures                              4,548               1,038
+Leasehold improvements                              3,939               3,939
+Total                                              33,438              24,370
+Less                                             (14,080)             (5,678)
+accumulated depreciation                                                     
+Property, equipment and software, net             $19,358             $18,692
+ Depreciation expense for the years ended December 31, 2016 and 2015 was $8,489 and $5,236, respectively. 
+ 5. PROMISSORY NOTES 
+ Promissory notes consist of the following: 
+ 
+                                                                                     Years ended December   
+                                                                                              31            
+------------------------------------------------------------------------------------------------------------
+                                                                             2016            2015           
+Current                                                                                                     
+Promissory Note - C$300,000; due                                                  $222,723            $-    
+on the earlier of demand by holder, receipt of the Company’s tax refund                                     
+for Scientific Research and Experimental Development (“SRED”) or February                                   
+28, 2017; bearing interest at 10%, compounded and paid monthly;                                             
+unsecured.                                                                                                  
+Long-term                                                                                                   
+Promissory Note - C$250,000; due                                                   185,603            -     
+two years from the date of issue being April 14, 2016; bearing interest at                                  
+10%, compounded and paid monthly; unsecured.                                                                
+Total Promissory                                                                  $408,326            $-    
+Notes                                                                                                       
+ Subsequent to year end both promissory notes were repaid in full. 
+
+6. CONVERTIBLE DEBENTURES 
+ SIL Enterprises Convertible Debentures 
+ The Company completed a non-brokered rights offering for convertible debentures with SIL Enterprises (note 8), in the aggregate principal amount of C$1,000,000 in January 2015. The convertible debentures accrue interest at 6% per annum, payable quarterly with the option to accrue until maturity, and are convertible into 10% of the total fully-diluted outstanding common shares of the Company at the option of the holder.
+ The Company completed a non-brokered rights offering for convertible debentures with SIL Enterprises (note 8), in the aggregate principal amount of $500,000 in November 2015. The convertible debentures accrue interest at 5% per annum, payable quarterly with the option to accrue until maturity, and are convertible at the holder’s option as determined based on a fully-diluted pre-money valuation cap of C$12,000,000. 
+ Management analyzed these debentures for embedded derivatives and concluded that the conversion features both would be considered derivative instruments. In further analyzing the instruments management determined that the conversion features in these two instruments have nominal value based on a relatively low probability of conversion at the date of issuance and at subsequent reporting periods when compared with the implied valuation of the Company in ongoing fundraising and considering expected growth rates. 
+ C$4M, C$12M and C$15M Convertible Debentures 
+ From September 18, 2013 to January 15, 2014, the Company entered into a number of non-brokered rights offerings for convertible debentures amounting to C$411,920. These debentures bore interest at 7% per annum, cumulative and payable at the maturity in two years from the respective dates of issue. The debentures were convertible upon a qualified financing of C$1M in equity, a non-qualified financing meaning any equity financing that is not a qualified financing, upon a qualified change in control or otherwise at maturity at a 15% discount to the price per share of the financing or the aggregate consideration received in a change of control. These debentures had a capped conversion price based on a fully-diluted pre-money valuation cap of $4,000,000 (the “C$4M Convertible Debentures”). 
+ From March 10, 2014 to March 5, 2015, the Company entered into a number of non-brokered rights offerings for convertible debentures amounting to C$1,022,000. These debentures bear interest at 5% per annum, cumulative and payable at the maturity in two years from the respective dates of issue. The debentures are convertible upon a qualified financing of C$2M in equity, a non-qualified financing meaning any equity financing that is not a qualified financing, upon a qualified change in control or otherwise at maturity at a 10% discount to the price per share of the financing or the aggregate consideration received in a change of control. These debentures have a capped conversion price based on a fully-diluted pre-money valuation cap of C$12,000,000 (the “C$12M Convertible Debentures”). 
+ From April 28, 2016 to December 22, 2016, the Company entered into a number of non-brokered rights offerings for convertible debentures amounting to C$980,825. These debentures bear interest at 5% per annum, cumulative and payable at the maturity in two years from the respective dates of issue. The debentures are convertible upon a qualified financing of C$3M in equity, a non-qualified financing meaning any equity financing that is not a qualified financing, upon a qualified change in control or otherwise at maturity at a 10-15% discount to the price per share of the financing or the aggregate consideration received in a change of control. These debentures have a capped conversion price based on a fully-diluted pre-money valuation cap of C$15,000,000 (the “C$15M Convertible Debentures”). 
+ During the year ended December 31, 2016, the Company repaid $38,656 (2015 - $50,054) of convertible debentures including accrued interest at maturity. During the year ended December 31, 2016, holders elected to convert $530,876 (2015 - $202,073) of debentures upon their maturity. 
+ As at December 31, 2016, $1,438,854 (2015 - $488,439) of debentures including interest were due within the following twelve months, subsequent to year end, C$481,000 debentures were converted and all remaining debentures and accrued interest were converted as a result of the subsequent transaction with Yelp Inc. 
+ During 2016, the Company issued convertible debentures in the amount of C$317,825 or $250,000 to 500 Startups IV, L.P., but only received cash of $200,000, with $50,000 being provided in promotion this non-cash expenditure is included in selling, general and administration expenses on the consolidated statement of operations. 
+
+7. COMMITMENTS AND CONTINGENCIES 
+ Office Facility Leases—The Company leases its office facilities under operating lease agreements that expire in July 2018. The Company recognizes rent expense as it is paid. Rental expense for 2016 and 2015 was $110,882 and $110,112 respectively.
+ The Company's minimum payments under non-cancelable operating leases for equipment and office space having initial terms in excess of one year were as follows as of December 31, 2016: 
+  
+Year Ending December 31,   Operating Leases
+-------------------------------------------
+2017                                130,239
+2018                                 75,973
+Total minimum lease                 206,212
+payments                                   
+ The Company has subleased certain office facilities under operating lease agreements that expire in 2018. The Company recognizes sublease rentals as a reduction in rental expense as it is paid.
+ Legal Proceedings—The Company is not subject to legal proceedings arising in the ordinary course of business.
+ Indemnification Agreements—In the ordinary course of business, the Company may provide indemnifications of varying scope and terms to customers, vendors, lessors, business partners and other parties with respect to certain matters, including, but not limited to, losses arising out of breach of such agreements, services to be provided by the Company or from intellectual property infringement claims made by third parties. In addition, the Company has entered into indemnification agreements with directors and certain officers and employees that will require the Company to, among other things, indemnify them against certain liabilities that may arise by reason of their status or service as directors, officers or employees.
+ While the outcome of claims cannot be predicted with certainty, the Company does not believe that the outcome of any claims under the indemnification arrangements will have a material effect on the Company's financial position, results of operations or cash flows. 
+ 8. RELATED PARTY TRANSACTIONS 
+ The Company had the following related party transactions during the twelve month periods ending December 31, 2016 and 2015: 
+ 
+●                             The Company completed                           
+        a non-brokered rights offering for convertible debentures, in the     
+    aggregate principal amount of $1,000,000 in January 2015 and for $500,000 
+    in November 2015 (see Note 6). SIL Enterprises is jointly controlled by a 
+           member of the Company’s Board of Directors, Donald G Jewell        
+                                     (“SIL”).                                 
+------------------------------------------------------------------------------
+●   The Company entered                                                       
+    into a debt agreement with SIL for the principal amount of $250,000 in    
+    August 2016. The debt accrues interest at 10% per annum, payable monthly, 
+    with a 2 year maturity. The amount remains outstanding in full as at      
+    December 31, 2016.                                                        
+●   The Company entered                                                       
+    into a debt agreement with SIL for the principal amount of $300,000 in    
+    November 2016 secured against the Company’s outstanding SRED refund owing 
+    for the period ended June 30, 2016. The amount remains outstanding in full
+    as at December 31, 2016.                                                  
+●   The Company received                                                      
+    an investment from David MacDonald, a Company board member, as part of a  
+    non-brokered rights offering. Mr MacDonald invested the principal amount  
+    of $50,000 in December 2015. The convertible debentures accrue interest at
+    5% per annum, payable quarterly with the option to accrue until maturity, 
+    and are convertible at a pre-money valuation cap of $15,000,000 CAD. The  
+    amount remains outstanding in full as at December 31,                     
+    2016.                                                                     
+
+9. STOCKHOLDERS’ EQUITY 
+ The following table presents the number of shares authorized and issued and outstanding as of the dates indicated: 
+  
+                                     31-Dec-16                          31-Dec-15            
+---------------------------------------------------------------------------------------------
+                                             Shares Issued                      Shares Issued
+                          Shares             and             Shares             and          
+                          Authorized         Outstanding     Authorized         Outstanding  
+Voting common stock       Unlimited          4,210,578       Unlimited          4,515,906    
+Non-Voting common stock   Unlimited          -               Unlimited          -            
+ Voting Common Stock, without nominal or par value, the holders of which are entitled: a. to vote at all meetings of shareholders except meetings at which only holders of a specified class of shares are entitled to vote; and b. to receive the remaining property of the Company upon dissolution; and c. to receive the dividends as and when declared by the board of directors of the Company. 
+ Non-Voting Common Stock share the same rights with the exception of voting. 
+ Common Stock Reserved for Future Issuance 
+ As of December 31, 2016, the Company had reserved shares of common stock for future issuances of either Voting or Non-Voting common stock, in connection with the following: 
+  
+       Options outstanding           2,068,752
+----------------------------------------------
+Total reserved for future issuance   2,068,752
+ Equity Incentive Plans 
+ The Company has outstanding awards under one equity incentive plan: the Amended and Restated 2013 Equity Incentive Plan (the "2013 Plan”). All outstanding stock awards under the 2013 Plan continue to be governed by their existing terms. Under the 2013 Plan, the Company has the ability to issue incentive stock options to employees, directors and consultants. 
+ Stock Options
+ Stock options granted under the 2013 Plan are granted at a price per share not less than the fair value at date of grant. Options granted to date generally vest over a four-year period with 25% vesting at the end of one year and the remaining shares vesting monthly thereafter. Options granted are generally exercisable for up to 10 years. 
+ A summary of stock option activity for the year ended December 31, 2016 is as follows: 
+ 
+                                                                                Weighted-Ave                        
+--------------------------------------------------------------------------------------------------------------------
+                                                                                    Remaining           Weighted-Ave
+                                       Number of          Weighted-Ave            Contractual        Grant Date Fair
+                                          Shares        Exercise Price        Term (in years)                  Value
+Outstanding - Dec 31, 2014               354,613                 $0.82                   7.14                  $1.02
+Granted                                1,005,995                  1.00                   8.99                   0.86
+Exercised                                      -                     -                      -                      -
+Canceled                                (61,630)                  1.00                      -                   1.09
+Outstanding - Dec 31, 2015             1,298,978                  0.96                   8.77                    0.9
+Granted                                  708,144                  1.82                   9.83                   0.71
+Exercised                               (12,115)                  1.00                      -                   1.15
+Canceled                                       -                     -                                             -
+Outstanding - Dec 31,                  1,995,007                 $1.20                   8.48                  $0.78
+2016                                                                                                                
+Options vested and expected to vest    1,995,097                 $1.20                   8.48                       
+as of Dec 31, 2016                                                                                                  
+Options vested and exercisable as of     788,654                  0.97                   7.76                       
+Dec 31, 2016                                                                                                        
+
+Stock-Based Compensation Expense 
+ The fair value of options granted to employees is estimated on the grant date using the Black-Scholes-Merton option valuation model. This valuation model for stock-based compensation expense requires the Company to make assumptions and judgments about the variables used in the calculation, including the expected term (weighted-average period of time that the options granted are expected to be outstanding), the volatility in the fair market value of the Company's common stock, a risk-free interest rate, expected dividends and the estimated forfeitures of unvested stock options. No compensation cost is recorded for options that do not vest. The Company uses the simplified calculation of expected life and volatility is based on an average of the historical volatilities of the common stock of several entities with characteristics similar to those of the Company. The risk-free rate is based on the U.S. Treasury yield curve in effect at the time of grant for periods corresponding with the expected life of the option. Expected forfeitures are based on the Company's historical experience. 
+ The Company uses the straight-line method for expense attribution. For the years ended December 31, 2016 and 2015, the weighted-average assumptions are as follows: 
+  
+                               Year Ended December   
+                                       31,           
+-----------------------------------------------------
+                               2016              2015
+Dividend yield                   0%                0%
+Annual risk-free rate         1.60%             1.84%
+Expected volatility            100%              100%
+Expected term (years)             5                 5
+ During the year ended December 31, 2016, the Company capitalized $6,820 (2015 - $nil) of stock-based compensation expense as Development costs. 
+ 10. INCOME TAXES
+ Reconciliation of the statutory tax rate of 26.5% and income tax benefits at those rates to the effective income tax rates and income tax benefits reported in the statement of operations and comprehensive loss is as follows: 
+  
+                                              2016                2015      
+----------------------------------------------------------------------------
+Net                                         $(1,194,733)        $(1,659,885)
+loss before recovery of income taxes                                        
+Statutory rate                                     26.5%               26.5%
+Expected income tax recovery                   (316,604)           (439,870)
+Other basis adjustment                                                      
+Non-deductible expenses                           86,651              68,907
+Change in valuation allowance                    229,953             370,963
+Recovery of income taxes                              $-                  $-
+ The components of deferred taxes are as follows: 
+  
+                                    2016             2015     
+--------------------------------------------------------------
+Deferred Tax Assets                                           
+Net                                 $ 583,820         $356,880
+operating loss carryforwards                                  
+SR&amp;ED pool                         92,500           96,510
+Other                                  10,670            1,680
+Inducement 12(1)(x)                   (5,160)          (3,190)
+Valuation allowance                 (681,830)        (451,880)
+                                           $-               $-
+ A valuation allowance has been recorded against net deferred tax assets as it is not more likely than not that future income will be realized against which the net deferred tax assets can be recognized. 
+
+The Company's net operating loss carryforwards expire as follows: 
+ 
+2033    $16,530  
+-----------------
+2034      157,540
+2035      597,140
+2036      996,430
+2037      435,640
+       $2,203,280
+ 11. SUBSEQUENT EVENTS THROUGH TO JUNE 3, 2017 
+ Goods and Services Tax Audit—In March 2017, the CRA began a Goods and Services tax audit of the Company for 2015. The Company has assessed the estimated range of such loss and as of December 31, 2016, a liability of $0 has been recorded. The Company expects the audits and any related assessments to be finalized by December 31, 2017. 
+ In December 2016, the Company received a non-binding Letter of Intent from Yelp Inc. to acquire 100% of the outstanding shares of the Company for total proceeds of $20,600,000. After extensive deliberation of the proposal, the Board and Management agreed to pursue this opportunity and begin the diligence process. With negotiations and diligence items completed, the Company signed a final Share Purchase Agreement dated April 3, 2017 with all outstanding debentures, company stock options and debt obligations converted, exercised and/or retired in full as of this date.
+ Subsequent to year end, the Company issued 1,537,600 common shares related to the conversion of debentures, the remainder of which converted with the closing of the Yelp transaction. 
+ The Company also received proceeds of C$38,308 on the exercise of 38,308 options at $1 exercise price. 
+ The Company repaid $550,000 in promissory notes to SIL Enterprises. 
+

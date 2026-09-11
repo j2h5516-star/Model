@@ -1,0 +1,634 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — NTAP 2024-05-30
+# 출처: https://www.sec.gov/Archives/edgar/data/1002047/000095017024066567/ntap-20240530.htm
+
+EX-99.1
+
+ 
+Exhibit 99.1
+ NetApp Reports Fourth Quarter and Fiscal Year 2024 Results
+ Net revenues of $1.67 billion for the fourth quarter;
+Net revenues of $6.27 billion for fiscal year 2024
+ 
+•Record all-flash array annualized revenue run rate1 of $3.6 billion, an increase of 17% year-over-year
+ •Record fiscal year GAAP consolidated gross margins of 71%; record non-GAAP consolidated gross margins2 of 72%
+ •Fiscal year GAAP operating margins of 19%; record non-GAAP operating margins2 of 27%
+ •Fiscal year GAAP net income per share3 of $4.63; record non-GAAP net income per share2 of $6.46
+ •NetApp announced an increase in its quarterly dividend to $0.52 cents per share and a new share repurchase authorization of an additional $1 billion 
+ 
+SAN JOSE, Calif.—May 30, 2024—NetApp (NASDAQ: NTAP), the intelligent data infrastructure company, today reported financial results for the fourth quarter and fiscal year 2024, which ended on April 26, 2024.
+ 
+“We concluded fiscal year 2024 on a high note, delivering company records for annual gross margin, operating margin, EPS, operating cash flow, and free cash flow and building positive momentum. Our modern approach to unified data storage, spanning data types, price points, and hybrid multi-cloud environments, is clearly resonating in the market,” said George Kurian, chief executive officer. “In fiscal year 2025, we will remain laser focused on our top priorities of driving growth in all-flash and cloud storage services while maintaining our operational discipline.”
+ 
+Fourth quarter of fiscal year 2024 financial results
+ 
+•Net revenues: $1.67 billion, compared to $1.58 billion in the fourth quarter of fiscal year 2023; a year-over-year increase of 6%.
+ oHybrid Cloud segment revenue: $1.52 billion, compared to $1.43 billion in the fourth quarter of fiscal year 2023.
+ oPublic Cloud segment revenue: $152 million, compared to $151 million in the fourth quarter of fiscal year 2023.
+ •Billings2: $1.81 billion, compared to $1.67 billion in the fourth quarter of fiscal year 2023; a year-over-year increase of 8%. 
+ •NetApp Public Cloud annualized revenue run rate (ARR)4: $630 million, compared to $620 million in the fourth quarter of fiscal year 2023; a year-over-year increase of 2%.
+ •All-flash array ARR: $3.6 billion, compared to $3.1 billion in the fourth quarter of fiscal year 2023; a year-over-year increase of 17%.
+ •Net income: GAAP net income of $291 million, compared to $245 million in the fourth quarter of fiscal year 2023; non-GAAP net income2 of $382 million, compared to $334 million in the fourth quarter of fiscal year 2023. 
+ 
+
+•Earnings per share: GAAP net income per share of $1.37 compared to $1.13 in the fourth quarter of fiscal year 2023; non-GAAP net income per share of $1.80 compared to $1.54 in the fourth quarter of fiscal year 2023. 
+ •Cash, cash equivalents and investments: $3.25 billion at the end of the fourth quarter of fiscal year 2024.
+ •Cash provided by operations: $613 million, compared to $235 million in the fourth quarter of fiscal year 2023.
+ •Share repurchases and dividends: Returned $204 million to stockholders through share repurchases and cash dividends.
+ 
+Fiscal year 2024 financial highlights
+ 
+•Net revenues: $6.27 billion, compared to $6.36 billion in fiscal year 2023; a year-over-year decrease of 1%.
+ oHybrid Cloud segment revenue: $5.66 billion, compared to $5.79 billion in fiscal year 2023.
+ oPublic Cloud segment revenue: $611 million, compared to $575 million in fiscal year 2023.
+ •Billings: $6.25 billion, compared to $6.41 billion in fiscal year 2023; a year-over-year decrease of 2%.
+ •Net income: GAAP net income of $986 million, compared to $1.27 billion in fiscal year 2023; non-GAAP net income of $1.38 billion, compared to $1.23 billion in fiscal year 2023.
+ •Earnings per share: GAAP net income per share of $4.63 compared to $5.79 in fiscal year 2023; non-GAAP net income per share of $6.46 compared to $5.59 in fiscal year 2023. 
+ •Cash provided by operations: $1.69 billion compared to $1.11 billion in fiscal year 2023.
+ •Share repurchases and dividends: Returned $1.32 billion to shareholders through share repurchases and cash dividends.
+ 
+First quarter of fiscal year 2025 financial outlook
+ 
+The Company provided the following financial guidance for the first quarter of fiscal year 2025:
+ 
+Net revenues are expected to be in the range of:          $1.455 billion - $1.605 billion
+                                                                   GAAP          Non-GAAP
+Earnings per share is expected to be in the range of:     $0.98 - $1.08     $1.40 - $1.50
+ 
+Full fiscal year 2025 financial outlook
+ 
+The Company provided the following financial guidance for the full fiscal year 2025:
+ 
+Net revenues are expected to be in the range of:                   $6.450 billion – $6.650 billion
+                                                                            GAAP          Non-GAAP
+Consolidated gross margins are expected to be in the range of:         70% - 71%         71% - 72%
+Operating margins are expected to be in the range of:                  20% - 21%         27% - 28%
+Earnings per share is expected to be in the range of:              $4.96 - $5.16     $6.80 - $7.00
+ 
+
+
+Dividend
+ 
+The next cash dividend of $0.52 per share is to be paid on July 24, 2024, to stockholders of record as of the close of business on July 5, 2024.
+ 
+Fourth quarter of fiscal year 2024 business highlights
+
+Leading Product Innovation 
+
+•NetApp™ AIPod™, powered by NVIDIA DGX, is now a certified NVIDIA DGX BasePOD solution. It uses NVIDIA DGX H100 systems integrated with NetApp AFF C-Series affordable capacity flash systems to drive a new level of cost/performance, while optimizing rack space and sustainability. 
+ •New FlexPod™ for AI reference architectures support the NVIDIA AI Enterprise software platform, extending the leading converged infrastructure solution from NetApp and Cisco. 
+ •NetApp announced validation for NVIDIA OVX computing systems to help streamline enterprise AI deployments, including model fine-tuning and inference workloads.
+ •NetApp announced the technology preview of ONTAP™ Autonomous Ransomware Protection with Artificial Intelligence (ARP/AI), the next generation of real-time enterprise storage ransomware protection, providing the increased accuracy and performance required to detect and mitigate new, more sophisticated cyber threats. 
+ •NetApp BlueXP™ Ransomware Protection provides a single control plane to intelligently coordinate and execute an end-to-end, workload-centric ransomware defense. 
+ •NetApp BlueXP Disaster Recovery offers seamless integration with VMware infrastructure and provides storage options for both on-premises and major public cloud environments. 
+ •NetApp Keystone™ Ransomware Recovery Guarantee extends NetApp’s current Ransomware Recovery Guarantee to our leading storage-as-a-service offering, NetApp Keystone.
+ •NetApp released NetApp SnapCenter™ 5.0, which includes support for key ONTAP features like tamperproof Snapshot™ copy locking, SnapLock™ protected volumes, and SnapMirror™ Business Continuity to enable more robust data protection for applications and virtual machines.
+ •NetApp introduced Application-Aware Ransomware Protection through NetApp SnapCenter™ 5.0, providing immutable ransomware protection for applications. 
+ •NetApp StorageGRID™ 11.8 software is built to elevate the user experience, enhance security, and streamline simplicity in the NetApp object storage solution.
+ •Upcoming enhancements were announced for NetApp Astra™ Control data protection and disaster recovery service for Kubernetes, which improves system extensibility, streamlines management across clusters, and delivers advanced data services. 
+ •Spot by NetApp announced a new Accelerated Scale Down feature to help generate greater efficiencies and cost savings.
+ 
+Customer and Partner Momentum 
+
+
+•NetApp and Aston Martin renewed their partnership, empowering Aston Martin Aramco Formula One Team to use NetApp’s storage technology to instantly store, manage, and access the immense amounts of data needed to optimize the team’s performance.
+ •NetApp partner Spectra Logic announced that it has validated its On-Prem Glacier solutions for deployment in NetApp StorageGRID™ object-based storage environments.
+ •NetApp and IBM worked together to certify FSx for ONTAP as part of a solution on which to run IBM MQ.
+ •AWS announced that Amazon FSx for NetApp ONTAP increased the maximum throughput capacity per file system by 2x, allowing customers to leverage ONTAP data management features for an even broader set of performance-intensive workloads.
+ •NetApp collaborated with NVIDIA to advance retrieval-augmented generation for GenAI applications, connecting NVIDIA NeMo Retriever microservices to NetApp ONTAP.
+ •DreamWorks used data management capabilities and solutions from NetApp for the Kung Fu Panda 4 movie.
+ •NetApp partner HCLTech launched an electronic design automation (EDA) solution in partnership with NetApp, to accelerate large EDA implementations in the hybrid cloud. 
+ •NetApp and Google Cloud announced a new service level for Google Cloud NetApp Volumes called Flex that gives customers more granular control to adapt their storage and performance to match the exact needs of their cloud workloads. 
+ •NetApp released a preview of its GenAI toolkit reference architecture for Vertex AI with support for Google Cloud NetApp Volumes, giving customers greater ability to generate unique, high-quality, and ultra-relevant insights and automations. 
+ •AWS named NetApp a Manufacturing and Industrial ISV Competency Partner in its Engineering and Design Category.
+ 
+Corporate News and Events 
+
+•NetApp and YouGov research surveyed over 1,000 IT decision makers on how planning and foundations for AI are at a critical moment for UK businesses.
+•NetApp released its second annual Cloud Complexity Report, which explores how technology decision makers around the globe are navigating and deploying AI at scale.
+  
+Awards and Recognition 
+
+•NetApp received the 2024 Google Cloud Technology Partner of the Year Award in the Infrastructure – Storage category for Google Cloud NetApp Volumes for the second year in a row. 
+ •As a part of CRN’s 2024 Storage 100 Awards, NetApp was listed as one of the top 50 vendors bringing software capabilities, services, and cloud connectivity to storage technology.
+ •NetApp was named a leading big data systems and cloud platform vendor in CRN’s 2024 Big Data 100 Awards. 
+ •CRN named NetApp a top 25 company leading the AI revolution in data centers, edge computing, and laptops as part of its AI 100 Awards.
+ •NetApp was named one of the top data center companies of 2024 in CRN’s Data Center 50 Awards.
+ 
+
+•NetApp received five stars in CRN’s 2024 Partner Program Guide due to the comprehensive incentives, resources, services, and benefits of NetApp Partner Sphere.
+•Frost & Sullivan named NetApp the 2024 Company of the Year for hybrid cloud storage management.
+•NetApp was named a Leader and Outperformer in GigaOm’s 2024 Radar report for Primary Storage for large and midsized enterprises. 
+ •NetApp was named a Leader and Outperformer in GigaOm’s 2024 Radar report for Unstructured Data Management for the third year in a row. 
+ •NetApp was named a Leader and Outperformer in GigaOm’s 2024 Radar report for Cloud FinOps.
+•Spot Ocean by NetApp was recognized as the sole Leader and Outperformer in GigaOm’s 2024 Radar report for Kubernetes Resource Management in the Maturity and Platform Play section.
+ •Jenni Flinders, SVP, Worldwide Partner Group at NetApp, was named one of the 50 Most Influential Channel Leaders as a part of CRN’s 2024 Channel Chief Awards.
+•Mignona Cote, SVP & CSO at NetApp, was named the Global Winner for the 2024 DallasCISO ORBIE Awards for organizations with over $3.5 billion annual revenue and multinational operations. 
+ 
+Executive Leadership Announcements 
+
+•NetApp appointed Pravjit Tiwana as GM and SVP of Cloud Storage.
+ •NetApp appointed Alessandra Yockelson as EVP, Chief Human Resources Officer.
+ 
+
+Webcast and Conference Call Information
+ 
+NetApp will host a conference call to discuss these results today at 2:30 p.m. Pacific Time. To access the live webcast of this event, go to the NetApp Investor Relations website at investors.netapp.com. In addition, this press release, historical supplemental data tables, and other information related to the call will be posted on the Investor Relations website. An audio replay will be available on the website after 4:30 p.m. Pacific Time today.
+ 
+“Safe Harbor” Statement Under U.S. Private Securities Litigation Reform Act of 1995
+ 
+This press release contains forward-looking statements within the meaning of the Private Securities Litigation Reform Act of 1995. These statements include, but are not limited to, all of the statements made in the First Quarter of Fiscal Year 2025 Financial Outlook section and the Full Fiscal Year 2025 Financial Outlook section, and statements about our business, economic and market outlook, financial guidance, our overall future prospects, our modern approach to unified data storage, such approach’s resonance with customers, and our ability to address new market opportunities, extend our leadership position in existing markets, and deliver increasing value for our stakeholders. Actual results may differ materially from these statements for a variety of reasons, including, without limitation, our ability to keep pace with the rapid industry, technological and market
+
+
+trends and changes in the markets in which we operate; our ability to execute our evolved cloud strategy and introduce and gain market acceptance for our products and services; our ability to maintain our customer, partner, supplier and contract manufacturer relationships on favorable terms and conditions; global political, macroeconomic and market conditions, including inflation, rising interest rates, monetary policy shifts, recession risks, and foreign exchange volatility and the resulting impact on demand for our products; the impact of new or ongoing geopolitical conflicts and sanctions; adoption or changes to laws, regulations standards or policies affecting our operations, products, services, the storage industry, or AI usage; material cybersecurity and other security breaches; the impact of supply chain disruptions on our business operations, financial performance and results of operations; changes in U.S. government spending; changes in overall technology spending by our customers; revenue seasonality; changes in laws or regulations, including those relating to privacy, data protection and information security; the timing of orders and their fulfilment; and our ability to manage our gross profit margins, including managing component costs. These and other equally important factors are described in reports and documents we file from time to time with the Securities and Exchange Commission, including the factors described under the sections titled “Risk Factors” in our most recently submitted annual report on Form 10-K and quarterly report on Form 10-Q. We disclaim any obligation to update information contained in this press release whether as a result of new information, future events, or otherwise.
+ 
+###
+ 
+NetApp, the NetApp logo, and the marks listed at http://www.netapp.com/TM are trademarks of NetApp, Inc. All other marks are the property of their respective owners.
+ 
+
+Footnotes
+ 
+1All-flash array annualized net revenue run rate is determined by products and services revenue for the current quarter, multiplied by 4.
+ 2Refer to “NetApp Usage of Non-GAAP Financial Information” section below for explanations of consolidated non-GAAP gross margins, non-GAAP operating margins, non-GAAP net income, non-GAAP net income per share, free cash flow, and billings.
+ 3GAAP net income per share and non-GAAP net income per share are calculated using the diluted number of shares.
+4Public Cloud annualized revenue run rate (ARR) is calculated as the annualized value of all Public Cloud customer commitments with the assumption that any commitment expiring during the next 12 months will be renewed with its existing terms.
+ 
+
+
+NetApp Usage of Non-GAAP Financial Information
+
+To supplement NetApp’s condensed consolidated financial statement information presented in accordance with generally accepted accounting principles in the United States (GAAP), NetApp provides investors with certain non-GAAP measures, including, but not limited to, historical non-GAAP gross margins, non-GAAP operating margins, non-GAAP operating results, non-GAAP net income, non-GAAP effective tax rate, free cash flow, billings, and historical and projected non-GAAP earnings per diluted share. NetApp also presents the hardware and software components of our GAAP product revenues. Because our revenue recognition policy under GAAP defines a configured storage system, inclusive of the operating system software essential to its functionality, as a single performance obligation, hardware and software components of our product revenues are considered non-GAAP measures. The hardware and software components of our product revenues are derived from an estimated fair value allocation of the transaction price of our contracts with customers, down to the level of the product hardware and software components. This allocation is primarily based on the contractual prices at which NetApp has historically billed customers for such respective components.
+
+NetApp believes that the presentation of its non-GAAP measures, when shown in conjunction with the corresponding GAAP measures, provides useful information to investors and management regarding financial and business trends relating to its financial condition and results of operations. NetApp’s management uses non-GAAP measures in making operating decisions because it believes that the measurements provide meaningful supplemental information regarding NetApp’s ongoing operational performance.
+
+NetApp believes that the presentation of non-GAAP gross margins, non-GAAP operating margin, non-GAAP effective tax rate, non-GAAP net income, and non-GAAP earnings per share data, provides investors with supplemental metrics that assist in understanding current results and future prospects, earnings and profitability that are complementary to GAAP metrics. Each of these Non-GAAP metrics is defined as the applicable GAAP metric adjusted to exclude the items defined in A through I below, as applicable, while our Non-GAAP effective tax rate and Non-GAAP net income also reflect a non-GAAP tax provision, as described in item J below, instead of our GAAP tax provision. Non-GAAP net income per share is computed as Non-GAAP net income divided by the diluted number of shares for the applicable period.
+ 
+NetApp believes that the presentation of free cash flow, which it defines as the net cash provided by operating activities less cash used to acquire property and equipment, to be a liquidity measure that provides useful information to management and investors because it reflects cash that can be used to, among other things, invest in its business, make strategic acquisitions, repurchase common stock, and pay dividends on its common stock. As free cash flow is not a measure of liquidity calculated in accordance with GAAP, free cash
+
+
+flow should be considered in addition to, but not as a substitute for, the analysis provided in the statement of cash flows.
+
+NetApp believes that the presentation of the software and hardware components of our product revenues is meaningful to investors and management as it illustrates the significance of the Company’s software and provides improved visibility into the value created by our software innovation and R&D investment.
+ 
+NetApp approximates billings by adding net revenues as reported on our Condensed Consolidated Statements of Operations for the period to the change in total deferred revenue and financed unearned services revenue as reported on our Condensed Consolidated Statements of Cash Flows for the same period. Billings is a performance measure that NetApp believes provides useful information to management and investors because it approximates the amounts under purchase orders received by us during a given period that have been billed.
+
+Non-GAAP financial measures are used to: (1) measure company performance against historical results, (2) facilitate comparisons to our competitors’ operating results and (3) allow greater transparency with respect to information used by management in financial and operational decision making.
+
+NetApp excludes the following items from its non-GAAP measures when applicable:
+ 
+A. Amortization of intangible assets. NetApp records amortization of intangible assets that were acquired in connection with its business combinations. The amortization of intangible assets varies depending on the level of acquisition activity. Management finds it useful to exclude these charges to assess the appropriate level of various operating expenses to assist in budgeting, planning and forecasting future periods and in measuring operational performance.
+ 
+B. Stock-based compensation expenses. NetApp excludes stock-based compensation expenses from its non-GAAP measures primarily because the amount can fluctuate based on variables unrelated to the performance of the underlying business. While management views stock-based compensation as a key element of our employee retention and long-term incentives, we do not view it as an expense to be used in evaluating operational performance in any given period.
+
+C. Litigation settlements. NetApp may periodically incur charges or benefits related to litigation settlements. NetApp excludes these charges and benefits, when significant, because it does not believe they are reflective of ongoing business and operating results.
+
+D. Acquisition-related expenses. NetApp excludes acquisition-related expenses, including (a) due diligence, legal and other one-time integration charges and (b) write down of assets acquired that NetApp does not
+
+
+intend to use in its ongoing business, from its non-GAAP measures, primarily because they are not related to our ongoing business or cost base and, therefore, are less useful for future planning and forecasting.
+ 
+E. Restructuring charges. These charges consist of restructuring charges that are incurred based on the particular facts and circumstances of restructuring decisions, including employment and contractual settlement terms, and other related charges, and can vary in size and frequency. We therefore exclude them in our assessment of operational performance.
+
+F. Asset impairments. These are non-cash charges to write down assets when there is an indication that the asset has become impaired. Management finds it useful to exclude these non-cash charges due to the unpredictability of these events in its assessment of operational performance.
+ 
+G. Gains/losses on the sale or derecognition of assets. These are gains/losses from the sale of our properties and other transactions in which we transfer control of assets to a third party. Management believes that these transactions do not reflect the results of our underlying, ongoing business and, therefore, are less useful for future planning and forecasting.
+
+H. Gains/losses on the sale of investments in equity securities. These are gains/losses from the sale of our investment in certain equity securities. Typically, such investments are sold as a result of a change in control of the underlying businesses. Management believes that these transactions do not reflect the results of our underlying, ongoing business and, therefore, are less useful for future planning and forecasting.
+ 
+I. Debt extinguishment costs. NetApp excludes certain non-recurring expenses incurred as a result of the early extinguishment of debt. Management believes such non-recurring costs do not reflect the results of its underlying, ongoing business and, therefore, are less useful for future planning and forecasting.
+ 
+J. Income tax adjustments. NetApp’s non-GAAP tax provision is based upon a projected annual non-GAAP effective tax rate for the first three quarters of the fiscal year and an actual non-GAAP tax provision for the fourth quarter of the fiscal year. The non-GAAP tax provision also excludes, when applicable, (a) tax charges or benefits in the current period that relate to one or more prior fiscal periods that are a result of events such as changes in tax legislation, authoritative guidance, income tax audit settlements, statute lapses and/or court decisions, (b) tax charges or benefits that are attributable to unusual or non-recurring book and/or tax accounting method changes, (c) tax charges that are a result of a non-routine foreign cash repatriation, (d) tax charges or benefits that are a result of infrequent restructuring of the Company’s tax structure, (e) tax charges or benefits that are a result of a change in valuation allowance, and (f) tax charges or benefits resulting from the integration of intellectual property from acquisitions. Management believes that the use of non-GAAP tax provisions provides a more meaningful measure of the Company’s operational performance.
+
+
+
+
+Non-GAAP measures are not in accordance with, or an alternative for, measures prepared in accordance with GAAP, and may be different from non-GAAP measures used by other companies. In addition, non-GAAP measures are not based on any comprehensive set of accounting rules or principles. NetApp believes that non-GAAP measures have limitations in that they do not reflect all of the amounts associated with the Company’s results of operations as determined in accordance with GAAP and that these measures should only be used to evaluate the Company’s results of operations in conjunction with the corresponding GAAP measures. NetApp management compensates for these limitations by analyzing current and projected results on a GAAP basis as well as a non-GAAP basis. The presentation of non-GAAP financial information is not meant to be considered in isolation or as a substitute for the directly comparable financial measures prepared in accordance with generally accepted accounting principles in the United States. The non-GAAP financial measures are meant to supplement, and be viewed in conjunction with, GAAP financial measures. A detailed reconciliation of our non-GAAP to GAAP results can be found herein.
+ 
+Constant Currency
+
+In periods in which the impacts of foreign currency exchange rate changes are significant, NetApp presents certain constant currency growth rates or quantifies the impact of foreign currency exchange rate changes on year-over-year fluctuations, including for net revenues, billings, and earnings. This constant currency information assumes the same foreign currency exchange rates that were in effect for the comparable prior-year period were used in translation of the current period results.
+ 
+About NetApp
+ 
+NetApp is the intelligent data infrastructure company combining unified data storage, integrated data services, and CloudOps solutions to turn a world of disruption into opportunity for every customer. NetApp creates silo-free infrastructure, then harnesses observability and AI, to enable the best data management. As the only enterprise-grade storage service natively embedded in the world’s biggest clouds, our data storage delivers seamless flexibility and our data services create a data advantage through superior cyber-resilience, governance, and applications agility. Our CloudOps solutions provide continuous optimization of performance and efficiency through observability and AI. No matter the data type, workload, or environment, transform your data infrastructure to realize your business possibilities with NetApp.
+
+Learn more at www.netapp.com or follow us on X, LinkedIn, Facebook, and Instagram.
+
+
+
+
+NETAPP, INC.
+CONDENSED CONSOLIDATED BALANCE SHEETS
+(In millions)
+ (Unaudited)
+ 
+
+                                                                        April 26,      April 28,
+                                                                             2024           2023
+ASSETS                                                                                          
+Current assets:                                                                                 
+Cash, cash equivalents and investments                                     $3,252         $3,070
+Accounts receivable                                                         1,007            987
+Inventories                                                                   186            167
+Other current assets                                                          452            456
+Total current assets                                                        4,897          4,680
+Property and equipment, net                                                   604            650
+Goodwill and purchased intangible assets, net                               2,883          2,940
+Other non-current assets                                                    1,503          1,548
+Total assets                                                               $9,887         $9,818
+LIABILITIES AND STOCKHOLDERS' EQUITY                                                            
+Current liabilities:                                                                            
+Accounts payable                                                             $517           $392
+Accrued expenses                                                            1,013            857
+Current portion of long-term debt                                             400              —
+Short-term deferred revenue and financed unearned services revenue          2,176          2,218
+Total current liabilities                                                   4,106          3,467
+Long-term debt                                                              1,992          2,389
+Other long-term liabilities                                                   585            708
+Long-term deferred revenue and financed unearned services revenue           2,058          2,095
+Total liabilities                                                           8,741          8,659
+Stockholders' equity                                                        1,146          1,159
+Total liabilities and stockholders' equity                                 $9,887         $9,818
+ 
+
+
+NETAPP, INC.
+CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS
+(In millions, except per share amounts)
+(Unaudited)
+
+
+                                                                                   Three Months Ended                                      Year Ended    
+                                                       April 26, 2024                  April 28, 2023      April 26, 2024              April 28, 2023    
+Revenues:                                                                                                                                                
+Product                                                          $806                            $744              $2,849                      $3,049    
+Services                                                          862                             837               3,419                       3,313    
+Net revenues                                                    1,668                           1,581               6,268                       6,362    
+Cost of revenues:                                                                                                                                        
+Cost of product                                                   314                             335               1,137                       1,517    
+Cost of services                                                  178                             171                 698                         636    
+Total cost of revenues                                            492                             506               1,835                       2,153    
+Gross profit                                                    1,176                           1,075               4,433                       4,209    
+Operating expenses:                                                                                                                                      
+Sales and marketing                                               460                             442               1,828                       1,829    
+Research and development                                          271                             243               1,029                         956    
+General and administrative                                         78                              67                 308                         265    
+Restructuring charges                                               —                              11                  44                         120    
+Acquisition-related expense                                         1                               3                  10                          21    
+Total operating expenses                                          810                             766               3,219                       3,191    
+Income from operations                                            366                             309               1,214                       1,018    
+Other income (expense), net                                        14                               5                  49                          48    
+Income before income taxes                                        380                             314               1,263                       1,066    
+Provision (benefit) for income taxes                               89                              69                 277                        (208   )
+Net income                                                       $291                            $245                $986                      $1,274    
+Net income per share:                                                                                                                                    
+Basic                                                           $1.41                           $1.15               $4.74                       $5.87    
+Diluted                                                         $1.37                           $1.13               $4.63                       $5.79    
+Shares used in net income per share calculations:                                                                                                        
+Basic                                                             206                             213                 208                         217    
+Diluted                                                           212                             217                 213                         220    
+ 
+
+
+NETAPP, INC.
+CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS
+(In millions)
+(Unaudited)
+ 
+
+                                                                                                               Three Months Ended                                          Year Ended    
+                                                                                   April 26, 2024                  April 28, 2023          April 26, 2024              April 28, 2023    
+Cash flows from operating activities:                                                                                                                                                    
+Net income                                                                                   $291                            $245                    $986                      $1,274    
+Adjustments to reconcile net income to net cash                                                                                                                                          
+provided by operating activities:                                                                                                                                                        
+Depreciation and amortization                                                                  64                              66                     255                         248    
+Non-cash operating lease cost                                                                  11                              12                      45                          52    
+Stock-based compensation                                                                       88                              74                     357                         312    
+Deferred income taxes                                                                          55                             (29   )                  53                        (606   )
+Other items, net                                                                              (17     )                         2                     (13   )                     (67   )
+Changes in assets and liabilities, net of acquisitions of                                                                                                                                
+businesses:                                                                                                                                                                              
+Accounts receivable                                                                          (228     )                      (165   )                 (33   )                     260    
+Inventories                                                                                   (55     )                         8                     (18   )                      37    
+Accounts payable                                                                              120                             (34   )                 123                        (207   )
+Accrued expenses                                                                              129                              14                     113                        (103   )
+Deferred revenue and financed unearned services                                               146                              93                     (14   )                      46    
+revenue                                                                                                                                                                                  
+Long-term taxes payable                                                                         1                               6                    (106   )                     (76   )
+Changes in other operating assets and liabilities, net                                          8                             (57   )                 (63   )                     (63   )
+Net cash provided by operating activities                                                     613                             235                   1,685                       1,107    
+Cash flows from investing activities:                                                                                                                                                    
+Purchases of investments, net                                                                (251     )                      (245   )                (580   )                    (719   )
+Purchases of property and equipment                                                           (46     )                       (39   )                (155   )                    (239   )
+Acquisitions of businesses, net of cash acquired                                                —                               —                       —                        (491   )
+Other investing activities, net                                                                 —                              (1   )                   —                          59    
+Net cash used in investing activities                                                        (297     )                      (285   )                (735   )                  (1,390   )
+Cash flows from financing activities:                                                                                                                                                    
+Proceeds from issuance of common stock under employee stock award plans                         —                               —                     100                         108    
+Payments for taxes related to net share settlement of stock awards                            (19     )                       (10   )                (127   )                     (84   )
+Repurchase of common stock                                                                   (100     )                      (150   )                (900   )                    (850   )
+Repayments and extinguishment of debt                                                           —                               —                       —                        (250   )
+Dividends paid                                                                               (104     )                      (106   )                (416   )                    (432   )
+Other financing activities, net                                                                (1     )                        (3   )                  (1   )                      (5   )
+Net cash used in financing activities                                                        (224     )                      (269   )              (1,344   )                  (1,513   )
+Effect of exchange rate changes on cash, cash equivalents and restricted cash                  (9     )                        (5   )                 (19   )                      (1   )
+Net change in cash, cash equivalents and restricted cash                                       83                            (324   )                (413   )                  (1,797   )
+Cash, cash equivalents and restricted cash:                                                                                                                                              
+Beginning of period                                                                         1,826                           2,646                   2,322                       4,119    
+End of period                                                                              $1,909                          $2,322                  $1,909                      $2,322    
+ 
+
+
+
+
+
+NETAPP, INC.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+SUPPLEMENTAL DATA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+(In millions except net income per share, percentages, DSO, DPO and Inventory Turns)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+(Unaudited)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+Revenues by Segment                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                Q4'FY24                                                                                                                         Q3'FY24                                                                                                                         Q4'FY23                                                                                                                          FY2024                                                                                                                          FY2023    
+Product                                                                                                                                                                            $806                                                                                                                            $747                                                                                                                            $744                                                                                                                          $2,849                                                                                                                          $3,049    
+Support                                                                                                                                                                             623                                                                                                                             631                                                                                                                             598                                                                                                                           2,488                                                                                                                           2,419    
+Professional and Other Services                                                                                                                                                      87                                                                                                                              77                                                                                                                              88                                                                                                                             320                                                                                                                             319    
+Hybrid Cloud Segment Net Revenues                                                                                                                                                 1,516                                                                                                                           1,455                                                                                                                           1,430                                                                                                                           5,657                                                                                                                           5,787    
+Public Cloud Segment Net Revenues                                                                                                                                                   152                                                                                                                             151                                                                                                                             151                                                                                                                             611                                                                                                                             575    
+Net Revenues                                                                                                                                                                     $1,668                                                                                                                          $1,606                                                                                                                          $1,581                                                                                                                          $6,268                                                                                                                          $6,362    
+Gross Profit by Segment                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                Q4'FY24                                                                                                                         Q3'FY24                                                                                                                         Q4'FY23                                                                                                                          FY2024                                                                                                                          FY2023    
+Product                                                                                                                                                                            $494                                                                                                                            $467                                                                                                                            $410                                                                                                                          $1,718                                                                                                                          $1,538    
+Support                                                                                                                                                                             574                                                                                                                             582                                                                                                                             549                                                                                                                           2,293                                                                                                                           2,238    
+Professional and Other Services                                                                                                                                                      20                                                                                                                              19                                                                                                                              33                                                                                                                              77                                                                                                                             108    
+Hybrid Cloud Segment Gross Profit                                                                                                                                                 1,088                                                                                                                           1,068                                                                                                                             992                                                                                                                           4,088                                                                                                                           3,884    
+Public Cloud Segment Gross Profit                                                                                                                                                   104                                                                                                                              99                                                                                                                              99                                                                                                                             408                                                                                                                             391    
+Total Segments Gross Profit                                                                                                                                                       1,192                                                                                                                           1,167                                                                                                                           1,091                                                                                                                           4,496                                                                                                                           4,275    
+Amortization of Intangible Assets                                                                                                                                                    (8                               )                                                                                              (9                               )                                                                                             (10                               )                                                                                             (34                               )                                                                                             (42   )
+Stock-based Compensation                                                                                                                                                             (8                               )                                                                                              (7                               )                                                                                              (6                               )                                                                                             (29                               )                                                                                             (24   )
+Unallocated Cost of Revenues                                                                                                                                                        (16                               )                                                                                             (16                               )                                                                                             (16                               )                                                                                             (63                               )                                                                                             (66   )
+Gross Profit                                                                                                                                                                     $1,176                                                                                                                          $1,151                                                                                                                          $1,075                                                                                                                          $4,433                                                                                                                          $4,209    
+Gross Margin by Segment                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                Q4'FY24                                                                                                                         Q3'FY24                                                                                                                         Q4'FY23                                                                                                                          FY2024                                                                                                                          FY2023    
+Product                                                                                                                                                                            61.3                               %                                                                                            62.5                               %                                                                                            55.1                               %                                                                                            60.3                               %                                                                                            50.4   %
+Support                                                                                                                                                                            92.1                               %                                                                                            92.2                               %                                                                                            91.8                               %                                                                                            92.2                               %                                                                                            92.5   %
+Professional and Other Services                                                                                                                                                    23.0                               %                                                                                            24.7                               %                                                                                            37.5                               %                                                                                            24.1                               %                                                                                            33.9   %
+Hybrid Cloud Segment Gross Margin                                                                                                                                                  71.8                               %                                                                                            73.4                               %                                                                                            69.4                               %                                                                                            72.3                               %                                                                                            67.1   %
+Public Cloud Segment Gross Margin                                                                                                                                                  68.4                               %                                                                                            65.6                               %                                                                                            65.6                               %                                                                                            66.8                               %                                                                                            68.0   %
+Product Revenues                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+                                                                                                                                                                                Q4'FY24                                                                                                                         Q3'FY24                                                                                                                         Q4'FY23                                                                                                                          FY2024                                                                                                                          FY2023    
+Total                                                                                                                                                                              $806                                                                                                                            $747                                                                                                                            $744                                                                                                                          $2,849                                                                                                                          $3,049    
+Software*                                                                                                                                                                          $446                                                                                                                            $412                                                                                                                            $437                                                                                                                          $1,598                                                                                                                          $1,798    
+Hardware*                                                                                                                                                                          $360                                                                                                                            $335                                                                                                                            $307                                                                                                                          $1,251                                                                                                                          $1,251    
+Software and recurring support and public cloud revenue                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                Q4'FY24                                                                                                                         Q3'FY24                                                                                                                         Q4'FY23                                                                                                                          FY2024                                                                                                                          FY2023    
+Product - Software                                                                                                                                                                 $446                                                                                                                            $412                                                                                                                            $437                                                                                                                          $1,598                                                                                                                          $1,798    
+Support                                                                                                                                                                             623                                                                                                                             631                                                                                                                             598                                                                                                                           2,488                                                                                                                           2,419    
+Public Cloud                                                                                                                                                                        152                                                                                                                             151                                                                                                                             151                                                                                                                             611                                                                                                                             575    
+Software and recurring support and public cloud revenue*                                                                                                                         $1,221                                                                                                                          $1,194                                                                                                                          $1,186                                                                                                                          $4,697                                                                                                                          $4,792    
+Software and recurring support and public cloud revenue as a percentage of net revenues                                                                                              73                               %                                                                                              74                               %                                                                                              75                               %                                                                                              75                               %                                                                                              75   %
+* Our revenue recognition policy under GAAP defines a configured storage system, inclusive of the operating system software essential to its functionality, as a single performance obligation. We have provided a breakdown of our GAAP product revenues into the software and hardware components, which are considered non-GAAP measures, to display the significance of software included in total product revenues. Software and recurring support and public cloud revenue is a non-GAAP measure because it includes the software component of our product revenues, but not the hardware component.                                                                                                                 
+ 
+
+
+Geographic Mix**                                                                                                                                                                                                                                                                                                                                                                                                                              
+                                                                                                                             % of Q4 FY'24                                                           % of Q3 FY'24                                                           % of Q4 FY'23                                                            % of FY 2024                                                            % of FY 2023    
+                                                                                                                                   Revenue                                                                 Revenue                                                                 Revenue                                                                 Revenue                                                                 Revenue    
+Americas                                                                                                                                51                 %                                                    50                 %                                                    49                 %                                                    51                 %                                                    51   %
+Americas Commercial                                                                                                                     41                 %                                                    41                 %                                                    39                 %                                                    40                 %                                                    40   %
+U.S. Public Sector                                                                                                                      10                 %                                                     9                 %                                                    10                 %                                                    11                 %                                                    11   %
+EMEA                                                                                                                                    34                 %                                                    35                 %                                                    36                 %                                                    34                 %                                                    34   %
+Asia Pacific                                                                                                                            15                 %                                                    15                 %                                                    15                 %                                                    15                 %                                                    15   %
+** Effective in Q1 FY'24, management began evaluating revenues by geographic region based on the location to which products and services are delivered, rather than based on the location from which the customer relationship is managed. Prior year percentages have been conformed to the current year presentation.                                                                                                                       
+Pathways Mix                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                                                                                                                             % of Q4 FY'24                                                           % of Q3 FY'24                                                           % of Q4 FY'23                                                            % of FY 2024                                                            % of FY 2023    
+                                                                                                                                   Revenue                                                                 Revenue                                                                 Revenue                                                                 Revenue                                                                 Revenue    
+Direct                                                                                                                                  24                 %                                                    26                 %                                                    22                 %                                                    24                 %                                                    22   %
+Indirect                                                                                                                                76                 %                                                    74                 %                                                    78                 %                                                    76                 %                                                    78   %
+Non-GAAP Income from Operations, Income before Income Taxes &amp; Effective Tax Rate                                                                                                                                                                                                                                                                                                                                                          
+                                                                                                                                   Q4'FY24                                                                 Q3'FY24                                                                 Q4'FY23                                                                  FY2024                                                                  FY2023    
+Non-GAAP Income from Operations                                                                                                       $469                                                                    $485                                                                    $414                                                                  $1,682                                                                  $1,539    
+% of Net Revenues                                                                                                                     28.1                 %                                                  30.2                 %                                                  26.2                 %                                                  26.8                 %                                                  24.2   %
+Non-GAAP Income before Income Taxes                                                                                                   $483                                                                    $501                                                                    $419                                                                  $1,726                                                                  $1,555    
+Non-GAAP Effective Tax Rate                                                                                                           20.9                 %                                                  18.2                 %                                                  20.3                 %                                                  20.3                 %                                                  20.9   %
+Non-GAAP Net Income                                                                                                                                                                                                                                                                                                                                                                                                                           
+                                                                                                                                   Q4'FY24                                                                 Q3'FY24                                                                 Q4'FY23                                                                  FY2024                                                                  FY2023    
+Non-GAAP Net Income                                                                                                                   $382                                                                    $410                                                                    $334                                                                  $1,375                                                                  $1,230    
+Non-GAAP Weighted Average Common Shares Outstanding, Diluted                                                                           212                                                                     211                                                                     217                                                                     213                                                                     220    
+Non-GAAP Net Income per Share, Diluted                                                                                               $1.80                                                                   $1.94                                                                   $1.54                                                                   $6.46                                                                   $5.59    
+Select Balance Sheet Items                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                   Q4'FY24                                                                 Q3'FY24                                                                 Q4'FY23                                                                                                                                                    
+Deferred Revenue and Financed Unearned Services Revenue                                                                             $4,234                                                                  $4,127                                                                  $4,313                                                                                                                                                    
+DSO (days)                                                                                                                              55                                                                      45                                                                      57                                                                                                                                                    
+DPO (days)                                                                                                                              96                                                                      79                                                                      70                                                                                                                                                    
+Inventory Turns                                                                                                                         11                                                                      14                                                                      12                                                                                                                                                    
+Days sales outstanding (DSO) is defined as accounts receivable divided by net revenues, multiplied by the number of days in the quarter.                                                                                                                                                                                                                                                                                                      
+Days payables outstanding (DPO) is defined as accounts payable divided by cost of revenues, multiplied by the number of days in the quarter.                                                                                                                                                                                                                                                                                                  
+Inventory turns is defined as annualized cost of revenues divided by net inventories.                                                                                                                                                                                                                                                                                                                                                         
+Select Cash Flow Statement Items                                                                                                                                                                                                                                                                                                                                                                                                              
+                                                                                                                                   Q4'FY24                                                                 Q3'FY24                                                                 Q4'FY23                                                                  FY2024                                                                  FY2023    
+Net Cash Provided by Operating Activities                                                                                             $613                                                                    $484                                                                    $235                                                                  $1,685                                                                  $1,107    
+Purchases of Property and Equipment                                                                                                    $46                                                                     $36                                                                     $39                                                                    $155                                                                    $239    
+Free Cash Flow                                                                                                                        $567                                                                    $448                                                                    $196                                                                  $1,530                                                                    $868    
+Free Cash Flow as % of Net Revenues                                                                                                   34.0                 %                                                  27.9                 %                                                  12.4                 %                                                  24.4                 %                                                  13.6   %
+Free cash flow is a non-GAAP measure and is defined as net cash provided by operating activities less purchases of property and equipment.                                                                                                                                                                                                                                                                                                    
+Some items may not add or recalculate due to rounding.                                                                                                                                                                                                                                                                                                                                                                                        
+ 
+
+
+
+
+
+
+NETAPP, INC.                                                                                                                                                                       
+RECONCILIATION OF NON-GAAP TO GAAP                                                                                                                                                 
+INCOME STATEMENT INFORMATION                                                                                                                                                       
+(In millions, except net income per share amounts)                                                                                                                                 
+                                                                               Q4'FY24               Q3'FY24               Q4'FY23                FY2024                 FY2023    
+NET INCOME                                                                        $291                  $313                  $245                  $986                 $1,274    
+Adjustments:                                                                                                                                                                       
+Amortization of intangible assets                                                   14                    14                    17                    57                     68    
+Stock-based compensation                                                            88                    89                    74                   357                    312    
+Restructuring charges                                                                —                    13                    11                    44                    120    
+Acquisition-related expense                                                          1                     3                     3                    10                     21    
+Gain on sale of equity investment                                                    —                     —                     —                     —                    (32   )
+Litigation settlements                                                               —                     —                     —                    (5    )                 —    
+Income tax effects                                                                 (12    )              (22    )               11                   (74    )               (51   )
+Income tax (benefits) expenses from integration of acquired companies                —                     —                   (27    )                —                    (27   )
+Resolution of income tax matters                                                     —                     —                     —                     —                     69    
+Income tax benefit from intra-entity intellectual property transfer                  —                     —                     —                     —                   (524   )
+NON-GAAP NET INCOME                                                               $382                  $410                  $334                $1,375                 $1,230    
+COST OF REVENUES                                                                  $492                  $455                  $506                $1,835                 $2,153    
+Adjustments:                                                                                                                                                                       
+Amortization of intangible assets                                                   (8    )               (9    )              (10    )              (34    )               (42   )
+Stock-based compensation                                                            (8    )               (7    )               (6    )              (29    )               (24   )
+NON-GAAP COST OF REVENUES                                                         $476                  $439                  $490                $1,772                 $2,087    
+COST OF PRODUCT REVENUES                                                          $314                  $282                  $335                $1,137                 $1,517    
+Adjustments:                                                                                                                                                                       
+Amortization of intangible assets                                                    —                     —                     —                     —                     (1   )
+Stock-based compensation                                                            (2    )               (2    )               (1    )               (6    )                (5   )
+NON-GAAP COST OF PRODUCT REVENUES                                                 $312                  $280                  $334                $1,131                 $1,511    
+COST OF SERVICES REVENUES                                                         $178                  $173                  $171                  $698                   $636    
+Adjustments:                                                                                                                                                                       
+Amortization of intangible assets                                                   (8    )               (9    )              (10    )              (34    )               (41   )
+Stock-based compensation                                                            (6    )               (5    )               (5    )              (23    )               (19   )
+NON-GAAP COST OF SERVICES REVENUES                                                $164                  $159                  $156                  $641                   $576    
+GROSS PROFIT                                                                    $1,176                $1,151                $1,075                $4,433                 $4,209    
+Adjustments:                                                                                                                                                                       
+Amortization of intangible assets                                                    8                     9                    10                    34                     42    
+Stock-based compensation                                                             8                     7                     6                    29                     24    
+NON-GAAP GROSS PROFIT                                                           $1,192                $1,167                $1,091                $4,496                 $4,275    
+ 
+
+
+
+
+
+
+
+NETAPP, INC.                                                                                                                                               
+RECONCILIATION OF NON-GAAP TO GAAP                                                                                                                         
+INCOME STATEMENT INFORMATION                                                                                                                               
+(In millions, except net income per share amounts)                                                                                                         
+                                                      Q4'FY24               Q3'FY24               Q4'FY23                 FY2024                 FY2023    
+SALES AND MARKETING EXPENSES                             $460                  $439                  $442                 $1,828                 $1,829    
+Adjustments:                                                                                                                                               
+Amortization of intangible assets                          (6    )               (5    )               (7    )               (23    )               (26   )
+Stock-based compensation                                  (34    )              (36    )              (32    )              (143    )              (135   )
+NON-GAAP SALES AND MARKETING EXPENSES                    $420                  $398                  $403                 $1,662                 $1,668    
+RESEARCH AND DEVELOPMENT EXPENSES                        $271                  $249                  $243                 $1,029                   $956    
+Adjustments:                                                                                                                                               
+Stock-based compensation                                  (33    )              (32    )              (29    )              (132    )              (111   )
+NON-GAAP RESEARCH AND DEVELOPMENT EXPENSES               $238                  $217                  $214                   $897                   $845    
+GENERAL AND ADMINISTRATIVE EXPENSES                       $78                   $81                   $67                   $308                   $265    
+Adjustments:                                                                                                                                               
+Stock-based compensation                                  (13    )              (14    )               (7    )               (53    )               (42   )
+NON-GAAP GENERAL AND ADMINISTRATIVE EXPENSES              $65                   $67                   $60                   $255                   $223    
+RESTRUCTURING CHARGES                                      $—                   $13                   $11                    $44                   $120    
+Adjustments:                                                                                                                                               
+Restructuring charges                                       —                   (13    )              (11    )               (44    )              (120   )
+NON-GAAP RESTRUCTURING CHARGES                             $—                    $—                    $—                     $—                     $—    
+ACQUISITION-RELATED EXPENSE                                $1                    $3                    $3                    $10                    $21    
+Adjustments:                                                                                                                                               
+Acquisition-related expense                                (1    )               (3    )               (3    )               (10    )               (21   )
+NON-GAAP ACQUISITION-RELATED EXPENSE                       $—                    $—                    $—                     $—                     $—    
+OPERATING EXPENSES                                       $810                  $785                  $766                 $3,219                 $3,191    
+Adjustments:                                                                                                                                               
+Amortization of intangible assets                          (6    )               (5    )               (7    )               (23    )               (26   )
+Stock-based compensation                                  (80    )              (82    )              (68    )              (328    )              (288   )
+Restructuring charges                                       —                   (13    )              (11    )               (44    )              (120   )
+Acquisition-related expense                                (1    )               (3    )               (3    )               (10    )               (21   )
+NON-GAAP OPERATING EXPENSES                              $723                  $682                  $677                 $2,814                 $2,736    
+ 
+
+
+
+NETAPP, INC.                                                                                                                                                                                
+RECONCILIATION OF NON-GAAP TO GAAP                                                                                                                                                          
+INCOME STATEMENT INFORMATION                                                                                                                                                                
+(In millions, except net income per share amounts)                                                                                                                                          
+                                                                                 Q4'FY24                 Q3'FY24                 Q4'FY23                  FY2024                  FY2023    
+INCOME FROM OPERATIONS                                                              $366                    $366                    $309                  $1,214                  $1,018    
+Adjustments:                                                                                                                                                                                
+Amortization of intangible assets                                                     14                      14                      17                      57                      68    
+Stock-based compensation                                                              88                      89                      74                     357                     312    
+Restructuring charges                                                                  —                      13                      11                      44                     120    
+Acquisition-related expense                                                            1                       3                       3                      10                      21    
+NON-GAAP INCOME FROM OPERATIONS                                                     $469                    $485                    $414                  $1,682                  $1,539    
+OTHER INCOME, NET                                                                    $14                     $16                      $5                     $49                     $48    
+Adjustments:                                                                                                                                                                                
+Gain on sale of equity investment                                                      —                       —                       —                       —                     (32   )
+Litigation settlements                                                                 —                       —                       —                      (5    )                  —    
+NON-GAAP OTHER INCOME, NET                                                           $14                     $16                      $5                     $44                     $16    
+INCOME BEFORE INCOME TAXES                                                          $380                    $382                    $314                  $1,263                  $1,066    
+Adjustments:                                                                                                                                                                                
+Amortization of intangible assets                                                     14                      14                      17                      57                      68    
+Stock-based compensation                                                              88                      89                      74                     357                     312    
+Restructuring charges                                                                  —                      13                      11                      44                     120    
+Acquisition-related expense                                                            1                       3                       3                      10                      21    
+Litigation settlements                                                                 —                       —                       —                      (5    )                  —    
+Gain on sale of equity investment                                                      —                       —                       —                       —                     (32   )
+NON-GAAP INCOME BEFORE INCOME TAXES                                                 $483                    $501                    $419                  $1,726                  $1,555    
+PROVISION FOR INCOME TAXES                                                           $89                     $69                     $69                    $277                   $(208   )
+Adjustments:                                                                                                                                                                                
+Income tax effects                                                                    12                      22                     (11    )                 74                      51    
+Income tax benefits (expenses) from integration of acquired companies                  —                       —                      27                       —                      27    
+Resolution of income tax matters                                                       —                       —                       —                       —                     (69   )
+Income tax benefit from intra-entity intellectual property transfer                    —                       —                       —                       —                     524    
+NON-GAAP PROVISION FOR INCOME TAXES                                                 $101                     $91                     $85                    $351                    $325    
+NET INCOME PER SHARE                                                               $1.37                   $1.48                   $1.13                   $4.63                   $5.79    
+Adjustments:                                                                                                                                                                                
+Amortization of intangible assets                                                   0.07                    0.07                    0.08                    0.27                    0.31    
+Stock-based compensation                                                            0.42                    0.42                    0.34                    1.68                    1.42    
+Restructuring charges                                                                  —                    0.06                    0.05                    0.21                    0.55    
+Acquisition-related expense                                                            —                    0.01                    0.01                    0.05                    0.10    
+Gain on sale of equity investment                                                      —                       —                       —                       —                   (0.15   )
+Litigation settlements                                                                 —                       —                       —                   (0.02    )                  —    
+Income tax effects                                                                 (0.06   )               (0.10    )               0.05                   (0.35    )              (0.23   )
+Income tax (benefits) expenses from integration of acquired companies                  —                       —                   (0.12    )                  —                   (0.12   )
+Resolution of income tax matters                                                       —                       —                       —                       —                    0.31    
+Income tax benefit from intra-entity intellectual property transfer                    —                       —                       —                       —                   (2.38   )
+NON-GAAP NET INCOME PER SHARE                                                      $1.80                   $1.94                   $1.54                   $6.46                   $5.59    
+ 
+
+
+
+RECONCILIATION OF NON-GAAP TO GAAP                                                                                                   
+GROSS MARGIN                                                                                                                         
+($ in millions)                                                                                                                      
+                                          Q4'FY24             Q3'FY24             Q4'FY23              FY2024              FY2023    
+Gross margin-GAAP                            70.5   %            71.7   %            68.0   %            70.7   %            66.2   %
+Cost of revenues adjustments                  1.0   %             1.0   %             1.0   %             1.0   %             1.0   %
+Gross margin-Non-GAAP                        71.5   %            72.7   %            69.0   %            71.7   %            67.2   %
+GAAP cost of revenues                        $492                $455                $506              $1,835              $2,153    
+Cost of revenues adjustments:                                                                                                        
+Amortization of intangible assets              (8   )              (9   )             (10   )             (34   )             (42   )
+Stock-based compensation                       (8   )              (7   )              (6   )             (29   )             (24   )
+Non-GAAP cost of revenues                    $476                $439                $490              $1,772              $2,087    
+Net revenues                               $1,668              $1,606              $1,581              $6,268              $6,362    
+ 
+
+RECONCILIATION OF NON-GAAP TO GAAP                                                                                                       
+PRODUCT GROSS MARGIN                                                                                                                     
+($ in millions)                                                                                                                          
+                                              Q4'FY24             Q3'FY24             Q4'FY23              FY2024              FY2023    
+Product gross margin-GAAP                        61.0   %            62.2   %            55.0   %            60.1   %            50.2   %
+Cost of product revenues adjustments              0.3   %             0.3   %             0.1   %             0.3   %             0.2   %
+Product gross margin-Non-GAAP                    61.3   %            62.5   %            55.1   %            60.3   %            50.4   %
+GAAP cost of product revenues                    $314                $282                $335              $1,137              $1,517    
+Cost of product revenues adjustments:                                                                                                    
+Amortization of intangible assets                   —                   —                   —                   —                  (1   )
+Stock-based compensation                           (2   )              (2   )              (1   )              (6   )              (5   )
+Non-GAAP cost of product revenues                $312                $280                $334              $1,131              $1,511    
+Product revenues                                 $806                $747                $744              $2,849              $3,049    
+ 
+
+RECONCILIATION OF NON-GAAP TO GAAP                                                                                                        
+SERVICES GROSS MARGIN                                                                                                                     
+($ in millions)                                                                                                                           
+                                               Q4'FY24             Q3'FY24             Q4'FY23              FY2024              FY2023    
+Services gross margin-GAAP                        79.4   %            79.9   %            79.6   %            79.6   %            80.8   %
+Cost of services revenues adjustments              1.6   %             1.6   %             1.8   %             1.7   %             1.8   %
+Services gross margin-Non-GAAP                    81.0   %            81.5   %            81.4   %            81.3   %            82.6   %
+GAAP cost of services revenues                    $178                $173                $171                $698                $636    
+Cost of services revenues adjustments:                                                                                                    
+Amortization of intangible assets                   (8   )              (9   )             (10   )             (34   )             (41   )
+Stock-based compensation                            (6   )              (5   )              (5   )             (23   )             (19   )
+Non-GAAP cost of services revenues                $164                $159                $156                $641                $576    
+Services revenues                                 $862                $859                $837              $3,419              $3,313    
+ 
+
+
+
+RECONCILIATION OF NON-GAAP TO GAAP                                                                                                                                               
+OPERATING MARGIN                                                                                                                                                                 
+($ in millions)                                                                                                                                                                  
+                                                                             Q4'FY24              Q3'FY24               Q4'FY23                FY2024                 FY2023     
+Operating margin-GAAP                                                           21.9    %            22.8   %              19.5    %             19.4    %              16.0    %
+Adjustments:                                                                     6.2    %             7.4   %               6.6    %              7.5    %               8.2    %
+Operating margin-Non-GAAP                                                       28.1    %            30.2   %              26.2    %             26.8    %              24.2    %
+GAAP income from operations                                                     $366                 $366                  $309                $1,214                 $1,018     
+Income from operations adjustments:                                                                                                                                              
+Amortization of intangible assets                                                 14                   14                    17                    57                     68     
+Stock-based compensation                                                          88                   89                    74                   357                    312     
+Restructuring charges                                                              —                   13                    11                    44                    120     
+Acquisition-related
