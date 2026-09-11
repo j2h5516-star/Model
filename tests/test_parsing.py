@@ -248,10 +248,15 @@ def test_은행개념_계기가_report_에_실린다():
     """만들어 놓고 배선을 잊으면 아무도 안 보는 칸이 된다(150차-C)."""
     import inspect
     src = inspect.getsource(sf.fetch_xbrl_approximation)
-    assert 'report["은행개념_후보"] = _은행개념_세기' in src, src[-800:]
+    # 183차-G 에 모양이 바뀌었다 — 세기만 하던 것을 **뼈대에도 쓰기로**
+    # 하면서, 계기는 `_기간`(뼈대에 쓸 날짜)만 빼고 기록한다.
+    assert "_은행개념_세기(" in src, src[-800:]
+    assert 'report["은행개념_후보"]' in src, src[-800:]
     # 160차 — 지금 뼈대와 견주려면 series·start_date 를 넘겨야 한다.
     #   안 넘기면 "새기간"이 아예 안 세어져 계기가 반쪽이 된다.
     assert "series=series" in src and "start_date=start_date" in src, src[-800:]
+    # 183차-G — 기간을 뼈대로 넘기는 배선도 함께 못박는다.
+    assert 'series["bank_period"]' in src, src[-800:]
     import collect_job as cj
     assert '"은행개념_후보"' in inspect.getsource(cj.run), "로봇 기록 배선 없음"
 

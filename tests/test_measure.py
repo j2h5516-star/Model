@@ -568,6 +568,81 @@ def test_지난_스냅샷_읽기는_파일이_없거나_깨져도_안_죽는다(
         os.unlink(path)
 
 
+# ── 분기열 표시가 **스냅샷까지** 살아남는가 (183차-G) ────────────────
+#
+# 왜 이 시험이 필요한가 — 실제로 일어난 일:
+#   183차에 파서·행·정제를 다 만들고 배선 시험까지 썼는데, 런 #76 의
+#   스냅샷에 표시가 **0칸**이었다. eps_rows 의 허용 목록(EPS_FIELDS)에
+#   이름을 안 넣어 스냅샷을 만들 때 전부 버려진 것이다.
+#
+#   배선 시험이 `_apply_press_to_row` 한 칸만 봤는데 실제 길은
+#   파서 → 행 → **eps_rows** → 스냅샷 → 정제로 한 칸 더 길었다.
+#   **시험은 값이 쓰이는 끝까지 따라가야 한다.**
+def test_분기열_표시가_스냅샷까지_살아남는다():
+    분기 = [{
+        "filing_date": "2025-06-02", "announced_date": "2025-06-02",
+        "period_label": "25 Q4", "adj_eps": 0.35, "gaap_eps": 0.20,
+        "adjusted_ebitda": 1_000_000.0,
+        "adj_eps_분기열": True, "gaap_eps_분기열": True,
+        "adjusted_ebitda_분기열": True,
+    }]
+    행 = measure_store.eps_rows(분기)[0]
+    for 칸 in ("adj_eps_분기열", "gaap_eps_분기열", "adjusted_ebitda_분기열"):
+        assert 행.get(칸) is True, (
+            f"{칸} 이 스냅샷 행에서 사라졌습니다 — "
+            f"EPS_FIELDS 허용 목록에 넣었는지 보세요: {sorted(행)}")
+
+    # 표시가 없으면 행에도 없어야 합니다 (짝 시험)
+    민 = measure_store.eps_rows([{"filing_date": "2025-06-02", "adj_eps": 0.35}])[0]
+    assert 민.get("adj_eps_분기열") is None, 민
+
+
+def test_파서부터_정제까지_한_줄로_이어진다():
+    """끝까지 따라가는 시험 — 보도자료 글에서 시작해 **정제가 그 값을
+    살려 내는 것**까지 한 번에 확인합니다. 중간 어느 한 칸이 끊기면
+    빨간 불이 됩니다."""
+    import sec_fundamentals as sf
+    import dataset
+
+    조정표 = (
+        "                                 Three Months Ended                     Year Ended\n"
+        "Non-GAAP diluted net income per share  $0.35          $0.25          $0.70         $0.09\n")
+    parsed = sf.parse_press_release(조정표)
+    assert parsed["adj_eps"] == 0.35, parsed
+    assert parsed.get("adj_eps_분기열") is True, "① 파서가 표시를 안 남겼습니다"
+
+    행 = {}
+    sf._apply_press_to_row(행, parsed)
+    assert 행.get("adj_eps_분기열") is True, "② 행으로 안 옮겨졌습니다"
+
+    행.update({"filing_date": "2025-06-02", "announced_date": "2025-06-02",
+              "period_label": "25 Q4"})
+    스냅행 = measure_store.eps_rows([행])[0]
+    assert 스냅행.get("adj_eps_분기열") is True, "③ 스냅샷에서 버려졌습니다"
+
+    # ④ 정제가 그 값을 누적값으로 보지 않고 살려 내는가
+    def 분기(i, v, 표시):
+        y, m = 2023 + i // 4, ((i % 4) * 3) + 1
+        r = {"filing_date": f"{y}-{m:02d}-28", "announced_date": f"{y}-{m:02d}-28",
+             "period_label": f"Q{i}", "revenue": 1_000_000.0 + i * 1_000,
+             "adj_eps": v}
+        if 표시:
+            r["adj_eps_분기열"] = True
+        return r
+    값 = [2.4, 2.5, 2.4, 2.6, 2.5, 2.5, 10.22, 2.6]
+    rows = [분기(i, v, i == 6) for i, v in enumerate(값)]
+    snap = {
+        "saved_at": "2026-09-11T00:00:00+00:00",
+        "tickers": ["AAA"], "benchmark": "SPY",
+        "eps": {"AAA": rows},
+        "prices": {"SPY": {"dates": ["2026-09-10", "2026-09-11"],
+                          "close": [500.0, 501.0]}},
+    }
+    ds = dataset.build(snap)
+    남음 = [r["adj_eps"] for r in ds["quarters"]["AAA"]]
+    assert 10.22 in 남음, f"④ 정제가 분기 열 표시를 무시하고 버렸습니다: {남음}"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

@@ -1075,6 +1075,12 @@ PRESS_PARSE_SKIP = frozenset({"TSLA"})
 #    넣습니다 (짐작 전에 계기 — 106·157차 규칙).
 TICKER_CIK: dict[str, int] = {
     "ZI": 1794515,      # ZoomInfo Technologies Inc. (티커가 GTM 으로 바뀜)
+    # 183차-G — 로봇이 SEC 에 직접 물어 찾아 온 번호(런 #76 로그).
+    #   SEC 회사 검색이 돌려준 이름이 "Discover Financial Services" 로
+    #   **정확히 일치**했고, 같은 번호가 다섯 결과 모두에서 나왔다.
+    #   (같은 런에서 edgartools 색인은 CHOICEONE FINANCIAL SERVICES 같은
+    #    **엉뚱한 회사**를 돌려줬다 — 직접 묻는 길이 실제로 일한 증거다.)
+    "DFS": 1393612,     # Discover Financial Services (캐피털원에 인수)
 }
 
 # 위 6개 중 아직 번호를 모르는 종목의 **회사 이름** — 검색 열쇠일 뿐,
@@ -1082,12 +1088,19 @@ TICKER_CIK: dict[str, int] = {
 # "이런 이름의 회사가 이런 번호로 있다"를 로그에 적어 옵니다.
 # 이름이 틀렸으면 아무것도 안 찾아지고 그대로 "없음"으로 남습니다 —
 # 틀린 값이 들어갈 길이 없습니다.
+# ⚠️ 183차-G — 이름은 **짧게** 적습니다.
+#
+# 런 #76 실측: 다섯 중 DFS 만 찾아졌습니다("Discover Financial Services"
+# 가 SEC 의 정식 이름과 정확히 같았음). 나머지 넷은 "결과없음"이었는데,
+# SEC 회사 검색은 **정식 이름의 앞부분**으로 맞춰 보기 때문입니다 —
+# SEC 에는 "HESS CORP"·"UNITED STATES STEEL CORP" 처럼 줄여 적혀 있어
+# "Hess Corporation"·"…Corporation" 으로는 앞부분이 어긋납니다.
+# 그래서 **회사 고유 이름만** 남깁니다(Corporation·Inc 같은 꼬리표 제거).
 TICKER_NAME_HINT: dict[str, str] = {
-    "HES": "Hess Corporation",
-    "X": "United States Steel Corporation",
-    "DFS": "Discover Financial Services",
-    "HOLX": "Hologic Inc",
-    "CFLT": "Confluent Inc",
+    "HES": "Hess",
+    "X": "United States Steel",
+    "HOLX": "Hologic",
+    "CFLT": "Confluent",
 }
 
 # 분기 종료일과 8-K 제출일이 이 일수 안이면 같은 분기의 발표로 짝짓습니다.

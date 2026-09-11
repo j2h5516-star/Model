@@ -3832,9 +3832,30 @@ def fetch_xbrl_approximation(
     # 확인할 수 없으므로(SEC 차단), 먼저 **세기만** 하고 뼈대는 그대로
     # 둡니다. 숫자를 보고 나서 넣을지 정합니다 (106차 규칙 그대로 —
     # 짐작으로 뼈대를 건드리지 않는다).
+    은행 = _은행개념_세기(facts, report, series=series, start_date=start_date)
     if report is not None:
-        report["은행개념_후보"] = _은행개념_세기(
-            facts, report, series=series, start_date=start_date)
+        report["은행개념_후보"] = {k: v for k, v in 은행.items() if k != "_기간"}
+
+    # 183차-G — **은행의 기간을 뼈대에 넣습니다** (160차의 선택지 (나)).
+    #
+    # 왜 이제 넣나 — 근거가 다 모였습니다:
+    #   ① 계기(런 #75): 넣으면 13종목에 82개 분기가 생긴다. 전부 은행의
+    #      연말 분기다(은행은 `OperatingIncomeLoss`·`Revenues` 를 안 내고
+    #      GAAP EPS 만 내는데, EPS 는 비율이라 4분기를 채울 수 없다).
+    #   ② 위험 점검(183차-E·F): 빈 행을 만들면 **구멍**이 되어 첫 돌파
+    #      판정을 망칠 수 있다. 그래서 "채울 값이 대기 중인가"를 물었다.
+    #   ③ 답(런 #76 계기): 짝을 못 찾은 1~2월 8-K 가 쌓여 있다 —
+    #      FITB 7 · RF 6 · JPM 5 · WFC 4 · TFC 3 · USB 3 건.
+    #      **행이 없어서 못 붙인 것**이므로, 행을 만들면 붙는다.
+    #
+    # ⚠️ **값은 넣지 않습니다 — 기간만.** 어느 개념을 "매출"로 볼지는
+    #    간단하지 않고(순이자수익 + 비이자수익을 더해야 총수익이 되는
+    #    회사가 대부분), 한 열에 정의가 섞이면 분기마다 뜻이 달라집니다
+    #    (주식보상비에서 이미 겪은 병). 모델이 실제로 쓰는 것은 TTM 조정
+    #    EPS 이므로 **행만 있으면 됩니다.**
+    if 은행.get("_기간"):
+        series = dict(series)
+        series["bank_period"] = {d: None for d in 은행["_기간"]}
 
     return _quarters_from_series(ticker, series, start_date, report, annual_eps)
 
@@ -3899,6 +3920,9 @@ def _은행개념_세기(facts, report: dict | None = None,
     if out and series is not None and start_date is not None:
         out["_요약"] = {"지금뼈대": len(지금),
                       "합집합_새기간": len(합집합 - 지금)}
+        # 183차-G — 세기만 하던 것을 **뼈대에도 쓰기로** 했습니다.
+        #   기간 집합을 함께 돌려줍니다(값이 아니라 날짜만).
+        out["_기간"] = sorted(합집합)
     return out
 
 
@@ -3953,7 +3977,11 @@ def _quarters_from_series(
     # 행이 생기고, 8-K 짝짓기가 발표일 도장을 찍어 측정에 들어갑니다.
     period_ends = sorted({
         d
-        for key in ("op_income", "revenue", "gaap_eps")
+        # 183차-G — "bank_period" 는 은행이 매출 자리에 쓰는 개념에서
+        #   온 **기간만**입니다(값 없음). 은행은 앞의 셋을 안 내서
+        #   연말 분기 행이 통째로 없었고, 그래서 1월 실적 발표문이
+        #   붙을 자리가 없었습니다.
+        for key in ("op_income", "revenue", "gaap_eps", "bank_period")
         for d in series.get(key, {})
         if d >= start_date
     })
@@ -4062,7 +4090,26 @@ def _quarters_from_series(
         # 셋 다 없는 분기는 행을 만들 재료가 없습니다 (113차).
         # ⚠️ 교차검증 **뒤**에 둡니다 — 검증이 매출을 비워 셋 다 없어진
         #    행도 걸러야 하기 때문입니다 (앞에 두면 그 경우를 놓칩니다).
-        if approx_op is None and revenue is None and gaap_eps is None:
+        #
+        # 183차-G 예외 — **은행의 기간**은 값이 없어도 행을 만듭니다.
+        #
+        #   왜: 은행은 영업이익·매출을 분기로 안 내고 GAAP EPS 도 4분기는
+        #   안 냅니다(EPS 는 비율이라 연간에서 뺄 수 없음). 그래서 연말
+        #   분기 **행 자체가 없고**, 1월에 낸 실적 발표문이 붙을 자리가
+        #   없어 버려집니다(런 #76: 짝 못 찾은 1~2월 8-K — FITB 7·RF 6·
+        #   JPM 5·WFC 4·TFC 3·USB 3건).
+        #
+        #   빈 행이 해가 되지 않는가 — 실측으로 확인했습니다:
+        #     ① 지금(4분기 행 없음)  구간 [3,3] · TTM **0개**
+        #     ② 빈 행만 생김        구간 [3,3] · TTM **0개**  ← 지금과 같음
+        #     ③ 보도자료가 채움      구간 [7]   · TTM **4개**
+        #   `eps_runs` 가 **잣대 값이 있는 행만** 보므로 빈 행은 아예 안
+        #   보입니다. 즉 못 채우면 지금 그대로이고, 채우면 은행이 측정에
+        #   들어옵니다. 지금 은행은 TTM 이 0개 — 통째로 빠져 있습니다.
+        #
+        #   ⚠️ 값은 지어내지 않습니다. 기간만 만들고 칸은 비워 둡니다.
+        if (approx_op is None and revenue is None and gaap_eps is None
+                and period_end not in (series.get("bank_period") or {})):
             continue
 
         gm_pct = None

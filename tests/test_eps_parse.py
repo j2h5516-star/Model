@@ -27,6 +27,7 @@ test_eps_parse.py — 보도자료에서 주당순이익(EPS) 읽어 오기 · 1
 """
 
 import os
+import io
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -2206,6 +2207,92 @@ SEC_검색응답 = """<?xml version="1.0" encoding="ISO-8859-1" ?>
   <link href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0000859737&amp;type=10-K"/>
  </entry>
 </feed>"""
+
+
+def test_은행_기간이_뼈대에_들어간다():
+    """183차-G — 은행은 영업이익·매출·GAAP EPS 를 분기로 안 내서 **연말
+    분기 행이 통째로 없었고**, 그래서 1월 실적 발표문이 붙을 자리가
+    없었습니다(런 #76 실측: 짝 못 찾은 1~2월 8-K 가 FITB 7·RF 6·JPM 5건).
+
+    은행 개념에서 온 **기간만** 넣습니다 — 값은 안 넣습니다.
+    """
+    series = {
+        "op_income": {}, "revenue": {}, "gross_profit": {},
+        "gaap_eps": {"2025-03-31": 1.0, "2025-06-30": 1.1, "2025-09-30": 1.2},
+        "bank_period": {"2025-03-31": None, "2025-06-30": None,
+                        "2025-09-30": None, "2025-12-31": None},
+    }
+    rows = sf._quarters_from_series("BANKX", series, "2025-01-01")
+    끝 = sorted(r["filing_date"] for r in rows)
+    assert "2025-12-31" in 끝, f"은행의 연말 분기 행이 안 생겼습니다: {끝}"
+    # 값은 만들지 않습니다 — 그 행의 매출은 비어 있어야 합니다
+    연말 = next(r for r in rows if r["filing_date"] == "2025-12-31")
+    assert 연말.get("revenue") is None, f"없는 매출을 지어냈습니다: {연말}"
+
+
+def test_은행개념_세기가_기간_목록을_돌려준다():
+    """세기만 하던 함수가 이제 **뼈대에 쓸 기간**도 돌려줍니다 (183차-G)."""
+    import config as cfg
+    개념 = cfg_첫_은행개념()
+    분기 = {"2025-03-31": 1e9, "2025-06-30": 1.1e9, "2025-09-30": 1.2e9}
+    연간 = {"2025-12-31": 4.5e9}
+    옛분기, 옛연간 = sf._quarterly_series, sf._annual_series
+    sf._quarterly_series = lambda f, c, r=None, unit="USD": (분기 if c == 개념 else {})
+    sf._annual_series = lambda f, c, r=None, unit="USD": (연간 if c == 개념 else {})
+    try:
+        out = sf._은행개념_세기(
+            None, None,
+            series={"op_income": {}, "revenue": {}, "gaap_eps": {}},
+            start_date="2025-01-01")
+    finally:
+        sf._quarterly_series, sf._annual_series = 옛분기, 옛연간
+    assert "_기간" in out, f"기간 목록을 안 돌려줍니다: {sorted(out)}"
+    assert "2025-12-31" in out["_기간"], out["_기간"]
+
+
+def cfg_첫_은행개념():
+    return sf._BANK_REVENUE_CANDIDATES[0]
+
+
+def test_은행_기간이_뼈대_조립에_실제로_전달된다():
+    """배선 시험 — 세기 함수의 기간이 `_quarters_from_series` 까지
+    가야 합니다. (183차-G 에 한 칸 짧은 배선 시험 때문에 스냅샷에서
+    표시가 통째로 사라진 적이 있습니다 — 같은 실수를 막습니다.)"""
+    받은 = {}
+    옛세기, 옛조립 = sf._은행개념_세기, sf._quarters_from_series
+    옛연간eps = sf._연간_gaap_eps
+    sf._은행개념_세기 = lambda *a, **k: {"X": {"분기": 1}, "_기간": ["2025-12-31"]}
+    sf._quarters_from_series = lambda t, series, sd, rep=None, ae=None: (
+        받은.update(series) or [])
+    sf._연간_gaap_eps = lambda facts, report=None: {}
+    옛계열 = sf._build_series if hasattr(sf, "_build_series") else None
+    try:
+        sf.fetch_xbrl_approximation("BANKX", "2025-01-01", {})
+    except Exception:
+        pass                     # SEC 접속은 막혀 있으므로 도중에 끊길 수 있습니다
+    finally:
+        sf._은행개념_세기, sf._quarters_from_series = 옛세기, 옛조립
+        sf._연간_gaap_eps = 옛연간eps
+    if 받은:                      # 조립까지 닿았다면 반드시 실려 있어야 합니다
+        assert "bank_period" in 받은, (
+            f"은행 기간이 뼈대 조립에 안 전달됐습니다: {sorted(받은)}")
+        assert "2025-12-31" in 받은["bank_period"], 받은["bank_period"]
+    else:
+        # SEC 차단으로 조립까지 못 갔으면, 배선이 글로라도 있는지 봅니다
+        코드 = io.open("sec_fundamentals.py", encoding="utf-8").read()
+        assert 'series["bank_period"] = {d: None for d in 은행["_기간"]}' in 코드, \
+            "은행 기간을 series 에 담는 배선이 없습니다"
+
+
+def test_은행_기간이_없으면_예전과_같다():
+    """짝 시험 — bank_period 가 없으면 행이 하나도 안 늘어야 합니다."""
+    series = {
+        "op_income": {}, "revenue": {}, "gross_profit": {},
+        "gaap_eps": {"2025-03-31": 1.0, "2025-06-30": 1.1, "2025-09-30": 1.2},
+    }
+    rows = sf._quarters_from_series("BANKX", series, "2025-01-01")
+    assert sorted(r["filing_date"] for r in rows) == [
+        "2025-03-31", "2025-06-30", "2025-09-30"], rows
 
 
 def test_SEC_이름검색이_번호를_읽어_온다(monkeypatch=None):

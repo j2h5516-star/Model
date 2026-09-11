@@ -620,6 +620,47 @@ def test_사건에_가속이_실려_온다():
     assert any(e["가속"] is not None for e in events), "가속이 전부 None — 재료 부족"
 
 
+# ── 빈 분기 행은 이력을 끊지 않는다 (183차-G) ─────────────────────────
+#
+# 왜 이 시험이 필요한가: 은행의 연말 분기 행을 만들기로 하면서 "빈 행이
+# 구멍이 되어 첫 돌파 판정을 망치지 않을까"를 걱정했다(183차-F). 실측해
+# 보니 걱정이 **틀렸다** — `eps_runs` 는 잣대 값이 있는 행만 보므로 빈
+# 행은 아예 안 보인다. 그 사실을 못박아 둔다. 누가 eps_runs 를 "모든
+# 행"을 보게 고치면 이 시험이 빨간 불이 된다.
+def _행(끝날, 값=None):
+    r = {"filing_date": 끝날, "announced_date": 끝날, "period_label": 끝날}
+    if 값 is not None:
+        r["gaap_eps"] = 값
+    return r
+
+
+def test_빈_분기_행은_이력을_끊지도_잇지도_않는다():
+    분기없음 = [_행("2023-03-31", 1.0), _행("2023-06-30", 1.1), _행("2023-09-30", 1.2),
+              _행("2024-03-31", 1.3), _행("2024-06-30", 1.4), _행("2024-09-30", 1.5)]
+    빈행추가 = 분기없음[:3] + [_행("2023-12-31")] + 분기없음[3:]
+
+    앞 = [len(x) for x in me.eps_runs(분기없음, field="gaap_eps")]
+    뒤 = [len(x) for x in me.eps_runs(빈행추가, field="gaap_eps")]
+    assert 앞 == 뒤 == [3, 3], f"빈 행이 구간을 바꿨습니다: {앞} → {뒤}"
+
+    ttm앞 = [s["ttm"] for s in me.earnings_states(분기없음, field="gaap_eps")]
+    ttm뒤 = [s["ttm"] for s in me.earnings_states(빈행추가, field="gaap_eps")]
+    assert ttm앞 == ttm뒤, f"빈 행이 TTM 을 바꿨습니다: {ttm앞} → {ttm뒤}"
+    assert all(v is None for v in ttm앞), f"4분기가 없는데 TTM 이 나왔습니다: {ttm앞}"
+
+
+def test_빈_행이_채워지면_이력이_이어진다():
+    """짝 시험 — 보도자료가 그 행을 채우면 구간이 하나로 이어지고
+    TTM 이 나옵니다. 이것이 은행을 측정에 들이는 길입니다."""
+    채움 = [_행("2023-03-31", 1.0), _행("2023-06-30", 1.1), _행("2023-09-30", 1.2),
+           _행("2023-12-31", 1.25),
+           _행("2024-03-31", 1.3), _행("2024-06-30", 1.4), _행("2024-09-30", 1.5)]
+    구간 = [len(x) for x in me.eps_runs(채움, field="gaap_eps")]
+    assert 구간 == [7], f"채웠는데 이력이 안 이어졌습니다: {구간}"
+    ttm = [s["ttm"] for s in me.earnings_states(채움, field="gaap_eps") if s["ttm"]]
+    assert len(ttm) == 4, f"TTM 이 4개 나와야 합니다: {ttm}"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
