@@ -1,0 +1,364 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — LSCC 2017-11-07
+# 출처: https://www.sec.gov/Archives/edgar/data/855658/000085565817000122/lscc2017q3form8-k.htm
+
+Exhibit
+
+
+Exhibit 99.1
+<img alt="latticelogoa06a01a01a12.gif" src="latticelogoa06a01a01a12.gif">NEWS RELEASE
+For more information contact: 
+David Pasquale 
+Global IR Partners 
+914-337-8801 
+lscc@globalirpartners.com 
+LATTICE SEMICONDUCTOR REPORTS THIRD QUARTER 2017 RESULTS
+Third Quarter 2017 Financial Highlights*: 
+
+•   Revenue of $92.0 million.
+
+•   On a GAAP basis, net loss of $43.1 million or $0.35 per basic and diluted share.
+
+•   On a Non-GAAP basis, net income of $5.3 million or $0.04 per basic and diluted share.
+
+•   Gross margin of 58.0% on a GAAP basis and 58.1% on a non-GAAP basis.
+* GAAP represents U.S. Generally Accepted Accounting Principles. Non-GAAP represents GAAP excluding the impact of certain activities which the Company's management excludes in analyzing the Company's operating results and in understanding trends in the Company's earnings. For a reconciliation of GAAP to non-GAAP results, see accompanying tables "Reconciliation of U.S. GAAP to Non-GAAP Financial Measures."
+PORTLAND, OR - November 7, 2017 - Lattice Semiconductor Corporation (NASDAQ: LSCC), the leading provider of customizable smart connectivity solutions, announced financial results today for the fiscal third quarter ended September 30, 2017.
+The Company reported revenue for the third quarter of 2017 of $92.0 million, which decreased 2.3% sequentially, as compared to the second quarter 2017 revenue of $94.1 million, and decreased 18.8%, as compared to the third quarter 2016 revenue of $113.2 million. 
+Gross margin on a GAAP basis was 58.0% for the third quarter of 2017, as compared to the second quarter of 2017 gross margin of 54.4% and 59.5% for the third quarter of 2016. Gross margin for the third quarter of 2017 was 58.1% on a non-GAAP basis, as compared to 54.6% for the second quarter of 2017 and 59.8% for the third quarter of 2016.
+Total operating expenses for the third quarter of 2017 were $90.8 million on a GAAP basis, including an intangible asset impairment charge of $36.2 million, as compared to $59.9 million for the second quarter of 2017 and $73.4 million for the third quarter of 2016. Total operating expenses were $44.6 million for the third quarter of 2017 on a non-GAAP basis, as compared to $46.0 million for the second quarter of 2017, and $52.9 million for the third quarter of 2016.
+1
+
+GAAP net loss for the third quarter of 2017 was $43.1 million ($0.35 per basic and diluted share), as compared to a net loss on a GAAP basis in the prior quarter of $13.0 million ($0.11 per basic and diluted share), and a net loss on a GAAP basis in the year ago period of $12.4 million ($0.10 per basic and diluted share). Non-GAAP net income for the third quarter of 2017 was $5.3 million ($0.04 per basic and diluted share), as compared to $0.1 million ($0.00 per basic and diluted share) in the prior quarter, and $5.9 million ($0.05 per basic and diluted share) in the year ago period. For a reconciliation of U.S. GAAP to Non-GAAP please see the table titled, “Reconciliation of U.S. GAAP to Non-GAAP Financial Measures” provided as part of this press release.
+Darin G. Billerbeck, President and Chief Executive Officer, said, "Product revenue increased in our three core markets in the third quarter of 2017 as compared to the second quarter of 2017. Our core business continues to grow while we invest in new solutions for opportunities at the edge of the cloud -- opportunities that perfectly align to Lattice's technology and strategy. While our IP and services were down, growth in our silicon revenue offset a majority of this decline. We expect to exit the year leveraging our core business stability and new design wins to take advantage of the significant growth opportunities in front of us. We will continue to execute on our plan to drive OpEx lower as we focus on generating higher free cash flow to pay down our debt and invest into areas of strength."
+Max Downing, Chief Financial Officer, added, "We are seeing positive results from the decisive actions we took to reduce operating expenses and to maximize profitability. In-line with our plan, we completed the sale of our Shanghai building in the quarter, which resulted in a gain on the sale of $4.6 million. We also took an intangible asset impairment charge of $36.2 million related to our previously announced strategic decision to cease future investment in wired application specific standard product development as we concentrate our resources on higher potential growth opportunities. In addition to the headcount and spin-out actions, we have a number of other cost structure improvements that are well underway and expected to benefit us in 2018, putting us on track to deliver additional improved financial results. We ended the third quarter of 2017 with approximately $108 million in cash and investments, up meaningfully from approximately $85 million in the second quarter of 2017."
+Recent Business Highlights
+
+•   CrossLink Adds Modular IP Cores to Support Intelligence at the Edge Applications: Lattice announced the availability of seven new modular IP cores for its award winning CrossLink FPGA product for increased design flexibility to support consumer, industrial and automotive applications. These modular IP cores offer the building blocks for customers to create their own unique video bridging solutions. Announced in May 2016, the CrossLink product was designed to address barriers faced by the increasingly complex and dynamic video market. Lattice equipped designers with a new way to deliver low power and compact bridging solutions without compromising performance to deliver cutting-edge innovations for multiple growth markets including automotive, AR/VR and drones. The new IP cores add to an already robust suite of tools to support quickly evolving intelligence at the edge applications.
+
+•   Continued Success and Leadership in AR and VR Applications: Guangdong Virtual Reality Technology Co., Ltd. (Ximmerse), a provider of interaction systems for mobile AR/VR applications, selected Lattice’s low power, small form factor ECP5™ FPGA to perform stereo vision computing in their AR/VR tracking platform. Lattice’s market-
+2
+
+leading ECP5 FPGAs are ideal for flexible connectivity and acceleration at the edge due to their low power, small form factor and low cost, delivering an energy-efficient, low latency solution.
+
+•   Launched Solution to Expedite Embedded Vision Design and Prototyping: Lattice’s first-of-its-kind development kit combines its CrossLink™ video bridging FPGA, ECP5™ processing FPGA and high-resolution HDMI® ASSP into a single, modular platform, along with Helion’s pre-packaged ISP options. This provides a complete hardware and software solution to expedite the development of advanced applications at the edge, including embedded vision applications in Industry 4.0 applications, robotics, drones, automotive, AR and intelligent cameras for smart cities.
+
+•   Lattice's iCE40 FPGA Enables Low Latency and Concurrent Sensor Processing in SteamVR Tracking: Valve selected Lattice’s low power and low cost iCE40™ FPGA to enable concurrent data capture and processing for its SteamVR™ Tracking. As a low power and low latency sensor hub on the SteamVR tracking platform, Lattice’s iCE40 FPGA significantly reduces the number of signals that need to be routed from the sensors to the applications processor (AP) / microcontrollers (MCUs) on the printed circuit board (PCB), which in turn reduces EMI emissions, PCB congestion and improves signal integrity.
+Business Outlook - Fourth Quarter 2017*:
+
+•   Revenue for the fourth quarter of 2017 is expected to be between approximately $92 million and $97 million.
+
+•   Gross margin percentage for the fourth quarter of 2017 is expected to be approximately 56% plus or minus 2% on both a GAAP and non-GAAP basis.
+
+•   Total operating expenses are expected to be between approximately $53 million and $55 million on a GAAP basis and between approximately $43 million and $45 million on a non-GAAP basis.
+* For a reconciliation of GAAP to non-GAAP business outlook, see accompanying tables "Reconciliation of U.S. GAAP to Non-GAAP Financial Measures."
+Investor Conference Call / Webcast Details:
+Lattice Semiconductor will review the Company's financial results for the third quarter of 2017 and business outlook for the fourth quarter of 2017 on Tuesday, November 7 at 5:00 p.m. Eastern Time. The conference call-in number is 1-888-684-5603 or 1-918-398-4852 with conference identification number 51993386. An accompanying presentation and live webcast of the conference call will also be available on Lattice's website at www.latticesemi.com. The Company's financial guidance will be limited to the comments on its public quarterly earnings call and the public business outlook statements contained in this press release.
+A replay of the call will be available approximately 2 hours after the conclusion of the live call through 11:59 p.m. Eastern Time on November 21, 2017, by telephone at 1-404-537-3406. To access the replay, use conference identification number 5199386. A webcast replay will also be available on the investor relations section of www.latticesemi.com.
+3
+
+Forward-Looking Statements Notice: 
+The foregoing paragraphs contain forward-looking statements that involve estimates, assumptions, risks and uncertainties. Any statements about our expectations, beliefs, plans, objectives, assumptions or future events or performance are not historical facts and may be forward-looking. Such forward-looking statements include statements relating to: our expectation that we will deliver new solutions for opportunities at the edge of the cloud that will perfectly align to Lattice's technology and strategy; that we will exit the year leveraging our core business stability and new design wins to take advantage of the significant growth opportunities in front of us; that we will continue to execute on our plan to drive OpEx lower as we focus on generating higher free cash flow to pay down our debt and invest into areas of strength; that we have a number of other cost savings actions that are well underway and expect them to benefit us in 2018, putting us on track to deliver improved financial results; and the statements under the heading “Business Outlook-Fourth Quarter 2017.” Other forward-looking statements may be indicated by words such as “will,” “could,” “should,” “would,” “may,” “expect,” “plan,” “project,” “anticipate,” “intend,” “forecast,” “future,” “believe,” “estimate,” “predict,” “propose,” “potential,” “continue” or the negative of these terms or other comparable terminology; and our expectation that we will remain focused on maximizing the leverage of our operating model and reduce our outstanding debt balance. Lattice believes the factors identified below could cause actual results to differ materially from the forward-looking statements.
+Estimates of future revenue are inherently uncertain due to, among other things, the high percentage of quarterly “turns” business. In addition, revenue is affected by such factors as global economic conditions, which may affect customer demand, pricing pressures, competitive actions, the demand for our Mature, Mainstream and New products, and in particular our iCE40™ and MachXO3L™ devices, the ability to supply products to customers in a timely manner, changes in our distribution relationships, or the volatility of our consumer business. Actual gross margin percentage and operating expenses could vary from the estimates on the basis of, among other things, changes in revenue levels, changes in product pricing and mix, changes in wafer, assembly, test and other costs, including commodity costs, variations in manufacturing yields, the failure to sustain operational improvements, the actual amount of compensation charges due to stock price changes. Any unanticipated declines in revenue or gross margin, any unanticipated increases in our operating expenses or unanticipated charges could adversely affect our profitability.
+In addition to the foregoing, other factors that may cause actual results to differ materially from the forward-looking statements in this press release include global economic uncertainty, overall semiconductor market conditions, market acceptance and demand for our new products, the Company's dependencies on its silicon wafer suppliers, the impact of competitive products and pricing, technological and product development risks, the failure to achieve the anticipated benefits and synergies of the Silicon Image transaction. In addition, actual results are subject to other risks and uncertainties that relate more broadly to our overall business, including those risks more fully described in Lattice’s filings with the SEC including its annual report on Form 10-K for the fiscal year ended December 31, 2016, and Lattice’s quarterly reports filed on Form 10-Q.
+You should not unduly rely on forward-looking statements because actual results could differ materially from those expressed in any forward-looking statements. In addition, any forward-looking statement applies only as of the date on which it is made. The Company does not intend to update or revise any forward-looking statements, whether as a result of events or circumstances after the date hereof or to reflect the occurrence of unanticipated events.
+4
+
+Non-GAAP Financial Measures:
+Included within this press release and the accompanying tables and notes are non-GAAP financial measures that supplement the Company's consolidated financial information prepared in accordance with U.S. GAAP. The non-GAAP measures presented exclude charges and adjustments primarily related to stock-based compensation, restructuring charges, acquisition-related charges, amortization of acquired intangible assets, impairment of intangible assets, purchase accounting adjustments, gain on sale of building, gain or loss on sale of business unit, and the estimated tax effect of these items. These charges and adjustments may be nonrecurring in nature but are a result of periodic or non-core operating activities of the Company. The Company describes these non-GAAP financial measures and reconciles them to the most directly comparable GAAP measures in the tables and notes attached to this press release. 
+The Company's management believes that these non-GAAP financial measures provide an additional and useful way of viewing aspects of our performance that, when viewed in conjunction with our GAAP results, provide a more comprehensive understanding of the various factors and trends affecting our ongoing financial performance and operating results than GAAP measures alone. In particular, investors may find the non-GAAP measures useful in reviewing our operating performance without the significant accounting charges resulting from the Silicon Image acquisition, alongside the comparably adjusted prior year results. Management also uses these non-GAAP measures for strategic and business decision-making, internal budgeting, forecasting, and resource allocation processes and believes that investors should have access to similar data when making their investment decisions.
+In addition, the Company uses Adjusted EBITDA in calculating the annual excess cash flow debt payment. These non-GAAP measures are included solely for informational and comparative purposes and are not meant as a substitute for GAAP and should be considered together with the consolidated financial information located in the tables attached to this press release.
+About Lattice Semiconductor Corporation:
+Lattice Semiconductor Corporation (NASDAQ: LSCC) is a leader in smart connectivity solutions at the network edge, where the “things” of IoT live. Our low power FPGA, 60 GHz millimeter wave, video ASSP and IP products deliver edge intelligence, edge connectivity, and control solutions to the consumer, communications, industrial, compute, and automotive markets. Our unwavering commitment to our global customers enables them to accelerate their innovation, creating an ever better and more connected world.
+For more information about Lattice please visit www.latticesemi.com. You can also follow us via LinkedIn, Twitter,  Facebook, YouTube, WeChat, Weibo or Youku.
+# # #
+Lattice Semiconductor Corporation, Lattice (& design), L (& design), iCE40 and MachXO3L, and specific product designations are either registered trademarks or trademarks of Lattice Semiconductor Corporation or its subsidiaries in the United States and/or other countries. 
+GENERAL NOTICE: Other product names used in this publication are for identification purposes only and may be trademarks of their respective holders. 
+5
+
+Lattice Semiconductor Corporation 
+Consolidated Statements of Operations 
+(in thousands, except per share data) 
+(unaudited) 
+
+                                                                                                                                    Three Months Ended                                 Nine Months Ended
+                                                                                          September 30,                July 1,              October 1,            September 30,               October 1,
+                                                                                                   2017                   2017                    2016                     2017                     2016
+Revenue                                                                                  $91,971                  $94,137               $113,225                $290,695                  $308,946      
+Costs and expenses:                                                                                                                                                                                     
+Cost of sales                                                                             38,649                   42,928                 45,801                 125,332                   125,992      
+Research and development                                                                  25,648                   26,820                 27,747                  79,857                    91,270      
+Selling, general, and administrative                                                      21,290                   21,938                 29,244                  67,133                    75,857      
+Amortization of acquired intangible assets                                                 8,526                    8,737                  8,260                  25,777                    25,292      
+Restructuring                                                                              3,071                    1,576                    317                   4,713                     8,316      
+Acquisition related charges                                                      681                                  867                      —                   3,208          94                    
+Impairment of acquired intangible assets                                                  36,198                        —                  7,866                  36,198                     7,866      
+Gain on sale of building                                                                  (4,624      )                 —                      —                  (4,624      )                  —      
+                                                                                         129,439                  102,866                119,235                 337,594                   334,687      
+Loss from operations                                                                     (37,468      )            (8,729    )            (6,010     )           (46,899      )            (25,741     )
+Interest expense                                                                          (3,888      )            (4,656    )            (5,235     )           (14,112      )            (15,257     )
+Other (expense) income, net                                                               (1,828      )               564                    209                  (1,412      )              3,558      
+Loss before income taxes and equity in net loss of an unconsolidated affiliate           (43,184      )           (12,821    )           (11,036     )           (62,423      )            (37,440     )
+Income tax (benefit) expense                                                                (331      )                47                    971         234                                 7,410      
+Equity in net loss of an unconsolidated affiliate, net of tax                               (199      )              (154    )              (407     )              (692      )             (1,085     )
+Net loss                                                                                $(43,052      )          $(13,022    )          $(12,414     )          $(63,349      )           $(45,935     )
+Net loss per share, basic and diluted                                                     $(0.35      )            $(0.11    )            $(0.10     )            $(0.52      )             $(0.38     )
+Shares used in per share calculations, basic and diluted                                 122,990                  122,390                120,584                 122,393                   119,596      
+6
+
+Lattice Semiconductor Corporation
+Consolidated Balance Sheets 
+(in thousands) 
+(unaudited)
+
+                                                                                                             September 30,             December 31,
+                                                                                                                      2017                     2016
+Assets                                                                                                                                             
+Current assets:                                                                                                                                    
+Cash, cash equivalents and short-term marketable securities                                                $107,977                 $116,860       
+Accounts receivable, net                                                                                     79,030                   99,637       
+Inventories                                                                                                  77,482                   79,168       
+Other current assets                                                                                         19,913                   19,035       
+Total current assets                                                                                        284,402                  314,700       
+Property and equipment, net                                                                                  43,236                   49,481       
+Intangible assets, net of amortization                                                                       52,966                  118,863       
+Goodwill                                                                                                    267,514                  269,758       
+Deferred income taxes                                                                               242                      372                   
+Other long-term assets                                                                                       13,137                   13,709       
+                                                                                                           $661,497                 $766,883       
+Liabilities and Stockholders' Equity                                                                                                               
+Current liabilities:                                                                                                                               
+Accounts payable and other accrued liabilities                                                              $70,542                  $90,798       
+Current portion of long-term debt                                                                            22,243                   33,767       
+Deferred income and allowances on sales to sell-through distributors and deferred license revenue            36,197                   32,985       
+Total current liabilities                                                                                   128,982                  157,550       
+Long-term debt                                                                                              280,381                  300,855       
+Other long-term liabilities                                                                                  33,842                   38,048       
+Total liabilities                                                                                           443,205                  496,453       
+Stockholders' equity                                                                                        218,292                  270,430       
+                                                                                                           $661,497                 $766,883       
+7
+
+Lattice Semiconductor Corporation
+Consolidated Statements of Cash Flows
+(in thousands) 
+(unaudited) 
+
+                                                                                                            Nine Months Ended
+                                                                                       September 30,               October 1,
+                                                                                                2017                     2016
+Cash flows from operating activities:                                                                                        
+Net loss                                                                             $(63,349      )           $(45,935     )
+Adjustments to reconcile net loss to net cash provided by operating activities:                                              
+Depreciation and amortization                                                          45,591                    47,908      
+Impairment of acquired intangible assets                                               36,198                     7,866      
+Amortization of debt issuance costs and discount                                        1,680                     1,212      
+Loss on sale or maturity of marketable securities                                         237                        72      
+Gain on forward contracts                                                                 (72      )                  —      
+Stock-based compensation expense                                                        9,286                    12,107      
+(Gain) loss on disposal of fixed assets                                                  (197      )                263      
+Gain on sale of building                                                               (4,624      )                  —      
+Loss (gain) on sale of assets and business units                                        1,496                    (2,646     )
+Equity in net loss of an unconsolidated affiliate, net of tax                             692                     1,085      
+Changes in assets and liabilities:                                                                                           
+Accounts receivable, net                                                               20,687                    (5,728     )
+Inventories                                                                             1,519                    (4,644     )
+Prepaid expenses and other assets                                                       3,839                    (2,227     )
+Accounts payable and accrued expenses (includes restructuring)                        (17,901      )              6,295      
+Accrued payroll obligations                                                            (2,002      )               (454     )
+Income taxes payable                                                                     (711      )              1,335      
+Deferred income and allowances on sales to sell-through distributors                    3,862                     3,067      
+Deferred licensing and services revenue                                                  (485      )               (258     )
+Net cash provided by operating activities                                              35,746                    19,318      
+Cash flows from investing activities:                                                                                        
+Proceeds from sales of and maturities of short-term marketable securities               9,689                    11,977      
+Purchases of marketable securities                                                     (7,420      )             (5,961     )
+Proceeds from sale of building                                                          7,895                         —      
+Cash paid for costs of sale of building                                                (1,004      )                  —      
+Capital expenditures                                                                  (12,325      )            (13,991     )
+Proceeds from sale of assets and business unit, net of cash sold                          967                     1,972      
+Cash paid for a non-marketable equity method investment                                (2,000      )             (1,000     )
+Cash paid for software licenses                                                        (6,472      )             (7,370     )
+Net cash used in investing activities                                                 (10,670      )            (14,373     )
+Cash flows from financing activities:                                                                                        
+Restricted stock unit withholdings                                                     (2,787      )             (2,883     )
+Proceeds from issuance of common stock                                                  3,452                     5,353      
+Repayment of debt                                                                     (33,679      )             (4,279     )
+Net cash used in financing activities                                                 (33,014      )             (1,809     )
+8
+
+
+Lattice Semiconductor Corporation                                                                                                                                                      
+Consolidated Statements of Cash Flows (continued)                                                                                                                                      
+(in thousands)                                                                                                                                                                         
+(unaudited)                                                                                                                                                                            
+                                                                                                                                                                      Nine Months Ended
+                                                                                                                                      September 30,                          October 1,
+                                                                                                                                               2017                                2016
+Effect of exchange rate change on cash                                                                                               1,381                                (579        )
+Net (decrease) increase in cash and cash equivalents                                                                                (6,557        )                      2,557         
+Beginning cash and cash equivalents                                                                                                106,552                              84,606         
+Ending cash and cash equivalents                                                                                                   $99,995                             $87,163         
+Supplemental cash flow information:                                                                                                                                                    
+Change in unrealized loss related to marketable securities, net of tax, included in Accumulated other comprehensive loss               $72                                 $50         
+Income taxes paid, net of refunds                                                                                                   $2,308                              $7,250         
+Interest paid                                                                                                                      $16,379                             $13,849         
+Accrued purchases of plant and equipment                                                                                               $51                              $1,678         
+Note receivable resulting from sale of assets and business units                                                                    $3,050                                  $—         
+9
+
+Lattice Semiconductor Corporation
+- Supplemental Historical Financial Information -
+(unaudited)
+
+                                                                                                                      Three Months Ended                             Nine Months Ended
+                                                                                September 30,             July 1,             October 1,          September 30,             October 1,
+                                                                                         2017                2017                   2016                   2017                   2016
+Operations and Cash Flow Information                                                                                                                                                  
+Percent of Revenue                                                                                                                                                                    
+Gross Margin                                                              58.0   %                     54.4     %           59.5       %          56.9        %           59.2       %
+R&amp;D Expense                                                           27.9   %                     28.5     %           24.5       %          27.5        %           29.5       %
+SG&amp;A Expense                                                          23.1   %                     23.3     %           25.8       %          23.1        %           24.6       %
+Depreciation and amortization (in thousands)                            15,094                       15,201               15,556                45,591                  47,908        
+Stock-based compensation expense (in thousands)                          2,514                        2,929                4,309                 9,286                  12,107        
+Restructuring and severance related charges (in thousands)               3,071                        1,576                  317                 4,713                   8,316        
+Net cash provided by (used in) operating activities (thousands)         24,232                        3,849              (13,339       )        35,746                  19,318        
+Capital expenditures (in thousands)                                      5,290                        3,661                3,889                12,325                  13,991        
+Repayment of debt (in thousands)                                             —                       22,899                  875                33,679                   4,279        
+Interest paid (in thousands)                                             4,285                        7,069                4,585                16,379                  13,849        
+Taxes paid (cash, in thousands)                                          1,332                          754                2,386                 2,308                   7,250        
+Balance Sheet Information                                                                                                                                                             
+Current Ratio                                                              2.2                          2.3                  2.2                                                      
+A/R Days Revenue Outstanding                                                78                           84                   76                                                      
+Inventory Months                                                           6.0                          5.5                  5.3                                                      
+Revenue% (by Geography)                                                                                                                                                               
+Asia                                                                        75   %                       69     %             74       %            71        %             70       %
+Europe (incl. Africa)                                                       12   %                       11     %             12       %            11        %             14       %
+Americas                                                                    13   %                       20     %             14       %            18        %             16       %
+Revenue% (by End Market)                                                                                                                                                              
+Communications and Computing                                                30   %                       29     %             27       %            29        %             30       %
+Mobile and Consumer                                                         28   %                       27     %             31       %            29        %             27       %
+Industrial and Automotive                                                   37   %                       32     %             33       %            33        %             34       %
+Licensing and Services                                                       5   %                       12     %              9       %             9        %              9       %
+Revenue% (by Channel)                                                                                                                                                                 
+Sell-through distribution                                                   68   %                       66     %             62       %            65        %             58       %
+Direct                                                                      32   %                       34     %             38       %            35        %             42       %
+10
+
+Lattice Semiconductor Corporation
+- Reconciliation of U.S. GAAP to Non-GAAP Financial Measures -
+(in thousands, except per share data) 
+(unaudited) 
+
+                                                                                                                                    Three Months Ended                                               Nine Months Ended
+                                                                         September 30,                         July 1,                      October 1,                   September 30,                      October 1,
+                                                                                  2017                            2017                            2016                            2017                            2016
+Gross Margin Reconciliation                                                                                                                                                                                           
+GAAP Gross margin                                                      $53,322                         $51,209                         $67,424                        $165,363                        $182,954        
+Inventory step-up expense                                                    —                               —                               —                               —                             523        
+Stock-based compensation - gross margin                                    154                             180                             231                             562                             656        
+Non-GAAP Gross margin                                                  $53,476                         $51,389                         $67,655                        $165,925                        $184,133        
+Gross Margin % Reconciliation                                                                                                                                                                                         
+GAAP Gross margin %                                                       58.0       %                    54.4       %                    59.5       %                    56.9       %                    59.2       %
+Cumulative effect of non-GAAP Gross Margin adjustments                     0.1       %                     0.2       %                     0.3       %                     0.2       %                     0.4       %
+Non-GAAP Gross margin %                                                   58.1       %                    54.6       %                    59.8       %                    57.1       %                    59.6       %
+Operating Expenses Reconciliation                                                                                                                                                                                     
+GAAP Operating expenses                                                $90,790                         $59,938                         $73,434                        $212,262                        $208,695        
+Amortization of acquired intangible assets                              (8,526       )                  (8,737       )                  (8,260       )                 (25,777       )                 (25,292       )
+Restructuring charges                                                   (3,071       )                  (1,576       )                    (317       )                  (4,713       )                  (8,316       )
+Acquisition related charges (1)                                           (681       )                    (867       )                       —                          (3,208       )                     (94       )
+Impairment of acquired intangible assets                               (36,198       )                       —                          (7,866       )                 (36,198       )                  (7,866       )
+Stock-based compensation - operations                                   (2,360       )                  (2,749       )                  (4,078       )                  (8,724       )                 (11,451       )
+Gain on sale of building                                                 4,624                               —                               —                           4,624                               —        
+Non-GAAP Operating expenses                                            $44,578                         $46,009                         $52,913                        $138,266                        $155,676        
+(1) Legal fees and outside services that were related to our proposed acquisition by Canyon Bridge Acquisition Company, Inc.                                                                                          
+11
+
+
+Lattice Semiconductor Corporation                                                                                                                                                                                                   
+- Reconciliation of U.S. GAAP to Non-GAAP Financial Measures -                                                                                                                                                                      
+(in thousands, except per share data)                                                                                                                                                                                               
+(unaudited)                                                                                                                                                                                                                         
+                                                                               Three Months Ended                                                                                                                  Nine Months Ended
+                                                                               September 30,                                 July 1,                      October 1,                   September 30,                      October 1,
+                                                                               2017                                             2017                            2016                            2017                            2016
+Income (Loss) from Operations Reconciliation                                                                                                                                                                                        
+GAAP Loss from operations                                                      $(37,468        )                     $(8,729       )                 $(6,010       )                $(46,899       )                $(25,741       )
+Inventory step-up expense                                                      —                                           —                               —                               —                             523        
+Stock-based compensation - gross margin                                154                             180                                               231                             562                             656        
+Amortization of acquired intangible assets                                     8,526                                   8,737                           8,260                          25,777                          25,292        
+Restructuring charges                                                          3,071                                   1,576                             317                           4,713                           8,316        
+Acquisition related charges (1)                                        681                             867                                                 —                           3,208                              94        
+Impairment of acquired intangible assets                                       36,198                                      —                           7,866                          36,198                           7,866        
+Stock-based compensation - operations                                          2,360                                   2,749                           4,078                           8,724                          11,451        
+Gain on sale of building                                                       (4,624          )                           —                               —                          (4,624       )                       —        
+Non-GAAP Income from operations                                                $8,898                                 $5,380                         $14,742                         $27,659                         $28,457        
+Income (Loss) from Operations % Reconciliation                                                                                                                                                                                      
+GAAP Loss from operations %                                                    (40.7           )%                       (9.3      )%                    (5.3      )%                   (16.1      )%                    (8.3      )%
+Cumulative effect of non-GAAP Gross Margin and Operating adjustments   50.4                    %       15.0                        %                    18.3       %                    25.6       %                    17.5       %
+Non-GAAP Income from operations %                                      9.7                     %       5.7                         %                    13.0       %                     9.5       %                     9.2       %
+Other (Expense) Income, Net Reconciliation                                                                                                                                                                                          
+GAAP Other (expense) income, net                                               $(1,828         )                        $564                            $209                         $(1,412       )                  $3,558        
+Loss (gain) on sale of assets and business units                               1,796                                    (300       )                       —                           1,496                          (2,646       )
+Non-GAAP Other (expense) income, net                                           $(32            )                        $264                            $209                             $84                            $912        
+Income Tax (Benefit) Expense Reconciliation                                                                                                                                                                                         
+GAAP Income tax (benefit) expense                                              $(331           )                         $47                            $971                            $234                          $7,410        
+Estimated tax effect of non-GAAP adjustments (2)                               (218            )       663                                             2,389                             142                             438        
+Non-GAAP Income tax (benefit) expense                                          $(549           )                        $710                          $3,360                            $376                          $7,848        
+(1) Legal fees and outside services that were related to our proposed acquisition by Canyon Bridge Acquisition Company, Inc.                                                                                                        
+(2) We calculate non-GAAP tax expense by applying our tax provision model to year-to-date and projected                                                                                                                             
+income after adjusting for non-GAAP items. The difference between calculated values for GAAP and                                                                                                                                    
+non-GAAP tax expense has been included as the “Estimated tax effect of non-GAAP adjustments.”                                                                                                                                       
+12
+
+
+Lattice Semiconductor Corporation                                                                                                                                                                                                           
+- Reconciliation of U.S. GAAP to Non-GAAP Financial Measures -                                                                                                                                                                              
+(in thousands, except per share data)                                                                                                                                                                                                       
+(unaudited)                                                                                                                                                                                                                                 
+                                                                                                                                                  Three Months Ended                                                       Nine Months Ended
+                                                                               September 30,                             July 1,                          October 1,                       September 30,                          October 1,
+                                                                                        2017                                2017                                2016                                2017                                2016
+Net Income (Loss) Reconciliation                                                                                                                                                                                                            
+GAAP Net loss                                                              $(43,052        )                   $(13,022        )                   $(12,414        )                   $(63,349        )                   $(45,935        )
+Inventory step-up expense                                                         —                                   —                                   —                                   —                                 523         
+Stock-based compensation - gross margin                    154                                                      180                                 231                                 562                                 656         
+Amortization of acquired intangible assets                                    8,526                               8,737                               8,260                              25,777                              25,292         
+Restructuring charges                                                         3,071                               1,576                                 317                               4,713                               8,316         
+Acquisition related charges (1)                            681                                                      867                                   —                               3,208                                  94         
+Impairment of acquired intangible assets                                     36,198                                   —                               7,866                              36,198                               7,866         
+Stock-based compensation - operations                                         2,360                               2,749                               4,078                               8,724                              11,451         
+Gain on sale of building                                                     (4,624        )                          —                                   —                              (4,624        )                          —         
+Loss (gain) on sale of assets and business units                              1,796                                (300        )                          —                               1,496                              (2,646        )
+Estimated tax effect of non-GAAP adjustments (2)           218                                                     (663        )                     (2,389        )                       (142        )                       (438        )
+Non-GAAP Net income (loss)                                                   $5,328                                $124                              $5,949                             $12,563                              $5,179         
+Net Income (Loss) Per Share Reconciliation                                                                                                                                                                                                  
+GAAP Net loss per share - basic and diluted                                  $(0.35        )                     $(0.11        )                     $(0.10        )                     $(0.52        )                     $(0.38        )
+Cumulative effect of Non-GAAP adjustments                  0.39                                                    0.11                                0.15                                0.62                                0.42         
+Non-GAAP Net income (loss) per share - basic and diluted                      $0.04                                  $—                               $0.05                               $0.10                               $0.04         
+Shares used in per share calculations:                                                                                                                                                                                                      
+Basic                                                                       122,990                             122,390                             120,584                             122,393                             119,596         
+Diluted - GAAP (3)                                                          122,990                             122,390                             120,584                             122,393                             119,596         
+Diluted - Non-GAAP (3)                                                      124,225                             124,527                             122,236                             124,454                             121,232         
+(1) Legal fees and outside services that were related to our proposed acquisition by Canyon Bridge Acquisition Company, Inc.                                                                                                                
+(2) We calculate non-GAAP tax expense by applying our tax provision model to year-to-date and projected                                                                                                                                     
+income after adjusting for non-GAAP items. The difference between calculated values for GAAP and                                                                                                                                            
+non-GAAP tax expense has been included as the “Estimated tax effect of non-GAAP adjustments.”                                                                                                                                               
+(3) Diluted shares are calculated using the GAAP treasury stock method. In a loss position, diluted shares equal basic shares.                                                                                                              
+13
+
+
+Lattice Semiconductor Corporation                                                                                                         
+- Reconciliation of U.S. GAAP to Non-GAAP Financial Measures -                                                                            
+(in thousands, except per share data)                                                                                                     
+(unaudited)                                                                                                                               
+                                                   Three Months Ended                                                                     
+                                                   December 30, 2017                                                                      
+Business Outlook - Fourth Quarter 2017             Low                     Midpoint                High                                   
+GAAP Operating expenses                            $53,000                 $54,000                 $55,000                                
+Amortization of acquired intangible assets         -2%                     (5,000      )           +2%                                    
+Restructuring charges                              -2%                     (3,000      )           +2%                                    
+Stock-based compensation - operations              -2%                     (2,000      )           +2%                                    
+Non-GAAP Operating expenses                        $43,000                 $44,000                 $45,000                                
+14
+
+

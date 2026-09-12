@@ -1,0 +1,262 @@
+# 잣대값 파싱 실패 원문 — DFS 2017-06-22
+# 출처: https://www.sec.gov/Archives/edgar/data/1393612/000119312517210511/d412594d8k.htm
+
+EXHIBIT 99.1
+
+DISCOVER FINANCIAL SERVICES
+
+Dodd-Frank Act Stress Test Disclosures
+
+June 22, 2017
+
+DISCOVER FINANCIAL SERVICES
+
+CCAR 2017 Public Disclosure of Stress Test Results
+
+TABLE OF CONTENTS
+
+  Introduction                                                 1
+  Summary of Supervisory Severely Adverse Scenario             1
+  Risk Types                                                   2
+  Stress Test Methodology                                      2
+  Pre-provision Net Revenue (PPNR)                             2
+  Loan Losses                                                  3
+  Operational Risk Losses                                      3
+  Company-run Stress Test Results                              3
+  Regulatory Capital Ratios                                    4
+  Risk-weighted Assets                                         4
+  Pro Forma Nine-quarter Income Statement                      5
+  Loan Losses                                                  5
+  Description of Stress Scenario Results for the Company       5
+
+Except as otherwise indicated or unless the context otherwise requires, “Discover Financial Services,”
+“Discover,” “DFS,” and “the Company” refer to Discover Financial Services and its subsidiaries.
+
+Introduction
+
+The Dodd-Frank Wall Street Reform and Consumer Protection Act (“Dodd Frank Act”) and the Federal Reserve Board’s Regulation YY
+require certain bank holding companies, including Discover Financial Services (“Discover” or the “Company”), to perform stress tests to assess the potential impact of hypothetical economic scenarios on the Company’s
+operations and capital position over a defined planning horizon. Regulation YY requires the disclosure of stress test results under the severely adverse stress scenario published by the Federal Reserve on February 10, 2017 (the
+“Supervisory Severely Adverse Scenario”). This scenario is characterized by a severe global recession that is accompanied by a period of heightened stress in corporate loan markets and commercial real estate markets.
+
+Discover Bank (“Discover Bank” or the “Bank”) is a Delaware state nonmember bank and is the Company’s principal
+subsidiary. In addition to performing stress testing for the consolidated Company, we also performed the annual stress test required under rules and guidance published by the Federal Deposit Insurance Corporation (the “FDIC”). The stress
+scenarios provided by the FDIC for use in the Bank stress test were consistent with those provided by the Federal Reserve for the Company, including the Supervisory Severely Adverse Scenario.
+
+This disclosure contains forward-looking statements, including projections of the Company’s results of operations and financial
+condition, under a hypothetical scenario incorporating a set of assumed economic and financial conditions that are more adverse than the Company expects, as prescribed by the Company’s regulators. The projections do not represent forecasts of
+expected results of operations or financial condition, but rather reflect possible results under the prescribed hypothetical scenario. The Company’s future results of operations and financial condition will be influenced by actual economic and
+financial conditions and various other factors as described in the Company’s annual report on Form 10-K for the year ended December 31, 2016, and other reports filed with the Securities and Exchange Commission, which are available at www.sec.gov.
+
+Summary of Supervisory Severely Adverse Scenario
+
+Under the Dodd-Frank Act Stress Testing (DFAST) rules for the Company-run annual stress tests, Discover is required to use baseline and stress
+scenarios provided by the Board of Governors of the Federal Reserve System (“Board”), and publicly disclose a summary of the results of the severely adverse stress scenario provided by the Board.
+
+The Supervisory Severely Adverse Scenario is described in the 2017 Supervisory Scenarios for Annual Stress Tests Required under the
+Dodd-Frank Act Stress Testing Rules and the Capital Plan Rule published by the Board of Governors of the Federal Reserve System on February 10, 2017. The scenario starts in the first quarter of 2017, and extends through the first quarter of
+2019.
+
+The Supervisory Severely Adverse Scenario forecasts a severe decline in real activity in the United States and severe recessions in
+the euro area, the United Kingdom, and Japan, and a marked growth slowdown in developing Asia. The level of U.S. real GDP begins to decline in the first quarter of 2017 and reaches a trough in the second quarter of 2018 that is about 6 1⁄2 percent below the pre-recession peak. The unemployment rate increases by about 5 1⁄4 percentage points, to 10 percent, by the third quarter of 2018. Headline consumer price inflation falls to about 1 1⁄4 percent at an annual rate by the second quarter of 2017 and then rises to about 1 3⁄4 percent at an annual rate by the middle of 2018. Short-term Treasury
+rates fall and remain near zero through the end of the scenario period. The 10-year Treasury yield drops to 3⁄4 percent in the first quarter of 2017, rising
+gradually thereafter to around 1 1⁄2 percent by the first quarter of 2019 and to about 1 3⁄4 percent by the first quarter of 2020. Financial conditions in corporate and real estate lending markets are stressed severely.
+
+Asset prices drop sharply in this scenario. Equity prices fall by 50 percent through the end of 2017, accompanied by a surge in equity market
+volatility, which approaches the levels attained in 2008. House prices and commercial real estate prices also experience large declines, with house prices and commercial real estate prices falling by 25 percent and 35 percent, respectively, through
+the first quarter of 2019.
+
+1
+
+For a complete description of the 2017 Supervisory Severely Adverse Scenario, refer to the
+February 10, 2017, Federal Reserve Board’s 2017 Supervisory Scenarios for Annual Stress Tests required under the Dodd-Frank Act Stress Testing Rules and the Capital Plan Rule document at www.federalreserve.gov.
+
+Risk Types
+
+When conducting the
+Company-run stress test under the Supervisory Severely Adverse Scenario, the Company intended to capture the principal risks to which the Company is exposed, including credit risk, market risk, operational risk, compliance and legal risk, liquidity
+risk, and strategic risk. Credit risk is primarily incurred through the Company’s consumer lending activities. Operational risk refers to the risk of loss that can arise from a number of events, such as inadequate or failed internal processes
+or systems, breaches of technology and information systems, fraud, potential legal or regulatory actions, or external events. Market risk is incurred due to adverse movements in market rates or prices, such as interest rates, foreign exchange rates,
+credit spreads, or equity prices. Compliance risk is the risk of legal or regulatory sanctions, financial loss, or damage to reputation resulting from failure to comply with laws, regulations, rules, other regulatory requirements, or codes of
+conduct and other standards applicable to the Company. Legal risk arises from the potential that unenforceable contracts, lawsuits, or adverse judgments can disrupt or otherwise negatively affect the operations or condition of the Company. Liquidity
+risk arises from events that could impact the Company’s ability to meet its day-to-day operating expenses, extend credit to consumers, or repay principal and interest on borrowings. Strategic risk is associated with a highly competitive
+marketplace, macroeconomic factors, and the uncertainty associated with new and acquired businesses.
+
+Stress Test Methodology
+
+Discover used both quantitative and qualitative methods to measure and assess risks, including proprietary models that forecast receivables,
+revenues, expenses, and losses under the Supervisory Severely Adverse Scenario. The Company’s capital position was projected by aggregating revenue and loss estimates as well as capital actions over the nine-quarter capital planning horizon.
+
+Pre-provision Net Revenue (PPNR)
+
+PPNR is estimated as total revenues (interest and non-interest revenues), net of interest expense and non-interest expense.
+
+Interest income is generated from the Company’s lending products, while non-interest income is generated by both the payments businesses
+and the lending products. Interest income is estimated across the Company’s lending products, using the forecasted performing receivables balance and projected yield. The receivables balance is forecasted based on projected originations,
+payments, charge-offs and other product-specific inputs. The projected yield is forecasted based on the cost of the loan, pricing strategies, and historical pricing information. Non-interest income is generally estimated by forecasting the volume of
+transactions and the rate for those transactions.
+
+Interest expense is forecasted for both retail and wholesale funding channels. The
+total cost of funding is estimated by multiplying the expected interest rates with the projected funding balance across those channels.
+
+A
+variety of approaches are used to forecast each component of non-interest expense. For instance, volume-driven expenses are driven by macroeconomic variables; fixed expenses or expenses that vary in response to factors other than business volume are
+forecasted using current expense levels, expense trends, and known initiatives that are expected to impact expense trends.
+
+2
+
+Net interest income and non-interest income components are forecasted at a business line level
+and then aggregated with non-interest expenses to determine total PPNR.
+
+Loan Losses
+
+Net loan losses are calculated as gross loan losses less recoveries. Discover forecasts its loan losses by using vintage-based framework and
+regression analyses based on macroeconomic, internal portfolio, and other data.
+
+Reserves are estimated based on the 12-month forward
+forecast of loan losses, adjusted for an estimate of activity included in the loss forecast related to loans that do not exist on the balance sheet at the reporting date.
+
+Operational Risk Losses
+
+Operational risk
+loss estimates include forecasted operational risk expenses for risk categories that include external fraud, damage to physical assets, business disruptions and systems failures, employment practices and workplace safety, and losses related to
+development, marketing, execution, and delivery of products and services. Further, potentially severe losses driven by low probability operational risk events identified through the Company’s operational risk scenario analysis framework are
+also included under stress conditions as either an increase in non-interest expense or a reduction of non-interest income.
+
+Company-run Stress Test
+Results
+
+The results of the Company-run stress test on Discover’s capital ratios and certain financial metrics are set forth in
+the following tables. The results include capital action assumptions provided within the Dodd-Frank Act Stress Testing (DFAST) rules, including:
+
+  For first quarter 2017, actual capital actions taken throughout the quarter, including dividends and share repurchases, are reflected in the results.
+ ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  For second quarter 2017 through the first quarter 2019, common stock dividends equal to the quarterly average dollar amount of common stock dividends that the Company paid in the previous year (this includes the first
+  quarter 2017 and the preceding three calendar quarters), as well as preferred dividends, were included. Consistent with the regulatory requirement, common stock issuances associated with expensed employee compensation were also included.
+ ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+These capital actions are defined in the DFAST rule in order to allow the Federal Reserve to conduct the required stress
+tests and may not represent the actual capital actions that Discover would take in a similar economic environment.
+
+Discover Bank accounts
+for over 95 percent of the Company’s overall assets. The types of risks evaluated and methodologies used were the same for the Bank as those described above for the Company. Accordingly, the results of the Bank’s stress test under the same
+Supervisory Severely Adverse Scenario are similar to the financial results of the consolidated Company. However, there are differences in the capital ratios when compared to Discover since the stress testing requirements for the Bank do not require
+the use of standardized DFAST capital actions. Therefore, the capital ratios presented for the Bank below reflect management’s judgment of the actions that would be taken to preserve capital under a hypothetical severe economic environment.
+
+3
+
+Regulatory Capital Ratios
+
+The following table presents hypothetical Capital Ratios as calculated under applicable regulatory capital rules, reflecting transition
+provisions, under the Supervisory Severely Adverse Scenario and DFAST capital actions:
+
+                                      DFS Consolidated                                                                          Discover Bank
+                                      Actual                           Stress Scenario                                          Actual                        Stress Scenario
+                                      Beginning                        Ending Value                    Minimum1                 Beginning                     Ending Value                    Minimum1
+
+
+                                      (4Q16)                           (1Q19)                                                   (4Q16)                        (1Q19)
+  Common Equity Tier 1 Capital                              13.2%                           11.2%                    10.6%                         13.2%                           12.2%                    11.4%
+  Tier 1 Capital Ratio                                      13.9%                           11.9%                    11.4%                         13.2%                           12.2%                    11.4%
+  Total Risk-based Capital Ratio                            15.5%                           13.3%                    12.8%                         15.5%                           14.3%                    13.7%
+  Tier 1 Leverage Ratio                                     12.3%                           10.1%                     9.9%                         11.6%                           10.3%                    10.0%
+
+Risk-weighted Assets
+
+The following table presents the actual beginning value (4Q16) and hypothetical ending value (1Q19) of risk-weighted assets in the
+Supervisory Severely Adverse Scenario under the Basel III standardized approach, reflecting transition provisions:
+
+                                            DFS Consolidated                                            Discover Bank
+                                            Actual                          Projected                   Actual                       Projected
+                                            Beginning                       Ending Value                Beginning                    Ending Value
+
+
+                                            (4Q16)                          (1Q19)                      (4Q16)                       (1Q19)
+  Risk-weighted Assets ($ in Billions)                            80.1                        72.1                         79.3                        71.4
+
+   1      Represents the projected minimum quarter-end ratio at any point during the forecast horizon
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────
+
+4
+
+Pro Forma Nine-quarter Income Statement
+
+The following table presents Discover’s hypothetical nine-quarter (1Q17 to 1Q19) losses, revenue, and net income before taxes under the
+Supervisory Severely Adverse Scenario:
+
+                                                       ($ in Billions)                  % of Average Assets2
+  Pre-provision Net Revenue3                                                9.6                                   11.1
+  Other Revenue4                                                            —                                     —
+  Provisions                                                                (11.1)                                (12.9
+  Realized (losses)/gains on Securities (AFS/HTM)                           —                                     —
+  Trading and Counterparty Losses5                                          —                                     —
+  Other (losses)/gains                                                      —                                     —
+  Net Income Before Tax                                                     (1.5)                                 (1.7
+  Memo Items
+  Other Comprehensive Income                                                —                                     —
+  Other Effects on Capital
+  AOCI Included in Capital (billions of                                     —                                     —
+  dollars)6
+
+Loan Losses
+
+The following table presents Discover’s hypothetical nine-quarter (1Q17 to 1Q19) loan losses, by type of loan, under the Supervisory
+Severely Adverse scenario:
+
+                                         ($ in          Portfolio
+
+
+                                         Billions)      Loss
+
+
+                                                        Rates7
+  Loan Losses                            9.6            13.3%
+  First-lien Mortgages, Domestic         —              —
+  Junior Liens and HELOCs, Domestic      —              —
+  Commercial and Industrial              —              —
+  Commercial Real Estate, Domestic       —              —
+  Credit Cards                           8.4            14.9%
+  Other Consumer                         1.2            7.6%
+  Other Loans                            —              —
+
+Description of Stress Scenario Results for the Company and Discover Bank
+
+While the Company’s and Discover Bank’s capital ratios decline over the Supervisory Severely Adverse Scenario’s nine-quarter
+horizon, both ending and minimum capital ratios are significantly above regulatory requirements. The decrease in capital ratios is due to a reduction in earnings in the stress scenario, offset in part by lower risk-weighted assets.
+
+The decline in earnings under the stress scenario is primarily the result of an increase in the provision for loan losses. Net charge-offs
+rise significantly over the period, driven largely by credit cards due to a significant increase in both contractual
+
+   2      Expressed on a nine-quarter cumulative basis as a percentage of average total assets over the same time period
+ ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+   3      Pre-provision Net Revenue includes losses from operational risk events and credit card fraud losses
+
+   4      Other revenue includes one-time income and (expense) items not included in Pre-provision Net Revenue
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+   5      Trading and counterparty losses include mark-to-market and credit valuation adjustments (CVA) losses and losses arising from the counterparty default scenario component applied to derivatives, securities lending, and
+          repurchase agreement activities
+
+   6      As a non-advanced approaches Banking organization, Discover chose to “opt out” of including AOCI in the regulatory capital calculations
+
+   7      Nine-quarter cumulative losses as a percentage of average balances over the same time period
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+5
+
+and bankruptcy charge-offs. Net income is further impacted by a significant increase in loan loss reserves, driven by higher expected net charge-offs early in the scenario horizon. As the economy
+begins to improve, there is an offset from reserve releases in the second half of the scenario.
+
+In the scenario, PPNR declines because of
+a decrease in net interest income due to lower receivables, higher interest and fee charge-offs, and higher operating expenses. Non-interest income also declines, driven by lower discount and interchange revenue due to lower credit card sales
+volume.
+
+Assets decline over the period, driven primarily by credit card receivables due to an increase in credit losses, lower credit
+card balance growth from existing customers, and a reduction in marketing activities across all lending products. Total funding falls due to lower borrowing needs while maintaining funding diversification throughout the forecast period.
+
+Given that Discover Bank comprises more than 95% of the consolidated Company’s assets and total regulatory capital, projected changes in
+the Bank’s capital ratios during the Supervisory Severely Adverse Scenario are driven largely by the same factors as described above for the Company.
+
+6

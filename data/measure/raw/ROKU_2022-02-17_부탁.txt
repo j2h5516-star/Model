@@ -1,0 +1,327 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — ROKU 2022-02-17
+# 출처: https://www.sec.gov/Archives/edgar/data/1428439/000142843922000006/wk-20220217.htm
+
+Document
+
+<img alt="image12.jpg" src="image12.jpg">Exhibit 99.1
+February 17, 2022
+Fellow Shareholders,
+2021 was another strong year for Roku, as we achieved record revenue, gross profit, adjusted EBITDA, and ARPU. Roku’s founding vision remains true: All TV and all TV advertising will be streamed. Almost every major media company is reorienting its business around streaming and has launched a flagship service, spending billions on content and marketing to attract and retain subscribers. At the same time, with the significant gap that exists between viewership and ad budgets, we are still in the early days of the secular shift to streaming. Our competitive advantages — the Roku® operating system, The Roku Channel, and our ad platform — position us strongly to continue leading this shift in the years ahead.
+2021 Key Results
+•Total net revenue grew 55% year-over-year (YoY) to $2.765 billion
+•Platform revenue increased 80% YoY to $2.285 billion
+•Gross profit was up 74% YoY to $1.409 billion
+•Active Accounts reached 60.1 million, a net increase of 8.9 million active accounts from Q4 2020
+•Streaming Hours increased by 14.4 billion hours YoY to 73.2 billion1
+•Average Revenue Per User (ARPU) grew to $41.03 (trailing 12-month basis), up 43% YoY
+•No. 1 TV streaming platform in the U.S., Canada, and Mexico by hours streamed
+
+Key Operating Metrics                                        Q4 20                                                 Q1 21                                                 Q2 21                                                 Q3 21                                                 Q4 21                                                 YoY %
+Active Accounts (millions)                           51.2                                                  53.6                                                  55.1                                                  56.4                                                  60.1                                                    17        %
+Streaming Hours (billions)*                          17.0                                                  18.3                                                  17.4                                                  18.0                                                  19.5                                                    15        %
+ARPU ($)                                           $28.76                                                $32.14                                                $36.46                                                $40.10                                                $41.03                                                    43        %
+Summary Financials ($ in millions)                           Q4 20                                                 Q1 21                                                 Q2 21                                                 Q3 21                                                 Q4 21                                                 YoY %
+Platform revenue                                   $471.2                                                $466.5                                                $532.3                                                $582.5                                                $703.6                                                    49        %
+Player revenue                                      178.7                                                 107.7                                                 112.8                                                  97.4                                                 161.7                                                   (9)        %
+Total net revenue                                   649.9                                                 574.2                                                 645.1                                                 680.0                                                 865.3                                                    33        %
+Platform gross profit                               300.8                                                 311.9                                                 345.0                                                 378.5                                                 425.6                                                    41        %
+Player gross profit (loss)                            4.6                                                  14.8                                                 (6.7)                                                (14.6)                                                (45.9)                                                             nm
+Total gross profit                                  305.5                                                 326.8                                                 338.3                                                 363.9                                                 379.6                                                    24        %
+Platform gross margin %                              63.8        %                                         66.9        %                                         64.8        %                                         65.0        %                                         60.5        %                                        (3.4)      pts
+Player gross margin %                                 2.6        %                                         13.8        %                                        (5.9)        %                                       (15.0)        %                                       (28.4)        %                                       (31.0)      pts
+Total gross margin %                                 47.0        %                                         56.9        %                                         52.4        %                                         53.5        %                                         43.9        %                                        (3.1)      pts
+Research and development                             94.7                                                 101.6                                                 113.3                                                 120.3                                                 126.4                                                    33        %
+Sales and marketing                                  96.1                                                  88.9                                                  93.7                                                 109.7                                                 163.4                                                    70        %
+General and administrative                           49.5                                                  60.5                                                  62.2                                                  65.1                                                  68.5                                                    38        %
+Total operating expenses                            240.3                                                 251.0                                                 269.2                                                 295.1                                                 358.3                                                    49        %
+Income from operations                               65.2                                                  75.8                                                  69.1                                                  68.8                                                  21.4                                                  (67)        %
+Adjusted EBITDA 1                                   113.5                                                 125.9                                                 122.4                                                 130.1                                                  86.7                                                  (24)        %
+Adjusted EBITDA margin %                             17.5        %                                         21.9        %                                         19.0        %                                         19.1        %                                         10.0        %                                        (7.4)      pts
+Outlook ($ in millions)                                   Q1 2022E                                                                                                                                                                                                                                                                              
+Total net revenue                                             $720                                                                                                                                                                                                                                                                              
+Total gross profit                                            $360                                                                                                                                                                                                                                                                              
+Net income (loss)                                            $(30)                                                                                                                                                                                                                                                                              
+Adjusted EBITDA 2                                              $55                                                                                                                                                                                                                                                                              
+1 Refer to the reconciliation of net income to adjusted EBITDA in the non-GAAP information in an appendix to this letter.                                                                                                                                                                                                                       
+2 Q1 2022E reconciling items between net income (loss) and non-GAAP adjusted EBITDA consist of stock-based compensation of approximately $72 million, depreciation and amortization and other net adjustments of approximately $13 million.                                                                                                     
+1 Reported streaming hours data reflects previously disclosed adjustments to our streaming hours calculations for periods prior to Q4 2020.
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+1
+
+
+<img alt="image12.jpg" src="image12.jpg"><img alt="picture6.jpg" src="picture6.jpg">Our Business Model
+Our three-phased business model — build scale, drive engagement, and monetize — supports our mission to be the global streaming platform that connects and benefits the entire TV ecosystem of consumers, content publishers, and advertisers.
+Building Scale
+Audiences around the world continue to shift to TV streaming due to its affordability, ease of use, and breadth of content choices. In 2021, we increased active accounts by 8.9 million globally, ending the year with over 60 million active accounts. To put that in context, Roku’s U.S. active account base surpassed the U.S. video subscribers of all of the cable companies combined.
+<img alt="picture7.jpg" src="picture7.jpg">We had strong active account net adds overall in 2021, though growth rates slowed some in the second half of the year. We believe that the slowdown in Q4 was, in large part, attributable to global supply chain disruptions that have impacted the U.S. TV market. Similar to Q3, overall U.S. TV unit sales in Q4 fell below pre-COVID 2019 levels. Some of our Roku TV OEM partners were hit particularly hard with inventory challenges, which negatively impacted their unit sales figures and market share in Q4.
+These reduced Roku TV™ model sales were partially offset by our player unit sales, which remained above pre-COVID 2019 levels and down only 4% year-over-year (despite comparing against a pandemic-driven surge in 2020). This was a result of careful management of our streaming player supply chain and inventory. Our strong and growing ARPU allowed us to prioritize account acquisition and insulate consumers from rising material and shipping costs in our player business. This resulted in player gross margin turning negative in Q3 and Q4 and also for the full year. While we expect market conditions to result in player-related costs remaining elevated for the near term, we do not believe these conditions will be permanent. 
+Roku OS 
+The Roku operating system (OS) powers our streaming players and Roku TV models and is the foundation of our platform. The Roku OS is purpose built for TV and is updated across our global installed base on an ongoing basis to deliver an exceptional user experience. During 2021 we updated the Roku OS to make improvements such as simplified TV setup, automatic Wi-Fi network detection, automatic game console configuration, and HDR10+ support. We also delivered new features, such as an expanded number of streaming apps that support voice commands, new surround sound configurations, private listening made even better for wireless headphones, and new “Save List” capabilities in the Roku mobile app.
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+2
+
+
+<img alt="image12.jpg" src="image12.jpg">Roku TV
+In 2021, the Roku OS remained the No. 1 selling Smart TV OS in the U.S., representing more than 1 in 3 Smart TVs sold. In the U.S., we announced with TCL the first model of an 8K Roku TV, which joined the critically acclaimed TCL 6-Series Roku TV models (“Best Smart TV Overall” by CNN), and was named Editor’s Choice from Digital Trends. We also announced a partnership with Sharp in which they will launch a series of HD and 4K Roku TV models in 2022.
+To drive further adoption in our current international markets, we expanded our product offering in the UK with the launch of TCL Roku TV models. In addition, in Mexico we announced a new Sanyo Roku TV model, and in Brazil, new Philco Roku TV models, TCL Roku TV models, and SEMP Roku TV models. Building on that momentum, we expanded our footprint in Latin America to Chile and Peru with AOC Roku TV models. We also brought our Roku TV Ready™ program to international markets with more partners launching in the UK, Canada, and Mexico. The Roku TV Ready program is designed to simplify the modern home theater setup when using a Roku TV and includes partners such as Bose, Hisense, and Denon.
+Streaming Players 
+Our streaming players enable consumers to easily and affordably turn any TV into an outstanding streaming experience. We were excited to launch our streaming players in Germany in the fall of 2021. In the U.S., we launched new versions of the Roku Express 4K+ and the Roku Streaming Stick® 4K, delivering powerful 4K streaming at an incredible value. We also introduced the Roku Voice Remote Pro, which features a rechargeable battery, lost remote finder, and hands-free voice controls. The Roku Streaming Stick 4K+ was named “Best Overall” streaming device by WIRED, and the Roku Voice Remote Pro was recently lauded by The Wall Street Journal as the go-to remote for consumers. Our previously-launched Roku Streambar® Pro (with built in streaming) and Roku Ultra also remain well reviewed, receiving “best of” accolades from CNN, Reviewed, Esquire, and Business Insider.
+Driving Engagement 
+We are the No. 1 TV streaming platform by hours streamed in each of the three largest North American markets, the U.S., Canada, and Mexico (Q4 2021, Hypothesis Group). Globally, our users streamed a record 19.5 billion hours in Q4 and 73.2 billion hours in 2021, which was nearly double the hours streamed in 2019 before the pandemic. 
+<img alt="picture10.jpg" src="picture10.jpg">Our 2021 viewing hour growth of 25% year-over-year significantly outperformed the broader industry: In 2021, ratings for U.S. adults aged 18-49 on legacy TV declined 23% year-over-year (according to Nielsen). We also grew engagement per user globally, with streaming hours per active account per day of 3.6 hours, up from Q3 2021 and pre-COVID Q4 2019. And we still have significant room for growth in this engagement, in the U.S. alone, the average household consumes more than 8 hours of TV per day (according to Nielsen).
+Content Promotion
+We are continuously innovating to promote content in organic, engaging ways. We create unique content experiences and ads directly on our home screen, including the recent “Live TV Zone” and “Featured Free” to our left-hand navigation bar for quick access to these popular categories. These features make it easy for consumers to discover and watch great entertainment, and produce substantial value for our content partners. 
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+3
+
+
+<img alt="image12.jpg" src="image12.jpg"><img alt="picture9.jpg" src="picture9.jpg">The Live TV Zone provides easy access to a broad range of content
+across news, sports, music, and entertainment
+The Roku Channel
+2021 was a record year for The Roku Channel:
+•Top five channel on our platform in the U.S. by active account reach in Q3 and Q4
+•Reached U.S. households with an estimated 80 million people in Q4
+•Streaming hours more than doubled YoY for the full year
+With The Roku Channel, we are focused on offering consumers the best in free entertainment, with both linear and on demand programming, and original and licensed content. Additionally, we provide easy access to paid, premium content. The Roku Channel is a successful flywheel in which the content grows engagement, which drives ad revenue, which enables us to invest more in content.
+The Roku Channel has been a leader in free, ad-supported linear streaming TV (FAST2), and in Q4 our linear offering was the No. 1 FAST service by active account reach on the Roku platform in the U.S. We have more than 270 linear channels across news, sports, music, and entertainment through an electronic programming guide, giving consumers the experience of legacy TV — for free. To create easy access to these channels, we launched a “Live TV Zone” directly on our home screen in the left-hand navigation bar. We believe The Roku Channel has a significant growth opportunity ahead, and FAST was the fastest-growing segment in TV streaming, doubling year-over-year the U.S. in Q4 (Kantar).
+We also provide great free on-demand entertainment and now license content from more than 250 publishers. In 2021, we expanded to original content with our acquisition of the global content distribution rights held by Quibi. We relaunched this content as Roku Originals, and in late 2021 created our first feature film, Zoey’s Extraordinary Christmas, which was the No. 1 on-demand title on The Roku Channel by reach in Q4. In fact, half of the top ten on-demand titles by reach on The Roku Channel last year were Roku Originals. Our robust content offering and our unique ability to efficiently and effectively promote content to our users creates significant value for advertisers. On average, 91% of adults aged 18-49 that advertisers reached on The Roku Channel had not seen these ads on legacy TV.
+2 FAST: free ad supported linear streaming TV does not include on-demand content 
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+4
+
+
+<img alt="image12.jpg" src="image12.jpg">Our growing investment in content is commensurate with the scale and growth trajectory of The Roku Channel, and creates value for our users, advertisers and content partners — and continues to drive The Roku Channel flywheel.
+<img alt="picture4.jpg" src="picture4.jpg">Zoey’s Extraordinary Christmas reached 100% more adults aged 18-34 
+than those who watched the season 2 finale on legacy TV 3
+Monetization
+We continue to deliver exceptional growth in platform monetization driven by content distribution, media and entertainment promotional spending, and advertising. In 2021, we grew Platform revenue 80% year-over-year to $2.3 billion. ARPU grew from $28.76 to $41.03 (trailing 12-month basis), an increase of 43% year-over-year. The growth of TV streaming is driven by both cord cutting rates and the increasing amount of time spent streaming TV: according to Nielsen, in Q4 adults aged 18-49 spent 45% of their TV time streaming, up from 40% in the prior year. Yet it is estimated that advertisers spent just 18% of their U.S. TV budgets on streaming in 2021. This gap illustrates the long runway left to increase ARPU, and our record ad commitments at the 2021 Upfronts as well as momentum in other advertising categories highlight that we are better positioned than ever to capture marketers’ shifting advertising spend.
+<img alt="picture11a.jpg" src="picture11a.jpg">3 Based on Roku reach estimates for the two weeks following the premier of Zoey’s Extraordinary Christmas and Nielsen live broadcast plus 7-day reach estimates for the season 2 finale.
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+5
+
+
+<img alt="image12.jpg" src="image12.jpg">Content Distribution
+With the launch of HBO Max, Paramount+, and Discovery+ in 2021, almost every major media company now has a flagship service and has reoriented their business around streaming. With increasing competition, streaming services are using Roku marketing tools such as home screen and video ads, advanced targeting, brand experiences, free trials, home screen themes, and Roku Pay to boost engagement, retention, win back lapsed customers, and recruit new first-time customers. As a result, in Q4 and for full year 2021, media and entertainment promotional spending grew faster than overall platform revenue. 
+<img alt="picture3.jpg" src="picture3.jpg">HBO Max used our media and entertainment tools to drive signups and promote Season 3 of “Succession”
+Advertising
+In 2021, the shift of advertiser budgets from legacy TV to TV streaming continued to accelerate. Our monetized video ad impressions grew 67% year-over-year in Q4, and nearly doubled year-over-year in 2021, both driven by an increase in client acquisition, retention, and spending per client. In 2021, our total number of advertisers grew by more than 20% (excluding political), and we retained over 95% of advertisers who spent $1 million or more compared to 2020. 
+In Q4, there was a mix of strength and softness among different advertising verticals. Verticals like restaurants and travel had strong growth, while auto and CPG (consumer packaged goods) experienced supply chain disruptions that had a negative impact on their product availability and therefore led to Q4 softness in advertising spend. In the long-term, the advertising upside in the shift to TV streaming remains strong across categories.
+We offer advertisers unique data and marketing tools to efficiently reach Roku consumers. In Q4, our fastest growing ad product was targeting using our first-party data. For example, Goodlife Clothing, a DTC (direct to consumer) apparel company, leveraged our data and Shopify partnership to achieve an add-to-cart rate that was more than double that of other TV streaming platforms.
+We continue to innovate and build new capabilities to help advertisers use the scale and insights of Roku’s platform to be successful. We launched the Roku Brand Studio in March, enabling advertisers to produce new 
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+6
+
+
+<img alt="image12.jpg" src="image12.jpg">creative ad formats for TV streaming. In April, we acquired video automatic content recognition (ACR) and dynamic ad insertion (DAI) team and technologies from Nielsen to accelerate our launch of an end-to-end linear ad replacement solution, which we expect to be another growth vector. This month, we incorporated Nielsen’s Digital Ad Ratings audience guarantees into OneView®, making it the first ad buying platform to enable Nielsen guarantees across media sold by Roku and publishers on the Roku platform. We also made progress in our international markets with the launch of our video ad business in Mexico. 
+Outlook 
+The global shift to TV streaming remains intact and, along with our competitive advantages, will continue to drive our business in 2022 and the years ahead. Going forward, we will continue to provide qualitative color on our annual outlook, and we will simplify our quarterly guidance by providing a single estimate for each metric instead of a range.
+For 2022, we expect ongoing supply chain disruptions will continue to impact the global economy. This will affect the broader consumer electronics space, and the TV industry in particular. Overall TV unit sales are likely to remain below pre-COVID levels, which could affect our active account growth. Account acquisition will remain a priority, and we intend to continue to insulate customers from elevated costs in our player business, which will continue to cause negative player gross margins until conditions normalize. On the monetization side, delayed ad spend in verticals most impacted by supply/demand imbalances may continue into 2022. However, we view all these factors as temporary and for the full year, we expect total net revenue growth to be 35%.
+Our Q1 outlook anticipates seasonality with total net revenue of $720 million, up 25% year-over-year. We anticipate total gross profit of roughly $360 million and adjusted EBITDA of $55 million. As the business mix normalizes toward video advertising, we expect platform gross margin of around 60%.
+More broadly, there remains an enormous opportunity in front of us that we expect to capture through our many competitive differentiators, which include the Roku OS, The Roku Channel, and our ad platform. We will continue to invest aggressively in all our strategic initiatives to drive growth and enhance our competitive differentiation. In particular, we believe that the Roku OS, due to our ongoing innovation, will continue to gain share as TV OEMs shift away from costly proprietary operating systems that are not core competencies and toward a best in class licensed solution (very similar to the consolidation that occurred over time in desktop and mobile OS). 
+In addition, free, ad-supported services are the fastest growing segment in TV streaming. In just four years, The Roku Channel flywheel has propelled it to be a top five channel on the Roku platform in the U.S. This success is a result of our robust content strategy (linear, on demand, licensing, originals) and our ability to effectively drive consumers into The Roku Channel. Finally, since day one, we have been building our ad platform to take advantage of the inherent benefits of TV streaming. The targeting, measurement, and optimization delivered by TV streaming creates a superior ROI that will cause large advertisers to shift away from legacy TV. Additionally, the digital nature of TV streaming will make this advertising channel much more accessible to small and medium-sized businesses. 
+We believe our most significant growth opportunities lie ahead of us, and thus our priority for 2022 is to continue to invest in these strategic opportunities to drive that growth, extend our industry leadership, and maximize our competitive differentiation. 
+Conclusion
+We have an enormous opportunity ahead of us around the world. Time spent on TV streaming is increasing but is not yet equivalent to time spent on legacy TV, and ad budgets still significantly lag TV streaming viewership. With our competitive advantages — the Roku OS, The Roku Channel, and our ad platform built for TV streaming — we are strongly positioned to capture this opportunity.
+Thank you for your support and Happy Streaming™!
+Anthony Wood, Founder and CEO; and Steve Louden, CFO
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+7
+
+
+<img alt="image12.jpg" src="image12.jpg">Conference Call Webcast – 2 p.m. PT February 17, 2022
+The Company will host a webcast of its conference call to discuss the Q4 and fiscal year 2021 results at 2 p.m. Pacific Time / 5 p.m. Eastern Time on February 17, 2022. Participants may access the live webcast in listen-only mode on the Roku investor relations website at ir.roku.com. An archived webcast of the conference call will also be available at ir.roku.com after the call.
+About Roku, Inc.
+Roku pioneered streaming to the TV. We connect users to the streaming content they love, enable content publishers to build and monetize large audiences, and provide advertisers with unique capabilities to engage consumers. Roku streaming players and TV-related audio devices are available in the U.S. and in select countries through direct retail sales and licensing arrangements with service operators. Roku TV models are available in the U.S. and in select countries through licensing arrangements with TV brands. Roku is headquartered in San Jose, Calif. U.S.A. 
+Roku, the Roku logo and other trade names, trademarks or service marks of Roku appearing in this shareholder letter are the property of Roku. Trade names, trademarks and service marks of other companies appearing in this shareholder letter are the property of their respective holders.
+
+Investor RelationsConrad Groddcgrodd@roku.com         MediaKim Sampsonksampson@roku.com      
+Use of Non-GAAP Measures 
+In addition to financial information prepared in accordance with generally accepted accounting principles in the United States (GAAP), this shareholder letter includes certain non-GAAP financial measures. These non-GAAP measures include Adjusted EBITDA. In order for our investors to be better able to compare our current results with those of previous periods, we have included a reconciliation of GAAP to non-GAAP financial measures in the tables at the end of this letter. The Adjusted EBITDA reconciliation adjusts the related GAAP financial measures to exclude other income (expense), net, stock-based compensation expense, depreciation and amortization, and income tax (benefit)/expense where applicable. We believe these non-GAAP financial measures are useful as a supplement in evaluating our ongoing operational performance and enhancing an overall understanding of our past financial performance. However, these non-GAAP financial measures have limitations, and should not be considered in isolation or as a substitute for our GAAP financial information. 
+Forward-Looking Statements 
+This shareholder letter contains “forward-looking” statements that are based on our beliefs and assumptions and on information currently available to us. Forward-looking statements include all statements that are not historical facts and can be identified by terms such as “anticipate,” “believe,” “continue,” “could,” “design,” “estimate,” “expect,” “may,” “seek,” “should,” “will,” “would” or similar expressions and the negatives of those terms. Forward-looking statements involve known and unknown risks, uncertainties and other factors that may cause our actual results, performance or achievements to be materially different from any future results, performance or achievements expressed or implied by the forward-looking statements. Forward-looking statements represent our beliefs and assumptions only as of the date of this letter. These statements include those related to the shift of TV and TV advertising to streaming; our ability to continue leading the shift to streaming; market conditions affecting player costs; the benefits of the Roku TV Ready program; the benefits, features and availability of our streaming players, our audio devices and our partners’ Roku TV models; our room for growth in engagement; our ability to promote content effectively to produce value for our content partners; our flywheel of content, engagement, and revenue; our international expansion; our prospects for financial performance and growth following the COVID-19 pandemic; supply chain disruptions; our strategic plan; the strength of the Roku brand, OS and platform; our ability to deliver growth in platform monetization; the runway to increase ARPU; our positioning to capture advertising spend; the growth and monetization of and investment in The Roku Channel; the growth of FAST; our content offering in The Roku Channel; our ability to create value for advertisers in The Roku Channel; the benefits of the Roku Brand Studio; the growth of our end-to-end linear ad replacement solution; our ability to insulate customers from elevated costs in the player business; player margins; TV OEM’s shift from other operating systems to the Roku OS; our financial outlook for the first quarter of 2022 and full year 2022 as well as our qualitative color on our business in 2022 and beyond; our investments; and our overall business trajectory. Except as required by law, we assume no obligation to update these forward-looking statements publicly, or to update the reasons actual results could differ materially from those anticipated in the forward-looking statements, even if new information becomes available in the future. Further information on factors that could cause actual results to differ materially from the results anticipated by our forward-looking statements is included in the reports we have filed with the Securities and Exchange Commission, including our Annual Report on Form 10-K for the year ended December 31, 2020 and our Quarterly Report on Form 10-Q for the quarter ended September 30, 2021. Additional information also will be available in our Annual Report on Form 10-K for the year ended December 31, 2021. All information provided in this shareholder letter and in the tables attached hereto is as of February 17, 2022, and we undertake no duty to update this information unless required by law.
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+8
+
+
+<img alt="image12.jpg" src="image12.jpg">ROKU, INC. 
+CONSOLIDATED STATEMENTS OF OPERATIONS (in thousands, except per share data) 
+(unaudited)
+
+                                                                                    Three Months Ended December 31,                                                Years Ended December 31,
+2021                                                                                                           2020                                2021                                2020
+Net Revenue:                                                                                                                                                                               
+Platform                                                       $703,582                              $471,179                           $2,284,925                          $1,267,744     
+Player                                                          161,747                               178,707                              479,659                             510,644     
+Total net revenue                                               865,329                               649,886                            2,764,584                           1,778,388     
+Cost of Revenue:                                                                                                                                                                           
+Platform (1)                                                    278,017                               170,349                              823,924                             503,177     
+Player (1)                                                      207,668                               174,079                              532,060                             466,992     
+Total cost of revenue                                           485,685                               344,428                            1,355,984                             970,169     
+Gross Profit (Loss):                                                                                                                                                                       
+Platform                                                        425,565                               300,830                            1,461,001                             764,567     
+Player                                                         (45,921)                                 4,628                             (52,401)                              43,652     
+Total gross profit                                              379,644                               305,458                            1,408,600                             808,219     
+Operating Expenses:                                                                                                                                                                        
+Research and development (1)                                    126,438                                94,731                              461,602                             355,784     
+Sales and marketing (1)                                         163,350                                96,089                              455,601                             299,457     
+General and administrative (1)                                   68,492                                49,487                              256,297                             173,231     
+Total operating expenses                                        358,280                               240,307                            1,173,500                             828,472     
+Income (Loss) from Operations                                    21,364                                65,151                              235,100                            (20,253)     
+Other Income (Expense), Net:                                                                                                                                                               
+Interest expense                                                  (749)                                 (762)                              (2,980)                             (3,432)     
+Other income (expense), net                                       2,006                                 2,213                                4,467                               5,233     
+Total other income (expense), net                                 1,257                                 1,451                                1,487                               1,801     
+Income (Loss) Before Income Taxes                                22,621                                66,602                              236,587                            (18,452)     
+Income tax benefit                                              (1,066)                                 (704)                              (5,798)                               (945)     
+Net Income (Loss)                                               $23,687                               $67,306                             $242,385                           $(17,507)     
+Net income (loss) per share — basic                               $0.18                                 $0.53                                $1.83                             $(0.14)     
+Net income (loss) per share — diluted                             $0.17                                 $0.49                                $1.71                             $(0.14)     
+Weighted-average common shares outstanding — basic                    134,711                               127,375                             132,710                             123,978
+Weighted-average common shares outstanding — diluted                  141,869                               138,763                             141,668                             123,978
+(1) Stock-based compensation was allocated as follows:                                                                                                                                     
+Cost of revenue, platform                                          $263                                  $198                                 $827                                $847     
+Cost of revenue, player                                             687                                   397                                2,035                               1,407     
+Research and development                                         21,746                                16,936                               77,770                              58,412     
+Sales and marketing                                              19,274                                11,602                               63,503                              42,846     
+General and administrative                                       12,083                                 9,595                               43,397                              30,564     
+Total stock-based compensation                                  $54,053                               $38,728                             $187,532                            $134,076     
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+9
+
+
+<img alt="image12.jpg" src="image12.jpg">ROKU, INC. 
+CONSOLIDATED BALANCE SHEETS (in thousands, except share data) 
+(unaudited) 
+
+
+                                                                                                               As of December 31,
+2021                                                                                                                         2020
+Assets                                                                                                                           
+Current Assets:                                                                                                                  
+Cash and cash equivalents                                                     $2,146,043                          $1,092,815     
+Accounts receivable, net of allowances of $56,827 and $41,236 as of              752,393                             523,852     
+December 31, 2021 and 2020, respectively                                                                                         
+Inventories                                                                       50,276                              53,895     
+Prepaid expenses and other current assets                                        105,795                              27,078     
+Total current assets                                                           3,054,507                           1,697,640     
+Property and equipment, net                                                      177,567                             155,197     
+Operating lease right-of-use assets                                              345,660                             266,197     
+Intangible assets, net                                                            84,126                              62,181     
+Goodwill                                                                         161,519                              73,058     
+Other non-current assets                                                         258,766                              16,269     
+Total Assets                                                                  $4,082,145                          $2,270,542     
+Liabilities and Stockholders’ Equity                                                                                             
+Current Liabilities:                                                                                                             
+Accounts payable                                                                $124,921                            $112,314     
+Accrued liabilities                                                              549,055                             347,668     
+Current portion of long-term debt                                                  9,883                               4,874     
+Deferred revenue, current portion                                                 45,760                              55,465     
+Total current liabilities                                                        729,619                             520,321     
+Long-term debt, non-current portion                                               79,985                              89,868     
+Deferred revenue, non-current portion                                             28,726                              21,283     
+Operating lease liability, non-current portion                                   394,724                             307,936     
+Other long-term liabilities                                                       82,485                               3,119     
+Total Liabilities                                                              1,315,539                             942,527     
+Stockholders’ Equity:                                                                                                            
+Common stock, $0.0001 par value;                                                      14                                  13     
+Additional paid-in capital                                                     2,856,572                           1,660,379     
+Accumulated other comprehensive income                                                41                                  29     
+Accumulated deficit                                                             (90,021)                           (332,406)     
+Total stockholders’ equity                                                     2,766,606                           1,328,015     
+Total Liabilities and Stockholders’ Equity                                    $4,082,145                          $2,270,542     
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+10
+
+
+<img alt="image12.jpg" src="image12.jpg">ROKU, INC. 
+CONSOLIDATED STATEMENTS OF CASH FLOWS (in thousands)
+(unaudited)
+
+                                                                                                                                Years Ended December 31,
+2021                                                                                                                                                2020
+Cash flows from operating activities:                                                                                                                   
+Net income (loss)                                                                                    $242,385                            $(17,507)      
+Adjustments to reconcile net income (loss) to net cash provided by operating activities:                                                                
+Depreciation and amortization                                                                                42,621                               36,206
+Stock-based compensation expense                                                                            187,532                              134,076
+Amortization of right-of-use assets                                                                          31,024                               28,743
+Amortization of content assets                                                                               95,570                               22,392
+Provision for (recoveries of) doubtful accounts                                                               (904)                                3,801
+Other items, net                                                                                              (101)                                  524
+Changes in operating assets and liabilities:                                                                                                            
+Accounts receivable                                                                                       (221,768)                            (196,046)
+Inventories                                                                                                   3,619                              (4,181)
+Prepaid expenses and other current assets                                                                  (67,240)                              (3,450)
+Other non-current assets                                                                                  (102,957)                              (1,128)
+Accounts payable                                                                                              8,428                                6,410
+Accrued liabilities                                                                                          38,279                              103,218
+Operating lease liabilities                                                                                (20,083)                               12,999
+Other long-term liabilities                                                                                 (1,100)                                  618
+Deferred revenue                                                                                            (7,224)                               21,517
+Net cash provided by operating activities                                                                   228,081                              148,192
+Cash flows from investing activities:                                                                                                                   
+Purchase of property and equipment                                                                         (40,041)                             (82,382)
+Purchase of business, net of cash acquired                                                                (136,778)                                    —
+Proceeds from escrows associated with acquisition                                                                 —                                1,058
+Net cash used in investing activities                                                                     (176,819)                             (81,324)
+Cash flows from financing activities:                                                                                                                   
+Proceeds from borrowings, net of issuance costs                                                                   —                               69,325
+Repayments of borrowings                                                                                    (5,000)                             (74,325)
+Proceeds from equity issued under incentive plans                                                            18,532                               16,806
+Proceeds from equity issued under at-the-market offerings, net of offering costs                            989,615                              497,242
+Net cash provided by financing activities                                                                 1,003,147                              509,048
+Net increase in cash, cash equivalents and restricted cash                                                1,054,409                              575,916
+Effect of exchange rate changes on cash, cash equivalents and restricted cash                                    12                                    —
+Cash, cash equivalents and restricted cash —Beginning of period                                           1,093,249                              517,333
+Cash, cash equivalents and restricted cash —End of period                                          $2,147,670                           $1,093,249      
+Cash, cash equivalents and restricted cash at end of period:                                                                                            
+Cash and cash equivalents                                                                                 2,146,043                            1,092,815
+Restricted cash, current                                                                                          —                                  434
+Restricted cash, non-current                                                                                  1,627                                    —
+Cash, cash equivalents and restricted cash —End of period                                          $2,147,670                           $1,093,249      
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+11
+
+
+<img alt="image12.jpg" src="image12.jpg">
+                                                                                                       Years Ended December 31,
+2021                                                                                              2020                         
+Supplemental disclosures of cash flow information:                                                                             
+Cash paid for interest                                                              $2,578                          $3,470     
+Cash paid for income taxes                                                          $1,363                          $1,014     
+Supplemental disclosures of non-cash investing and financing activities:                                                       
+Non-cash consideration for business combination                                    $21,400                              $—     
+Services to be received as part of a business combination                           $6,500                              $—     
+Unpaid portion of property and equipment purchases                                  $3,073                          $1,242     
+NON-GAAP INFORMATION (in thousands) 
+(unaudited) 
+
+
+                                                          Three Months Ended December 31,                                            Years Ended December 31,
+2021                                                  2020                                  2021                              2020                           
+Reconciliation of Net Income (Loss) to Adjusted EBITDA:                                                                                                      
+Net income (loss)                     $23,687                               $67,306                           $242,385                         $(17,507)     
+Other income (expense), net           (1,257)                               (1,451)                            (1,487)                           (1,801)     
+Stock-based compensation               54,053                                38,728                            187,532                           134,076     
+Depreciation and amortization          11,317                                 9,639                             42,621                            36,206     
+Income tax benefit                    (1,066)                                 (704)                            (5,798)                             (945)     
+Adjusted EBITDA                       $86,734                              $113,518                           $465,253                          $150,029     
+Quarterly streaming hours published vs. revised streaming hours (billions) 0b 2b 4b 6b 8b 10b 12b 14b 2017 q1 2017 q2 2017 q3 2017 q4 2018 q1 2018 q2 2018 q3 2018 q4 2019 q1 2019 q2 2019 q3 2019 q4 2020 q1 published streaming hours revised streaming ho
+
+Roku Q4 and Full Year 2021 Shareholder Letter      
+12
+
+
+
+
