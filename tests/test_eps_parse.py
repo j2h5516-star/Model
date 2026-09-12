@@ -2209,6 +2209,45 @@ SEC_검색응답 = """<?xml version="1.0" encoding="ISO-8859-1" ?>
 </feed>"""
 
 
+# ── 표시가 **실제로 도는 조립 함수**를 통과하는가 (183차-H) ──────────
+#
+# 왜 이 시험이 또 필요한가 — 같은 사고를 **두 번** 냈다:
+#   런 #76: measure_store.EPS_FIELDS 허용 목록에 이름이 없어 스냅샷에서 사라짐
+#   런 #77: fetch_earnings_8k 의 조립 dict 에 이름이 없어 행에 못 실림
+# 두 번 다 "끝까지 따라가는 시험"을 썼다고 생각했지만, 시험이 **손으로
+# 만든 dict** 로 시작해 실제 조립 함수를 건너뛰었다.
+#
+# 이 시험은 **파서가 내놓은 결과 그대로**를 조립 함수에 태운다.
+def test_조립_함수가_분기열_표시를_옮긴다():
+    """fetch_earnings_8k 가 만드는 dict 에 표시가 실려야 합니다.
+
+    그 함수는 SEC 를 두드리므로 여기서는 **조립 부분만** 봅니다 —
+    파서 결과의 어느 칸이 dict 로 옮겨지는지를 소스에서 확인하고,
+    파서가 그 칸을 실제로 내놓는지를 함께 봅니다.
+    """
+    import inspect
+    조립 = inspect.getsource(sf.fetch_earnings_8k)
+    for 칸 in ("adj_eps", "gaap_eps", "adjusted_ebitda"):
+        assert f'"{칸}_분기열"' in 조립, (
+            f"조립 dict 에 {칸}_분기열 이 없습니다 — 파서가 남겨도 "
+            f"행까지 못 갑니다(런 #77 사고)")
+
+    # 파서가 실제로 그 칸을 내놓는지 (이름만 적어 두고 파서가 안 주면 헛것)
+    표 = ("                                 Three Months Ended                     Year Ended\n"
+         "Non-GAAP diluted net income per share  $0.35          $0.25          $0.70         $0.09\n")
+    parsed = sf.parse_press_release(표)
+    assert parsed.get("adj_eps_분기열") is True, parsed
+
+    # 조립이 쓰는 것과 같은 방식으로 꺼내지는가
+    assert parsed.get("adj_eps_분기열") == parsed.get("adj_eps_분기열")
+    행 = {}
+    sf._apply_press_to_row(행, {
+        "adj_eps": parsed["adj_eps"],
+        "adj_eps_분기열": parsed.get("adj_eps_분기열"),
+    })
+    assert 행.get("adj_eps_분기열") is True, 행
+
+
 def test_은행_기간이_뼈대에_들어간다():
     """183차-G — 은행은 영업이익·매출·GAAP EPS 를 분기로 안 내서 **연말
     분기 행이 통째로 없었고**, 그래서 1월 실적 발표문이 붙을 자리가

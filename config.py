@@ -1081,6 +1081,10 @@ TICKER_CIK: dict[str, int] = {
     #   (같은 런에서 edgartools 색인은 CHOICEONE FINANCIAL SERVICES 같은
     #    **엉뚱한 회사**를 돌려줬다 — 직접 묻는 길이 실제로 일한 증거다.)
     "DFS": 1393612,     # Discover Financial Services (캐피털원에 인수)
+    # 183차-H — 이름을 줄이자(꼬리표 제거) 런 #77 에서 둘이 더 나왔다.
+    #   SEC 가 돌려준 이름이 **정확히 일치**했고 다섯 결과가 같은 번호였다.
+    "CFLT": 1699838,    # Confluent, Inc.
+    "X": 1163302,       # UNITED STATES STEEL CORP (일본제철에 인수)
 }
 
 # 위 6개 중 아직 번호를 모르는 종목의 **회사 이름** — 검색 열쇠일 뿐,
@@ -1096,11 +1100,15 @@ TICKER_CIK: dict[str, int] = {
 # SEC 에는 "HESS CORP"·"UNITED STATES STEEL CORP" 처럼 줄여 적혀 있어
 # "Hess Corporation"·"…Corporation" 으로는 앞부분이 어긋납니다.
 # 그래서 **회사 고유 이름만** 남깁니다(Corporation·Inc 같은 꼬리표 제거).
+# ⚠️ 남은 둘 (183차-H 실측):
+#   HES  — 번호는 셋(1120916 · 4447 · 1789832)이 나왔는데 **이름이 빈 채로**
+#          왔다. 어느 것이 헤스인지 확인할 방법이 없으므로 **넣지 않는다**
+#          (짐작으로 번호를 넣지 않는다 — 헌법 1조). 이름이 함께 오도록
+#          검색 방식을 바꾸든지, 다른 자료로 교차 확인이 되면 그때 넣는다.
+#   HOLX — "Hologic" 으로도 결과없음. 아직 모른다.
 TICKER_NAME_HINT: dict[str, str] = {
     "HES": "Hess",
-    "X": "United States Steel",
     "HOLX": "Hologic",
-    "CFLT": "Confluent",
 }
 
 # 분기 종료일과 8-K 제출일이 이 일수 안이면 같은 분기의 발표로 짝짓습니다.
