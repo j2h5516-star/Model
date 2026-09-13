@@ -2854,6 +2854,8 @@ _SEC_회사검색_URL = (
 )
 _CIK_RE = re.compile(r"CIK=(\d{5,10})", re.I)
 _CONFORMED_RE = re.compile(r"<conformed-name>([^<]+)</conformed-name>", re.I)
+# 목록 꼴에서 회사 이름이 실리는 다른 자리 (183차-J — 아직 실물로 확인 전)
+_TITLE_RE = re.compile(r"<title[^>]*>([^<]+)</title>", re.I)
 
 
 def _SEC_이름검색(name: str) -> list[list[str]]:
@@ -2872,12 +2874,29 @@ def _SEC_이름검색(name: str) -> list[list[str]]:
         글 = download_text(_SEC_회사검색_URL.format(이름=quote(name)))
     except Exception as exc:
         return [["SEC검색실패", f"{type(exc).__name__}: {str(exc)[:80]}", ""]]
-    번호 = _CIK_RE.findall(글 or "")
-    이름들 = _CONFORMED_RE.findall(글 or "")
+    글 = 글 or ""
+    번호 = _CIK_RE.findall(글)
+    # 183차-J — 이름이 **두 자리** 중 하나에 있습니다.
+    #
+    #   찾은 회사가 하나면 SEC 는 그 회사 페이지를 주고 이름이
+    #   <conformed-name> 안에 있습니다(DFS·CFLT·X 가 그랬습니다).
+    #   여럿이면 목록을 주는데, 실측(런 #77·#78)에서 HES 는 번호가 셋인데
+    #   **이름이 전부 빈 채로** 왔습니다 — 목록 꼴에서는 이름이 다른
+    #   자리(<title>)에 있을 것으로 보입니다.
+    #
+    #   ⚠️ "보입니다" 는 짐작입니다. 그래서 **응답 앞부분을 함께 적어
+    #      옵니다**(_응답앞) — 다음 런의 로그로 실제 모양을 보고 정합니다.
+    #      값은 안 씁니다(106차 규칙).
+    이름들 = _CONFORMED_RE.findall(글) or _TITLE_RE.findall(글)
     나온다: list[list[str]] = []
     for i, n in enumerate(번호[:5]):
-        나온다.append([이름들[i] if i < len(이름들) else "", n, ""])
-    return 나온다 or [["결과없음", "", ""]]
+        나온다.append([(이름들[i].strip() if i < len(이름들) else ""), n, ""])
+    if not 나온다:
+        나온다 = [["결과없음", "", ""]]
+    # 이름을 하나도 못 읽었으면 응답 모양을 적어 둡니다 (계기)
+    if 글 and not any(x[0] and x[0] != "결과없음" for x in 나온다):
+        나온다.append(["_응답앞", re.sub(r"\s+", " ", 글[:300]), ""])
+    return 나온다
 
 
 def new_report(ticker: str) -> dict:

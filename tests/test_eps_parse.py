@@ -2350,6 +2350,52 @@ def test_SEC_이름검색이_번호를_읽어_온다(monkeypatch=None):
     assert any("HOLOGIC" in x[0].upper() for x in 나온다), 나온다
 
 
+SEC_목록응답 = """<?xml version="1.0"?>
+<feed>
+ <entry><title>HESS CORP</title>
+  <link href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0000004447&amp;type=10-K"/></entry>
+ <entry><title>HESS MIDSTREAM LP</title>
+  <link href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001789832&amp;type=10-K"/></entry>
+</feed>"""
+
+
+def _가짜응답으로(글):
+    import edgar.httprequests as hr
+    옛함수, 옛신원 = hr.download_text, sf._ensure_identity
+    hr.download_text = lambda *a, **k: 글
+    sf._ensure_identity = lambda: None
+    try:
+        return sf._SEC_이름검색("아무이름")
+    finally:
+        hr.download_text, sf._ensure_identity = 옛함수, 옛신원
+
+
+def test_여러_회사가_나오는_목록_꼴에서도_이름을_읽는다():
+    """183차-J — 찾은 회사가 하나면 SEC 는 회사 페이지를 주고 이름이
+    <conformed-name> 에 있지만(DFS·CFLT·X), 여럿이면 목록을 주고 이름이
+    다른 자리에 있습니다. 런 #77·#78 에서 HES 는 번호 셋이 **이름 없이**
+    왔습니다 — 이름 없는 번호는 넣을 수 없으므로 되살리지 못했습니다."""
+    나온다 = _가짜응답으로(SEC_목록응답)
+    번호들 = {x[1] for x in 나온다}
+    이름들 = {x[0] for x in 나온다}
+    assert "0000004447" in 번호들, 나온다
+    assert any("HESS CORP" in n for n in 이름들), f"목록 꼴에서 이름을 못 읽었습니다: {나온다}"
+
+
+def test_이름을_못_읽으면_응답_앞부분을_적어_온다():
+    """짐작 대신 계기 — 다음 런의 로그로 실제 모양을 본다 (106차 규칙)."""
+    나온다 = _가짜응답으로("<feed><entry><cik>0000004447</cik></entry></feed>")
+    계기 = [x for x in 나온다 if x[0] == "_응답앞"]
+    assert 계기, f"이름을 못 읽었는데 응답을 안 적었습니다: {나온다}"
+    assert "0000004447" in 계기[0][1], 계기
+
+
+def test_이름을_읽으면_응답을_적지_않는다():
+    """짝 시험 — 잘 읽히면 로그를 지저분하게 만들지 않습니다."""
+    나온다 = _가짜응답으로(SEC_목록응답)
+    assert not [x for x in 나온다 if x[0] == "_응답앞"], 나온다
+
+
 def test_SEC_이름검색이_실패해도_수집을_멈추지_않는다():
     """SEC 가 막힌 개발 환경·일시 장애에서도 예외를 밖으로 내보내지 않습니다."""
     import edgar.httprequests as hr
