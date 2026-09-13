@@ -161,6 +161,14 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
     past_peak: float | None = None
     seen: set[str] = set()
     drought: int | None = None    # 직전 신고점 이후 발표 수 (본 적 없으면 None)
+    # 183차-L — **직전 발표에 TTM 이 있었나**. H9-clean(183차-E 등록)이
+    # 씁니다. 직전 발표에 TTM 이 없으면 그 사이에 구멍이 있었다는 뜻이고,
+    # "직전 정점"은 구멍 이전의 것이므로 진짜 정점을 못 본 것일 수 있습니다.
+    # 그런 자리의 "첫 돌파"는 참이라고 말할 수 없습니다(실물 PATH
+    # 2025-05-29 폭 1,200% · CRDO 2026-06-01 폭 3,700%).
+    # ⚠️ 이 값은 **아무것도 바꾸지 않습니다** — 기존 가설의 표본은 한 칸도
+    #    안 움직입니다. H9-clean 만 이것으로 표본을 좁힙니다.
+    앞ttm: float | None = None
     for run in eps_runs(rows, field):
         streak = 0    # 구간이 새로 시작하면 연속 셈도 새로
         values: list[float] = []
@@ -216,8 +224,11 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
                     "drought": drought,
                     "ttm_growth": growth,
                     "accel": accel,
+                    # 183차-L — 직전 발표에 TTM 이 없었나 (구멍 바로 뒤인가)
+                    "직전TTM없음": 앞ttm is None,
                 }
             )
+            앞ttm = current
             # 가뭄 셈 (151차 H27) — 상태를 적은 **뒤에** 갱신합니다.
             # 신고점이면 방금 끝난 가뭄 길이가 위에 적혔으니 0 부터 다시
             # 세고, 아니면 (한 번이라도 신고점을 본 뒤라면) 하나 더 셉니다.
@@ -546,6 +557,10 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
                     # H31 (164차 등록) — TTM 증가율이 직전보다 커졌나 (가속).
                     # 같은 연속 구간의 TTM 세 개가 없으면 None (판단 불가)
                     "가속": state.get("accel"),
+                    # H9-clean (183차-E 등록) — 직전 발표에 TTM 이 없었나.
+                    # 참이면 그 자리의 "첫 돌파"는 구멍 너머를 보고 잰 것이라
+                    # H9-clean 표본에서 뺍니다(신호에도 기준선에도 안 넣음).
+                    "직전TTM없음": state.get("직전TTM없음"),
                     "excess": excess,
                     # H26 (143차 등록) — 125거래일 창. **기존 excess(60일)는
                     # 한 칸도 안 바뀝니다.** 창이 더 길어 최근 사건은 아직

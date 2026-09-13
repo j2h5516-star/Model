@@ -890,6 +890,73 @@ def test_H31이_시계와_등록부와_로봇에_있다():
 
 
 # ---------------------------------------------------------------------------
+# H9-clean (183차-E 등록 · 183차-L 배선) — 구멍 뒤 첫 돌파를 뺀 H9
+# ---------------------------------------------------------------------------
+def _h9c_사건(날, streak, below52, 구멍뒤, 초과=0.0):
+    return {"ticker": "AA", "잣대": "adj_eps", "announced": 날,
+            "newhigh_streak": streak, "below52": below52,
+            "직전TTM없음": 구멍뒤, "excess": 초과}
+
+
+def test_H9clean은_구멍_뒤_사건을_신호에서도_기준선에서도_뺀다():
+    """등록문 그대로 — "직전 발표에 TTM 이 없으면 판단 불가".
+
+    구멍 바로 뒤의 "첫 돌파"는 직전 정점이 구멍 이전 것이라 진짜 정점을
+    못 본 것일 수 있습니다. 그래서 **신호에도 기준선에도** 넣지 않습니다.
+    """
+    새신호 = [_h9c_사건("2026-09-11", 1, True, False) for _ in range(11)]
+    새보통 = [_h9c_사건("2026-09-12", 2, False, False) for _ in range(9)]
+    새구멍 = [_h9c_사건("2026-09-13", 1, True, True) for _ in range(5)]   # 빠져야 함
+    옛것 = [_h9c_사건("2026-01-01", 1, True, False, 99.0) for _ in range(30)]
+    등록일당일 = [_h9c_사건("2026-09-10", 1, True, False)]               # 옛 표본
+    r = judge.judge_h9_clean(새신호 + 새보통 + 새구멍 + 옛것 + 등록일당일)
+    h = r[judge.H9CLEAN_NAME]
+    assert h["등록일"] == "2026-09-10"
+    새 = h["신규(판정)"]
+    assert 새["신호"]["n"] == 11, f"구멍 뒤 5건이 신호에 섞였습니다: {새}"
+    assert 새["기준선"]["n"] == 20, f"구멍 뒤 5건이 기준선에 남았습니다: {새}"
+    assert 새["뺀_구멍뒤_n"] == 5, f"뺀 건수를 안 적었습니다: {새}"
+    assert h["탐색표본(참고)"]["신호"]["n"] == 31, "등록일 당일은 탐색 표본입니다"
+    # 탐색 표본이 전부 폭등(99.0)이어도 판정은 새 표본만 봅니다
+    assert h["판정"] == "미채택", h["판정"]
+
+
+def test_H9clean은_52주선을_모르는_사건을_표본에_안_넣는다():
+    """H9 과 같은 표본 규칙 — 이력이 52주 미만이면 판단 불가(21차 등록)."""
+    e = _h9c_사건("2026-09-11", 1, None, False)
+    r = judge.judge_h9_clean([e])
+    assert r[judge.H9CLEAN_NAME]["신규(판정)"]["기준선"]["n"] == 0
+
+
+def test_H9clean은_옛_사건에_없는_칸을_지어내지_않는다():
+    """"직전TTM없음" 이 아직 안 실린 사건(None)은 뺄 근거가 없으므로 남깁니다.
+
+    없는 값을 '구멍 뒤'로도 '아니다'로도 단정하지 않습니다(헌법 1조).
+    """
+    옛꼴 = {"ticker": "AA", "잣대": "adj_eps", "announced": "2026-09-11",
+            "newhigh_streak": 1, "below52": True, "excess": 0.0}   # 칸 자체가 없음
+    r = judge.judge_h9_clean([옛꼴])
+    assert r[judge.H9CLEAN_NAME]["신규(판정)"]["기준선"]["n"] == 1
+
+
+def test_H9clean이_시계와_등록부와_로봇에_있다():
+    """등록만 하고 배선을 잊으면 판정 파일에 영영 안 나온다(150차-C).
+
+    ⚠️ 183차-E 가 바로 그 상태였습니다 — 등록문만 문서에 있고 재는 장치가
+    없어 표본이 영원히 0개였습니다. 이 시험이 그 재발을 막습니다.
+    """
+    import model_verify as mv
+    assert judge.H9CLEAN_NAME in judge.hypothesis_clock()
+    assert judge.hypothesis_clock()[judge.H9CLEAN_NAME][0] == "2026-09-10"
+    assert judge.H9CLEAN_NAME in mv.expected_hypotheses()
+    import inspect
+    import collect_job as cj
+    assert "judge_h9_clean" in inspect.getsource(cj.run), "로봇 배선 없음"
+    import app
+    assert judge.H9CLEAN_NAME in app.HYPOTHESIS_LABELS, "화면 이름표 없음"
+
+
+# ---------------------------------------------------------------------------
 # H32·H32b (168차 등록) — 감속 ∧ 런업(회피) · 가속 ∧ 런업
 # ---------------------------------------------------------------------------
 def _h32_사건(날, 가속, 런업, 초과=0.0):

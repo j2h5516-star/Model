@@ -198,6 +198,7 @@ def hypothesis_clock() -> dict[str, tuple[str, int]]:
         H27_NAME: (H27_START_DAY, me.WINDOW_TRADING_DAYS),
         H28_NAME: (H28_START_DAY, me.WINDOW_TRADING_DAYS),
         H31_NAME: (H31_START_DAY, me.WINDOW_TRADING_DAYS),
+        H9CLEAN_NAME: (H9CLEAN_START_DAY, me.WINDOW_TRADING_DAYS),
         H32_NAME: (H32_START_DAY, me.WINDOW_TRADING_DAYS),
         H32B_NAME: (H32_START_DAY, me.WINDOW_TRADING_DAYS),
         H33_NAME: (H33_START_DAY, me.WINDOW_TRADING_DAYS),
@@ -207,6 +208,41 @@ def hypothesis_clock() -> dict[str, tuple[str, int]]:
     for 이름, _수준 in H22_LEVELS[1:]:
         표[이름] = (H22_START_DAY, me.WINDOW_TRADING_DAYS)
     return 표
+
+
+# 배선일 — **가설이 코드에 실제로 들어간 날** (183차-L)
+# ---------------------------------------------------------------------------
+# 보통은 등록한 날 바로 장치를 답니다. 그러면 등록일 = 배선일이라 따로
+# 적을 것이 없습니다. 그런데 183차-E 는 H9-clean 을 **등록만 하고 사흘 뒤에**
+# 장치를 달았습니다. 그 사이에 로봇이 두 번 돌았으니, 화면 자료에는 그
+# 가설이 없는 것이 **당연**합니다.
+#
+# 화면 점검이 "등록일"만 보고 판단하면 이 당연한 상태를 ⛔(빠짐)로 외칩니다 —
+# 거짓 경보입니다. 그래서 **등록일과 배선일 중 나중 것**을 기준으로 봅니다.
+#
+# ⚠️ 이것은 검사를 무르게 하는 것이 아닙니다. "등록만 하고 안 재는" 상태는
+#    여전히 잡힙니다 — `test_H9clean이_시계와_등록부와_로봇에_있다` 처럼
+#    **로봇 배선 자체를 보는 시험**이 따로 있고, 로봇이 배선일 뒤에 한 번이라도
+#    돌면 이 표는 아무 일도 하지 않습니다.
+def hypothesis_wired_day() -> dict[str, str]:
+    """가설 이름 → 코드에 장치를 단 날. 등록과 같은 날이면 안 적습니다.
+
+    (상수를 함수 안에서 읽는 것은 이 파일의 관례입니다 — 이름이 아래쪽에
+    정의되어 있어도 함수가 불릴 때는 다 있습니다.)
+    """
+    return {
+        # 183차-E 가 등록(2026-09-10) · 183차-L 이 배선(2026-09-13)
+        H9CLEAN_NAME: "2026-09-13",
+    }
+
+
+def wired_day(name: str) -> str | None:
+    """그 가설을 화면이 실을 수 있게 된 날 — 등록일과 배선일 중 나중 것."""
+    등록일 = (hypothesis_clock().get(name) or (None,))[0]
+    배선일 = hypothesis_wired_day().get(name)
+    if 등록일 and 배선일:
+        return max(등록일, 배선일)
+    return 배선일 or 등록일
 
 
 def first_verdict_floor(verdict: dict | None = None) -> list[dict]:
@@ -804,6 +840,60 @@ def judge_accel_breakout(events: list[dict],
         entry[label] = judged
     entry["판정"] = entry["신규(판정)"]["판정"]
     return {H31_NAME: entry}
+
+
+# ---------------------------------------------------------------------------
+# H9-clean (183차-E 등록, 2026-09-10) — 구멍 너머의 "첫 돌파"를 뺀 H9
+# ---------------------------------------------------------------------------
+# 왜 등록했나: 183차-E 가 세어 보니 첫 돌파 882건 중 **98건(11.1%)** 이
+# "구멍 바로 뒤"였습니다. 그 자리의 직전 정점은 구멍 이전 것이라 진짜
+# 정점을 못 본 것일 수 있습니다 — 그러면 "첫 돌파"라고 말할 수 없습니다.
+# 실물: PATH 2025-05-29 폭 1,200% · CRDO 2026-06-01 폭 3,700%.
+#
+#   신호 = H9 과 같음 (첫 돌파 ∧ 주봉 종가 < 52주선)
+#   표본 = H9 과 같되 **직전 발표에 TTM 이 없는 사건은 판단 불가**로 보아
+#          신호에서도 기준선에서도 뺍니다
+#   등록문 원문: 측정결과.md 183차-E
+#
+# ⚠️ H9 은 한 칸도 안 바뀝니다. 이것은 **나란히 서는 다른 가설**입니다.
+#    둘의 폭등률 차이가 곧 "구멍 너머 첫 돌파가 신호를 얼마나 흐렸나"입니다.
+#
+# 왜 이제야 코드에 넣나(183차-L): 183차-E 는 등록만 하고 재는 장치를
+# 만들지 않았습니다. **재지 않으면 표본은 영원히 0개**입니다 — 등록만 한
+# 가설은 죽은 가설입니다. 그래서 지금 장치를 답니다. 판정 표본은 등록일
+# 뒤의 새 발표만이고(헌법 5조 — 탐색 표본 재사용 금지), 등록일 이전은
+# '탐색표본(참고)'로 나란히 적습니다.
+H9CLEAN_START_DAY = "2026-09-10"      # 183차-E 등록일
+H9CLEAN_NAME = "H9clean_저평가_첫신기록_구멍제외"
+
+
+def judge_h9_clean(events: list[dict],
+                   start_day: str = H9CLEAN_START_DAY) -> dict:
+    """H9-clean 판정 — 구멍 바로 뒤의 발표를 표본에서 뺀 H9.
+
+    "직전TTM없음" 이 아직 안 실린 옛 사건 목록(None)은 **뺄 근거가 없으므로
+    그대로 둡니다** — 없는 값을 참으로도 거짓으로도 지어내지 않습니다.
+    """
+    entry: dict = {"등록일": start_day,
+                   "문턱": {"뺀 것": "직전 발표에 TTM 이 없는 사건(구멍 바로 뒤)"}}
+    쓸것 = [e for e in events
+            if e.get("below52") is not None and e.get("직전TTM없음") is not True]
+    for label, pool in (
+        ("신규(판정)", [e for e in 쓸것 if e["announced"] > start_day]),
+        ("탐색표본(참고)", [e for e in 쓸것 if e["announced"] <= start_day]),
+    ):
+        signal = [e for e in pool
+                  if e["newhigh_streak"] == 1 and e["below52"] is True]
+        judged = _judge(signal, pool)
+        # 뺀 것이 몇 건인지 함께 적습니다 — 표본이 얼마나 줄었는지 보이게
+        같은시기 = [e for e in events
+                   if e.get("below52") is not None
+                   and ((e["announced"] > start_day) if label == "신규(판정)"
+                        else (e["announced"] <= start_day))]
+        judged["뺀_구멍뒤_n"] = len(같은시기) - len(pool)
+        entry[label] = judged
+    entry["판정"] = entry["신규(판정)"]["판정"]
+    return {H9CLEAN_NAME: entry}
 
 
 # ---------------------------------------------------------------------------

@@ -51,6 +51,7 @@ def expected_hypotheses() -> list[str]:
     names.append(judge.H31_NAME)   # 164차 등록 — 가속 ∧ 첫돌파
     names += [judge.H32_NAME, judge.H32B_NAME]   # 168차 등록 — 감속/가속 ∧ 런업
     names.append(judge.H33_NAME)   # 168차-D 등록 — 런업 변동 폭
+    names.append(judge.H9CLEAN_NAME)   # 183차-E 등록 — 구멍 뒤 첫돌파 제외
     return names
 
 

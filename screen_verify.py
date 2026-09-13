@@ -194,7 +194,11 @@ def 화면과_데이터를_맞댄다() -> list[dict]:
     수집시각 = str(a.get("수집") or "")[:10]
     말썽, 대기 = [], []
     for 이름 in sorted(기대 - 실린):
-        등록일 = (시계.get(이름) or (None,))[0]
+        # 183차-L — 등록일이 아니라 **화면이 실을 수 있게 된 날**과 견줍니다.
+        # 등록만 하고 며칠 뒤에 장치를 달면(H9-clean 이 그랬습니다) 그 사이
+        # 로봇이 돈 화면에 그 가설이 없는 것은 당연합니다 — ⛔ 가 아닙니다.
+        등록일 = (judge.wired_day(이름) if hasattr(judge, "wired_day")
+                else (시계.get(이름) or (None,))[0])
         if 등록일 and 수집시각 and 수집시각 <= 등록일:
             대기.append(이름)
         else:
