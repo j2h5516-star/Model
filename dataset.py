@@ -1059,15 +1059,22 @@ _LABEL_PERIOD_RE = re.compile(r"(\d{4})-(\d{2})")
 
 
 def _이름표_분기차이(row: dict) -> int | None:
-    """이름의 분기 번호와 기간끝의 달력 분기 번호의 차이(0~3). 못 재면 None."""
+    """이름의 분기 번호와 기간끝의 달력 분기 번호의 차이(0~3). 못 재면 None.
+
+    183차-K: 달력 분기는 **가장 가까운 분기끝**으로 정합니다. 주 단위
+    회계달력(13주 분기)을 쓰는 회사는 끝나는 날이 9/30 과 10/1 을 오가는데,
+    달(month)로만 보면 그 며칠 때문에 **맞는 이름이 '어긋난 것'으로 몰려**
+    날짜형으로 바뀌었습니다.
+    """
+    import data_quality as dq
+
     label = _LABEL_QUARTER_RE.match(str(row.get("period_label") or ""))
-    period = _LABEL_PERIOD_RE.search(
+    잰것 = dq.가까운_분기끝(
         str(row.get("period_end") or row.get("filing_date") or "")
     )
-    if not (label and period):
+    if not (label and 잰것):
         return None
-    calendar_quarter = (int(period.group(2)) - 1) // 3 + 1
-    return (int(label.group(2)) - calendar_quarter) % 4
+    return (int(label.group(2)) - 잰것[1]) % 4
 
 
 def _날짜형_이름표(row: dict) -> str | None:

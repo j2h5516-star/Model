@@ -31,6 +31,7 @@ data_quality.py — 숫자를 쓰기 전에 먼저 검사하는 단계
 
 from __future__ import annotations
 
+import datetime
 import math
 import re
 import statistics
@@ -328,6 +329,57 @@ def validate_quarters(quarters: list[dict], report: dict | None = None) -> list[
 
 
 # ---------------------------------------------------------------------------
+# 183차-K — 분기끝 날짜를 **가장 가까운 달력 분기끝**에 붙입니다
+# ---------------------------------------------------------------------------
+# 왜 필요한가 (실측으로 드러난 결함):
+#
+#   많은 회사가 "주(週) 단위 회계달력"을 씁니다 — 분기가 늘 13주라서
+#   끝나는 날이 해마다 며칠씩 밀립니다. 그러면 같은 회계분기가
+#   어떤 해에는 9월 30일(=달력 3분기), 다른 해에는 10월 1일(=달력 4분기)에
+#   끝납니다. **달(month)만 보고 분기 번호를 매기면 같은 분기가 해마다
+#   다른 번호를 받습니다.**
+#
+#   실물(2026-09-13 수집물 전수):
+#     TMO  2016-10-01(3분기 끝) 과 2016-12-31(4분기 끝) 이 **둘 다 4분기**
+#     KLIC 2021-01-02(1분기 끝) 이 달력으로는 1분기, 나머지 해는 4분기
+#
+#   재 보니 이웃한 두 분기의 번호가 한 칸씩 돌지 **않는** 쌍이
+#   14,811쌍 중 **313쌍(55종목)** 이었습니다. 이 번호는 계절성 판정과
+#   이상값의 '같은 분기 평소'가 쓰는 것이라 **계산이 실제로 어긋납니다.**
+#
+#   날짜를 가장 가까운 달력 분기끝(3/31·6/30·9/30·12/31)에 붙이면
+#   **313쌍 → 44쌍** 으로 줄었습니다.
+#
+#   ⚠️ 남는 44쌍의 한계(숨기지 않습니다): COST·AZO 처럼 한 해를
+#      12·12·12·16주로 나누는 회사는 분기끝이 2월 중순·5월 중순처럼
+#      달력 분기끝에서 6주 넘게 떨어져 있어 이 방법으로도 어긋납니다.
+#      COST 18쌍 · AZO 19쌍 · NBIX 4쌍 · NBIS 2쌍 · SMTC 1쌍.
+_분기끝_달 = ((3, 31), (6, 30), (9, 30), (12, 31))
+
+
+def 가까운_분기끝(date_text: str) -> tuple[int, int] | None:
+    """"2016-10-01" → (2016, 3). 가장 가까운 달력 분기끝의 (연, 분기)."""
+    m = re.search(r"(\d{4})-(\d{2})-(\d{2})", str(date_text or ""))
+    if not m:
+        m = re.search(r"(\d{4})-(\d{2})", str(date_text or ""))
+        if not m:
+            return None
+        year, month = int(m.group(1)), int(m.group(2))
+        return (year, (month - 1) // 3 + 1)      # 날짜가 없으면 달로
+    try:
+        day = datetime.date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+    except ValueError:
+        return None
+    후보 = []
+    for year in (day.year - 1, day.year, day.year + 1):
+        for month, last in _분기끝_달:
+            끝 = datetime.date(year, month, last)
+            후보.append((abs((day - 끝).days), year, (month - 1) // 3 + 1))
+    후보.sort()
+    return (후보[0][1], 후보[0][2])
+
+
+# ---------------------------------------------------------------------------
 # 계절성 검사 — "이 종목은 전분기 대비로 판정해도 되는가"
 # ---------------------------------------------------------------------------
 def fiscal_quarter_of(quarter: dict) -> tuple[int, int] | None:
@@ -364,11 +416,14 @@ def fiscal_quarter_of(quarter: dict) -> tuple[int, int] | None:
     기간종료일이 아예 없을 때만 이름으로 돌아갑니다.
     """
     # ① 기간종료일 (XBRL 이 준 구조값 — 글자로 뽑은 것이 아니라 믿을 수 있음)
+    #    183차-K: 달(month)이 아니라 **가장 가까운 달력 분기끝**에 붙입니다.
+    #    주 단위 회계달력(13주 분기)을 쓰는 회사는 끝나는 날이 해마다
+    #    며칠씩 밀려 9/30 과 10/1 을 오갑니다 — 달로만 보면 같은 분기가
+    #    해마다 다른 번호를 받습니다(전수 313쌍 → 44쌍).
     date_text = str(quarter.get("period_end") or quarter.get("filing_date") or "")
-    match = re.search(r"(\d{4})-(\d{2})", date_text)
-    if match:
-        year, month = int(match.group(1)), int(match.group(2))
-        return (year, (month - 1) // 3 + 1)
+    잰것 = 가까운_분기끝(date_text)
+    if 잰것 is not None:
+        return 잰것
 
     # ② 기간종료일이 없을 때만 이름으로
     label = str(quarter.get("period_label") or "")
