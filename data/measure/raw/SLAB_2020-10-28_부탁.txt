@@ -1,0 +1,392 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — SLAB 2020-10-28
+# 출처: https://www.sec.gov/Archives/edgar/data/1038074/000110465920118745/tm2034334d1_8k.htm
+
+
+ 
+Exhibit 99
+ 
+<img alt="" src="tm203433d1_ex99img001.jpg"> 
+
+Silicon Labs Announces Third Quarter 2020 Results
+ 
+-- Strong Results Driven by Record IoT Revenue -- 
+ 
+AUSTIN, Texas – October 28, 2020 – Silicon Labs (NASDAQ: SLAB), a leading provider of silicon, software and solutions for a smarter, more connected world, today reported financial results for its third quarter ended October 3, 2020. Revenue exceeded the top end of the guidance range at $221.3 million, up from $207.5 million in the second quarter. Third quarter GAAP and non-GAAP diluted earnings per share (EPS) were $0.07 and $0.73, respectively.
+ 
+“Third quarter revenue exceeded the high end of our guidance range at $221.3 million,” said Tyson Tuttle, CEO of Silicon Labs. “Revenue was considerably stronger than expected, with our IoT products leading the way with a record quarter. We see sustained acceleration towards a more connected world, which our products are well-suited to address.”
+ 
+Third Quarter Financial Highlights
+ 
+
+·                                     IoT                                   
+    revenue grew to $133.2 million, up 16% sequentially and 3% year-on-year.
+----------------------------------------------------------------------------
+ 
+·                                 Infrastructure                              
+    and Automotive revenue declined to $88.2 million, down 5% sequentially and
+                                 6% year-on-year.                             
+------------------------------------------------------------------------------
+ On a GAAP basis:
+ 
+
+·   GAAP gross margin was 58.8%.
+--------------------------------
+ 
+·   GAAP R&amp;D expenses were $72 million.
+-------------------------------------------
+ 
+·   GAAP SG&amp;A expenses were $48 million.
+--------------------------------------------
+ 
+·   GAAP operating income as a percentage of revenue was 4.3%.
+--------------------------------------------------------------
+ 
+·   GAAP diluted earnings per share was $0.07.
+----------------------------------------------
+ On a non-GAAP basis, excluding the impact of stock compensation, amortization of acquired intangible assets, restructuring charges, non-cash interest expense and other costs associated with convertible notes, and certain other items as set forth in the reconciliation tables below:
+ 
+
+·   Non-GAAP gross margin was 59.5%.
+------------------------------------
+ 
+·   Non-GAAP R&amp;D expenses were $56 million.
+-----------------------------------------------
+ 
+·   Non-GAAP SG&amp;A expenses were $39 million.
+------------------------------------------------
+ 
+·   Non-GAAP operating income as a percentage of revenue was 16.9%.
+-------------------------------------------------------------------
+ 
+·   Non-GAAP diluted earnings per share were $0.73.
+---------------------------------------------------
+ 
+
+
+Product Results
+ 
+
+·                                         Expanded                                      
+          our Bluetooth® Low Energy portfolio this quarter with the launch of the       
+           BGM220S and BGM220P modules. At just 6x6 mm, the BGM220S is one of the       
+    world's smallest Bluetooth modules. It provides ultra-small size, low-cost, and long
+      battery life to add turnkey Bluetooth connectivity to a variety of end products.  
+----------------------------------------------------------------------------------------
+ 
+·                                            Launched                                        
+          the Si54x/6x Ultra Series, a new family of small form-factor, high-performance     
+       crystal oscillators. The Si54x/6x Ultra Series delivers jitter performance as low as  
+    80 femtoseconds for integer and fractional frequencies across the entire operating range,
+       providing outstanding jitter margin for demanding applications including data center  
+              interconnect, optical transport, broadcast video and test/measurement.         
+---------------------------------------------------------------------------------------------
+ 
+·                                          Introduced                                      
+       new Si823Hx/825xx isolated gate drivers offering a combination of faster and safer  
+    switching, low latency and high noise immunity capabilities that enable power converter
+    designers to meet or exceed increasing energy efficiency standards and size constraints
+    in a variety of applications including data center and industrial power supplies, micro
+       inverters for solar power, and traction inverters for the electric vehicle market.  
+-------------------------------------------------------------------------------------------
+ 
+Business Highlights
+ 
+
+·                                         Announced                                       
+     collaboration with Amazon to support Sidewalk, a secure network created by neighbors 
+    who share a small portion of Wi-Fi bandwidth to help their devices work better at home
+    and beyond the front door. Sidewalk is a free software application layer that works on
+          top of our Wireless Gecko Series 2 products to support Sidewalk's sub-GHz       
+    and Bluetooth Low Energy protocols and permit IoT devices to securely connect to each 
+                                   other through the cloud.                               
+------------------------------------------------------------------------------------------
+ 
+·                                             Held                                         
+        our first-ever Works With smart home developer conference with leaders from the    
+       world’s largest smart home ecosystem players including key executives from Google,  
+     Amazon, Ring, and Comcast. Our Works With conference provided an onramp enabling smart
+    home developers to directly engage with the biggest, most popular smart home ecosystems
+     through co-authored curriculum featuring 40 technical sessions, 12 hands-on workshops 
+          and six keynotes spanning 40 hours of high quality, high engagement content.     
+-------------------------------------------------------------------------------------------
+ 
+·                                          Debuted                                        
+           our new Secure Vault technology for Silicon Labs’ multiprotocol Wireless       
+      Gecko Series 2 platform. Our products are the first with radios to earn ARM’s PSA   
+    Level 2 security certification. We also received SmartCert security certification from
+     the ioXt Alliance and were awarded a Gold medal in the 2020 LEAP Awards Connectivity 
+                             category for best-in-class security.                         
+------------------------------------------------------------------------------------------
+ 
+·                                           Released                                        
+       Simplicity Studio 5, which is the latest version of our free to use, class-leading   
+    IoT developer environment. Simplicity Studio now offers universal access and an enhanced
+     experience across a wide range of wireless protocols, all within a new, intuitive and  
+      responsive web-style user interface allowing customers to accelerate differentiation  
+                                      and time to market.                                   
+--------------------------------------------------------------------------------------------
+ 
+·                                         Announced                                       
+         our collaboration with STRATIS on their 3.0 Gateway which uses Silicon Labs’     
+    connectivity products to provide multiprotocol wireless capabilities connecting smart 
+    devices throughout apartment communities. This new industrial IoT application enables 
+    residents to use their smartphones as a credential to enter the apartment building and
+    their fully equipped smart apartment unit. The system also allows property managers to
+     control energy usage and smart technology in vacant units and monitor common areas.  
+------------------------------------------------------------------------------------------
+ 
+
+
+
+·                                         Continued                                      
+    to focus on addressing health and safety during the ongoing pandemic by collaborating
+     with our customers to expedite time-to-market of impactful products. For example, we
+           worked with Maggy, a Belgium-based start-up, to use our BGM13S Bluetooth      
+     module to enable a new, compact social-distancing wearable that warns users when the
+    distance between people becomes too small and could pose a risk of COVID-19 infection
+                                          transfer.                                      
+-----------------------------------------------------------------------------------------
+ 
+·                                        Promoted                                    
+                  Serena Townsend to Silicon Labs’ Chief People Officer              
+    to lead the company’s global talent strategy, people programs, and values-driven,
+                                    inclusive culture.                               
+-------------------------------------------------------------------------------------
+ 
+Business Outlook 
+ 
+The company expects fourth quarter revenue to be in the range of $221 to $231 million, with IoT and Infrastructure & Automotive up, and estimates the following:
+ 
+On a GAAP basis:
+ 
+
+·   GAAP gross margin at approximately 59%.
+-------------------------------------------
+ 
+·   GAAP operating expenses at approximately $123 million.
+----------------------------------------------------------
+ 
+·   GAAP effective tax rate of 0.0%.
+------------------------------------
+ 
+·   GAAP diluted earnings per share between $0.02 and $0.12.
+------------------------------------------------------------
+ 
+On a non-GAAP basis, excluding the impact of stock compensation, amortization of acquired intangible assets, acquisition related charges, restructuring charges, non-cash interest expense and other costs associated with convertible notes, and certain other items as set forth in the reconciliation tables below:
+ 
+
+·   Non-GAAP gross margin at approximately 59%.
+-----------------------------------------------
+ 
+·   Non-GAAP operating expenses at approximately $95 million.
+-------------------------------------------------------------
+ 
+·   Non-GAAP effective tax rate at 13.0%.
+-----------------------------------------
+ 
+·   Non-GAAP diluted earnings per share between $0.68 and $0.78.
+----------------------------------------------------------------
+ 
+Webcast and Conference Call
+
+A conference call discussing the quarterly results will follow this press release at 7:30 a.m. Central time. An audio webcast will be available on Silicon Labs' website (www.silabs.com) under Investor Relations. A replay will be available after the call at the same website listed above or by calling 1 (877) 344-7529 (US) or (412) 317-0088 (International) and entering access code 10145993. The replay will be available through November 28, 2020.
+ 
+About Silicon Labs
+ 
+Silicon Labs (NASDAQ: SLAB) is a leading provider of silicon, software and solutions for a smarter, more connected world. Our award-winning technologies are shaping the future of the Internet of Things, Internet infrastructure, industrial automation, consumer and automotive markets. Our world-class engineering team creates products focused on performance, energy savings, connectivity and simplicity. silabs.com
+ 
+
+
+Forward-Looking Statements
+ 
+This press release contains forward-looking statements based on Silicon Labs’ current expectations. The words "believe," "estimate," "expect," "intend," "anticipate," "plan," "project," "will" and similar phrases as they relate to Silicon Labs are intended to identify such forward-looking statements. These forward-looking statements reflect the current views and assumptions of Silicon Labs and are subject to various risks and uncertainties that could cause actual results to differ materially from expectations. Among the factors that could cause actual results to differ materially from those in the forward-looking statements are the following: the impact of COVID-19 on the U.S. and global economy, including the restrictions on travel and transportation and other actions taken by governmental authorities and disruptions to the business of our customers or our global supply chain that have occurred or may occur in the future, the ongoing impact of COVID-19 on our employees and our ability to provide services to our customers and respond to their needs; risks that Silicon Labs may not be able to maintain its historical growth; quarterly fluctuations in revenues and operating results; difficulties developing new products that achieve market acceptance; risks associated with international activities (including trade barriers, particularly with respect to China); intellectual property litigation risks; risks associated with acquisitions and divestitures; product liability risks; difficulties managing Silicon Labs’ distributors, manufacturers and subcontractors; dependence on a limited number of products; absence of long-term commitments from customers; inventory-related risks; difficulties managing international activities; risks that Silicon Labs may not be able to manage strains associated with its growth; credit risks associated with its accounts receivable; dependence on key personnel; stock price volatility; geographic concentration of manufacturers, assemblers, test service providers and customers in Asia that subjects Silicon Labs’ business and results of operations to risks of natural disasters, epidemics or pandemics, war and political unrest; debt-related risks; capital-raising risks; the competitive and cyclical nature of the semiconductor industry; average selling prices of products may decrease significantly and rapidly; information technology risks; cyber-attacks against Silicon Labs’ products and its networks; conflict mineral risks and other factors that are detailed in the SEC filings of Silicon Laboratories Inc. Silicon Labs disclaims any intention or obligation to update or revise any forward-looking statements, whether as a result of new information, future events or otherwise. References in this press release to Silicon Labs shall mean Silicon Laboratories Inc.
+ 
+Note to editors: Silicon Laboratories, Silicon Labs, the “S” symbol, and the Silicon Labs logo are trademarks of Silicon Laboratories Inc. All other product names noted herein may be trademarks of their respective holders.
+ 
+CONTACT: George Lane, +1 (512) 712-0019, George.Lane@silabs.com
+ 
+
+
+Silicon Laboratories Inc.
+ 
+Condensed Consolidated Statements of Income
+ 
+(In thousands, except per share data)
+ 
+(Unaudited)
+ 
+
+                                                            Three Months Ended                                  Nine Months Ended                  
+---------------------------------------------------------------------------------------------------------------------------------------------------
+                                                   October 3,                  September 28,            October 3,                September 28,    
+                                                         2020                           2019                  2020                         2019    
+Revenues                                             $221,350                       $223,294              $643,760                     $618,116    
+Cost of revenues                                       91,276                         89,204               258,209                      241,103    
+Gross profit                                          130,074                        134,090               385,551                      377,013    
+Operating expenses:                                                                                                                                
+Research and development                               71,969                         62,552               214,030                      187,974    
+Selling, general and administrative                    48,483                         47,718               150,883                      145,571    
+Operating expenses                                    120,452                        110,270               364,913                      333,545    
+Operating income                                        9,622                         23,820                20,638                       43,468    
+Other income (expense):                                                                                                                            
+Interest income and other, net                          2,044                          3,172                 8,562                        9,691    
+Interest expense                                       (8,604   )                     (5,126   )           (25,923   )                  (15,128   )
+Income before income taxes                              3,062                         21,866                 3,277                       38,031    
+Provision (benefit) for income taxes                     (100   )                      1,685                  (306   )                   28,481    
+Net income                                             $3,162                        $20,181                $3,583                       $9,550    
+Earnings per share:                                                                                                                                
+Basic                                                   $0.07                          $0.47                 $0.08                        $0.22    
+Diluted                                                 $0.07                          $0.45                 $0.08                        $0.22    
+Weighted-average common shares outstanding:                                                                                                        
+Basic                                                  43,815                         43,358                43,737                       43,311    
+Diluted                                                44,328                         44,634                44,254                       44,120    
+ 
+
+
+Unaudited Reconciliation of GAAP to Non-GAAP Financial Measures
+ 
+(In thousands, except per share data)
+ 
+
+          Non-GAAP Income                                                                                                                 Three                                                                                                        
+          Statement Items                                                                                                          Months Ended October                                                                                                
+                                                                                                                                         3, 2020                                                                                                       
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                      GAAP Measure                GAAP Percent          Stock Compensation            Intangible                    Acquisition             Restructuring           Non-GAAP Measure               Non-GAAP Percent    
+                                                                    of Revenue          Expense                       Asset Amortization            Related Items           Charges                                                      of Revenue    
+Revenues                              $221,350                                                                                                                                                                                                         
+Gross profit                                   130,074                    58.8   %      $390                          $--                           $1,233                  $--                     $131,697                                   59.5   %
+Research and development                        71,969                    32.5   %                      7,384                     8,954                      --             37                                   55,594                        25.1   %
+Selling, general and administrative             48,483                    22.0   %                      6,785                     2,894                      --             153                                  38,651                        17.5   %
+Operating income                                 9,622                     4.3   %                     14,559                     11,848                     1,233          190                                  37,452                        16.9   %
+ 
+
+     Non-GAAP                                                                                                             Three                                                                                                      
+     Earnings                                                                                                      Months Ended October                                                                                              
+    Per Share                                                                                                            3, 2020                                                                                                     
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                     GAAP Measure            Stock Compensation            Intangible                    Acquisition               Restructuring           Interest                        Income                 Non- GAAP Measure  
+                                             Expense*                      Asset Amortization*           Related Items*            Charges*                Expense Adjustments*            Tax                                       
+                                                                                                                                                                                           Adjustments                               
+Net income           $3,162                  $14,559                       $11,848                       $1,233                    $190                    $6,373                          $(4,853         )      $32,512            
+Diluted                       44,328                                                                                                                                                                                           44,328
+shares outstanding                                                                                                                                                                                                                   
+Diluted              $0.07                                                                                                                                                                                        $0.73              
+earnings per share                                                                                                                                                                                                                   
+ 
+* Represents pre-tax amounts
+ 
+Unaudited Forward-Looking Statements Regarding Business Outlook
+ 
+(In millions, except per share data)
+ 
+
+         Business Outlook                                     Three Months Ending January 2, 2021                              
+-------------------------------------------------------------------------------------------------------------------------------
+                                       GAAP Measure                 Non-GAAP Adjustments*                  Non-GAAP Measure    
+Gross margin                                     59     %                               0     %                          59   %
+Operating expenses                             $123                                   $28                               $95    
+Effective tax rate                              0.0     %                            13.0     %                        13.0   %
+Diluted earnings per share - low              $0.02                                 $0.66                             $0.68    
+Diluted earnings per share - high             $0.12                                 $0.66                             $0.78    
+ 
+* Non-GAAP adjustments include the following estimates: stock compensation expense of $16.0 million, intangible asset amortization of $12.0 million, and interest expense adjustments of $6.0 million, and associated tax impact from the aforementioned items.
+ 
+
+
+
+Silicon Laboratories Inc.
+ 
+Condensed Consolidated Balance Sheets
+ 
+(In thousands, except per share data)
+ 
+(Unaudited)
+ 
+
+                                                                                                                                                                        October 3, 2020      December 28, 2019  
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Assets                                                                                                                                                                                                          
+Current assets:                                                                                                                                                                                                 
+Cash and cash equivalents                                                                                                                                                        $230,358               $227,146
+Short-term investments                                                                                                                                                            491,428                498,825
+Accounts receivable, net                                                                                                                                                           80,460                 75,639
+Inventories                                                                                                                                                                        66,159                 73,057
+Prepaid expenses and other current assets                                                                                                                                          69,244                 69,192
+Total current assets                                                                                                                                                              937,649                943,859
+Property and equipment, net                                                                                                                                                       139,673                135,939
+Goodwill                                                                                                                                                                          631,932                398,402
+Other intangible assets, net                                                                                                                                                      178,076                134,279
+Other assets, net                                                                                                                                                                  55,745                 62,374
+Total assets                                                                                                                                                                   $1,943,075             $1,674,853
+Liabilities and Stockholders’ Equity                                                                                                                                                                            
+Current liabilities:                                                                                                                                                                                            
+Accounts payable                                                                                                                                                                  $46,228                $38,899
+Deferred revenue and returns liability                                                                                                                                             22,323                 19,251
+Other current liabilities                                                                                                                                                          82,595                 79,551
+Total current liabilities                                                                                                                                                         151,146                137,701
+Convertible debt                                                                                                                                                                  561,678                368,257
+Other non-current liabilities                                                                                                                                                      60,200                 53,844
+Total liabilities                                                                                                                                                                 773,024                559,802
+Commitments and contingencies                                                                                                                                                                                   
+Stockholders' equity:                                                                                                                                                                                           
+Preferred stock – $0.0001 par value; 10,000 shares authorized; no shares issued                                                                                                        --                     --
+Common stock – $0.0001 par value; 250,000 shares authorized; 43,827 and 43,496 shares issued and outstanding at October 3, 2020 and December 28, 2019, respectively                     4                      4
+Additional paid-in capital                                                                                                                                                        183,471                133,793
+Retained earnings                                                                                                                                                                 984,716                980,608
+Accumulated other comprehensive income                                                                                                                                              1,860                    646
+Total stockholders' equity                                                                                                                                                      1,170,051              1,115,051
+Total liabilities and stockholders' equity                                                                                                                                     $1,943,075             $1,674,853
+ 
+
+
+
+Silicon Laboratories Inc.
+ 
+Condensed Consolidated Statements of Cash Flows
+ 
+(In thousands)
+ 
+(Unaudited)
+
+                                                                                                 Nine Months Ended                      
+----------------------------------------------------------------------------------------------------------------------------------------
+                                                                                October 3, 2020                September 28, 2019       
+Operating Activities                                                                                                                    
+Net income                                                                      $3,583                         $9,550                   
+Adjustments to reconcile net income to cash provided by operating activities:                                                           
+Depreciation of property and equipment                                                      12,896                            12,675    
+Amortization of other intangible assets and other assets                                    32,741                            29,891    
+Amortization of debt discount and debt issuance costs                                       14,946                            10,031    
+Loss on extinguishment of convertible debt                                                   3,977                                --    
+Stock-based compensation expense                                                            44,329                            40,042    
+Deferred income taxes                                                                       (7,382    )                       24,531    
+Changes in operating assets and liabilities:                                                                                            
+Accounts receivable                                                                         (2,902    )                       (2,975   )
+Inventories                                                                                 11,283                             3,512    
+Prepaid expenses and other assets                                                           (6,162    )                       23,401    
+Accounts payable                                                                             6,103                             6,419    
+Other current liabilities and income taxes                                                   3,648                           (15,602   )
+Deferred revenue and returns liability                                                       2,643                              (667   )
+Other non-current liabilities                                                                7,260                            (5,957   )
+Net cash provided by operating activities                                                  126,963                           134,851    
+Investing Activities                                                                                                                    
+Purchases of available-for-sale investments                                               (418,227    )                     (306,645   )
+Sales and maturities of available-for-sale investments                                     427,235                           268,140    
+Purchases of property and equipment                                                        (15,247    )                      (12,773   )
+Purchases of other assets                                                                   (1,280    )                       (7,132   )
+Acquisition of business, net of cash acquired                                             (316,809    )                           --    
+Net cash used in investing activities                                                     (324,328    )                      (58,410   )
+Financing Activities                                                                                                                    
+Proceeds from issuance of debt                                                             845,000                                --    
+Payments on debt                                                                          (618,729    )                       (1,127   )
+Repurchases of common stock                                                                (16,287    )                      (26,716   )
+Payment of taxes withheld for vested stock awards                                          (17,562    )                      (15,693   )
+Proceeds from the issuance of common stock                                                   8,155                             7,108    
+Net cash provided by (used in) financing activities                                        200,577                           (36,428   )
+Increase in cash and cash equivalents                                                        3,212                            40,013    
+Cash and cash equivalents at beginning of period                                           227,146                           197,043    
+Cash and cash equivalents at end of period                                      $230,358                       $237,056                 
+ 
+
+

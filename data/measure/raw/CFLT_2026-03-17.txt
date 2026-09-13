@@ -1,0 +1,140 @@
+# 잣대값 파싱 실패 원문 — CFLT 2026-03-17
+# 출처: https://www.sec.gov/Archives/edgar/data/1699838/000110465926029071/tm268826d6_8k.htm
+
+Exhibit 99.1
+
+IBM Completes
+Acquisition of Confluent, Making Real Time Data the Engine of Enterprise AI and Agents
+
+Day-one integrations include IBM watsonx.data,
+IBM MQ, IBM webMethods Hybrid Integration,
+
+and IBM Z
+
+ARMONK, N.Y., March 17, 2026 /PRNewswire/ - IBM (NYSE: IBM) today completed its acquisition of Confluent, Inc., the data streaming platform that more than 6,500 enterprises, including 40% of the
+Fortune 500, rely on to power real-time operations. Together, IBM and Confluent deliver a smart data platform that gives every AI model,
+agent, and automated workflow the real-time, trusted data needed to operate across on-premises and hybrid cloud environments at scale.
+
+As enterprises move from AI experimentation to production, the critical
+barrier to success is the data - clean, governed, continuously refreshed - and delivered at the speed and scale AI demands.
+Yet in most enterprises today, data remains siloed across systems and environments, arriving hours or days after it is generated. Together
+IBM and Confluent provide the fabric through which AI agents can access the information they need, with the controls, governance, and
+real-time velocity to put information to work safely and at scale.
+
+IDC estimates that more than one billion new logical applications
+will emerge by 2028 [1], driven by a new generation of AI that will only deliver value if the data behind it is live, trusted, and continuously
+flowing. That scale of demand requires a new kind of data foundation, and IBM and Confluent address that challenge directly, giving enterprises
+a single, governed platform where AI models and agents can operate with context, in real time, across every environment.
+
+“Transactions happen in milliseconds, and AI decisions need
+to happen just as fast. With Confluent, we are giving clients the ability to move trusted data continuously across their entire operation
+so their AI models and agents can act on what is happening right now, not on data that is hours old” said Rob Thomas, Senior
+Vice President, IBM Software and Chief Commercial Officer. “Together, IBM and Confluent give enterprises the foundation for
+a new operating model - one where AI runs on live data, drives decisions in real time, and delivers value at scale.”
+
+Built on Apache Kafka®, the standard for data streaming, Confluent
+is already embedded in the operational fabric of the world's largest enterprises, with a customer base that spans industries from financial
+services and healthcare to manufacturing and retail.
+
+  Michelin relies
+  on Confluent to manage real-time inventory across a supply chain spanning 170 countries —
+  achieving 35% cost savings without sacrificing visibility or control [2].
+
+  L'Oréal uses Confluent to stream real-time product and inventory updates across internal systems
+  and third-party applications, helping the company respond faster to changing consumer demand
+  [3].
+
+  BMW Group streams
+  IoT data from 30+ production sites and its global sales network in real time, connecting
+  factory floor systems and cloud applications across the organization [4].
+
+  Ticketmaster streams
+  ticket inventory, sales, and customer activity in real time across hundreds of systems, reducing
+  development friction and powering machine learning at scale [5].
+
+“Since our founding, Confluent’s mission has been to set
+the world’s data in motion, making data streaming as foundational to the enterprise as the database. Joining IBM allows us to accelerate
+that mission at a much greater scale,” said Jay Kreps, CEO and Co-founder of Confluent. “IBM’s global reach
+and deep enterprise relationships will help us go further, faster. As enterprises move from experimenting with AI to running their business
+on it, helping data flow continuously across the business has never mattered more. I’m excited to see what we’ll build together.”
+
+IBM and Confluent Product Synergies
+
+Today’s announcement brings immediate integrations across the
+IBM portfolio, including:
+
+  AI-Ready, Real-Time
+  Data. Enterprise AI technologies need current context, not yesterday’s data. Confluent
+  streams live operational events directly into watsonx.data – ensuring every model,
+  agent, and workflow runs on continuously updated enterprise data, with lineage, policy enforcement,
+  and quality controls included.
+
+  Activate the modernized
+  mainframe in the AI era. The most critical business transactions in the world have long
+  run on IBM Z. With IBM Z and Confluent, organizations can identify and drive real-time events
+  at the transaction source as well as stream transactional data directly for real-time analytics,
+  automation, and AI workflows. This enables mission-critical transaction processing to integrate
+  tightly with the rest of the business in real-time, at enterprise scale.
+
+  Event-Driven
+  Automation Across Hybrid Environments. IBM MQ and IBM webMethods Hybrid Integration form
+  the foundation of enterprise event-driven automation, combining trusted transactional messaging
+  with modern integration and orchestration across hybrid environments. Confluent extends this
+  platform with high-scale event streaming, enabling applications, APIs, and AI agents to sense
+  and act on business events in real time.
+
+With Confluent, IBM Consulting and IBM partners, will help clients
+build the data foundation their AI needs - live, governed, and continuously flowing across every system and environment.
+
+“The shift from AI experimentation to production deployment
+has exposed a critical gap in enterprise data architecture: the inability to deliver trusted, real-time data to the systems that need
+it most. AI agents and automated workflows don't operate on historical data; they require live operational signals, continuously flowing
+across the enterprise as events occur," said Sanjeev Mohan, Principal Analyst, SanjMo. "IBM has made significant progress
+assembling a portfolio that addresses both sides of this equation: governance and infrastructure for data at rest, and a platform for
+data in motion. For enterprises whose architecture and priorities align with this approach, it is a compelling stack worth evaluating.”
+
+Under the terms of the agreement, IBM has acquired all of the issued
+and outstanding common shares of Confluent for $31 per share in cash, representing an enterprise value of approximately $11 billion.
+
+For more information about today's news, please visit https://www.ibm.com/products/confluent
+
+[1] *Source: IDC, 1 Billion New Logical Applications: More
+Background, doc #US51953724, April 2024
+
+[2 -5] *Source: Confluent Case Studies & Testimonials https://www.confluent.io/customers/michelin/
+
+https://www.confluent.io/customers/loreal/
+
+https://www.confluent.io/customers/bmw-group/
+
+https://www.confluent.io/customers/ticketmaster/
+
+###
+
+About IBM
+
+IBM is a leading provider of global hybrid cloud and AI, and consulting
+expertise. We help clients in more than 175 countries capitalize on insights from their data, streamline business processes, reduce costs
+and gain the competitive edge in their industries. Thousands of government and corporate entities in critical infrastructure areas such
+as financial services, telecommunications and healthcare rely on IBM's hybrid cloud platform and Red Hat OpenShift to affect their digital
+transformations quickly, efficiently and securely. IBM's breakthrough innovations in AI, quantum computing, industry-specific cloud solutions
+and consulting deliver open and flexible options to our clients. All of this is backed by IBM's legendary commitment to trust, transparency,
+responsibility, inclusivity and service. Visit www.ibm.com for more information.
+
+Press Contact
+
+Sarah Benchaita
+IBM Software Communications
+sarah.benchaita@ibm.com
+
+Forward-Looking Statements
+Certain statements contained
+in this communication may be characterized as forward-looking under the Private Securities Litigation Reform Act of 1995. These statements
+involve risks, uncertainties and other factors that could cause actual results to differ materially from those expressed or implied.
+Forward-looking statements in this press release may include statements regarding the expected benefits of the transaction, the impact
+of the transaction on IBM’s and the acquired business’s operations and financial results, and expectations following the
+completion of the transaction. There can be no assurance that the anticipated benefits of the transaction will be realized. All forward-looking
+statements are based on information available to IBM as of the date of this press release. Additional risks and uncertainties are described
+in IBM’s filings with the Securities and Exchange Commission, including its most recent Annual Report on Form 10-K and
+Quarterly Report on Form 10-Q. IBM undertakes no obligation to update forward-looking statements, except as required by
+law.
