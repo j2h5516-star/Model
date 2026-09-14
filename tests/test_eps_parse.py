@@ -2432,6 +2432,66 @@ def test_이름을_읽으면_응답을_적지_않는다():
     assert not [x for x in 나온다 if x[0] == "_응답앞"], 나온다
 
 
+# 런 #79 의 **실물 모양** (183차-R). 세 가지가 함께 들어 있습니다:
+#   ① 목록 전체의 제목("Company Search Feed") — 회사 이름이 아님
+#   ② 번호가 항목마다 **두 번** 나옴(링크와 본문)
+#   ③ 항목마다 회사 이름이 <title> 에 있음
+#   ④ 같은 회사가 두 항목으로 오기도 합니다(번호 중복)
+#   ⑤ 이름이 없는 항목이 섞이면 **자리 맞추기(앞에서부터 짝짓기)가
+#      어긋납니다** — 그래서 항목 단위로 짝지어야 합니다
+SEC_실물목록응답 = """<?xml version="1.0"?>
+<feed><title>EDGAR Company Search Feed</title>
+ <entry><link href="...action=getcompany&amp;CIK=0001120916&amp;type=10-K"/>
+  <content><cik>CIK=0001120916</cik></content></entry>
+ <entry><title>HESS CORP</title>
+  <link href="...action=getcompany&amp;CIK=0000004447&amp;type=10-K"/>
+  <content><cik>CIK=0000004447</cik></content></entry>
+ <entry><title>HESS CORP</title>
+  <link href="...action=getcompany&amp;CIK=0000004447&amp;type=10-Q"/></entry>
+ <entry><title>HESS MIDSTREAM PARTNERS LP</title>
+  <link href="...action=getcompany&amp;CIK=0001789832&amp;type=10-K"/></entry>
+</feed>"""
+
+
+def test_목록_제목을_회사_이름으로_읽지_않는다():
+    """(183차-R) 런 #79 실물: 첫 이름이 "Company Search Feed" 였습니다.
+
+    183차-J 는 `<title>` 을 순서대로 번호에 붙였는데, 목록 꼴의 첫
+    `<title>` 은 **목록 전체의 제목**입니다. 그래서 회사 셋 중 첫 번호에
+    엉뚱한 이름이 붙고 나머지는 빈 채로 왔습니다. 게다가 번호가 두 번씩
+    나와 세 회사가 **다섯 줄**이 됐습니다.
+    """
+    나온다 = [x for x in _가짜응답으로(SEC_실물목록응답) if x[0] != "_응답앞"]
+    이름들 = [x[0] for x in 나온다]
+    번호들 = [x[1] for x in 나온다]
+
+    assert not any("Search Feed" in n for n in 이름들), (
+        f"목록 제목을 회사 이름으로 읽었습니다: {나온다}")
+    assert len(번호들) == len(set(번호들)) == 3, (
+        f"같은 번호를 두 번 세었습니다: {나온다}")
+    짝 = dict(zip(번호들, 이름들))
+    # 첫 항목에는 이름이 없습니다 — **빈 채로 두어야** 합니다.
+    # 앞에서부터 자리로 짝지으면 여기에 'HESS CORP' 가 잘못 붙습니다.
+    assert 짝.get("0001120916") == "", (
+        f"이름 없는 항목에 남의 이름을 붙였습니다: {짝}")
+    assert 짝.get("0000004447") == "HESS CORP", f"이름과 번호가 어긋났습니다: {짝}"
+    assert 짝.get("0001789832") == "HESS MIDSTREAM PARTNERS LP", 짝
+
+
+def test_이름이_하나라도_비면_응답을_적어_온다():
+    """(183차-R) 183차-J 는 "하나도 못 읽었을 때만" 적었습니다.
+
+    그래서 쓸모없는 이름 하나("Company Search Feed")가 **진단을 막았고**,
+    다음 런에서도 실제 모양을 알 수 없었습니다. 하나라도 비면 적습니다.
+    """
+    반쪽 = """<feed><title>EDGAR Company Search Feed</title>
+ <entry><title>HESS CORP</title><link href="...CIK=0000004447"/></entry>
+ <entry><link href="...CIK=0001789832"/></entry></feed>"""
+    나온다 = _가짜응답으로(반쪽)
+    assert [x for x in 나온다 if x[0] == "_응답앞"], (
+        f"이름이 빈 줄이 있는데 응답을 안 적었습니다: {나온다}")
+
+
 def test_SEC_이름검색이_실패해도_수집을_멈추지_않는다():
     """SEC 가 막힌 개발 환경·일시 장애에서도 예외를 밖으로 내보내지 않습니다."""
     import edgar.httprequests as hr

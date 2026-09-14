@@ -2861,8 +2861,12 @@ _SEC_회사검색_URL = (
 )
 _CIK_RE = re.compile(r"CIK=(\d{5,10})", re.I)
 _CONFORMED_RE = re.compile(r"<conformed-name>([^<]+)</conformed-name>", re.I)
-# 목록 꼴에서 회사 이름이 실리는 다른 자리 (183차-J — 아직 실물로 확인 전)
+# 목록 꼴에서 회사 이름이 실리는 다른 자리 (183차-J → 183차-R 에서 실물 확인)
 _TITLE_RE = re.compile(r"<title[^>]*>([^<]+)</title>", re.I)
+# 한 회사 = 한 항목. 항목 안에서 이름과 번호를 짝지어야 섞이지 않습니다.
+_ENTRY_RE = re.compile(r"<entry[^>]*>(.*?)</entry>", re.I | re.S)
+# 목록 전체의 제목 — 회사 이름이 아닙니다 (실물: "Company Search Feed")
+_목록제목_RE = re.compile(r"search\s+feed|EDGAR\s+search", re.I)
 
 
 def _SEC_이름검색(name: str) -> list[list[str]]:
@@ -2894,14 +2898,55 @@ def _SEC_이름검색(name: str) -> list[list[str]]:
     #   ⚠️ "보입니다" 는 짐작입니다. 그래서 **응답 앞부분을 함께 적어
     #      옵니다**(_응답앞) — 다음 런의 로그로 실제 모양을 보고 정합니다.
     #      값은 안 씁니다(106차 규칙).
-    이름들 = _CONFORMED_RE.findall(글) or _TITLE_RE.findall(글)
+    # 183차-R — 런 #79 의 **실물 응답**으로 고쳤습니다. HES 가 이렇게 왔습니다:
+    #
+    #   [["Company Search Feed", "0001120916", ""], ["", "0001120916", ""],
+    #    ["", "0000004447", ""], ["", "0000004447", ""], ["", "0001789832", ""]]
+    #
+    # 두 가지가 드러났습니다:
+    #   ① 목록 꼴의 `<title>` 첫 개는 **목록 전체의 제목**("Company Search
+    #      Feed")이지 회사 이름이 아닙니다. 그것을 첫 번호에 붙이고 나머지는
+    #      빈 채로 두었습니다 — **틀린 이름을 붙인 것**입니다.
+    #   ② 번호가 **두 번씩** 나옵니다(항목 링크와 본문). 회사 셋이 다섯 줄이
+    #      됐습니다.
+    #   ③ 이름을 하나라도 읽으면 `_응답앞`(진단)이 안 찍혀, 쓸모없는 이름
+    #      하나가 **진단을 가로막았습니다.**
+    #
+    # 그래서 **항목(<entry>) 단위로** 읽습니다 — 한 항목 안의 `<title>` 과
+    # 그 안의 번호를 짝지으면 목록 제목이 섞이지 않습니다. 항목이 없으면
+    # 예전 길로 돌아가되 목록 제목은 빼고, **이름이 빈 줄이 하나라도 있으면**
+    # 응답 앞부분을 적어 옵니다(짐작하지 않고 다음 런에 실제 모양을 봅니다).
     나온다: list[list[str]] = []
-    for i, n in enumerate(번호[:5]):
-        나온다.append([(이름들[i].strip() if i < len(이름들) else ""), n, ""])
+    본번호: set[str] = set()
+    for 항목 in _ENTRY_RE.findall(글):
+        항목번호 = _CIK_RE.findall(항목)
+        if not 항목번호:
+            continue
+        n = 항목번호[0]
+        if n in 본번호:
+            continue
+        본번호.add(n)
+        # 한 항목 안에서 이름이 실리는 자리는 둘입니다 — 회사 페이지 꼴은
+        # <conformed-name>(실물 HOLOGIC INC), 목록 꼴은 <title>(실물 HESS CORP).
+        이름 = _CONFORMED_RE.search(항목) or _TITLE_RE.search(항목)
+        나온다.append([(이름.group(1).strip() if 이름 else ""), n, ""])
+        if len(나온다) >= 5:
+            break
+    if not 나온다:                       # 한 회사 꼴(항목이 없는 응답)
+        이름들 = _CONFORMED_RE.findall(글) or [
+            t for t in _TITLE_RE.findall(글) if not _목록제목_RE.search(t)]
+        for n in 번호[:5]:
+            if n in 본번호:
+                continue
+            본번호.add(n)
+            i = len(나온다)
+            나온다.append([(이름들[i].strip() if i < len(이름들) else ""), n, ""])
     if not 나온다:
         나온다 = [["결과없음", "", ""]]
-    # 이름을 하나도 못 읽었으면 응답 모양을 적어 둡니다 (계기)
-    if 글 and not any(x[0] and x[0] != "결과없음" for x in 나온다):
+    # 이름이 **하나라도** 비었으면 응답 모양을 적어 둡니다 (계기).
+    # 183차-J 는 "하나도 못 읽었을 때만" 적어서, 쓸모없는 이름 한 개가
+    # 진단을 막았습니다. 그 실수를 되풀이하지 않습니다.
+    if 글 and any((not x[0]) or x[0] == "결과없음" for x in 나온다):
         나온다.append(["_응답앞", re.sub(r"\s+", " ", 글[:300]), ""])
     return 나온다
 
