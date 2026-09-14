@@ -1,0 +1,318 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — CFLT 2025-07-30
+# 출처: https://www.sec.gov/Archives/edgar/data/1699838/000169983825000004/cflt-20250730.htm
+
+Exhibit 99.1
+
+Confluent Announces Second Quarter 2025 Financial Results
+
+• Subscription revenue of $271 million, up 21% year over year
+
+• Confluent Cloud revenue of $151 million, up 28% year over year
+
+• 1,439 customers with $100,000 or greater in ARR, up 10% year over year
+
+MOUNTAIN VIEW, Calif. -- July 30, 2025 -- Confluent, Inc. (NASDAQ: CFLT), the data streaming pioneer, today announced financial results for its second quarter of 2025, ended June 30, 2025.
+
+“Confluent delivered a solid quarter, led by 28% year-over-year growth in Confluent Cloud revenue,” said Jay Kreps, co-founder and CEO, Confluent. “Our DSP monetization continues to gain traction, with Flink ARR growing approximately 3x over the past two quarters. This reinforces our complete data streaming platform strategy and our strong positioning for a future shaped by agentic, real-time AI.”
+
+“Our second quarter was highlighted by solid top-line growth and continued margin expansion,” said Rohan Sivaram, CFO, Confluent. “Our results underscore the strength and flexibility of our data streaming platform, helping customers unlock the full value of real-time data across cloud, on-premises, and BYOC environments.”
+
+Second Quarter 2025 Financial Highlights
+
+(In millions, except per share data and percentages)
+
+                                                 Q2 2025       Q2 2024      Y/Y Change
+ ────────────────────────────────────────────────────────────────────────────────────────
+  Subscription Revenue                            $270.8        $224.7             21%
+  Total Revenue                                   $282.3        $235.0             20%
+  GAAP Operating Loss                            $(96.4)      $(108.3)           $11.9
+  Non-GAAP Operating Income                        $17.8          $1.3           $16.5
+  GAAP Operating Margin                          (34.2%)       (46.1%)        11.9 pts
+  Non-GAAP Operating Margin                         6.3%          0.6%         5.7 pts
+  GAAP Net Loss Per Share                        $(0.24)       $(0.28)           $0.04
+  Non-GAAP Net Income Per Diluted Share            $0.09         $0.06           $0.03
+  Net Cash Provided by Operating Activities        $18.1          $8.6            $9.5
+  Adjusted Free Cash Flow                          $11.0          $2.7            $8.3
+
+Financial Outlook
+
+For the third quarter and fiscal year 2025, Confluent expects:
+
+                                             Q3 2025 Outlook        FY 2025 Outlook
+  Subscription Revenue                       $281-$282 million      $1.105-$1.11 billion
+  Non-GAAP Operating Margin                  ~7%                    ~6%
+ ──────────────────────────────────────────────────────────────────────────────────────────
+  Non-GAAP Net Income Per Diluted Share      $0.09-$0.10            ~$0.36
+
+A reconciliation of forward-looking non-GAAP operating margin, adjusted free cash flow margin and non-GAAP net income per diluted share to the most directly comparable GAAP measures is not available without unreasonable effort, as certain items cannot be reasonably predicted because of their high variability, complexity and low visibility. In particular, the measures and effects of our stock-based compensation-related charges, which include stock-based compensation expenses, employer payroll taxes on employee stock transactions, and amortization of stock-based compensation capitalized in internal-use software, are directly impacted by the timing of employee stock transactions and unpredictable fluctuations in our stock price, which we expect to have a significant impact on our future GAAP financial results.
+
+Conference Call Information
+
+Confluent will host a video webcast to discuss the company’s second quarter 2025 results as well as its financial outlook today at 4:30 p.m. Eastern Time/1:30 p.m. Pacific Time. Open to the public, investors may access the webcast, earnings press release, supplemental financial information, and investor presentation on Confluent’s investor relations website at investors.confluent.io before the commencement of the webcast. A replay of the webcast will also be accessible from Confluent’s investor relations website a few hours after the conclusion of the live event.
+
+Confluent uses its investor relations website and may use its X (Twitter), LinkedIn, and Facebook accounts as a means of disclosing material non-public information and for complying with its disclosure obligations under Regulation FD.
+
+Forward-Looking Statements
+
+This press release and the earnings call referencing this press release contain forward-looking statements including, among other things, statements regarding (i) our financial outlook, including expected subscription revenue, Confluent Cloud revenue, non-GAAP operating margin, free cash flow margin, adjusted free cash flow margin, non-GAAP net income per share, revenue mix, including Confluent Cloud subscription revenue mix, revenue run rates, Confluent Cloud and data streaming platform growth, adoption and traction, operating margins and margin improvements, targeted or anticipated gross and operating margin levels, earnings per share levels and improvements, in-product optimizations of Confluent Cloud, continued business momentum, and expected revenue, (ii) our market and category leadership position, (iii) our expectations and trends relating to growth of our Data Streaming Platform products, (iv) rates of Confluent Cloud consumption, Confluent Platform growth, and demand for and retention of data streaming platforms like Confluent, (v) customer growth, retention and engagement, and expansion of customers into new use cases, (vi) increased adoption of our offerings and fully managed solutions for data streaming in general, including from customers building generative AI applications, (vii) our expectations regarding the impact of operational improvements, including our sales and go-to-market strategies, (viii) growth in and growth rate of revenue, customers, dollar-based net retention rate, and gross retention rate, (ix) our ability to increase engagement of customers for Confluent and expand customer cohorts, (x) our market opportunity and our ability to capture our market opportunity, (xi) our go-to-market strategy, (xii) our product differentiation and market acceptance of our products, (xiii) our strategy and expected results and market acceptance for our Flink offering, Tableflow, Freight Clusters, and our other Data Streaming Platform offerings, (xiv) our expectations of meeting near-term and mid-term financial targets, (xv) our expectations regarding the generative AI landscape and our offerings, (xvi) our ability to drive long-term growth, (xvii) our expectations regarding the impact of our offerings, including WarpStream and Freight Clusters, (xviii) our expectations regarding our growth strategies and our partner ecosystem, including our Confluent OEM Program, and (xix) our overall future prospects. The words “believe,” “may,” “will,” “estimate,” “continue,” “anticipate,” “intend,” “expect,” “seek,” “plan,” “project,” “target,” “looking ahead,” “look to,” “move into,” and similar expressions are
+
+intended to identify forward-looking statements. Forward-looking statements represent our current beliefs, estimates and assumptions only as of the date of this press release and information contained in this press release should not be relied upon as representing our estimates as of any subsequent date. These forward-looking statements are subject to risks, uncertainties, and assumptions. If the risks materialize or assumptions prove incorrect, actual results could differ materially from the results implied by these forward-looking statements. Risks include, but are not limited to: (i) our limited operating history, including in uncertain macroeconomic environments, (ii) our ability to sustain and manage our rapid growth, (iii) our ability to increase consumption of our offerings, including by existing customers and through the acquisition of new customers, including by addressing customer consumption preferences, successfully adding new features and functionality to our offerings, and partnering with our customers to help them realize increased value in Confluent in an efficient and sustainable manner, (iv) our ability to successfully execute our go-to-market strategy and initiatives, (v) our ability to attract new customers and successfully ramp their consumption of our offerings, as well as retain and sell additional features and services to our existing customers, (vi) uncertain macroeconomic conditions, including high inflation, high interest rates, bank failures, global tariffs, taxes on multinational companies, geopolitical events, recessionary risks, and exchange rate fluctuations, (vii) the estimated addressable market opportunity for our Data Streaming Platform, and our ability to capture our share of that market opportunity, (viii) shifts in certain customers’ data streaming strategies, (ix) our ability to compete effectively in an increasingly competitive market, (x) our ability to attract, ramp, and retain highly qualified personnel, and the impacts of attrition and related challenges, (xi) breaches in our security measures, intentional or accidental cybersecurity incidents or unauthorized access to our platform, our data, or our customers’ or other users’ personal data, (xii) our reliance on third-party cloud-based infrastructure to host Confluent Cloud, (xiii) public sector budgetary cycles and funding reductions or delays, or shifts in procurement strategies, (xiv) changes in legislation related to the taxation of business entities, and (xv) our ability to accurately forecast our future performance, business and growth. These risks are not exhaustive. Further information on these and other risks that could affect Confluent’s results is included in our filings with the Securities and Exchange Commission (“SEC”), including our Quarterly Report on Form 10-Q for the quarter ended March 31, 2025, and our future reports that we may file from time to time with the SEC. Additional information will be made available in our Quarterly Report on Form 10-Q for the quarter ended June 30, 2025 that will be filed with the SEC, which should be read in conjunction with this press release and the financial results included herein. Confluent assumes no obligation to, and does not currently intend to, update or revise any forward-looking statements, whether as a result of new information, future events or otherwise, except as required by law.
+
+Non-GAAP Financial Measures
+
+This press release includes the following non-GAAP financial measures: non-GAAP gross profit, non-GAAP gross margin, non-GAAP operating expenses (research and development, sales and marketing, and general and administrative), non-GAAP operating income (loss), non-GAAP operating margin, non-GAAP net income, non-GAAP net income per share, free cash flow, free cash flow margin, adjusted free cash flow, and adjusted free cash flow margin. We use these non-GAAP financial measures and other key metrics internally to facilitate analysis of our financial and business trends and for internal planning and forecasting purposes. We believe these non-GAAP financial measures, when taken collectively, may be helpful to investors because they provide consistency and comparability with past financial performance by excluding certain items that may not be indicative of our business, results of operations, or outlook. However, non-GAAP financial measures have limitations as an analytical tool and are presented for supplemental informational purposes only. They should not be considered in isolation from, or as a substitute for, financial information prepared in accordance with GAAP. In particular, other companies, including companies in our industry, may report non-GAAP gross profit, non-GAAP gross margin, non-GAAP operating expenses (research and development, sales and marketing, general and administrative), non-GAAP operating income (loss), non-GAAP
+
+operating margin, non-GAAP net income, non-GAAP net income per share, free cash flow, free cash flow margin, adjusted free cash flow, adjusted free cash flow margin, or similarly titled measures but calculate them differently, which reduces their usefulness as comparative measures. Further, free cash flow and adjusted free cash flow are not substitutes for cash used in operating activities. The utility of free cash flow and adjusted free cash flow are limited as such measures do not reflect our future contractual commitments and do not represent the total increase or decrease in our cash balance for any given period. Investors are encouraged to review the reconciliation of these non-GAAP measures to their most directly comparable GAAP financial measures, as presented below.
+
+We define non-GAAP gross profit, non-GAAP gross margin, non-GAAP operating expenses (research and development, sales and marketing, and general and administrative), non-GAAP operating income (loss), non-GAAP operating margin, non-GAAP net income, and non-GAAP net income per share as the respective GAAP measures, adjusted for, as applicable, stock-based compensation-related charges which include stock-based compensation expense, employer taxes on employee stock transactions and amortization of stock-based compensation capitalized in internal-use software; amortization of acquired intangibles; acquisition-related expenses; amortization of debt issuance costs; and income tax effects associated with these adjustments as well as the non-recurring income tax expense or benefit associated with acquisitions and income tax benefit from the release of a valuation allowance on certain deferred tax assets. Non-GAAP gross margin and non-GAAP operating margin are defined as non-GAAP gross profit and non-GAAP operating income (loss) as a percentage of revenue, respectively.
+
+We define free cash flow as net cash used in operating activities less capitalized internal-use software costs and capital expenditures and free cash flow margin as free cash flow as a percentage of revenue. We define adjusted free cash flow as free cash flow excluding the non-recurring impact from a change to timing of certain cash compensation payments and adjusted free cash flow margin as adjusted free cash flow as a percentage of revenue. We believe that free cash flow, free cash flow margin, adjusted free cash flow, and adjusted free cash flow margin are useful indicators of liquidity that provide information to management and investors about the performance of core operations and future ability to generate cash that can be used for strategic opportunities or investing in our business.
+
+Definition
+
+Customers with $100,000 or greater in annual recurring revenue (“ARR”) represent the number of customers that contributed $100,000 or more in ARR as of period end. We define ARR as (1) with respect to Confluent Platform customers, the amount of revenue to which our customers are contractually committed over the following 12 months assuming no increases or reductions in their subscriptions, and (2) with respect to Confluent Cloud and WarpStream customers, the amount of revenue that we expect to recognize from such customers over the following 12 months, calculated by annualizing actual consumption of Confluent Cloud and WarpStream in the last three months of the applicable period, assuming no increases or reductions in usage rate. Services arrangements are excluded from the calculation of ARR. For purposes of determining our customer count, we treat all affiliated entities with the same parent organization as a single customer and include pay-as-you-go customers. Our customer count is subject to adjustments for acquisitions, consolidations, spin-offs, and other market activity.
+
+Flink ARR is defined as (1) with respect to Confluent Platform customers, the amount of Confluent Platform for Apache Flink revenue to which our customers are contractually committed over the following 12 months assuming no increases or reductions in their subscriptions, and (2) with respect to Confluent Cloud customers, the amount of Confluent Cloud for Apache Flink revenue that we expect to recognize from such customers over the following 12 months, calculated by annualizing actual
+
+consumption of Confluent Cloud for Apache Flink in the last three months of the applicable period, assuming no increases or reductions in usage rate.
+
+About Confluent
+
+Confluent is the data streaming platform that is pioneering a fundamentally new category of data infrastructure that sets data in motion. Confluent’s cloud-native offering is the foundational platform for data in motion - designed to be the intelligent connective tissue enabling real-time data, from multiple sources, to constantly stream across the organization. With Confluent, organizations can meet the new business imperative of delivering rich, digital front-end customer experiences and transitioning to sophisticated, real-time, software-driven backend operations.
+
+Investor Contact
+
+Shane Xie
+
+investors@confluent.io
+
+Media Contact
+
+Justin Dorff
+
+pr@confluent.io
+
+Confluent, Inc.
+
+Condensed Consolidated Balance Sheets
+
+(in thousands)
+
+(unaudited)
+
+                                                        June 30,                       December 31,
+
+
+                                                        2025                           2024
+  ASSETS
+  Current assets:
+  Cash and cash equivalents                             $                 295,591      $                     385,980
+  Marketable securities                                                 1,645,032                          1,524,583
+  Accounts receivable, net                                                357,607                            314,306
+  Deferred contract acquisition costs                                      47,658                             47,271
+  Prepaid expenses and other current assets                                95,606                             79,179
+  Total current assets                                                  2,441,494                          2,351,319
+  Property and equipment, net                                              86,962                             78,680
+  Operating lease right-of-use assets                                       6,932                              8,818
+  Goodwill                                                                164,406                            164,406
+  Intangible assets, net                                                    6,997                              7,924
+  Deferred contract acquisition costs, non-current                         68,473                             71,468
+  Other assets, non-current                                                42,144                             12,296
+  Total assets                                          $               2,817,408      $                   2,694,911
+  LIABILITIES AND STOCKHOLDERS’ EQUITY
+  Current liabilities:
+  Accounts payable                                      $                  11,491      $                       7,531
+  Accrued expenses and other liabilities                                  167,839                            194,250
+  Operating lease liabilities                                               9,251                              8,694
+  Deferred revenue                                                        424,293                            378,771
+  Total current liabilities                                               612,874                            589,246
+  Operating lease liabilities, non-current                                  4,454                              9,138
+  Deferred revenue, non-current                                            31,356                             30,430
+  Convertible senior notes, net                                         1,094,051                          1,092,149
+  Other liabilities, non-current                                           11,006                             12,722
+  Total liabilities                                                     1,753,741                          1,733,685
+  Stockholders’ equity:
+  Preferred stock                                       —                              —
+  Class A common stock                                  2                              2
+  Class B common stock                                  1                              1
+  Additional paid-in capital                                            3,192,349                          2,953,080
+  Accumulated other comprehensive income (loss)                            10,055                            (2,641)
+  Accumulated deficit                                                 (2,138,740)                        (1,989,216)
+  Total stockholders’ equity                                            1,063,667                            961,226
+  Total liabilities and stockholders’ equity            $               2,817,408      $                   2,694,911
+
+Confluent, Inc.
+
+Condensed Consolidated Statements of Operations
+
+(in thousands, except share and per share data)
+
+(unaudited)
+
+                                                                                     Three Months Ended June 30,                                                    Six Months Ended June 30,
+                                                                                     2025                                           2024                            2025                                          2024
+ ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Revenue:
+  Subscription                                                                       $                                 270,832      $                  224,702      $                                531,742      $                  431,604
+  Services                                                                                                              11,453                          10,284                                        21,663                          20,619
+  Total revenue                                                                                                        282,285                         234,986                                       553,405                         452,223
+  Cost of revenue:
+  Subscription(1)                                                                                                       61,052                          52,863                                       117,899                         101,218
+  Services(1)                                                                                                           13,118                          12,118                                        25,389                          24,984
+  Total cost of revenue                                                                                                 74,170                          64,981                                       143,288                         126,202
+  Gross profit                                                                                                         208,115                         170,005                                       410,117                         326,021
+  Operating expenses:
+  Research and development(1)                                                                                          121,221                         106,060                                       238,022                         203,631
+  Sales and marketing(1)                                                                                               143,631                         132,865                                       289,890                         264,217
+  General and administrative(1)                                                                                         39,701                          39,429                                        79,821                          77,873
+  Total operating expenses                                                                                             304,553                         278,354                                       607,733                         545,721
+  Operating loss                                                                                                      (96,438)                       (108,349)                                     (197,616)                       (219,700)
+  Other income, net                                                                                                     21,109                          21,853                                        41,519                          42,703
+  Loss before income taxes                                                                                            (75,329)                        (86,496)                                     (156,097)                       (176,997)
+  Provision for (benefit from) income taxes                                                                              6,621                           3,404                                       (6,573)                           5,870
+  Net loss                                                                           $                                (81,950)      $                 (89,900)      $                              (149,524)      $                (182,867)
+  Net loss per share, basic and diluted                                              $                                  (0.24)      $                   (0.28)      $                                 (0.44)      $                   (0.58)
+  Weighted-average shares used to compute net loss per share, basic and diluted      341,208,548                                    319,415,586                     338,491,146                                   316,809,384
+
+(1) Includes stock-based compensation-related charges as follows:
+
+                                                      Three Months Ended June 30,                                          Six Months Ended June 30,
+                                                      2025                                          2024                   2025                                        2024
+ ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Cost of revenue - subscription                      $                                 10,382      $           9,292      $                               19,090      $          17,197
+  Cost of revenue - services                                                             2,022                  2,338                                       3,889                  5,056
+  Research and development                                                              48,653                 41,866                                      92,488                 83,290
+  Sales and marketing                                                                   32,068                 35,332                                      64,825                 71,112
+  General and administrative                                                            13,796                 15,872                                      28,206                 31,030
+  Total stock-based compensation-related charges      $                                106,921      $         104,700      $                              208,498      $         207,685
+
+Confluent, Inc.
+
+Condensed Consolidated Statements of Cash Flows
+
+(in thousands)
+
+(unaudited)
+
+                                                                                             Three Months Ended June 30,                                               Six Months Ended June 30,
+                                                                                             2025                                             2024                                          2025      2024
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  CASH FLOWS FROM OPERATING ACTIVITIES
+  Net loss                                                                                   $                                 (81,950)          $       (89,900)                     $(149,524)      $          (182,867)
+  Adjustments to reconcile net loss to cash provided by (used in) operating activities:
+  Depreciation and amortization                                                                                                   7,344                     5,842                         13,949                    10,153
+  Net accretion of discounts on marketable securities                                                                           (5,952)                   (9,871)                       (12,799)                  (20,267)
+  Amortization of debt issuance costs                                                        957                                               953                                         1,902                     1,906
+  Amortization of deferred contract acquisition costs                                                                            14,323                    13,334                         28,254                    26,096
+  Non-cash operating lease costs                                                                                                  1,089        969                                         2,164                     1,854
+  Stock-based compensation, net of amounts capitalized                                                                          101,997                    99,107                        194,572                   194,429
+  Deferred income taxes                                                                      177                                             (273)                                      (17,161)      342
+  Other                                                                                                                           1,107        361                                         1,561                     1,210
+  Changes in operating assets and liabilities, net of effects of business combinations:
+  Accounts receivable                                                                                                          (60,321)                  (58,018)                       (44,907)                  (28,658)
+  Deferred contract acquisition costs                                                                                          (15,236)                  (15,296)                       (25,646)                  (25,028)
+  Prepaid expenses and other assets                                                                                            (19,988)                     3,703                       (18,473)                     1,774
+  Accounts payable                                                                                                                5,356                    11,987                          4,082                     7,055
+  Accrued expenses and other liabilities                                                                                         21,149                    46,893                       (28,679)                     3,141
+  Operating lease liabilities                                                                                                   (2,205)                   (1,994)                        (4,382)                   (3,929)
+  Deferred revenue                                                                                                               50,268        793                                        46,448                   (4,575)
+  Net cash provided by (used in) operating activities                                                                            18,115                     8,590                        (8,639)                  (17,364)
+  CASH FLOWS FROM INVESTING ACTIVITIES
+  Capitalization of internal-use software costs                                                                                 (6,191)                   (4,776)                       (10,997)                  (10,315)
+  Purchases of marketable securities                                                                                          (465,993)                 (455,883)                      (871,228)                 (899,190)
+  Sales of marketable securities                                                                                                  6,144                    12,744                          6,144                    12,744
+  Maturities of marketable securities                                                                                           458,470                   403,489                        757,937                   835,756
+  Purchases of investments in privately-held companies                                       —                                                            (1,000)                              —                   (1,000)
+  Purchases of property and equipment                                                        (919)                                                        (1,105)                        (2,348)                   (1,291)
+  Net cash used in investing activities                                                                                         (8,489)                  (46,531)                      (120,492)                  (63,296)
+  CASH FLOWS FROM FINANCING ACTIVITIES
+  Proceeds from issuance of common stock upon exercise of vested options                                                          6,062                    13,096                         22,668                    27,497
+  Proceeds from issuance of common stock under employee stock purchase plan                  —                                                   —                                        14,195                    15,603
+  Net cash provided by financing activities                                                                                       6,062                    13,096                         36,863                    43,100
+  Effect of exchange rate changes on cash and cash equivalents                                                                    1,342      (200)                                         1,879      (873)
+  Net increase (decrease) in cash and cash equivalents                                                                           17,030                  (25,045)                       (90,389)                  (38,433)
+  Cash and cash equivalents at beginning of period                                                                              278,561                   336,373                        385,980                   349,761
+  Cash and cash equivalents at end of period                                                 $                                  295,591          $        311,328                       $295,591      $            311,328
+
+Confluent, Inc.
+
+Reconciliation of GAAP Measures to Non-GAAP Measures
+
+(in thousands, except percentages, share and per share data)
+
+(unaudited)
+
+                                                                                                     Three Months Ended June 30,                                          Six Months Ended June 30,
+                                                                                                     2025                                          2024                   2025                                        2024
+ ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Reconciliation of GAAP total gross profit to non-GAAP total gross profit:
+  Total gross profit on a GAAP basis                                                                 $                                208,115      $         170,005      $                              410,117      $         326,021
+  Total gross margin on a GAAP basis                                                                 73.7                             %            72.3      %            74.1                           %            72.1      %
+  Add: Stock-based compensation-related charges                                                                                       12,404                 11,630                                      22,979                 22,253
+  Add: Amortization of acquired intangibles                                                          466                                           501                    927                                                   1,003
+  Non-GAAP total gross profit                                                                        $                                220,985      $         182,136      $                              434,023      $         349,277
+  Non-GAAP total gross margin                                                                        78.3                             %            77.5      %            78.4                           %            77.2      %
+  Reconciliation of GAAP operating expenses to non-GAAP operating expenses:
+  Research and development operating expense on a GAAP basis                                         $                                121,221      $         106,060      $                              238,022      $         203,631
+  Research and development operating expense as a percentage of total revenue on a GAAP basis        42.9                             %            45.1      %            43.0                           %            45.0      %
+  Less: Stock-based compensation-related charges                                                                                      48,653                 41,866                                      92,488                 83,290
+  Less: Acquisition-related expenses                                                                                                  7,965                  4,472                                       17,606                 8,834
+  Non-GAAP research and development operating expense                                                $                                64,603       $         59,722       $                              127,928      $         111,507
+  Non-GAAP research and development operating expense as a percentage of total revenue               22.9                             %            25.4      %            23.1                           %            24.7      %
+  Sales and marketing operating expense on a GAAP basis                                              $                                143,631      $         132,865      $                              289,890      $         264,217
+  Sales and marketing operating expense as a percentage of total revenue on a GAAP basis             50.9                             %            56.5      %            52.4                           %            58.4      %
+  Less: Stock-based compensation-related charges                                                                                      32,068                 35,332                                      64,825                 71,112
+  Less: Acquisition-related expenses                                                                                                  (1,076)      —                      —                                           —
+  Non-GAAP sales and marketing operating expense                                                     $                                112,639      $         97,533       $                              225,065      $         193,105
+  Non-GAAP sales and marketing operating expense as a percentage of total revenue                    39.9                             %            41.5      %            40.7                           %            42.7      %
+  General and administrative operating expense on a GAAP basis                                       $                                39,701       $         39,429       $                              79,821       $         77,873
+  General and administrative operating expense as a percentage of total revenue on a GAAP basis      14.1                             %            16.8      %            14.4                           %            17.2      %
+  Less: Stock-based compensation-related charges                                                                                      13,796                 15,872                                      28,206                 31,030
+  Less: Acquisition-related expenses                                                                 —                                             6                      14                                          231
+  Non-GAAP general and administrative operating expense                                              $                                25,905       $         23,551       $                              51,601       $         46,612
+  Non-GAAP general and administrative operating expense as a percentage of total revenue             9.2                              %            10.0      %            9.3                            %            10.3      %
+
+                                                                                      Three Months Ended June 30,                                                    Six Months Ended June 30,
+                                                                                      2025                                           2024                            2025                                          2024
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Reconciliation of GAAP operating loss to non-GAAP operating income (loss):
+  Operating loss on a GAAP basis                                                      $                                (96,438)      $                (108,349)      $                              (197,616)      $                (219,700)
+  GAAP operating margin                                                               (34.2                                          (46.1                           (35.7                                         (48.6
+  Add: Stock-based compensation-related charges                                                                         106,921                         104,700                                       208,498                         207,685
+  Add: Amortization of acquired intangibles                                           466                                            501                             927                                                                1,003
+  Add: Acquisition-related expenses                                                                                       6,889                           4,478                                        17,620                           9,065
+  Non-GAAP operating income (loss)                                                    $                                  17,838      $                    1,330      $                                 29,429      $                  (1,947)
+  Non-GAAP operating margin                                                           6.3                                            0.6                             5.3                                           (0.4
+  Reconciliation of GAAP net loss to non-GAAP net income:
+  Net loss on a GAAP basis                                                            $                                (81,950)      $                 (89,900)      $                              (149,524)      $                (182,867)
+  Add: Stock-based compensation-related charges                                                                         106,921                         104,700                                       208,498                         207,685
+  Add: Amortization of acquired intangibles                                           466                                            501                             927                                                                1,003
+  Add: Acquisition-related expenses                                                                                       6,889                           4,478                                        17,620                           9,065
+  Add: Amortization of debt issuance costs                                            957                                            953                                                                1,902                           1,906
+  Add: Income tax effects and adjustments(1)                                          981                                            (175)                                                           (16,175)      (435)
+  Non-GAAP net income                                                                 $                                  34,264      $                   20,557      $                                 63,248      $                   36,357
+  Non-GAAP net income per share, basic                                                $                                    0.10      $                     0.06      $                                   0.19      $                     0.11
+  Non-GAAP net income per share, diluted                                              $                                    0.09      $                     0.06      $                                   0.17      $                     0.10
+  Weighted-average shares used to compute non-GAAP net income per share, basic        341,208,548                                    319,415,586                     338,491,146                                   316,809,384
+  Weighted-average shares used to compute non-GAAP net income per share, diluted      367,293,632                                    354,236,764                     367,556,846                                   352,216,317
+
+(1) Income tax effects and adjustments for the six months ended June 30, 2025 includes an adjustment for the income tax benefit from the release of a valuation allowance on certain deferred tax assets.
+
+The following table presents a reconciliation of free cash flow to net cash provided by (used in) operating activities, the most directly comparable GAAP measure, for each of the periods indicated (unaudited, in thousands, except percentages):
+
+                                                                                            Three Months Ended June 30,                                           Six Months Ended June 30,
+                                                                                            2025                                          2024                    2025                                          2024
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Net cash provided by (used in) operating activities                                       $                                18,115       $            8,590      $                                (8,639)      $         (17,364)
+  Capitalized internal-use software costs                                                                                    (6,191)                 (4,776)                                      (10,997)                (10,315)
+  Capital expenditures                                                                      (919)                                                    (1,105)                                       (2,348)                 (1,291)
+  Free cash flow                                                                            $                                11,005       $            2,709      $                               (21,984)      $         (28,970)
+  Impact from compensation payments adjustment(1)                                           —                                             —                                                         37,930      —
+  Adjusted free cash flow                                                                   $                                11,005       $            2,709      $                                 15,946      $         (28,970)
+  Net cash provided by (used in) operating activities as a percentage of total revenue      6.4                              %            3.7              %      (1.6                                          (3.8
+  Free cash flow margin                                                                     3.9                              %            1.2              %      (4.0                                          (6.4
+  Adjusted free cash flow margin                                                            3.9                              %            1.2              %      2.9                                           (6.4
+  Net cash used in investing activities                                                     $                                (8,489)      $         (46,531)      $                              (120,492)      $         (63,296)
+  Net cash provided by financing activities                                                 $                                6,062        $           13,096      $                                 36,863      $           43,100
+
+(1) Represents an adjustment to reflect the non-recurring impact in the first quarter of 2025 from the change to timing of cash compensation payments for most of our non go-to-market employees implemented at the start of 2025.

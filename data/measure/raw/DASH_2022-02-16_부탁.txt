@@ -1,0 +1,374 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — DASH 2022-02-16
+# 출처: https://www.sec.gov/Archives/edgar/data/1792789/000162828022002851/dash-20220216.htm
+
+Document
+
+<img alt="image161.jpg" src="image161.jpg">Exhibit 99.1
+February 16, 2022
+Fellow Shareholders,
+DoorDash's mission is to grow and empower local economies. We were pleased with the consistent execution in our core restaurant business in 2021 and with our progress on expanding the scope of our business in new categories, new services, and new geographies. In 2022, we intend to build on areas of strength in order to drive more sales for merchants, create more earning opportunities for Dashers, delight consumers in new ways, and increase the long-term profit potential of our business. Among key achievements in Q4 2021, DoorDash:
+•Established new quarterly records for Total Orders and Marketplace GOV
+•Achieved record monthly active users (MAUs)1 of over 25 million, up 22% year-over year ("Y/Y") 
+•Grew the percentage of MAUs ordering from a non-restaurant merchant to 14% in December 2021
+•Increased DashPass members to more than 10 million
+Fourth Quarter 2021 Key Financial Metrics
+•Revenue grew 34% Y/Y to $1.3 billion, Total Orders grew 35% Y/Y to 369 million, and Marketplace GOV grew 36% Y/Y to $11.2 billion.
+•GAAP gross profit of $637 million, up 34% Y/Y from $477 million in Q4 2020
+•GAAP net loss of $155 million, compared to GAAP net loss of $312 million in Q4 2020
+•Adjusted EBITDA of $47 million, declined from $94 million in Q4 2020
+
+                                                                                                                                                                          Three Months Ended
+(in millions, except percentages)                                          Dec. 31,                   Mar.31,                  Jun. 30,                  Sept. 30,                  Dec. 31,
+                                                                               2020                      2021                      2021                       2021                      2021
+Total Orders                                                               273                       329                       345                       347                        369     
+Total Orders Y/Y % change                                                  233    %                  219    %                   69    %                   47     %                   35    %
+Marketplace GOV                                                         $8,179                    $9,913                   $10,456                   $10,416                    $11,159     
+Marketplace GOV Y/Y % change                                               227    %                  222    %                   70    %                   44     %                   36    %
+Revenue                                                                   $970                    $1,077                    $1,236                    $1,275                     $1,300     
+Revenue Y/Y % change                                                       226    %                  198    %                   83    %                   45     %                   34    %
+Net Revenue Margin                                                        11.9    %                 10.9    %                 11.8    %                 12.2     %                 11.6    %
+GAAP Gross Profit                                                         $477                      $493                      $657                      $665                       $637     
+Contribution Profit                                                       $230                      $209                      $290                      $281                       $291     
+Contribution Profit (Loss) as a % of Marketplace GOV                       2.8    %                  2.1    %                  2.8    %                  2.7     %                  2.6    %
+GAAP Net Loss                                                           $(312)                    $(110)                    $(102)                    $(101)                     $(155)     
+Adjusted EBITDA                                                            $94                       $43                      $113                       $86                        $47     
+Adjusted EBITDA as a % of Marketplace GOV                                  1.1    %                  0.4    %                  1.1    %                  0.8     %                  0.4    %
+1 Based on the number of individual consumer accounts that have completed an order on our Marketplace in the past calendar month during the relevant period.
+1<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+Operating Trends
+CONSUMERS
+Demand on our Marketplace grew substantially in 2021, exceeding our expectations and the expectations of many who questioned the sustainability of demand as restaurants reopened. Higher-than-expected consumer retention and new consumer growth drove the outperformance. We believe these results reflect our relentless focus on selection, quality, and affordability, as well as consumers' enduring demand for convenience.
+Retention is a perennial area of focus for us because it underpins our ability to drive returns on consumer acquisition spend and reinvest in our business. Strong retention also helps drive growth, as it allows improvements in order frequency to compound over a larger base. Based on third-party data, we believe we have leading consumer and spend retention within the third-party food delivery logistics category in the U.S., which has contributed to strong growth in Marketplace GOV within our annual cohorts in recent years.
+
+                                               Marketplace GOV by Cohort, Indexed to Y1
+                         Y1          Y2          Y3          Y4          Y5   Y6       
+    2016 Cohort        1.0x        1.4x        1.4x        1.6x        2.8x   3.7x     
+    2017 Cohort        1.0x        1.5x        1.6x        2.8x        3.8x            
+    2018 Cohort        1.0x        1.7x        2.7x        3.6x                        
+    2019 Cohort        1.0x        2.1x        2.7x                                    
+    2020 Cohort        1.0x        1.5x                                                
+Source: DoorDash internal data excluding Caviar
+Restaurants remain the core of our service for most consumers. In 2021, we continued adding new restaurants to our Marketplace and third-party data suggests we remain the selection leader in the U.S. This helped drive average monthly order frequency higher in Q4 on both a Q/Q and Y/Y basis. 
+Beyond restaurants, consumers showed a growing interest in many of the newer categories on our Marketplace in 2021. In December, 14% of MAUs placed an order in our non-restaurant verticals, with increasing average order frequency versus September. During that time many markets saw over 20% of MAUs placing an order in a non-restaurant vertical. Since many of our non-restaurant verticals are ones that consumers use frequently in their daily lives, we see an opportunity to meaningfully increase adoption and engagement over time. 
+<img alt="chart-97cb32b5bf0d4a6095b.jpg" src="chart-97cb32b5bf0d4a6095b.jpg">*Excludes markets with fewer than 500 MAU
+Source: DoorDash internal data
+2<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+Our goal with our Marketplace is to build a world-class local commerce platform. Our analysis continues to suggest consumers who order from non-restaurant categories subsequently increase their order volume on our Marketplace as a whole and in the restaurant category by more than consumers who do not order from new categories. This supports our view that a scaled multi-category experience can drive improved retention and order frequency over time.
+MAUs reached an all-time high of over 25 million in Q4 and DashPass members exceeded 10 million in Q4. In many ways, DashPass is emblematic of our broader strategy to focus on maximizing long-term profit dollar production. While DashPass orders generate lower contribution margins than non-DashPass orders on average, DashPass members have higher retention and order frequency than non-members. This helps drive faster growth and higher profit dollar production.
+
+<img alt="chart-e6cd32d0952b477f89a.jpg" src="chart-e6cd32d0952b477f89a.jpg">*An active consumer is a consumer that completed an order on our Marketplace in Q4 2021.
+Source: DoorDash internal data, excluding Caviar
+While our overall penetration of DashPass members has grown over the last year, penetration in several markets remains well below the company average. We view these under-penetrated markets as an attractive opportunity to continue growing DashPass.
+Marketplace orders in Canada and Australia grew substantially faster than those in the U.S. in both Q4 and 2021. Based on third-party data, we believe we gained category share in both markets in Q4. We are still a minority player in Canada and Australia, but we are beginning to see consistent execution drive improvements in order frequency, category share, and contribution margins, which reinforces our optimism about the long-term value of these markets. In Japan and Germany, our efforts remain nascent and we continue to focus on the foundational elements of selection and quality.
+DASHERS
+In 2021, over 6 million people dashed, earning a total of well over $11 billion. We know of no other earning opportunity that provides the same level of accessibility and flexibility as dashing and we are extremely proud that so many people are finding value in it.
+We must compete to earn Dashers' time and effort with every order. Dashers choose whether, where, when, how long, and how frequently to work. If the opportunities we provide are not sufficiently attractive, people will choose to deliver with other services, work outside our industry, or simply choose to do other things with their time.
+3<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+If we do not earn Dashers’ time and effort, we cannot serve consumers, which means our business and the business of our merchant partners will suffer. This is a powerful incentive; in order to progress against our mission and achieve our long-term financial ambitions, we must make dashing attractive work that empowers people to achieve their goals.
+Despite a tight labor market with more jobs available than people looking for work, over 3 million people dashed in Q4. The data around how Dashers leverage our platform continues to suggest dashing is both unique from and additive to traditional structured work. Dashers worked an average of less than four active hours per week in Q4, which was consistent with previous quarters. Additionally, well under 1% of Dashers averaged more than 30 active hours per week in Q4, which was also consistent with previous quarters. Data from the Bureau of Labor Statistics from December 2021 suggests it takes 13 weeks for the median unemployed person in the U.S. to find a new job. People that qualify to dash are often eligible to begin generating income within a day of signing up. These usage patterns and characteristics are unlike those of any other earning opportunity we know of.
+We strongly believe dashing has a positive impact on individuals and their communities. In our most recent survey: 68% of Dashers said they use dashing to make up for lost income at work, which suggests dashing generates income that is additive to structured employment; 35% of Dashers said they use dashing to avoid applying for government assistance, which suggests dashing helps people bridge periods of financial insecurity; 71% of Dashers said they work more hours at certain times of the week, month, or year, which suggests the flexibility of dashing is critical; 64% of Dashers said dashing helps them pay rent and care for their family, which suggests dashing helps people achieve greater financial security; and 27% of Dashers said they would not get another job if they could no longer dash, which suggests much of the income generated from dashing would be lost if its accessibility and flexibility was impaired. 
+Our data suggests dashing has become a powerful tool that helps millions of people achieve their goals. While this is gratifying, we are not resting on it. We will continue listening to Dashers and working with community leaders, policymakers, and academics to make dashing more accessible, more efficient, and more effective so that it becomes an even more attractive choice for anyone looking to earn incremental income.
+MERCHANTS
+We started DoorDash with the goal of enabling local merchants to succeed in the digital age. In 2021, DoorDash generated nearly $30 billion in sales for merchants in our communities through our Marketplace and facilitated several billion more in sales through our Platform Services. These results are the output of our focus on providing a range of services that help merchants more easily connect with consumers, so they can focus on what they do best.
+We compete for merchants based on the overall value we provide, our ease of use, and the level of service we provide. In most cases, merchants have several alternatives, including services from competitors or building functions internally. If we do not continue innovating in order to provide exceptional value, merchants will not use our services. 
+Over the last year, we introduced new tiered pricing options to better serve the unique needs of every restaurant; our first mobile merchant app so businesses can manage their stores on DoorDash from their phones; new tools for managing demand during busy times in restaurant kitchens; and new advertising solutions to help merchants attract new consumers and grow their businesses.
+The innovation, quality, and value we provide to merchants is evident in the growing volume of merchants on our platform and in their decisions to stick with us over time. We exited 2021 with over 550,000 partner merchants leveraging our Marketplace and Platform Services, which was up by more than 150,000 Y/Y. Similarly, voluntary merchant churn on our platform declined in 2021 versus levels in either 2020 or 2019. In Q4, partner merchants grew sales on our Marketplace by 23% Y/Y on a same-store basis.
+Active Drive and Storefront stores increased by over 70% Y/Y. Merchant demand for services that help them build their own channels remains high. Even merchants who have historically relied on in-house fleets are often using DoorDash Drive due to its cost effectiveness and demonstrated quality. We intend to continue making our existing services easier to use, more cost effective and reliable, and expanding our suite of services, so that more merchants can more easily build successful first-party digital businesses.
+4<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+In 2021, our services helped many restaurants grow their businesses in an environment that remained challenged by supply chain constraints, hiring difficulties, and changing regulations. Although we have driven significant growth in Marketplace GOV from restaurants and believe we made a meaningful contribution to the industry in 2021, our Marketplace GOV remains just 5% of US restaurant industry sales.
+In verticals beyond restaurants, our Marketplace remains nascent. We launched convenience and grocery on the DoorDash Marketplace in 2020 and a number of other new categories in 2021. Non-restaurant partner merchants on our Marketplace more than doubled during 2021. While we are pleased with this progress, we must make it easier for merchants, particularly smaller ones, to onboard and leverage our services, while also driving more consumer demand in order to increase the value we provide. We are focused on this and intend to invest in new tools that make it easier and more attractive for merchants to leverage our services to build and grow their businesses. 
+Fourth Quarter 2021 Financial and Operational Highlights
+In Q4 2021, we grew Total Orders 35% Y/Y to 369 million. On a Y/Y basis, order growth was driven by increased average order frequency, MAU growth, and growth in orders through Drive. International orders grew substantially faster than domestic orders on a Y/Y basis in Q4.
+Q4 2021 Marketplace GOV grew 36% Y/Y to $11.2 billion. Growth in Marketplace GOV drove Q4 2021 Revenue up 34% Y/Y to $1.3 billion.
+Net Revenue Margin, defined as Revenue as a percentage of Marketplace GOV, was 11.6% in Q4 2021. On a Y/Y basis, Net Revenue Margin decreased by 21bps, due in part to higher Dasher costs associated with the implementation of Proposition 22 in California in December 2020. Despite the increase in Dasher costs, Net Revenue Margin in our US Restaurant Marketplace increased on a Y/Y basis. This was offset by growth in orders from new verticals and international markets, which carry lower Net Revenue Margins on average compared to orders in our US restaurant business.
+Adjusted Cost of Revenue as a percentage of Marketplace GOV increased on a Y/Y basis, due primarily to growth in costs associated with our first-party DashMart business. Adjusted Gross Profit increased 28% Y/Y to $686 million in Q4 2021. Adjusted Gross Profit was 6.1% of Marketplace GOV in Q4 2021, which was down from 6.6% in Q4 2020. 
+Q4 2021 Contribution Profit increased 27% Y/Y to $291 million or 2.6% of Marketplace GOV. On a Y/Y basis, Contribution Profit as a percentage of Marketplace GOV declined by 20bps. Adjusted sales and marketing as a percentage of Marketplace GOV was 3.5% in Q4 2021, down from 3.7% in Q4 2020, driven by a decrease in consumer acquisition costs as a percentage of Marketplace GOV, partially offset by an increase in Dasher acquisition costs as a percentage of Marketplace GOV.
+Adjusted Research & Development expense as a percentage of Marketplace GOV increased by 26bps Y/Y in Q4 2021, due primarily to personnel costs associated with growth in headcount.
+Adjusted General & Administrative expense as a percentage of Marketplace GOV also increased by 26bps Y/Y in Q4 2021, due primarily to personnel costs associated with growth in headcount.
+Adjusted EBITDA was $47 million in Q4 2021 or 0.4% of Marketplace GOV, a decrease from $94 million in in Q4 2020 or 1.1% of Marketplace GOV. We continue to manage our business with the goal of maximizing long-term profit dollar production. In Q4 2021, we invested aggressively in international markets and new verticals. We are encouraged by the growth we have experienced in these areas and expect to continue investing in these businesses.
+In Q4 2021, operating cash flow was $167 million and free cash flow was $97 million. We ended the quarter with $4.4 billion of cash, cash equivalents, and investments, and no debt.
+5<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+Q1 and 2022 Outlook
+We expect Q1 Marketplace GOV to be in a range of $11.4 billion to $11.8 billion, with Q1 Adjusted EBITDA in a range of $0 million to $50 million.
+We expect 2022 Marketplace GOV to be in a range of $48 billion to $50 billion, with 2022 Adjusted EBITDA in a range of $0 million to $500 million.
+Our current outlook excludes any impact from the pending Wolt transaction. We continue to expect the Wolt transaction to close in 1H 2022, and anticipate updating our outlook after the transaction closes.
+Among other factors, our outlook anticipates continued growth in our U.S. restaurant Marketplace, as well as ongoing investment in new categories, international markets, and Platform Services. We caution investors that significant uncertainty remains around several factors, including: the ongoing COVID pandemic and the impact of labor shortages, inflation, and other macroeconomic factors. These or other factors could cause the behavior of merchants, Dashers, or consumers to deviate from the expectations included in our guidance. A more complete discussion of our risk factors is available in our 10-K and other relevant SEC filings.
+Conclusion
+We ended 2021 with even more opportunity than when we began. The addition of new verticals, new services, and new geographies provides more surfaces to execute against and greater room to drive long-term growth that benefits all of our stakeholders. We expect the pending close of the Wolt acquisition to add to this, bringing extraordinary talent and world-class operations that will expand our ability to enhance local commerce on a global scale. 
+We continue to believe the transition to omni-channel local commerce is in its early innings and we are just beginning to build the platform we envision. While we are the leader in the restaurant category in the U.S., we see significant room for growth within this category and even more in our newer categories. Based on the magnitude of opportunities in front of us, we expect to continue investing much of the cash generated by our core U.S. restaurant business in order to expand our competitive advantages and further our growth initiatives. In doing so, we intend to maintain a consistent approach to investment discipline and manage the business to maximize scale and long-term profit dollars. Our expectations of ourselves are high. We will do our best to exceed them.
+We could not be more grateful to our employees and stakeholders for the confidence they place in us, or more humbled by our shareholders who entrust us with their capital. Thank you for making this journey possible.
+Sincerely,
+Tony Xu, Co-founder, CEO and Board Chair, and Prabir Adarkar, CFO
+
+
+IR Contact:Andy Hargreaves, CFAir@doordash.com        PR Contact:Press at DoorDashpress@doordash.com     
+Webcast
+DoorDash will host a webcast today at 2:00 p.m. Pacific Time (5:00 p.m. Eastern Time) to discuss these financial results and business highlights. To listen to a live audio webcast, please visit our Investor Relations page at https://ir.doordash.com. The archived webcast will be available on our Investor Relations page shortly after the call.
+6<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+Available Information
+We announce material information to the public about us, our products and services, and other matters through a variety of means, including filings with the SEC, press releases, public conference calls, webcasts, the investor relations section of our website (ir.doordash.com), our blog (blog.doordash.com or doordash.news), and our Twitter account (@DoorDash) in order to achieve broad, non-exclusionary distribution of information to the public and for complying with our disclosure obligations under Regulation FD. 
+Forward-Looking Statements
+This investor letter contains forward-looking statements within the meaning of Section 27A of the Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934, as amended, which statements involve substantial risks and uncertainties. Forward-looking statements generally relate to future events or our future financial or operating performance. In some cases, you can identify forward-looking statements because they contain words such as “may,” “will,” “should,” “expect,” “plan,” “anticipate,” “could,” “would,” “intend,” “target,” “project,” “contemplate,” “believe,” “estimate,” “predict,” “potential” or “continue” or the negative of these words or other similar terms or expressions that concern our expectations, strategies, plans or intentions. Forward-looking statements in this investor letter include, but are not limited to, our expectations regarding our financial position and operating performance, including our outlook and guidance for the first quarter and full year 2022, our pending acquisition of Wolt, and our expectations regarding the impact on our business, and demand for our platform and for local logistics platforms in general, as well as trends in our business, markets and industries, including the transition to omni-channel local commerce. Our expectations and beliefs regarding these matters may not materialize, and actual results in future periods are subject to risks and uncertainties that could cause actual results to differ materially from those projected, including risks and uncertainties related to: competition, managing our growth and corporate culture, financial performance, including the impact of the COVID-19 pandemic on our business and operations and our ability to forecast our performance due to our limited operating history and the COVID-19 pandemic, investments in new geographies, products, or offerings, our ability to attract merchants, consumers and Dashers to our platform, legal proceedings and regulatory matters and developments, any future changes to our business or our financial or operating model, and our brand and reputation. The forward-looking statements contained in this investor letter are also subject to other risks and uncertainties that could cause actual results to differ from the results predicted, including those more fully described in our filings with the SEC, including our Annual Report on Form 10-K for the year ended December 31, 2020 and our quarterly reports on Form 10-Q. All forward-looking statements in this investor letter are based on information available to DoorDash and assumptions and beliefs as of the date hereof, and we disclaim any obligation to update any forward-looking statements, except as required by law.
+Use of Non-GAAP Financial Measures
+To supplement our financial information presented in accordance with GAAP, we consider certain financial measures that are not prepared in accordance with GAAP, including adjusted cost of revenue, adjusted sales and marketing expense, adjusted research and development expense, adjusted general and administrative expense, Adjusted Gross Profit (Loss), Adjusted Gross Margin, Contribution Profit (Loss), Contribution Margin, Adjusted EBITDA, Adjusted EBITDA Margin, and free cash flow. We use these financial measures in conjunction with GAAP measures as part of our overall assessment of our performance, including the preparation of our annual operating budget and quarterly forecasts, to evaluate the effectiveness of our business strategies and to communicate with our board of directors concerning our business and financial performance. We believe that these non-GAAP financial measures provide useful information to investors about our business and financial performance, enhance their overall understanding of our past performance and future prospects, and allow for greater transparency with respect to metrics used by our management in their financial and operational decision making. We are presenting these non-GAAP financial measures to assist investors in seeing our business and financial performance through the eyes of management, and because we believe that these non-GAAP financial measures provide an additional tool for investors to use in comparing results of operations of our business over multiple periods with other companies in our industry.
+We define adjusted cost of revenue as cost of revenue, exclusive of depreciation and amortization, excluding stock-based compensation expense and certain payroll tax expense, and allocated overhead. Allocated overhead is determined based on an allocation of shared costs, such as facilities (including rent and utilities) and information technology costs, among all departments based on employee headcount. We define adjusted sales and marketing expense as sales and marketing expenses excluding stock-based compensation expense and certain payroll tax expense, and allocated overhead. We define adjusted research and development expense as research and development expenses excluding stock-based 
+7<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+compensation expense and certain payroll tax expense, and allocated overhead. We define adjusted general and administrative expense as general and administrative expenses excluding stock-based compensation expense and certain payroll tax expense, certain legal, tax, and regulatory settlements, reserves, and expenses, transaction-related costs, impairment expenses, and including allocated overhead from cost of revenue, sales and marketing, and research and development. 
+We define Adjusted Gross Profit (Loss) as gross profit (loss) plus (i) depreciation and amortization expense related to cost of revenue, (ii) stock-based compensation expense and certain payroll tax expense included in cost of revenue, and (iii) allocated overhead included in cost of revenue. Gross profit (loss) is defined as revenue less (i) cost of revenue, exclusive of depreciation and amortization and (ii) depreciation and amortization related to cost of revenue. Adjusted Gross Margin is defined as Adjusted Gross Profit (Loss) as a percentage of revenue for the same period. 
+We define Contribution Profit (Loss) as our gross profit (loss) less sales and marketing expense plus (i) depreciation and amortization expense related to cost of revenue, (ii) stock-based compensation expense and certain payroll tax expense included in cost of revenue and sales and marketing expenses, and (iii) allocated overhead included in cost of revenue and sales and marketing expenses. We define gross margin as gross profit (loss) as a percentage of revenue for the same period and we define Contribution Margin as Contribution Profit (Loss) as a percentage of revenue for the same period.
+We define Adjusted EBITDA as net income (loss), adjusted to exclude (i) certain legal, tax, and regulatory settlements, reserves, and expenses, (ii) a one-time non-cash change in fair value of a forward contract related to the issuance of our Series F redeemable convertible preferred stock, (iii) loss on disposal of property and equipment, (iv) transaction-related costs, (v) impairment expenses, (vi) provision for income taxes, (vii) interest income and expense, (viii) other income (expense), net, (ix) stock-based compensation expense and certain payroll tax expense, and (x) depreciation and amortization expense. Adjusted EBITDA Margin is calculated by dividing Adjusted EBITDA by revenue for the same period. 
+We define free cash flow as cash flows from operating activities less purchases of property and equipment and capitalized software and website development costs.
+Our definitions may differ from the definitions used by other companies and therefore comparability may be limited. In addition, other companies may not publish these or similar metrics. Further, these metrics have certain limitations in that they do not include the impact of certain expenses that are reflected in our consolidated statements of operations. Thus, our adjusted cost of revenue, adjusted sales and marketing expense, adjusted research and development expense, adjusted general and administrative expense, Adjusted Gross Profit (Loss), Adjusted Gross Margin, Contribution Profit (Loss), Contribution Margin, Adjusted EBITDA, Adjusted EBITDA Margin, and free cash flow should be considered in addition to, not as substitutes for, or in isolation from, measures prepared in accordance with GAAP.
+8<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+DOORDASH, INC.
+CONDENSED CONSOLIDATED BALANCE SHEETS
+(in millions)
+(Unaudited)
+
+                                                          December 31, 2020                December 31, 2021
+Assets                                                                                                      
+Current assets:                                                                                             
+Cash and cash equivalents                                    $4,345                           $2,504        
+Short-term marketable securities                                514                            1,253        
+Funds held at payment processors                                146                              320        
+Accounts receivable, net                                        291                              349        
+Prepaid expenses and other current assets                       221                              139        
+Total current assets                                          5,517                            4,565        
+Long-term marketable securities                                   —                              650        
+Operating lease right-of-use assets                             203                              336        
+Property and equipment, net                                     210                              402        
+Intangible assets, net                                           74                               61        
+Goodwill                                                        316                              316        
+Non-marketable equity securities                                  —                              409        
+Other assets                                                     33                               70        
+Total assets                                                 $6,353                           $6,809        
+Liabilities and Stockholders’ Equity                                                                        
+Current liabilities:                                                                                        
+Accounts payable                                                $80                             $161        
+Operating lease liabilities                                      15                               26        
+Convertible notes                                               364                                —        
+Accrued expenses and other current liabilities                  943                            1,573        
+Total current liabilities                                     1,402                            1,760        
+Operating lease liabilities                                     238                              373        
+Other liabilities                                                13                                9        
+Total liabilities                                             1,653                            2,142        
+Stockholders’ equity:                                                                                       
+Common stock                                                      —                                —        
+Additional paid-in capital                                    6,313                            6,752        
+Accumulated other comprehensive loss                              —                              (4)        
+Accumulated deficit                                         (1,613)                          (2,081)        
+Total stockholders’ equity                                    4,700                            4,667        
+Total liabilities and stockholders’ equity                   $6,353                           $6,809        
+9<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+DOORDASH, INC.
+CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS
+(in millions, except share amounts which are reflected in thousands, and per share data) 
+(Unaudited)
+
+                                                                                                                                Three Months Ended December 31,                                   Year Ended December 31,
+2020                                                                                                                                                       2021                      2020                            2021
+Revenue                                                                                                          $970                              $1,300                     $2,886                          $4,888     
+Costs and expenses:                                                                                                                                                                                                      
+Cost of revenue, exclusive of depreciation and amortization shown separately below                                469                                 635                      1,368                           2,338     
+Sales and marketing                                                                                               347                                 413                        957                           1,619     
+Research and development                                                                                          209                                 133                        321                             430     
+General and administrative                                                                                        219                                 224                        556                             797     
+Depreciation and amortization                                                                                      31                                  49                        120                             156     
+Total costs and expenses                                                                                        1,275                               1,454                      3,322                           5,340     
+Loss from operations                                                                                            (305)                               (154)                      (436)                           (452)     
+Interest income                                                                                                     1                                   1                          7                               3     
+Interest expense                                                                                                 (10)                                 (1)                       (32)                            (14)     
+Other income, net                                                                                                   3                                   1                          3                               —     
+Loss before income taxes                                                                                        (311)                               (153)                      (458)                           (463)     
+Provision for income taxes                                                                                          1                                   2                          3                               5     
+Net loss                                                                                                       $(312)                              $(155)                     $(461)                          $(468)     
+Net loss per share, basic and diluted                                                                         $(2.67)                             $(0.45)                    $(7.39)                         $(1.39)     
+Weighted-average number of shares outstanding used to compute net loss per share, basic and diluted           116,913                             344,469                     62,390                         336,847     
+10<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+DOORDASH, INC.
+CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS 
+(in millions)
+(Unaudited)
+
+                                                                                                                                                       Year Ended December 31,
+2019                                                                                                                                          2020                        2021
+Cash flows from operating activities                                                                                                                                          
+Net loss                                                                                                    $(667)                      $(461)                      $(468)    
+Adjustments to reconcile net loss to net cash (used in) provided by operating activities:                                                                                     
+Depreciation and amortization                                                                                   32                         120                         156    
+Change in fair value of forward contract liability                                                              67                           —                           —    
+Non-cash interest expense                                                                                        —                          31                          11    
+Stock-based compensation                                                                                        18                         322                         486    
+Reduction of operating lease right-of-use assets and accretion of operating lease liabilities                   22                          40                          52    
+Bad debt expense                                                                                                 4                          16                          36    
+Other                                                                                                            —                          18                          28    
+Changes in operating assets and liabilities:                                                                                                                                  
+Funds held at payment processors                                                                               (9)                        (96)                       (174)    
+Accounts receivable, net                                                                                      (40)                       (248)                        (94)    
+Prepaid expenses and other current assets                                                                     (88)                        (96)                          85    
+Other assets                                                                                                  (18)                        (20)                        (51)    
+Accounts payable                                                                                              (13)                          54                          79    
+Accrued expenses and other current liabilities                                                                 251                         587                         595    
+Payments for operating lease liabilities                                                                       (3)                        (26)                        (44)    
+Other liabilities                                                                                             (23)                          11                         (5)    
+Net cash (used in) provided by operating activities                                                          (467)                         252                         692    
+Cash flows from investing activities                                                                                                                                          
+Purchases of property and equipment                                                                           (78)                       (106)                       (129)    
+Acquisitions, net of cash acquired                                                                           (315)                        (28)                           —    
+Capitalized software and website development costs                                                            (14)                        (53)                       (108)    
+Purchases of marketable securities                                                                           (762)                       (593)                     (2,344)    
+Sales of marketable securities                                                                                 160                           4                         224    
+Maturities of marketable securities                                                                            440                         583                         720    
+Purchases of non-marketable equity securities                                                                    —                           —                       (409)    
+Other investing activities                                                                                     (1)                           1                         (1)    
+Net cash used in investing activities                                                                        (570)                       (192)                     (2,047)    
+Cash flows from financing activities                                                                                                                                          
+Proceeds from issuance of common stock upon initial public offering, net of underwriter discounts                —                       3,289                           —    
+Proceeds from issuance of preferred stock, net of issuance costs                                             1,111                         382                           —    
+Proceeds from issuance of convertible notes, net of issuance costs                                               —                         333                           —    
+Proceeds from exercise of stock options                                                                          3                           5                          32    
+Deferred offering costs paid                                                                                   (3)                         (6)                        (10)    
+Repayment of convertible notes                                                                                   —                           —                       (333)    
+Taxes paid related to net share settlement of equity awards                                                      —                         (7)                       (172)    
+Other financing activities                                                                                     (2)                           —                           —    
+Net cash provided by (used in) financing activities                                                          1,109                       3,996                       (483)    
+Foreign currency effect on cash, cash equivalents, and restricted cash                                           —                           2                         (1)    
+Net increase (decrease) in cash, cash equivalents, and restricted cash                                          72                       4,058                     (1,839)    
+Cash, cash equivalents, and restricted cash                                                                                                                                   
+Cash, cash equivalents, and restricted cash, beginning of period                                               215                         287                       4,345    
+Cash, cash equivalents, and restricted cash, end of period                                                    $287                      $4,345                      $2,506    
+11<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+
+Reconciliation of cash, cash equivalents, and restricted cash to the condensed consolidated balance sheets                                                         
+Cash and cash equivalents                                                                                         $257         $4,345               $2,504
+Restricted cash                                                                                                   30                —   2                 
+Total cash, cash equivalents, and restricted cash                                                                 $287         $4,345               $2,506
+Supplemental disclosure of cash flow information                                                                                                                   
+Cash paid for interest                                                                                            $—               $—                  $42
+Cash paid for income taxes                                                                                        $—               $1                   $4
+Non-cash investing and financing activities                                                                                                                        
+Conversion of redeemable convertible preferred stock to common stock upon initial public offering                 $—           $2,646                   $—
+Purchases of property and equipment not yet settled                                                               $14             $17                  $23
+Redeemable convertible preferred stock issued in connection with an acquisition                                   $100             $—                   $—
+Leasehold improvements acquired through tenant improvement allowance                                              $—               $9                   $4
+Deferred offering costs not yet paid                                                                              $2              $10                   $—
+Stock-based compensation included in capitalized software and website development costs                           $—               $8                  $93
+Holdback consideration for acquisitions                                                                           $—               $3                   $—
+12<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+DOORDASH, INC.
+NON-GAAP FINANCIAL MEASURES
+(Unaudited)
+
+                                                                                                                                                                                                                                                                                    Three Months Ended
+(in millions)                                                                                                   Mar. 31,                Jun. 30,                  Sept. 30,                Dec. 31,                 Mar.31,                Jun. 30,                  Sept. 30,                Dec. 31,
+                                                                                                                    2020                    2020                       2020                    2020                    2021                    2021                       2021                    2021
+Cost of revenue, exclusive of depreciation and amortization                                                    $194                    $323                      $382                     $469                    $563                    $555                      $585                     $635     
+Adjusted to exclude the following:                                                                                                                                                                                                                                                                    
+Stock-based compensation expense and certain payroll tax expense                                                (1)                       —                         —                     (31)                     (9)                    (13)                      (12)                     (14)     
+Allocated overhead                                                                                              (5)                     (5)                       (4)                      (4)                     (5)                     (6)                       (7)                      (7)     
+Adjusted cost of revenue                                                                                       $188                    $318                      $378                     $434                    $549                    $536                      $566                     $614     
+Sales and marketing                                                                                            $152                    $168                      $290                     $347                    $333                    $427                      $446                     $413     
+Adjusted to exclude the following:                                                                                                                                                                                                                                                                    
+Stock-based compensation expense and certain payroll tax expense                                                (1)                       —                         —                     (37)                    (10)                    (14)                      (15)                     (14)     
+Allocated overhead                                                                                              (2)                     (4)                       (4)                      (4)                     (4)                     (3)                       (3)                      (4)     
+Adjusted sales and marketing                                                                                   $149                    $164                      $286                     $306                    $319                    $410                      $428                     $395     
+Research and development                                                                                        $33                     $38                       $41                     $209                     $82                    $100                      $115                     $133     
+Adjusted to exclude the following:                                                                                                                                                                                                                                                                    
+Stock-based compensation expense and certain payroll tax expense                                                (1)                     (2)                       (2)                    (172)                    (36)                    (47)                      (49)                     (54)     
+Allocated overhead                                                                                              (4)                     (3)                       (4)                      (3)                     (3)                     (3)                       (4)                      (3)     
+Adjusted research and development                                                                               $28                     $33                       $35                      $34                     $43                     $50                       $62                      $76     
+General and administrative                                                                                      $82                     $88                      $167                     $219                    $169                    $216                      $188                     $224     
+Adjusted to exclude the following:                                                                                                                                                                                                                                                                    
+Stock-based compensation expense and certain payroll tax expense                                                (2)                     (1)                       (1)                     (82)                    (45)                    (65)                      (49)                     (51)     
+Certain legal, tax, and regulatory settlements, reserves, and expenses(1)                                      (24)                    (12)                      (79)                     (45)                    (13)                    (36)                      (17)                     (11)     
+Transaction-related costs                                                                                         —                       —                         —                      (1)                       —                       —                       (2)                      (8)     
+Impairment expenses(2)                                                                                            —                     (6)                       (5)                        —                       —                       —                       (1)                        —     
+Allocated overhead from cost of revenue, sales and marketing, and research and development         11                      12                      12                         11                      12                      12                      14                         14                   
+Adjusted general and administrative                                                                             $67                     $81                       $94                     $102                    $123                    $127                      $133                     $168     
+(1)We exclude certain costs and expenses from our calculation of adjusted general and administrative expense because management believes that these costs and expenses are not indicative of our core operating performance, do not reflect the underlying economics of our business, and are not necessary to operate our business. These excluded costs and expenses consist of (i) certain legal costs primarily related to worker classification matters, (ii) reserves for the collection of sales and indirect taxes that we do not expect to incur on a recurring basis, (iii) costs related to the settlement of an intellectual property matter, (iv) expenses related to supporting various policy matters, including those related to worker classification and price controls, and (v) donations as part of our COVID-19 pandemic relief efforts. We believe it is appropriate to exclude the foregoing matters from our calculation of adjusted general and administrative expense because (1) the timing and magnitude of 
+13<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+such expenses are unpredictable and thus not part of management’s budgeting or forecasting process, and with respect to worker classification matters, management currently expects such expenses will not be material to our results of operations over the long term as a result of increasing legislative and regulatory certainty in this area, including as a result of Proposition 22 and similar legislation.
+(2)Consists of impairment expense related to an operating lease right-of-use asset associated with our former headquarters.
+
+                                                                                                                                                                                                                                                                                                                        Three Months Ended
+(In millions, except percentages)                                                                                                             Mar. 31,                Jun. 30,                  Sept. 30,                Dec. 31,                  Mar. 31,                  Jun. 30,                  Sept. 30,                  Dec. 31,
+                                                                                                                                                  2020                    2020                       2020                    2020                      2021                      2021                       2021                      2021
+Revenue                                                                                                                                      $362                    $675                      $879                     $970                    $1,077                    $1,236                    $1,275                     $1,300     
+Less: Cost of revenue, exclusive of depreciation and amortization                                                                           (194)                   (323)                     (382)                    (469)                     (563)                     (555)                     (585)                      (635)     
+Less: Depreciation and amortization related to cost of revenue                                                                               (20)                    (25)                      (28)                     (24)                      (21)                      (24)                      (25)                       (28)     
+Gross profit                                                                                                                                 $148                    $327                      $469                     $477                      $493                      $657                      $665                       $637     
+Gross Margin                                                                                                                                   41    %                 48    %                   53     %                 49    %                   46    %                   53    %                   52     %                   49    %
+Less: Sales and marketing                                                                                                                   (152)                   (168)                     (290)                    (347)                     (333)                     (427)                     (446)                      (413)     
+Add: Depreciation and amortization related to cost of revenue                                                                                  20                      25                        28                       24                        21                        24                        25                         28     
+Add: Stock-based compensation expense and certain payroll tax expense included in cost of revenue and sales and marketing                       2                       —                         —                       68                        19                        27                        27                         28     
+Add: Allocated overhead included in cost of revenue and sales and marketing                                                                     7                       9                         8                        8                         9                         9                        10                         11     
+Contribution Profit (Loss)                                                                                                                    $25                    $193                      $215                     $230                      $209                      $290                      $281                       $291     
+Contribution Margin                                                                                                                             7    %                 29    %                   24     %                 24    %                   19    %                   23    %                   22     %                   22    %
+
+                                                                                                                                                                                                                                                                                          Three Months Ended
+(in millions, except percentages)                                                                                     Mar. 31,                Jun. 30,                  Sept. 30,                Dec. 31,                 Mar.31,                Jun. 30,                  Sept. 30,                Dec. 31,
+                                                                                                                          2020                    2020                       2020                    2020                    2021                    2021                       2021                    2021
+Gross profit                                                                                                         $148                    $327                      $469                     $477                    $493                    $657                      $665                     $637     
+Add: Depreciation and amortization related to cost of revenue                                                          20                      25                        28                       24                      21                      24                        25                       28     
+Add: Stock-based compensation expense and certain payroll tax expense included in cost of revenue                       1                       —                         —                       31                       9                      13                        12                       14     
+Add: Allocated overhead included in cost of revenue                                                                     5                       5                         4                        4                       5                       6                         7                        7     
+Adjusted Gross Profit                                                                                                $174                    $357                      $501                     $536                    $528                    $700                      $709                     $686     
+Adjusted Gross Margin                                                                                                  48    %                 53    %                   57     %                 55    %                 49    %                 57    %                   56     %                 53    %
+14<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+
+                                                                                                                                                                                                                                                                            Three Months Ended
+(in millions, except percentages)                                                               Mar. 31,                Jun. 30,                  Sept. 30,                  Dec. 31,                   Mar.31,                  Jun. 30,                  Sept. 30,                  Dec. 31,
+                                                                                                    2020                    2020                       2020                      2020                      2021                      2021                       2021                      2021
+Net loss                                                                                     $(129)                     $23                     $(43)                     $(312)                    $(110)                    $(102)                    $(101)                     $(155)     
+Certain legal, tax, and regulatory settlements, reserves, and expenses(1)                        24                      12                        79                         45                        13                        36                        17                         11     
+Transaction-related costs                                                                         —                       —                         —                          1                         —                         —                         2                          8     
+Impairment expenses(2)                                                                            —                       6                         5                          —                         —                         —                         1                          —     
+Provision for income taxes                                                                        1                       —                         1                          1                         1                         2                         —                          2     
+Interest income and expense                                                                       1                       7                         8                          9                        10                         1                         —                          —     
+Other (income) expense, net                                                                       4                     (3)                       (1)                        (3)                         —                         —                         1                        (1)     
+Stock-based compensation expense and certain payroll tax expense                                  5                       3                         3                        322                       100                       139                       125                        133     
+Depreciation and amortization expense                                                            24                      31                        34                         31                        29                        37                        41                         49     
+Adjusted EBITDA                                                                               $(70)                     $79                       $86                        $94                       $43                      $113                       $86                        $47     
+Adjusted EBITDA Margin                                                                         (19)    %                 12    %                   10     %                   10    %                    4    %                    9    %                    7     %                    4    %
+(1)We exclude certain costs and expenses from our calculation of Adjusted EBITDA because management believes that these costs and expenses are not indicative of our core operating performance, do not reflect the underlying economics of our business, and are not necessary to operate our business. These excluded costs and expenses consist of (i) certain legal costs primarily related to worker classification matters, (ii) reserves for the collection of sales and indirect taxes that we do not expect to incur on a recurring basis, (iii) costs related to the settlement of an intellectual property matter, (iv) expenses related to supporting various policy matters, including those related to worker classification and price controls, and (v) donations as part of our COVID-19 pandemic relief efforts. We believe it is appropriate to exclude the foregoing matters from our calculation of Adjusted EBITDA because (1) the timing and magnitude of such expenses are unpredictable and thus not part of management’s budgeting or forecasting process, and (2) with respect to worker classification matters, management currently expects such expenses will not be material to our results of operations over the long term as a result of increasing legislative and regulatory certainty in this area, including as a result of Proposition 22 and similar legislation.
+(2)Consists of impairment expense related to an operating lease right-of-use asset associated with our former headquarters.
+
+                                                                                     Year Ended December 31,
+(in millions)                                            2020                    2021                       
+Net cash provided by operating activities                            $252                          $692     
+Purchases of property and equipment                                 (106)                         (129)     
+Capitalized software and website development costs                   (53)                         (108)     
+Free cash flow                                                        $93                          $455     
+15<img alt="image_131.jpg" src="image_131.jpg" style="height:26px;margin-bottom:5pt;vertical-align:text-bottom;width:45px"/>
+
+
+
+
