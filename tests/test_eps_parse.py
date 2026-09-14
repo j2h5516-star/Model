@@ -977,6 +977,42 @@ def test_section_title_separates_annual_from_quarterly():
     assert got == 0.49, got
 
 
+def test_구역_제목은_summary_라고도_적는다():
+    """(183차-O) "Financial **Summary**" 도 구역 제목입니다 — 실물 ACMR.
+
+    150차-AP 가 CSX 의 "Financial **Highlights**" 로 겪은 것과 **같은 병**이
+    ACMR 에서 낱말만 바꿔 되풀이됐습니다. 파서는 연간 구역의 1.37 을 물고
+    있었고 진짜 4분기 값은 0.11 입니다.
+
+    ACMR 은 이 일이 **해마다** 일어나 22·23·24·25 Q4 의 GAAP EPS 가 전부
+    "연간값이 분기 칸에 들어왔다"며 버려졌고(150차-AO), 그래서 이 종목은
+    해마다 4분기가 **구멍**이었습니다.
+    """
+    text = (
+        "Full Year 2025 Financial Summary\n"
+        "Unless otherwise noted, the following figures refer to the full "
+        "year of 2025.\n"
+        "•Revenue was $901.3 million, up 15.2%\n"
+        "•Diluted net income per share attributable to ACM Research, "
+        "Inc. was $1.37 compared to $1.53.\n"
+        "Fourth Quarter 2025 Financial Summary\n"
+        "•Revenue was $244.4 million, up 9.4%\n"
+        "•Diluted net income per share attributable to ACM Research, "
+        "Inc. was $0.11 compared to $0.46.\n"
+    )
+    got = sf.find_eps_value(text, sf.LABELS_GAAP_EPS, exclude_nongaap=True)
+    assert got == 0.11, f"연간 구역의 값을 물었습니다: {got}"
+
+    # 실물 원문이 저장소에 있으면 그것으로도 확인합니다 (합성 자료만 믿지 않음)
+    실물 = os.path.join(os.path.dirname(__file__), "..", "data", "measure",
+                      "raw", "ACMR_2026-02-26_부탁.txt")
+    if os.path.exists(실물):
+        with open(실물, encoding="utf-8") as f:
+            r = sf.parse_press_release(f.read())
+        assert r.get("gaap_eps") == 0.11, (
+            f"실물에서 분기 EPS 를 못 읽었습니다: {r.get('gaap_eps')}")
+
+
 def test_document_title_is_not_mistaken_for_a_section_title():
     """문서 제목을 구역 제목으로 오인하면 **문서 전체**를 버립니다.
 

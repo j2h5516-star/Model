@@ -1354,7 +1354,14 @@ _ANNUAL_LINE_HEAD = 24   # 줄머리에서 이만큼 안에 "Full-year" 가 있�
 # 2026-01-22 는 "Fourth Quarter Financial Highlights" 와 "**Full Year 2025**
 # Financial Highlights" 로 나눠 적는데, 이 말을 몰라서 연간 구역의
 # "•EPS was $1.54, and adjusted EPS was $1.61" 을 4분기 값으로 읽었습니다.
-_SECTION_TITLE_RE = re.compile(r"financial\s+(?:results|highlights)", re.I)
+# 183차-O — "Financial **Summary**" 도 같은 구역 제목입니다. 실물 ACMR
+# 2026-02-26 은 "**Full Year 2025** Financial Summary" 와 "Fourth Quarter
+# 2025 Financial Summary" 로 나눠 적는데, 이 말을 몰라서 연간 구역의
+# "•Diluted net income per share … was $1.37" 을 4분기 값으로 읽었습니다
+# (진짜 분기값 0.11). ACMR 은 이 일이 해마다 되풀이돼 22·23·24·25 Q4 가
+# 전부 구멍입니다. 150차-AP 가 CSX 에서 겪은 것과 **같은 병**입니다.
+_SECTION_TITLE_RE = re.compile(
+    r"financial\s+(?:results|highlights|summary)", re.I)
 _SECTION_DOC_TITLE_RE = re.compile(r"\b(?:reports?|announces?|announced)\b", re.I)
 _SECTION_QUARTER_RE = re.compile(r"\bquarter(?:ly)?\b|\bQ[1-4]\b", re.I)
 _SECTION_MAX_CHARS = 60       # 이보다 길면 문서 제목으로 봅니다
