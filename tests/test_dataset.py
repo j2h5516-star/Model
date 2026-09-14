@@ -1550,6 +1550,98 @@ def test_build_는_수집일을_넘겨_미래_발표일을_막는다():
     assert ds["quarters"]["가"][0]["announced_date"] is None, "미래 예정일이 들어왔습니다"
 
 
+
+# ---------------------------------------------------------------------------
+# 183차-Q — 연간 영업이익이 분기 자리에 앉은 것을 버린다
+# ---------------------------------------------------------------------------
+def _마진행(달, 매출, 영업이익, xbrl="같음"):
+    """한 분기 행. xbrl: "같음"(매출과 동일) · "없음" · "다름"."""
+    r = quarter_row(filing_date=f"2024-{달:02d}-28",
+                    announced_date=f"2024-{달:02d}-28",
+                    period_label=f"24 Q{달}",
+                    revenue=매출, op_income=영업이익,
+                    adj_eps=None, gaap_eps=None)
+    if xbrl == "같음":
+        r["revenue_xbrl"] = 매출
+    elif xbrl == "다름":
+        r["revenue_xbrl"] = 매출 * 3        # 매출 쪽이 의심스러운 경우
+    return r
+
+
+def _열두분기(튄자리_영업이익, xbrl="같음"):
+    """마진 10%가 고른 열두 분기 — 다섯째 분기만 값을 갈아 끼웁니다."""
+    행들 = []
+    for i in range(12):
+        매출 = 100_000_000.0 + i * 1_000_000
+        영업 = 매출 * 0.10
+        행들.append(_마진행(i + 1, 매출, 영업, xbrl))
+    행들[4]["op_income"] = 튄자리_영업이익
+    return 행들
+
+
+def test_연간_영업이익이_분기_자리에_앉으면_버린다():
+    """(183차-Q) 실물 ACMR: 4분기 보도자료의 **연간** 영업이익이 분기 칸에.
+
+    실물 25 Q4 — 매출 244,430천(XBRL 과 일치) · 영업이익 $143.0M(연간).
+    마진 58.5% 인데 이웃은 19.2% 였습니다. 기존 마진 검사는
+    "−500%~100% 안인가"만 보므로 그냥 통과했습니다.
+    전수 실측: 150칸 중 **141칸이 이 모양**(매출은 XBRL 과 같음)이었습니다.
+    """
+    행들 = _열두분기(104_000_000.0 * 0.6)     # 마진 60% ↔ 이웃 10%
+    결과 = dataset.build(make_snapshot(eps={"AAA": 행들}))
+    kept = 결과["quarters"]["AAA"]
+    튄것 = [r for r in kept if r.get("period_label") == "24 Q5"]
+    assert 튄것 and 튄것[0]["op_income"] is None, (
+        f"연간값이 앉은 영업이익을 안 버렸습니다: {튄것}")
+    assert 튄것[0]["revenue"] is not None, "매출까지 버리면 안 됩니다"
+    assert any("183차-Q" in n for n in 결과["notes"]), "왜 버렸는지 안 적었습니다"
+    # 나머지 열한 분기는 그대로여야 합니다
+    남은 = [r for r in kept if r.get("period_label") != "24 Q5"]
+    assert all(r["op_income"] is not None for r in 남은), "멀쩡한 칸을 버렸습니다"
+
+
+def test_바깥_자가_없으면_영업이익을_안_버린다():
+    """매출을 보증할 XBRL 이 없으면 **어느 칸이 틀렸는지 못 가립니다.**
+
+    실물 APPF 17 Q4 는 영업이익(2,387천)이 원문 그대로 맞고 **매출**이
+    틀렸습니다. 가릴 자가 없을 때 영업이익을 버리면 맞는 값을 잃습니다.
+    전수 실측에서 이런 칸이 9개였습니다.
+    """
+    행들 = _열두분기(104_000_000.0 * 0.6, xbrl="없음")
+    kept = dataset.build(make_snapshot(eps={"AAA": 행들}))["quarters"]["AAA"]
+    튄것 = [r for r in kept if r.get("period_label") == "24 Q5"]
+    assert 튄것 and 튄것[0]["op_income"] is not None, (
+        "가릴 자가 없는데 버렸습니다 — 맞는 값을 잃을 수 있습니다")
+
+
+def test_매출이_XBRL과_다르면_영업이익을_안_버린다():
+    """매출 쪽이 의심스러우면 영업이익은 죄가 없을 수 있습니다."""
+    행들 = _열두분기(104_000_000.0 * 0.6, xbrl="다름")
+    kept = dataset.build(make_snapshot(eps={"AAA": 행들}))["quarters"]["AAA"]
+    튄것 = [r for r in kept if r.get("period_label") == "24 Q5"]
+    assert 튄것 and 튄것[0]["op_income"] is not None, (
+        "매출이 XBRL 과 다른데 영업이익을 버렸습니다")
+
+
+def test_천천히_오른_마진은_안_버린다():
+    """(150차-AC 의 교훈) **전체**가 아니라 **이웃**과 견줘야 합니다.
+
+    마진이 1%에서 45%로 자란 회사는 전체 중앙값과 견주면 뒷부분이
+    통째로 걸립니다. 이웃과 견주면 한 칸도 안 걸립니다.
+    """
+    행들 = []
+    for i, 비율 in enumerate((0.01, 0.01, 0.01, 0.01, 0.05, 0.05, 0.05, 0.05,
+                             0.20, 0.20, 0.20, 0.20, 0.45, 0.45, 0.45, 0.45)):
+        매출 = 100_000_000.0 + i * 1_000_000
+        행들.append(_마진행((i % 12) + 1, 매출, 매출 * 비율))
+        행들[-1]["filing_date"] = f"20{20 + i // 4}-{(i % 4) * 3 + 1:02d}-28"
+        행들[-1]["announced_date"] = 행들[-1]["filing_date"]
+        행들[-1]["period_label"] = f"{20 + i // 4} Q{(i % 4) + 1}"
+    kept = dataset.build(make_snapshot(eps={"AAA": 행들}))["quarters"]["AAA"]
+    버린것 = [r for r in kept if r["op_income"] is None]
+    assert not 버린것, f"천천히 자란 회사의 칸을 버렸습니다: {len(버린것)}개"
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

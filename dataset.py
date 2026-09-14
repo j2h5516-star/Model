@@ -424,6 +424,9 @@ def _clean_quarters(eps_map: dict, notes: list[str]) -> dict:
         _drop_cumulative_values(ticker, kept, notes)
         _drop_parse_debris(ticker, kept, notes)
         _drop_same_day_siblings(ticker, kept, notes)
+        # 183차-Q — 영업이익률이 이웃과 터무니없이 어긋나고, **매출은 XBRL 이
+        # 보증**하는 행의 영업이익을 버립니다 (아래 함수 설명).
+        _이웃과_어긋난_영업이익을_버린다(ticker, kept, notes)
         # 발표일 상식 검사는 **형제 행 규칙들 뒤에** — 그 규칙들이
         # 발표일로 행을 묶어 보기 때문입니다 (아래 함수 설명 참조).
         _drop_implausible_announced(ticker, kept, notes)
@@ -1129,6 +1132,75 @@ def _같은_분기_이름표가_겹치면_날짜형으로(
     for name in 겹친이름():
         for row in [r for r in rows if str(r.get("period_label")) == name]:
             바꾸기(row, "어느 쪽이 맞는지 가릴 수 없음")
+
+
+# ---------------------------------------------------------------------------
+# 183차-Q — 연간 영업이익이 분기 자리에 앉은 것을 **버립니다**
+# ---------------------------------------------------------------------------
+# 183차-N 이 실물로 찾고 183차-P 가 세어 둔 자리입니다.
+#
+#   실물 ACMR 2026-02-26(25 Q4): 4분기 보도자료의 "Full Year … Summary"
+#   구역에 있는 **연간** 영업이익 $143.0M 이 분기 칸에 앉았습니다.
+#   진짜 분기값은 $23.0M(GAAP)·$29.5M(논갭)입니다. 기존 마진 검사는
+#   "−500%~100% 안인가"만 보므로 58.5% 는 그냥 통과했습니다.
+#   ACMR 은 22·23·24·25 Q4 가 **해마다** 그랬습니다.
+#
+# 어느 칸이 틀렸는지 어떻게 아는가 — **바깥 자로 가릅니다**:
+#   마진이 튀는 이유는 둘입니다(영업이익이 큰 것 / 매출이 작은 것).
+#   그런데 매출에는 **XBRL 이라는 독립된 자**가 있습니다. 매출이 XBRL 과
+#   같다면 매출은 옳고, 튄 것은 영업이익입니다.
+#
+# 2026-09-13 수집물 전수 실측 — 걸린 150칸을 가르니:
+#   · 영업이익이 틀림(매출 = XBRL) **141칸**  ← 이 함수가 버립니다
+#   · 가릴 수 없음(XBRL 매출 없음) 9칸        ← 손대지 않습니다
+#   · 매출이 틀림 0칸
+#
+# **고치지 않고 버립니다**(헌법 1조). 진짜 분기값을 짐작해 넣지 않습니다 —
+# 없음이 안전하고 틀림이 위험합니다.
+_마진_초과_PP = 20.0        # 이웃 중앙값보다 몇 %p 높으면
+_마진_초과_배수 = 2.0       # 그리고 몇 배 넘으면
+_마진_이웃창 = 3            # 앞뒤 몇 분기를 이웃으로 볼 것인가
+_마진_이웃최소 = 4          # 이웃이 이보다 적으면 '평소'를 말할 수 없음
+_XBRL_매출_허용오차 = 0.02  # XBRL 과 2% 안쪽이면 같은 값으로 봄
+
+
+def _이웃과_어긋난_영업이익을_버린다(
+    ticker: str, rows: list[dict], notes: list[str]
+) -> None:
+    """영업이익률이 이웃과 크게 어긋나고 매출은 XBRL 이 보증하는 행의
+    영업이익을 없음으로 만듭니다 (제자리 수정)."""
+    마진: list[float | None] = []
+    for r in rows:
+        rev, op = r.get("revenue"), r.get("op_income")
+        마진.append(op / rev * 100.0
+                   if (_finite_number(rev) and rev > 0 and _finite_number(op))
+                   else None)
+    for i, m in enumerate(마진):
+        if m is None:
+            continue
+        이웃 = [x for j, x in enumerate(마진)
+              if x is not None and j != i and abs(j - i) <= _마진_이웃창]
+        if len(이웃) < _마진_이웃최소:
+            continue
+        중앙 = statistics.median(이웃)
+        if not (m - 중앙 >= _마진_초과_PP
+                and (abs(중앙) < 1 or m / 중앙 >= _마진_초과_배수)):
+            continue
+        row = rows[i]
+        참매출 = row.get("revenue_xbrl")
+        if not (_finite_number(참매출) and 참매출 > 0):
+            continue                      # 가릴 자가 없으면 손대지 않습니다
+        if abs(row["revenue"] - 참매출) / 참매출 > _XBRL_매출_허용오차:
+            continue                      # 매출 쪽이 의심스러우면 판단 보류
+        notes.append(
+            f"{ticker} {row.get('period_label', '?')}: 영업이익률 {m:.1f}% 가 "
+            f"이웃 분기(중앙 {중앙:.1f}%)와 크게 어긋나는데 매출 "
+            f"{row['revenue']:,.0f} 는 XBRL 과 같습니다 — 연간값이 분기 칸에 "
+            f"들어온 것으로 보아 영업이익 {row['op_income']:,.0f} 없음 처리 "
+            "(183차-Q). 진짜 분기값은 짐작하지 않습니다"
+        )
+        row["op_income"] = None
+        마진[i] = None
 
 
 def _drop_parse_debris(ticker: str, rows: list[dict], notes: list[str]) -> None:
