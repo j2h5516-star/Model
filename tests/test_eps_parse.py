@@ -2526,6 +2526,52 @@ def test_사라진회사_찾아보기가_SEC직접_결과를_함께_적는다():
     assert sf.사라진회사_찾아보기("NVDA") == {}
 
 
+def test_티커표에서_번호를_찾아_적어_온다():
+    """(183차-U) 이름 검색은 **SEC 쪽이 깨져** 있습니다 — 티커로 갑니다.
+
+    런 #80 진단이 보여 준 실물:
+        <entry title="ARRAY(0x5628d8254898)">
+          <content type="text/xml"><company-info name="ARRAY(0x5628d…
+    `ARRAY(0x…)` 는 SEC 서버가 배열을 글자로 잘못 찍은 것이라 **회사 이름이
+    아예 안 옵니다.** 우리가 어떻게 읽든 읽을 이름이 없습니다.
+
+    SEC 티커표(company_tickers.json)는 티커를 그대로 맞추면 되므로 이름을
+    읽을 필요가 없습니다. 값은 여전히 **안 씁니다 — 적어 오기만** 합니다.
+    """
+    import edgar.httprequests as hr
+    표 = ('{"0":{"cik_str":320193,"ticker":"AAPL","title":"Apple Inc."},'
+         '"1":{"cik_str":4447,"ticker":"HES","title":"HESS CORP"}}')
+    옛함수, 옛신원 = hr.download_text, sf._ensure_identity
+    hr.download_text = lambda *a, **k: 표
+    sf._ensure_identity = lambda: None
+    try:
+        찾음 = sf._SEC_티커표에서_찾기("HES")
+        없음 = sf._SEC_티커표에서_찾기("ZZZZ")
+    finally:
+        hr.download_text, sf._ensure_identity = 옛함수, 옛신원
+
+    assert 찾음 == [["HESS CORP", "0000004447", "HES"]], (
+        f"티커로 번호를 못 찾았습니다: {찾음}")
+    assert 없음 == [["없음", "", ""]], f"없는 것을 지어냈습니다: {없음}"
+
+
+def test_티커표_결과가_로그에_실린다():
+    """배선 시험 — 로그에 실려야 사람이 보고 번호를 넣을 수 있습니다.
+
+    ⚠️ 183차-G·H 에서 **두 번** 빠뜨린 자리입니다(만들고 배선을 잊음).
+    """
+    옛이름, 옛티커 = sf._SEC_이름검색, sf._SEC_티커표에서_찾기
+    sf._SEC_이름검색 = lambda name: [["", "0000004447", ""]]
+    sf._SEC_티커표에서_찾기 = lambda t: [["HESS CORP", "0000004447", t]]
+    try:
+        report = {}
+        out = sf.사라진회사_찾아보기("HES", report)
+    finally:
+        sf._SEC_이름검색, sf._SEC_티커표에서_찾기 = 옛이름, 옛티커
+    assert out["티커표"] == [["HESS CORP", "0000004447", "HES"]], out
+    assert report["사라진회사_검색"]["티커표"], report
+
+
 def test_분기열_표시가_행까지_옮겨진다():
     """배선 시험 — 파서가 남긴 표시가 **행**에 실려야 정제가 볼 수 있습니다.
     (178차: 배선만 빠져도 시험이 초록불이던 사고를 되풀이하지 않기 위해)"""

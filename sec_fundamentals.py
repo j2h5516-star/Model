@@ -2832,10 +2832,59 @@ def 사라진회사_찾아보기(ticker: str, report: dict | None = None) -> dic
             찾음.append([str(row.company), str(row.cik), str(row.ticker)])
     except Exception as exc:      # 검색이 깨져도 수집 전체를 멈추지 않습니다
         찾음 = [["검색실패", f"{type(exc).__name__}: {str(exc)[:80]}", ""]]
-    out = {"이름": name, "찾음": 찾음, "SEC직접": _SEC_이름검색(name)}
+    out = {"이름": name, "찾음": 찾음, "SEC직접": _SEC_이름검색(name),
+           # 183차-U — 이름 말고 **티커로** 곧장 묻는 길 (아래 설명)
+           "티커표": _SEC_티커표에서_찾기(ticker)}
     if report is not None:
         report["사라진회사_검색"] = out
     return out
+
+
+# 183차-U — 이름 검색은 **SEC 쪽이 깨져 있다**. 티커표로 간다.
+# ---------------------------------------------------------------------------
+# 런 #80 의 진단(_응답앞)이 이유를 그대로 보여 줬습니다:
+#
+#   <entry title="ARRAY(0x5628d8254898)">
+#     <content type="text/xml"><company-info name="ARRAY(0x5628d…
+#
+# `ARRAY(0x…)` 는 **SEC 서버 쪽 프로그램이 배열을 글자로 잘못 찍은 것**입니다.
+# 회사 이름이 아예 안 실려 옵니다 — 우리가 어떻게 읽든 읽을 이름이 없습니다.
+# (183차-J·R 에서 두 번 읽는 법을 고쳤지만 원인은 우리 쪽이 아니었습니다.)
+#
+# 그런데 SEC 는 **티커 ↔ 회사번호 대조표**를 파일 하나로 내놓습니다:
+#   https://www.sec.gov/files/company_tickers.json
+#   {"0":{"cik_str":320193,"ticker":"AAPL","title":"Apple Inc."}, …}
+# 여기서 **티커를 그대로 맞추면** 이름을 읽을 필요가 없습니다.
+#
+# ⚠️ 여전히 **번호를 쓰지 않습니다 — 적어 오기만** 합니다(106·157차 규칙).
+#    사람이 로그에서 회사 이름과 함께 보고 `config.TICKER_CIK` 에 넣습니다.
+#    이 표에 없을 수도 있습니다(상장 폐지·티커 변경). 없으면 "없음"입니다 —
+#    지어내지 않습니다.
+_SEC_티커표_URL = "https://www.sec.gov/files/company_tickers.json"
+
+
+def _SEC_티커표에서_찾기(ticker: str) -> list:
+    """SEC 티커표에서 이 티커의 (회사이름, 번호)를 찾습니다.
+
+    개발 환경에서는 SEC 가 막혀 있어 **언제나 실패로 기록**됩니다 —
+    그것이 정상입니다. 이 길은 로봇(깃허브 서버)에서만 실제로 돕니다.
+    """
+    try:
+        from edgar.httprequests import download_text
+
+        _ensure_identity()
+        글 = download_text(_SEC_티커표_URL)
+        표 = json.loads(글 or "{}")
+    except Exception as exc:
+        return [["티커표실패", f"{type(exc).__name__}: {str(exc)[:80]}", ""]]
+    찾은: list[list[str]] = []
+    for row in (표.values() if isinstance(표, dict) else 표):
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("ticker", "")).upper() == ticker.upper():
+            찾은.append([str(row.get("title", "")),
+                        str(row.get("cik_str", "")).zfill(10), ticker])
+    return 찾은 or [["없음", "", ""]]
 
 
 # SEC 회사 이름 검색 (183차-C) — **로봇에서만 실제로 돕니다.**
