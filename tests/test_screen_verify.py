@@ -520,6 +520,50 @@ def test_일감이라_부르던_칸을_고칠_수_있는_것만_남긴다():
     셈3 = sv._빈칸사유_세기(ds, {})
     assert 셈3["짝없음_냄_짝실패"] == 0 and 셈3["짝없음_냄_원문없음"] == 2, 셈3
 
+
+def test_같은_분기가_두_줄이면_일감이_아니다():
+    """(183차-T) 183차-S 가 "진짜 일감 7칸"이라 한 것의 정체.
+
+    실물 WAT — 주 단위 회계달력이라 분기끝이 4월 3일인데, XBRL 뼈대가
+    3월 31일 자리에도 행을 만듭니다:
+
+        분기끝 2021-03-31 | 발표 없음 | adj 없음  | 매출 608,545,000
+        분기끝 2021-04-03 | 발표 05-05 | adj 2.29 | 매출 608,545,000
+
+    **같은 분기**이고 값은 옆줄에 다 있습니다 — 잃은 것이 아닙니다.
+    전수 실측(런 #79): 10일 안에 붙은 분기 쌍 56쌍·12종목.
+    측정에는 해가 없지만(빈 행은 eps_runs 에 안 보임, 183차-G),
+    계기가 "일감"이라 부르면 주인이 **없는 일을 시키게** 됩니다.
+    """
+    ds = {"quarters": {"WAT": [
+        {"filing_date": "2021-03-31", "announced_date": None,
+         "press_matched": False, "adj_eps": None},           # 빈 껍데기
+        {"filing_date": "2021-04-03", "announced_date": "2021-05-05",
+         "press_matched": True, "adj_eps": 2.29},            # 값이 있는 쪽
+        {"filing_date": "2016-06-30", "announced_date": "2016-07-20",
+         "press_matched": False, "adj_eps": None},           # 진짜 빈칸
+    ]}}
+    셈 = sv._빈칸사유_세기(ds, {})
+    assert 셈["짝없음_냄_두줄"] == 1, f"쌍둥이 행을 못 알아봤습니다: {셈}"
+    assert 셈["짝없음_냄_원문없음"] == 1, 셈
+    assert 셈["짝없음_냄_짝실패"] == 0, 셈
+
+    # 멀리 떨어진 행은 쌍둥이가 아닙니다 (분기는 약 91일 간격)
+    ds2 = {"quarters": {"WAT": [
+        {"filing_date": "2021-03-31", "announced_date": None,
+         "press_matched": False, "adj_eps": None},
+        {"filing_date": "2021-06-30", "announced_date": "2021-08-03",
+         "press_matched": True, "adj_eps": 2.60},
+    ]}}
+    셈2 = sv._빈칸사유_세기(ds2, {})
+    assert 셈2["짝없음_냄_두줄"] == 0, f"다른 분기를 쌍둥이라 했습니다: {셈2}"
+
+    # 화면 문구에 실려 있는가
+    with open(os.path.join(ROOT, "screen_verify.py"), encoding="utf-8") as f:
+        코드 = f.read()
+    assert "짝없음_냄_두줄" in 코드.split("def _빈칸사유_세기")[0], \
+        "갈래를 만들고 화면 문구에 안 실었습니다"
+
     # 화면 문구에 실제로 실려 있는가
     with open(os.path.join(ROOT, "screen_verify.py"), encoding="utf-8") as f:
         코드 = f.read()
