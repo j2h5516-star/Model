@@ -2832,9 +2832,12 @@ def 사라진회사_찾아보기(ticker: str, report: dict | None = None) -> dic
             찾음.append([str(row.company), str(row.cik), str(row.ticker)])
     except Exception as exc:      # 검색이 깨져도 수집 전체를 멈추지 않습니다
         찾음 = [["검색실패", f"{type(exc).__name__}: {str(exc)[:80]}", ""]]
-    out = {"이름": name, "찾음": 찾음, "SEC직접": _SEC_이름검색(name),
+    직접 = _SEC_이름검색(name)
+    out = {"이름": name, "찾음": 찾음, "SEC직접": 직접,
            # 183차-U — 이름 말고 **티커로** 곧장 묻는 길 (아래 설명)
-           "티커표": _SEC_티커표에서_찾기(ticker)}
+           "티커표": _SEC_티커표에서_찾기(ticker),
+           # 183차-V — 번호 후보마다 **그 번호로** 회사 이름을 되물어 봅니다
+           "번호로확인": _번호마다_이름을_되묻는다(직접)}
     if report is not None:
         report["사라진회사_검색"] = out
     return out
@@ -2861,6 +2864,54 @@ def 사라진회사_찾아보기(ticker: str, report: dict | None = None) -> dic
 #    이 표에 없을 수도 있습니다(상장 폐지·티커 변경). 없으면 "없음"입니다 —
 #    지어내지 않습니다.
 _SEC_티커표_URL = "https://www.sec.gov/files/company_tickers.json"
+
+
+# 183차-V — 번호는 있는데 이름이 없다면, **번호로 이름을 되묻는다**
+# ---------------------------------------------------------------------------
+# 런 #81 이 두 길 다 막혔음을 보여 줬습니다:
+#   · 이름 검색 → SEC 서버가 `ARRAY(0x…)` 를 뱉어 이름이 없음 (183차-U)
+#   · 티커표   → HES·HOLX 둘 다 **없음**. 지금 상장된 회사만 실리는 표라,
+#               인수·합병으로 상장이 끝난 회사는 빠집니다(159차에 적은 그대로).
+#
+# 그런데 **번호는 있습니다.** 이름 검색이 HES 에 네 개를 돌려줬습니다
+# (1120916 · 4447 · 1789832 · 1619739). 어느 것이 헤스인지만 알면 됩니다.
+#
+# SEC 는 **번호로 묻는 구조화된 창구**를 따로 둡니다:
+#   https://data.sec.gov/submissions/CIK0000004447.json
+#   {"cik":"4447","name":"HESS CORPORATION","tickers":["HES"], …}
+# 이 창구는 CGI 가 아니라 JSON 이라 `ARRAY(0x…)` 같은 것이 나오지 않습니다.
+#
+# ⚠️ 여전히 **번호를 쓰지 않습니다 — 적어 오기만** 합니다(106·157차 규칙).
+#    사람이 로그에서 "0000004447 → HESS CORPORATION (티커 HES)" 를 보고
+#    `config.TICKER_CIK` 에 넣습니다.
+_SEC_제출물_URL = "https://data.sec.gov/submissions/CIK{번호}.json"
+_되묻기_최대 = 5          # 후보가 아무리 많아도 이만큼만 (SEC 를 두드리는 수)
+
+
+def _번호마다_이름을_되묻는다(후보: list) -> list:
+    """번호 후보마다 SEC 에 그 번호의 회사 이름·티커를 물어 적습니다.
+
+    돌려주는 각 줄: [회사이름, 번호, "티커1,티커2" 또는 실패 사유]
+    """
+    나온다: list[list[str]] = []
+    for 줄 in (후보 or [])[:_되묻기_최대]:
+        번호 = str(줄[1]) if len(줄) > 1 else ""
+        if not 번호.isdigit():
+            continue                      # "_응답앞" 같은 계기 줄은 건너뜁니다
+        try:
+            from edgar.httprequests import download_text
+
+            _ensure_identity()
+            글 = download_text(_SEC_제출물_URL.format(번호=번호.zfill(10)))
+            자료 = json.loads(글 or "{}")
+        except Exception as exc:
+            나온다.append(["되묻기실패", 번호,
+                          f"{type(exc).__name__}: {str(exc)[:60]}"])
+            continue
+        이름 = str(자료.get("name") or "")
+        티커들 = ",".join(str(t) for t in (자료.get("tickers") or []))
+        나온다.append([이름 or "이름없음", 번호, 티커들])
+    return 나온다
 
 
 def _SEC_티커표에서_찾기(ticker: str) -> list:

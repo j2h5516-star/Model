@@ -2555,21 +2555,64 @@ def test_티커표에서_번호를_찾아_적어_온다():
     assert 없음 == [["없음", "", ""]], f"없는 것을 지어냈습니다: {없음}"
 
 
+def test_번호로_이름을_되묻는다():
+    """(183차-V) 두 길이 다 막혔을 때 남은 길 — **번호로 되묻기**.
+
+    런 #81 실측: 이름 검색은 SEC 가 `ARRAY(0x…)` 를 뱉고, 티커표에는
+    HES·HOLX 가 **없다**(상장이 끝난 회사는 지금 티커표에서 빠진다).
+    그런데 **번호는 있다**. SEC 의 제출물 창구는 번호로 물으면 JSON 으로
+    회사 이름과 티커를 돌려준다.
+    """
+    import edgar.httprequests as hr
+    응답 = {
+        "0000004447": '{"cik":"4447","name":"HESS CORPORATION","tickers":["HES"]}',
+        "0001789832": '{"cik":"1789832","name":"Hess Midstream LP","tickers":["HESM"]}',
+    }
+    부른것 = []
+
+    def 가짜(url, *a, **k):
+        부른것.append(url)
+        for 번호, 글 in 응답.items():
+            if 번호 in url:
+                return 글
+        return "{}"
+
+    옛함수, 옛신원 = hr.download_text, sf._ensure_identity
+    hr.download_text, sf._ensure_identity = 가짜, lambda: None
+    try:
+        나온다 = sf._번호마다_이름을_되묻는다([
+            ["", "0000004447", ""], ["", "0001789832", ""],
+            ["_응답앞", "<?xml …", ""],        # 계기 줄 — 두드리면 안 됩니다
+        ])
+    finally:
+        hr.download_text, sf._ensure_identity = 옛함수, 옛신원
+
+    assert 나온다 == [["HESS CORPORATION", "0000004447", "HES"],
+                    ["Hess Midstream LP", "0001789832", "HESM"]], 나온다
+    assert len(부른것) == 2, f"계기 줄까지 SEC 를 두드렸습니다: {부른것}"
+
+
 def test_티커표_결과가_로그에_실린다():
     """배선 시험 — 로그에 실려야 사람이 보고 번호를 넣을 수 있습니다.
 
     ⚠️ 183차-G·H 에서 **두 번** 빠뜨린 자리입니다(만들고 배선을 잊음).
     """
     옛이름, 옛티커 = sf._SEC_이름검색, sf._SEC_티커표에서_찾기
+    옛되묻기 = sf._번호마다_이름을_되묻는다
     sf._SEC_이름검색 = lambda name: [["", "0000004447", ""]]
     sf._SEC_티커표에서_찾기 = lambda t: [["HESS CORP", "0000004447", t]]
+    sf._번호마다_이름을_되묻는다 = lambda 후보: [["HESS CORPORATION", "0000004447", "HES"]]
     try:
         report = {}
         out = sf.사라진회사_찾아보기("HES", report)
     finally:
         sf._SEC_이름검색, sf._SEC_티커표에서_찾기 = 옛이름, 옛티커
+        sf._번호마다_이름을_되묻는다 = 옛되묻기
     assert out["티커표"] == [["HESS CORP", "0000004447", "HES"]], out
     assert report["사라진회사_검색"]["티커표"], report
+    # 183차-V — 번호로 되물은 결과도 로그에 실려야 합니다
+    assert out["번호로확인"] == [["HESS CORPORATION", "0000004447", "HES"]], out
+    assert report["사라진회사_검색"]["번호로확인"], report
 
 
 def test_분기열_표시가_행까지_옮겨진다():
