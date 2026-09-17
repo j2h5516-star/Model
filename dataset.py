@@ -1061,23 +1061,30 @@ _LABEL_QUARTER_RE = re.compile(r"^(\d{2})\s*Q([1-4])$")
 _LABEL_PERIOD_RE = re.compile(r"(\d{4})-(\d{2})")
 
 
-def _이름표_분기차이(row: dict) -> int | None:
-    """이름의 분기 번호와 기간끝의 달력 분기 번호의 차이(0~3). 못 재면 None.
+def _이름표_분기차이들(rows: list[dict]) -> list[int | None]:
+    """이름의 분기 번호와 **그 종목 자기 순서** 분기 번호의 차이(0~3).
 
-    183차-K: 달력 분기는 **가장 가까운 분기끝**으로 정합니다. 주 단위
+    183차-K: 달력 분기는 **가장 가까운 분기끝**으로 정했습니다. 주 단위
     회계달력(13주 분기)을 쓰는 회사는 끝나는 날이 9/30 과 10/1 을 오가는데,
     달(month)로만 보면 그 며칠 때문에 **맞는 이름이 '어긋난 것'으로 몰려**
     날짜형으로 바뀌었습니다.
+
+    183차-X: 달력에 붙이는 방법도 **12·12·12·16주 회사**(COST·AZO 등)는
+    못 고칩니다 — 2월·5월 분기끝이 달력 분기끝의 딱 중간이라 네 분기가
+    세 칸에 뭉칩니다. 이제 달력을 안 보고 그 종목 자기 날짜 순서로
+    번호를 매깁니다(`data_quality.회계분기_순번` 의 설명 참조).
+
+    `rows` 와 같은 길이·같은 순서의 목록을 돌려줍니다. 못 재면 None.
     """
     import data_quality as dq
 
-    label = _LABEL_QUARTER_RE.match(str(row.get("period_label") or ""))
-    잰것 = dq.가까운_분기끝(
-        str(row.get("period_end") or row.get("filing_date") or "")
-    )
-    if not (label and 잰것):
-        return None
-    return (int(label.group(2)) - 잰것[1]) % 4
+    번호 = dq.회계분기_순번(rows)
+    out: list[int | None] = []
+    for row, 잰것 in zip(rows, 번호):
+        label = _LABEL_QUARTER_RE.match(str(row.get("period_label") or ""))
+        out.append(None if not (label and 잰것)
+                   else (int(label.group(2)) - 잰것[1]) % 4)
+    return out
 
 
 def _날짜형_이름표(row: dict) -> str | None:
@@ -1096,7 +1103,8 @@ def _같은_분기_이름표가_겹치면_날짜형으로(
     """한 종목 안에서 겹치는 분기 이름을 날짜형으로 바꿉니다 (표시 전용)."""
     from collections import Counter
 
-    차이들 = [d for d in (_이름표_분기차이(r) for r in rows) if d is not None]
+    행별차이 = _이름표_분기차이들(rows)
+    차이들 = [d for d in 행별차이 if d is not None]
     if not 차이들:
         return
     다수차이 = Counter(차이들).most_common(1)[0][0]
@@ -1122,9 +1130,10 @@ def _같은_분기_이름표가_겹치면_날짜형으로(
         return True
 
     # ② 다수 규칙을 벗어난 행부터
-    for row in list(rows):
+    #    (차이는 이름을 바꾸기 **전에** 재 둔 것을 씁니다 — 바꾸는 도중에
+    #     다시 재면 앞서 바꾼 행 때문에 다수 규칙이 흔들립니다)
+    for row, 차이 in zip(list(rows), 행별차이):
         if str(row.get("period_label")) in 겹친이름():
-            차이 = _이름표_분기차이(row)
             if 차이 is not None and 차이 != 다수차이:
                 바꾸기(row, "이 종목의 회계 달력과 어긋남")
 

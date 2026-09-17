@@ -437,6 +437,97 @@ def fiscal_quarter_of(quarter: dict) -> tuple[int, int] | None:
     return None
 
 
+# 한 분기의 평균 길이(날). 13주=91일, 12주=84일, 16주=112일 — 모두
+# 이 값으로 나눠 반올림하면 1이 됩니다.
+_한분기_날 = 91.3
+
+
+def 회계분기_순번(quarters: list[dict]) -> list[tuple[int, int] | None]:
+    """종목 **자기 날짜 순서**로 회계분기 번호를 매깁니다 (183차-X).
+
+    왜 달력에 붙이면 안 되나 — 실측으로 드러난 결함입니다.
+
+    `가까운_분기끝` 은 분기끝 날짜를 **가장 가까운 달력 분기끝**
+    (3/31·6/30·9/30·12/31)에 붙입니다. 13주 회계달력의 며칠 밀림은
+    이것으로 잘 걷어냈지만(183차-K), **12·12·12·16주 달력**을 쓰는
+    회사는 이 방법으로 풀리지 않습니다. 코스트코(COST)를 재 보면:
+
+        분기끝 2025-02-16 → 가까운 달력분기 (2025, 1)
+        분기끝 2025-05-11 → 가까운 달력분기 (2025, 1)   ← 같은 칸!
+        분기끝 2025-08-31 → 가까운 달력분기 (2025, 3)
+        분기끝 2025-11-23 → 가까운 달력분기 (2025, 4)
+
+    네 분기가 **세 칸에 뭉칩니다.** 2월 중순과 5월 중순은 달력 분기끝의
+    딱 중간이라 반올림이 서로 다른 쪽으로 넘어갑니다. 그 결과
+    ① 계절성 판정에서 서로 다른 두 분기가 한 그룹이 되고
+    ② 이상값의 "작년 같은 분기" 짝이 엉뚱한 분기와 맺어집니다.
+    자료를 지울지 말지 정하는 자리라 화면 오탐보다 무겁습니다.
+
+    어떻게 고쳤나: 달력을 아예 안 봅니다. 그 종목의 분기끝을 **날짜순으로
+    줄 세우고**, 앞 분기와의 간격을 한 분기 길이(91.3일)로 나눠 반올림해
+    몇 칸 건너뛰었는지 셉니다. 분기가 빠져 있으면 그만큼 번호가 건너뜁니다.
+    12주(84일)도 16주(112일)도 반올림하면 1칸이라 똑같이 맞습니다.
+
+    번호의 기준점은 **달력이 맞는 회사에서는 달력 번호가 그대로 나오도록**
+    맞춰 둡니다(사람이 읽기 쉬우라고). 묶는 데 필요한 것은 "같은 분기끼리
+    같은 번호"뿐이라 기준점이 무엇이든 판정 결과는 같습니다.
+
+    돌려주는 것: `quarters` 와 **같은 길이·같은 순서**의 목록.
+    날짜를 못 읽은 칸은 None 입니다.
+    """
+    from collections import Counter
+
+    날들: list[datetime.date | None] = []
+    for q in quarters:
+        text = str(q.get("period_end") or q.get("filing_date") or "")
+        m = re.search(r"(\d{4})-(\d{2})-(\d{2})", text)
+        try:
+            날들.append(datetime.date(*map(int, m.groups())) if m else None)
+        except (ValueError, TypeError):
+            날들.append(None)
+
+    # 입력이 날짜순이 아닐 수도 있으므로 **날짜로 줄 세운 뒤** 제자리에 돌려줍니다
+    순서 = sorted((i for i, d in enumerate(날들) if d is not None),
+                  key=lambda i: 날들[i])
+    #  ⚠️ 며칠 차이로 **같은 분기가 두 줄** 있는 일이 흔합니다
+    #     (실물 WAT: 2017-03-31 과 2017-04-01 이 둘 다 있습니다 — 63행 중
+    #      20쌍). 간격을 한 분기 길이로 나눠 반올림하면 이런 줄은 **0칸**,
+    #      즉 앞 줄과 같은 번호를 받습니다. 처음에 `max(1, …)` 로 무조건
+    #      한 칸씩 밀었더니 WAT 21칸·NBIX 23칸이 통째로 어긋났습니다.
+    #     ⚠️ 기준 날짜는 **칸이 바뀔 때만** 옮깁니다. 군더더기 줄을
+    #        징검다리로 밟으면 간격이 잘게 쪼개져 한 분기를 통째로 잃습니다
+    #        (실물 NBIX: 11-01 → 11-22(군더더기) → 01-06 을 밟으면
+    #         21일+45일 이라 둘 다 0칸이 되어 21 Q4 가 21 Q3 자리에
+    #         앉았습니다. 11-01 에서 곧장 재면 66일 → 한 칸입니다).
+    순번: list[int | None] = [None] * len(quarters)
+    칸, 기준날 = 0, None
+    for i in 순서:
+        if 기준날 is not None:
+            간 = round((날들[i] - 기준날).days / _한분기_날)
+            if 간:
+                칸 += 간
+                기준날 = 날들[i]
+        else:
+            기준날 = 날들[i]
+        순번[i] = 칸
+
+    # 기준점 — 달력으로 읽히는 번호와 가장 자주 일치하는 어긋남을 고릅니다
+    어긋남 = Counter()
+    for i, q in enumerate(quarters):
+        if 순번[i] is None:
+            continue
+        달력 = 가까운_분기끝(str(q.get("period_end") or q.get("filing_date") or ""))
+        if 달력:
+            어긋남[(달력[1] - 순번[i]) % 4] += 1
+    기준 = 어긋남.most_common(1)[0][0] if 어긋남 else 1
+
+    # 기간끝이 아예 없는 행은 예전 규칙 그대로 **이름으로** 돌아갑니다
+    # (`fiscal_quarter_of` 의 ② 갈래). 순서에 낄 수 없으니 홀로 읽습니다.
+    return [fiscal_quarter_of(quarters[i]) if 순번[i] is None else
+            (날들[i].year, (순번[i] + 기준 - 1) % 4 + 1)
+            for i in range(len(quarters))]
+
+
 def detect_seasonality(quarters: list[dict]) -> dict:
     """분기마다 실적이 오르내리는 '계절 장사'인지 판정합니다.
 
@@ -463,10 +554,14 @@ def detect_seasonality(quarters: list[dict]) -> dict:
                 "reason": "분기가 부족해 계절성을 판단하지 않았습니다"}
 
     # 전분기 대비 증가율을 '그 분기가 몇 번째 회계분기인가'로 묶습니다
+    #  183차-X: 달력이 아니라 **그 종목 자기 날짜 순서**로 번호를 매깁니다.
+    #  12·12·12·16주 달력(COST·AZO 등)은 네 분기가 달력 세 칸에 뭉쳐
+    #  서로 다른 분기가 한 그룹이 되고 있었습니다.
+    번호 = 회계분기_순번(usable)
     groups: dict[int, list[float]] = {}
-    for previous, current in zip(usable, usable[1:]):
+    for i, (previous, current) in enumerate(zip(usable, usable[1:])):
         growth = safe_growth_pct(previous.get("op_income"), current.get("op_income"))
-        key = fiscal_quarter_of(current)
+        key = 번호[i + 1]          # current 의 번호
         if growth is not None and key is not None:
             groups.setdefault(key[1], []).append(growth)
 
@@ -577,7 +672,8 @@ def detect_anomalies(quarters: list[dict]) -> dict:
     if seasonal is None:
         seasonal = detect_seasonality(quarters)["seasonal"]
 
-    fq_of = [fiscal_quarter_of(q) for q in quarters]
+    # 183차-X: 달력이 아니라 그 종목 자기 날짜 순서로 (위 설명과 같은 이유)
+    fq_of = 회계분기_순번(quarters)
 
     for i, value in enumerate(values):
         multiple = multiples[i]
