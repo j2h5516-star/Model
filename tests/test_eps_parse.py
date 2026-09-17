@@ -2618,6 +2618,63 @@ def test_티커표_결과가_로그에_실린다():
     assert report["사라진회사_검색"]["번호로확인"], report
 
 
+def test_이름을_문_문장을_남긴다():
+    """(183차-Z) 파서가 **어느 문장에서** 분기 이름을 물었는지 남깁니다.
+
+    왜 필요한가: 파서는 본문에서 맨 처음 나오는 분기 표현을 뭅니다.
+    1분기 발표문에는 2분기 전망·작년 1분기 비교가 나란히 실려서 맨 처음
+    것이 이번 분기가 아닐 때가 있습니다(183차-Y 실측 203칸·83종목).
+
+    고치려면 문 자리를 봐야 하는데, 원문은 **잣대값을 하나도 못 읽었을
+    때만** 보관합니다(`_should_keep_raw`). 이 203칸은 값이 멀쩡히 읽힌
+    행이라 원문이 안 남습니다 — 실측으로 **203칸 중 5칸만** 재료가
+    있었습니다. 그래서 문장 조각을 행에 붙여 보냅니다.
+    """
+    글 = ("Acme Corp Reports Results\n"
+          "Acme today announced financial results for the second quarter 2025.\n"
+          "Revenue was $100.0 million.\n")
+    자리 = []
+    이름 = sf.extract_period_label(글, "2025-08-01", 자리=자리)
+    assert 이름 == "25 Q2", 이름
+    assert len(자리) == 1, f"문 자리를 안 남겼습니다: {자리}"
+    assert "second quarter 2025" in 자리[0], f"문 자리가 엉뚱합니다: {자리[0]}"
+    assert "\n" not in 자리[0], "줄바꿈을 안 폈습니다"
+    assert len(자리[0]) <= sf._문장_최대, f"조각이 너무 깁니다: {len(자리[0])}"
+
+
+def test_짧은_분기표현도_문_자리를_남긴다():
+    """"Q3 2025" 꼴로 쓰는 회사도 마찬가지입니다."""
+    자리 = []
+    이름 = sf.extract_period_label("Results for Q3 2025 were strong.", "2025-11-01",
+                                 자리=자리)
+    assert 이름 == "25 Q3", 이름
+    assert 자리 and "Q3 2025" in 자리[0], 자리
+
+
+def test_분기표현을_못_찾으면_문_자리도_안_남긴다():
+    """헌법 1조 — 없는 것을 지어내지 않습니다."""
+    자리 = []
+    이름 = sf.extract_period_label("No period words here at all.", "2025-11-01",
+                                 자리=자리)
+    assert 이름 == "25/11", 이름
+    assert 자리 == [], f"못 찾았는데 자리를 남겼습니다: {자리}"
+
+
+def test_자리를_안_주면_예전과_똑같이_군다():
+    """부르는 쪽을 안 고쳐도 깨지지 않아야 합니다."""
+    assert sf.extract_period_label("the first quarter 2025", "2025-05-01") == "25 Q1"
+
+
+def test_문_문장이_수집_행에_실린다():
+    """배선 시험 — 만들고 안 실으면 헛돕니다 (183차-G·H 에서 두 번 빠뜨림)."""
+    with open(os.path.join(os.path.dirname(__file__), "..",
+                           "sec_fundamentals.py"), encoding="utf-8") as f:
+        코드 = f.read()
+    assert '"period_label_문장": 이름자리[0] if 이름자리 else None' in 코드, \
+        "문 자리를 만들고 수집 행에 안 실었습니다"
+    assert "자리=이름자리" in 코드, "extract_period_label 에 자리를 안 넘깁니다"
+
+
 def test_분기열_표시가_행까지_옮겨진다():
     """배선 시험 — 파서가 남긴 표시가 **행**에 실려야 정제가 볼 수 있습니다.
     (178차: 배선만 빠져도 시험이 초록불이던 사고를 되풀이하지 않기 위해)"""

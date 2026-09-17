@@ -2647,17 +2647,53 @@ _QUARTER_RE = re.compile(
 _QUARTER_RE_SHORT = re.compile(r"\bQ([1-4])\s*(?:of\s*)?(?:FY\s*)?(20\d{2}|\d{2})\b", re.I)
 
 
-def extract_period_label(text: str, filing_date: str) -> str:
+_문장_앞뒤 = 60           # 이름을 문 자리 앞뒤로 몇 글자를 남길까
+_문장_최대 = 160          # 남기는 조각의 글자 수 상한
+
+
+def _문_자리(text: str, match) -> str:
+    """이름을 **어느 문장에서 물었는지** 짧게 남깁니다 (183차-Z).
+
+    왜 필요한가: 파서는 본문에서 **맨 처음 나오는** 분기 표현을 뭅니다.
+    그런데 1분기 발표문에는 **2분기 전망**과 **작년 1분기 비교**가 나란히
+    실려서, 맨 처음 것이 이번 분기가 아닐 때가 있습니다(183차-Y 실측:
+    203칸 · 83종목, 다음 분기 116칸 · 직전 분기 62칸).
+
+    고치려면 "어느 문장을 물었나"를 봐야 하는데, 지금은 볼 수가
+    없습니다. 원문은 **잣대값을 하나도 못 읽었을 때만** 보관하는데
+    (`_should_keep_raw`), 이 203칸은 값이 멀쩡히 읽힌 행이라 원문이
+    안 남습니다. 실측으로 확인했습니다 — **203칸 중 원문이 있는 것은
+    5개뿐**이고 198개는 재료가 없습니다.
+
+    그래서 원문 통째가 아니라 **문 자리 앞뒤 한 줄**만 행에 붙여
+    보냅니다. 한 행에 160자를 넘지 않습니다.
+    """
+    시작 = max(0, match.start() - _문장_앞뒤)
+    끝 = min(len(text), match.end() + _문장_앞뒤)
+    조각 = " ".join(text[시작:끝].split())      # 줄바꿈·연속 공백을 한 칸으로
+    return 조각[:_문장_최대]
+
+
+def extract_period_label(text: str, filing_date: str,
+                         자리: list | None = None) -> str:
     """보도자료에서 "몇 년 몇 분기"인지 알아냅니다. 못 찾으면 제출일로 대신합니다.
 
     차트 가로축에 들어가므로 최대한 짧게 만듭니다 (예: "25 Q3").
+
+    `자리` 에 목록을 주면 **이름을 문 문장 조각**을 거기에 담아 줍니다
+    (183차-Z — 위 `_문_자리` 설명 참조). 안 주면 예전과 똑같이 굴러
+    갑니다.
     """
     if text:
         match = _QUARTER_RE.search(text)
         if match:
+            if 자리 is not None:
+                자리.append(_문_자리(text, match))
             return f"{match.group(2)[2:]} Q{_QUARTER_WORDS[match.group(1).lower()]}"
         match = _QUARTER_RE_SHORT.search(text)
         if match:
+            if 자리 is not None:
+                자리.append(_문_자리(text, match))
             year = match.group(2)
             year = year[2:] if len(year) == 4 else year
             return f"{year} Q{match.group(1)}"
@@ -3397,11 +3433,17 @@ def fetch_earnings_8k(
             report["gaap_eps_ok"] += 1
 
         filing_date = str(filing.filing_date)
+        # 183차-Z — 이름을 **어느 문장에서 물었는지** 함께 담아 옵니다.
+        # 원문은 값이 하나도 안 읽혔을 때만 보관되므로, 이름만 틀린 행은
+        # 고칠 재료가 없었습니다(203칸 중 원문 있는 것 5개).
+        이름자리: list[str] = []
         quarters.append(
             {
                 "ticker": ticker,
                 "filing_date": filing_date,
-                "period_label": extract_period_label(text, filing_date),
+                "period_label": extract_period_label(text, filing_date,
+                                                     자리=이름자리),
+                "period_label_문장": 이름자리[0] if 이름자리 else None,
                 # 173차 — 6-K 실적 문서에서 온 행 표시. dataset 의 6-K 격리(172차)
                 # 는 XBRL 자가 없어도 이 표시가 있는 행은 남깁니다.
                 "fpi_results": True if fpi else None,
