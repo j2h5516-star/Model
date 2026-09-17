@@ -1,0 +1,318 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — AMD 2017-07-25
+# 출처: https://www.sec.gov/Archives/edgar/data/2488/000000248817000150/a20170725q217earnings8-k.htm
+
+Exhibit
+
+
+<img alt="ex992logoa12.jpg" src="ex992logoa12.jpg">NEWS RELEASE 
+Media Contact
+Drew Prairie
+512-602-4425
+drew.prairie@amd.com
+Investor Contact
+Laura Graves
+408-749-5467
+laura.graves@amd.com 
+AMD Reports Second Quarter 2017 Financial Results
+- Revenue Increased 19 Percent Year-over-Year -
+SUNNYVALE, Calif. - July 25, 2017 - AMD (NASDAQ:AMD) today announced revenue for the second quarter of 2017 of $1.22 billion, operating income of $25 million, and net loss of $16 million, or $(0.02) per share. On a non-GAAP(1) basis, operating income was $49 million, net income was $19 million, and earnings per share was $0.02.
+GAAP Financial Results
+
+                            Q2-17     Q1-17      Q2-16
+Revenue                     $1.22B    $984M     $1.03B
+Operating income (loss)     $25M      $(29)M     $(8)M
+Net income (loss)           $(16)M    $(73)M      $69M
+Earnings (loss) per share   $(0.02)   $(0.08)    $0.08
+Non-GAAP Financial Results(1)
+
+                             Q2-17   Q1-17     Q2-16  
+Revenue                     $1.22B   $984M     $1.03B 
+Operating income (loss)       $49M   $(6)M     $3M    
+Net income (loss)             $19M   $(38)M    $(40)M 
+Earnings (loss) per share    $0.02   $(0.04)   $(0.05)
+
+“Our second quarter results demonstrate strong growth driven by leadership products and focused execution," said Dr. Lisa Su, AMD president and CEO. "Our Ryzen desktop processors, Vega GPUs, and EPYC datacenter products have received tremendous industry recognition. We are very pleased with our improved financial performance, including double digit revenue growth and year-over-year gross margin expansion on the strength of our new products.” 
+1
+
+Q2 2017 Results
+
+•   On a GAAP basis, revenue was $1.22 billion, up 19 percent year-over-year, driven by higher revenue in the Computing and Graphics segment. Revenue was up 24 percent sequentially, driven by increased sales in both business segments. Gross margin was 33 percent, up 2 percentage points year-over-year due to a richer product mix and a higher percentage of revenue from the Computing and Graphics segment, driven by the first full quarter of Ryzen processor sales. On a sequential basis, gross margin declined 1 percentage point due to a higher percentage of revenue from the Enterprise, Embedded and Semi-Custom segment. Operating income was $25 million compared to an operating loss of $8 million a year ago and an operating loss of $29 million in the prior quarter. Net loss was $16 million compared to net income of $69 million a year ago and a net loss of $73 million in the prior quarter. Loss per share was $0.02 compared to diluted earnings per share of $0.08 a year ago (which included a pre-tax gain of $150 million related to our ATMP JV transaction) and a loss per share of $0.08 in the prior quarter.
+
+•   On a non-GAAP(1) basis, operating income was $49 million compared to operating income of $3 million a year ago and an operating loss of $6 million in the prior quarter. Net income was $19 million compared to a net loss of $40 million a year ago and a net loss of $38 million in the prior quarter. Diluted earnings per share was $0.02 compared to a loss per share of $0.05 a year ago and a loss per share of $0.04 in the prior quarter.
+
+•   Cash, cash equivalents, and marketable securities were $844 million at the end of the quarter, compared to $943 million in the prior quarter.
+Quarterly Financial Segment Summary
+
+•   Computing and Graphics segment revenue was $659 million, up 51 percent year-over-year, driven by demand for graphics and Ryzen desktop processors.
+
+•   Operating income was $7 million, compared to an operating loss of $81 million in Q2 2016. The year-over-year improvement was driven primarily by higher revenue and improved product mix.
+
+•   Client average selling price (ASP) increased significantly year-over-year, as desktop processor ASP increased due to the first full quarter of Ryzen processor shipments.
+
+•   GPU ASP increased year-over-year.
+
+•   Enterprise, Embedded and Semi-Custom segment revenue was $563 million, down 5 percent year-over-year primarily due to lower semi-custom SoC sales. In the quarter, AMD reached an important milestone by recognizing initial revenue from EPYC datacenter processor shipments.
+
+•   Operating income was $42 million, compared to operating income of $84 million in Q2 2016. The year-over-year decrease was primarily due to lower revenue and higher datacenter related R&amp;D investments.
+2
+
+
+•   All Other operating loss was $24 million compared with an operating loss of $11 million in Q2 2016. The year-over-year difference in operating loss was related to stock-based compensation charges and a $7 million restructuring credit in Q2 2016.
+Q2 2017 Highlights
+
+•   AMD launched its new “Zen” architecture-based EPYC™ 7000 series processors, returning innovation and choice to the x86 server market with record setting single and dual-socket performance and product introductions from 10 of the world’s largest server manufacturers.
+
+•   AMD introduced its upcoming high-end desktop solution targeted at the world’s fastest ultra-premium desktop systems, the Ryzen™ Threadripper™ CPU.
+
+•   AMD unveiled new details about its upcoming Ryzen™ 3 desktop CPUs.
+
+•   AMD launched its Ryzen™ PRO desktop processors, designed to bring reliability, security, and performance to enterprise desktops.
+
+•   AMD announced that Radeon Instinct™ accelerators, including Radeon Instinct MI25, MI8, and MI6, together with AMD’s open ROCm 1.6 software platform, will ship in Q3 2017.
+
+•   AMD launched the Radeon™ Vega Frontier Edition graphics card which expands the capacity of traditional GPU memory to 256TB by leveraging system memory.
+
+•   AMD introduced the Radeon™ RX 580 and Radeon™ RX 570 graphics cards, engineered using the 2nd generation Polaris architecture for smooth gaming in leading AAA games at HD resolutions and higher.
+
+•   Microsoft® unveiled new details and branding for its Xbox One X™ (formerly “Project Scorpio”), which features an AMD semi-custom chip.
+
+•   AMD announced that it has been selected by the Department of Energy's Exascale Computing Project (ECP) to accelerate critical computing technology research for the development of the nation's first exascale supercomputers.
+
+•   At Financial Analyst Day, AMD detailed the next phase of its long-term growth strategy focused on delivering products and technologies for a combined $60 billion market for PCs, immersive devices, and datacenters.
+
+•   AMD announced the appointment of Abhi Y. Talwalkar to its board of directors.
+Current Outlook
+AMD’s outlook statements are based on current expectations. The following statements are forward-looking, and actual results could differ materially depending on market conditions and the factors set forth under “Cautionary Statement” below.
+For the third quarter of 2017, AMD expects revenue to increase approximately 23 percent sequentially, plus or minus 3 percent. The midpoint of guidance would result in third quarter 2017 
+3
+
+revenue increasing approximately 15 percent year-over-year. AMD now expects annual revenue to increase by a mid to high-teens percentage, compared to prior guidance of low double digit percentage revenue growth.
+ For additional details regarding AMD’s results and outlook please see the CFO commentary posted at quarterlyearnings.amd.com.
+AMD Teleconference
+AMD will hold a conference call for the financial community at 2:00 p.m. PT (5:00 p.m. ET) today to discuss its second quarter 2017 financial results. AMD will provide a real-time audio broadcast of the teleconference on the Investor Relations page of its website at www.amd.com. The webcast will be available for 12 months after the conference call.
+4
+
+
+Reconciliation of GAAP to Non-GAAP Gross Margin                                                                
+(Millions except percentages)                                           Q2-17            Q1-17            Q2-16
+GAAP Gross Margin                                            $404                     $331             $319    
+GAAP Gross Margin %                                            33           %           34   %           31   %
+Stock-based compensation                                        1                        —                —    
+Non-GAAP Gross Margin                                        $405                     $331             $319    
+Non-GAAP Gross Margin %                                        33           %           34   %           31   %
+
+Reconciliation of GAAP to Non-GAAP Operating Income (Loss)                                                                          
+(Millions)                                                   Q2-17                                        Q1-17                Q2-16
+GAAP operating income (loss)                                 $25                                          $(29      )        $(8   )
+Restructuring and other special charges, net                 —                                            —                   (7   )
+Stock-based compensation                       24                                                      23               18          
+Non-GAAP operating income (loss)                             $49                                          $(6       )         $3    
+
+Reconciliation of GAAP to Non-GAAP Net Income (Loss) / Income (Loss) per share                                                                                                                                                                                                                                                                       
+(Millions except per share amounts)                                                                                                             Q2-17                                                                                           Q1-17                                                                                           Q2-16
+GAAP net income (loss) / income (loss) per share                                     $(16           )                              $(0.02           )                                $(73           )                              $(0.08           )                                 $69                                           $0.08            
+Loss on debt redemption                                                                 3                                               —                                               4                                               —                                               —                                               —            
+Non-cash interest expense related to convertible debt                                   5                                            0.01                                               6                                            0.01                                               —                                               —            
+Restructuring and other special charges, net                                            —                                               —                                               —                                               —                                              (7           )                               (0.01           )
+Stock-based compensation                                                               24                                            0.02                                              23                                            0.02                                              18                                            0.02            
+Equity loss in investee                                                                 3                                               —                                               2                                               —                                               3                                               —            
+Gain on sale of 85% of ATMP JV                                                          —                                               —                                               —                                               —                                            (150           )                               (0.19           )
+Tax provision related to sale of 85% of ATMP JV                                         —                                               —                                               —                                               —                                              27                                            0.03            
+Non-GAAP net income (loss) / income (loss) per share*                                 $19                                           $0.02                                            $(38           )                              $(0.04           )                                $(40           )                              $(0.05           )
+*Q2 2017 GAAP net loss per share is calculated based on 945 million basic and diluted weighted-average shares of common stock. Non-GAAP net income per share is calculated based on 1,036 million diluted weighted-average shares of common stock.                                                                                                   
+About AMD
+For more than 45 years, AMD has driven innovation in high-performance computing, graphics, and visualization technologies - the building blocks for gaming, immersive platforms, and the datacenter. Hundreds of millions of consumers, leading Fortune 500 businesses, and cutting-edge scientific research facilities around the world rely on AMD technology daily to improve how they live, work, and play. AMD employees around the world are focused on building great products that push the boundaries of what is possible. For more information about how AMD is enabling today and inspiring tomorrow, visit the AMD (NASDAQ: AMD) website, blog, Facebook and Twitter pages.
+5
+
+Cautionary Statement
+This document contains forward-looking statements concerning Advanced Micro Devices, Inc. (AMD) including AMD's expected third quarter 2017 revenue and expected fiscal 2017 revenue; and the features, functionality, timing, availability, expectations and benefits of AMD future products, which are made pursuant to the Safe Harbor provisions of the Private Securities Litigation Reform Act of 1995. Forward-looking statements are commonly identified by words such as "would," "may," "expects," "believes," "plans," "intends," "projects" and other terms with similar meaning. Investors are cautioned that the forward-looking statements in this document are based on current beliefs, assumptions and expectations, speak only as of the date of this document and involve risks and uncertainties that could cause actual results to differ materially from current expectations. Such statements are subject to certain known and unknown risks and uncertainties, many of which are difficult to predict and generally beyond AMD's control, that could cause actual results and other future events to differ materially from those expressed in, or implied or projected by, the forward-looking information and statements. Material factors that could cause actual results to differ materially from current expectations include, without limitation, the following: Intel Corporation’s dominance of the microprocessor market and its aggressive business practices may limit AMD’s ability to compete effectively; AMD has a wafer supply agreement with GF with obligations to purchase all of its microprocessor and APU product requirements, and a certain portion of its GPU product requirements from GLOBALFOUNDRIES Inc. (GF), with limited exceptions. If GF is not able to satisfy AMD’s manufacturing requirements, AMD’s business could be adversely impacted; AMD relies on third parties to manufacture its products, and if they are unable to do so on a timely basis in sufficient quantities and using competitive technologies, AMD’s business could be materially adversely affected; failure to achieve expected manufacturing yields for AMD’s products could negatively impact its financial results; the success of AMD’s business is dependent upon its ability to introduce products on a timely basis with features and performance levels that provide value to its customers while supporting and coinciding with significant industry transitions; if AMD cannot generate sufficient revenue and operating cash flow or obtain external financing, it may face a cash shortfall and be unable to make all of its planned investments in research and development or other strategic investments; the loss of a significant customer may have a material adverse effect on AMD; AMD’s receipt of revenue from its semi-custom SoC products is dependent upon its technology being designed into third-party products and the success of those products; global economic uncertainty may adversely impact AMD’s business and operating results; the markets in which AMD’s products are sold are highly competitive; AMD may not be able to generate sufficient cash to service its debt obligations or meet its working capital requirements; AMD has a substantial amount of indebtedness which could adversely affect its financial position and prevent it from implementing its strategy or fulfilling its contractual obligations; the agreements governing AMD’s notes and the Secured Revolving Line of Credit impose restrictions on AMD that may adversely affect its ability to operate its business; AMD's issuance to West Coast Hitech L.P. (WCH) of warrants to purchase 75 million shares of its common stock, if and when exercised, will dilute the ownership interests of its existing stockholders, and the conversion of the 2.125% Convertible Senior Notes due 2026 may dilute the ownership interest of its existing stockholders, or may otherwise depress the price of its common stock; uncertainties involving the ordering and shipment of AMD’s products could materially adversely affect it; the demand for AMD’s products depends in part on the market conditions in the industries into which they are sold. Fluctuations in demand for AMD’s products or a market decline in any of these industries could have a material adverse effect on its results of operations; AMD’s ability to design and introduce new products in a timely manner is dependent upon third-party intellectual property; AMD depends on third-party companies for the design, manufacture and supply of motherboards, software and other computer platform components to support its business; if AMD loses Microsoft Corporation’s support for its products or other software vendors do not design and develop software to run on AMD’s products, its ability to sell its products could be materially adversely affected; AMD’s reliance on third-party distributors and AIB partners subjects it to certain risks; AMD’s inability to continue to attract and retain qualified personnel may hinder its business; in the event of a change of control, AMD may not be able to repurchase its outstanding debt as required by the applicable indentures and its Secured Revolving Line of Credit, which would result in a default under the indentures and its Secured Revolving Line of Credit; the semiconductor industry is highly cyclical and has experienced severe downturns that have materially adversely affected, and may continue to materially adversely affect its business in the future; acquisitions, divestitures and/or joint ventures could disrupt its business, harm its financial condition and operating results or dilute, or adversely affect the price of, its common stock; AMD’s business is dependent upon the proper functioning of its internal business processes and information systems and modification or interruption of such systems may disrupt its business, processes and internal controls; data breaches and cyber-attacks could compromise AMD’s intellectual property or other sensitive information, be costly to remediate and cause significant damage to its business and reputation; AMD’s operating results are subject to quarterly and seasonal sales patterns; if essential equipment, materials or manufacturing processes are not available to manufacture its products, AMD could be materially adversely affected; if AMD’s products are not compatible with some or all industry-standard software and hardware, it could be materially adversely affected; costs related to defective products could have a material adverse effect on AMD; if AMD fails to maintain the efficiency of its supply chain as it responds to changes in customer demand for its products, its business could be materially adversely affected; AMD outsources to third parties certain supply-chain logistics functions, including portions of its product distribution, transportation management and information technology support services; AMD may incur future impairments of goodwill; AMD's stock price is subject to volatility; AMD’s worldwide operations are subject to political, legal 
+6
+
+and economic risks and natural disasters, which could have a material adverse effect on it; worldwide political conditions may adversely affect demand for AMD’s products; unfavorable currency exchange rate fluctuations could adversely affect AMD; AMD’s inability to effectively control the sales of its products on the gray market could have a material adverse effect on it; if AMD cannot adequately protect its technology or other intellectual property in the United States and abroad, through patents, copyrights, trade secrets, trademarks and other measures, it may lose a competitive advantage and incur significant expenses; AMD is a party to litigation and may become a party to other claims or litigation that could cause it to incur substantial costs or pay substantial damages or prohibit it from selling its products; AMD’s business is subject to potential tax liabilities; and AMD is subject to environmental laws, conflict minerals-related provisions of the Dodd-Frank Wall Street Reform and Consumer Protection Act as well as a variety of other laws or regulations that could result in additional costs and liabilities. Investors are urged to review in detail the risks and uncertainties in AMD's Securities and Exchange Commission filings, including but not limited to AMD's Quarterly Report on Form 10-Q for the quarter ended April 1, 2017.
+-30-
+AMD, the AMD Arrow logo, AMD Ryzen, AMD Radeon and combinations thereof, are trademarks of Advanced Micro Devices, Inc. Other names are for informational purposes only and used to identify companies and products and may be trademarks of their respective owner.
+
+1.   In this earnings press release, in addition to GAAP financial results, AMD has provided non-GAAP financial measures including non-GAAP gross margin, non-GAAP operating income (loss), non-GAAP net income (loss) and non-GAAP earnings (loss) per share. These non-GAAP financial measures reflect certain adjustments as presented in the tables in this earnings press release. AMD also provided adjusted EBITDA and free cash flow as supplemental non-GAAP measures of its performance. These items are defined in the footnotes to the selected corporate data tables provided at the end of this earnings press release. AMD is providing these financial measures because it believes this non-GAAP presentation makes it easier for investors to compare its operating results for current and historical periods and also because AMD believes it assists investors in comparing AMD’s performance across reporting periods on a consistent basis by excluding items that it does not believe are indicative of its core operating performance and for the other reasons described in the footnotes to the selected data tables. Refer to the data tables at the end of this earnings press release.
+7
+
+ADVANCED MICRO DEVICES, INC.
+CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS
+(Millions except per share amounts and percentages)
+
+                                                                                                                   Three Months Ended                                        Six Months Ended
+                                                                      July 1,                    April 1,                    June 25,                     July 1,                    June 25,
+                                                                         2017                        2017                        2016                        2017                        2016
+Net revenue                                                     $1,222                        $984                      $1,027                      $2,206                      $1,859       
+Cost of sales                                                      818                         653                         708                      $1,471                      $1,271       
+Gross margin                                                       404                         331                         319                         735                         588       
+Gross margin %                                                      33      %                   34      %                   31      %                   33      %                   32      %
+Research and development                                           279                         266                         243                         545                         485       
+Marketing, general and administrative                              125                         121                         117                         246                         222       
+Restructuring and other special charges, net                         —                           —                          (7      )                    —                         (10      )
+Licensing gain                                                     (25      )                  (27      )                  (26      )                  (52      )                  (33      )
+Operating income (loss)                                             25                         (29      )                   (8      )                   (4      )                  (76      )
+Interest expense                                                   (32      )                  (32      )                  (41      )                  (64      )                  (81      )
+Other income (expense), net                                         (3      )                   (5      )                  150                          (8      )                  150       
+Income (loss) before equity loss and income taxes                  (10      )                  (66      )                  101                         (76      )                   (7      )
+Provision for income taxes                                           3                           5                          29                           8                          30       
+Equity loss in investee                                             (3      )                   (2      )                   (3      )                   (5      )                   (3      )
+Net income (loss)                                                 $(16      )                 $(73      )                  $69                        $(89      )                 $(40      )
+Net income (loss) per share                                                                                                                                                                  
+Basic                                                           $(0.02      )               $(0.08      )                $0.09                      $(0.09      )               $(0.05      )
+Diluted                                                         $(0.02      )               $(0.08      )                $0.08                      $(0.09      )               $(0.05      )
+Shares used in per share calculation                                                                                                                                                         
+Basic                                                              945                         939                         794                         942                         794       
+Diluted                                                            945                         939                         821                         942                         794       
+ADVANCED MICRO DEVICES, INC.CONDENSED CONSOLIDATED STATEMENTS OF COMPREHENSIVE INCOME (LOSS)(Millions)                                                                                       
+                                                                                                                   Three Months Ended                                        Six Months Ended
+                                                                      July 1,                    April 1,                    June 25,                     July 1,                    June 25,
+                                                                         2017                        2017                        2016                        2017                        2016
+Total comprehensive income (loss)                                 $(12      )                 $(72      )                  $72                        $(84      )                 $(35      )
+8
+
+ADVANCED MICRO DEVICES, INC.
+CONDENSED CONSOLIDATED BALANCE SHEETS 
+(Millions)
+
+
+                                                                July 1,             December 31,
+                                                                   2017                     2016
+Assets                                                                                          
+Current assets:                                                                                 
+Cash and cash equivalents                                     $760                 $1,264       
+Marketable securities                                           84                      —       
+Accounts receivable, net                                       614                    311       
+Inventories, net                                               833                    751       
+Prepayment and other receivables - related parties              10                     32       
+Prepaid expenses                                                68                     63       
+Other current assets                                           142                    109       
+Total current assets                                         2,511                  2,530       
+Property, plant and equipment, net                             200                    164       
+Goodwill                                                       289                    289       
+Investment: equity method                                       58                     59       
+Other assets                                                   312                    279       
+Total Assets                                                $3,370                 $3,321       
+Liabilities and Stockholders' Equity                                                            
+Current liabilities:                                                                            
+Short-term debt                                                 42                      —       
+Accounts payable                                               483                    440       
+Payables to related parties                                    374                    383       
+Accrued liabilities                                            430                    391       
+Other current liabilities                                       48                     69       
+Deferred income on shipments to distributors                    72                     63       
+Total current liabilities                                    1,449                  1,346       
+Long-term debt, net                                          1,375                  1,435       
+Other long-term liabilities                                    129                    124       
+Stockholders' equity:                                                                           
+Capital stock:                                                                                  
+Common stock, par value                                          9                      9       
+Additional paid-in capital                                   8,405                  8,334       
+Treasury stock, at cost                                       (105    )              (119      )
+Accumulated deficit                                         (7,892    )            (7,803      )
+Accumulated other comprehensive loss                             —                     (5      )
+Total Stockholders' equity                                    $417                   $416       
+Total Liabilities and Stockholders' Equity                  $3,370                 $3,321       
+9
+
+ADVANCED MICRO DEVICES, INC.
+CONDENSED CONSOLIDATED STATEMENT OF CASH FLOWS
+(Millions)
+
+
+                                                                                               Three Months Ended            Six Months
+                                                                                                                                  Ended
+                                                                                                          July 1,               July 1,
+                                                                                                             2017                  2017
+Cash flows from operating activities:                                                                                                  
+Net loss                                                                                            $(16        )            $(89     )
+Adjustments to reconcile net loss to net cash used in operating activities:                                                            
+Depreciation and amortization                                                                         35                       69      
+Stock-based compensation expense                                                                      24                       47      
+Non-cash interest expense                                                                              9                       18      
+Loss on debt redemption                                                                                3                        7      
+Other                                                                                                 (4        )               1      
+Changes in operating assets and liabilities:                                                                                           
+Accounts receivable                                                                                 (120        )            (303     )
+Inventories                                                                                            6                      (82     )
+Prepayment and other receivables - related parties                                                    21                       22      
+Prepaid expenses and other assets                                                                    (26        )             (56     )
+Payables to related parties                                                                           45                       (9     )
+Accounts payable, accrued liabilities and other                                                      (59        )              (6     )
+Net cash used in operating activities                                                               $(82        )           $(381     )
+Cash flows from investing activities:                                                                                                  
+Purchases of property, plant and equipment                                                           (12        )             (35     )
+Purchases of available-for-sale securities                                                             —                     (221     )
+Proceeds from maturity of available-for-sale securities                                              137                      137      
+Other                                                                                                 (1        )              (3     )
+Net cash provided by (used in) investing activities                                                 $124                     (122     )
+Cash flows from financing activities:                                                                                                  
+Proceeds from borrowings, net                                                                         42                       42      
+Proceeds from issuance of common stock under stock-based compensation equity plans                     2                       10      
+Repayments of long-term debt                                                                         (42        )             (42     )
+Other                                                                                                 (6        )             (11     )
+Net cash used in financing activities                                                                $(4        )             $(1     )
+Net increase (decrease) in cash and cash equivalents                                                  38                     (504     )
+Cash and cash equivalents at beginning of period                                                    $722                   $1,264      
+Cash and cash equivalents at end of period                                                          $760                     $760      
+10
+
+ADVANCED MICRO DEVICES, INC.
+SELECTED CORPORATE DATA
+(Millions)
+
+                                                                                             Three Months Ended                           Six Months Ended
+                                                              July 1,             April 1,             June 25,              July 1,              June 25,
+                                                                 2017                 2017                 2016                 2017                  2016
+Segment and Category Information                                                                                                                          
+Computing and Graphics (1)                                                                                                                                
+Net revenue                                                 $659                 $593                 $435               $1,252                  $895     
+Operating income (loss)                                       $7                 $(15    )            $(81    )             $(8    )            $(151    )
+Enterprise, Embedded and Semi-Custom (2)                                                                                                                  
+Net revenue                                                  563                  391                  592                  954                   964     
+Operating income                                              42                    9                   84                   51                   100     
+All Other (3)                                                                                                                                             
+Net revenue                                                    —                    —                    —                    —                     —     
+Operating loss                                               (24    )             (23    )             (11    )             (47    )              (25    )
+Total                                                                                                                                                     
+Net revenue                                               $1,222                 $984               $1,027               $2,206                $1,859     
+Operating income (loss)                                      $25                 $(29    )             $(8    )             $(4    )             $(76    )
+Other Data                                                                                                                                                
+Capital expenditures (4)                                     $12                  $23                  $21                  $35                   $47     
+Adjusted EBITDA (5)                                          $84                  $28                  $36                 $112                   $14     
+Cash, cash equivalents and marketable securities            $844                 $943                 $957                 $844                  $957     
+Free cash flow (6)                                          $(94    )           $(322    )           $(106    )           $(416    )            $(174    )
+Total assets                                              $3,370               $3,299               $3,316               $3,370                $3,316     
+Total debt                                                $1,417               $1,408               $2,238               $1,417                $2,238     
+
+(1)   The Computing and Graphics segment primarily includes desktop and notebook processors and chipsets, discrete graphics processing units (GPUs) and professional graphics processors.                                                                                                            
+(2)   The Enterprise, Embedded and Semi-Custom segment primarily includes server and embedded processors, semi-custom System-on-Chip (SoC) products, development services and technology for game consoles. The Company also licenses portions of intellectual property portfolio.                   
+(3)   All Other category primarily includes certain expenses and credits that are not allocated to any of the operating segments. Also included in this category are stock-based compensation expense and restructuring and other special charges, net.                                              
+(4)   Starting in Q1 2017, the Company classifies production mask sets as property, plant and equipment on its balance sheet.                                                                                                                                                                        
+(5)   Reconciliation of GAAP Operating Income (Loss) to Adjusted EBITDA*                                                                                                                                                                                                                             
+
+                                                                                  Three Months Ended                       Six Months Ended
+                                                       July 1,           April 1,           June 25,            July 1,            June 25,
+                                                          2017               2017               2016               2017                2016
+GAAP operating income (loss)                          $25               $(29   )            $(8    )           $(4   )            $(76    )
+Restructuring and other special charges, net            —                  —                 (7    )             —                 (10    )
+Stock-based compensation                               24                 23                 18                 47                  34     
+Depreciation and amortization                          35                 34                 33                 69                  66     
+Adjusted EBITDA                                        84                 28                 36                112                  14     
+
+(6)    Free cash flow reconciliation** 
+11
+
+
+                                             Three Months Ended                                   Six Months Ended                
+                                             July 1,            April 1,           June 25,       July 1,             June 25,    
+                                             2017               2017               2016           2017                2016        
+GAAP net cash used in operating activities   $(82      )        $(299     )        $(85      )    $(381     )         $(127     ) 
+Purchases of property, plant and equipment   (12       )        (23       )        (21       )    (35       )         (47       ) 
+Free cash flow                               $(94      )        $(322     )        $(106     )    $(416     )         $(174     ) 
+
+*    The Company presents “Adjusted EBITDA” as a supplemental measure of its performance. Adjusted EBITDA for the Company is determined by adjusting operating income (loss) for depreciation and amortization, stock-based compensation expense and restructuring and other special charges, net. The Company calculates and presents Adjusted EBITDA because management believes it is of importance to investors and lenders in relation to its overall capital structure and its ability to borrow additional funds. In addition, the Company presents Adjusted EBITDA because it believes this measure assists investors in comparing its performance across reporting periods on a consistent basis by excluding items that the Company does not believe are indicative of its core operating performance. The Company’s calculation of Adjusted EBITDA may or may not be consistent with the calculation of this measure by other companies in the same industry. Investors should not view Adjusted EBITDA as an alternative to the GAAP operating measure of operating income (loss) or GAAP liquidity measures of cash flows from operating, investing and financing activities. In addition, Adjusted EBITDA does not take into account changes in certain assets and liabilities as well as interest income and expense and income taxes that can affect cash flows.                        
+**   The Company also presents free cash flow as a supplemental non-GAAP measure of its performance. Free cash flow is determined by adjusting GAAP net cash provided by (used in) operating activities for capital expenditures. The Company calculates and communicates free cash flow in the financial earnings press release because management believes it is of importance to investors to understand the nature of these cash flows. The Company’s calculation of free cash flow may or may not be consistent with the calculation of this measure by other companies in the same industry. Investors should not view free cash flow as an alternative to GAAP liquidity measures of cash flows from operating activities.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+     The Company has provided reconciliations within the earnings press release of these non-GAAP financial measures to the most directly comparable GAAP financial measures.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+12
+
+
