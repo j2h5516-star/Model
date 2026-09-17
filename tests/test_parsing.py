@@ -1857,20 +1857,25 @@ def test_사라진회사_검색은_이름표에_있을_때만_기록한다():
     본래 = edgar.find_company
     질의 = []
 
+    # ⚠️ 183차-W — 종목을 **박아 두지 않습니다.** 번호를 찾으면 그 종목은
+    #    이름표에서 번호표로 옮겨 가므로(HES 가 그랬습니다), 박아 두면
+    #    졸업할 때마다 시험이 깨집니다. 지금 이름표에 있는 것을 씁니다.
+    종목 = sorted(cfg.TICKER_NAME_HINT)[0]
+
     def 가짜(name, top_n=10):
         질의.append(name)
         표 = pd.DataFrame(
             # 일부러 가짜 번호입니다 — 진짜 번호로 오해하지 않도록.
-            [{"cik": 999999, "ticker": "HES", "company": "Hess Corporation",
+            [{"cik": 999999, "ticker": 종목, "company": "아무 회사",
               "score": 100}])
         return types.SimpleNamespace(results=표)
 
     edgar.find_company = 가짜
     try:
         report = {}
-        out = sf.사라진회사_찾아보기("HES", report)
-        assert 질의 == [cfg.TICKER_NAME_HINT["HES"]], 질의
-        assert out["찾음"] == [["Hess Corporation", "999999", "HES"]], out
+        out = sf.사라진회사_찾아보기(종목, report)
+        assert 질의 == [cfg.TICKER_NAME_HINT[종목]], 질의
+        assert out["찾음"] == [["아무 회사", "999999", 종목]], out
         assert report["사라진회사_검색"] == out
         # 이름표에 없는 종목은 검색조차 하지 않는다 (쓸데없는 SEC 요청 금지)
         질의.clear()
@@ -1889,14 +1894,15 @@ def test_XBRL이_실패하면_사라진회사_검색이_실제로_돈다():
     (157차에 실제로 놓쳤습니다).
     """
     불림 = []
+    종목 = sorted(cfg.TICKER_NAME_HINT)[0]      # 183차-W — 박아 두지 않습니다
     본래_facts = sf._facts_with_retry
     본래_검색 = sf.사라진회사_찾아보기
     sf._facts_with_retry = lambda fetch, report, **kw: (None, True)
     sf.사라진회사_찾아보기 = lambda t, report=None: 불림.append(t)
     try:
-        report = sf.new_report("HES")
-        assert sf.fetch_xbrl_approximation("HES", report=report) == []
-        assert 불림 == ["HES"], 불림
+        report = sf.new_report(종목)
+        assert sf.fetch_xbrl_approximation(종목, report=report) == []
+        assert 불림 == [종목], 불림
     finally:
         sf._facts_with_retry = 본래_facts
         sf.사라진회사_찾아보기 = 본래_검색

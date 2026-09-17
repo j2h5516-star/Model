@@ -2599,16 +2599,19 @@ def test_티커표_결과가_로그에_실린다():
     """
     옛이름, 옛티커 = sf._SEC_이름검색, sf._SEC_티커표에서_찾기
     옛되묻기 = sf._번호마다_이름을_되묻는다
+    # 183차-W — 특정 종목(HES)을 박아 두지 않습니다. 번호를 찾아 졸업하면
+    # 이름표에서 빠지고, 그러면 이 시험이 종목 탓에 깨졌습니다.
+    종목 = sorted(cfg.TICKER_NAME_HINT)[0]
     sf._SEC_이름검색 = lambda name: [["", "0000004447", ""]]
     sf._SEC_티커표에서_찾기 = lambda t: [["HESS CORP", "0000004447", t]]
     sf._번호마다_이름을_되묻는다 = lambda 후보: [["HESS CORPORATION", "0000004447", "HES"]]
     try:
         report = {}
-        out = sf.사라진회사_찾아보기("HES", report)
+        out = sf.사라진회사_찾아보기(종목, report)
     finally:
         sf._SEC_이름검색, sf._SEC_티커표에서_찾기 = 옛이름, 옛티커
         sf._번호마다_이름을_되묻는다 = 옛되묻기
-    assert out["티커표"] == [["HESS CORP", "0000004447", "HES"]], out
+    assert out["티커표"] == [["HESS CORP", "0000004447", 종목]], out
     assert report["사라진회사_검색"]["티커표"], report
     # 183차-V — 번호로 되물은 결과도 로그에 실려야 합니다
     assert out["번호로확인"] == [["HESS CORPORATION", "0000004447", "HES"]], out

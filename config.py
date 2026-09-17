@@ -1085,6 +1085,17 @@ TICKER_CIK: dict[str, int] = {
     #   SEC 가 돌려준 이름이 **정확히 일치**했고 다섯 결과가 같은 번호였다.
     "CFLT": 1699838,    # Confluent, Inc.
     "X": 1163302,       # UNITED STATES STEEL CORP (일본제철에 인수)
+    # 183차-W — **세 번째 길**로 찾았다(런 #82 로그). 앞의 두 길은 막혀 있다:
+    #   ① 이름 검색  — SEC 서버가 이름 자리에 `ARRAY(0x…)` 를 뱉는다(183차-U)
+    #   ② 티커표     — 상장이 끝난 회사는 company_tickers.json 에 없다(183차-V)
+    #   ③ **번호로 되묻기** — data.sec.gov 제출물 창구에 번호로 물으면
+    #      JSON 으로 공식 이름이 온다. 네 후보가 전부 이름과 함께 왔다:
+    #        0001120916 HESS BAKKEN INVESTMENTS I Corp   (자회사)
+    #        0000004447 **HESS CORP**                     ← 본사
+    #        0001789832 Hess Midstream LP (티커 HESM)     (별도 상장사)
+    #        0001619739 Hess Midstream Operations LP
+    #      짐작이 아니라 **SEC 가 그 번호로 돌려준 공식 이름**이다.
+    "HES": 4447,        # HESS CORP (셰브런에 인수)
 }
 
 # 위 6개 중 아직 번호를 모르는 종목의 **회사 이름** — 검색 열쇠일 뿐,
@@ -1107,7 +1118,9 @@ TICKER_CIK: dict[str, int] = {
 #          검색 방식을 바꾸든지, 다른 자료로 교차 확인이 되면 그때 넣는다.
 #   HOLX — "Hologic" 으로도 결과없음. 아직 모른다.
 TICKER_NAME_HINT: dict[str, str] = {
-    "HES": "Hess",
+    # 183차-W — HES 는 번호를 찾았으므로 위 TICKER_CIK 로 옮겼습니다.
+    #   번호를 아는 종목을 이름표에 남겨 두면 두 길이 갈려 헷갈립니다
+    #   (시험 `test_사라진종목_표는_유니버스_안에만_있다` 가 그것을 막습니다).
     "HOLX": "Hologic",
 }
 
