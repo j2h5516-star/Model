@@ -4236,6 +4236,7 @@ def _quarters_from_series(
     #    그 숫자를 보고 고칠지 정합니다 (짐작으로 뼈대를 건드리지 않는다).
     if report is not None:
         report["xbrl_orphan"] = orphan_counts(series, period_ends, start_date)
+        report["채운4분기_행적"] = _채운4분기_행적(report, period_ends, start_date)
 
     # ⚠️ **되돌릴 항목은 모든 분기에 있을 때만 씁니다.**
     #
@@ -4424,6 +4425,45 @@ def _annual_series(facts, concept: str, report: dict | None = None, unit: str = 
     return _period_series(facts, concept, months=12, report=report, unit=unit)
 
 
+def _채운4분기_행적(report: dict, period_ends, start_date: str) -> dict:
+    """채운 4분기가 **뼈대까지 갔는지** 봅니다 (183차-AA).
+
+    무엇이 의심스러운가 — 계기끼리 말이 안 맞습니다. 실물 LOW(런 #82):
+
+        q4_채움.op_income = {연간수 10, 채움 8, 앞선세분기부족 2,
+                            못채운예 ['2015-01-30', '2016-01-29']}
+
+    못 채운 둘은 수집 시작(2016-09-15) 이전이고, **2017-02-03(FY2016
+    4분기)은 채웠다고 나옵니다.** 그런데 수집물에 LOW 의 2017-02-03 행이
+    없습니다 — 2016-10-28 다음이 곧장 2017-05-05 입니다. 그래서
+    발표일이 189일 벌어진 구간으로 잡힙니다(전수 55건 중 38건이 이런
+    4분기 자리입니다).
+
+    "채웠다"와 "뼈대에 있다" 사이 어디서 사라지는지 개발 환경에서는
+    SEC 접속이 막혀 확인할 수 없습니다. 그래서 **세 숫자를 함께**
+    실어 오게 합니다 (짐작 전에 계기 — 91·98·106차 규칙):
+
+      · 채움: 이 항목이 채웠다고 한 4분기 수
+      · 창안: 그중 수집 시작일 뒤에 있는 것 (뼈대에 있어야 할 것)
+      · 사라짐: 창 안인데 **뼈대에 없는** 날짜 (있으면 안 되는 값)
+
+    `사라짐` 이 0 이면 이 길은 결백합니다 — 그때는 8-K 짝짓기 쪽을
+    봅니다. 0 이 아니면 그 날짜가 곧 범인의 이름입니다.
+    """
+    뼈대 = set(period_ends)
+    out: dict = {}
+    for key, 계기 in (report.get("q4_채움") or {}).items():
+        채운날 = [d for d in (계기.get("채운날") or []) if d]
+        창안 = [d for d in 채운날 if d >= start_date]
+        사라짐 = sorted(d for d in 창안 if d not in 뼈대)
+        out[key] = {"채움": len(채운날), "창안": len(창안),
+                    "사라짐수": len(사라짐), "사라짐": 사라짐[:8]}
+        # 날짜 목록 자체는 로그에 안 남깁니다 — 403종목 × 6항목이면
+        # 로그가 400KB 쯤 부풀고, 우리가 볼 것은 **사라진 날짜**뿐입니다.
+        계기.pop("채운날", None)
+    return out
+
+
 def _fill_missing_q4(
     quarterly: dict[str, float],
     annual: dict[str, float],
@@ -4473,6 +4513,9 @@ def _fill_missing_q4(
         filled[fy_end] = q4_value
         if 계기 is not None:
             계기["채움"] = 계기.get("채움", 0) + 1
+            # 183차-AA — **채운 날짜를 적어 둡니다.** 개수만으로는
+            # "채웠다는데 뼈대에 없다"를 가릴 수 없었습니다 (아래 설명).
+            계기.setdefault("채운날", []).append(fy_end)
 
     return filled
 
