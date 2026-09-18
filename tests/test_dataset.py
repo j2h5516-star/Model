@@ -1697,6 +1697,86 @@ def test_연간_영업이익이_분기_자리에_앉으면_버린다():
     assert all(r["op_income"] is not None for r in 남은), "멀쩡한 칸을 버렸습니다"
 
 
+def _KO모양(마진=80.0, 매출총이익률=50.0):
+    """**이웃까지 전부 어긋난** 열두 분기 — 이웃 검사가 눈이 머는 모양.
+
+    실물 KO 2020년: 네 분기가 모두 매출총이익을 넘는 값(5,000M · 6,000M ·
+    5,000M · 7,000M)이라 서로를 가려 주지 못했습니다. 이 자료로 시험해야
+    183차-AC 의 산수 검사만 따로 볼 수 있습니다.
+    """
+    행들 = []
+    for i in range(12):
+        매출 = 100_000_000.0 + i * 1_000_000
+        행들.append(quarter_row(
+            filing_date=f"2024-{i+1:02d}-28", announced_date=f"2024-{i+1:02d}-28",
+            period_label=f"24 Q{i+1}", revenue=매출,
+            op_income=매출 * 마진 / 100.0, gross_margin_pct=매출총이익률,
+            adj_eps=None, gaap_eps=None))
+    return 행들
+
+
+def test_매출총이익을_넘는_영업이익은_이웃_없이도_버린다():
+    """(183차-AC) 이웃이 함께 오염되면 이웃 검사는 눈이 멉니다.
+
+    이웃이 필요 없는 자가 하나 있습니다 — **산수**입니다. 판매관리비는
+    음수가 될 수 없으니 `영업이익 ≤ 매출총이익` 은 언제나 참입니다.
+
+    실물 HPE 25 Q2: 매출 7,627M · 매출총이익률 29.4% → 매출총이익
+    2,242M 인데 보도자료 영업이익이 2,500M 입니다. XBRL 은 -1,109M 로
+    산수를 지킵니다.
+    """
+    행들 = _KO모양()                       # 열둘 다 마진 80% ↔ 매출총이익률 50%
+    행들[4]["op_income_xbrl"] = 행들[4]["revenue"] * 0.10   # 이 칸만 자가 있음
+    결과 = dataset.build(make_snapshot(eps={"AAA": 행들}))
+    kept = 결과["quarters"]["AAA"]
+    튄것 = [r for r in kept if r.get("period_label") == "24 Q5"]
+    assert 튄것 and 튄것[0]["op_income"] is None, (
+        f"산수로 있을 수 없는 값을 안 버렸습니다: {튄것}")
+    assert any("183차-AC" in n for n in 결과["notes"]), "왜 버렸는지 안 적었습니다"
+    assert 튄것[0]["revenue"] is not None, "매출까지 버리면 안 됩니다"
+    # 이웃 검사로는 한 칸도 안 걸리는 자료입니다 — 그것이 이 시험의 요점입니다
+    assert not [n for n in 결과["notes"] if "183차-AB" in n or "183차-Q" in n], (
+        "이웃 검사가 걸렸습니다 — 이 시험은 산수 검사를 못 보고 있습니다")
+
+
+def test_자도_함께_산수를_어기면_안_버린다():
+    """(183차-AC) 자까지 매출총이익을 넘으면 **매출총이익률 쪽이**
+    의심스러운 것입니다 — 영업이익을 버리면 맞는 값을 잃습니다.
+
+    실물 GL(보험사)은 '매출총이익'이 제 뜻대로 안 쓰여 보도자료와 XBRL
+    이 똑같은 값(204,581천)인데도 둘 다 매출총이익을 넘습니다.
+    전수 실측: 위반 259칸 중 98칸이 이 모양이었습니다.
+    """
+    행들 = _KO모양()
+    행들[4]["op_income_xbrl"] = 행들[4]["op_income"]        # 자도 함께 위반
+    kept = dataset.build(make_snapshot(eps={"AAA": 행들}))["quarters"]["AAA"]
+    튄것 = [r for r in kept if r.get("period_label") == "24 Q5"]
+    assert 튄것 and 튄것[0]["op_income"] is not None, (
+        "자도 함께 산수를 어기는데 버렸습니다 — 매출총이익률 쪽이 의심입니다")
+
+
+def test_산수를_조금_넘는_것은_안_버린다():
+    """(183차-AC) 지분법이익·기타영업수익을 영업이익에 넣는 회사가 있어
+    산수를 몇 % 정당하게 어깁니다(실물 ALB 23 Q1 3.3% 초과).
+    전수로 재니 0.5%~10% 사이는 8칸뿐이라 여유를 10% 로 두었습니다."""
+    행들 = _KO모양(마진=50.0 * 1.03)        # 매출총이익보다 3% 큼
+    행들[4]["op_income_xbrl"] = 행들[4]["revenue"] * 0.10
+    kept = dataset.build(make_snapshot(eps={"AAA": 행들}))["quarters"]["AAA"]
+    튄것 = [r for r in kept if r.get("period_label") == "24 Q5"]
+    assert 튄것 and 튄것[0]["op_income"] is not None, (
+        "산수를 3% 넘은 것을 버렸습니다 — 지분법이익일 수 있습니다")
+
+
+def test_가릴_자가_없으면_산수만으로는_안_버린다():
+    """(183차-AC) XBRL 영업이익이 없으면 어느 칸이 틀렸는지 못 가립니다 —
+    매출이 틀렸을 수도, 매출총이익률이 틀렸을 수도 있습니다.
+    전수 실측: 위반 259칸 중 6칸이 이 모양이었습니다."""
+    행들 = _KO모양()                        # 아무 칸에도 자가 없습니다
+    kept = dataset.build(make_snapshot(eps={"AAA": 행들}))["quarters"]["AAA"]
+    남은 = [r for r in kept if r.get("op_income") is not None]
+    assert len(남은) == len(kept), f"가릴 자가 없는데 버렸습니다: {len(kept)-len(남은)}칸"
+
+
 def test_XBRL_영업이익이_직접_다른_말을_하면_버린다():
     """(183차-AB) 183차-P 는 이 칸들을 "바깥 자가 없어 못 가림"이라고
     적어 두었는데, 세어 보니 **14칸 중 10칸에 `op_income_xbrl` 이
