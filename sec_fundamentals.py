@@ -4450,7 +4450,58 @@ def _series_for_key(key: str, facts, report: dict | None = None) -> dict[str, fl
     계기 = None
     if report is not None:
         계기 = report.setdefault("q4_채움", {}).setdefault(key, {})
+
+    # 183차-AS 계기 — **3개월 값이 같은 날짜의 12개월 값과 같은가.**
+    #
+    # 무엇을 판단하려고 재나: 183차-AR 에서 4분기(결산) 칸에 **연간값**이
+    # 앉은 행을 28칸 찾았습니다(GS 아홉 해 · ORCL 다섯 해). 그 값이
+    #   ① XBRL 쪽에서 온 것인지 (3개월 태그가 실은 12개월 값)
+    #   ② 보도자료 파서가 연간 줄을 문 것인지
+    # 를 **가릴 수가 없습니다.** 은행·보험은 애초에 XBRL 매출이 안 붙으므로
+    # (106차 — 뼈대를 논갭 영업이익에서만 만듭니다) ②일 가능성이 크지만,
+    # ORCL 은 은행이 아닌데도 그랬습니다. 짐작하지 말고 셉니다.
+    #
+    # 한 분기가 그 해 전체와 같으려면 나머지 세 분기가 0 이어야 합니다 —
+    # 매출에서는 사실상 불가능합니다. 그러니 **같다면 태그가 틀린 것**입니다.
+    #
+    # ⚠️ **값은 안 고칩니다**(106차 규칙). 이 뼈대를 건드리면 모든 종목의
+    #    행이 달라져 판정까지 흔들립니다. 몇 칸인지 먼저 세고, 그 숫자를
+    #    보고 고칠지 정합니다.
+    if 계기 is not None:
+        같은날 = _분기가_연간과_같은_날들(merged, annual)
+        if 같은날:
+            계기["분기가_연간과_같음"] = (
+                계기.get("분기가_연간과_같음", 0) + len(같은날))
+            계기.setdefault("분기가_연간과_같음_예", []).extend(같은날[:5])
+
     return _fill_missing_q4(merged, annual, 계기)
+
+
+_분기연간_같다_여유 = 0.005      # 0.5% 안쪽이면 "같은 값"으로 봅니다
+
+
+def _분기가_연간과_같은_날들(
+    quarterly: dict[str, float], annual: dict[str, float]
+) -> list[str]:
+    """3개월 값이 **같은 날짜의 12개월 값과 같은** 날들 (183차-AS 계기).
+
+    한 분기가 그 해 전체와 같으려면 나머지 세 분기가 0 이어야 합니다 —
+    매출에서는 사실상 불가능합니다. 그러니 같다면 **3개월 태그가 실은
+    12개월 값**이라는 뜻입니다.
+
+    ⚠️ 여기서는 **세기만 합니다.** 값을 버리면 그 날짜가 뼈대에서 빠져
+    모든 종목의 행이 달라지고 판정까지 흔들립니다(106차 규칙 —
+    짐작으로 뼈대를 건드리지 않는다).
+    """
+    if not annual or not quarterly:
+        return []
+    같은날 = []
+    for 날, v in quarterly.items():
+        a = annual.get(날)
+        if (isinstance(a, (int, float)) and isinstance(v, (int, float))
+                and a and abs(v - a) <= abs(a) * _분기연간_같다_여유):
+            같은날.append(날)
+    return sorted(같은날)
 
 
 def _quarterly_series(
