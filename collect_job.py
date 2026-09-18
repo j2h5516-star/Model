@@ -466,6 +466,34 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
                 # 개념별 "받음·버림·모호·남음" 을 그대로 남깁니다.
                 "xbrl_calls": r.get("xbrl_calls", []),
                 "xbrl_rejected": r.get("xbrl_rejected", 0),
+                # 183차-AP — **XBRL 조회가 깨졌나** (참/거짓 한 칸).
+                #
+                # 155차가 이 값을 심으면서 이렇게 적어 두었습니다:
+                # "'조회 실패'와 '원래 XBRL 없음'은 다른 사건이고 대응이
+                # **정반대**입니다." 그런데 이 칸이 로그 허용 목록에 없어
+                # 매일 런에서는 둘을 **가릴 수가 없었습니다** — 심어 놓고
+                # 아무도 안 읽던 계기입니다(183차-AO 와 같은 갈래).
+                "xbrl_error": bool(r.get("xbrl_error")),
+                # 183차-AP — **수집 깔때기 네 단계**.
+                #
+                # 여태 로그에는 깔때기의 **마지막 칸**(adj_eps_ok)만 실려
+                # 있었습니다. 그래서 한 건도 못 건진 종목을 두고 "공시를
+                # 못 찾은 것"인지 "찾았는데 실적발표가 아니라고 걸러진
+                # 것"인지 "읽었는데 숫자를 못 뽑은 것"인지 **가릴 수가
+                # 없었습니다**. HOLX·NVMI 를 세 회차째 짐작으로만 다룬
+                # 까닭이 여기 있습니다. 네 숫자를 그대로 남깁니다.
+                "filings_found": r.get("filings_found", 0),
+                "text_ok": r.get("text_ok", 0),
+                "gate_passed": r.get("gate_passed", 0),
+                "parsed_ok": r.get("parsed_ok", 0),
+                # 잣대별로 몇 건을 읽었나 (조정 EPS 는 위 adj_eps_ok).
+                # 잣대 사다리(조정 EPS → 조정 EBITDA → GAAP EPS)가 어디서
+                # 끊기는지 보려면 이 둘이 함께 있어야 합니다.
+                "op_income_ok": r.get("op_income_ok", 0),
+                "gaap_eps_ok": r.get("gaap_eps_ok", 0),
+                "xbrl_quarters": r.get("xbrl_quarters", 0),
+                # 전망(가이던스) 수집이 왜 비었나 — 한 줄 사유.
+                "forward_note": r.get("forward_note", ""),
                 # 94차 — 시간 예산에 걸려 옛 분기를 못 받았나. "10년치를
                 # 받았다"고 짐작하지 말고 이 표시와 note 를 보세요.
                 # 106차 계기 — 분기 목록은 논갭 영업이익에서만 만들어지므로,
