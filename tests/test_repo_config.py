@@ -319,6 +319,45 @@ def test_실행스위치_뒤에_갇힌_시험이_없다():
         "그 블록을 파일 맨 끝으로 옮기세요:\n  " + "\n  ".join(갇힘))
 
 
+def test_본코드도_실행스위치_뒤에_정의가_없다():
+    """(183차-AR) 같은 덫이 **본 코드**에도 있습니다 — 그런데 시험 파일만
+    지키고 있었습니다.
+
+    실제로 오늘 걸렸습니다: `screen_verify.py` 끝에 세는 함수를 붙였는데
+    그 파일의 실행 스위치가 **862번째 줄**에 있었습니다. 불러 쓸 때
+    (`import screen_verify`)는 파일 전체가 읽히므로 함수가 있고 **시험은
+    전부 초록**이었지만, 명령줄로 직접 돌리면 스위치가 먼저 끝나
+    `NameError: name '_연간값이_앉은듯한_매출' is not defined` 로
+    **점검기가 통째로 죽었습니다.**
+
+    시험이 못 잡는 자리라는 점이 고약합니다 — 시험은 언제나 import 로
+    쓰니까요. 그래서 여기서 **글자로** 봅니다.
+    """
+    import re
+
+    스위치 = re.compile(r"^if __name__ ==", re.M)
+    갇힘 = []
+    for f in sorted(os.listdir(ROOT)):
+        if not f.endswith(".py"):
+            continue
+        with open(os.path.join(ROOT, f), encoding="utf-8") as fh:
+            글 = fh.read()
+        m = 스위치.search(글)
+        if m is None:
+            continue                      # 스위치가 없는 모듈은 이 덫이 없습니다
+        뒤 = re.findall(r"^(?:def|class|[A-Za-z_가-힣]\w*\s*=)", 글[m.start():], re.M)
+        # 스위치 블록 자체의 첫 줄은 빼고 셉니다
+        이름들 = re.findall(r"^def (\w+)|^class (\w+)|^([A-Za-z_가-힣]\w*)\s*=",
+                         글[m.start():], re.M)
+        이름들 = [a or b or c for a, b, c in 이름들]
+        if 이름들:
+            갇힘.append(f"{f}: 스위치 뒤에 {len(이름들)}개 — {이름들[:6]}")
+    assert not 갇힘, (
+        "실행 스위치 **뒤**에 적힌 정의가 있습니다. 불러 쓸 때는 멀쩡해 보이지만 "
+        "명령줄로 직접 돌리면 NameError 로 죽습니다. 스위치를 파일 맨 끝으로 "
+        "옮기세요:\n  " + "\n  ".join(갇힘))
+
+
 def test_공시원문_캐시는_시간초과에도_저장된다():
     """(150차-AE) **스스로 못 빠져나오는 덫**이었습니다.
 
