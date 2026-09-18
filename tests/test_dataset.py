@@ -1374,6 +1374,70 @@ def test_GAAP이_다르면_쌍둥이가_아니다():
                for r in q2), "합치지 않았는데 EBITDA 가 뼈대 행으로 옮겨졌습니다"
 
 
+def _DE모양(간격일=1, 매출차=0.0, 이름="다름"):
+    """(183차-AF) 실물 DE 2016-10-30 ↔ 2016-10-31 모양.
+
+    같은 분기가 하루 차이로 두 줄인데 **이름이 다릅니다**. 값은
+    매출·GAAP 이 달러까지 같습니다. 다른 정제 규칙(마진 상식·발표일
+    상식)에 먼저 걸리지 않도록 `_성장행` 으로 짓습니다.
+    """
+    import datetime
+
+    rows = [_성장행(i, 0.80 + i * 0.03, 700e6 + i * 10e6) for i in range(5)]
+    본 = _성장행(5, 0.99, 800e6)
+    쌍 = _성장행(5, 0.99, 800e6 + 매출차)
+    끝 = datetime.date.fromisoformat(본["filing_date"]) + datetime.timedelta(days=간격일)
+    쌍["filing_date"] = 끝.isoformat()
+    쌍["period_label"] = 본["period_label"] if 이름 == "같음" else "27 Q1"
+    쌍.pop("revenue_xbrl", None)          # 앵커는 XBRL 매출이 붙은 쪽
+    쌍["adjusted_ebitda"] = 166_770_000.0  # 앵커의 빈 칸을 채울 값
+    본.pop("adjusted_ebitda", None)
+    return rows + [본, 쌍]
+
+
+def test_이름이_달라도_같은_분기면_합친다():
+    """(183차-AF) 합치는 열쇠에 **날짜**를 보탰습니다.
+
+    데이터규격 1장: "분기의 신원은 **기간종료일 하나**", "이름은 화면
+    표시용, 계산에 쓰지 않는다". 합칠지 말지는 계산입니다.
+
+    실물 DE 2016-10-30 ↔ 2016-10-31 — 매출 6,520,000,000 · GAAP 0.90 ·
+    매출총이익률 19.43% 가 전부 같은 한 분기인데 이름이 '16/10' 과
+    '16 Q1' 로 달라 안 합쳐졌고, 그 결과 잣대(GAAP EPS) 계열에 같은
+    분기가 **두 번** 들어갔습니다.
+
+    전수 실측: 합쳐지는 행 1개 → 35개. 잣대를 두 번 세던 쌍 1개 → 0개.
+    """
+    result = dataset.build(make_snapshot(eps={"AAA": _DE모양()}))
+    합침 = [n for n in result["notes"] if "한 행으로 합침" in n]
+    assert 합침, f"이름이 달라서 못 합쳤습니다: {result['notes'][-4:]}"
+    남은 = [r for r in result["quarters"]["AAA"] if r.get("revenue") == 800e6]
+    assert len(남은) == 1, f"두 행이 남았습니다: {[r['filing_date'] for r in 남은]}"
+    assert 남은[0]["adjusted_ebitda"] == 166_770_000.0, "빈 칸을 안 채웠습니다"
+    assert 남은[0].get("revenue_xbrl") == 800e6, "XBRL 매출이 붙은 쪽이 앵커여야 합니다"
+
+
+def test_열흘_넘게_떨어지고_이름도_다르면_합치지_않는다():
+    """(183차-AF) 한 분기는 아무리 짧아도 12주(84일)입니다. 열흘을 넘는데
+    이름까지 다르면 같은 분기라 말할 근거가 없습니다.
+
+    ⚠️ 이름이 **같으면** 열흘을 넘어도 합칩니다 — 8-K 로 승격된 행은
+    분기끝 자리에 8-K 날짜가 들어가 날짜가 멀어집니다(163차 TTMI).
+    """
+    result = dataset.build(make_snapshot(eps={"AAA": _DE모양(간격일=14)}))
+    assert not [n for n in result["notes"] if "한 행으로 합침" in n], (
+        "열흘 넘게 떨어지고 이름도 다른 행을 합쳤습니다")
+
+
+def test_매출이_한_달러라도_다르면_합치지_않는다():
+    """(183차-AF) 실물 WAT 2025-06-28(771,000,000) ↔ 06-30(771,332,000).
+    같은 분기로 **보이지만** 값이 다르므로 확신할 수 없습니다 — 손대지
+    않습니다(헌법 1조: 없음은 안전하고 틀림은 위험합니다)."""
+    result = dataset.build(make_snapshot(eps={"AAA": _DE모양(매출차=1.0)}))
+    assert not [n for n in result["notes"] if "한 행으로 합침" in n], (
+        "매출이 다른데 합쳤습니다")
+
+
 def _보도자료_GAAP_표본(마지막_gaap, 연간, 앞_gaap=None):
     """실물 BXP 형 — 8분기 GAAP 0.5~1.2 뒤, 12월 결산 마지막 분기 행에
     XBRL 3개월 GAAP 은 없고(10-K) 보도자료 GAAP 과 XBRL 연간값만 있다."""

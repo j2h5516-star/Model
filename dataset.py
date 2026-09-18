@@ -900,15 +900,79 @@ _TWIN_FILL_FIELDS = ("adj_eps", "adjusted_ebitda", "op_income", "gross_margin_pc
                      "guid_ebitda_low", "guid_ebitda_high", "guid_ebitda_mid")
 
 
+# 183차-AF — 열쇠를 **이름에서 날짜로** 바꿉니다
+# ---------------------------------------------------------------------------
+# 위 규칙은 "같은 분기표(`period_label`)" 를 열쇠로 썼습니다. 그런데
+# 데이터규격 1장은 **분기의 신원은 기간종료일 하나**라고 못박아 두었고,
+# 이름은 "화면 표시용, 계산에 쓰지 않는다"입니다. 합칠지 말지는
+# 계산이므로 이름을 쓰면 안 됩니다.
+#
+# 실물로 드러났습니다 — DE 2016-10-30 과 2016-10-31 은
+#
+#     매출 6,520,000,000 · GAAP EPS 0.90 · 매출총이익률 19.43%
+#
+# 이 **전부 같은** 한 분기인데, 이름이 '16/10' 과 '16 Q1' 로 달라서
+# 안 합쳐졌습니다. 그 결과 DE 의 잣대(GAAP EPS) 계열에 같은 분기가
+# **두 번** 들어갔습니다. (이름은 나중에 183차-Y 가 둘 다 '16/10' 으로
+# 바꾸지만, 합치기는 그 전에 끝나 있습니다.)
+#
+# 새 열쇠: **매출이 같음 ∧ GAAP EPS 가 같음** 이고, 그 위에
+#   **같은 이름 ∨ 분기끝이 열흘 안** 이면 한 분기로 봅니다.
+#
+#   ⚠️ 이름을 **버리지는** 않습니다. 시험이 그것을 잡아 줬습니다 —
+#      원래의 TTMI 사례는 8-K 로 승격된 행이라 분기끝 자리에 8-K 날짜가
+#      들어가 두 행의 날짜가 **멀리 떨어져** 있고, 이름으로만 묶였습니다.
+#      날짜로 갈아치웠더니 그 사례가 빨간 불이 됐습니다. 그래서 이름은
+#      **더하는 열쇠**로 남기고 날짜를 **보태기만** 합니다.
+#
+#   한 분기는 아무리 짧아도 12주(84일)이므로, 열흘 안의 두 행이 서로
+#   다른 분기일 수는 없습니다. 게다가 매출이 **달러까지 같고** EPS 도
+#   같아야 하므로 우연히 묶일 일이 없습니다.
+#
+# 전수 실측(2026-09-17 수집물): 합쳐지는 행 **1개 → 35개**.
+#   늘어난 34개는 거의 다 WAT 입니다(회계 분기끝과 달력 분기끝이
+#   하루~나흘 어긋나 두 줄이 생김). 잣대를 두 번 세던 것은 DE 한 건.
+_쌍둥이_며칠 = 10          # 분기끝이 며칠 안이면 같은 분기로 볼 것인가
+
+
 def _merge_same_quarter_twins(ticker: str, rows: list[dict],
                               notes: list[str]) -> None:
-    """같은 분기표·매출·GAAP EPS 인 행들을 한 행으로 합칩니다 (제자리 수정)."""
-    groups: dict[tuple, list[dict]] = {}
-    for row in rows:
-        if row.get("revenue") is None or row.get("gaap_eps") is None:
-            continue                      # 견줄 값이 없으면 같은 분기라 말할 수 없다
-        key = (row.get("period_label"), row["revenue"], row["gaap_eps"])
-        groups.setdefault(key, []).append(row)
+    """분기끝이 열흘 안이고 매출·GAAP EPS 가 같은 행들을 한 행으로 합칩니다."""
+    import datetime
+
+    def 날(row):
+        m = re.search(r"(\d{4})-(\d{2})-(\d{2})", str(row.get("filing_date") or ""))
+        try:
+            return datetime.date(*map(int, m.groups())) if m else None
+        except (ValueError, TypeError):
+            return None
+
+    쓸 = [(날(r), r) for r in rows
+         if r.get("revenue") is not None and r.get("gaap_eps") is not None]
+    쓸 = sorted(((d, r) for d, r in 쓸 if d is not None), key=lambda x: x[0])
+
+    # 열흘 안 + 같은 매출·GAAP 인 행들을 한 무리로 묶습니다
+    묶임: dict[int, list[dict]] = {}
+    어디: dict[int, int] = {}
+    for i, (d1, r1) in enumerate(쓸):
+        for d2, r2 in 쓸[i + 1:]:
+            if r1["revenue"] != r2["revenue"] or r1["gaap_eps"] != r2["gaap_eps"]:
+                continue
+            같은이름 = (r1.get("period_label") is not None
+                     and r1.get("period_label") == r2.get("period_label"))
+            if (d2 - d1).days > _쌍둥이_며칠 and not 같은이름:
+                continue
+            뿌리 = 어디.get(id(r1))
+            if 뿌리 is None:
+                뿌리 = id(r1)
+                묶임[뿌리] = [r1]
+                어디[id(r1)] = 뿌리
+            if id(r2) not in 어디:
+                묶임[뿌리].append(r2)
+                어디[id(r2)] = 뿌리
+
+    groups = {(_날짜형_이름표(g[0]) or "?", g[0]["revenue"], g[0]["gaap_eps"]): g
+              for g in 묶임.values()}
     remove: list[int] = []
     for key, group in groups.items():
         if len(group) < 2:
@@ -925,10 +989,11 @@ def _merge_same_quarter_twins(ticker: str, rows: list[dict],
                     filled.append(field)
             remove.append(id(twin))
         notes.append(
-            f"{ticker} {key[0]}: 같은 분기표·매출 {key[1]:,.0f}·GAAP {key[2]} 인 행이 "
+            f"{ticker} {key[0]}: 분기끝이 {_쌍둥이_며칠}일 안이고 "
+            f"매출 {key[1]:,.0f}·GAAP {key[2]} 가 같은 행이 "
             f"{len(group)}개 — 한 행으로 합침"
             + (f" (빈 칸 {'·'.join(filled)} 을 다른 행에서 채움)" if filled else "")
-            + " (163차, 실물 TTMI 26 Q2)"
+            + " (163차 TTMI 26 Q2 · 183차-AF 에서 열쇠를 이름→날짜로 바꿈)"
         )
     if remove:
         rows[:] = [r for r in rows if id(r) not in remove]
