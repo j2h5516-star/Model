@@ -199,6 +199,7 @@ def hypothesis_clock() -> dict[str, tuple[str, int]]:
         H28_NAME: (H28_START_DAY, me.WINDOW_TRADING_DAYS),
         H31_NAME: (H31_START_DAY, me.WINDOW_TRADING_DAYS),
         H9CLEAN_NAME: (H9CLEAN_START_DAY, me.WINDOW_TRADING_DAYS),
+        H34_NAME: (H34_START_DAY, me.WINDOW_TRADING_DAYS),
         H32_NAME: (H32_START_DAY, me.WINDOW_TRADING_DAYS),
         H32B_NAME: (H32_START_DAY, me.WINDOW_TRADING_DAYS),
         H33_NAME: (H33_START_DAY, me.WINDOW_TRADING_DAYS),
@@ -233,6 +234,7 @@ def hypothesis_wired_day() -> dict[str, str]:
     return {
         # 183차-E 가 등록(2026-09-10) · 183차-L 이 배선(2026-09-13)
         H9CLEAN_NAME: "2026-09-13",
+        H34_NAME: "2026-09-18",
     }
 
 
@@ -894,6 +896,56 @@ def judge_h9_clean(events: list[dict],
         entry[label] = judged
     entry["판정"] = entry["신규(판정)"]["판정"]
     return {H9CLEAN_NAME: entry}
+
+
+# ---------------------------------------------------------------------------
+# H34 (183차-AI 등록, 2026-09-18) — 가이던스 신기록 예고
+# ---------------------------------------------------------------------------
+# 헌법 1장 5번이 확정해 둔 것: "추세와 펀더멘털은 동행한다, **그러나
+# 확인하면 늦다**." H2b 는 **이미 일어난** 신고점 돌파를 봅니다.
+# 가이던스는 회사가 **먼저** 말하는 것이므로, 같은 사건을 한 분기 앞당겨
+# 볼 수 있는지 묻습니다.
+#
+#   신호 = 회사가 직접 낸 **다음 분기 조정 EPS 가이던스 중간값**을 다음
+#          분기 자리에 넣어 만든 예상 TTM 이 지금까지의 정점을 넘는 발표.
+#   대조 = 가이던스를 **냈지만** 예상 TTM 이 정점을 못 넘는 발표.
+#          가이던스를 내는 회사가 48종목뿐이라, 이 대조가 없으면 "가이던스를
+#          내는 회사"라는 종목 편향과 신호를 가를 수 없습니다.
+#   기준선 = 같은 표본의 **모든 발표** (측정 기본형 고정).
+#
+# ⚠️ 가이던스가 없으면 **기권**입니다 — 신호도 대조도 아니고, 역산·
+#    컨센서스로 대신하지 않습니다(헌법 제1조). 기준선에는 남습니다.
+#
+# 등록 시점에 성적을 보지 않았습니다. 창 60거래일·폭등 20%p·채택 기준은
+# 측정 기본형을 그대로 쓴 것이고, 판정은 등록일 뒤의 새 발표만 셉니다.
+# 미리 적은 약점(183차-AI): ① 48종목은 스스로 고른 무리다 ② 연간
+# 가이던스는 분기로 나누지 않으므로 표본에서 빠진다 ③ 신호가 연 70건의
+# 일부이므로 n≥10 까지 1년 안팎 걸릴 수 있다.
+H34_START_DAY = "2026-09-18"
+H34_NAME = "H34_가이던스_신기록예고"
+
+
+def judge_h34(events: list[dict], start_day: str = H34_START_DAY) -> dict:
+    """H34 판정 — 회사가 스스로 이익 신기록을 예고한 발표."""
+    entry: dict = {
+        "등록일": start_day,
+        "문턱": {"신호": "가이던스 중간값으로 만든 예상 TTM > 지금까지의 정점",
+               "기권": "회사가 가이던스를 안 냈으면 신호도 대조도 아님"},
+        "채택기준": "신호 윌슨 하한 > 기준선 상한 (n≥10)",
+    }
+    for label, pool in (
+        ("신규(판정)", [e for e in events if e["announced"] > start_day]),
+        ("탐색표본(참고)", [e for e in events if e["announced"] <= start_day]),
+    ):
+        signal = [e for e in pool if e.get("가이던스_신기록예고") is True]
+        judged = _judge(signal, pool)
+        # 대조군 — 가이던스는 냈는데 예고가 아닌 발표
+        대조 = [e for e in pool if e.get("가이던스_신기록예고") is False]
+        judged["대조_예고아님"] = _judge(대조, pool)["신호"]
+        judged["가이던스_n"] = len(signal) + len(대조)
+        entry[label] = judged
+    entry["판정"] = entry["신규(판정)"]["판정"]
+    return {H34_NAME: entry}
 
 
 # ---------------------------------------------------------------------------

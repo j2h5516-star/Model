@@ -1041,6 +1041,97 @@ def test_H33이_시계와_등록부와_로봇에_있다():
     assert "judge_runup_swing" in inspect.getsource(cj.run), "로봇 배선 없음"
 
 
+
+# ---------------------------------------------------------------------------
+# H34 (183차-AI 등록) — 가이던스 신기록 예고
+# ---------------------------------------------------------------------------
+def _h34_사건(날, 예고, 초과=0.0):
+    return {"ticker": "AA", "잣대": "adj_eps", "announced": 날,
+            "가이던스_신기록예고": 예고, "excess": 초과}
+
+
+def test_H34는_예고한_발표만_신호로_센다():
+    """등록문 그대로 — 신호는 "가이던스로 만든 예상 TTM > 지금까지의 정점"."""
+    새신호 = [_h34_사건("2026-09-19", True) for _ in range(11)]
+    새대조 = [_h34_사건("2026-09-20", False) for _ in range(7)]
+    새기권 = [_h34_사건("2026-09-21", None) for _ in range(5)]   # 가이던스 없음
+    # 탐색 표본은 **채택이 나오게** 짭니다 — 그래야 "판정은 새 표본만
+    # 본다"는 규칙이 시험에 걸립니다(돌연변이로 확인: 탐색을 판정에
+    # 넣으면 빨간 불).
+    옛신호 = [_h34_사건("2026-01-01", True, 99.0) for _ in range(30)]   # 전부 폭등
+    옛보통 = [_h34_사건("2026-01-02", False, 0.0) for _ in range(300)]  # 전부 안 폭등
+    r = judge.judge_h34(새신호 + 새대조 + 새기권 + 옛신호 + 옛보통)
+    h = r[judge.H34_NAME]
+    assert h["등록일"] == "2026-09-18"
+    새 = h["신규(판정)"]
+    assert 새["신호"]["n"] == 11, f"신호를 잘못 셌습니다: {새}"
+    # 기권(가이던스 없음)도 **기준선에는 남습니다** — 그 발표는 실제로 있었습니다
+    assert 새["기준선"]["n"] == 23, f"기준선에서 기권을 뺐습니다: {새}"
+    assert 새["대조_예고아님"]["n"] == 7, f"대조군을 잘못 셌습니다: {새}"
+    assert 새["가이던스_n"] == 18, "가이던스를 낸 발표 수를 안 적었습니다"
+    # 탐색 표본은 **채택**이 나오지만 판정은 새 표본만 봅니다 (헌법 5조)
+    assert h["탐색표본(참고)"]["신호"]["n"] == 30
+    assert h["탐색표본(참고)"]["판정"] == "채택", h["탐색표본(참고)"]
+    assert h["판정"] == "미채택", (
+        f"탐색 표본의 채택이 판정으로 새어 나왔습니다: {h['판정']}")
+
+
+def test_H34는_가이던스가_없으면_신호도_대조도_아니다():
+    """헌법 제1조 — 없는 값을 참으로도 거짓으로도 지어내지 않습니다.
+    역산·컨센서스로 대신하지도 않습니다."""
+    r = judge.judge_h34([_h34_사건("2026-09-19", None) for _ in range(9)])
+    새 = r[judge.H34_NAME]["신규(판정)"]
+    assert 새["신호"]["n"] == 0 and 새["대조_예고아님"]["n"] == 0, 새
+    assert 새["기준선"]["n"] == 9, "발표 자체는 기준선에 남아야 합니다"
+    assert 새["가이던스_n"] == 0, 새
+
+
+def test_H34_장치가_가이던스로_예상TTM을_만든다():
+    """배선 시험 — 판정만 만들고 재는 장치가 없으면 표본이 영영 0 입니다
+    (183차-E 가 실제로 그 상태였습니다)."""
+    import measure_engine as me
+
+    def 행(끝, 발표, eps, guid=None):
+        r = {"filing_date": 끝, "announced_date": 발표, "adj_eps": eps}
+        if guid is not None:
+            r["guid_eps_mid"] = guid
+        return r
+
+    # 넉 분기 1.0 씩 → TTM 4.0. 다음도 1.0 → TTM 4.0(정점과 같음).
+    # 마지막 발표에서 가이던스 1.5 를 내면 예상 TTM = 4.0 − 1.0 + 1.5 = 4.5 > 4.0
+    rows = [행("2025-03-31", "2025-04-20", 1.0), 행("2025-06-30", "2025-07-20", 1.0),
+            행("2025-09-30", "2025-10-20", 1.0), 행("2025-12-31", "2026-01-20", 1.0),
+            행("2026-03-31", "2026-04-20", 1.0, guid=1.5)]
+    상태 = list(me.earnings_states(rows, field="adj_eps"))
+    끝 = 상태[-1]
+    assert 끝["가이던스_신기록예고"] is True, (
+        f"가이던스로 예상 TTM 을 못 만들었습니다: {끝}")
+    # 가이던스가 낮으면 예고가 아닙니다
+    rows[-1]["guid_eps_mid"] = 0.5      # 예상 TTM = 3.5 < 4.0
+    assert list(me.earnings_states(rows, field="adj_eps"))[-1]["가이던스_신기록예고"] is False
+    # 가이던스가 없으면 기권입니다
+    rows[-1].pop("guid_eps_mid")
+    assert list(me.earnings_states(rows, field="adj_eps"))[-1]["가이던스_신기록예고"] is None
+
+
+def test_H34가_시계와_등록부와_로봇과_화면에_있다():
+    """등록만 하고 배선을 잊으면 판정 파일에 영영 안 나옵니다(150차-C)."""
+    import inspect
+    import collect_job as cj
+    import model_verify as mv
+    import app
+
+    assert judge.H34_NAME in judge.hypothesis_clock()
+    assert judge.hypothesis_clock()[judge.H34_NAME][0] == "2026-09-18"
+    assert judge.wired_day(judge.H34_NAME) == "2026-09-18"
+    assert judge.H34_NAME in mv.expected_hypotheses()
+    assert "judge_h34" in inspect.getsource(cj.run), "로봇 배선 없음"
+    assert judge.H34_NAME in app.HYPOTHESIS_LABELS, "화면 이름표 없음"
+    # 사건에도 실려야 합니다 (장치 → 사건 → 판정)
+    assert '"가이던스_신기록예고": state.get' in \
+        inspect.getsource(__import__("measure_engine")), "사건 배선 없음"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

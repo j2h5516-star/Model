@@ -193,6 +193,22 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
             폭 = None
             if new_high and past_peak and past_peak > 0:
                 폭 = (current - past_peak) / past_peak * 100.0
+
+            # H34 (183차-AI 등록) — 회사가 낸 **다음 분기 가이던스**로
+            # 예상 TTM 을 만들어 정점과 견줍니다:
+            #
+            #     예상 TTM = 이번 TTM − 4분기 전 값 + 가이던스 중간값
+            #
+            # 넉 분기가 안 차거나 가이던스가 없으면 **None(기권)** 입니다 —
+            # 참으로도 거짓으로도 지어내지 않습니다(헌법 제1조). 잣대가
+            # 조정 EPS 인 종목에서만 잽니다(가이던스도 조정 EPS 이므로).
+            # ⚠️ 이 값은 아무것도 바꾸지 않습니다 — 기존 가설의 표본은
+            #    한 칸도 안 움직입니다. H34 만 씁니다.
+            예고 = None
+            안내 = row.get("guid_eps_mid")
+            if (field == "adj_eps" and current is not None and had_prior
+                    and isinstance(안내, (int, float)) and len(values) >= 4):
+                예고 = (current - values[-4] + 안내) > past_peak
             if current is not None and (past_peak is None or current > past_peak):
                 past_peak = current
             streak = streak + 1 if new_high else 0
@@ -226,6 +242,14 @@ def earnings_states(rows: list[dict], field: str = "adj_eps") -> list[dict]:
                     "accel": accel,
                     # 183차-L — 직전 발표에 TTM 이 없었나 (구멍 바로 뒤인가)
                     "직전TTM없음": 앞ttm is None,
+                    # 183차-AI(H34 사전 등록) — 회사가 **스스로 신기록을
+                    # 예고했나**. 가이던스 중간값을 다음 분기 자리에 넣어
+                    # 만든 예상 TTM 이 지금까지의 정점을 넘는가.
+                    # 가이던스가 없으면 **None**(기권) — 참으로도 거짓으로도
+                    # 지어내지 않습니다(헌법 제1조).
+                    # ⚠️ 이 값도 아무것도 바꾸지 않습니다 — 기존 가설의
+                    #    표본은 한 칸도 안 움직입니다. H34 만 씁니다.
+                    "가이던스_신기록예고": 예고,
                 }
             )
             앞ttm = current
@@ -561,6 +585,11 @@ def collect_events(ds: dict) -> tuple[list[dict], dict]:
                     # 참이면 그 자리의 "첫 돌파"는 구멍 너머를 보고 잰 것이라
                     # H9-clean 표본에서 뺍니다(신호에도 기준선에도 안 넣음).
                     "직전TTM없음": state.get("직전TTM없음"),
+                    # H34 (183차-AI 등록) — 회사가 낸 다음 분기 가이던스로
+                    # 만든 **예상 TTM** 이 정점을 넘는가(스스로 신기록 예고).
+                    # 가이던스가 없으면 None 이고, 그 발표는 신호도 대조도
+                    # 되지 못합니다(기권). 기준선에는 그대로 남습니다.
+                    "가이던스_신기록예고": state.get("가이던스_신기록예고"),
                     "excess": excess,
                     # H26 (143차 등록) — 125거래일 창. **기존 excess(60일)는
                     # 한 칸도 안 바뀝니다.** 창이 더 길어 최근 사건은 아직

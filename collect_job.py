@@ -299,6 +299,8 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         # 표본에서 뺀 H9. H9 은 한 칸도 안 바뀌고 나란히 섭니다. 판정 표본은
         # 등록일(2026-09-10) 뒤의 새 발표만입니다.
         verdict["가설"].update(judge.judge_h9_clean(events))
+        # H34 (183차-AI 등록) — 가이던스 신기록 예고
+        verdict["가설"].update(judge.judge_h34(events))
         # H32·H32b (168차 등록) — 감속 ∧ 런업(회피) · 가속 ∧ 런업. "런업"은
         # 위 H25 자리에서 이미 붙었고 "가속"은 사건에 실려 옵니다. 판정은
         # 등록일 뒤의 새 발표만 셉니다.
