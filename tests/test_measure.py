@@ -689,6 +689,108 @@ def test_파서부터_정제까지_한_줄로_이어진다():
     assert 10.22 in 남음, f"④ 정제가 분기 열 표시를 무시하고 버렸습니다: {남음}"
 
 
+
+
+# ── 분기 행에 심는 칸이 **스냅샷까지 가거나 이유가 적혀 있는가** (183차-AQ)
+#
+# 바로 위 시험 둘은 칸 하나씩을 지킵니다. 그런 시험을 다섯 개 붙이는
+# 동안에도 여섯 번째·일곱 번째가 났습니다 — 새 칸을 만들면 시험이
+# 따라오지 않기 때문입니다. 그래서 여기서는 **규칙**을 지킵니다:
+#
+#   수집기가 분기 행에 심는 칸은 **전부** ① `EPS_FIELDS` 를 통과해
+#   스냅샷에 담기거나 ② 아래 목록에 **이유와 함께** 적혀 있어야 한다.
+#
+# (같은 규칙의 로봇 로그 쪽 짝은 `tests/test_collect_job.py` 에 있습니다.)
+_스냅샷에_일부러_안_담는_칸 = {
+    "ticker": "스냅샷이 이미 종목별로 나뉘어 있어 행마다 적으면 중복입니다",
+    "guidance_text": "eps_rows 가 여기서 읽어 guid_eps_* 숫자로 바꿔 담습니다 "
+                     "(원문 전체를 행마다 담으면 스냅샷이 수십 배가 됩니다)",
+    "da": "감가상각비 — 수집기 안에서 EBITDA 역산에 쓰고 끝납니다",
+    "derivation": "'어떻게 구했나' 사람 설명. v2 화면이 쓰던 칸이고 "
+                  "v3 계기판은 안 씁니다",
+    "filing_url": "'원문 보기' 링크. v2 화면이 쓰던 칸이고 v3 계기판은 안 씁니다",
+}
+
+
+def _분기행에_심는_칸() -> set:
+    """수집기가 분기 행에 심는 칸 전부.
+
+    글자를 찾는 대신 **파이썬 문법으로 읽습니다**(ast). 183차-AP 에서
+    글자만 보는 시험이 `+= 1` 로만 늘어나는 칸 일곱 개를 통째로 놓친 적이
+    있습니다. 여기서는 `quarters.append({…})` 의 열쇠와, 행에 나중에
+    덧붙이는 `row[…] = ` · `promoted[…] = ` · `새행[…] = ` 를 모읍니다.
+    """
+    import ast
+    import pathlib
+
+    나무 = ast.parse(pathlib.Path("sec_fundamentals.py").read_text(encoding="utf-8"))
+    칸 = set()
+    for n in ast.walk(나무):
+        if (isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+                and n.func.attr == "append" and isinstance(n.func.value, ast.Name)
+                and n.func.value.id == "quarters"):
+            for a in n.args:
+                if isinstance(a, ast.Dict):
+                    칸 |= {k.value for k in a.keys if isinstance(k, ast.Constant)}
+        if isinstance(n, ast.Assign):
+            for 대상 in n.targets:
+                if (isinstance(대상, ast.Subscript)
+                        and isinstance(대상.value, ast.Name)
+                        and 대상.value.id in {"row", "promoted", "새행"}
+                        and isinstance(대상.slice, ast.Constant)
+                        and isinstance(대상.slice.value, str)):
+                    칸.add(대상.slice.value)
+    return 칸
+
+
+def test_분기행에_심은_칸은_스냅샷까지_가거나_이유가_적혀_있다():
+    """(183차-AQ) 칸 하나씩이 아니라 규칙을 지킵니다.
+
+    고치는 법은 둘 중 하나입니다:
+      ① `measure_store.EPS_FIELDS` 에 칸 이름을 넣는다
+      ② 위 `_스냅샷에_일부러_안_담는_칸` 에 **이유와 함께** 적는다
+    """
+    빠짐 = sorted(_분기행에_심는_칸() - set(measure_store.EPS_FIELDS)
+                  - set(_스냅샷에_일부러_안_담는_칸))
+    assert not 빠짐, (
+        f"수집기가 행에 심는데 EPS_FIELDS 에도 없고 '일부러 안 담는' 목록에도 "
+        f"없는 칸: {빠짐} — 넣거나 이유를 적으세요 (183차-AO 의 재발)")
+
+
+def test_일부러_안_담는_목록에_죽은_이름이_없다():
+    """(183차-AQ) 반대 방향 — 없어진 칸이나 **실제로는 담기는** 칸이
+    목록에 남아 있으면 다음 사람이 설명을 믿고 지나갑니다."""
+    심음 = _분기행에_심는_칸()
+    죽은이름 = sorted(set(_스냅샷에_일부러_안_담는_칸) - 심음)
+    assert not 죽은이름, f"수집기가 더 이상 안 심는 칸이 목록에 남아 있습니다: {죽은이름}"
+
+    거짓설명 = sorted(set(_스냅샷에_일부러_안_담는_칸) & set(measure_store.EPS_FIELDS))
+    assert not 거짓설명, (
+        f"'안 담는다'고 적혀 있는데 실제로는 EPS_FIELDS 에 있는 칸: {거짓설명}")
+
+
+def test_행_출처_표시가_스냅샷까지_살아남는다():
+    """(183차-AQ) 화면이 "구멍메움"이라 적어 온 66칸은 표시를 읽은 것이
+    아니라 **짐작**이었습니다 — 수집기가 다는 `구멍메움` 표시가 스냅샷까지
+    오지 못해, 화면은 "press_matched 가 비었으면 구멍메움"이라고 셌습니다.
+    실측 66칸 중 최소 13칸은 발표일조차 없어 둘 다 아니었습니다."""
+    행 = measure_store.eps_rows([{
+        "filing_date": "2025-06-02", "adj_eps": 0.35,
+        "구멍메움": True, "gm_is_gaap": True,
+    }])[0]
+    assert 행.get("구멍메움") is True, f"구멍메움 표시가 사라졌습니다: {sorted(행)}"
+    assert 행.get("gm_is_gaap") is True, f"gm_is_gaap 이 사라졌습니다: {sorted(행)}"
+
+    승격행 = measure_store.eps_rows([{
+        "filing_date": "2025-06-02", "adj_eps": 0.35, "승격": True,
+    }])[0]
+    assert 승격행.get("승격") is True, f"승격 표시가 사라졌습니다: {sorted(승격행)}"
+
+    # 표시가 없으면 없는 대로 (지어내지 않습니다)
+    민 = measure_store.eps_rows([{"filing_date": "2025-06-02", "adj_eps": 0.35}])[0]
+    assert 민.get("구멍메움") is None and 민.get("승격") is None, 민
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0
@@ -705,4 +807,3 @@ if __name__ == "__main__":
             failed += 1
     print(f"\n측정 저장 검증: {passed}개 통과, {failed}개 실패")
     sys.exit(1 if failed else 0)
-

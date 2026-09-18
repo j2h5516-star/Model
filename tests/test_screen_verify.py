@@ -579,8 +579,17 @@ def test_빈칸사유를_갈래별로_센다():
              "press_matched": False, "adj_eps": None},         # 못 붙임 · 냄
             {"filing_date": "2023-12-31", "announced_date": None,
              "press_matched": False, "adj_eps": None},         # 발표 기록 없음
+            # 183차-AQ — 구멍 메움은 **표시로** 가립니다. 예전에는
+            # "press_matched 가 비었으면 구멍메움"이라고 짐작했는데,
+            # 실측 66칸 중 최소 13칸이 구멍메움도 승격도 아니었습니다.
             {"filing_date": "2024-12-31", "announced_date": "2025-01-20",
-             "press_matched": None, "adj_eps": None},          # 구멍 메움
+             "press_matched": None, "adj_eps": None,
+             "구멍메움": True},                                # 구멍 메움
+            {"filing_date": "2025-03-31", "announced_date": "2025-04-20",
+             "press_matched": None, "adj_eps": None,
+             "승격": True},                                    # 승격된 8-K
+            {"filing_date": "2025-06-30", "announced_date": None,
+             "press_matched": None, "adj_eps": None},          # 표시 없음
         ],
         # 조정 EPS 를 **아예 안 내는** 회사
         "BBB": [
@@ -589,13 +598,16 @@ def test_빈칸사유를_갈래별로_센다():
         ],
     }}
     셈 = sv._빈칸사유_세기(ds)
-    assert 셈["전체"] == 6, 셈
+    assert 셈["전체"] == 8, 셈
     assert 셈["있음"] == 1, 셈
     assert 셈["회사미발표"] == 1, 셈
     assert 셈["짝없음_냄"] == 1, 셈
     assert 셈["짝없음_안냄"] == 1, 셈
     assert 셈["그시절없음"] == 1, 셈
+    # 183차-AQ — 뭉쳐 세던 한 칸을 셋으로 가릅니다
     assert 셈["구멍메움"] == 1, 셈
+    assert 셈["승격"] == 1, 셈
+    assert 셈["표시없음"] == 1, 셈
 
 
 def test_일감이라_부르던_칸을_고칠_수_있는_것만_남긴다():

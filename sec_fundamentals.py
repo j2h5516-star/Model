@@ -5200,6 +5200,13 @@ def merge_quarters(
             continue   # 같은 분기의 두 번째 발표 → 이중 계상 방지
         promoted = dict(press)
         promoted["announced_date"] = press.get("filing_date", "")
+        # 183차-AQ — 이 행이 **어디서 왔는지** 남깁니다.
+        #
+        # 없어도 값은 같지만, 화면이 "구멍메움"이라고 적어 온 칸에 이
+        # 승격 행들이 섞여 들어가 있었습니다. 구멍메움은 "짝 없는 8-K 로
+        # 빠진 분기를 새로 끼운 것"이고, 승격은 "뼈대에 없던 8-K 를 그냥
+        # 행으로 올린 것"이라 뜻이 다릅니다.
+        promoted["승격"] = True
         merged.append(promoted)
         promoted_dates.append(press_date)
         used_press.add(index)
