@@ -158,12 +158,26 @@ def verdict_on_flagged(quarters: dict, vendor: dict,
             continue
         ticker = cell["종목"]
         그쪽 = 티커표.get(ticker)
+        # 183차-AG — 우리 행을 **발표일**로 찾습니다. 예전에는 분기 이름
+        # (`period_label`)으로 찾았는데, 데이터규격 1장이 "이름은 화면
+        # 표시용, 계산에 쓰지 않는다"고 못박아 둔 그 이름입니다. 게다가
+        # 183차-Y 부터 정제가 어긋난 이름 203개를 날짜형으로 **바꿉니다** —
+        # 튄 칸 목록이 런을 넘겨 저장되는 순간 짝을 놓칩니다.
+        #
+        # ⚠️ 오늘은 하나도 안 깨집니다(전수 실측: GAAP 튄 칸 377개 중
+        #    이름으로 못 찾은 것 0개 · 발표일로 못 찾은 것 0개). 튄 칸
+        #    목록이 같은 런 안에서 같은 정제물로 만들어지기 때문입니다.
+        #    **예방으로** 바꿉니다 — 값은 한 칸도 안 바뀝니다.
+        # ⚠️ 발표일이 **없으면 짝을 짓지 않습니다.** `None == None` 로
+        #    두면 발표일 없는 행 아무거나 값만 같으면 맞아 버립니다.
+        발표일 = cell.get("발표일")
         우리행 = None
-        for row in (quarters or {}).get(ticker) or []:
-            if row.get("period_label") == cell.get("라벨") and \
-                    row.get("gaap_eps") == cell.get("값"):
-                우리행 = row
-                break
+        if 발표일:
+            for row in (quarters or {}).get(ticker) or []:
+                if row.get("announced_date") == 발표일 and \
+                        row.get("gaap_eps") == cell.get("값"):
+                    우리행 = row
+                    break
         if 우리행 is None or not 그쪽:
             결과["야후에_없음"].append(cell)
             continue
