@@ -1,0 +1,558 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — MOS 2021-02-17
+# 출처: https://www.sec.gov/Archives/edgar/data/1285785/000124378621000007/mos-20210217.htm
+
+UNITED STATES
+
+SECURITIES AND EXCHANGE COMMISSION
+
+Washington, D.C. 20549
+
+FORM 8-K
+
+CURRENT REPORT
+
+Pursuant to Section 13 or 15(d) of the
+
+Securities Exchange Act of 1934
+
+Date of Report (Date of earliest event reported): February 17, 2021
+
+THE MOSAIC COMPANY
+
+(Exact name of registrant as specified in its charter)
+
+  Delaware                          001-32327         20-1026454
+  (State or other jurisdiction      (Commission       (IRS Employer
+
+
+  of incorporation)                 File Number)      Identification No.)
+
+  101 East Kennedy Blvd.                                     33602
+  Suite 2500
+  Tampa,                                        Florida
+  (Address of principal executive offices)                   (Zip Code)
+
+Registrant’s telephone number, including area code: ( 800 ) 918-8270
+
+Not applicable
+
+(Former Name or Former Address, if Changed Since Last Report)
+
+Check the appropriate box below if the Form 8-K filing is intended to simultaneously satisfy the filing obligation of the registrant under any of the following provisions (see General Instruction A.2. below):
+
+  ☐                                                                                                                                                                                                                                                                 Written communications pursuant to Rule 425 under the Securities Act (17 CFR 230.425)
+  ☐                                                                                                                                                                                                                                                                 Soliciting material pursuant to Rule 14a-12 under the Exchange Act (17 CFR 240.14a-12)
+  ☐                                                                                                                                                                                                                                                                 Pre-commencement communications pursuant to Rule 14d-2(b) under the Exchange Act (17 CFR 240.14d-2(b))
+  ☐                                                                                                                                                                                                                                                                 Pre-commencement communications pursuant to Rule 13e-4(c) under the Exchange Act (17 CFR 240.13e-4(c))
+  Securities registered pursuant to Section 12(b) of the Act
+  Title of each class                                                                                                                                                                                                                                                                                                                                                           Trading Symbol(s)      Name of each exchange on which registered
+  Common Stock, par value $0.01 per share                                                                                                                                                                                                                                                                                                                                       MOS                    New York Stock Exchange
+  Indicate by check mark whether the registrant is an emerging growth company as defined in Rule 405 of the Securities Act of 1933 or Rule 12b-2 of the Securities Exchange Act of 1934.
+  ☐                                                                                                                                                                                                                                                                 Emerging growth company
+  If an emerging growth company, indicate by check mark if the registrant has elected not to use the extended transition period for complying with any new or revised financial accounting standards provided pursuant to Section 13(a) of the Exchange Act. ¨
+
+  Item 2.02.      Results of Operations and Financial Condition.
+
+The following information is being “furnished” in accordance with General Instruction B.2. of Form 8-K and shall not be deemed “filed” for purposes of Section 18 of the Securities Exchange Act of 1934, as amended (the “Exchange Act”), or otherwise subject to the liabilities of that section, nor shall it be deemed to be incorporated by reference in any filing under the Securities Act of 1933, as amended (the “Securities Act”), or the Exchange Act, except as expressly set forth by specific reference in such filing:
+
+Furnished herewith as Exhibit 99.1 and incorporated by reference herein is the text of The Mosaic Company’s (“Mosaic,” and Mosaic and its subsidiaries, individually or in any combination, “we,” “us” or “our”) announcement regarding its earnings and results of operations for the quarter and full year ended December 31, 2020, as presented in a press release issued on February 18, 2021.
+
+Furnished herewith as Exhibit 99.2 and incorporated by reference herein is certain performance data for the period ended December 31, 2020 to be published on Mosaic’s website.
+
+  Item 9.01.      Financial Statements and Exhibits.
+
+(d) Exhibits.
+
+Reference is made to the Exhibit Index hereto with respect to the exhibits furnished herewith. The following exhibits are being “furnished” in accordance with General Instruction B.2. of Form 8-K and shall not be deemed “filed” for purposes of Section 18 of the Exchange Act, or otherwise subject to the liabilities of that section, nor shall they be deemed to be incorporated by reference in any filing under the Securities Act or the Exchange Act, except as expressly set forth by specific reference in such filing.
+
+  Exhibit No.      Description
+ ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+         99.1      Press release, dated February 17, 2021, of The Mosaic Company regarding its earnings and results of operations for the quarter and full year ended December 31, 2020
+         99.2      Performance data for the period ended December 31, 2020
+
+SIGNATURES
+
+Pursuant to the requirements of the Securities Exchange Act of 1934, the registrant has duly caused this report to be signed on its behalf by the undersigned hereunto duly authorized.
+
+                               THE MOSAIC COMPANY
+  Date: February 17, 2021      By:                     /s/ Mark J. Isaacson
+                               Name:                   Mark J. Isaacson
+                               Title:                  Senior Vice President, General Counsel
+                                                       and Corporate Secretary
+Exhibit 99.1
+
+  The Mosaic Company
+  101 E. Kennedy Blvd., Suite 2500
+  Tampa, FL 33602
+  www.mosaicco.com
+
+  For Immediate Release
+  Media                            Investors
+  Ben Pratt                        Laura Gagnon
+  The Mosaic Company               The Mosaic Company
+  813-775-4206                     813-775-4214
+  benjamin.pratt@mosaicco.com      investor@mosaicco.com
+
+THE MOSAIC COMPANY REPORTS FOURTH QUARTER AND FULL YEAR 2020 RESULTS
+
+TAMPA, FL, February 17, 2021 - The Mosaic Company (NYSE: MOS) reported net income of $666 million and earnings per share (EPS) of $1.75 for full year 2020. Adjusted EBITDA(1) for the year was $1.56 billion and adjusted EPS(1) was $0.85.
+
+The company’s fourth quarter net income was $828 million and EPS was $2.17. Adjusted EBITDA(1) was $508 million in the quarter and adjusted EPS(1) was $0.57. Net income for the year and quarter includes $580 million in discrete tax benefits recognized in the quarter.
+
+Improving fertilizer markets during the second half of 2020 reflected the tightening supply and demand balance in both potash and phosphates. Grower economics improved materially across most geographies, while diminished inventories and limited supply in the U.S. market in particular led to nutrient price improvements during the third and fourth quarters of 2020.
+
+Mosaic realized significant improvements in its cost structure by executing its transformation plans. In total, the company delivered over $300 million in transformation savings in 2020, including $100 million from shifting potash production from the Colonsay mine to the company’s new Esterhazy K3 facility. Potash continues to benefit from the transition from Esterhazy K1 and K2 to K3 as brine management costs decline. In phosphates, the integrated operating center is now functional and is expected to drive additional savings as well as improved safety. The Mosaic Fertilizantes business in Brazil exceeded its $50 million 2020 transformation target by over 100 percent.
+
+“Our actions to optimize our portfolio of assets and invest in efficiencies, along with our reduced inventories and the expected strong global fertilizer demand in 2021, position the company well for 2021”, said President and Chief Executive Officer Joc O’Rourke. "However, in the U.S. market, those strong trends depend in part on the outcome of a pending trade case whose outcome is uncertain."
+
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+
+In 2020, Mosaic made important progress:
+
+• Delivered excellent safety results and continued activities to protect our employees and operations from the effects of the pandemic.
+
+• Realized $115 million in transformation benefits in Mosaic Fertilizantes.
+
+• Commissioned the sixth four-rotor miner and produced 1.3 million tonnes of MOP from Esterhazy K3 during the year, and lowered MOP cash costs per tonne, excluding brine management costs, to $56 in 2020, with Belle Plaine cash costs per tonne reaching $48, the lowest in a decade.
+
+• Lowered phosphates cash conversion costs to $62 per tonne and U.S. cash mining costs to $37 per tonne in 2020.
+
+• Lowered phosphates total fixed costs by $50 million.
+
+• Reduced 2020 brine management cash costs to $73 million.
+
+• Realized over 10 percent growth in sales volumes in both Potash and Mosaic Fertilizantes, and delivered record sales of MicroEssentials.
+
+2020 Full-year Summary
+
+  Potash*                                            2020      2019      2018
+ ───────────────────────────────────────────────────────────────────────────────
+  Sales Volumes million tonnes                        9.4       7.8       8.8
+  MOP Selling Price(2)                               $181      $237      $214
+  Gross Margin (GAAP) per tonne                       $50       $79       $68
+  Adjusted Gross Margin (non-GAAP) per tonne(1)       $58       $83       $69
+
+*Tonnes = finished product tonnes
+
+(2)Average MOP selling price (fob mine)
+
+The Potash segment reported net sales of $2.0 billion in 2020, down slightly from $2.1 billion in 2019, as higher volumes were offset by lower prices. Cash costs of production, excluding brine management costs, fell to $56 per tonne from $65. Brine inflow cash costs were down 28% from 2019 to $73 million. Gross margin per tonne was $50 per tonne, down from $79 per tonne last year, and adjusted gross margin per tonne(1) declined year over year from $83 per tonne to $58 per tonne, as cost improvements only partially offset average realized price declines.
+
+Mosaic remained on track in its development of the K3 project at Esterhazy, which is expected to reach full operational capacity by mid-2022, with brine management costs expected to drop to an immaterial level by the end of 2021.
+
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+
+  Mosaic Fertilizantes*              2020      2019      2018
+ ───────────────────────────────────────────────────────────────
+  Sales Volumes million tonnes       10.6       9.2       9.1
+  Brazil MAP Selling Price(3)        $333      $402      $491
+  Gross Margin (GAAP) per tonne       $40       $31       $42
+
+*Tonnes = finished product tonnes
+
+(3) Average MAP selling price (Brazil production, delivered price to third party customers)
+
+Favorable crop pricing and foreign currency rates benefited Brazilian grower economics, which drove demand for inputs. The second half of 2020 was marked by strong nutrient pricing, volumes and cost controls, partially offsetting the weaker pricing environment at the start of the year.
+
+Volumes grew 14% over 2019, but this was offset by full year realized prices being down 17%, reflecting weakness in the first and second quarters. Prices recovered during the second half of the year. Net sales for Mosaic Fertilizantes declined from $3.8 billion in 2019 to $3.5 billion in 2020. Gross margin per tonne in the segment rose from $31 per tonne in 2019 to $40 per tonne in 2020, as cost improvements during year and the absence of the costs associated with tailings dam compliance that impacted 2019 results more than offset lower prices.
+
+  Phosphates*                                        2020       2019      2018
+ ────────────────────────────────────────────────────────────────────────────────
+  Sales Volumes million tonnes                        8.5        8.2       8.4
+  DAP Selling Price(4)                               $310       $325      $402
+  Gross Margin (GAAP) per tonne                       $15      $(10)       $69
+  Adjusted Gross Margin (non-GAAP) per tonne(1)       $16       $(5)       $72
+
+*Tonnes = finished product tonnes
+
+(4)Average DAP Selling Price (fob plant)
+
+A shift in global trade flows as a result of the company's countervailing duty (CVD) petition marked the second half of 2020. In North America, the announced 2021 spring import shipments are very similar to 2020 spring imports in terms of overall volume, indicating the expected shift in phosphate trade flows is well under way. In addition, outside the United States, phosphate inventories were depleted at the same time that global crop prices climbed, driving demand for inputs in major agriculture regions. For the full year, average realized prices were down, predominantly due to first half weakness. Prices ended the year up substantially from the prior year due to factors noted above.
+
+Net sales in Phosphates fell from $3.2 billion in 2019 to $3.1 billion in 2020. Sales volumes rose from 8.2 million tonnes in 2019 to 8.5 million tonnes, but this increase was partially offset by the decline in average realized selling price. Despite
+
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+
+lower realized prices, gross margin per tonne was $15 in 2020, compared to a loss of $10 per tonne in 2019, and adjusted gross margin per tonne increased to $16 in 2020 from a loss of $5 in 2019, reflecting improved mining and conversion cost performance as well as lower input costs.
+
+MicroEssentials sales volumes in 2020 hit a record 3.1 million tonnes, up from 2.7 million tonnes in 2019. The gross margin premium for MicroEssentials products over MAP remained consistent with prior years at approximately $40 per tonne.
+
+Other
+
+Full-year selling, general and administrative (SG&A) expenses were $372 million in 2020 versus $354 million in 2019, driven by increased investments in transformation initiatives and higher incentive compensation expense.
+
+Mosaic recognized a loss on equity investments of $94 million, including a $97 million loss for the company’s share of the MWSPC joint venture in Saudi Arabia, as a result of less than full operating rates and challenging global phosphate market conditions in the first half of the year.
+
+The reported effective tax rate for 2020 was negative 320 percent, and 17 percent excluding discrete items. Discrete items included the reversal of a tax valuation reserve established with the acquisition of Vale Fertilizantes. The effective rate, excluding discrete items, was driven by the mix of earnings across jurisdictions and benefits related to non-U.S. tax incentives. Cash taxes paid in 2020 were $6 million.
+
+In 2020, net cash provided by operating activities was $1.6 billion and capital expenditures were $1.2 billion
+
+Fourth Quarter 2020 Results
+
+Fertilizer markets strengthened, and global prices continued to move higher. Increasing crop prices globally are incenting growers to maximize yield through nutrient application, and this strong demand is leading to significant declines in both producer and channel inventories in both phosphate and potash. In North America, strong demand, good application seasons, and lower phosphate imports have diminished channel inventories and driven prices higher.
+
+Mosaic’s net sales in the fourth quarter of 2020 were $2.5 billion, compared to $2.1 billion last year, driven by volume growth in all segments and higher prices in phosphates compared to last year’s fourth quarter.
+
+  Potash Results*                                    4Q 2020      3Q 2020      4Q 2019
+ ────────────────────────────────────────────────────────────────────────────────────────
+  Sales Volumes million tonnes                           2.7          2.3          1.5
+  MOP Selling Price(2)                                  $176         $170         $224
+  Gross Margin (GAAP) per tonne                          $45          $48          $61
+  Adjusted Gross Margin (non-GAAP) per tonne(1)          $51          $56          $76
+
+*Tonnes = finished product tonnes
+
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+
+(2)Average MOP selling price (fob mine)
+
+Net sales in the Potash segment totaled $559 million for the fourth quarter, up from $395 million last year, reflecting an increase in sales volumes, partially offset by lower prices. Gross margin per tonne was $45 per tonne compared to $61 per tonne a year ago due to lower average realized prices and a higher percentage of sales to Canpotex, which have a lower margin.
+
+Potash production for the fourth quarter was 2.1 million tonnes, or 85 percent of operational capacity, up from 63 percent in the prior year quarter.
+
+MOP cash cost of production per tonne in the fourth quarter rose from the third quarter, primarily reflecting a turnaround at Esterhazy K2 and higher incentive plan compensation costs.
+
+  Mosaic Fertilizantes Results*                             4Q 2020      3Q 2020      4Q 2019
+ ───────────────────────────────────────────────────────────────────────────────────────────────
+  Sales Volumes million tonnes                                  2.3          3.6          2.2
+  Brazil MAP Selling Price(3)                                  $384         $366         $365
+  Average finished product selling price (destination)         $352         $318         $394
+  Gross Margin (GAAP) per tonne                                 $32          $49          $32
+
+*Tonnes = finished product tonnes
+
+(3) Average MAP selling price (Brazil production, delivered price to third party customers)
+
+Net sales in the Mosaic Fertilizantes segment were $823 million for the fourth quarter, down from $864 million in the prior year quarter, as higher volumes were offset by lower average prices. Gross margin was $76 million, or $32 per tonne, compared to $70 million, or $32 per tonne for the same period a year ago, reflecting cost improvements offset by lower average prices and higher turnaround costs in the fourth quarter of 2020.
+
+  Phosphates Results*                                4Q 2020      3Q 2020      4Q 2019
+ ────────────────────────────────────────────────────────────────────────────────────────
+  Sales Volumes million tonnes                           2.3          2.1          2.0
+  DAP Selling Price(4)                                  $363         $307         $266
+  Gross Margin (GAAP) per tonne                          $73          $11        $(52)
+  Adjusted Gross Margin (non-GAAP) per tonne(1)          $73          $11        $(45)
+
+*Tonnes = finished product tonnes
+
+(4)Average DAP Selling Price (fob plant)
+
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+
+Net sales in the Phosphates segment were $990 million for the fourth quarter, up from $698 million in the prior year quarter, driven by higher prices and volumes. Gross margin per tonne in the fourth quarter was $73 per tonne. The year-over-year improvement was primarily driven by higher realized prices in the United States and globally, the elimination of the pricing discount previously seen in the United States, and lower raw material costs.
+
+Mosaic’s North American finished phosphate production was 2.1 million tonnes, or 86 percent of operational capacity, compared to 1.9 million tonnes, or 79 percent of operational capacity, during the fourth quarter of 2019.
+
+Other
+
+Selling, general and administrative (SG&A) expenses were $111 million for the fourth quarter, up from $105 million last year, as a result of increased investment in transformation initiatives and higher incentive compensation expense. Other Operating Expense was $6 million.
+
+The reported effective tax rate during the fourth quarter of 2020 was negative 134 percent and 28 percent excluding discrete items. The provision for income taxes in the fourth quarter included a cost of $39 million related to the decrease in the full-year effective tax rate to 17% excluding discrete items. In 2021, cash taxes are expected to be approximately $150 million, and the effective tax rate, excluding discrete items, in the low-20 percent range, both dependent upon earnings levels and geographic mix.
+
+Cash flow provided by operating activities in the fourth quarter of 2020 was $238 million compared to $278 million in the prior year period. The prior year period included approximately $120 million cash flow from a decrease in working capital, primarily from the liquidation of inventory. The current year period began and ended with minimal inventory levels, and included an increase in working capital primarily from an increase in receivables as a result of strong volumes and higher prices. Capital expenditures totaled $385 million in the quarter.
+
+2021 Market Outlook
+
+Improving market dynamics in the second half of 2020 are expected to continue through 2021. Global demand for grains and oilseeds remains high and farm economics remain robust. As a result, we expect strong global fertilizer demand in 2021. This strong demand has driven rapid price increases in the United States and globally, which are normally realized in our earnings after an average lag of 45 to 60 days.
+
+Phosphate demand is strong globally, and producer and channel inventories remain well below normal ahead of the North American application season. While Chinese phosphate exports continue to be a key consideration, declines in 2020 are expected to hold into 2021, as strong domestic demand and recent industry restructuring limit supplies available for export. In phosphates, the company expects to realize a $40 to $50 per tonne improvement in average realized prices in the first quarter over the fourth quarter, and expects global supply and demand balance to remain tight through the year.
+
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+
+In potash, favorable grower economics have led to strong demand in globally, which is expected to continue through 2021. The company expects to realize a $20 to $25 per tonne improvement in average realized prices in the first quarter over the fourth quarter of 2020, and benefit throughout 2021 from improving pricing globally.
+
+2021 Expectations and Key Assumptions
+
+The Company provides the following modeling assumptions for the full year 2021:
+
+  Estimated reconciling items EBITDA to EPS      Full Year 2021
+ ──────────────────────────────────────────────────────────────────────
+  Depreciation, Depletion & Amortization         $910 - $920 million
+  Net Interest Expense                           $180 - $190 million
+  Non-notable adjustments                        $80 - $90 million
+  Effective tax rate*                            Mid 20’s %
+
+*The Company expects cash taxes for the full year 2021 to be approximately $150 million, dependent upon earnings levels and geographic mix.
+
+  Capital Expenditures Expectations      $ in Billions
+  Sustaining Capital                     $0.75-$0.80
+  Growth Capital                         $0.30-$0.35
+  Total Capital                          ~$1.10
+
+Sensitivities Table Using 2020 Cost Structure
+
+The Company provided the following sensitivities to price and foreign exchange rates to help investors anticipate the potential impact of movements in these factors.
+
+These sensitivities are based on 2020 adjusted EBITDA of $1.56 billion. The company's price exposure increase is driven by higher sales volumes in 2020 compared to 2019. The company's gross BRL exposure decline is driven by lower relative costs from transformation and cost management initiatives. The company hedges approximately 50 percent of its Brazilian real exposures over time.
+
+  Sensitivity                                   Full year adj. EBITDA impact(1)             2020 Actual
+ ─────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Average MOP Price / tonne (fob mine)(3)       $10/mt price change = $65 million (2)              $181
+  Average DAP Price / tonne (fob plant)(3)      $10/mt price change = $105 million                 $310
+  Average BRL / USD                             0.10 change, unhedged = $13 million(4)             5.15
+
+(1) See “Non-GAAP Financial Measures” for additional information and reconciliation.
+
+(2) Includes impact of Canadian Resource Tax
+
+(3) Approximately 20% of DAP price sensitivity impact is expected to be in the Mosaic Fertilizantes segment.; approximately 5% of the MOP price sensitivity impact is expected to be in the Mosaic Fertilizantes segment.
+
+(4) The company hedged about 50 percent of the annual sensitivity. Over longer periods of time, inflation is expected to offset a portion of currency benefits.
+
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+
+About The Mosaic Company
+
+The Mosaic Company is one of the world's leading producers and marketers of concentrated phosphate and potash crop nutrients. Mosaic is a single-source provider of phosphate and potash fertilizers and feed ingredients for the global agriculture industry. More information on the company is available at www.mosaicco.com.
+
+Mosaic will conduct a conference call on Thursday, February 18, 2021, at 11:00 a.m. Eastern Time to discuss fourth quarter 2020 earnings results. A simultaneous webcast of the conference call may be accessed through Mosaic’s website at www.mosaicco.com/investors. This webcast will be available up to one year from the time of the earnings call.
+
+This release contains forward-looking statements within the meaning of the Private Securities Litigation Reform Act of 1995. Such statements include, but are not limited to, statements about proposed or pending future transactions or strategic plans and other statements about future financial and operating results. Such statements are based upon the current beliefs and expectations of The Mosaic Company’s management and are subject to significant risks and uncertainties. These risks and uncertainties include, but are not limited to: the economic impact and operating impacts of the Covid-19 pandemic, the potential drop in oil demand / production and its impact on the availability and price of sulfur, political and economic instability in Brazil or changes in government policy in Brazil, such as higher costs associated with the new mining rules or the implementation of new freight tables; the predictability and volatility of, and customer expectations about, agriculture, fertilizer, raw material, energy and transportation markets that are subject to competitive and other pressures and economic and credit market conditions; the level of inventories in the distribution channels for crop nutrients; the effect of future product innovations or development of new technologies on demand for our products; changes in foreign currency and exchange rates; international trade risks and other risks associated with Mosaic’s international operations and those of joint ventures in which Mosaic participates, including the performance of the Wa’ad Al Shamal Phosphate Company (also known as MWSPC), the timely development and commencement of operations of production facilities in the Kingdom of Saudi Arabia, and the future success of current plans for MWSPC and any future changes in those plans; the risk that protests against natural resource companies in Peru extend to or impact the Miski Mayo mine, which is operated by an entity in which we are the majority owner; difficulties with realization of the benefits of our long term natural gas based pricing ammonia supply agreement with CF Industries, Inc., including the risk that the cost savings initially anticipated from the agreement may not be fully realized over its term or that the price of natural gas or ammonia during the term are at levels at which the pricing is disadvantageous to Mosaic; customer defaults; the effects of Mosaic’s decisions to exit business operations or locations; changes in government policy; changes in environmental and other governmental regulation, including expansion of the types and extent of water resources regulated under federal law, carbon taxes or other greenhouse gas regulation, implementation of numeric water quality standards for the discharge of nutrients into Florida waterways or efforts to reduce the flow of excess nutrients into the Mississippi River basin, the Gulf of Mexico or elsewhere; further developments in judicial or administrative proceedings, or complaints that Mosaic’s operations are adversely impacting nearby farms, business operations or properties; difficulties or delays in receiving, increased costs of or challenges to necessary governmental permits or approvals or increased financial assurance requirements; resolution of global tax audit activity; the effectiveness of Mosaic’s processes for managing its strategic priorities; adverse weather conditions affecting operations in Central Florida, the Mississippi River basin, the Gulf Coast of the United States, Canada or Brazil, and including potential hurricanes, excess heat, cold, snow, rainfall or drought; actual costs of various items differing from management’s current estimates, including, among others, asset retirement, environmental remediation, reclamation or other environmental regulation, Canadian resources taxes and royalties, or the costs of the MWSPC; reduction of Mosaic’s available cash and liquidity, and increased leverage, due to its use of cash and/or available debt capacity to fund financial assurance requirements and strategic investments; brine inflows at Mosaic’s Esterhazy, Saskatchewan, potash mine or other potash shaft mines; other accidents and disruptions involving Mosaic’s operations, including potential mine fires, floods, explosions, seismic events, sinkholes or releases of hazardous or volatile chemicals; and risks associated with cyber security, including reputational loss; as well as other risks and uncertainties reported from time to time in The Mosaic Company’s reports filed with the Securities and Exchange Commission. Actual results may differ from those set forth in the forward-looking statements. The Company does not undertake any duty to publicly update any forward-looking statements.
+
+###
+
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+
+Non-GAAP Financial Measures
+
+This press release includes the presentation and discussion of non-GAAP diluted net earnings per share guidance, or adjusted EPS, non-GAAP gross margin per tonne, or adjusted gross margin per tonne, and non-GAAP adjusted EBITDA, referred to as non-GAAP financial measures. Generally, a non-GAAP financial measure is a supplemental numerical measure of a company's performance, financial position or cash flows that either excludes or includes amounts that are not normally excluded or included in the most directly comparable measure calculated and presented in accordance with U.S. generally accepted accounting principles, or GAAP. Non-GAAP financial measures should not be considered as substitutes for, or superior to, measures of financial performance prepared in accordance with GAAP. In addition, because non-GAAP measures are not determined in accordance with GAAP, they are thus susceptible to varying interpretations and calculations and may not be comparable to other similarly titled measures of other companies. Adjusted metrics, including adjusted EPS, adjusted gross margin, and adjusted EBITDA are calculated by excluding the impact of notable items from the GAAP measure. Notable items impact on gross margin and EBITDA is pretax. Notable items impact on diluted net earnings per share is calculated as the notable item amount plus income tax effect, based on expected annual effective tax rate, divided by diluted weighted average shares. Management believes that these adjusted measures provide securities analysts, investors, management and others with useful supplemental information regarding our performance by excluding certain items that may not be indicative of, or are unrelated to, our core operating results. Management utilizes these adjusted measures in analyzing and assessing Mosaic’s overall performance and financial trends, for financial and operating decision-making, and to forecast and plan for future periods. These adjusted measures also assist our management in comparing our and our competitors' operating results. We are not providing forward looking guidance for U.S. GAAP reported diluted net earnings per share, gross margin per tonne, or a quantitative reconciliation of forward-looking adjusted EPS, adjusted gross margin and adjusted EBITDA because we are unable to predict with reasonable certainty our notable items without unreasonable effort. Historically, our notable items have included, but are not limited to, foreign currency transaction gain or loss, unrealized gain or loss on derivatives, acquisition-related fees, discrete tax items, contingencies and certain other gains or losses. These items are uncertain, depend on various factors, and could have a material impact on U.S. GAAP reported results for the guidance period. Reconciliations for Non-GAAP financial measures contained in this press release are found below. Reconciliations for current and historical periods beginning with the quarter ended March 31, 2019 for consolidated adjusted EPS and adjusted EBITDA, as well as segment adjusted EBITDA and adjusted gross margin per tonne are provided in the Selected Calendar Quarter Financial Information performance data for the related periods. This information is being furnished under Exhibit 99.2 of the Form 8-K and available on our website at www.mosaicco.com in the “Financial Information - Quarterly Earnings” section under the “Investors” tab.
+
+(1)See “Non-GAAP Financial Measures” for additional information and reconciliation.
+
+For the three months ended December 31, 2020, the Company reported the following notable items which, combined, positively impacted earnings per share by $1.60:
+
+                                                                                                                             Amount                         Tax effect                 EPS impact
+  Description                                       Segment                   Line item                                      (in millions)               (in millions)                (per share)
+ ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Foreign currency transaction gain (loss)          Consolidated              Foreign currency transaction gain (loss)       $                  110                  $      (26)                $      0.22
+  Unrealized gain (loss) on derivatives             Corporate and Other       Cost of goods sold                             39                                    (9)                       0.08
+  Pre-acquisition contingencies                     Mosaic Fertilizantes      Other operating income (expense)               8                                     (2)                       0.02
+  Accelerated depreciation                          Potash                    Cost of goods sold                             (16)                                    4                     (0.03)
+  Closed and indefinitely idled facility costs      Phosphates                Other operating income (expense)               (10)                                    2                     (0.03)
+  Closed and indefinitely idled facility costs      Potash                    Other operating income (expense)               (7)                                     2                     (0.01)
+  Discrete tax items                                Consolidated              (Provision for) benefit from income taxes      —                                     580                       1.52
+  ARO adjustment                                    Phosphates                Other operating income (expense)               (5)                                     1                     (0.01)
+  Tax Rate Adjustment                               Consolidated              (Provision for) benefit from income taxes      —                                    (59)                     (0.15)
+  ARO Adjustment                                    Potash                    Other operating income (expense)               (3)                                     1                     (0.01)
+  Total Notable Items                                                                                                        $                  116                  $       494                $      1.60
+
+For the three months ended December 31, 2019, the Company reported the following notable items which, combined, negatively impacted earnings per share by $2.14:
+
+                                                                                                                                    Amount         Tax effect      EPS impact
+  Description                                   Segment                   Line item                                          (in millions)      (in millions)      (per share)
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Foreign currency transaction gain (loss)      Consolidated              Foreign currency transaction gain (loss)                       $               31 $      (18) $             0.03
+  Unrealized gain (loss) on derivatives         Corporate and Other       Cost of goods sold                                            15                (9)      0.01
+  Louisiana gypstack costs                      Phosphates                Cost of goods sold                                           (2)                  1      —
+  Plant City closure costs                      Phosphates                Impairment, restructuring and other (expense)                 13                  —      0.03
+  ARO adjustment                                Phosphates                Other operating income (expense)                               1                (1)      —
+  Discrete tax items                            Consolidated              (Provision for) benefit from income taxes                      —               (41)      (0.11)
+  Accelerated depreciation                      Potash                    Cost of goods sold                                          (22)                 17      (0.01)
+  ARO adjustment                                Potash                    Other operating income (expense)                             (3)                  2      —
+  Asset write-off                               Mosaic Fertilizantes      Other operating income (expense)                             (4)                  3      —
+  Goodwill impairment                           Phosphates                Impairment, restructuring and other (expense)              (589)                 80      (1.34)
+  Inventory lower of cost or market             Phosphates                Cost of goods sold                                          (14)                  9      (0.01)
+  Legal contingencies                           Mosaic Fertilizantes      Other operating income (expense)                            (31)                 19      (0.03)
+  Colonsay write-off                            Potash                    Impairment, restructuring and other (expense)              (530)                263      (0.71)
+  Total Notable Items                                                                                                                    $          (1,135) $      325 $            (2.14)
+
+Condensed Consolidated Statements of Earnings
+
+(in millions, except per share amounts)
+
+  The Mosaic Company      (unaudited)
+
+                                                                       Three months ended December 31,                                                Years ended
+
+
+                                                                                                                                                     December 31,
+                                                                                                  2020                      2019                             2020                      2019
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Net sales                                                                                          $      2,457.4            $        2,076.3                 $      8,681.7            $        8,906.3
+  Cost of goods sold                                                                                        2,046.0                     1,995.6                        7,616.8                     8,009.0
+  Gross margin                                                                                   411.4                      80.7                                       1,064.9        897.3
+  Selling, general and administrative expenses                                                   110.9                     104.3                            371.5                     354.1
+  Impairment, restructuring and other expenses                                                       —                                  1,108.3                 —                                  1,462.1
+  Other operating expenses                                                                         5.7                      62.7                            280.5                     176.0
+  Operating earnings (loss)                                                                      294.8                                (1,194.6)             412.9                                (1,094.9)
+  Interest expense, net                                                                         (47.2)                    (46.7)                          (180.6)                   (182.9)
+  Foreign currency transaction (loss) gain                                                       110.0                      30.6                           (64.3)                      20.2
+  Other income (expense)                                                                           1.3                     (3.4)                             12.9                       1.5
+  Earnings (loss) from consolidated companies before income taxes                                358.9                                (1,214.1)             180.9                                (1,256.1)
+  (Benefit from) provision for income taxes                                                    (480.9)                   (288.8)                          (578.5)                   (224.7)
+  Earnings (loss) from consolidated companies                                                    839.8                   (925.3)                            759.4                                (1,031.4)
+  Equity in net (loss) of nonconsolidated companies                                             (11.5)                    (25.1)                           (93.8)                    (59.4)
+  Net earnings (loss) including noncontrolling interests                                         828.3                   (950.4)                            665.6                                (1,090.8)
+  Less: Net (loss) attributable to noncontrolling interests                                        0.4                    (29.4)                            (0.5)                    (23.4)
+  Net earnings (loss) attributable to Mosaic                                                         $        827.9            $        (921.0)                 $        666.1            $      (1,067.4)
+  Diluted net earnings (loss) per share attributable to Mosaic                                       $         2.17            $         (2.43)                 $         1.75            $         (2.78)
+  Diluted weighted average number of shares outstanding                                          382.3                     378.8                            381.3                     383.8
+
+Condensed Consolidated Balance Sheets
+
+(in millions, except per share amounts)
+
+  The Mosaic Company      (unaudited)
+
+                                                                                                                                                                                                                                                  December 31, 2020                     December 31, 2019
+ ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Assets
+  Current assets:
+  Cash and cash equivalents                                                                                                                                                                                                                       $                          574.0      $                          519.1
+  Receivables, net                                                                                                                                                                                                                                881.1                                 803.9
+  Inventories                                                                                                                                                                                                                                                              1,739.2                               2,076.4
+  Other current assets                                                                                                                                                                                                                            326.9                                 318.8
+  Total current assets                                                                                                                                                                                                                                                     3,521.2                               3,718.2
+  Property, plant and equipment, net                                                                                                                                                                                                                                      11,854.3                              11,690.0
+  Investments in nonconsolidated companies                                                                                                                                                                                                        673.1                                 763.6
+  Goodwill                                                                                                                                                                                                                                                                 1,173.0                               1,156.9
+  Deferred income taxes                                                                                                                                                                                                                                                    1,179.4      515.4
+  Other assets                                                                                                                                                                                                                                                             1,388.8                               1,454.4
+  Total assets                                                                                                                                                                                                                                    $                       19,789.8      $                       19,298.5
+  Liabilities and Equity
+  Current liabilities:
+  Short-term debt                                                                                                                                                                                                                                 $                            0.1      $                           41.6
+  Current maturities of long-term debt                                                                                                                                                                                                            504.2                                 47.2
+  Structured accounts payable arrangements                                                                                                                                                                                                        640.0                                 740.6
+  Accounts payable                                                                                                                                                                                                                                769.1                                 680.4
+  Accrued liabilities                                                                                                                                                                                                                                                      1,233.1                               1,081.9
+  Total current liabilities                                                                                                                                                                                                                                                3,146.5                               2,591.7
+  Long-term debt, less current maturities                                                                                                                                                                                                                                  4,073.8                               4,525.5
+  Deferred income taxes                                                                                                                                                                                                                                                    1,060.8                               1,040.7
+  Other noncurrent liabilities                                                                                                                                                                                                                                             1,753.5                               1,773.0
+  Equity:
+  Preferred stock, $0.01 par value, 15,000,000 shares authorized, none issued and outstanding as of December 31, 2020 and 2019                                                                                                                    —                                     —
+  Common stock, $0.01 par value, 1,000,000,000 shares authorized, 389,974,041 shares issued and 379,091,544 shares outstanding as of December 31, 2020, 389,646,939 shares issued and 378,764,442 shares outstanding as of December 31, 2019      3.8                                   3.8
+  Capital in excess of par value                                                                                                                                                                                                                  872.8                                 858.4
+  Retained earnings                                                                                                                                                                                                                                                       10,511.0                               9,921.5
+  Accumulated other comprehensive loss                                                                                                                                                                                                                                   (1,806.2)                             (1,598.2)
+  Total Mosaic stockholders’ equity                                                                                                                                                                                                                                        9,581.4                               9,185.5
+  Non-controlling interests                                                                                                                                                                                                                       173.8                                 182.1
+  Total equity                                                                                                                                                                                                                                                             9,755.2                               9,367.6
+  Total liabilities and equity                                                                                                                                                                                                                    $                       19,789.8      $                       19,298.5
+
+Condensed Consolidated Statements of Cash Flows
+
+(in millions, except per share amounts)
+
+  The Mosaic Company      (unaudited)
+
+                                                                        Three months ended December 31,                               Years ended
+
+
+                                                                                                                                     December 31,
+                                                                                                   2020         2019                         2020                        2019
+ ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Cash Flows from Operating Activities:
+  Net cash provided by operating activities                                                           $      238.4 $      277.6                 $        1,582.6            $        1,095.4
+  Cash Flows from Investing Activities:
+  Capital expenditures                                                                          (384.8)      (341.1)                                   (1,170.6)                   (1,272.2)
+  Purchases of available-for-sale securities - restricted                                       (119.5)       (73.3)                      (618.7)                     (557.6)
+  Proceeds from sale of available-for-sale securities - restricted                                117.7         65.0                        607.2                       533.2
+  Proceeds from sale of assets                                                                        —          4.0                            —                         4.0
+  Acquisition, net of cash acquired                                                                   —            —                            —                      (55.1)
+  Purchases of held-to-maturity securities                                                        (5.4)        (0.9)                        (6.1)                      (15.4)
+  Proceeds from sale of held-to-maturity securities                                                   —            —                          1.7                         2.3
+  Other                                                                                           (2.8)        (0.5)                        (3.0)                       (0.1)
+  Net cash used in investing activities                                                         (394.8)      (346.8)                                   (1,189.5)                   (1,360.9)
+  Cash Flows from Financing Activities:
+  Payments of short-term debt                                                                   (209.8)      (112.5)                                   (1,542.5)      (554.2)
+  Proceeds from issuance of short-term debt                                                         3.8         69.7                                     1,521.1        591.0
+  Payments of structured accounts payable arrangements                                          (308.2)      (214.6)                                   (1,156.2)      (977.1)
+  Proceeds from structured accounts payable arrangements                                          316.4        259.0                                     1,037.4                     1,124.2
+  Payments of long-term debt                                                                     (16.0)       (15.4)                       (66.9)                      (48.3)
+  Proceeds from issuance of long-term debt                                                            —            —                          4.7                           —
+  Repurchases of stock                                                                                —       (32.8)                            —                     (149.9)
+  Cash dividends paid                                                                            (19.0)       (19.0)                       (75.8)                      (67.2)
+  Other                                                                                           (0.1)        (0.3)                        (5.6)                       (0.7)
+  Net cash used in financing activities                                                         (232.9)       (65.9)                      (283.8)                      (82.2)
+  Effect of exchange rate changes on cash                                                          38.6          8.9                       (47.2)                         9.0
+  Net change in cash, cash equivalents and restricted cash                                      (350.7)      (126.2)                         62.1                     (338.7)
+  Cash, cash equivalents and restricted cash—beginning of year                                    945.1        658.5                        532.3                       871.0
+  Cash, cash equivalents and restricted cash—end of year                                              $      594.4 $      532.3                 $          594.4            $          532.3
+
+                                                                                                                                                                  Years ended December 31,
+                                                                                                                                                                  2020                                     2019
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Reconciliation of cash, cash equivalents and restricted cash reported within the consolidated balance sheets to the consolidated statements of cash flows:
+  Cash and cash equivalents                                                                                                                                       $                             574.0      $         519.1
+  Restricted cash in other current assets                                                                                                                         8.1                                      7.8
+  Restricted cash in other assets                                                                                                                                 12.3                                     5.4
+  Total cash, cash equivalents and restricted cash shown in the statement of cash flows                                                                           $                             594.4      $         532.3
+
+Earnings Per Share Calculation
+
+                                                             Three months ended December 31,                                          Years ended
+
+
+                                                                                                                                      December 31,
+                                                             2020                                             2019                    2020                          2019
+ ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Net earnings (loss) attributed to Mosaic                   $                                     827.9      $          (921.0)      $                  666.1      $          (1,067.4)
+  Basic weighted average number of shares outstanding        379.1                                            378.8                   379.0                         383.8
+  Dilutive impact of share-based awards                      3.2                                              —                       2.3                           —
+  Diluted weighted average number of shares outstanding      382.3                                            378.8                   381.3                         383.8
+  Basic net earnings (loss) per share                        $                                      2.18      $           (2.43)      $                   1.76      $             (2.78)
+  Diluted net earnings (loss) per share                      $                                      2.17      $           (2.43)      $                   1.75      $             (2.78)
+  Notable items impact on earnings per share                 $                                    (1.60)      $             2.14      $                 (0.90)      $               2.94
+  Adjusted earnings per share                                $                                      0.57      $           (0.29)      $                   0.85      $               0.16
+
+Reconciliation of Non-GAAP Financial Measures
+
+  Consolidated Earnings (in millions)                                                     Three months ended December 31,      Years ended December 31,
+                                                                                                                     2020                          2020
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Consolidated net (loss) earnings attributable to Mosaic                                                               $                         828 $        666
+  Less: Consolidated interest expense, net                                                                           (47)                         (180)
+  Plus: Consolidated depreciation, depletion and amortization                                                         208                           846
+  Plus: Accretion expense                                                                                              15                            66
+  Plus: Share-based compensation expense                                                                               12                            17
+  Plus: Consolidated provision for (benefit from) income taxes                                                      (480)                         (578)
+  Less: Equity in net earnings (loss) of nonconsolidated companies, net of dividends                                 (12)                          (94)
+  Plus: Notable items not included above                                                                            (134)                           272
+  Adjusted EBITDA                                                                                                       $                         508 $      1,563
+
+                                             Three months ended
+  Potash Earnings (in millions)                    December 31,      September 30,      December 31,
+                                                           2020               2020              2019
+ ──────────────────────────────────────────────────────────────────────────────────────────────────────
+  Gross Margin                                             $120               $108               $92
+  Notable items in gross margin                             $16                $19               $22
+  Adjusted gross margin                                    $136               $127              $114
+  Gross margin / tonne                                      $45                $48               $61
+  Notable items in gross margin / tonne                      $6                 $8               $15
+  Adjusted gross margin / tonne                             $51                $56               $76
+
+                                              Years ended
+  Potash Earnings (in millions)              December 31,
+                                                     2020      2019      2018
+ ───────────────────────────────────────────────────────────────────────────────
+  Gross Margin                                       $468      $617      $598
+  Notable items in gross margin                       $79       $34        $9
+  Adjusted gross margin                              $547      $651      $607
+  Gross margin / tonne                                $50       $79       $68
+  Notable items in gross margin / tonne                $8        $4        $1
+  Adjusted gross margin / tonne                       $58       $83       $69
+
+Reconciliation of Non-GAAP Financial Measures
+
+                                             Three months ended
+  Phosphates Earnings (in millions)          December 31,                     September 30,      December 31,
+                                             2020                             2020               2019
+ ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Gross Margin                               $                       169      $22                $                 (106)
+  Notable items in gross margin              $                       —        $—                 $                    16
+  Adjusted gross margin                      $                       169      $22                $                  (90)
+  Gross margin / tonne                       $                       73       $11                $                  (52)
+  Notable items in gross margin / tonne      $                       —        $—                 $                     7
+  Adjusted gross margin / tonne              $                       73       $11                $                  (45)
+
+                                              Years ended
+  Phosphates Earnings (in millions)          December 31,
+                                                     2020      2019                2018
+ ─────────────────────────────────────────────────────────────────────────────────────────
+  Gross Margin                                       $126      $         (82)      $582
+  Notable items in gross margin                       $13      $           37       $21
+  Adjusted gross margin                              $139      $         (45)      $603
+  Gross margin / tonne                                $15      $         (10)       $69
+  Notable items in gross margin / tonne                $1      $            6        $3
+  Adjusted gross margin / tonne                       $16      $          (4)       $72
