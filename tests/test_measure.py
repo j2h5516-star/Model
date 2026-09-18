@@ -597,6 +597,52 @@ def test_분기열_표시가_스냅샷까지_살아남는다():
     assert 민.get("adj_eps_분기열") is None, 민
 
 
+def test_파서가_문_문장이_스냅샷까지_살아남는다():
+    """(183차-AO) 바로 위 시험이 경고한 자리에 **또** 걸렸습니다.
+
+    183차-Z 에서 `period_label_문장` 을 만들고 파서·행·정제·시험까지
+    다 썼는데, `EPS_FIELDS` 허용 목록에 이름을 안 넣어 런 #83 에서
+    **0건** 찍혔습니다. "만들고 배선을 잊은" **여섯 번째**입니다.
+
+    그때 쓴 배선 시험은 `sec_fundamentals.py` 의 **글자**만 봤습니다
+    (`'"period_label_문장": …' in 코드`). 글자는 있는데 값이 저장되는
+    길 끝에서 버려졌습니다. 시험은 **값이 저장되는 끝까지** 따라가야
+    합니다 — 이 시험이 그 끝입니다.
+    """
+    분기 = [{
+        "filing_date": "2025-06-02", "announced_date": "2025-06-02",
+        "period_label": "25 Q4", "adj_eps": 0.35,
+        "period_label_문장": "results for the second quarter 2025 were strong",
+    }]
+    행 = measure_store.eps_rows(분기)[0]
+    assert 행.get("period_label_문장") == \
+        "results for the second quarter 2025 were strong", (
+        "문 문장이 스냅샷 행에서 사라졌습니다 — "
+        f"EPS_FIELDS 허용 목록에 넣었는지 보세요: {sorted(행)}")
+
+    # 없으면 없는 대로 (없는 값을 지어내지 않습니다)
+    민 = measure_store.eps_rows([{"filing_date": "2025-06-02", "adj_eps": 0.35}])[0]
+    assert 민.get("period_label_문장") is None, 민
+
+
+def test_새_계기가_로봇_로그까지_살아남는다():
+    """(183차-AO) 로그에도 **허용 목록**이 있습니다.
+
+    `collect_job` 은 `per_ticker` 를 만들 때 칸 이름을 하나하나 적습니다.
+    거기 없는 칸은 보고에 담겨도 **로그에 안 실립니다.** 183차-AA 의
+    `채운4분기_행적` 과 183차-AD 의 `어떤서식을_내나` 가 그래서 런 #83 에서
+    한 종목도 안 실렸습니다(로그 칸 이름 목록이 전혀 안 바뀜).
+    """
+    import inspect
+    import collect_job as cj
+
+    코드 = inspect.getsource(cj)
+    for 칸 in ("채운4분기_행적", "어떤서식을_내나"):
+        assert f'"{칸}": r.get("{칸}")' in 코드, (
+            f"{칸} 이 per_ticker 허용 목록에 없습니다 — "
+            "보고에 담아도 로그에 안 실립니다")
+
+
 def test_파서부터_정제까지_한_줄로_이어진다():
     """끝까지 따라가는 시험 — 보도자료 글에서 시작해 **정제가 그 값을
     살려 내는 것**까지 한 번에 확인합니다. 중간 어느 한 칸이 끊기면
