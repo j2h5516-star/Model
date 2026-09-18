@@ -301,6 +301,8 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         verdict["가설"].update(judge.judge_h9_clean(events))
         # H34 (183차-AI 등록) — 가이던스 신기록 예고
         verdict["가설"].update(judge.judge_h34(events))
+        # H34b (183차-AK 등록) — 기준선을 가이던스 낸 발표로 맞춘 판
+        verdict["가설"].update(judge.judge_h34b(events))
         # H32·H32b (168차 등록) — 감속 ∧ 런업(회피) · 가속 ∧ 런업. "런업"은
         # 위 H25 자리에서 이미 붙었고 "가속"은 사건에 실려 옵니다. 판정은
         # 등록일 뒤의 새 발표만 셉니다.

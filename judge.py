@@ -200,6 +200,7 @@ def hypothesis_clock() -> dict[str, tuple[str, int]]:
         H31_NAME: (H31_START_DAY, me.WINDOW_TRADING_DAYS),
         H9CLEAN_NAME: (H9CLEAN_START_DAY, me.WINDOW_TRADING_DAYS),
         H34_NAME: (H34_START_DAY, me.WINDOW_TRADING_DAYS),
+        H34B_NAME: (H34B_START_DAY, me.WINDOW_TRADING_DAYS),
         H32_NAME: (H32_START_DAY, me.WINDOW_TRADING_DAYS),
         H32B_NAME: (H32_START_DAY, me.WINDOW_TRADING_DAYS),
         H33_NAME: (H33_START_DAY, me.WINDOW_TRADING_DAYS),
@@ -235,6 +236,7 @@ def hypothesis_wired_day() -> dict[str, str]:
         # 183차-E 가 등록(2026-09-10) · 183차-L 이 배선(2026-09-13)
         H9CLEAN_NAME: "2026-09-13",
         H34_NAME: "2026-09-18",
+        H34B_NAME: "2026-09-18",
     }
 
 
@@ -946,6 +948,46 @@ def judge_h34(events: list[dict], start_day: str = H34_START_DAY) -> dict:
         entry[label] = judged
     entry["판정"] = entry["신규(판정)"]["판정"]
     return {H34_NAME: entry}
+
+
+# H34b (183차-AK 등록, 2026-09-18) — 기준선을 **가이던스 낸 발표**로 맞춘 판
+# ---------------------------------------------------------------------------
+# H34 의 신호는 가이던스를 내는 48종목에서만 **구조적으로** 생기는데
+# 기준선은 403종목 전체입니다. 그래서 "기준선을 이겼다"가 신호의 힘인지
+# 그 48종목이 원래 잘 오르는 무리인지 가릴 수 없습니다 — 183차-AJ 탐색이
+# 그것을 보여 줬습니다(대조 14.9% > 신호 13.4% > 기준선 9.1%).
+#
+# H34b 는 한 가지만 다릅니다: **기준선 = 가이던스를 낸 발표만.**
+# 종목 선택 효과가 분자·분모에 똑같이 들어가 상쇄됩니다.
+#
+# ⚠️ H34 는 고치지 않고 그대로 둡니다. 둘을 나란히 두면 "기준선을 무엇으로
+#    잡느냐"가 결론을 얼마나 바꾸는지가 기록으로 남습니다.
+# 미리 적은 약점(183차-AK): ① 기준선이 좁아 표본이 훨씬 느리게 찬다
+# ② 48종목을 고른 것 자체의 효과는 여전히 못 가린다.
+H34B_START_DAY = "2026-09-18"
+H34B_NAME = "H34b_가이던스_신기록예고_같은무리"
+
+
+def judge_h34b(events: list[dict], start_day: str = H34B_START_DAY) -> dict:
+    """H34b 판정 — 기준선을 **가이던스를 낸 발표**로 좁힌 H34."""
+    entry: dict = {
+        "등록일": start_day,
+        "문턱": {"신호": "가이던스 중간값으로 만든 예상 TTM > 지금까지의 정점",
+               "기준선": "가이던스를 낸 발표만 (종목 선택 효과 상쇄)"},
+        "채택기준": "신호 윌슨 하한 > 기준선 상한 (n≥10)",
+    }
+    for label, 창 in (("신규(판정)", lambda e: e["announced"] > start_day),
+                      ("탐색표본(참고)", lambda e: e["announced"] <= start_day)):
+        # 기준선부터 좁힙니다 — 가이던스를 **낸** 발표만(True 이거나 False).
+        # 기권(None)은 기준선에도 안 들어갑니다. 이것이 H34 와 다른 점입니다.
+        pool = [e for e in events
+                if 창(e) and e.get("가이던스_신기록예고") is not None]
+        signal = [e for e in pool if e.get("가이던스_신기록예고") is True]
+        judged = _judge(signal, pool)
+        judged["가이던스_n"] = len(pool)
+        entry[label] = judged
+    entry["판정"] = entry["신규(판정)"]["판정"]
+    return {H34B_NAME: entry}
 
 
 # ---------------------------------------------------------------------------

@@ -1132,6 +1132,45 @@ def test_H34가_시계와_등록부와_로봇과_화면에_있다():
         inspect.getsource(__import__("measure_engine")), "사건 배선 없음"
 
 
+
+def test_H34b는_기준선을_가이던스_낸_발표로_좁힌다():
+    """(183차-AK) H34 와 **한 가지만** 다릅니다 — 기준선.
+
+    H34 의 신호는 가이던스를 내는 48종목에서만 구조적으로 생기는데
+    기준선은 403종목 전체였습니다. 그래서 "기준선을 이겼다"가 신호의
+    힘인지 그 무리가 원래 잘 오르는지 가릴 수 없었습니다
+    (183차-AJ 탐색: 대조 14.9% > 신호 13.4% > 기준선 9.1%).
+    """
+    새신호 = [_h34_사건("2026-09-19", True) for _ in range(11)]
+    새대조 = [_h34_사건("2026-09-20", False) for _ in range(7)]
+    새기권 = [_h34_사건("2026-09-21", None) for _ in range(5)]
+    r = judge.judge_h34b(새신호 + 새대조 + 새기권)
+    새 = r[judge.H34B_NAME]["신규(판정)"]
+    assert 새["신호"]["n"] == 11, 새
+    # ⭐ 여기가 H34 와 다른 자리 — 기권 5건이 기준선에서도 빠집니다
+    assert 새["기준선"]["n"] == 18, (
+        f"기준선을 안 좁혔습니다(H34 라면 23): {새}")
+    assert 새["가이던스_n"] == 18, 새
+
+    # 같은 자료로 H34 는 기준선이 넓습니다 — 둘이 실제로 다릅니다
+    h34 = judge.judge_h34(새신호 + 새대조 + 새기권)[judge.H34_NAME]["신규(판정)"]
+    assert h34["기준선"]["n"] == 23, "H34 가 바뀌었습니다 — 건드리면 안 됩니다"
+
+
+def test_H34b가_시계와_등록부와_로봇과_화면에_있다():
+    """등록만 하고 배선을 잊으면 판정 파일에 영영 안 나옵니다(150차-C)."""
+    import inspect
+    import collect_job as cj
+    import model_verify as mv
+    import app
+
+    assert judge.H34B_NAME in judge.hypothesis_clock()
+    assert judge.hypothesis_clock()[judge.H34B_NAME][0] == "2026-09-18"
+    assert judge.H34B_NAME in mv.expected_hypotheses()
+    assert "judge_h34b" in inspect.getsource(cj.run), "로봇 배선 없음"
+    assert judge.H34B_NAME in app.HYPOTHESIS_LABELS, "화면 이름표 없음"
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]

@@ -53,6 +53,7 @@ def expected_hypotheses() -> list[str]:
     names.append(judge.H33_NAME)   # 168차-D 등록 — 런업 변동 폭
     names.append(judge.H9CLEAN_NAME)   # 183차-E 등록 — 구멍 뒤 첫돌파 제외
     names.append(judge.H34_NAME)       # 183차-AI 등록 — 가이던스 신기록 예고
+    names.append(judge.H34B_NAME)      # 183차-AK 등록 — 기준선을 맞춘 판
     return names
 
 
