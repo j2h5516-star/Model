@@ -3487,7 +3487,50 @@ def fetch_earnings_8k(
         )
 
     quarters.sort(key=lambda q: q["filing_date"])  # 발표일(8-K 제출일) 순 정렬
+    # 183차-AD — **한 건도 못 건진 종목**이 실제로 무슨 서식을 내는지
+    # 적어 옵니다 (아래 함수 설명 참조).
+    if not quarters and report is not None:
+        report["어떤서식을_내나"] = _어떤_서식을_내나(company, start_date)
     return quarters
+
+
+# 183차-AD — 빈 종목이 **무슨 서식을 내는지** 적어 온다
+# ---------------------------------------------------------------------------
+# 무엇이 의심스러운가: 실적이 한 칸도 없는 종목이 셋 있습니다
+# (HES · HOLX · NVMI). 앞의 둘은 회사 번호를 못 찾은 것이고(183차-V·W),
+# NVMI 는 **번호는 찾았는데** 한 건도 못 건졌습니다. 계기가 이렇습니다:
+#
+#   NVMI  연간 XBRL 17개 · 분기 XBRL **0개** · 8-K 시도 0 · 캐시 0
+#
+# 연간만 있고 분기가 없는 것은 **10-Q 를 안 내는 회사**의 모양입니다
+# (외국 회사는 20-F/6-K 로 냅니다 — NBIS 가 그래서 `FPI_6K_TICKERS` 에
+# 들어 있습니다). 노바(NVMI)는 이스라엘 회사이므로 같은 꼴로 보이지만,
+# 개발 환경에서는 SEC 가 막혀 **확인할 수 없습니다.**
+#
+# 106·157차 규칙 그대로 — 짐작으로 설정을 바꾸지 않습니다. 로봇이
+# "이 회사가 실제로 낸 서식"을 세어 오게 하고, 사람이 그것을 보고
+# `config.FPI_6K_TICKERS` 에 넣습니다.
+_서식세기_최대 = 60
+
+
+def _어떤_서식을_내나(company, start_date: str) -> dict:
+    """이 회사가 수집 창 안에서 실제로 낸 서식을 세어 돌려줍니다.
+
+    돌려주는 것: {"6-K": 12, "20-F": 3, …} · 조회가 깨지면 {"오류": "…"}.
+    **아무것도 바꾸지 않습니다** — 세기만 합니다.
+    """
+    세기: dict[str, int] = {}
+    try:
+        filings = company.get_filings(filing_date=f"{start_date}:")
+        for i, f in enumerate(filings):
+            if i >= _서식세기_최대:
+                세기["…더있음"] = 1
+                break
+            이름 = str(getattr(f, "form", "") or "?")
+            세기[이름] = 세기.get(이름, 0) + 1
+    except Exception as exc:          # 조회가 깨져도 수집을 멈추지 않습니다
+        return {"오류": f"{type(exc).__name__}: {str(exc)[:80]}"}
+    return 세기
 
 
 def _safe_filing_url(filing) -> str:

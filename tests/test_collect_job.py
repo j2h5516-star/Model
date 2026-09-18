@@ -603,7 +603,10 @@ def test_6K_종목은_8K와_6K를_함께_훑고_나머지는_8K만_훑는다():
             self.ticker = ticker
 
         def get_filings(self, **kw):
-            받은서식[self.ticker] = kw.get("form")
+            # 183차-AD — 한 종목에 **두 번** 불립니다. 첫 번째가 실적 훑기,
+            # 두 번째는 한 건도 못 건졌을 때 "무슨 서식을 내나" 세기입니다
+            # (서식을 안 넘겨 전부 셉니다). 덮어쓰면 첫 호출이 지워집니다.
+            받은서식.setdefault(self.ticker, []).append(kw.get("form"))
             return []
 
     가짜edgar = types.ModuleType("edgar")
@@ -621,8 +624,11 @@ def test_6K_종목은_8K와_6K를_함께_훑고_나머지는_8K만_훑는다():
             sys.modules["edgar"] = 옛edgar
         else:
             sys.modules.pop("edgar", None)
-    assert 받은서식["NBIS"] == ["8-K", "6-K"], 받은서식
-    assert 받은서식["IREN"] == "8-K", 받은서식
+    assert 받은서식["NBIS"][0] == ["8-K", "6-K"], 받은서식
+    assert 받은서식["IREN"][0] == "8-K", 받은서식
+    # 183차-AD — 한 건도 못 건졌으므로 서식 세기가 뒤따라야 합니다
+    assert 받은서식["NBIS"][1:] == [None], (
+        f"빈 종목인데 서식 세기를 안 불렀습니다: {받은서식}")
 
 
 def test_6K_종목은_실적_문서만_통과하고_이름_변경_이전은_읽지_않는다():

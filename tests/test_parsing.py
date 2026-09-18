@@ -167,6 +167,53 @@ def test_fill_q4_skips_when_quarters_missing():
     assert "2025-12-31" not in filled, filled
 
 
+def test_빈_종목이_무슨_서식을_내는지_적어_온다():
+    """(183차-AD) 실적을 한 건도 못 건진 종목이 **무슨 서식을 내는지**
+    세어 옵니다.
+
+    실물 NVMI(런 #82): 연간 XBRL 17개 · 분기 XBRL 0개 · 8-K 시도 0 ·
+    캐시 0. 연간만 있고 분기가 없는 것은 10-Q 를 안 내는 회사의
+    모양입니다(외국 회사는 20-F/6-K 로 냅니다). 노바는 이스라엘
+    회사라 같은 꼴로 보이지만 개발 환경에서는 SEC 가 막혀 확인할 수
+    없습니다 — 그래서 로봇이 세어 오게 합니다.
+
+    ⚠️ **세기만 합니다.** 찾았다고 설정을 자동으로 바꾸지 않습니다
+    (106·157차 규칙 — 사람이 보고 넣습니다).
+    """
+    class 가짜공시:
+        def __init__(self, form): self.form = form
+
+    class 가짜회사:
+        def __init__(self, 목록): self.목록 = 목록
+        def get_filings(self, **k): return self.목록
+
+    세기 = sf._어떤_서식을_내나(
+        가짜회사([가짜공시("6-K")] * 12 + [가짜공시("20-F")] * 3), "2016-09-15")
+    assert 세기 == {"6-K": 12, "20-F": 3}, 세기
+
+    # 너무 많으면 잘라내고 그 사실을 말합니다 (로그가 부풀지 않게)
+    많음 = sf._어떤_서식을_내나(
+        가짜회사([가짜공시("8-K")] * 500), "2016-09-15")
+    assert 많음.get("…더있음") == 1, 많음
+    assert 많음["8-K"] == sf._서식세기_최대, 많음
+
+    # 조회가 깨져도 수집을 멈추지 않습니다
+    class 깨진회사:
+        def get_filings(self, **k): raise RuntimeError("막힘")
+    assert "오류" in sf._어떤_서식을_내나(깨진회사(), "2016-09-15")
+
+
+def test_서식_세기는_빈_종목에만_부른다():
+    """배선 시험 — 값을 건진 종목까지 세면 SEC 를 쓸데없이 두드립니다."""
+    with open(os.path.join(os.path.dirname(__file__), "..",
+                           "sec_fundamentals.py"), encoding="utf-8") as f:
+        코드 = f.read()
+    assert 'if not quarters and report is not None:' in 코드, \
+        "빈 종목일 때만 부르지 않습니다"
+    assert 'report["어떤서식을_내나"] = _어떤_서식을_내나(' in 코드, \
+        "서식 세기를 만들고 보고에 안 실었습니다"
+
+
 def test_채운4분기의_행적을_남긴다():
     """(183차-AA) "채웠다"와 "뼈대에 있다" 사이에서 사라지는지 봅니다.
 
