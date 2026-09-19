@@ -320,6 +320,56 @@ def _parse_number_at(
     )
 
 
+# ---------------------------------------------------------------------------
+# 183차-AW — 표 머리의 **기간 선언**을 읽는다 ("YEAR ENDED" vs "THREE MONTHS")
+# ---------------------------------------------------------------------------
+# 실물 GS 2026-01-15 (원문으로 확인). 제목이 "**Full Year and** Fourth
+# Quarter 2025 Earnings Results" 이고 표가 둘입니다 —
+#
+#   ① "YEAR ENDED DECEMBER 31,"  아래  Total net revenues $58,283 $53,512
+#   ② "THREE MONTHS ENDED …"     아래  Total net revenues $13,454 $15,184
+#
+# 파서는 ①을 채택했습니다. GS 는 **아홉 해 내리**, ORCL 은 **다섯 해 내리**
+# 그랬습니다(183차-AR — 전수 28칸·14종목). 같은 행의 EPS 는 분기값이 맞아
+# 한 행 안에서 매출만 연간이었습니다.
+#
+# 기존 연간 가드가 왜 못 잡았나: 매출 쪽 가드는 **라벨 앞 같은 줄**만 봅니다.
+# 표 머리는 2,138자 뒤라 닿지 않습니다.
+#
+# 규칙 (데이터규격 3장의 "가까운 표 머리" 를 기간에도 그대로 씁니다):
+#   값에서 3,000자 안에 기간 머리가 있고, 그것이 **연간 전용**이면 건너뛴다.
+#
+# ⚠️ **합친 표를 건드리면 안 됩니다.** 많은 회사가 한 표에 분기 열과 연간
+#    열을 나란히 둡니다 (실물 ACLS 2025-02-10:
+#      "Three Months Ended December 31, 2024 2023  Twelve Months Ended …"
+#       Total revenue 252,417 310,288 1,017,865 1,130,604)
+#    이 표에서는 이름 뒤 **첫 숫자가 분기값**이라 지금이 이미 맞습니다.
+#    그래서 분기 머리가 연간 머리와 **가까이(300자 안) 같이** 있으면
+#    합친 표로 보고 손대지 않습니다.
+_기간머리_연간_RE = re.compile(r"(?:TWELVE\s+MONTHS|YEARS?)\s+ENDED", re.I)
+_기간머리_분기_RE = re.compile(
+    r"(?:THREE|SIX|NINE)\s+MONTHS\s+ENDED|QUARTERS?\s+ENDED", re.I)
+_기간머리_창 = 3000          # 값에서 몇 자 뒤까지 표 머리를 찾을까
+_기간머리_한묶음 = 300       # 두 머리가 이만큼 안에 있으면 **합친 표**
+
+
+def _연간전용_표머리_아래인가(text: str, pos: int) -> bool:
+    """이 자리가 **연간 전용 표** 안인가 (가장 가까운 기간 머리로 판단).
+
+    머리를 못 찾으면 False — 모르면 건드리지 않습니다(창작 금지와 같은 결).
+    """
+    앞 = text[max(0, pos - _기간머리_창):pos]
+    연간 = [m.end() for m in _기간머리_연간_RE.finditer(앞)]
+    if not 연간:
+        return False
+    분기 = [m.end() for m in _기간머리_분기_RE.finditer(앞)]
+    if not 분기:
+        return True
+    # 분기 머리가 연간 머리보다 **뒤**면 이 자리는 분기 표 안입니다.
+    # 같은 머리 묶음 안(300자)에 둘이 함께 있으면 합친 표이므로 손대지 않습니다.
+    return 분기[-1] < 연간[-1] - _기간머리_한묶음
+
+
 def find_labeled_value(
     text: str,
     label_patterns: list[str],
@@ -442,6 +492,17 @@ def _scan_labeled_value(
                 window_start = max(line_start, start - _ANNUAL_LOOKBACK)
                 if _ANNUAL_CONTEXT_RE.search(text[window_start:start]):
                     continue
+
+            # 가장 가까운 **표 머리**가 "YEAR ENDED"만 말하면 그 표는 연간
+            # 표입니다 (183차-AW — 위 _연간전용_표머리_아래인가 설명).
+            #
+            # ⚠️ 이 검사는 `avoid_annual` **밖**에 둡니다. find_labeled_value
+            #    는 같은 탐색을 네 번 돌리는데 뒤 두 번은 `avoid_annual=False`,
+            #    곧 **연간 가드를 끄고** 다시 찾습니다. 검사를 가드 안에 두면
+            #    앞 두 번이 걸러도 뒤 두 번이 그대로 주워 옵니다
+            #    (183차-AT 의 고침이 매출을 한 칸도 못 바꾼 까닭입니다).
+            if _연간전용_표머리_아래인가(text, label_match.start()):
+                continue
 
             # 두 이익률의 **차이**를 말하는 자리면 이익률이 아닙니다
             # (77차 — 실물 AMBA). 라벨 앞쪽만 보고, 줄을 넘지 않습니다.

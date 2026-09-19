@@ -2738,6 +2738,78 @@ def test_분기값이_연간값과_같으면_계기가_센다():
         "센 것을 q4_채움 계기에 안 넣었습니다 — 로그에 한 글자도 안 나옵니다"
 
 
+def test_연간_전용_표의_값을_분기값으로_담지_않는다():
+    """(183차-AW) GS 는 **아홉 해 내리** 4분기 매출 칸에 그 해 연간
+    순수익이 들어 있었습니다 (2025-12-31 = 58,283백만 = 연간치).
+
+    까닭: 제목이 "Full Year and Fourth Quarter …" 인 보도자료에는 표가
+    둘 들어갑니다. 파서가 **연간 표를 먼저** 만나 그 값을 담았습니다.
+    매출 쪽 연간 가드는 라벨 앞 같은 줄만 보는데 표 머리는 2,138자
+    뒤라 닿지 않았습니다.
+    """
+    # GS 모양 — 연간 표가 앞, 분기 표가 뒤
+    지에스 = (
+        "Goldman Sachs Reports Full Year and Fourth Quarter 2025 Results\n"
+        "Segment Net Revenues (unaudited) $ in millions\n"
+        "YEAR ENDED DECEMBER 31, 2025 2024\n"
+        "Investment banking fees 9,340 7,738\n"
+        "Total net revenues $58,283 $53,512\n"
+        + "x" * 400 + "\n"
+        "Segment Net Revenues (unaudited) $ in millions\n"
+        "THREE MONTHS ENDED DECEMBER 31, 2025 2024\n"
+        "Investment banking fees 2,580 2,064\n"
+        "Total net revenues $13,454 $13,869\n"
+    )
+    r = sf.parse_press_release(지에스)
+    assert r["revenue"] == 13_454_000_000, (
+        f"연간 표(58,283)를 분기 매출로 담았습니다: {r['revenue']}")
+
+    # 합친 표(분기 열 + 연간 열이 한 표에) 는 **건드리면 안 됩니다** —
+    # 이름 뒤 첫 숫자가 이미 분기값입니다 (실물 ACLS 2025-02-10).
+    합친표 = (
+        "Condensed Consolidated Statements of Operations\n"
+        "Three Months Ended December 31, 2024 2023 "
+        "Twelve Months Ended December 31, 2024 2023\n"
+        "Revenue:\n"
+        "Total revenue 252,417 310,288 1,017,865 1,130,604\n"
+    )
+    r2 = sf.parse_press_release(합친표)
+    # ⚠️ 이 시험 자료에는 단위 선언("$ in thousands")이 없어 숫자가 그대로
+    #    나옵니다. 여기서 볼 것은 단위가 아니라 **어느 열을 집었나** 입니다 —
+    #    분기 열 252,417 이어야 하고 연간 열 1,017,865 면 안 됩니다.
+    assert r2["revenue"] == 252_417.0, (
+        f"합친 표에서 분기 열을 잃었습니다: {r2['revenue']}")
+    assert r2["revenue"] != 1_017_865.0, "합친 표에서 연간 열을 집었습니다"
+
+    # 머리를 못 찾으면 건드리지 않습니다 (모르면 그대로 — 창작 금지와 같은 결)
+    assert sf._연간전용_표머리_아래인가("Total revenue 100", 5) is False
+
+
+def test_표머리_검사가_연간가드_밖에_있다():
+    """(183차-AW) `find_labeled_value` 는 같은 탐색을 **네 번** 돌리는데
+    뒤 두 번은 `avoid_annual=False`, 곧 **연간 가드를 끄고** 다시 찾습니다.
+
+    그래서 이 검사를 가드 **안**에 두면 앞 두 번이 연간값을 제대로 걸러도
+    뒤 두 번이 그대로 주워 옵니다 — 183차-AT 의 고침이 매출을 **한 칸도**
+    못 바꾼 까닭이 이것입니다. 자리를 지킵니다.
+    """
+    import inspect
+    import re as _re
+
+    코드 = inspect.getsource(sf._scan_labeled_value)
+    가드 = 코드.index("if avoid_annual:")
+    검사 = 코드.index("_연간전용_표머리_아래인가(text")
+    assert 검사 > 가드, "검사가 avoid_annual 블록보다 앞에 있습니다"
+    # 들여쓰기가 가드 블록 **밖**(같은 층)이어야 합니다
+    줄 = [l for l in 코드[검사 - 200:검사 + 80].split("\n")
+          if "_연간전용_표머리_아래인가(text" in l][0]
+    들여 = len(줄) - len(줄.lstrip())
+    가드줄 = [l for l in 코드.split("\n") if "if avoid_annual:" in l][0]
+    assert 들여 == len(가드줄) - len(가드줄.lstrip()), (
+        "검사가 avoid_annual 블록 **안**에 있습니다 — 뒤 두 번이 가드를 끄고 "
+        "그대로 주워 옵니다 (183차-AT 의 재발)")
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
