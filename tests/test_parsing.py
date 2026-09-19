@@ -1086,15 +1086,41 @@ def test_quarter_column_wins_in_a_two_column_table():
     assert result["op_income"] == 250_000_000
 
 
-def test_annual_only_document_still_yields_numbers():
-    """연간 숫자밖에 없는 문서에서는 그것이라도 써야 합니다 (자료를 잃지 않음)"""
+def test_annual_only_document_yields_nothing():
+    """(183차-AX) **뜻을 뒤집었습니다.**
+
+    예전 이름은 `…still_yields_numbers` 였고 설명은 "연간 숫자밖에 없는
+    문서에서는 그것이라도 써야 합니다(자료를 잃지 않음)" 였습니다.
+    그런데 이 행들은 **분기 행**입니다. 연간값을 분기 칸에 넣는 것은
+    '자료를 지키는 것'이 아니라 **틀린 값을 만드는 것**입니다.
+
+    헌법 1조: *없는 값은 "없음"으로 둡니다 — "없음"은 안전하고
+    "틀림"은 위험합니다.* (CLAUDE.md 3장 · 전략.md)
+
+    실제로 이 설계가 해를 끼치고 있었습니다. 매출 탐색이 같은 글을 네 번
+    훑으면서 **뒤 두 번은 연간 가드를 끄는** 구조가 이 시험을 통과시키려고
+    있었고, 그 탓에 후보를 걸러 내면 "없음"이 아니라 **더 나쁜 후보**가
+    올라왔습니다(183차-AV 에서 두 번 부딪힌 벽).
+
+    전수 3,244건으로 재고 바꿨습니다 — 수상→없음 10 · 수상→그럴듯 1 ·
+    그럴듯→없음 1. **좋아짐 11 · 나빠짐 1.**
+    """
     text = (
         "Full year revenue was $3.6 billion and "
         "non-GAAP operating income was $820.0 million."
     )
     result = sf.parse_press_release(text)
-    assert result["revenue"] == 3_600_000_000
-    assert result["op_income"] == 820_000_000
+    assert result["revenue"] is None, (
+        f"연간값을 분기 매출로 담았습니다: {result['revenue']}")
+    assert result["op_income"] is None, (
+        f"연간값을 분기 영업이익으로 담았습니다: {result['op_income']}")
+
+    # 분기값이 함께 있으면 **잃지 않습니다** (이 시험이 지키려던 것)
+    둘다 = (
+        "Full year revenue was $3.6 billion. "
+        "Fourth quarter revenue was $950.0 million."
+    )
+    assert sf.parse_press_release(둘다)["revenue"] == 950_000_000
 
 
 def test_earlier_quarter_does_not_steal_the_next_quarters_8k():

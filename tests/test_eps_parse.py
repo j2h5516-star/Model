@@ -2810,6 +2810,34 @@ def test_표머리_검사가_연간가드_밖에_있다():
         "그대로 주워 옵니다 (183차-AT 의 재발)")
 
 
+def test_연간값밖에_없으면_없음으로_끝낸다():
+    """(183차-AX) 예전에는 연간 가드를 **끄고 한 번 더** 찾았습니다.
+
+    그래서 후보 하나를 걸러 내면 "없음"이 되는 것이 아니라 **더 나쁜
+    후보로 떨어졌습니다** — 가드를 잘 만들수록 나쁜 값이 올라오는
+    구조였습니다. 헌법 1조는 그 반대를 말합니다: 없음은 안전하고 틀림은
+    위험하다.
+
+    전수 3,244건 실측: 수상→없음 9칸 ✅ · 그럴듯→없음 1칸 ⛔.
+    """
+    # 연간값밖에 없는 글 — 분기 매출은 **없음**이 정답입니다
+    연간만 = (
+        "Acme Reports Full Year 2025 Results\n"
+        "Full-year revenue was $1,200.0 million, up 12%.\n"
+    )
+    assert sf.parse_press_release(연간만)["revenue"] is None, (
+        "연간값밖에 없는 글에서 그 연간값을 분기 매출로 담았습니다")
+
+    # 분기값이 함께 있으면 그것을 집습니다 (값을 잃으면 안 됩니다)
+    둘다 = (
+        "Acme Reports Fourth Quarter and Full Year 2025 Results\n"
+        "Full-year revenue was $1,200.0 million, up 12%.\n"
+        "Fourth quarter revenue was $310.0 million, up 9%.\n"
+    )
+    assert sf.parse_press_release(둘다)["revenue"] == 310_000_000, (
+        f"분기값을 잃었습니다: {sf.parse_press_release(둘다)['revenue']}")
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())

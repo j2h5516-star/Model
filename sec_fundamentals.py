@@ -405,7 +405,19 @@ def find_labeled_value(
     #   "4분기 및 연간 실적" 보도자료에는 두 숫자가 함께 들어 있는데, 예전에는
     #   구분하는 장치가 전혀 없어 연간 숫자를 분기 자리에 넣었습니다.
     #   매년 4분기마다 +228% 짜리 가짜 급등이 생겼습니다.
-    for avoid_annual in (True, False):
+    # 183차-AX — 예전에는 여기가 `(True, False)` 였습니다. 곧 **연간 가드를
+    # 끄고 한 번 더** 찾았습니다. 그 탓에 후보 하나를 걸러 내면 "없음"이
+    # 되는 것이 아니라 **더 나쁜 후보로 떨어졌습니다** — 가드를 잘 만들수록
+    # 나쁜 값이 올라오는 구조였습니다(183차-AV 에서 두 번 부딪힌 벽).
+    #
+    # 헌법 1조: **없는 값은 없음으로 둔다 — 없음은 안전하고 틀림은 위험하다.**
+    # 코드가 그 반대로 되어 있었습니다.
+    #
+    # 전수 3,244건으로 재고 바꿨습니다(`tools_파서품질평가.py` 의 같은 자):
+    #   매출 갈래 옮김 — 수상→없음 **9칸** ✅ · 그럴듯→없음 **1칸** ⛔
+    #   전체 바뀐 칸 12개뿐이고, 잃은 값은 2.8 · 2.7 · 1.0 같은 쓰레기와
+    #   BBY 2019-04-15 영업이익 2,000,000,000(= 그 해 **연간** 영업이익)입니다.
+    for avoid_annual in (True,):
         for same_line_only in (True, False):
             found = _scan_labeled_value(
                 text, label_patterns, is_percent, apply_table_unit,
@@ -490,7 +502,17 @@ def _scan_labeled_value(
                 start = label_match.start()
                 line_start = text.rfind("\n", 0, start) + 1
                 window_start = max(line_start, start - _ANNUAL_LOOKBACK)
-                if _ANNUAL_CONTEXT_RE.search(text[window_start:start]):
+                _되돌아본글 = text[window_start:start]
+                # 183차-AX — 같은 구간에 **quarter 가 함께 있으면** 연간
+                # 표시가 아닙니다. 회사 제목은 "Third Quarter of **Fiscal
+                # Year 2026** Financial Results" 처럼 분기와 회계연도를 함께
+                # 적습니다(실물 CRDO 2026-03-02). 예전에는 이런 글의 매출을
+                # 이 가드가 버리고, 뒤에서 **가드를 끄고 도는 판**이 도로
+                # 주워 왔습니다. 그 판을 없앤 지금은 여기서 안 버려야 합니다.
+                # (같은 예외를 `_ANNUAL_BEFORE_RE` 쪽은 74차에 이미 배웠습니다
+                #  — 실물 NTAP "in the fourth quarter of fiscal year 2022".)
+                if (_ANNUAL_CONTEXT_RE.search(_되돌아본글)
+                        and not _SECTION_QUARTER_RE.search(_되돌아본글)):
                     continue
 
             # 가장 가까운 **표 머리**가 "YEAR ENDED"만 말하면 그 표는 연간
