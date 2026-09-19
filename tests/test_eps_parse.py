@@ -2838,6 +2838,48 @@ def test_연간값밖에_없으면_없음으로_끝낸다():
         f"분기값을 잃었습니다: {sf.parse_press_release(둘다)['revenue']}")
 
 
+def test_응답을_300자에서_자르지_않는다():
+    """(183차-BC) HOLX 를 네 회차째 "못 찾음"으로 넘기려다 계기를 열어 보니
+    SEC 응답이 **300자에서 잘려** 있었습니다.
+
+    거기까지는 Atom 머리글(author·id)뿐이고 **결과가 있는지 없는지는 그
+    뒤**에 나옵니다. 즉 "결과없음"은 파서의 말이었고, 원문이 그렇다는
+    증거는 한 번도 못 봤습니다. **못 본 것은 "못 봤다"이지 "없다"가
+    아닙니다**(150차-R).
+    """
+    머리글 = ('<?xml version="1.0" encoding="ISO-8859-1" ?>'
+            '<feed xmlns="http://www.w3.org/2005/Atom"><author>'
+            '<email>webmaster@sec.gov</email><name>Webmaster</name></author>'
+            '<id>https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany'
+            '&amp;company=Hologic&amp;type=10-K&amp;owner=include&amp;count=40'
+            '&amp;output=atom</id><title>EDGAR Search Results</title>'
+            '<updated>2026-09-19T00:00:00-04:00</updated>')
+    assert len(머리글) > 300, "시험 자료가 300자를 안 넘어 아무것도 못 가립니다"
+    몸통 = ('<entry><title>HOLOGIC INC</title><content type="text/xml">'
+          '<company-info><cik>0000859737</cik></company-info></content></entry>')
+    나온다 = _가짜응답으로(머리글 + 몸통)
+
+    계기 = [x for x in 나온다 if x[0] == "_응답앞"]
+    assert 계기, "응답 계기가 아예 없습니다"
+    적힌글 = 계기[0][1]
+    # ⚠️ **길이를 재면 안 됩니다.** 앞에 붙인 요약 때문에 창을 300자로
+    #    되돌려도 길이는 300을 넘습니다(돌연변이가 초록으로 통과했습니다).
+    #    창이 **몸통까지 닿았는지**를 직접 봅니다 — 300자 뒤에 있는 글자가
+    #    적혀 있어야 합니다.
+    assert 머리글.index("<title>EDGAR Search Results") > 300
+    assert "HOLOGIC INC" in 적힌글, (
+        "응답의 **몸통**이 안 적혔습니다 — Atom 머리글만 보고 '결과없음'이라 "
+        f"단정하게 됩니다: {적힌글[:120]}")
+
+    # ⚠️ 계기를 **새 줄**로 넣으면 안 됩니다 — 이 목록의 칸 뜻은
+    #    [이름, 번호, …] 이고 읽는 쪽들은 "_응답앞" 한 줄만 건너뜁니다.
+    #    실제로 새 줄을 넣었다가 다른 시험이 그것을 회사 번호로 셌습니다.
+    assert "entry 1개" in 적힌글, f"결과 수를 세어 적지 않았습니다: {적힌글[:80]}"
+    assert "company-info 1개" in 적힌글, 적힌글[:80]
+    assert len([x for x in 나온다 if str(x[0]).startswith("_")]) == 1, (
+        f"계기 줄이 둘 이상입니다 — 읽는 쪽이 번호로 셉니다: {나온다}")
+
+
 if __name__ == "__main__":
     tests = [
         (n, f) for n, f in sorted(globals().items())
