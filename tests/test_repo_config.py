@@ -138,6 +138,11 @@ def test_6차확장_종목과_6K_종목은_유니버스_안에_있다():
         assert t not in cfg.UNIVERSE_V5_NEW, f"{t} 는 H26 표본(5차)에 들어가면 안 됩니다"
     assert "NBIS" in cfg.FPI_6K_TICKERS, "NBIS 는 6-K 로 실적을 알립니다"
     assert "IREN" not in cfg.FPI_6K_TICKERS, "IREN 은 2025-07 부터 8-K 를 냅니다"
+    # 183차-BA — NVMI(노바)도 6-K 회사입니다. 짐작이 아니라 로봇이 센
+    # 서식표가 근거입니다(런 #84): 6-K 13건 · 20-F 1건 · 8-K 0건.
+    # 이 줄이 빠지면 NVMI 는 다시 "실적이 한 칸도 없는 종목"이 됩니다.
+    assert "NVMI" in cfg.FPI_6K_TICKERS, (
+        "NVMI 는 6-K·20-F 만 내는 외국 회사입니다 (런 #84 서식표로 확인)")
     빠진 = [t for t in cfg.FPI_6K_TICKERS if t not in cfg.TICKERS]
     assert not 빠진, f"6-K 표에만 있고 유니버스에 없는 종목: {빠진}"
 
