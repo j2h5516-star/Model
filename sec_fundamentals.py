@@ -137,6 +137,42 @@ _NUMBER_RE = re.compile(
 # 위 _parse_number_at 에서 물리치므로 탐색 범위가 넓어지지는 않습니다.
 _NUMBER_TAIL = 40
 
+# 183차-BI — 이 범위의 **민숭민숭한 네 자리 정수**는 연도로 봅니다.
+# 아래쪽을 1900 으로 잡은 것은 그보다 작은 수는 연도로 오해할 일이
+# 드물고, 위쪽 2100 은 먼 미래의 회계연도까지 넉넉히 덮기 때문입니다.
+_연도_아래, _연도_위 = 1900, 2100
+
+
+def _연도처럼_보이는가(match: "re.Match") -> bool:
+    """이 숫자가 **값이 아니라 연도**인가 (183차-BI).
+
+    파서는 이름 뒤 첫 숫자를 값으로 삼는데, 그 자리에 흔히 연도가
+    있습니다 — "Revenue Range for Third Quarter **2023**".
+
+    183차-BH 전에는 이 연도가 `202` 로 잘려 들어왔습니다. 작은 수라
+    뒷단 검사가 버려 주었습니다. 잘림을 고치자 `2023` 이 되었고, 표
+    단위(백만)가 곱해지면 **20억** — 어떤 검사에도 안 걸리는 그럴듯한
+    크기가 됩니다. 실측(전수 3,287건): 영업이익 35칸 · 매출 6칸 ·
+    EBITDA 1칸이 이 모양이었습니다. CAT 은 202조가 **2,025조**로요.
+
+    연도에는 없고 진짜 값에는 있는 표시 **셋**을 빠져나갈 구멍으로
+    둡니다. 하나라도 붙어 있으면 연도로 보지 않습니다:
+
+        `2,023`  콤마를 쓴 표 값
+        `2023 million`  값이 스스로 단위를 말함
+        `2023.5`  연도에는 소수점이 없음
+    """
+    글자 = match.group("num")
+    if "," in 글자 or "." in 글자:
+        return False
+    if (match.group("scale") or "").lower().strip() in _WORD_SCALE:
+        return False
+    try:
+        값 = float(글자)
+    except ValueError:
+        return False
+    return _연도_아래 <= 값 <= _연도_위
+
 # 숫자 바로 뒤에 붙어 "이건 퍼센트다"를 뜻하는 표기들.
 # "%" 기호만 보면 "82 percent" 같은 낱말 표기를 금액으로 오인합니다.
 _PERCENT_AFTER_RE = re.compile(
@@ -289,15 +325,26 @@ def _parse_number_at(
        같은 사고가 다시 납니다.
     """
     segment = text[search_from : search_from + search_len + _NUMBER_TAIL]
-    match = _NUMBER_RE.search(segment)
-    if not match:
-        return None
-    # 창 밖에서 **시작**한 숫자는 이 자리의 값이 아닙니다.
-    # ⚠️ match.start() 가 아니라 match.start("num") 을 봅니다 — 패턴이
-    #    앞의 공백·괄호·$ 까지 포함해서 시작하므로, match.start() 는
-    #    이름 바로 뒤(공백의 시작)를 가리켜 이 검사가 늘 통과해 버립니다.
-    if match.start("num") >= search_len:
-        return None
+    # 183차-BI — 연도를 만나면 **건너뛰고 다음 숫자**를 봅니다.
+    #   "… three months ended March 31, **2025** was **$1.60**"
+    # 연도에서 그냥 멈추면 뒤에 있는 진짜 값($1.60)까지 잃습니다.
+    # (이 시험이 실제로 빨간 불을 켜서 설계를 고쳤습니다 —
+    #  처음에는 멈추게 만들었다가 시험 3개가 깨졌습니다.)
+    찾기시작 = 0
+    while True:
+        match = _NUMBER_RE.search(segment, 찾기시작)
+        if not match:
+            return None
+        # 창 밖에서 **시작**한 숫자는 이 자리의 값이 아닙니다.
+        # ⚠️ match.start() 가 아니라 match.start("num") 을 봅니다 — 패턴이
+        #    앞의 공백·괄호·$ 까지 포함해서 시작하므로, match.start() 는
+        #    이름 바로 뒤(공백의 시작)를 가리켜 이 검사가 늘 통과해 버립니다.
+        if match.start("num") >= search_len:
+            return None
+        if not _연도처럼_보이는가(match):
+            break
+        # 연도였습니다 — 그 숫자 **다음 글자**부터 다시 찾습니다.
+        찾기시작 = match.end("num")
 
     raw = match.group("num").replace(",", "")
     try:
