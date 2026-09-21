@@ -968,7 +968,15 @@ def _연간값이_앉은듯한_매출(ds: dict) -> dict:
                 continue
             칸 += 1
             종목.add(t)
-            if "Q4" in str(r.get("period_label") or "").upper():
+            # 183차-BO — **라벨을 믿지 말고 식 밖 증거를 먼저 봅니다.**
+            # 실물 NTRS: 라벨은 "24 Q3" 인데 발표일이 2025-01-23(4분기·연간
+            # 발표)이고 XBRL 12개월 EPS 가 9.77 로 찍혀 있습니다 — 그 날이
+            # 결산일임이 식 밖에서 확인됩니다. 라벨이 한 분기 밀린 것뿐인데
+            # 라벨만 보는 자는 "4분기가 아닌 칸"으로 잘못 갈랐습니다.
+            # 그 증거는 이미 `결산일증거` 로 세고 있었는데, 정작 갈래를
+            # 가를 때는 더 약한 자(라벨)를 쓰고 있었습니다.
+            if (isinstance(r.get("gaap_eps_annual_xbrl"), (int, float))
+                    or "Q4" in str(r.get("period_label") or "").upper()):
                 사분기칸 += 1
             else:
                 다른분기칸 += 1
