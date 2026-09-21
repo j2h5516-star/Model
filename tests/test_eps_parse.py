@@ -28,6 +28,7 @@ test_eps_parse.py — 보도자료에서 주당순이익(EPS) 읽어 오기 · 1
 
 import os
 import io
+import pathlib
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -1292,6 +1293,79 @@ def test_연도를_값으로_물지_않는다():
     ]:
         읽은값 = sf._parse_number_at(f"Total revenue   {글자}", len("Total revenue"))
         assert 읽은값 is not None and 읽은값[0] == 참값, f"{글자!r} → {읽은값}"
+
+
+def test_이익률을_찾을_때는_연도를_건너뛰지_않는다():
+    """연도 건너뛰기는 **이익률 탐색에서는 이득 없이 판만 흔듭니다** (183차-BJ).
+
+    이익률은 "뒤에 % 기호가 붙었는가"로 이미 걸러집니다. 연도가 값으로
+    채택될 길이 원래 없습니다. 그런데 건너뛰면 **그 뒤의 나쁜 값**을
+    더 빨리 만납니다.
+
+    실물 PG 2020-10-20(눌린 발표자료) — 연도 가드를 넣자 52.70% 가
+    1.00% 가 되었습니다:
+
+        "… Core operating margin +350 basis points … Q1 FY **2021**
+         **+1%** Pricing, flat Mix …"
+
+    "2021" 을 건너뛰자 바로 뒤의 "+1%" 를 물었습니다. 연도는 어차피
+    퍼센트가 아니라 채택되지 않았을 값입니다 — 건너뛸 까닭이 없습니다.
+
+    ⚠️ 이 시험은 **실물 원문**으로 잽니다. 처음에는 짧은 더미 문장으로
+    만들었는데, 그 문장에서는 연도를 건너뛰든 말든 결과가 같아
+    **고쳐도 빨간 불이 그대로**였습니다. 실제 동작을 재현하지 못하는
+    시험은 아무것도 지켜 주지 않습니다.
+    """
+    원문 = pathlib.Path("data/measure/raw/PG_2020-10-20.txt")
+    if not 원문.exists():          # 원문 캐시가 없는 환경에서는 건너뜁니다
+        return
+    글 = 원문.read_text(encoding="utf-8", errors="replace")
+    읽은값 = sf.parse_press_release(글)["gross_margin_pct"]
+    assert 읽은값 == 52.7, f"표의 52.7% 가 아니라 {읽은값} 을 물었습니다"
+
+
+def test_fiscal_연도_표기도_연간으로_본다():
+    """`fiscal 2023` 도 "연간"이라는 말입니다 (183차-BJ).
+
+    연간 가드는 `full year` · `fiscal year` · `FY 2025` 는 알아보는데
+    **`fiscal 2023`** 은 못 알아봤습니다.
+
+    실물 HD 2024-02-20 — 연도 가드를 넣자 분기값 2.82 가 **연간값**
+    15.11 로 바뀌었습니다:
+
+        "Net earnings for **fiscal 2023** were $15.1 billion,
+         or **$15.11 per diluted share**"
+
+    전에는 이 문장의 연도가 우연히 방패 노릇을 했습니다. 방패를 치웠으니
+    제대로 된 문지기를 세웁니다.
+
+    이 문장은 숫자가 **이름 앞**에 오는 모양이라
+    `find_eps_before_per_share` 가 읽습니다. 그 길에는 연간 가드가
+    **아예 없었습니다** — 배당·전망·논갭만 걸렀습니다.
+    """
+    글 = ("Net earnings for fiscal 2023 were $15.1 billion, "
+          "or $15.11 per diluted share.")
+    assert sf.find_eps_before_per_share(글) is None
+
+    # 분기 문장은 그대로 읽어야 합니다 (가드가 과하지 않은지)
+    분기글 = ("Net earnings for the fourth quarter were $2.8 billion, "
+              "or $2.82 per diluted share.")
+    assert sf.find_eps_before_per_share(분기글) == 2.82
+
+    # 판정 자체 — `quarter` 가 함께 있으면 연간이 아닙니다.
+    # (이 줄이 없으면 quarter 예외를 지워도 시험이 전부 초록이었습니다)
+    assert sf._연간이라고_말하는가(" for fiscal 2023 were ") is True
+    assert sf._연간이라고_말하는가("Fiscal 2018 fourth quarter ") is False
+    assert sf._연간이라고_말하는가(" for the full year 2020, ") is True
+    assert sf._연간이라고_말하는가(" for the third quarter of fiscal 2025 ") is False
+
+    # 실물 — 이름과 값 **사이**에 연간 표시가 끼는 길(`find_eps_value`).
+    # 이 갈래가 없으면 사이 구간 가드를 통째로 지워도 시험이 초록이었습니다.
+    원문 = pathlib.Path("data/measure/raw/HD_2024-02-20.txt")
+    if 원문.exists():
+        실물 = 원문.read_text(encoding="utf-8", errors="replace")
+        읽은값 = sf.parse_press_release(실물)["gaap_eps"]
+        assert 읽은값 == 2.82, f"연간 EPS 를 물었습니다 ({읽은값}, 분기값은 2.82)"
 
 
 def test_값_없는_제목줄은_건너뛴다():

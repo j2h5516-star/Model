@@ -302,7 +302,8 @@ def _표_아래_각주에_적힌_단위(text: str, position: int) -> int:
 
 
 def _parse_number_at(
-    text: str, search_from: int, search_len: int = 160
+    text: str, search_from: int, search_len: int = 160,
+    연도건너뛰기: bool = True,
 ) -> tuple[float, int, int, bool, int] | None:
     """지정한 위치부터 오른쪽으로 훑으며 첫 번째 숫자를 찾아 값으로 바꿉니다.
 
@@ -341,7 +342,7 @@ def _parse_number_at(
         #    이름 바로 뒤(공백의 시작)를 가리켜 이 검사가 늘 통과해 버립니다.
         if match.start("num") >= search_len:
             return None
-        if not _연도처럼_보이는가(match):
+        if not 연도건너뛰기 or not _연도처럼_보이는가(match):
             break
         # 연도였습니다 — 그 숫자 **다음 글자**부터 다시 찾습니다.
         찾기시작 = match.end("num")
@@ -651,7 +652,15 @@ def _scan_labeled_value(
                 remaining = limit - (search_from - label_match.end())
                 if remaining <= 0:
                     break
-                parsed = _parse_number_at(text, search_from, remaining)
+                # 183차-BJ — 이익률을 찾는 중이면 **연도를 건너뛰지 않습니다.**
+                # 이익률은 "뒤에 % 기호가 붙었는가"로 이미 걸러지므로 연도가
+                # 채택될 길이 원래 없고, 건너뛰면 그 뒤의 나쁜 값을 더 빨리
+                # 만납니다 — 실물 PG 2020-10-20(눌린 발표자료)에서 "Q1 FY
+                # **2021** **+1%** Pricing" 의 +1% 를 물어 52.70% 가 1.00% 가
+                # 되었습니다.
+                parsed = _parse_number_at(
+                    text, search_from, remaining, 연도건너뛰기=not is_percent
+                )
                 if parsed is None:
                     break
                 value, number_start, number_end, had_word_scale, num_end = parsed
@@ -1475,6 +1484,27 @@ _FISCAL_HEAD_RE = re.compile(r"^fiscal\s+20\d{2}\b", re.I)
 _FISCAL_HEAD_SPAN = 60   # 줄머리에서 이만큼 안에서 quarter 여부를 함께 봅니다
 _ANNUAL_LINE_HEAD = 24   # 줄머리에서 이만큼 안에 "Full-year" 가 있으면 그 줄은 연간
 
+# 183차-BJ — **문장 한가운데**의 `fiscal 2023`.
+#
+# 위 `_FISCAL_HEAD_RE` 는 줄이 그 말로 **시작**할 때만 봅니다(119차, SYNA).
+# 그런데 회사는 문장 중간에도 적습니다 —
+#   실물 HD 2024-02-20: "Net earnings **for fiscal 2023** were $15.1
+#   billion, or **$15.11** per diluted share" (분기값은 2.82)
+_문장속_FISCAL_RE = re.compile(r"\bfiscal\s+(?:19|20)\d{2}\b", re.I)
+
+
+def _연간이라고_말하는가(글: str) -> bool:
+    """이 토막이 "연간"이라고 말하는가 (183차-BJ).
+
+    `quarter` 가 함께 있으면 **아닙니다** — 회사는 분기를 말하면서도
+    회계연도를 함께 적기 때문입니다("Q3 **fiscal 2024**", "**Fiscal
+    2018** fourth quarter"). 74차·119차에 이미 배운 예외이고, 여기서도
+    같은 자를 씁니다.
+    """
+    if _SECTION_QUARTER_RE.search(글):
+        return False
+    return bool(_ANNUAL_BEFORE_RE.search(글) or _문장속_FISCAL_RE.search(글))
+
 # 구역 제목으로 연간/분기를 가르기 (76차 — 실물 HPE 로 확증)
 # ---------------------------------------------------------------------------
 # 보도자료는 흔히 **구역 제목**으로 연간과 분기를 나눠 적습니다:
@@ -1947,6 +1977,38 @@ def find_eps_value(
                 if _ANNUAL_AFTER_RE.match(text[num_end:num_end + _ANNUAL_AHEAD]):
                     search_from = number_end
                     continue
+
+                # 183차-BJ — 이름과 값 **사이**에 연간 표시가 끼어 있는 경우.
+                #
+                # 위쪽 가드는 이름 **앞** 60자를, 이 가드는 값 **바로 뒤**를
+                # 봅니다. 그 사이는 아무도 안 보고 있었습니다. 실물 HD
+                # 2024-02-20:
+                #   "Net earnings **for fiscal 2023** were $15.1 billion,
+                #    or **$15.11** per diluted share"
+                # 그 분기 GAAP EPS 는 2.82(같은 글 표의 첫 열)인데 **연간값**
+                # 15.11 을 물었습니다.
+                #
+                # 183차-BI 전에는 이 자리가 우연히 가려져 있었습니다 — 파서가
+                # 앞쪽 연도에 먼저 걸려 다른 후보로 갔기 때문입니다. 연도
+                # 가드로 그 방패를 치우자 드러났습니다.
+                #
+                # 이 자리만 건너뛰고 계속 찾습니다. 같은 문단 뒤쪽에 분기값이
+                # 이어지는 경우가 많고, 없으면 다른 이름 자리가 답을 냅니다.
+                #
+                # ⚠️ **값 뒤에 분기 표시가 있으면 건드리지 않습니다.** 한
+                #    문장에 연간·전년·분기가 줄줄이 오는 글이 있기 때문입니다
+                #    (실물 GS 2022-01-18):
+                #      "EPS was $59.45 **for the year ended** December 31,
+                #       2021 compared with $24.74 for the year ended December
+                #       31, 2020, **and was $10.81 for the fourth quarter**"
+                #    10.81 은 분기값인데, 이름부터 값까지를 통째로 보면 앞선
+                #    두 값의 연간 표시까지 삼켜 멀쩡한 값을 버립니다
+                #    (이 시험이 실제로 빨간 불을 켜서 창을 좁혔습니다).
+                if (_연간이라고_말하는가(text[label_match.end():num_start])
+                        and not _SECTION_QUARTER_RE.search(
+                            text[num_end:num_end + _ANNUAL_AHEAD])):
+                    search_from = number_end
+                    continue
                 # 값 뒤에 **"주당 …, 그 해 동안"** 이 붙은 경우 (150차-AP).
                 # 위 검사는 값 **바로 뒤**만 보므로 "per share" 가 사이에
                 # 끼면 닿지 않습니다. 실물 PCG 2021-02-25:
@@ -2300,6 +2362,26 @@ def find_eps_before_per_share(text: str) -> float | None:
             back = max(start - _FORECAST_BACK, line_start,
                        text.rfind(". ", 0, start) + 2)
             if _FORECAST_NEAR_RE.search(text[back:match.end()]):
+                continue
+            # 183차-BJ — 원문이 "연간"이라고 **직접 말하는** 자리면 분기값이
+            # 아닙니다. 이름 뒤에서 값을 찾는 `find_eps_value` 는 74차에
+            # 이 가드를 얻었는데, **숫자가 이름 앞에 오는 이 길에는 없었습니다**
+            # (배당·전망·논갭만 걸렀습니다).
+            #
+            # 실물 HD 2024-02-20:
+            #   "Net earnings for **fiscal 2023** were $15.1 billion,
+            #    or **$15.11** per diluted share"
+            # 그 분기 GAAP EPS 는 2.82 인데 **연간값 15.11** 을 물었습니다.
+            #
+            # 183차-BI 전에는 이 자리가 우연히 가려져 있었습니다 — 파서가
+            # 앞쪽 연도에 먼저 걸려 다른 후보로 갔기 때문입니다. 연도 가드로
+            # 그 방패를 치우자 드러났습니다. 방패가 아니라 문지기를 둡니다.
+            #
+            # 문장 시작(앞 마침표 뒤)까지 되돌아봅니다 — 연간 표시는 보통
+            # 문장 앞머리에 옵니다("**for fiscal 2023** were … per share").
+            # `quarter` 가 함께 있으면 연간이 아닙니다(74차·119차의 예외를
+            # `_연간이라고_말하는가` 가 그대로 씁니다).
+            if _연간이라고_말하는가(text[back:start]):
                 continue
             raw = match.group(1)
             negative = raw.startswith("(") and raw.endswith(")")
