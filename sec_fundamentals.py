@@ -1521,6 +1521,20 @@ def _연간이라고_말하는가(글: str) -> bool:
     2018** fourth quarter"). 74차·119차에 이미 배운 예외이고, 여기서도
     같은 자를 씁니다.
     """
+    # **누적(YTD)은 quarter 예외보다 먼저 봅니다** (183차-BM).
+    #
+    # 회사가 한 표에 "3Q 2024" 와 "YTD 2024" 를 나란히 두기 때문에,
+    # quarter 를 먼저 보면 누적 칸이 분기로 통과해 버립니다(실물 MCO).
+    #
+    # ⚠️ 이 세 줄은 183차-BK 에서 **한 번 지웠던 것**입니다. 그때는
+    #    돌연변이를 내도 아무 시험이 안 깨져 "아무것도 지키지 않는 죽은
+    #    코드"로 판정했습니다. 그 판정은 맞았습니다 — 그때는 `3Q` 를
+    #    알아보지 못해서 quarter 예외 자체가 안 걸렸기 때문입니다.
+    #    183차-BM 이 `3Q` 를 알아보게 만들자 **곧바로 필요해졌습니다**
+    #    (MCO 조정 EPS 가 3.21 → 2.93 으로 다시 틀어졌습니다).
+    #    **죽어 보이던 코드가 다른 고침 하나로 살아났습니다.**
+    if _누적_RE.search(글):
+        return True
     if _SECTION_QUARTER_RE.search(글):
         return False
     return bool(_ANNUAL_BEFORE_RE.search(글) or _문장속_FISCAL_RE.search(글))
@@ -1561,6 +1575,23 @@ def _연간이라고_말하는가(글: str) -> bool:
 _SECTION_TITLE_RE = re.compile(
     r"financial\s+(?:results|highlights|summary)", re.I)
 _SECTION_DOC_TITLE_RE = re.compile(r"\b(?:reports?|announces?|announced)\b", re.I)
+# ⚠️ **`3Q` 꼴은 일부러 안 넣었습니다** (183차-BM — 넣어 보고 되돌렸습니다).
+#
+# 이 자는 `Q3` 는 알고 `3Q` 는 모릅니다. 저장 원문 실측으로 `3Q`·`4Q19`
+# 꼴이 **435건**이나 있어서 고칠 값어치가 있어 보였고, 실제로 넣어
+# 전수 3,299건을 쟀습니다:
+#
+#   매출  좋아짐 6(YETI·PATH·RJF 등) · 나빠짐 4(TT·HUBS·MMM)
+#   EPS   MCO 두 칸이 **참값 3.21 → GAAP 값 2.93** 으로 틀어짐
+#         (자동 잣대는 둘 다 "그럴듯"이라 0:0 으로 셌습니다 — 원문을
+#          열어야 보이는 손해입니다)
+#   합계  **좋아짐 6 · 나빠짐 6** → 사전 등록한 채택 기준
+#         (좋아짐 > 나빠짐)을 못 넘어 되돌렸습니다.
+#
+# 왜 이득이 작았나: 이 자는 **연간 가드의 예외**입니다. 넓힐수록 가드가
+# 풀려서, 맞는 분기값을 되찾는 만큼 연간값도 함께 들어옵니다.
+# `3Q` 를 알아보게 하려면 **예외를 넓히는 것이 아니라 다른 장치**가
+# 필요합니다.
 _SECTION_QUARTER_RE = re.compile(r"\bquarter(?:ly)?\b|\bQ[1-4]\b", re.I)
 _SECTION_MAX_CHARS = 60       # 이보다 길면 문서 제목으로 봅니다
 _SECTION_LOOKBACK_LINES = 12  # 이름에서 몇 줄 위까지 구역 제목을 찾을까
