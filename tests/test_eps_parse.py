@@ -1412,6 +1412,44 @@ def test_누적_YTD_는_분기값이_아니다():
         assert 읽은값 == 3.21, f"누적 EPS 를 물었습니다 ({읽은값}, 분기값은 3.21)"
 
 
+def test_FY22_두자리_표기도_연간이다():
+    """`FY22` 도 "그 회계연도 전체"라는 말입니다 (183차-BP).
+
+    연간 가드는 `FY 2022` · `FY2022` 는 아는데 **두 자리 표기는
+    몰랐습니다.** 실물 RF 2023-04-18(1분기 발표문):
+
+        "… Performance Metrics **FY22** Reported Adjusted(1) …
+         Total Revenue **$7.2B** $7.2B …"
+
+    72억은 리전스파이낸셜의 **2022년 한 해** 매출입니다. 그 분기값은
+    19억 안팎입니다.
+    """
+    for 연간표기 in (" FY22 Reported ", " FY'22 ", " FY 2022 ", " FY2022 "):
+        assert sf._ANNUAL_BEFORE_RE.search(연간표기) is not None, 연간표기
+
+
+def test_매출도_전망_문맥이면_읽지_않는다():
+    """전망(가이던스)은 실적이 아닙니다 — **매출도** 마찬가지입니다 (183차-BP).
+
+    `_FORECAST_NEAR_RE`(`guidance`·`outlook`·`expects` 포함)가 EPS
+    경로에만 달려 있고 **매출 경로에는 없었습니다.**
+
+    실물 FSLR 2018-07-26(2분기 발표문):
+
+        2018 GAAP **Guidance**              Prior          Current
+        **Net Sales**            $2.45B to $2.65B   $2.5B to $2.6B
+
+    2분기 발표에 실린 **그 해 연간 전망**을 그 분기 매출로 읽었습니다.
+    """
+    전망글 = ("2018 GAAP Guidance                  Prior          Current\n"
+              "Net Sales                $2.45B to $2.65B   $2.5B to $2.6B\n")
+    assert sf.find_labeled_value(전망글, sf.LABELS_REVENUE) is None
+
+    # 실적 문장은 그대로 읽어야 합니다 (가드가 과하지 않은지)
+    실적글 = "Net sales for the second quarter were $309.3 million.\n"
+    assert sf.find_labeled_value(실적글, sf.LABELS_REVENUE) == 309_300_000
+
+
 def test_값_없는_제목줄은_건너뛴다():
     """논갭 조정표의 **제목 줄**이 다음 줄 GAAP 값을 물면 안 됩니다 (103차).
 

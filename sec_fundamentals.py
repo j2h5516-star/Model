@@ -498,10 +498,28 @@ def find_labeled_value(
 # ("fourth quarter and full year" 보도자료에서 분기 숫자와 연간 숫자를 가릅니다)
 _ANNUAL_CONTEXT_RE = re.compile(
     r"(full[-\s]year|fiscal[-\s]year|twelve\s+months|year\s+ended|"
-    r"annual\s+(?:revenue|results?)|for\s+the\s+year)",
+    r"annual\s+(?:revenue|results?)|for\s+the\s+year"
+    # 183차-BP — `FY22` · `FY 2022` 같은 회계연도 표기도 "그 해 전체"라는
+    # 말입니다. EPS 쪽 가드(`_ANNUAL_BEFORE_RE`)는 알고 있었는데 **매출
+    # 쪽은 몰랐습니다** — 두 가드가 서로 다른 낱말 목록을 들고 있었습니다.
+    # 실물 RF 2023-04-18(1분기 발표문): "Performance Metrics **FY22**
+    # Reported … Total Revenue **$7.2B**" — 72억은 그 해 전체 매출이고
+    # 그 분기값은 19억 안팎입니다.
+    # (`quarter` 가 같은 창에 있으면 183차-AX 의 예외로 통과합니다 —
+    #  "Q1 FY2026" 같은 분기 표기를 잃지 않습니다.)
+    r"|FY\s*['’]?\d{2}(?:\d{2})?\b)",
     re.I,
 )
-_ANNUAL_LOOKBACK = 90   # 라벨 앞 몇 글자까지 되돌아볼 것인가
+# 183차-BP — 90 → **130자**. 실물 RF 2023-04-18 은 라벨 `Total Revenue`
+# 에서 `FY22` 까지 **109자**였습니다(줄 안). 90자로는 19자가 모자라
+# 전년도 연간 매출 72억을 1분기 칸에 들였습니다.
+_ANNUAL_LOOKBACK = 130  # 라벨 앞 몇 글자까지 되돌아볼 것인가
+
+# 183차-BP — 매출·영업이익의 **전망 가드**가 되돌아보는 범위.
+# 실물 FSLR 2018-07-26 은 라벨 `Net sales` 에서 표 머리 `Guidance` 까지
+# **138자**이고 **줄을 넘습니다**(표 머리가 앞 줄). 그래서 줄 제약을
+# 두지 않고 200자를 봅니다 — 다만 앞 **문장** 경계(`. `)는 지킵니다.
+_금액전망_되돌아보기 = 200
 
 
 def _scan_labeled_value(
@@ -633,6 +651,27 @@ def _scan_labeled_value(
                 _le = text.find("\n", label_match.end())
                 _le = _le if _le != -1 else len(text)
                 if _PCT_FORECAST_RE.search(text[_ls:_le]):
+                    continue
+
+            # 183차-BP — **금액도 전망 문맥이면 실적이 아닙니다.**
+            #
+            # 위 가드는 `is_percent` 안에 있어 **이익률만** 지켰습니다.
+            # 매출·영업이익은 전망 문맥을 아무도 안 보고 있었습니다.
+            #
+            # 실물 FSLR 2018-07-26(2분기 발표문):
+            #     2018 GAAP **Guidance**        Prior          Current
+            #     **Net Sales**      $2.45B to $2.65B   $2.5B to $2.6B
+            # 2분기 발표에 실린 **그 해 연간 전망**을 그 분기 매출로
+            # 읽었습니다.
+            #
+            # 되돌아보는 범위는 EPS 경로와 같은 자(`_FORECAST_BACK`)를
+            # 쓰되, **줄을 넘지 않고 앞 문장도 넘지 않습니다** — 넓히면
+            # 멀리 있는 전망 문단이 멀쩡한 실적 문장까지 삼킵니다.
+            if not is_percent:
+                _s2 = label_match.start()
+                _back2 = max(_s2 - _금액전망_되돌아보기,
+                             text.rfind(". ", 0, _s2) + 2)
+                if _FORECAST_NEAR_RE.search(text[_back2:_s2]):
                     continue
 
             search_from = label_match.end()
@@ -1352,7 +1391,11 @@ _ANNUAL_BEFORE_RE = re.compile(
     r"|\bannual\b"
     # "FY 2025"/"FY2025" (119차 — 실물 AXP 머리글: "FY 2025 EARNINGS PER
     # SHARE ROSE TO $15.38"). FY 는 fiscal year 의 표준 약자입니다.
-    r"|\bFY\s*20\d{2}\b"
+    # 183차-BP — **두 자리 표기**도 같은 말입니다(`FY22` · `FY'22`).
+    # 실물 RF 2023-04-18(1분기 발표문): "Performance Metrics **FY22**
+    # Reported … Total Revenue **$7.2B**" — 72억은 그 해 **전체** 매출이고
+    # 그 분기값은 19억 안팎입니다. 네 자리만 알아서 못 걸렀습니다.
+    r"|\bFY\s*['’]?\d{2}(?:\d{2})?\b"
     # "YTD 2024" / "year-to-date" (183차-BK — 실물 MCO). **누적**은 분기값이
     # 아닙니다. 이 이름은 값 **앞**에 오므로(표의 행 이름) 이름 앞을 보는
     # 가드가 잡아야 합니다 — `_연간이라고_말하는가` 만으로는 안 닿습니다.
