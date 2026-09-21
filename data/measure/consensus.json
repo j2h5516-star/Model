@@ -602,6 +602,33 @@
       "rev_analysts": 32
      }
     }
+   },
+   {
+    "as_of": "2026-09-21",
+    "rows": {
+     "0q": {
+      "avg": 31.47183,
+      "low": 28.04,
+      "high": 37.44,
+      "analysts": 32,
+      "year_ago": 3.03,
+      "rev_avg": 51098691500.0,
+      "rev_low": 46911000000.0,
+      "rev_high": 59805000000.0,
+      "rev_analysts": 35
+     },
+     "+1q": {
+      "avg": 35.51414,
+      "low": 29.51,
+      "high": 47.81,
+      "analysts": 32,
+      "year_ago": 4.78,
+      "rev_avg": 57431628860.0,
+      "rev_low": 50105200000.0,
+      "rev_high": 75369000000.0,
+      "rev_analysts": 32
+     }
+    }
    }
   ],
   "SNDK": [
@@ -9579,6 +9606,33 @@
       "rev_analysts": 25
      }
     }
+   },
+   {
+    "as_of": "2026-09-21",
+    "rows": {
+     "0q": {
+      "avg": 3.27069,
+      "low": 3.24613,
+      "high": 3.36,
+      "analysts": 30,
+      "year_ago": 2.66,
+      "rev_avg": 925329760.0,
+      "rev_low": 924100000.0,
+      "rev_high": 939000000.0,
+      "rev_analysts": 28
+     },
+     "+1q": {
+      "avg": 4.08268,
+      "low": 3.97,
+      "high": 4.21653,
+      "analysts": 30,
+      "year_ago": 3.09,
+      "rev_avg": 965024180.0,
+      "rev_low": 961790840.0,
+      "rev_high": 970600000.0,
+      "rev_analysts": 27
+     }
+    }
    }
   ],
   "BILL": [
@@ -10698,6 +10752,33 @@
       "rev_analysts": 27
      }
     }
+   },
+   {
+    "as_of": "2026-09-21",
+    "rows": {
+     "0q": {
+      "avg": 0.4544,
+      "low": 0.3,
+      "high": 0.6,
+      "analysts": 25,
+      "year_ago": 0.5,
+      "rev_avg": 27500849980.0,
+      "rev_low": 24286500000.0,
+      "rev_high": 30566000000.0,
+      "rev_analysts": 27
+     },
+     "+1q": {
+      "avg": 0.49376,
+      "low": 0.29442,
+      "high": 0.82,
+      "analysts": 25,
+      "year_ago": 0.5,
+      "rev_avg": 28500834410.0,
+      "rev_low": 25887238000.0,
+      "rev_high": 32372000000.0,
+      "rev_analysts": 27
+     }
+    }
    }
   ],
   "TTD": [
@@ -11339,6 +11420,33 @@
      },
      "+1q": {
       "avg": 2.55882,
+      "low": 1.83,
+      "high": 2.955,
+      "analysts": 17,
+      "year_ago": 1.61,
+      "rev_avg": 1375724170.0,
+      "rev_low": 1320200000.0,
+      "rev_high": 1436000000.0,
+      "rev_analysts": 16
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-21",
+    "rows": {
+     "0q": {
+      "avg": 2.4336,
+      "low": 2.21,
+      "high": 2.88,
+      "analysts": 17,
+      "year_ago": 1.83,
+      "rev_avg": 1327895650.0,
+      "rev_low": 1288042000.0,
+      "rev_high": 1383382500.0,
+      "rev_analysts": 16
+     },
+     "+1q": {
+      "avg": 2.56352,
       "low": 1.83,
       "high": 2.955,
       "analysts": 17,
@@ -16722,6 +16830,33 @@
       "rev_low": 22303000000.0,
       "rev_high": 23460282410.0,
       "rev_analysts": 15
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-21",
+    "rows": {
+     "0q": {
+      "avg": 2.61949,
+      "low": 2.39,
+      "high": 2.73,
+      "analysts": 9,
+      "year_ago": 2.263,
+      "rev_avg": 23659916500.0,
+      "rev_low": 23343000000.0,
+      "rev_high": 23976833000.0,
+      "rev_analysts": 2
+     },
+     "+1q": {
+      "avg": 2.33211,
+      "low": 2.21902,
+      "high": 2.48,
+      "analysts": 9,
+      "year_ago": 1.2433,
+      "rev_avg": 22794778000.0,
+      "rev_low": 22620000000.0,
+      "rev_high": 22969556000.0,
+      "rev_analysts": 2
      }
     }
    }
@@ -31928,6 +32063,33 @@
       "analysts": 12,
       "year_ago": 1.83,
       "rev_avg": 6315226700.0,
+      "rev_low": 6203714350.0,
+      "rev_high": 6376900000.0,
+      "rev_analysts": 10
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-21",
+    "rows": {
+     "0q": {
+      "avg": 2.39346,
+      "low": 2.35,
+      "high": 2.44642,
+      "analysts": 12,
+      "year_ago": 2.19,
+      "rev_avg": 6616403490.0,
+      "rev_low": 6453019520.0,
+      "rev_high": 6685000000.0,
+      "rev_analysts": 10
+     },
+     "+1q": {
+      "avg": 2.01304,
+      "low": 1.92,
+      "high": 2.05284,
+      "analysts": 12,
+      "year_ago": 1.83,
+      "rev_avg": 6316440700.0,
       "rev_low": 6203714350.0,
       "rev_high": 6376900000.0,
       "rev_analysts": 10
