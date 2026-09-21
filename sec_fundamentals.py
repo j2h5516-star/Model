@@ -1352,7 +1352,11 @@ _ANNUAL_BEFORE_RE = re.compile(
     r"|\bannual\b"
     # "FY 2025"/"FY2025" (119차 — 실물 AXP 머리글: "FY 2025 EARNINGS PER
     # SHARE ROSE TO $15.38"). FY 는 fiscal year 의 표준 약자입니다.
-    r"|\bFY\s*20\d{2}\b",
+    r"|\bFY\s*20\d{2}\b"
+    # "YTD 2024" / "year-to-date" (183차-BK — 실물 MCO). **누적**은 분기값이
+    # 아닙니다. 이 이름은 값 **앞**에 오므로(표의 행 이름) 이름 앞을 보는
+    # 가드가 잡아야 합니다 — `_연간이라고_말하는가` 만으로는 안 닿습니다.
+    r"|\bYTD\b|\byear[-\s]to[-\s]date\b",
     re.I,
 )
 # 줄머리에서는 넓게 봐도 됩니다 — 줄이 "Fiscal year 2023 …" 으로 **시작**
@@ -1483,6 +1487,22 @@ _FROM_BEFORE_RE = re.compile(r"\bfrom\s*\$?\s*$", re.I)
 _FISCAL_HEAD_RE = re.compile(r"^fiscal\s+20\d{2}\b", re.I)
 _FISCAL_HEAD_SPAN = 60   # 줄머리에서 이만큼 안에서 quarter 여부를 함께 봅니다
 _ANNUAL_LINE_HEAD = 24   # 줄머리에서 이만큼 안에 "Full-year" 가 있으면 그 줄은 연간
+
+# 183차-BK — **누적(YTD)** 은 분기값이 아닙니다.
+#
+# 파서는 지금까지 **연간**과 **분기**만 가렸습니다. `YTD` 라는 말은
+# 코드 어디에도 없었는데(grep 0건), 저장된 원문 259건에 그 표현이
+# 있습니다.
+#
+# 실물 MCO 2024-10-22(눌린 발표자료):
+#     3Q 2024      3Q 2024        Diluted EPS
+#     $2.93 ⇑39%   **$3.21** ⇑32%          ← 그 분기 조정 EPS
+#     YTD 2024     YTD 2024       Adjusted Diluted EPS1
+#     **$9.09** ⇑32%  $9.85 ⇑28%           ← 이것을 물고 있었습니다
+#
+# 누적은 연간값보다 **잡기 어렵습니다**. 3분기 누적은 그 분기의 3배쯤
+# 이라 이웃과 견주는 잣대에 "그럴듯한 크기"로 보이기까지 합니다.
+_누적_RE = re.compile(r"\bYTD\b|\byear[-\s]to[-\s]date\b", re.I)
 
 # 183차-BJ — **문장 한가운데**의 `fiscal 2023`.
 #

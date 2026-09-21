@@ -1368,6 +1368,47 @@ def test_fiscal_연도_표기도_연간으로_본다():
         assert 읽은값 == 2.82, f"연간 EPS 를 물었습니다 ({읽은값}, 분기값은 2.82)"
 
 
+def test_누적_YTD_는_분기값이_아니다():
+    """`YTD`(연초 이래 누적)는 분기값이 아닙니다 (183차-BK).
+
+    파서는 **연간**과 **분기**만 가렸습니다. `YTD` 라는 말은 코드
+    어디에도 없었는데, 저장된 원문 259건에 그 표현이 있습니다.
+
+    실물 MCO 2024-10-22(눌린 발표자료):
+
+        3Q 2024        3Q 2024        Diluted EPS
+        $2.93 ⇑ 39%    $3.21 ⇑ 32%
+        YTD 2024       YTD 2024       Adjusted Diluted EPS1
+        $9.09 ⇑ 32%    $9.85 ⇑ 28%
+
+    그 분기 조정 EPS 는 **3.21** 인데 누적 **9.09** 를 물었습니다.
+
+    누적은 연간값보다 **잡기 어렵습니다** — 3분기 누적은 그 분기의
+    3배쯤이라 "그럴듯한 크기"로 보이기까지 합니다. 이웃 분기와 견주는
+    잣대만으로는 가릴 수 없습니다.
+    """
+    assert sf._연간이라고_말하는가(" YTD 2024 Adjusted Diluted EPS ") is True
+    assert sf._연간이라고_말하는가(" year-to-date results ") is True
+    # 분기 표현은 그대로 — 가드가 과하지 않은지
+    assert sf._연간이라고_말하는가(" 3Q 2024 Adjusted Diluted EPS ") is False
+
+    # ⚠️ **분기 표기 `3Q` 는 지금 알아보지 못합니다** (183차-BK 에서 발견).
+    #    `_SECTION_QUARTER_RE` 는 `Q3` 는 알고 `3Q` 는 모릅니다. 그래서
+    #    "3Q 2024" 라고 적는 회사(실물 MCO)의 분기 문장을 분기로 인정하지
+    #    않습니다. 이 시험은 **지금 그렇다는 사실을 적어 두는 것**이지
+    #    옳다는 뜻이 아닙니다 — 고치면 이 줄을 뒤집어야 합니다.
+    assert sf._SECTION_QUARTER_RE.search(" Q3 2024 ") is not None
+    assert sf._SECTION_QUARTER_RE.search(" 3Q 2024 ") is None   # ⚠️ 못 알아봄
+
+    # 실물 — 참값은 그 분기 조정 EPS **3.21** 입니다.
+    # (이 갈래가 없으면 이름 앞 가드에서 YTD 를 지워도 시험이 초록이었습니다)
+    원문 = pathlib.Path("data/measure/raw/MCO_2024-10-22_부탁.txt")
+    if 원문.exists():
+        실물 = 원문.read_text(encoding="utf-8", errors="replace")
+        읽은값 = sf.parse_press_release(실물)["adj_eps"]
+        assert 읽은값 == 3.21, f"누적 EPS 를 물었습니다 ({읽은값}, 분기값은 3.21)"
+
+
 def test_값_없는_제목줄은_건너뛴다():
     """논갭 조정표의 **제목 줄**이 다음 줄 GAAP 값을 물면 안 됩니다 (103차).
 
