@@ -1328,7 +1328,19 @@ _FORECAST_NEAR_RE = re.compile(
     # 낱말 전체("approximately")는 실적 문장에도 흔히 쓰여 넣지 않고,
     # **약자만** 넣습니다.
     r"\bapprox\.?(?=\s|$)"
-    r"|\b(?:expects?|expected|expecting|anticipates?|approach(?:es|ing)?"
+    # 183차-BQ — `approach` 는 **뒤에 숫자가 올 때만** 전망입니다.
+    #
+    # 예전에는 낱말만 보고 물어서 **명사 approach** 까지 전망으로 봤습니다.
+    # 실물 STT 2021-06-14: "leadership **approach**: Solutions-based,
+    # leveraging Alpha for …" — 그 뒤의 멀쩡한 매출을 버렸습니다.
+    #
+    # 저장 원문 실측: `approach` 1,082건 중 표본 12개가 **전부 명사**
+    # ("Top-down approach" · "our approach" · "hyper-local approach").
+    # 그렇다고 낱말을 통째로 뺄 수는 없습니다 — `approaches 11.7%` ·
+    # `approaching $1 billion` 같은 **진짜 전망 용법**이 있습니다.
+    # 그래서 낱말이 아니라 **그 뒤에 숫자가 이어지는가**로 가릅니다.
+    r"|\bapproach(?:es|ing)?\b(?=\s*[\$\d~>≥])"
+    r"|\b(?:expects?|expected|expecting|anticipates?"
     r"|targets?|targeting|forecasts?|estimates?|guidance|outlook"
     r"|earnings\s+model)\b",
     re.I,

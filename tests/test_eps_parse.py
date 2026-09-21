@@ -1450,6 +1450,39 @@ def test_매출도_전망_문맥이면_읽지_않는다():
     assert sf.find_labeled_value(실적글, sf.LABELS_REVENUE) == 309_300_000
 
 
+def test_명사_approach_는_전망이_아니다():
+    """`approach` 는 **뒤에 숫자가 올 때만** 전망입니다 (183차-BQ).
+
+    전망 가드가 `\\bapproach(es|ing)?\\b` 를 그대로 물어 **명사**까지
+    전망으로 봤습니다. 실물 STT 2021-06-14:
+
+        "leadership **approach**: Solutions-based, leveraging Alpha for …"
+
+    그 뒤의 멀쩡한 매출을 버렸습니다.
+
+    저장 원문 실측 — `approach` 1,082건 중 표본 12개가 전부 명사
+    ("Top-down approach" · "our approach" · "hyper-local approach").
+    그렇다고 낱말을 통째로 빼면 안 됩니다: `approaches 11.7%` ·
+    `approaching $1 billion` 같은 **진짜 전망 용법**이 있습니다.
+    """
+    # 명사 — 전망이 아닙니다
+    for 명사 in ("leadership approach: Solutions-based",
+                 "our approach is working",
+                 "a more personalized approach to the guest app",
+                 "Top-down approach to re-imagine what we do"):
+        assert sf._FORECAST_NEAR_RE.search(명사) is None, 명사
+
+    # 뒤에 숫자가 오면 전망입니다
+    for 전망 in ("approaching $1 billion", "approaches 11.7%",
+                 "approaching 20%", "approach 11.4%"):
+        assert sf._FORECAST_NEAR_RE.search(전망) is not None, 전망
+
+    # 다른 전망 낱말은 그대로 (가드가 헐거워지지 않았는지)
+    for 그대로 in ("the Company expects", "2018 GAAP Guidance",
+                   "now anticipates", "full-year outlook"):
+        assert sf._FORECAST_NEAR_RE.search(그대로) is not None, 그대로
+
+
 def test_값_없는_제목줄은_건너뛴다():
     """논갭 조정표의 **제목 줄**이 다음 줄 GAAP 값을 물면 안 됩니다 (103차).
 
