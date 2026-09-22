@@ -1544,6 +1544,37 @@ def test_매출_전망은_라벨_뒤에_와도_막는다():
     assert sf.find_labeled_value(이어진글, sf.LABELS_REVENUE) == 409_300_000
 
 
+def test_Low_High_열머리가_있으면_전망표다():
+    """`Low`/`High` 열 머리가 붙은 표는 **전망표**입니다 (183차-BU).
+
+    실물 AAL 2022-01-11:
+
+        ⁠                        4Q21 Range
+        ⁠                   Low                 High
+        ⁠Total revenue    $9,420              $9,420
+
+    `guidance` · `expects` 같은 낱말이 라벨 근처에 없어 183차-BP·BS 의
+    가드가 못 잡았습니다.
+
+    `Range` 는 쓸 수 없었습니다 — 저장 원문 164건의 표본이 "**Vesting
+    Factor Range**"(보상 약정) 같은 무관한 쓰임으로 채워져 있었습니다.
+
+    `Low`/`High` 도 문장 속 낱말일 수 있어(실물: "**Low** environmental
+    impact … Fuel-flexible **High** efficiency") **사이가 공백만**일
+    때(= 열 머리일 때)로 한정합니다.
+    """
+    원문 = pathlib.Path("data/measure/raw/AAL_2022-01-11.txt")
+    if 원문.exists():
+        글 = 원문.read_text(encoding="utf-8", errors="replace")
+        읽은값 = sf.parse_press_release(글)["revenue"]
+        assert 읽은값 is None, f"전망표를 물었습니다 ({읽은값})"
+
+    # 문장 속 낱말은 열 머리가 아닙니다 (가드가 과하지 않은지)
+    문장 = ("Low environmental impact and easy install with High efficiency.\n"
+            "Total revenue was $9.4 billion in the quarter.\n")
+    assert sf.find_labeled_value(문장, sf.LABELS_REVENUE) == 9_400_000_000
+
+
 def test_값_없는_제목줄은_건너뛴다():
     """논갭 조정표의 **제목 줄**이 다음 줄 GAAP 값을 물면 안 됩니다 (103차).
 

@@ -521,6 +521,29 @@ _ANNUAL_LOOKBACK = 130  # 라벨 앞 몇 글자까지 되돌아볼 것인가
 # 두지 않고 200자를 봅니다 — 다만 앞 **문장** 경계(`. `)는 지킵니다.
 _금액전망_되돌아보기 = 200
 
+# 183차-BU — **`Low`/`High` 열 머리**가 붙은 표는 전망표입니다.
+#
+# 실물 AAL 2022-01-11:
+#         ⁠              4Q21 Range
+#         ⁠         Low            High
+#         ⁠Total revenue  $9,420      $9,420
+# `guidance`·`expects` 가 라벨 근처에 없어 183차-BP·BS 의 가드가
+# 못 잡았습니다.
+#
+# `Range` 는 못 씁니다 — 저장 원문 164건의 표본이 "**Vesting Factor
+# Range**"(보상 약정) 같은 무관한 쓰임이었습니다.
+#
+# `Low`/`High` 도 문장 속 낱말일 수 있어(실물: "**Low** environmental
+# impact … Fuel-flexible **High** efficiency) **사이가 공백만**일 때로
+# 한정합니다. 문장이면 사이에 낱말이 끼어 걸리지 않습니다.
+_전망표_열머리_RE = re.compile(r"\(?Low\)?\s{2,}\(?High\)?", re.I)
+
+# 창은 실측해서 정했습니다(183차-BG·BP 의 교훈 — 짐작하지 않습니다).
+# 이 열 머리가 매출 라벨 앞에 있는 원문 23건의 거리: 최소 1 · 중앙 22 ·
+# 90% 1,367 · 최대 1,439자. 가까운 것(1자)이 여럿이고(AAL·APP·HCA),
+# 먼 것(BSX·BXP 700~1,400자)은 **다른 표의 머리**일 수 있어 좁게 잡습니다.
+_전망표_열머리_창 = 200
+
 # 183차-BR — **문장 끝**을 찾는 자. 예전에는 `". "`(마침표+공백)만
 # 봤는데, 인용이 `.”` 로 끝나고 줄바꿈이 오면 경계를 못 잡아 **앞
 # 문장의 전망 낱말**이 창 안으로 넘어왔습니다.
@@ -704,6 +727,12 @@ def _scan_labeled_value(
                 if (_FORECAST_NEAR_RE.search(text[_back2:_s2])
                         or _FORECAST_NEAR_RE.search(
                             text[label_match.end():_앞끝])):
+                    continue
+                # 183차-BU — `Low`/`High` 열 머리가 가까이 있으면 전망표입니다.
+                # (위 낱말 가드와 달리 **문장 경계를 보지 않습니다** — 표
+                #  머리는 문장이 아니라 줄로 끊기기 때문입니다.)
+                if _전망표_열머리_RE.search(
+                        text[max(0, _s2 - _전망표_열머리_창):_s2]):
                     continue
 
             search_from = label_match.end()
