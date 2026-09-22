@@ -1483,6 +1483,35 @@ def test_명사_approach_는_전망이_아니다():
         assert sf._FORECAST_NEAR_RE.search(그대로) is not None, 그대로
 
 
+def test_문장_경계가_닫는_따옴표를_넘는다():
+    """`performance.”` 도 문장 끝입니다 (183차-BR).
+
+    전망 가드는 **그 문장 안**만 봅니다. 그런데 경계 찾기가
+    `". "`(마침표+공백)만 보아서, 인용이 `.”` 로 끝나고 줄바꿈이 오면
+    경계를 못 잡고 **앞 문장의 전망 낱말**이 넘어왔습니다.
+
+    실물 NSC 2018-04-25:
+
+        "… we are increasing our **expected** annual share repurchases
+         to $1.5 billion, confident that we will deliver strong
+         financial performance.**”**
+         First-quarter summary
+         •   **Railway operating revenues** … $2.7 billion"
+
+    27억은 그 분기 실제 철도 매출인데, 221자 앞 문장의 `expected` 가
+    넘어와 버렸습니다.
+    """
+    글 = ('We are increasing our expected annual share repurchases to '
+          '$1.5 billion, confident that we will deliver strong financial '
+          'performance.”\nFirst-quarter summary\n'
+          '•   Railway operating revenues were $2.7 billion.\n')
+    assert sf.find_labeled_value(글, sf.LABELS_REVENUE) == 2_700_000_000
+
+    # 같은 문장 안의 전망은 그대로 막아야 합니다 (가드가 헐거워지지 않았는지)
+    같은문장 = "The Company expects Net sales of $2.45 billion this year.\n"
+    assert sf.find_labeled_value(같은문장, sf.LABELS_REVENUE) is None
+
+
 def test_값_없는_제목줄은_건너뛴다():
     """논갭 조정표의 **제목 줄**이 다음 줄 GAAP 값을 물면 안 됩니다 (103차).
 

@@ -521,6 +521,24 @@ _ANNUAL_LOOKBACK = 130  # 라벨 앞 몇 글자까지 되돌아볼 것인가
 # 두지 않고 200자를 봅니다 — 다만 앞 **문장** 경계(`. `)는 지킵니다.
 _금액전망_되돌아보기 = 200
 
+# 183차-BR — **문장 끝**을 찾는 자. 예전에는 `". "`(마침표+공백)만
+# 봤는데, 인용이 `.”` 로 끝나고 줄바꿈이 오면 경계를 못 잡아 **앞
+# 문장의 전망 낱말**이 창 안으로 넘어왔습니다.
+#
+# 실물 NSC 2018-04-25: "… our **expected** annual share repurchases …
+# strong financial performance.**”**\nFirst-quarter summary\n•  Railway
+# operating **revenues** … $2.7 billion" — 27억은 그 분기 실제 철도
+# 매출인데 **221자 앞** 문장의 `expected` 가 넘어와 버렸습니다.
+_문장끝_RE = re.compile(r"""[.!?]["”’']?\s""")
+
+
+def _앞문장_끝(text: str, 자리: int, 아래: int) -> int:
+    """`자리` 앞에서 가장 가까운 **문장 끝** 다음 위치 (없으면 `아래`)."""
+    끝 = 아래
+    for m in _문장끝_RE.finditer(text, 아래, 자리):
+        끝 = m.end()
+    return 끝
+
 
 def _scan_labeled_value(
     text: str,
@@ -669,8 +687,8 @@ def _scan_labeled_value(
             # 멀리 있는 전망 문단이 멀쩡한 실적 문장까지 삼킵니다.
             if not is_percent:
                 _s2 = label_match.start()
-                _back2 = max(_s2 - _금액전망_되돌아보기,
-                             text.rfind(". ", 0, _s2) + 2)
+                _back2 = _앞문장_끝(
+                    text, _s2, max(0, _s2 - _금액전망_되돌아보기))
                 if _FORECAST_NEAR_RE.search(text[_back2:_s2]):
                     continue
 
