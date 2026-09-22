@@ -2698,6 +2698,52 @@ def test_은행개념_세기가_기간_목록을_돌려준다():
     assert "2025-12-31" in out["_기간"], out["_기간"]
 
 
+def test_Revenues_가_부분값인지_산수로_센다():
+    """은행의 `Revenues` 가 **부분값**인지 산수로 셉니다 (183차-CA).
+
+    183차-BZ 실측 — MTB 매출이 전 기간 3.6~4.4억인데 M&T은행 분기
+    총수익은 **23억 안팎**입니다(1/6). XBRL 도 같은 값이니 파서가 아니라
+    **태그 선택**이 틀렸습니다. 은행은 `Revenues` 라는 이름으로 수수료
+    수익 같은 **부분값**을 싣는 일이 있습니다.
+
+    잴 자는 산수입니다 — **`Revenues` 가 `순이자수익 + 비이자수익` 의
+    절반에도 못 미치면 그것은 총수익이 아닙니다.** 둘 다 XBRL 에 있으니
+    이웃도 짐작도 필요 없습니다.
+
+    ⚠️ **값은 고치지 않습니다.** 몇 칸인지 세기만 하고, 그 수를 보고
+    다음을 정합니다 (183차-AS 와 같은 방식).
+    """
+    분기_이자 = {"2025-03-31": 1.8e9, "2025-06-30": 1.9e9}
+    분기_비이자 = {"2025-03-31": 0.6e9, "2025-06-30": 0.6e9}
+    부분_Revenues = {"2025-03-31": 0.39e9, "2025-06-30": 0.42e9}   # 합의 1/6
+
+    옛분기, 옛연간 = sf._quarterly_series, sf._annual_series
+
+    def 가짜분기(f, c, r=None, unit="USD"):
+        if c == "InterestIncomeExpenseNet":
+            return dict(분기_이자)
+        if c == "NoninterestIncome":
+            return dict(분기_비이자)
+        if c == "Revenues":
+            return dict(부분_Revenues)
+        return {}
+
+    sf._quarterly_series = 가짜분기
+    sf._annual_series = lambda f, c, r=None, unit="USD": {}
+    try:
+        out = sf._은행개념_세기(
+            None, None,
+            series={"op_income": {}, "revenue": dict(부분_Revenues),
+                    "gaap_eps": {}},
+            start_date="2025-01-01")
+    finally:
+        sf._quarterly_series, sf._annual_series = 옛분기, 옛연간
+
+    셈 = out.get("_Revenues_부분값_의심")
+    assert 셈 is not None, f"계기를 안 달았습니다: {sorted(out)}"
+    assert 셈.get("칸") == 2, f"두 분기 모두 세야 합니다: {셈}"
+
+
 def cfg_첫_은행개념():
     return sf._BANK_REVENUE_CANDIDATES[0]
 

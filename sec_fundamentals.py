@@ -4558,6 +4558,11 @@ def fetch_xbrl_approximation(
 
 
 # 은행·보험이 매출 자리에 쓰는 개념들 (157차 — 세기 전용)
+# 183차-CA — `Revenues` 가 이 비율에도 못 미치면 **부분값**으로 셉니다.
+# 절반으로 잡은 까닭: 총수익의 절반을 밑도는 "매출"은 어떤 회계로도
+# 총수익이 아닙니다. MTB 실물은 1/6 이라 넉넉히 걸립니다.
+_부분값_문턱 = 0.5
+
 _BANK_REVENUE_CANDIDATES = [
     "RevenuesNetOfInterestExpense",
     "InterestAndDividendIncomeOperating",
@@ -4614,6 +4619,44 @@ def _은행개념_세기(facts, report: dict | None = None,
             칸["채운뒤"] = len(기간)
             칸["새기간"] = len(기간 - 지금)
         out[concept] = 칸
+    # 183차-CA — **`Revenues` 가 부분값인지 산수로 셉니다.**
+    #
+    # 183차-BZ 실측: MTB 매출이 전 기간 3.6~4.4억인데 M&T은행 분기
+    # 총수익은 23억 안팎입니다(1/6). XBRL 도 같은 값이니 파서가 아니라
+    # **태그 선택**이 틀렸습니다 — 은행은 `Revenues` 라는 이름으로
+    # 수수료 수익 같은 **부분값**을 싣는 일이 있습니다.
+    #
+    # 자는 산수입니다: **`Revenues` 가 `순이자수익 + 비이자수익` 의
+    # 절반에도 못 미치면 그것은 총수익이 아닙니다.** 둘 다 XBRL 에
+    # 있으니 이웃도 짐작도 필요 없습니다.
+    #
+    # ⚠️ **값은 고치지 않습니다.** 몇 칸인지 세기만 합니다(183차-AS 방식).
+    #    이 환경에서는 SEC 에 못 붙어 실물 수를 볼 수 없으므로, 로봇
+    #    런에서 답이 나오면 그 수를 보고 다음을 정합니다.
+    if series is not None:
+        _rev = series.get("revenue") or {}
+        try:
+            _이자 = _quarterly_series(facts, "InterestIncomeExpenseNet",
+                                     None, unit="USD")
+            _비이자 = _quarterly_series(facts, "NoninterestIncome",
+                                      None, unit="USD")
+        except Exception:
+            _이자, _비이자 = {}, {}
+        _의심 = 0
+        for _d, _v in _rev.items():
+            if not isinstance(_v, (int, float)) or _v <= 0:
+                continue
+            _합 = (_이자.get(_d) or 0) + (_비이자.get(_d) or 0)
+            if _합 > 0 and _v < _합 * _부분값_문턱:
+                _의심 += 1
+        if _이자 or _비이자:
+            out["_Revenues_부분값_의심"] = {
+                "칸": _의심, "잰칸": len(_rev),
+                "설명": "Revenues 가 (순이자수익+비이자수익)의 "
+                        f"{_부분값_문턱:.0%} 에도 못 미치는 분기 수 — "
+                        "값은 안 고쳤습니다(183차-CA)",
+            }
+
     if out and series is not None and start_date is not None:
         out["_요약"] = {"지금뼈대": len(지금),
                       "합집합_새기간": len(합집합 - 지금)}
