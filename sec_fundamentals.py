@@ -689,7 +689,21 @@ def _scan_labeled_value(
                 _s2 = label_match.start()
                 _back2 = _앞문장_끝(
                     text, _s2, max(0, _s2 - _금액전망_되돌아보기))
-                if _FORECAST_NEAR_RE.search(text[_back2:_s2]):
+                # 183차-BS — **라벨 뒤도 봅니다.** 전망 문장은 흔히 이름
+                # 뒤에 옵니다 (실물 TYL 2021-06-07):
+                #   "•Non-GAAP **total revenues** are **expected to be**
+                #    in the range of **$1.510 billion** …"
+                # EPS 경로에는 이미 같은 자가 있었습니다 — 두 경로가
+                # 다른 자를 쓰면 오늘 겪은 일(연간 가드가 두 벌인데
+                # 낱말 목록이 서로 달랐던 183차-BP)이 또 납니다.
+                _앞끝 = label_match.end() + _FORECAST_AHEAD
+                for _멈춤 in ("\n", ". "):
+                    _자름 = text.find(_멈춤, label_match.end(), _앞끝)
+                    if _자름 != -1:
+                        _앞끝 = _자름
+                if (_FORECAST_NEAR_RE.search(text[_back2:_s2])
+                        or _FORECAST_NEAR_RE.search(
+                            text[label_match.end():_앞끝])):
                     continue
 
             search_from = label_match.end()

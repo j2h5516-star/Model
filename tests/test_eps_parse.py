@@ -1512,6 +1512,38 @@ def test_문장_경계가_닫는_따옴표를_넘는다():
     assert sf.find_labeled_value(같은문장, sf.LABELS_REVENUE) is None
 
 
+def test_매출_전망은_라벨_뒤에_와도_막는다():
+    """전망 낱말이 **라벨 뒤**에 와도 전망입니다 (183차-BS).
+
+    매출 전망 가드는 라벨 **앞**만 봤습니다. 그런데 전망 문장은 흔히
+    뒤에 옵니다 — 실물 TYL 2021-06-07:
+
+        "•Non-GAAP **total revenues** are **expected to be** in the
+         range of **$1.510 billion** to $1.540 billion."
+
+    EPS 경로에는 이미 같은 자(`_FORECAST_AHEAD`)가 있었습니다.
+
+    ⚠️ **실물 원문으로 잽니다.** 처음에는 짧은 더미 문장으로 만들었는데
+    거기서는 앞 줄의 `guidance:` 를 **라벨 앞 가드가 이미 잡아** 고치기
+    전에도 초록이었습니다. 실제 동작을 재현하지 못하는 시험은 아무것도
+    지켜 주지 않습니다 (오늘만 여덟 번째로 겪는 가짜 초록불입니다).
+    """
+    원문 = pathlib.Path("data/measure/raw/TYL_2021-06-07.txt")
+    if 원문.exists():
+        글 = 원문.read_text(encoding="utf-8", errors="replace")
+        읽은값 = sf.parse_press_release(글)["revenue"]
+        assert 읽은값 is None, f"연간 가이던스를 물었습니다 ({읽은값})"
+
+    # 실적 문장은 그대로 (가드가 과하지 않은지)
+    실적글 = "Total revenues were $409.3 million in the second quarter.\n"
+    assert sf.find_labeled_value(실적글, sf.LABELS_REVENUE) == 409_300_000
+
+    # 다음 **문장**의 전망은 막지 않습니다 — 줄바꿈·문장 끝에서 자릅니다
+    이어진글 = ("Total revenues were $409.3 million. "
+                "We expect further growth next quarter.\n")
+    assert sf.find_labeled_value(이어진글, sf.LABELS_REVENUE) == 409_300_000
+
+
 def test_값_없는_제목줄은_건너뛴다():
     """논갭 조정표의 **제목 줄**이 다음 줄 GAAP 값을 물면 안 됩니다 (103차).
 
