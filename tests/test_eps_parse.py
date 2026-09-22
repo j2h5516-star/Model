@@ -1575,6 +1575,30 @@ def test_Low_High_열머리가_있으면_전망표다():
     assert sf.find_labeled_value(문장, sf.LABELS_REVENUE) == 9_400_000_000
 
 
+def test_띄어진_단위선언도_읽는다():
+    """`I n millions` 처럼 **글자가 띄어진** 단위 선언도 읽습니다 (183차-BV).
+
+    실물 CF 2022-05-05(슬라이드 추출문):
+
+        "7 Financial results - first quarter 2022 **I n millions**,
+         except percentages, per MMBtu and EPS  Q1 20 22  Q1 2021
+         Net sales $ 2,868  $ 1,048"
+
+    추출 과정에서 `In` 의 두 글자가 띄어졌습니다(같은 줄의 `Q1 20 22`
+    도 마찬가지입니다). 파서는 `in millions` 만 찾아 2,868 을
+    **2,868달러**로 읽었습니다 — 참값은 **28.68억 달러**입니다.
+
+    저장 원문 실측: 정상 `in millions` 1,481건 · 띄어진 꼴 **5건**.
+    영어에 `i n` 이라는 낱말은 없으므로 오탐이 원리적으로 없습니다.
+    """
+    원문 = pathlib.Path("data/measure/raw/CF_2022-05-05.txt")
+    if 원문.exists():
+        글 = 원문.read_text(encoding="utf-8", errors="replace")
+        읽은값 = sf.parse_press_release(글)["revenue"]
+        assert 읽은값 is not None and 읽은값 > 1e9, \
+            f"띄어진 단위 선언을 못 읽었습니다 ({읽은값})"
+
+
 def test_값_없는_제목줄은_건너뛴다():
     """논갭 조정표의 **제목 줄**이 다음 줄 GAAP 값을 물면 안 됩니다 (103차).
 

@@ -97,6 +97,16 @@ _UNIT_PATTERNS = [
     # 전부 단위 선언이었고 서술문은 한 건도 없었습니다.
     (re.compile(rf"\$\s*in\s+{_SCALE_WORDS}\b", re.I), None),
     (re.compile(rf"^[ \t]*in\s+{_SCALE_WORDS}\b", re.I | re.M), None),
+    # 183차-BV — **글자가 띄어진** 단위 선언. 슬라이드·PDF 추출문에서는
+    # `In` 의 두 글자가 벌어집니다. 실물 CF 2022-05-05:
+    #   "Financial results - first quarter 2022 **I n millions**, except
+    #    percentages … Net sales $ 2,868"  (같은 줄의 `Q1 20 22` 도 그렇습니다)
+    # 이것을 못 읽어 2,868 을 **2,868달러**로 읽었습니다 — 참값은 28.68억.
+    #
+    # `i` 와 `n` **사이에 공백이 있을 때만** 잡습니다. 영어에 `i n` 이라는
+    # 낱말은 없으므로 오탐이 원리적으로 없고, 정상 `in millions` 는 위
+    # 두 갈래가 이미 잡습니다. 저장 원문 실측 — 정상 1,481건 · 이 꼴 5건.
+    (re.compile(rf"\bi\s+n\s+{_SCALE_WORDS}\b", re.I), None),
 ]
 # 잡아낸 낱말 → 배수 (약자 M·B·K 포함 — 87차)
 _SCALE_MULTIPLIER = {
