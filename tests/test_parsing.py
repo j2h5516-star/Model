@@ -353,7 +353,12 @@ def test_은행개념_세기는_값을_쓰지_않고_세기만_한다():
 def test_은행개념_계기가_report_에_실린다():
     """만들어 놓고 배선을 잊으면 아무도 안 보는 칸이 된다(150차-C)."""
     import inspect
-    src = inspect.getsource(sf.fetch_xbrl_approximation)
+    # 183차-CI — 꼬리를 `_은행_정리하고_조립` 으로 떼어 냈다(네트워크 없이
+    # 시험하려고). 배선은 그대로이므로 **호출 사슬을 따라가** 잰다 —
+    # 본 함수가 도우미를 부르는지, 도우미 안에 배선이 있는지.
+    본 = inspect.getsource(sf.fetch_xbrl_approximation)
+    assert "_은행_정리하고_조립(" in 본, "본 함수가 도우미를 안 부릅니다"
+    src = inspect.getsource(sf._은행_정리하고_조립)
     # 183차-G 에 모양이 바뀌었다 — 세기만 하던 것을 **뼈대에도 쓰기로**
     # 하면서, 계기는 `_기간`(뼈대에 쓸 날짜)만 빼고 기록한다.
     assert "_은행개념_세기(" in src, src[-800:]

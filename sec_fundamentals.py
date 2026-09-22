@@ -4529,9 +4529,41 @@ def fetch_xbrl_approximation(
     # 확인할 수 없으므로(SEC 차단), 먼저 **세기만** 하고 뼈대는 그대로
     # 둡니다. 숫자를 보고 나서 넣을지 정합니다 (106차 규칙 그대로 —
     # 짐작으로 뼈대를 건드리지 않는다).
+    return _은행_정리하고_조립(ticker, series, start_date, report, annual_eps, facts)
+
+
+def _은행_정리하고_조립(ticker, series, start_date, report, annual_eps, facts):
+    """은행 개념을 세고, 뼈대에 기간을 넣고, 부분값 매출을 비운 뒤 조립합니다.
+
+    `fetch_xbrl_approximation` 의 꼬리를 떼어 낸 것입니다(183차-CI) —
+    네트워크 없이 시험할 수 있도록.
+    """
     은행 = _은행개념_세기(facts, report, series=series, start_date=start_date)
     if report is not None:
-        report["은행개념_후보"] = {k: v for k, v in 은행.items() if k != "_기간"}
+        report["은행개념_후보"] = {k: v for k, v in 은행.items()
+                              if k not in ("_기간", "_부분값_날짜")}
+
+    # 183차-CI — **산수로 부분값이 확인된 분기의 XBRL 매출을 비웁니다.**
+    #
+    # 183차-CA 의 계기가 런 #87 에서 **127칸 · 9종목**을 냈습니다
+    # (HBAN 27 · ZION 27 · FITB 22 · SOFI 19 · IBKR 13 · MTB 10 · CFG 4 ·
+    #  DFS 4 · NTRS 1). `Revenues` 가 (순이자수익+비이자수익)의 절반에도
+    # 못 미치면 그것은 총수익이 아니라 수수료 수익 같은 **부분값**입니다.
+    #
+    # **채워 넣지 않고 비우기만** 합니다. 순이자+비이자를 매출 자리에
+    # 넣으면 한 열에 정의가 섞입니다(바로 아래 157차·183차-G 의 우려).
+    # 비운 자리는 보도자료 값이 있으면 그것이 남고(DFS 는 그렇게 총수익만
+    # 남아 열이 고르게 됩니다 — 183차-CB), 없으면 "없음"입니다(헌법 1조).
+    #
+    # 매출은 가설 판정에 쓰이지 않습니다(183차-CE) — 판정은 흔들리지 않고,
+    # 화면에 틀린 매출이 보이는 것만 없어집니다.
+    부분값 = 은행.get("_부분값_날짜") or []
+    if 부분값 and series.get("revenue"):
+        series = dict(series)
+        series["revenue"] = {d: v for d, v in series["revenue"].items()
+                             if d not in set(부분값)}
+        if report is not None:
+            report["은행_부분값_비움"] = len(부분값)
 
     # 183차-G — **은행의 기간을 뼈대에 넣습니다** (160차의 선택지 (나)).
     #
@@ -4643,12 +4675,17 @@ def _은행개념_세기(facts, report: dict | None = None,
         except Exception:
             _이자, _비이자 = {}, {}
         _의심 = 0
+        _날짜 = []
         for _d, _v in _rev.items():
             if not isinstance(_v, (int, float)) or _v <= 0:
                 continue
             _합 = (_이자.get(_d) or 0) + (_비이자.get(_d) or 0)
             if _합 > 0 and _v < _합 * _부분값_문턱:
                 _의심 += 1
+                _날짜.append(_d)
+        if _날짜:
+            # 183차-CI — 비우는 쪽이 어느 분기인지 알 수 있게 날짜도 돌려줍니다
+            out["_부분값_날짜"] = sorted(_날짜)
         if _이자 or _비이자:
             out["_Revenues_부분값_의심"] = {
                 "칸": _의심, "잰칸": len(_rev),

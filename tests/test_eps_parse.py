@@ -2742,6 +2742,47 @@ def test_Revenues_가_부분값인지_산수로_센다():
     셈 = out.get("_Revenues_부분값_의심")
     assert 셈 is not None, f"계기를 안 달았습니다: {sorted(out)}"
     assert 셈.get("칸") == 2, f"두 분기 모두 세야 합니다: {셈}"
+    # 183차-CI — 어느 분기인지 **날짜**도 돌려줘야 비울 수 있습니다
+    assert sorted(out.get("_부분값_날짜") or []) == ["2025-03-31", "2025-06-30"], out
+
+
+def test_부분값으로_판명된_XBRL_매출은_비운다():
+    """산수로 부분값이 확인된 분기의 XBRL 매출을 **비웁니다** (183차-CI).
+
+    런 #87 계기(183차-CA)가 **127칸 · 9종목**을 냈습니다(HBAN 27 · ZION 27
+    · FITB 22 · SOFI 19 · IBKR 13 · MTB 10 · CFG 4 · DFS 4 · NTRS 1).
+    183차-CD 에서 제 기억으로 찍은 종목들이 산수 자로도 전부 나왔습니다.
+
+    **채워 넣지 않고 비우기만** 합니다 — 순이자수익+비이자수익을 매출
+    자리에 넣으면 한 열에 정의가 섞입니다(157차의 우려). 비운 자리는
+    보도자료 값이 있으면 그것이 남고, 없으면 "없음"입니다(헌법 1조).
+
+    매출은 판정에 쓰이지 않으므로(183차-CE) 판정은 흔들리지 않습니다.
+    """
+    옛세기 = sf._은행개념_세기
+    넘겨받은 = {}
+
+    def 가짜세기(facts, report=None, series=None, start_date=None):
+        return {"_부분값_날짜": ["2025-03-31"], "_기간": []}
+
+    def 가짜조립(ticker, series, start_date, report, annual_eps):
+        넘겨받은["revenue"] = dict(series.get("revenue") or {})
+        return []
+
+    옛조립 = sf._quarters_from_series
+    sf._은행개념_세기, sf._quarters_from_series = 가짜세기, 가짜조립
+    try:
+        sf._은행_정리하고_조립(
+            "MTB",
+            {"revenue": {"2025-03-31": 0.39e9, "2025-06-30": 2.3e9}},
+            "2025-01-01", {}, {}, None)
+    finally:
+        sf._은행개념_세기, sf._quarters_from_series = 옛세기, 옛조립
+
+    assert "2025-03-31" not in 넘겨받은["revenue"], \
+        f"부분값을 안 비웠습니다: {넘겨받은}"
+    assert 넘겨받은["revenue"].get("2025-06-30") == 2.3e9, \
+        f"멀쩡한 분기까지 지웠습니다: {넘겨받은}"
 
 
 def cfg_첫_은행개념():
