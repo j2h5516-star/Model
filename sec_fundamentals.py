@@ -4541,7 +4541,7 @@ def _은행_정리하고_조립(ticker, series, start_date, report, annual_eps, 
     은행 = _은행개념_세기(facts, report, series=series, start_date=start_date)
     if report is not None:
         report["은행개념_후보"] = {k: v for k, v in 은행.items()
-                              if k not in ("_기간", "_부분값_날짜")}
+                              if k not in ("_기간", "_부분값_날짜", "_부분값_자")}
 
     # 183차-CI — **산수로 부분값이 확인된 분기의 XBRL 매출을 비웁니다.**
     #
@@ -4586,7 +4586,31 @@ def _은행_정리하고_조립(ticker, series, start_date, report, annual_eps, 
         series = dict(series)
         series["bank_period"] = {d: None for d in 은행["_기간"]}
 
-    return _quarters_from_series(ticker, series, start_date, report, annual_eps)
+    행들 = _quarters_from_series(ticker, series, start_date, report, annual_eps)
+
+    # 183차-CJ — 비운 분기의 행에 **자**를 붙여 둡니다.
+    #
+    # 런 #88 실측: 183차-CI 로 비운 자리에 보도자료 매출이 들어왔는데
+    # 절반이 쓰레기였습니다(ZION 2,000,000 이 24칸 · MTB 1,017 · FITB −29 ·
+    # HBAN 43.1억). 비운 까닭이 "산수로 총수익이 아님이 드러나서"였으니,
+    # 그 자리에 들어오는 값도 **같은 자로** 재야 앞뒤가 맞습니다.
+    # 재는 곳은 `_apply_press_to_row` 입니다. 이 칸은 저장되지 않습니다
+    # (measure_store 허용 목록에 없음) — 짝짓기 동안만 쓰는 자입니다.
+    자 = 은행.get("_부분값_자") or {}
+    if 자:
+        # (변수 이름을 row 로 둡니다 — 시험 규칙이 `row[…] =` 를 읽어
+        #  "행에 심은 칸"을 모으므로, 다른 이름이면 규칙 눈에 안 보입니다.)
+        for row in 행들:
+            if row.get("filing_date") in 자:
+                row["은행_총수익_자"] = 자[row["filing_date"]]
+    return 행들
+
+
+# 183차-CJ — 비운 자리의 보도자료 매출이 자의 몇 배 안에 있어야 받나.
+#   아래 문턱은 183차-CA 의 `_부분값_문턱`(0.5)을 그대로 씁니다.
+#   위 문턱 2배: 총수익의 두 배를 넘는 "분기 매출"은 연간값·총자산 같은
+#   다른 숫자입니다(런 #88 실물: HBAN 43.1억 · ZION 100억).
+_보도매출_위문턱 = 2.0
 
 
 # 은행·보험이 매출 자리에 쓰는 개념들 (157차 — 세기 전용)
@@ -4676,6 +4700,7 @@ def _은행개념_세기(facts, report: dict | None = None,
             _이자, _비이자 = {}, {}
         _의심 = 0
         _날짜 = []
+        _자: dict = {}
         for _d, _v in _rev.items():
             if not isinstance(_v, (int, float)) or _v <= 0:
                 continue
@@ -4683,9 +4708,13 @@ def _은행개념_세기(facts, report: dict | None = None,
             if _합 > 0 and _v < _합 * _부분값_문턱:
                 _의심 += 1
                 _날짜.append(_d)
+                _자[_d] = _합
         if _날짜:
             # 183차-CI — 비우는 쪽이 어느 분기인지 알 수 있게 날짜도 돌려줍니다
             out["_부분값_날짜"] = sorted(_날짜)
+            # 183차-CJ — 그 분기의 자(순이자수익+비이자수익)도 돌려줍니다.
+            #   비운 자리에 보도자료 매출이 들어올 때 같은 자로 잽니다.
+            out["_부분값_자"] = _자
         if _이자 or _비이자:
             out["_Revenues_부분값_의심"] = {
                 "칸": _의심, "잰칸": len(_rev),
@@ -5517,7 +5546,16 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
     # 야후와 일치). 헌법 1조는 "없음이 틀림보다 안전"이지 "없음이 맞음보다
     # 안전"이 아니다. 그래서 XBRL 이 없을 때만 보도자료를 쓴다 — 잃는 것 0.
     if row.get("revenue") is None and press.get("revenue") is not None:
-        row["revenue"] = press["revenue"]
+        # 183차-CJ — XBRL 매출을 **산수로 부분값이라 비운** 은행 분기면,
+        # 보도자료 값도 같은 자(순이자수익+비이자수익)로 잽니다.
+        # 자의 0.5~2배 밖이면 받지 않고 **없음**으로 둡니다(고치지 않음).
+        # 자가 없는 행(비우지 않은 분기 · 은행 아닌 종목)은 예전 그대로입니다.
+        자 = row.get("은행_총수익_자")
+        if (자 and 자 > 0 and not (
+                자 * _부분값_문턱 <= abs(press["revenue"]) <= 자 * _보도매출_위문턱)):
+            row["은행_보도매출_거절"] = press["revenue"]
+        else:
+            row["revenue"] = press["revenue"]
     # 매출총이익률은 **뒤집지 않는다** (92차).
     #   숫자만 보면 169:0 으로 XBRL 압승이지만, 이 칸은 뜻이 다르다 —
     #   보도자료는 회사가 발표한 **논갭** 이익률이고 XBRL·야후는 **갭**이다
@@ -5891,6 +5929,9 @@ def merge_quarters(
         # 그 1월 8-K 가 짝을 못 찾아 남은 것인지(= 구멍 메우기가 기회를
         # 얻고도 실패) 아니면 다른 분기가 가져간 것인지 구분이 안 됐습니다.
         report["unpaired_dates"] = sorted(unpaired)[-24:]
+        # 183차-CJ 계기 — 자로 재서 **받지 않은** 보도자료 매출 칸 수.
+        report["은행_보도매출_거절"] = sum(
+            1 for r in merged if r.get("은행_보도매출_거절") is not None)
         if unpaired:
             report["pair_note"] = (
                 f"짝 못 찾은 8-K {len(unpaired)}건 (예: {unpaired[0]}) — "

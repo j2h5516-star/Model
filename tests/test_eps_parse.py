@@ -2785,6 +2785,83 @@ def test_부분값으로_판명된_XBRL_매출은_비운다():
         f"멀쩡한 분기까지 지웠습니다: {넘겨받은}"
 
 
+def test_비운_자리의_보도자료_매출도_같은_자로_잰다():
+    """183차-CI 로 비운 분기에는 보도자료 매출도 **같은 산수 자**로 잽니다 (183차-CJ).
+
+    런 #88 실측 — 비운 127칸에 보도자료 매출이 들어왔는데 절반이
+    쓰레기였습니다: ZION **2,000,000** 이 24칸(ZION 분기 총수익은 약 8억) ·
+    MTB 1,017 · FITB −29 · HBAN 43.1억. 반면 IBKR·DFS·NTRS 는 그럴듯한
+    총수익이 들어왔습니다. 그래서 자(순이자수익+비이자수익)의 0.5~2배
+    안에 드는 값만 받고, 밖이면 **없음**으로 둡니다(고치지 않음).
+
+    진짜 경로를 끝까지 탑니다: 세기 → 비우기 → 행에 자 붙이기 → 짝짓기.
+    """
+    분기_이자 = {"2025-03-31": 0.60e9, "2025-06-30": 0.62e9}
+    분기_비이자 = {"2025-03-31": 0.17e9, "2025-06-30": 0.18e9}
+    부분_Revenues = {"2025-03-31": 0.14e9, "2025-06-30": 0.15e9}   # ZION 실물 규모
+
+    def 가짜분기(f, c, r=None, unit="USD"):
+        return dict({"InterestIncomeExpenseNet": 분기_이자,
+                     "NoninterestIncome": 분기_비이자}.get(c, {}))
+
+    옛분기, 옛연간 = sf._quarterly_series, sf._annual_series
+    sf._quarterly_series = 가짜분기
+    sf._annual_series = lambda f, c, r=None, unit="USD": {}
+    report: dict = {}
+    try:
+        뼈대 = sf._은행_정리하고_조립(
+            "ZION",
+            _은행모양_series(revenue=dict(부분_Revenues),
+                          gaap_eps={"2025-03-31": 1.13, "2025-06-30": 1.58}),
+            "2025-01-01", report, {}, None)
+    finally:
+        sf._quarterly_series, sf._annual_series = 옛분기, 옛연간
+
+    assert report.get("은행_부분값_비움") == 2, report
+    assert "_부분값_자" not in report.get("은행개념_후보", {}), \
+        "짝짓기용 자가 로그 계기에 섞였습니다"
+    자 = {r["filing_date"]: r.get("은행_총수익_자") for r in 뼈대}
+    assert 자 == {"2025-03-31": 0.77e9, "2025-06-30": 0.80e9}, f"행에 자가 안 붙었습니다: {자}"
+
+    보도 = [
+        {"filing_date": "2025-04-21", "revenue": 2_000_000.0,   # 실물 쓰레기
+         "adj_eps": 1.13, "gaap_eps": 1.13, "op_income": None},
+        {"filing_date": "2025-07-21", "revenue": 0.84e9,        # 그럴듯한 총수익
+         "adj_eps": 1.58, "gaap_eps": 1.58, "op_income": None},
+    ]
+    merge_report: dict = {}
+    합침 = {r["filing_date"]: r for r in sf.merge_quarters(뼈대, 보도, merge_report)}
+
+    q1, q2 = 합침["2025-03-31"], 합침["2025-06-30"]
+    assert q1["announced_date"] == "2025-04-21", "발표일 도장은 그대로 찍혀야 합니다"
+    assert q1["revenue"] is None, f"자 밖의 쓰레기 매출을 받았습니다: {q1['revenue']}"
+    assert q1.get("은행_보도매출_거절") == 2_000_000.0, q1
+    assert q1["adj_eps"] == 1.13, "매출만 거절해야지 조정 EPS 까지 버리면 안 됩니다"
+    assert q2["revenue"] == 0.84e9, f"자 안의 값까지 버렸습니다: {q2['revenue']}"
+    assert merge_report.get("은행_보도매출_거절") == 1, merge_report
+
+
+def test_자가_없는_행은_보도자료_매출을_예전처럼_받는다():
+    """183차-CJ 는 **비운 은행 분기에만** 닿아야 합니다.
+
+    자가 없는 행(은행 아닌 종목 · 비우지 않은 분기)은 92차 규칙
+    "XBRL 이 없을 때만 보도자료" 그대로여야 합니다. 위 문턱(2배)도
+    확인합니다 — HBAN 43.1억(총수익 약 19억의 2.3배)이 실물입니다.
+    """
+    행 = {"revenue": None, "op_income": None}
+    sf._apply_press_to_row(행, {"revenue": 8.0, "filing_date": "2025-04-15"})
+    assert 행["revenue"] == 8.0, "자가 없는 행의 동작이 바뀌었습니다"
+    assert "은행_보도매출_거절" not in 행
+
+    행 = {"revenue": None, "op_income": None, "은행_총수익_자": 1.9e9}
+    sf._apply_press_to_row(행, {"revenue": 4.309e9, "filing_date": "2022-04-20"})
+    assert 행["revenue"] is None, f"자의 2배를 넘는 값을 받았습니다: {행['revenue']}"
+
+    행 = {"revenue": None, "op_income": None, "은행_총수익_자": 1.9e9}
+    sf._apply_press_to_row(행, {"revenue": 3.7e9, "filing_date": "2022-04-20"})
+    assert 행["revenue"] == 3.7e9, "자의 2배 안의 값은 받아야 합니다"
+
+
 def cfg_첫_은행개념():
     return sf._BANK_REVENUE_CANDIDATES[0]
 
