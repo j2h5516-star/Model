@@ -1,0 +1,390 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — EXTR 2017-08-14
+# 출처: https://www.sec.gov/Archives/edgar/data/1078271/000156459017017659/extr-8k_20170630.htm
+
+Exhibit 99.1
+
+FOR IMMEDIATE RELEASE
+
+  For more information, contact:
+  Investor Relations                  Media Contact
+
+
+  Laurie Little                       Ben Haber
+  212/481-2050                        617/624-3200
+  extreme@tpr-ir.com                  ExtremeUS@racepointglobal.com
+
+Extreme Networks Reports Fourth Quarter and Fiscal Year 2017 Financial Results
+
+SAN JOSE, Calif., August 14, 2017 -- Extreme Networks, Inc. (“Extreme”) (Nasdaq: EXTR) today released financial results for its fiscal fourth quarter and full fiscal year ended June 30, 2017.
+
+Fourth Quarter Results:
+
+  Fourth quarter revenue was $178.7 million, an increase of 28% year-over-year.
+
+  GAAP gross margin for the fourth fiscal quarter was 56.9% and non-GAAP gross margin was 57.1%, an increase of 230 basis points year-over-year.
+
+  GAAP operating margin for the fourth fiscal quarter was 8.2% and non-GAAP operating margin was 12.2%, an increase of 360 basis points year-over-year.
+
+  GAAP net income for the fourth fiscal quarter was $12.2 million, or $0.11 per diluted share, and non-GAAP net income was $19.4 million, or $0.17 per diluted share, an increase of $0.07 year-over-year.
+
+Full Year Results:
+
+  Fiscal year GAAP revenue was $598.1 million, an increase of 13% year-over-year.
+
+  Fiscal year GAAP net loss per share was $0.08 and non-GAAP net income per share was $0.46, an increase of $0.18 year-over-year.
+
+“Led by solid organic growth and continued execution of our recently acquired WLAN business, we concluded 2017 with one of our strongest performances in recent years," stated Ed Meyercord, President and CEO of Extreme Networks. “During our fourth quarter, revenue from our Extreme solutions portfolio generated organic growth of 6% driven by record wireless performance that was at or above current industry growth rates, while our non-GAAP gross margins expanded by 230 basis points year-over-year to 57.1% through our high-quality solution selling strategy and disciplined approach to discounting. Even more noteworthy, for the first time since 2013, we achieved positive GAAP earnings, while delivering non-GAAP earnings at or above our expectations for the ninth consecutive quarter.
+
+“The successful integration of our WLAN acquisition validates our pursuit of accretive acquisitions and we are poised to build on this momentum with the recent closing of the Avaya networking business acquisition and the pending closing of the Brocade data center networking business acquisition. Heading into fiscal 2018, we plan to leverage our expanded market share and significant cross selling opportunities
+
+supported by the combination of these transformative acquisitions, greater penetration across our target verticals and the continued introduction of new products and services. We anticipate these actions will enable us to reach critical mass and build on our leadership position in the enterprise networking industry as we continue to deliver software-driven, end-to-end, wired and wireless networking solutions for enterprise customers," concluded Meyercord.
+
+Recent Key Events:
+
+  Closed the Acquisition of Avaya’s Networking Business: Extreme completed the acquisition of
+
+  Avaya’s networking business in July and has commenced the integration process. As part of this transaction, Extreme acquired customers, employees and technology assets from Avaya that strengthen Extreme’s position as a leader across the education, healthcare, and government markets. Technology assets include Avaya’s award winning fabric technology for highly secure, simplified access, management and control, in addition to a new family of high performance modular switches, software tools ...
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Introduced New Networking Solutions and Enhancements to Software, Switching, and Wireless portfolio:
+
+  Information Governance Engine (software): Extreme's Information Governance Engine replaces the current manual and error-prone network compliance process with a fully automated and repeatable solution capable of completing an assessment in minutes. This addition to Extreme's product portfolio highlights the company's focus on the technology and security needs of today's healthcare industry and other verticals that are challenged by the increasing use of mobile and IoT devices to improve pa...
+
+  ExtremeGuest Analytics (software): Enables retailers and hospitality to provide simple guest sign-on, obtain in-depth analytics of shoppers/visitors, including demographics and preferences, and gather metrics between stores and locations. These analytics provide brick and mortar retailers with the tools they need to compete with online retailers including information such as the number of mobile customers that entered a store, new customers vs. repeat customers, and customer duration in a...
+
+  ExtremeSwitching 200 Series (project name ‘Street Fighter’): A new family of economical, managed Gigabit Ethernet switches that address the wired connections of PCs, servers and storage devices in addition to PoE to power wireless APs and IP phones. The family can also be flexibly managed via ExtremeCloud, ExtremeManagement, web client or industry-standard command line interface (CLI).
+
+  ExtremeWireless WiNG AP 7602 and AP 7622: Priced for the budget-conscious mass market applications and include enterprise-grade features and Bluetooth customer engagement applicable in our target verticals, especially hospitality and retail.
+
+  Key Customer Wins in Focus Markets: Extreme Networks continued to showcase customer momentum across the global education, hospitality and government markets. Customers continue to note Extreme's software and services as value added differentiators for choosing our solutions. Notable customer wins in key vertical markets include the Tampa Bay Buccaneers, the Metro Toronto Convention Centre (Canada’s Largest Convention Center), Suffolk University, Humble Independent School District, Perth &...
+
+  Update on Brocade Acquisition: Extreme expects to close on its purchase of the data center networking assets of Brocade Communications Systems (“Brocade”) within 2-3 business days of the completed Brocade – Broadcom Limited merger, currently expected to close during Brocade’s fourth fiscal quarter ending October 29, 2017.
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Fiscal Q4 2017 Financial Metrics:
+
+(in millions, except percentages and per share information)
+
+                                                   2017      2016                 Change
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+  GAAP Results of Operations
+  Product                                        $140.8      $         106.0       $34.7              33%
+  Service                                          38.0                 33.6         4.4              13%
+  Total Net Revenue                              $178.7      $         139.6       $39.1              28%
+  Gross Margin                                    56.9%                 52.1      480bps               9%
+  Operating Margin                                 8.2%                  (.3      850bps      NM
+  Net Income (Loss)                               $12.2      $          (2.3       $14.5      NM
+  Income (loss) per basic and diluted share       $0.11      $         (0.02       $0.13      NM
+  Non-GAAP Results of Operations
+  Product                                        $140.8      $         106.0       $34.7              33%
+  Service                                          38.0                 34.0         4.0              12%
+  Total Net Revenue                              $178.7      $         140.0       $38.7              28%
+  Gross Margin                                    57.1%                 54.8      230bps               5%
+  Operating Margin                                12.2%                  8.6      360bps              42%
+  Net Income                                      $19.4      $          10.2        $9.2              90%
+  Earnings per diluted share                      $0.17      $          0.10       $0.07              70%
+
+  Cash and investments ended the quarter at $130.5 million, an increase of $13.2 million from the prior quarter and an increase of $36.4 million from the prior year.
+
+  Accounts receivable balance ending Q4 was $120.8 million, with days sales outstanding (“DSO”) of 61.
+
+  Inventory ending Q4 was $45.9 million, a decrease of $1.8 million from the prior quarter and an increase of $4.9 million from the prior year.
+
+Business Outlook:
+
+Extreme’s Business Outlook is based on current expectations. The following statements are forward-looking, and actual results could differ materially based on market conditions and the factors set forth under “Forward-Looking Statements” below.
+
+For its first quarter of fiscal 2018 ending September 30, 2017, the Company is targeting revenue in a range of $200.0 million to $210.0 million. GAAP gross margin is targeted between 53.5% and 55.5% and non-GAAP gross margin is targeted between 55.5% and 57.5%. Operating expenses are targeted to be between $105.0 million and $109.0 million on a GAAP basis and $96.0 million to $99.0 million on a non-GAAP basis. GAAP earnings are targeted to be between a net loss of $1.2 million to net income of $5.5 million or earnings of $(0.01) to $0.05 per diluted share. Non-GAAP earnings are targeted in a range of net income of $12.5 million to $19.5 million, or $0.11 to $0.17 per diluted share. The GAAP and non-GAAP net income targets are based on an estimated 116.2 million average outstanding shares.
+
+The following table shows the GAAP to non-GAAP reconciliation for Q1FY’18 guidance:
+
+                                               Gross Margin Rate                Operating Margin Rate                Earnings per Share
+ ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  GAAP                                         53.5% - 55.5%                    0.5% - 3.7%                          ($0.01) - $0.05
+  Estimated adjustments for:
+  Amortization of product intangibles                                 2.1%                                 2.1%      $0.03
+  Stock based compensation                                            0.1%                                 1.6%      $0.03
+  Amortization of non product intangibles      -                                                           1.0%      $0.02
+  Acquisition and integration costs            -                                                           2.3%      $0.04
+  Non-GAAP                                     55.5% - 57.5%                    7.5% - 10.4%                         $0.11 - $0.17
+
+The total of percentage rate changes may not equal the total change in all cases due to rounding.
+
+Conference Call:
+
+Extreme will host a conference call at 4:30 p.m. Eastern (1:30 p.m. Pacific) today to review the fourth fiscal quarter results as well as the first fiscal quarter 2018 business outlook, including significant factors and assumptions underlying the targets noted above. The conference call will be available to the public through a live audio web broadcast via the Internet at http://investor.extremenetworks.com and a replay of the call will be available on the website through August 13, 2018. The conference call may also be heard by dialing 1-877-303-9826 (international callers dial 1-224-357-2194). Supplemental financial information to be discussed during the conference call will be posted in the Investor Relations section of the Company's website www.extremenetworks.com including the non-GAAP reconciliation attached to this press release. The encore recording can be accessed by dialing (855) 859-2056 /or international 1 (404) 537-3406 Conference ID # 6976972.
+
+About Extreme Networks:
+
+Extreme Networks, Inc. (EXTR) delivers software-driven networking solutions that help IT departments everywhere deliver the ultimate business outcome: stronger connections with customers, partners and employees. Wired to wireless, desktop to datacenter, on premise or through the cloud, we go to extreme measures for our customers in more than 80 countries, delivering 100% insourced call-in technical support to organizations large and small, including some of the world’s leading names in business, hospitality, retail, transportation and logistics, education, government, healthcare, and manufacturing. Founded in 1996, Extreme is headquartered in San Jose, California. For more information, visit Extreme's website or call 1-888-257-3000.
+
+Extreme Networks and the Extreme Networks logo, ExtremeManagement, ExtremeWireless, ExtremeControl and ExtremeAnalytics are either trademarks or registered trademarks of Extreme Networks, Inc. in the United States and/or other countries.
+
+Non-GAAP Financial Measures:
+
+Extreme provides all financial information required in accordance with generally accepted accounting principles (“GAAP”). The Company is providing with this press release non-GAAP gross margins, non-GAAP operating expenses, non-GAAP net income and non-GAAP earnings per share. In preparing non-GAAP information, the Company has excluded, where applicable, the impact of share-based compensation, acquisition and integration costs, purchase accounting adjustments, acquired inventory adjustments, amortization of acquired intangibles, restructuring charges, executive transition costs, litigation expenses and overhead adjustments. The Company believes that excluding these items provides both management and investors with additional insight into its current operations, the trends affecting the
+
+Company, the Company's marketplace performance, and the Company's ability to generate cash from operations. Please note the Company's non-GAAP measures may be different than those used by other companies. The additional non-GAAP financial information the Company presents should be considered in conjunction with, and not as a substitute for, the Company's GAAP financial information.
+
+The Company has provided a non-GAAP reconciliation of the results for the periods presented in this release, which are adjusted to exclude certain items as indicated. These measures should only be used to evaluate the Company's results of operations in conjunction with the corresponding GAAP measures for comparable financial information and understanding of the Company's ongoing performance as a business. Extreme Networks uses both GAAP and non-GAAP measures to evaluate and manage its operations.
+
+Forward Looking Statements:
+
+Statements in this release, including those concerning the Company’s business outlook, future financial and operating results, any anticipated benefits related to the asset acquisition with Avaya and the potential asset acquisition with Broadcom and overall future prospects are forward-looking statements within the meaning of the "safe harbor" provisions of the Private Securities Litigation Reform Act of 1995. These forward-looking statements speak only as of the date of this release. Actual results or events could differ materially from those anticipated in those forward-looking statements as a result of certain factors, including: our ability to realize the anticipated benefits of the acquisition of the WLAN business from Zebra Technologies Corporation: our ability to successfully close the Broadcom transaction (where we will ultimately acquire Brocade assets) and to successfully integrate the acquired technologies and operations from Avaya and Broadcom (where we will ultimately acquire Brocade assets) into our business and operations; failure to achieve targeted revenues and forecasted demand from end customers; a highly competitive business environment for network switching equipment; our effectiveness in controlling expenses; the possibility that we might experience delays in the development or introduction of new technology and products; customer response to our new technology and products; risks related to pending or future litigation; and a dependency on third parties for certain components and for the manufacturing of our products.
+
+More information about potential factors that could affect the Company's business and financial results is included in the Company’s filings with the Securities and Exchange Commission, including, without limitation, under the captions: "Management's Discussion and Analysis of Financial Condition and Results of Operations," and "Risk Factors". Except as required under the U.S. federal securities laws and the rules and regulations of the U.S. Securities and Exchange Commission, Extreme Networks disclaims any obligation to update any forward-looking statements after the date of this release, whether as a result of new information, future events, developments, changes in assumptions or otherwise.
+
+EXTREME NETWORKS, INC.
+
+CONDENSED CONSOLIDATED BALANCE SHEETS
+
+(In thousands)
+
+(Unaudited)
+
+                                                                                                     June 30,                   June 30,
+
+
+                                                                                                     2017                       2016
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ASSETS
+  Current assets:
+  Cash and cash equivalents                                                                          $             130,450      $              94,122
+  Accounts receivable, net of allowances of $1,732 at June 30, 2017 and $3,257 at June 30, 2016                    120,770                     81,419
+  Inventories                                                                                                       45,880                     40,989
+  Prepaid expenses and other current assets                                                                         27,867                     12,438
+  Total current assets                                                                                             324,967                    228,968
+  Property and equipment, net                                                                                       30,240                     29,580
+  Intangible assets, net                                                                                            25,337                     19,762
+  Goodwill                                                                                                          80,216                     70,877
+  Other assets                                                                                                      22,586                     25,236
+  Total assets                                                                                       $             483,346      $             374,423
+  LIABILITIES AND STOCKHOLDERS’ EQUITY
+  Current liabilities:
+  Current portion of long-term debt                                                                  $              12,280      $              17,628
+  Accounts payable                                                                                                  31,587                     30,711
+  Accrued compensation and benefits                                                                                 42,662                     27,145
+  Accrued warranty                                                                                                  10,007                      9,600
+  Deferred revenue, net                                                                                             79,048                     72,934
+  Deferred distributors revenue, net of cost of sales to distributors                                               43,525                     26,817
+  Other accrued liabilities                                                                                         36,713                     26,691
+  Total current liabilities                                                                                        255,822                    211,526
+  Deferred revenue, less current portion                                                                            25,293                     21,926
+  Long-term debt, less current portion                                                                              80,422                     37,446
+  Deferred income taxes                                                                                              6,576                      4,693
+  Other long-term liabilities                                                                                        8,526                      8,635
+  Commitments and contingencies
+  Stockholders’ equity                                                                                             106,707                     90,197
+  Total liabilities and stockholders’ equity                                                         $             483,346      $             374,423
+
+EXTREME NETWORKS, INC.
+
+CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS
+
+(In thousands, except per share amounts)
+
+(Unaudited)
+
+                                                           Three Months Ended                                              Year Ended
+                                                           June 30,                             June 30,                   June 30,                     June 30,
+
+
+                                                           2017                                 2016                       2017                         2016
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Net revenues:
+  Product                                                  $                       140,750      $             106,017      $               451,459      $              395,464
+  Service                                                                           37,951                     33,600                      146,659                     132,925
+  Total net revenues                                                               178,701                    139,617                      598,118                     528,389
+  Cost of revenues:
+  Product                                                                           61,740                     54,462                      217,727                     208,739
+  Service                                                                           15,222                     12,480                       55,906                      48,862
+  Total cost of revenues                                                            76,962                     66,942                      273,633                     257,601
+  Gross profit:
+  Product                                                                           79,010                     51,555                      233,732                     186,725
+  Service                                                                           22,729                     21,120                       90,753                      84,063
+  Total gross profit                                                               101,739                     72,675                      324,485                     270,788
+  Operating expenses:
+  Research and development                                                          26,721                     18,885                       93,724                      78,721
+  Sales and marketing                                                               46,103                     39,364                      162,927                     150,806
+  General and administrative                                                        10,568                      9,767                       37,864                      37,675
+  Acquisition and integration costs                                                  3,197                          -                       13,105                       1,145
+  Restructuring and related charges, net of reversals                                (676)                        998                        8,896                      10,990
+  Amortization of intangibles                                                        1,192                      4,141                        8,702                      17,001
+  Total operating expenses                                                          87,105                     73,155                      325,218                     296,338
+  Operating income (loss)                                                           14,634                      (480)                        (733)                    (25,550)
+  Interest income                                                                      315                         29                          689                         113
+  Interest expense                                                                 (1,086)                      (694)                      (4,086)                     (3,098)
+  Other income (expense), net                                                        (598)                        174                         (47)                         987
+  Income (loss) before income taxes                                                 13,265                      (971)                      (4,177)                    (27,548)
+  Provision for income taxes                                                         1,088                      1,369                        4,340                       4,336
+  Net income (loss)                                        $                        12,177      $             (2,340)      $               (8,517)      $             (31,884)
+  Basic and diluted net loss per share:
+  Net income (loss) per share - basic                      $                          0.11      $              (0.02)      $                (0.08)      $               (0.31)
+  Net income (loss) per share - diluted                    $                          0.11      $              (0.02)      $                (0.08)      $               (0.31)
+  Shares used in per share calculation - basic                                     110,500                    104,837                      108,273                     103,074
+  Shares used in per share calculation - diluted                                   114,524                    104,837                      108,273                     103,074
+
+EXTREME NETWORKS, INC.
+
+CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS
+
+(In thousands)
+
+(Unaudited)
+
+                                                           Year Ended
+                                                           June 30,                      June 30,
+
+
+                                                           2017                          2016
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Net cash provided by operating activities                $                 59,283      $              30,366
+  Cash flows from investing activities:
+  Capital expenditures                                                     (10,425)                    (5,327)
+  Acquisition                                                              (51,088)                          -
+  Deposit related to future acquisition                                    (10,239)                          -
+  Net cash used in investing activities                                    (71,752)                    (5,327)
+  Cash flows from financing activities:
+  Borrowings under Revolving Facility                                             -                     15,000
+  Borrowings under Term Loan                                                 48,250
+  Loan fees on borrowings                                                   (1,327)
+  Repayment of debt                                                        (10,038)
+  Proceeds from issuance of common stock                                     11,823                      4,637
+  Net cash provided by (used in) financing activities                        48,708                     19,637
+  Foreign currency effect on cash                                                89                      (404)
+  Net increase in cash and cash equivalents                                  36,328                     44,272
+  Cash and cash equivalents at beginning of period                           94,122                     76,225
+  Cash and cash equivalents at end of period               $                130,450      $             120,497
+
+Extreme Networks, Inc.
+
+Non-GAAP Measures of Financial Performance
+
+To supplement the Company's consolidated financial statements presented in accordance with generally accepted accounting principles, ("GAAP"), Extreme Networks uses non-GAAP measures of certain components of financial performance. These non-GAAP measures include non-GAAP net income, non-GAAP earnings per diluted share, non-GAAP gross margin, non-GAAP operating expenses and free cash flow.
+
+Reconciliation to the nearest GAAP measure of all historical non-GAAP measures included in this press release can be found in the tables included with this press release. In this press release, Extreme Networks also presents its target for non-GAAP expenses, which is expenses less share-based compensation expense, acquisition and integration costs, purchase accounting adjustments, acquired inventory adjustments, amortization of intangibles, restructuring expenses, executive transition expenses, litigation expense and overhead adjustments.
+
+Non-GAAP measures presented in this press release are not in accordance with or alternative measures prepared in accordance with GAAP and may be different from non-GAAP measures used by other companies. In addition, these non-GAAP measures are not based on any comprehensive set of accounting rules or principles. Non-GAAP measures have limitations in that they do not reflect all of the amounts associated with Extreme Networks' results of operations as determined in accordance with GAAP. These non-GAAP measures should only be used to evaluate Extreme Networks' results of operations in conjunction with the corresponding GAAP measures.
+
+Extreme believes these non-GAAP measures when shown in conjunction with the corresponding GAAP measures enhance investors' and management's overall understanding of the Company's current financial performance and the Company's prospects for the future, including cash flows available to pursue opportunities to enhance shareholder value. In addition, because Extreme Networks has historically reported certain non-GAAP results to investors, the Company believes the inclusion of non-GAAP measures provides consistency in the Company's financial reporting.
+
+For its internal planning process, and as discussed further below, Extreme's management uses financial statements that do not include share-based compensation expense, acquisition and integration costs, purchase accounting adjustments, acquired inventory adjustment, amortization of intangibles, restructuring expenses, executive transition costs, litigation expenses and overhead adjustments. Extreme’s management also uses non-GAAP measures, in addition to the corresponding GAAP measures, in reviewing the Company's financial results.
+
+As described above, Extreme excludes the following items from one or more of its non-GAAP measures when applicable.
+
+Share-based compensation. This expense consists of expenses for stock options, restricted stock and employee stock purchases through its ESPP. Extreme Networks excludes share-based compensation expenses from its non-GAAP measures primarily because they are non-cash expenses that the Company does not believe are reflective of ongoing cash requirement related to operating results. Extreme Networks expects to incur share-based compensation expenses in future periods.
+
+Acquisition and integration costs. Acquisition and integration costs consist of legal and professional fees related to the acquisition of a) Zebra Technologies Corporation’s wireless LAN business b) Avaya, Inc.’s networking assets, as well as the fabric-based secure networking solutions and network security
+
+solutions business of Avaya, Inc., and c) Brocade’s data center assets; Extreme Networks excludes these expenses since they result from an event that is outside the ordinary course of continuing operations.
+
+Purchase accounting adjustments. Purchase accounting adjustments relating to deferred revenue consists of adjustments to the carrying value of deferred revenue. We have recorded adjustments to the assumed deferred revenue to reflect only a fulfillment margin and thereby excluding the profit margin and revenue which would have been incurred had Extreme Networks entered into the service contract post-acquisition.
+
+Acquired inventory adjustments. Purchase accounting adjustments relating to the mark up of acquired inventory to fair value less disposal costs.
+
+Amortization of acquired intangibles. Amortization of acquired intangibles includes the monthly amortization expense of acquired intangible assets such as developed technology, customer relationships, trademarks and order backlog. The amortization of the developed technology intangible is recorded in product cost of goods sold, while the amortization for the other intangibles are recorded in operating expenses. Extreme Networks excludes these non-cash expenses since they result from an intangible asset and for which the period expense does not impact the operations of the business and are non-cash in nature.
+
+Restructuring expenses. Restructuring expenses primarily consist of accrued lease costs pertaining to the estimated future obligations for non-cancelable lease payments and accelerated depreciation of leasehold improvements related to excess facilities. Extreme Networks excludes restructuring expenses since they result from events that often occur outside of the ordinary course of continuing operations.
+
+Executive transition expenses. Executive transition expenses consist of severance and termination benefits and legal transition cash transactions. The expenses are incurred through execution of pre-established employment contracts with senior executives. The Company does not believe these expenses are reflective of ongoing cash requirements related to its operating results.
+
+Litigation expenses. Litigation expenses consist of legal and professional fees and expenses related to our on-going ligation matter as a result of a securities laws class action lawsuit.
+
+Overhead adjustments. Overhead adjustment relates to service inventory overhead capitalization, this was a one-time event and was non-cash in nature.
+
+In addition to the non-GAAP measures discussed above, Extreme uses free cash flow as a measure of operating performance. Free cash flow represents operating cash flows less net purchase of property and equipment on a GAAP basis. Extreme considers free cash flows to be a liquidity measure that provides useful information to management and investors about the amount of cash generated by the business after the purchases of property and equipment, which can then be used to, among other things, invest in Extreme’s business, make strategic acquisitions, and strengthen the balance sheet. A limitation of the utility of free cash flows as a measure of financial performance is that it does not represent the total increase or decrease in the Company's cash balance for the period.
+
+EXTREME NETWORKS, INC.
+
+CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS
+
+GAAP TO NON-GAAP RECONCILIATION
+
+(In thousands, except percentage and per share amounts)
+
+(Unaudited)
+
+  Non-GAAP Revenue                    Three Months Ended                                 Year Ended
+                                      June 30,                             June 30,      June 30,                     June 30,
+
+
+                                      2017                                     2016      2017                             2016
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Revenue - GAAP Basis                $                       178,701      $139,617      $               598,118      $528,389
+  Adjustments:
+  Purchase accounting adjustment                              -                 377                          133         1,508
+  Revenue - Non-GAAP Basis            $                       178,701      $139,994      $               598,251      $529,897
+
+  Non-GAAP Gross Margin                          Three Months Ended                                             Year Ended
+                                                 June 30,                             June 30,                  June 30,                     June 30,
+
+
+                                                 2017                                 2016                      2017                         2016
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Gross profit - GAAP Basis                      $                       101,739      $             72,675      $               324,485      $             270,788
+  Gross margin - GAAP Basis percentage                                     56.9%                     52.1%                        54.3%                      51.2%
+  Adjustments:
+  Stock based compensation expense                                           185                       279                          922                      1,923
+  Purchase accounting adjustments                                              -                       377                          133                      1,508
+  Acquired inventory adjustments                                               -                         -                        4,263                          -
+  Acquisition and integration costs                                        (579)                         -                        4,525                          -
+  Amortization of intangibles                                                633                     3,417                        6,661                     14,834
+  Service inventory overhead capitalization                                    -                         -                            -                    (1,493)
+  Gross profit - Non-GAAP Basis                  $                       101,978      $             76,748      $               340,989      $             287,560
+  Gross margin - Non-GAAP Basis percentage                                 57.1%                     54.8%                        57.0%                      54.3%
+
+  Non-GAAP Operating Income                              Three Months Ended                                            Year Ended
+                                                         June 30,                            June 30,                  June 30,                    June 30,
+
+
+                                                         2017                                2016                      2017                        2016
+ ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  GAAP operating income (loss) percentage                $                       14,634      $               (480      $                 (733      $             (25,550
+  GAAP operating income (loss) percentage                                          8.2%                       (.3                         (.1                       (4.8
+  Adjustments:
+  Stock based compensation expense                                                3,304                     2,673                      12,633                     14,792
+  Acquisition and integration costs                                               2,618                         -                      17,630                      1,145
+  Restructuring charge, net of reversal                                           (676)                       998                       8,896                     10,990
+  Acquired inventory adjustments                                                      -                         -                       4,263                          -
+  Amortization of intangibles                                                     1,825                     7,558                      15,363                     31,835
+  Purchase accounting adjustments                                                     -                       377                         133                      1,508
+  Executive transition costs                                                          -                       771                          34                      2,166
+  Litigation                                                                        166                       167                         385                        331
+  Service inventory overhead capitalization                                           -                         -                           -                     (1,493
+  Total adjustments to GAAP operating income (loss)      $                        7,237      $             12,544      $               59,337      $              61,274
+  Non-GAAP operating income                              $                       21,871      $             12,064      $               58,604      $              35,724
+  Non-GAAP operating income percentage                                            12.2%                       8.6                         9.8                        6.7
+
+  Non-GAAP Net Income                                          Three Months Ended                                              Year Ended
+                                                               June 30,                             June 30,                   June 30,                     June 30,
+
+
+                                                               2017                                 2016                       2017                         2016
+ ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  GAAP net income (loss)                                       $                        12,177      $             (2,340)      $               (8,517)      $             (31,884)
+  Adjustments:
+  Stock based compensation expense                                                       3,304                      2,673                       12,633                      14,792
+  Acquisition and integration costs                                                      2,618                          -                       17,630                       1,145
+  Restructuring charge, net of reversal                                                  (676)                        998                        8,896                      10,990
+  Amortization of intangibles                                                            1,825                      7,558                       15,363                      31,835
+  Acquired inventory adjustments                                                             -                          -                        4,263                           -
+  Purchase accounting adjustments                                                            -                        377                          133                       1,508
+  Executive transition costs                                                                 -                        771                           34                       2,166
+  Litigation                                                                               166                        167                          385                         331
+  Service inventory overhead capitalization                                                  -                          -                            -                     (1,493)
+  Total adjustments to GAAP net income (loss)                  $                         7,237      $              12,544      $                59,337      $               61,274
+  Non-GAAP net income                                          $                        19,414      $              10,204      $                50,820      $               29,390
+  Earnings per share
+  Non-GAAP diluted net income per share                        $                          0.17      $                0.10      $                  0.46      $                 0.28
+  Shares used in diluted net income per share calculation
+  Non-GAAP shares used                                                                 114,524                    107,275                      111,472                     105,306
+
+  Free Cash Flow                        Three Months Ended                                 Year Ended
+                                        June 30,                             June 30,      June 30,                      June 30,
+
+
+                                        2017                                     2016      2017                              2016
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Cash flow provided by operations      $                        15,161       $11,451      $                 59,283       $30,366
+  Less: PP&E CapEx spending                                     (2,593)      $(2,529)                      (10,425)       (5,327)
+  Total free cash flow                  $                        12,568        $8,922      $                 48,858       $25,039
