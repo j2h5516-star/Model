@@ -2841,6 +2841,46 @@ def test_비운_자리의_보도자료_매출도_같은_자로_잰다():
     assert merge_report.get("은행_보도매출_거절") == 1, merge_report
 
 
+def test_XBRL_매출이_아예_없는_은행_분기에도_자를_붙인다():
+    """183차-CL — XBRL `Revenues` 가 **아예 없는** 분기에도 같은 자로 잽니다.
+
+    런 #89 실측: FITB 2025~2026 매출이 3,900만~5,800만(실제 분기 총수익 약
+    22억)이었습니다. XBRL 에 `Revenues` 가 없어 183차-CI 가 비울 것이 없었고,
+    그래서 183차-CJ 의 자도 안 붙어 보도자료 쓰레기가 그대로 들어왔습니다.
+    """
+    분기_이자 = {"2025-03-31": 1.45e9, "2025-06-30": 1.50e9}
+    분기_비이자 = {"2025-03-31": 0.70e9, "2025-06-30": 0.72e9}
+
+    def 가짜분기(f, c, r=None, unit="USD"):
+        return dict({"InterestIncomeExpenseNet": 분기_이자,
+                     "NoninterestIncome": 분기_비이자}.get(c, {}))
+
+    옛분기, 옛연간 = sf._quarterly_series, sf._annual_series
+    sf._quarterly_series = 가짜분기
+    sf._annual_series = lambda f, c, r=None, unit="USD": {}
+    report: dict = {}
+    try:
+        뼈대 = sf._은행_정리하고_조립(
+            "FITB",
+            _은행모양_series(revenue={},      # XBRL 매출이 아예 없음
+                          gaap_eps={"2025-03-31": 0.71, "2025-06-30": 0.88}),
+            "2025-01-01", report, {}, None)
+    finally:
+        sf._quarterly_series, sf._annual_series = 옛분기, 옛연간
+
+    assert report.get("은행_자만_붙임") == 2, report
+    assert "_자만_붙임" not in report.get("은행개념_후보", {}), report
+    보도 = [
+        {"filing_date": "2025-04-17", "revenue": 44_000_000.0,   # 실물 쓰레기 규모
+         "adj_eps": 0.71, "gaap_eps": 0.71, "op_income": None},
+        {"filing_date": "2025-07-17", "revenue": 2.30e9,         # 그럴듯한 총수익
+         "adj_eps": 0.88, "gaap_eps": 0.88, "op_income": None},
+    ]
+    합침 = {r["filing_date"]: r for r in sf.merge_quarters(뼈대, 보도, {})}
+    assert 합침["2025-03-31"]["revenue"] is None, 합침["2025-03-31"]
+    assert 합침["2025-06-30"]["revenue"] == 2.30e9, 합침["2025-06-30"]
+
+
 def test_자가_없는_행은_보도자료_매출을_예전처럼_받는다():
     """183차-CJ 는 **비운 은행 분기에만** 닿아야 합니다.
 

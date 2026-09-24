@@ -4541,7 +4541,8 @@ def _은행_정리하고_조립(ticker, series, start_date, report, annual_eps, 
     은행 = _은행개념_세기(facts, report, series=series, start_date=start_date)
     if report is not None:
         report["은행개념_후보"] = {k: v for k, v in 은행.items()
-                              if k not in ("_기간", "_부분값_날짜", "_부분값_자")}
+                              if k not in ("_기간", "_부분값_날짜", "_부분값_자",
+                                           "_자만_붙임")}
 
     # 183차-CI — **산수로 부분값이 확인된 분기의 XBRL 매출을 비웁니다.**
     #
@@ -4597,6 +4598,9 @@ def _은행_정리하고_조립(ticker, series, start_date, report, annual_eps, 
     # 재는 곳은 `_apply_press_to_row` 입니다. 이 칸은 저장되지 않습니다
     # (measure_store 허용 목록에 없음) — 짝짓기 동안만 쓰는 자입니다.
     자 = 은행.get("_부분값_자") or {}
+    if report is not None:
+        # 183차-CL 계기 — XBRL 매출이 없는 분기에 자를 붙인 수
+        report["은행_자만_붙임"] = 은행.get("_자만_붙임", 0)
     if 자:
         # (변수 이름을 row 로 둡니다 — 시험 규칙이 `row[…] =` 를 읽어
         #  "행에 심은 칸"을 모으므로, 다른 이름이면 규칙 눈에 안 보입니다.)
@@ -4709,12 +4713,29 @@ def _은행개념_세기(facts, report: dict | None = None,
                 _의심 += 1
                 _날짜.append(_d)
                 _자[_d] = _합
+        # 183차-CL — XBRL 매출이 **아예 없는** 분기에도 자를 붙입니다.
+        #   런 #89 실측: FITB 2025~2026 은 XBRL `Revenues` 가 없어 비울 것도
+        #   없었고, 그래서 자도 안 붙어 보도자료 쓰레기(3,900만~5,800만,
+        #   실제 약 22억)가 그대로 들어왔습니다. 비운 자리와 같은 상황입니다.
+        _자만 = 0
+        for _d in set(_이자) | set(_비이자):
+            if _d in _rev or _d in _자:
+                continue
+            if start_date is not None and _d < start_date:
+                continue
+            _합 = (_이자.get(_d) or 0) + (_비이자.get(_d) or 0)
+            if _합 > 0:
+                _자[_d] = _합
+                _자만 += 1
         if _날짜:
             # 183차-CI — 비우는 쪽이 어느 분기인지 알 수 있게 날짜도 돌려줍니다
             out["_부분값_날짜"] = sorted(_날짜)
+        if _자:
             # 183차-CJ — 그 분기의 자(순이자수익+비이자수익)도 돌려줍니다.
-            #   비운 자리에 보도자료 매출이 들어올 때 같은 자로 잽니다.
+            #   비운 자리(와 183차-CL 부터는 XBRL 매출이 없는 자리)에 보도자료
+            #   매출이 들어올 때 같은 자로 잽니다.
             out["_부분값_자"] = _자
+            out["_자만_붙임"] = _자만
         if _이자 or _비이자:
             out["_Revenues_부분값_의심"] = {
                 "칸": _의심, "잰칸": len(_rev),
