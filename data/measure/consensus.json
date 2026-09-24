@@ -656,6 +656,33 @@
       "rev_analysts": 31
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 31.55891,
+      "low": 28.04,
+      "high": 37.44,
+      "analysts": 33,
+      "year_ago": 3.03,
+      "rev_avg": 51199717270.0,
+      "rev_low": 46911000000.0,
+      "rev_high": 59805000000.0,
+      "rev_analysts": 35
+     },
+     "+1q": {
+      "avg": 35.52269,
+      "low": 29.51,
+      "high": 47.81,
+      "analysts": 32,
+      "year_ago": 4.78,
+      "rev_avg": 57398836230.0,
+      "rev_low": 50105200000.0,
+      "rev_high": 75369000000.0,
+      "rev_analysts": 31
+     }
+    }
    }
   ],
   "SNDK": [
@@ -4355,6 +4382,33 @@
       "rev_analysts": 32
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 3.82526,
+      "low": 3.53,
+      "high": 3.91,
+      "analysts": 39,
+      "year_ago": 1.95,
+      "rev_avg": 34883319430.0,
+      "rev_low": 34743200000.0,
+      "rev_high": 35591502020.0,
+      "rev_analysts": 37
+     },
+     "+1q": {
+      "avg": 4.07566,
+      "low": 3.7,
+      "high": 4.3,
+      "analysts": 35,
+      "year_ago": 2.05,
+      "rev_avg": 36940941590.0,
+      "rev_low": 34097000000.0,
+      "rev_high": 38796000000.0,
+      "rev_analysts": 32
+     }
+    }
    }
   ],
   "QCOM": [
@@ -6996,6 +7050,33 @@
       "rev_analysts": 17
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 0.76955,
+      "low": 0.66,
+      "high": 0.842,
+      "analysts": 18,
+      "year_ago": 0.58,
+      "rev_avg": 1330148530.0,
+      "rev_low": 1321200000.0,
+      "rev_high": 1339000000.0,
+      "rev_analysts": 16
+     },
+     "+1q": {
+      "avg": 0.83696,
+      "low": 0.71,
+      "high": 0.99,
+      "analysts": 19,
+      "year_ago": 0.69,
+      "rev_avg": 1481876800.0,
+      "rev_low": 1459500000.0,
+      "rev_high": 1510516040.0,
+      "rev_analysts": 17
+     }
+    }
    }
   ],
   "WDC": [
@@ -8874,6 +8955,33 @@
       "rev_analysts": 39
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 0.93474,
+      "low": 0.92104,
+      "high": 0.99,
+      "analysts": 41,
+      "year_ago": 0.82,
+      "rev_avg": 816170160.0,
+      "rev_low": 814620000.0,
+      "rev_high": 828059000.0,
+      "rev_analysts": 40
+     },
+     "+1q": {
+      "avg": 1.02843,
+      "low": 1.0,
+      "high": 1.1,
+      "analysts": 41,
+      "year_ago": 0.9,
+      "rev_avg": 837872490.0,
+      "rev_low": 835211000.0,
+      "rev_high": 857850000.0,
+      "rev_analysts": 39
+     }
+    }
    }
   ],
   "ZS": [
@@ -9928,6 +10036,33 @@
       "rev_low": 961790840.0,
       "rev_high": 970600000.0,
       "rev_analysts": 27
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 3.27066,
+      "low": 3.24613,
+      "high": 3.36,
+      "analysts": 31,
+      "year_ago": 2.66,
+      "rev_avg": 925311490.0,
+      "rev_low": 924100000.0,
+      "rev_high": 939000000.0,
+      "rev_analysts": 29
+     },
+     "+1q": {
+      "avg": 4.08292,
+      "low": 3.97,
+      "high": 4.21653,
+      "analysts": 31,
+      "year_ago": 3.09,
+      "rev_avg": 965016170.0,
+      "rev_low": 961790840.0,
+      "rev_high": 970600000.0,
+      "rev_analysts": 28
      }
     }
    }
@@ -12417,6 +12552,33 @@
       "rev_analysts": 44
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 6.38179,
+      "low": 3.13,
+      "high": 7.64,
+      "analysts": 42,
+      "year_ago": 1.05,
+      "rev_avg": 63315490060.0,
+      "rev_low": 61702000000.0,
+      "rev_high": 65278000000.0,
+      "rev_analysts": 46
+     },
+     "+1q": {
+      "avg": 8.23281,
+      "low": 6.84,
+      "high": 9.09,
+      "analysts": 41,
+      "year_ago": 8.88,
+      "rev_avg": 73665344230.0,
+      "rev_low": 71681000000.0,
+      "rev_high": 75897000000.0,
+      "rev_analysts": 44
+     }
+    }
    }
   ],
   "AMZN": [
@@ -14242,6 +14404,33 @@
       "analysts": 21,
       "year_ago": 3.16,
       "rev_avg": 11232537500.0,
+      "rev_low": 10525420000.0,
+      "rev_high": 12848000000.0,
+      "rev_analysts": 21
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 4.98779,
+      "low": 4.5,
+      "high": 5.15,
+      "analysts": 21,
+      "year_ago": 3.33,
+      "rev_avg": 10862445750.0,
+      "rev_low": 9234000000.0,
+      "rev_high": 11143000000.0,
+      "rev_analysts": 21
+     },
+     "+1q": {
+      "avg": 4.82326,
+      "low": 4.29,
+      "high": 5.74,
+      "analysts": 21,
+      "year_ago": 3.16,
+      "rev_avg": 11226108930.0,
       "rev_low": 10525420000.0,
       "rev_high": 12848000000.0,
       "rev_analysts": 21
@@ -21968,6 +22157,33 @@
       "rev_analysts": 27
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 3.39836,
+      "low": 3.25,
+      "high": 3.5,
+      "analysts": 28,
+      "year_ago": 3.22,
+      "rev_avg": 7320485740.0,
+      "rev_low": 7164000000.0,
+      "rev_high": 7403806200.0,
+      "rev_analysts": 27
+     },
+     "+1q": {
+      "avg": 3.29846,
+      "low": 3.06,
+      "high": 3.49,
+      "analysts": 28,
+      "year_ago": 3.12,
+      "rev_avg": 7286077450.0,
+      "rev_low": 7148900000.0,
+      "rev_high": 7428300000.0,
+      "rev_analysts": 27
+     }
+    }
    }
   ],
   "SBUX": [
@@ -22383,6 +22599,33 @@
       "analysts": 23,
       "year_ago": 0.53,
       "rev_avg": 11848633570.0,
+      "rev_low": 11269610450.0,
+      "rev_high": 12185000000.0,
+      "rev_analysts": 28
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 0.44197,
+      "low": 0.38,
+      "high": 0.5,
+      "analysts": 23,
+      "year_ago": 0.49,
+      "rev_avg": 11329636430.0,
+      "rev_low": 11050000000.0,
+      "rev_high": 11537000000.0,
+      "rev_analysts": 28
+     },
+     "+1q": {
+      "avg": 0.51459,
+      "low": 0.39,
+      "high": 0.58,
+      "analysts": 23,
+      "year_ago": 0.53,
+      "rev_avg": 11844812140.0,
       "rev_low": 11269610450.0,
       "rev_high": 12185000000.0,
       "rev_analysts": 28
@@ -24014,6 +24257,33 @@
       "rev_analysts": 13
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 1.98724,
+      "low": 1.89883,
+      "high": 2.09,
+      "analysts": 17,
+      "year_ago": 1.66,
+      "rev_avg": 12828801890.0,
+      "rev_low": 12554000000.0,
+      "rev_high": 13116636610.0,
+      "rev_analysts": 13
+     },
+     "+1q": {
+      "avg": 2.27468,
+      "low": 1.83537,
+      "high": 2.7537,
+      "analysts": 9,
+      "year_ago": 2.31,
+      "rev_avg": 13189808990.0,
+      "rev_low": 13010000000.0,
+      "rev_high": 13567725730.0,
+      "rev_analysts": 13
+     }
+    }
    }
   ],
   "UNP": [
@@ -24374,6 +24644,33 @@
       "rev_analysts": 6
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 3.57019,
+      "low": 3.23,
+      "high": 4.10135,
+      "analysts": 7,
+      "year_ago": null,
+      "rev_avg": 22538400000.0,
+      "rev_low": 22327000000.0,
+      "rev_high": 22661000000.0,
+      "rev_analysts": 5
+     },
+     "+1q": {
+      "avg": 6.38847,
+      "low": 5.4,
+      "high": 6.95,
+      "analysts": 9,
+      "year_ago": null,
+      "rev_avg": 24666000000.0,
+      "rev_low": 22309000000.0,
+      "rev_high": 25692000000.0,
+      "rev_analysts": 7
+     }
+    }
    }
   ],
   "BA": [
@@ -24695,6 +24992,33 @@
       "low": 0.565,
       "high": 0.64,
       "analysts": 18,
+      "year_ago": 0.54,
+      "rev_avg": 31677449730.0,
+      "rev_low": 31240276820.0,
+      "rev_high": 31907855000.0,
+      "rev_analysts": 18
+     },
+     "+1q": {
+      "avg": 0.52497,
+      "low": 0.48,
+      "high": 0.58,
+      "analysts": 18,
+      "year_ago": 0.52,
+      "rev_avg": 34553173030.0,
+      "rev_low": 33955000000.0,
+      "rev_high": 35254000000.0,
+      "rev_analysts": 17
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 0.60386,
+      "low": 0.565,
+      "high": 0.64,
+      "analysts": 19,
       "year_ago": 0.54,
       "rev_avg": 31677449730.0,
       "rev_low": 31240276820.0,
@@ -25122,6 +25446,33 @@
       "analysts": 18,
       "year_ago": 0.84,
       "rev_avg": 30253250080.0,
+      "rev_low": 29375000000.0,
+      "rev_high": 31228000000.0,
+      "rev_analysts": 20
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 0.99029,
+      "low": 0.91,
+      "high": 1.06,
+      "analysts": 19,
+      "year_ago": 1.12,
+      "rev_avg": 29297242370.0,
+      "rev_low": 28785000000.0,
+      "rev_high": 29969000000.0,
+      "rev_analysts": 21
+     },
+     "+1q": {
+      "avg": 0.68579,
+      "low": 0.6,
+      "high": 0.77091,
+      "analysts": 18,
+      "year_ago": 0.84,
+      "rev_avg": 30245950080.0,
       "rev_low": 29375000000.0,
       "rev_high": 31228000000.0,
       "rev_analysts": 20
@@ -27694,6 +28045,33 @@
       "rev_analysts": 15
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 2.13558,
+      "low": 2.09,
+      "high": 2.24,
+      "analysts": 19,
+      "year_ago": 2.13,
+      "rev_avg": 4275677370.0,
+      "rev_low": 4213000000.0,
+      "rev_high": 4344000000.0,
+      "rev_analysts": 17
+     },
+     "+1q": {
+      "avg": 1.70069,
+      "low": 1.55776,
+      "high": 1.78,
+      "analysts": 18,
+      "year_ago": 1.51,
+      "rev_avg": 4096673990.0,
+      "rev_low": 4018000000.0,
+      "rev_high": 4187200000.0,
+      "rev_analysts": 15
+     }
+    }
    }
   ],
   "LYB": [
@@ -27829,6 +28207,33 @@
       "rev_low": 7349000000.0,
       "rev_high": 9734976800.0,
       "rev_analysts": 12
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 2.65923,
+      "low": 2.16,
+      "high": 3.02703,
+      "analysts": 16,
+      "year_ago": 1.01,
+      "rev_avg": 8880155580.0,
+      "rev_low": 7744000000.0,
+      "rev_high": 10099334430.0,
+      "rev_analysts": 13
+     },
+     "+1q": {
+      "avg": 1.70929,
+      "low": 1.26,
+      "high": 2.3,
+      "analysts": 16,
+      "year_ago": -0.26,
+      "rev_avg": 8159324410.0,
+      "rev_low": 7349000000.0,
+      "rev_high": 9734976800.0,
+      "rev_analysts": 13
      }
     }
    }
@@ -30440,6 +30845,33 @@
       "rev_analysts": 14
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 0.96343,
+      "low": 0.84,
+      "high": 1.04288,
+      "analysts": 15,
+      "year_ago": 1.1,
+      "rev_avg": 4693649400.0,
+      "rev_low": 4659894670.0,
+      "rev_high": 4734000000.0,
+      "rev_analysts": 8
+     },
+     "+1q": {
+      "avg": 0.68167,
+      "low": 0.581,
+      "high": 0.76,
+      "analysts": 15,
+      "year_ago": 0.64,
+      "rev_avg": 4382368460.0,
+      "rev_low": 4340196670.0,
+      "rev_high": 4444178000.0,
+      "rev_analysts": 8
+     }
+    }
    }
   ],
   "KHC": [
@@ -32753,6 +33185,33 @@
       "analysts": 22,
       "year_ago": 0.75,
       "rev_avg": 5171659960.0,
+      "rev_low": 4704800000.0,
+      "rev_high": 5304000000.0,
+      "rev_analysts": 23
+     },
+     "+1q": {
+      "avg": 0.83866,
+      "low": 0.82,
+      "high": 0.91,
+      "analysts": 21,
+      "year_ago": 0.8,
+      "rev_avg": 5416976220.0,
+      "rev_low": 5204000000.0,
+      "rev_high": 5680840000.0,
+      "rev_analysts": 22
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 0.76731,
+      "low": 0.58,
+      "high": 0.84,
+      "analysts": 22,
+      "year_ago": 0.75,
+      "rev_avg": 5158442570.0,
       "rev_low": 4704800000.0,
       "rev_high": 5304000000.0,
       "rev_analysts": 23
@@ -36142,6 +36601,33 @@
       "rev_analysts": 8
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 4.05294,
+      "low": 3.0256,
+      "high": 4.89,
+      "analysts": 24,
+      "year_ago": 2.71,
+      "rev_avg": 7309383260.0,
+      "rev_low": 5761872120.0,
+      "rev_high": 8441000000.0,
+      "rev_analysts": 8
+     },
+     "+1q": {
+      "avg": 4.14018,
+      "low": 2.70518,
+      "high": 5.34,
+      "analysts": 22,
+      "year_ago": 2.27,
+      "rev_avg": 7337291580.0,
+      "rev_low": 5882878630.0,
+      "rev_high": 8477654000.0,
+      "rev_analysts": 8
+     }
+    }
    }
   ],
   "KMI": [
@@ -37892,6 +38378,33 @@
       "year_ago": 27.63,
       "rev_avg": 4587926020.0,
       "rev_low": 4513600000.0,
+      "rev_high": 4640700000.0,
+      "rev_analysts": 17
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 35.36542,
+      "low": 31.47,
+      "high": 39.2,
+      "analysts": 19,
+      "year_ago": 31.04,
+      "rev_avg": 4949125120.0,
+      "rev_low": 4880800000.0,
+      "rev_high": 5024000000.0,
+      "rev_analysts": 17
+     },
+     "+1q": {
+      "avg": 31.60915,
+      "low": 29.80194,
+      "high": 33.67,
+      "analysts": 19,
+      "year_ago": 27.63,
+      "rev_avg": 4588852900.0,
+      "rev_low": 4513558250.0,
       "rev_high": 4640700000.0,
       "rev_analysts": 17
      }
@@ -40684,6 +41197,33 @@
       "analysts": 30,
       "year_ago": 6.59,
       "rev_avg": 1952535250.0,
+      "rev_low": 1684000000.0,
+      "rev_high": 2062336490.0,
+      "rev_analysts": 34
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 0.20032,
+      "low": 0.08,
+      "high": 0.3,
+      "analysts": 31,
+      "year_ago": 0.11,
+      "rev_avg": 1917408660.0,
+      "rev_low": 1719000000.0,
+      "rev_high": 1970400000.0,
+      "rev_analysts": 34
+     },
+     "+1q": {
+      "avg": 0.19413,
+      "low": 0.06,
+      "high": 0.29,
+      "analysts": 30,
+      "year_ago": 6.59,
+      "rev_avg": 1952544070.0,
       "rev_low": 1684000000.0,
       "rev_high": 2062336490.0,
       "rev_analysts": 34
@@ -45642,6 +46182,33 @@
       "rev_analysts": 8
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 0.64497,
+      "low": 0.614,
+      "high": 0.68634,
+      "analysts": 10,
+      "year_ago": 0.67,
+      "rev_avg": 3799173070.0,
+      "rev_low": 3741888670.0,
+      "rev_high": 3869069000.0,
+      "rev_analysts": 9
+     },
+     "+1q": {
+      "avg": 0.59061,
+      "low": 0.55096,
+      "high": 0.64,
+      "analysts": 10,
+      "year_ago": 0.57,
+      "rev_avg": 3716102640.0,
+      "rev_low": 3596300000.0,
+      "rev_high": 3799585000.0,
+      "rev_analysts": 9
+     }
+    }
    }
   ],
   "IQV": [
@@ -49562,6 +50129,33 @@
       "rev_analysts": 5
      }
     }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 1.21493,
+      "low": 0.84,
+      "high": 1.56,
+      "analysts": 19,
+      "year_ago": 1.04,
+      "rev_avg": 6948929640.0,
+      "rev_low": 5334128220.0,
+      "rev_high": 7844000000.0,
+      "rev_analysts": 5
+     },
+     "+1q": {
+      "avg": 1.31005,
+      "low": 0.9,
+      "high": 1.69,
+      "analysts": 17,
+      "year_ago": 0.82,
+      "rev_avg": 7199209430.0,
+      "rev_low": 5749534170.0,
+      "rev_high": 8313513000.0,
+      "rev_analysts": 5
+     }
+    }
    }
   ],
   "FANG": [
@@ -49813,6 +50407,33 @@
     "rows": {
      "0q": {
       "avg": 4.88346,
+      "low": 2.61,
+      "high": 6.52,
+      "analysts": 23,
+      "year_ago": 3.08,
+      "rev_avg": 4552882750.0,
+      "rev_low": 4197000000.0,
+      "rev_high": 5589000000.0,
+      "rev_analysts": 8
+     },
+     "+1q": {
+      "avg": 5.06087,
+      "low": 2.95,
+      "high": 7.16,
+      "analysts": 22,
+      "year_ago": 1.74,
+      "rev_avg": 4696220250.0,
+      "rev_low": 4045000000.0,
+      "rev_high": 6142000000.0,
+      "rev_analysts": 8
+     }
+    }
+   },
+   {
+    "as_of": "2026-09-24",
+    "rows": {
+     "0q": {
+      "avg": 4.91912,
       "low": 2.61,
       "high": 6.52,
       "analysts": 23,
