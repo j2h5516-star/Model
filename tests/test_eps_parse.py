@@ -2836,6 +2836,9 @@ def test_비운_자리의_보도자료_매출도_같은_자로_잰다():
     assert q1["announced_date"] == "2025-04-21", "발표일 도장은 그대로 찍혀야 합니다"
     assert q1["revenue"] is None, f"자 밖의 쓰레기 매출을 받았습니다: {q1['revenue']}"
     assert q1.get("은행_보도매출_거절") == 2_000_000.0, q1
+    # 183차-CM — 거절할 때의 자도 남아야 4분기 자를 감사할 수 있습니다
+    assert q1.get("은행_보도매출_거절_자") == 0.77e9, q1
+    assert "은행_보도매출_거절_자" not in q2, "받은 칸에는 거절 자가 없어야 합니다"
     assert q1["adj_eps"] == 1.13, "매출만 거절해야지 조정 EPS 까지 버리면 안 됩니다"
     assert q2["revenue"] == 0.84e9, f"자 안의 값까지 버렸습니다: {q2['revenue']}"
     assert merge_report.get("은행_보도매출_거절") == 1, merge_report

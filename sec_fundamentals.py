@@ -5575,6 +5575,9 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
         if (자 and 자 > 0 and not (
                 자 * _부분값_문턱 <= abs(press["revenue"]) <= 자 * _보도매출_위문턱)):
             row["은행_보도매출_거절"] = press["revenue"]
+            # 183차-CM 계기 — 그때의 자도 남깁니다. 4분기 자에 12개월 값이
+            # 섞였는지(DFS 23 Q4 진짜 41.96억 거절 의심) 다음 런에서 봅니다.
+            row["은행_보도매출_거절_자"] = 자
         else:
             row["revenue"] = press["revenue"]
     # 매출총이익률은 **뒤집지 않는다** (92차).
