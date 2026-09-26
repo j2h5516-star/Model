@@ -2884,6 +2884,55 @@ def test_XBRL_매출이_아예_없는_은행_분기에도_자를_붙인다():
     assert 합침["2025-06-30"]["revenue"] == 2.30e9, 합침["2025-06-30"]
 
 
+def test_4분기_자는_연간에서_채우고_반쪽이면_만들지_않는다():
+    """183차-CN — 4분기 자가 **반쪽**이면 진짜 매출을 버립니다.
+
+    런 #91 실측: DFS 4분기 자가 이웃의 0.2배(7.1억 vs 42.1억)였고, 그래서
+    23 Q4 의 진짜 41.96억이 거절됐습니다. 은행이 4분기 순이자수익을 10-K 에
+    **연간으로만** 실어 비이자수익 한쪽만 더해진 것입니다.
+    고침: ① 빠진 4분기를 `연간 − 앞 세 분기`로 채우고(183차-BE 방식)
+    ② 그래도 한쪽이 없으면 자를 만들지 않습니다(모르면 막지도 않음).
+    """
+    이자_분기 = {"2023-03-31": 3.1e9, "2023-06-30": 3.2e9, "2023-09-30": 3.4e9}
+    이자_연간 = {"2023-12-31": 13.2e9}                 # → 4분기 3.5e9 로 채움
+    비이자_분기 = {"2023-03-31": 0.65e9, "2023-06-30": 0.66e9,
+                "2023-09-30": 0.68e9, "2023-12-31": 0.71e9}
+
+    def 가짜분기(f, c, r=None, unit="USD"):
+        return dict({"InterestIncomeExpenseNet": 이자_분기,
+                     "NoninterestIncome": 비이자_분기}.get(c, {}))
+
+    def 가짜연간(f, c, r=None, unit="USD"):
+        return dict({"InterestIncomeExpenseNet": 이자_연간}.get(c, {}))
+
+    def 조립(연간함수):
+        옛분기, 옛연간 = sf._quarterly_series, sf._annual_series
+        sf._quarterly_series, sf._annual_series = 가짜분기, 연간함수
+        try:
+            return sf._은행_정리하고_조립(
+                "DFS",
+                _은행모양_series(revenue={}, gaap_eps={
+                    "2023-09-30": 2.59, "2023-12-31": 1.54}),
+                "2023-07-01", {}, {}, None)
+        finally:
+            sf._quarterly_series, sf._annual_series = 옛분기, 옛연간
+
+    # ① 연간에서 4분기를 채우면 자는 3.5e9 + 0.71e9 → 진짜 41.96억을 받는다
+    뼈대 = 조립(가짜연간)
+    자 = {r["filing_date"]: r.get("은행_총수익_자") for r in 뼈대}
+    assert 자.get("2023-12-31") is not None and abs(자["2023-12-31"] - 4.21e9) < 1e3, \
+        f"4분기 자를 못 채웠습니다: {자}"
+    보도 = [{"filing_date": "2024-01-17", "revenue": 4.196e9,
+             "adj_eps": 1.54, "gaap_eps": 1.54, "op_income": None}]
+    q4 = {r["filing_date"]: r for r in sf.merge_quarters(뼈대, 보도, {})}["2023-12-31"]
+    assert q4["revenue"] == 4.196e9, f"진짜 4분기 매출을 버렸습니다: {q4}"
+
+    # ② 연간이 없어 한쪽이 비면 자를 만들지 않는다(반쪽 0.71e9 로 재지 않음)
+    뼈대 = 조립(lambda f, c, r=None, unit="USD": {})
+    자 = {r["filing_date"]: r.get("은행_총수익_자") for r in 뼈대}
+    assert 자.get("2023-12-31") is None, f"반쪽 자를 만들었습니다: {자}"
+
+
 def test_자가_없는_행은_보도자료_매출을_예전처럼_받는다():
     """183차-CJ 는 **비운 은행 분기에만** 닿아야 합니다.
 

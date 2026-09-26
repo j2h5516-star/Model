@@ -4700,16 +4700,33 @@ def _은행개념_세기(facts, report: dict | None = None,
                                      None, unit="USD")
             _비이자 = _quarterly_series(facts, "NoninterestIncome",
                                       None, unit="USD")
+            # 183차-CN — 빠진 4분기를 `연간 − 앞 세 분기`로 채웁니다(183차-BE 와
+            #   같은 방식). 런 #91 실측: DFS 4분기 자가 이웃의 0.2배였습니다 —
+            #   은행이 4분기를 10-K 에 연간으로만 실어 한쪽이 비었던 것입니다.
+            _이자 = _fill_missing_q4(
+                _이자, _annual_series(facts, "InterestIncomeExpenseNet",
+                                     None, unit="USD"))
+            _비이자 = _fill_missing_q4(
+                _비이자, _annual_series(facts, "NoninterestIncome",
+                                      None, unit="USD"))
         except Exception:
             _이자, _비이자 = {}, {}
+
+        def _총수익(_d):
+            # 183차-CN — **둘 다 있어야** 자입니다. 한쪽만 더한 반쪽 자로 재면
+            #   진짜 매출을 버립니다(DFS 23 Q4 41.96억). 모르면 막지도 않습니다.
+            _a, _b = _이자.get(_d), _비이자.get(_d)
+            if not isinstance(_a, (int, float)) or not isinstance(_b, (int, float)):
+                return None
+            return _a + _b
         _의심 = 0
         _날짜 = []
         _자: dict = {}
         for _d, _v in _rev.items():
             if not isinstance(_v, (int, float)) or _v <= 0:
                 continue
-            _합 = (_이자.get(_d) or 0) + (_비이자.get(_d) or 0)
-            if _합 > 0 and _v < _합 * _부분값_문턱:
+            _합 = _총수익(_d)
+            if _합 is not None and _합 > 0 and _v < _합 * _부분값_문턱:
                 _의심 += 1
                 _날짜.append(_d)
                 _자[_d] = _합
@@ -4723,8 +4740,8 @@ def _은행개념_세기(facts, report: dict | None = None,
                 continue
             if start_date is not None and _d < start_date:
                 continue
-            _합 = (_이자.get(_d) or 0) + (_비이자.get(_d) or 0)
-            if _합 > 0:
+            _합 = _총수익(_d)
+            if _합 is not None and _합 > 0:
                 _자[_d] = _합
                 _자만 += 1
         if _날짜:
