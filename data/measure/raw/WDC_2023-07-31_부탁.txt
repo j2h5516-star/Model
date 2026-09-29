@@ -1,0 +1,325 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — WDC 2023-07-31
+# 출처: https://www.sec.gov/Archives/edgar/data/106040/000010604023000020/wdc-20230731.htm
+
+Document
+
+Exhibit 99.1
+<img alt="wdcolorlogogif1a.gif" src="wdcolorlogogif1a.gif">Western Digital Reports Fiscal Fourth Quarter and Fiscal Year 2023 Financial Results
+News Summary
+•Fourth quarter revenue was $2.7 billion, down 5% sequentially (QoQ). Cloud revenue decreased 18% (QoQ), Client revenue increased 6% and Consumer revenue increased 3% (QoQ). Fiscal year 2023 revenue was $12.3 billion.
+•Fourth quarter GAAP earnings per share (EPS) was $(2.27) and Non-GAAP EPS was $(1.98), which includes $211 million of underutilization related charges in Flash and HDD. Fiscal year 2023 GAAP EPS was $(5.44) and Non-GAAP EPS was $(3.59).
+•Expect fiscal first quarter 2024 revenue to be in the range of $2.55 billion to $2.75 billion.
+•Expect Non-GAAP EPS in the range of $(2.10) to $(1.80) which includes $200 to $220 million of underutilization charges in Flash and HDD.
+SAN JOSE, Calif., — July 31, 2023 — Western Digital Corp. (Nasdaq: WDC) today reported fiscal fourth quarter and fiscal year 2023 financial results.
+“Throughout the fiscal fourth quarter and fiscal year, Western Digital continued to optimize our operations and successfully execute our innovative product roadmap, priming ourselves for greater profitability when demand rebounds across hard drives and flash. As a result of these efforts, we delivered revenue above our expectation and delivered a range of industry-leading products to our customers,” said David Goeckeler, Western Digital CEO.
+“We are encouraged by several indicators signaling improving Flash market dynamics. Our two largest end markets, Client and Consumer, are returning to growth, inventories are normalizing, content per unit is increasing and price declines have been moderating. Western Digital is well-positioned to capitalize on improving market conditions and capture long-term growth opportunities in data storage, spanning from client to edge to cloud,” continued David Goeckeler. 
+Western Digital Reports Fiscal Fourth Quarter and Fiscal Year 2023 Financial Results
+Page 2
+
+Q4 2023 Financial Highlights
+                                 GAAP                                               Non-GAAP                                        
+                                 Q4 2023        Q3 2023        Q/Q                  Q4 2023        Q3 2023        Q/Q               
+Revenue ($M)                     $2,672         $2,803         down 5%              $2,672         $2,803         down 5%           
+Gross Margin                     3.4%           10.2%          down 6.8 ppt         3.9%           10.6%          down 6.7 ppt      
+Operating Expenses ($M)          $742           $758           down 2%              $582           $602           down 3%           
+Operating Loss ($M)              $(650)         $(472)         *                    $(478)         $(304)         *                 
+Net Loss ($M)                    $(715)         $(572)         *                    $(621)         $(427)         *                 
+Earnings (Loss) Per Share        $(2.27)        $(1.82)        *                    $(1.98)        $(1.37)        *                 
+* not a meaningful figure
+
+                                    GAAP                                               Non-GAAP                                        
+                                    Q4 2023             Q4 2022                  Y/Y   Q4 2023             Q4 2022                  Y/Y
+Revenue ($M)                        $2,672               $4,528             down 41%   $2,672               $4,528             down 41%
+Gross Margin                        3.4%                  31.9%        down 28.5 ppt   3.9%                  32.3%        down 28.4 ppt
+Operating Expenses ($M)             $742                   $883             down 16%   $582                   $760             down 23%
+Operating Income (Loss) ($M)        $(650)                 $562                    *   $(478)                 $702                    *
+Net Income (Loss) ($M)              $(715)                 $301                    *   $(621)                 $567                    *
+Earnings (Loss) Per Share           $(2.27)               $0.95                    *   $(1.98)               $1.78                    *
+* not a meaningful figure
+The company had an operating cash outflow of $68 million and ended the quarter with $2.02 billion of total cash and cash equivalents.
+Fiscal Year 2023 Financial Highlights
+
+                                             GAAP                                                        Non-GAAP                                        
+                                    2023                            2022                  Y/Y   2023                            2022                  Y/Y
+Revenue ($M)                                 $12,318             $18,793             down 34%            $12,318             $18,793             down 34%
+Gross Margin                                 15.3%                 31.3%        down 16.0 ppt            15.7%                 32.9%        down 17.2 ppt
+Operating Expenses ($M)                      $3,172               $3,483              down 9%            $2,532               $3,002             down 16%
+Operating Income (Loss) ($M)                 $(1,285)             $2,391                    *            $(594)               $3,186                    *
+Net Income (Loss) ($M)                       $(1,706)             $1,500                    *            $(1,119)             $2,599                    *
+Earnings (Loss) Per Share                    $(5.44)               $4.75                    *            $(3.59)               $8.22                    *
+* not a meaningful figure
+Additional details can be found within the company’s earnings presentation, which is accessible online at investor.wdc.com.
+Western Digital Reports Fiscal Fourth Quarter and Fiscal Year 2023 Financial Results
+Page 3
+
+End Market Summary
+Revenue ($M)              Q4 2023        Q3 2023            Q/Q                 Q4 2022            Y/Y           2023           2022            Y/Y
+Cloud                        $994         $1,205       down 18%                  $2,098       down 53%         $5,252         $8,017       down 34%
+Client                      1,035            975          up 6%                   1,637       down 37%          4,328          7,076       down 39%
+Consumer                      643            623          up 3%   793                         down 19%          2,738          3,700       down 26%
+Total Revenue              $2,672         $2,803        down 5%                  $4,528       down 41%        $12,318        $18,793       down 34%
+In the fiscal fourth quarter: 
+•Cloud represented 37% of total revenue. Sequentially, the decline was primarily due to a decrease in capacity enterprise drive shipments. The year-over-year decrease was primarily due to declines in both hard drive and flash product shipments.
+•Client represented 39% of total revenue. Sequentially, the increase was driven by growth in bit shipments for gaming consoles. The year-over-year decrease was due to declines in flash pricing, and lower client SSD and hard drive unit shipments for PC applications.
+•Consumer represented 24% of total revenue. Sequentially, the increase was primarily due to higher retail SSD shipments. The year-over-year decrease was driven by price declines in Flash and lower retail hard drive shipments.
+In fiscal year 2023:
+•Cloud represented 43% of total revenue. The year-over-year decrease was primarily due to reduced shipments of capacity enterprise hard drives and enterprise SSDs.
+•Client represented 35% of total revenue. The year-over-year decrease was primarily due to declines in flash pricing, as well as lower client SSD and hard drive unit shipments for PC applications.
+•Consumer represented 22% of total revenue. Revenue decreased year-over-year, as growth in retail SSD bit shipments was more than offset by broad-based flash price decline and lower consumer hard drive shipments.
+Western Digital Reports Fiscal Fourth Quarter and Fiscal Year 2023 Financial Results
+Page 4
+
+Business Outlook for Fiscal First Quarter of 2024
+                                                Three Months Ending                                      
+                                                September 29, 2023                                       
+                                                GAAP(1)                             Non-GAAP(1)          
+Revenue ($B)                                    $2.55 - $2.75                       $2.55 - $2.75        
+Gross margin                                    1.9% - 4.0%                         2.5% - 4.5%          
+Operating expenses ($M)                         $665 - $685                         $570 - $590          
+Interest and other expense, net ($M)            ~$90                                ~$90                 
+Income tax expense ($M)(2)                      N/A                                 $30 - $40            
+Diluted earnings per share                      N/A                                 $(2.10) - $(1.80)    
+Diluted shares outstanding (in millions)        ~323                                ~323                 
+
+
+(1) Non-GAAP gross margin guidance excludes stock-based compensation expense of approximately $10 million to $15 million. The company’s Non-GAAP operating expenses guidance excludes stock-based compensation expense, and expenses related to strategic review, totaling approximately $90 million to $100 million. In the aggregate, Non-GAAP diluted earnings per share guidance excludes these items totaling approximately $100 million to $115 million. The timing and amount of these charges excluded from Non-GAAP gross margin, Non-GAAP operating expenses, and Non-GAAP diluted earnings per share cannot be further allocated or quantified with certainty. Additionally, the timing and amount of additional charges the company excludes from its Non-GAAP income tax expense and Non-GAAP diluted earnings per share are dependent on the timing and determination of certain actions and cannot be reasonably predicted. Accordingly, full reconciliations of Non-GAAP gross margin, Non-GAAP operating expenses, Non-GAAP income tax expense and Non-GAAP diluted earnings per share to the most directly comparable GAAP financial measures (GAAP gross profit, GAAP operating expenses, income tax expense and diluted earnings per share, respectively) are not available without unreasonable effort.
+(2) The Non-GAAP income tax expense is determined based on a percentage of Non-GAAP pre-tax income or loss. Our estimated Non-GAAP tax dollars may differ from our GAAP tax dollars (i) due to differences in the tax treatment of items excluded from our Non-GAAP net income or loss; (ii) the fact that our GAAP income tax expense or benefit recorded in any interim period is based on an estimated forecasted GAAP tax rate for the full year, excluding loss jurisdictions; and (iii) because our GAAP taxes recorded in any interim period are dependent on the timing and determination of certain GAAP operating expenses.
+Western Digital Reports Fiscal Fourth Quarter and Fiscal Year 2023 Financial Results
+Page 5
+
+Investor Communications
+The investment community conference call to discuss these results and the company’s business outlook for the fiscal first quarter of 2024 will be broadcast live online today at 1:30 p.m. Pacific/4:30 p.m. Eastern. The live and archived conference call/webcast and the earnings presentation can be accessed online at investor.wdc.com. 
+About Western Digital
+Western Digital is on a mission to unlock the potential of data by harnessing the possibility to use it. With Flash and HDD franchises, underpinned by advancements in storage technologies, we create breakthrough innovations and powerful data storage solutions that enable the world to actualize its aspirations. Core to our values, we recognize the urgency to combat climate change and have committed to ambitious carbon reduction goals approved by the Science Based Targets initiative. Learn more about Western Digital and the Western Digital®, SanDisk® and WD® brands at www.westerndigital.com.
+Forward-Looking Statements
+This press release contains forward-looking statements within the meaning of federal securities laws, including statements regarding expectations for the company’s business outlook and financial performance for the fiscal first quarter of 2024; future market dynamics and demand trends; product developments and mix; the position of the company and its products in the industry; and overall market conditions. These forward-looking statements are based on management’s current expectations and are subject to risks and uncertainties that could cause actual results to differ materially from those expressed or implied in the forward-looking statements. The preliminary financial results for the company’s fiscal fourth quarter and year ended June 30, 2023 included in this press release represent the most current information available to management. The company’s actual results when disclosed in its Form 10-K may differ from these preliminary results as a result of the completion of the company’s financial closing procedures, including completion of the annual assessment of impairment of goodwill; completion of the audit by the company’s independent registered accounting firm; and other developments that may arise between now and the filing of its Form 10-K. Other risks and uncertainties that could cause actual results to differ materially from those expressed or implied in the forward-looking statements include: volatility in global economic conditions; future responses to and effects of the COVID-19 pandemic or other similar global health crises; impact of business and market conditions; the outcome and impact of our ongoing strategic review, including with respect to customer and supplier relationships, regulatory and contractual restrictions, stock price volatility and the diversion of management’s attention from ongoing business operations and opportunities; impact of competitive products and pricing; our development and introduction of products based on new technologies and expansion into new data storage markets; risks associated with cost saving initiatives, restructurings, acquisitions, divestitures, mergers, joint 
+Western Digital Reports Fiscal Fourth Quarter and Fiscal Year 2023 Financial Results
+Page 6
+
+ventures and our strategic relationships; difficulties or delays in manufacturing or other supply chain disruptions; hiring and retention of key employees; our level of debt and other financial obligations; changes to our relationships with key customers; compromise, damage or interruption from cybersecurity incidents or other data system security risks; actions by competitors; risks associated with compliance with changing legal and regulatory requirements and the outcome of legal proceedings; and other risks and uncertainties listed in the company’s filings with the Securities and Exchange Commission (the “SEC”), including the company’s Form 10-K filed with the SEC on August 25, 2022 and Form 10-Q filed with the SEC on May 10, 2023, to which your attention is directed. You should not place undue reliance on these forward-looking statements, which speak only as of the date hereof, and the company undertakes no obligation to update or revise these forward-looking statements to reflect new information or events, except as required by law.
+###
+Western Digital, the Western Digital logo, SanDisk and WD are registered trademarks or trademarks of Western Digital Corporation or its affiliates in the US and/or other countries. 
+WESTERN DIGITAL CORPORATION
+PRELIMINARY CONDENSED CONSOLIDATED BALANCE SHEETS 
+(in millions; unaudited; on a US GAAP basis)
+
+
+                                                                                           June 30,                                         July 1,
+                                                                                               2023                                            2022
+ASSETS                                                                                                                                             
+Current assets:                                                                                                                                    
+Cash and cash equivalents                                                            $2,023                                          $2,327        
+Accounts receivable, net                                                              1,598                                           2,804        
+Inventories                                                                           3,698                                           3,638        
+Other current assets                                                                    567                                             684        
+Total current assets                                                                  7,886                                           9,453        
+Property, plant and equipment, net                                                    3,620                                           3,670        
+Notes receivable and investments in Flash Ventures                                    1,297                                           1,396        
+Goodwill                                                                             10,037                                          10,041        
+Other intangible assets, net                                                             80                                             213        
+Other non-current assets                                                              1,509                                           1,486        
+Total assets                                                                        $24,429                                         $26,259        
+LIABILITIES, CONVERTIBLE PREFERRED STOCK AND SHAREHOLDERS’ EQUITY                                                                                  
+Current liabilities:                                                                                                                               
+Accounts payable                                                                     $1,293                                          $1,902        
+Accounts payable to related parties                                                     292                                             320        
+Accrued expenses                                                                      1,288                                           1,636        
+Income taxes payable                                                                    999                                             869        
+Accrued compensation                                                                    349                                             510        
+Current portion of long-term debt                                                     1,213                                               —        
+Total current liabilities                                                             5,434                                           5,237        
+Long-term debt                                                                        5,857                                           7,022        
+Other liabilities                                                                     1,415                                           1,779        
+Total liabilities                                                                    12,706                                          14,038        
+Convertible preferred stock                                                             876                                               —        
+Total shareholders’ equity                                                           10,847                                          12,221        
+Total liabilities, convertible preferred stock and shareholders’ equity             $24,429                                         $26,259        
+WESTERN DIGITAL CORPORATION
+PRELIMINARY CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS
+(in millions, except per share amounts; unaudited; on a US GAAP basis)
+
+
+                                                                                                 Three Months Ended                                              Years Ended
+                                                                           June 30,                         July 1,                    June 30,                      July 1,
+                                                                               2023                            2022                        2023                         2022
+Revenue, net                                                            $2,672                          $4,528                     $12,318                      $18,793     
+Cost of revenue                                                          2,580                           3,083                      10,431                       12,919     
+Gross profit                                                                92                           1,445                       1,887                        5,874     
+Operating expenses:                                                                                                                                                         
+Research and development                                                   458                             598                       2,009                        2,323     
+Selling, general and administrative                                        231                             266                         970                        1,117     
+Employee termination, asset impairment, and other charges                   53                              19                         193                           43     
+Total operating expenses                                                   742                             883                       3,172                        3,483     
+Operating income (loss)                                                  (650)                             562                     (1,285)                        2,391     
+Interest and other income, net                                            (80)                            (51)                       (275)                        (268)     
+Income (loss) before taxes                                               (730)                             511                     (1,560)                        2,123     
+Income tax expense (benefit)                                              (15)                             210                         146                          623     
+Net income (loss)                                                        (715)                             301                     (1,706)                        1,500     
+Less: cumulative dividends allocated to preferred shareholders              15                               —                          24                            —     
+Net income (loss) attributable to common shareholders                   $(730)                            $301                    $(1,730)                       $1,500     
+Income (loss) per common share:                                                                                                                                             
+Basic                                                                  $(2.27)                           $0.96                     $(5.44)                        $4.81     
+Diluted                                                                $(2.27)                           $0.95                     $(5.44)                        $4.75     
+Weighted average shares outstanding:                                                                                                                                        
+Basic                                                                      321                             314                         318                          312     
+Diluted                                                                    321                             318                         318                          316     
+
+WESTERN DIGITAL CORPORATION
+PRELIMINARY CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS
+(in millions; unaudited; on a US GAAP basis)
+
+
+                                                                                                                   Three Months Ended                                              Years Ended
+                                                                                             June 30,                         July 1,                    June 30,                      July 1,
+                                                                                                 2023                            2022                        2023                         2022
+Operating Activities                                                                                                                                                                          
+Net income (loss)                                                                         $(715)                            $301                    $(1,706)                       $1,500     
+Adjustments to reconcile net income (loss) to net cash provided by operations:                                                                                                                
+Depreciation and amortization                                                                185                             221                         828                          929     
+Stock-based compensation                                                                      72                              77                         318                          326     
+Deferred income taxes                                                                       (68)                              73                        (34)                          114     
+Gain on disposal of assets                                                                     —                             (2)                         (7)                         (16)     
+Non-cash portion of asset impairment                                                           1                               —                          19                            —     
+Gain on business divestiture                                                                   —                             (9)                           —                          (9)     
+Amortization of debt issuance costs and discounts                                              4                              10                          13                           44     
+Other non-cash operating activities, net                                                      65                              25                          71                           67     
+Changes in:                                                                                                                                                                                   
+Accounts receivable, net                                                                     (7)                           (450)                       1,206                        (546)     
+Inventories                                                                                  281                              23                        (60)                         (22)     
+Accounts payable                                                                            (17)                            (29)                       (459)                        (129)     
+Accounts payable to related parties                                                           26                            (76)                        (28)                         (78)     
+Accrued expenses                                                                             132                             243                       (352)                          245     
+Income taxes payable                                                                        (14)                            (24)                         130                         (74)     
+Accrued compensation                                                                           7                              26                       (162)                        (123)     
+Other assets and liabilities, net                                                           (20)                           (114)                       (185)                        (348)     
+Net cash provided by (used in) operating activities                                         (68)                             295                       (408)                        1,880     
+Investing Activities                                                                                                                                                                          
+Purchases of property, plant and equipment, net                                            (119)                           (278)                       (807)                      (1,107)     
+Activity related to Flash Ventures, net                                                     (32)                           (114)                          14                         (91)     
+Strategic investments and other, net                                                           9                              22                          31                            6     
+Net cash used in investing activities                                                      (142)                           (370)                       (762)                      (1,192)     
+Financing Activities                                                                                                                                                                          
+Employee stock plans, net                                                                     33                              55                          13                           32     
+Net proceeds from convertible preferred stock                                                (1)                               —                         881                            —     
+Repayments of debt                                                                             —                           (150)                     (1,180)                      (3,621)     
+Proceeds from debt                                                                             —                               —                       1,180                        1,894     
+Debt issuance costs                                                                         (13)                               —                        (19)                         (23)     
+Net cash provided by (used in) financing activities                                           19                            (95)                         875                      (1,718)     
+Effect of exchange rate changes on cash                                                      (6)                             (8)                         (9)                         (13)     
+Net decrease in cash and cash equivalents                                                  (197)                           (178)                       (304)                      (1,043)     
+Cash and cash equivalents, beginning of period                                             2,220                           2,505                       2,327                        3,370     
+Cash and cash equivalents, end of period                                                  $2,023                          $2,327                      $2,023                       $2,327     
+WESTERN DIGITAL CORPORATION
+SUPPLEMENTAL OPERATING SEGMENT RESULTS
+(in millions; except percentages; unaudited)
+
+
+                                                                               Three Months Ended                                            Years Ended
+                                                         June 30,                         July 1,                  June 30,                      July 1,
+                                                             2023                            2022                      2023                         2022
+Net revenue:                                                                                                                                            
+Flash                                                 $1,377                          $2,400                    $6,063                       $9,753     
+HDD                                                    1,295                           2,128                     6,255                        9,040     
+Total net revenue                                     $2,672                          $4,528                   $12,318                      $18,793     
+Gross profit:                                                                                                                                           
+Flash                                                 $(164)                            $862                      $433                       $3,527     
+HDD                                                      268                             600                     1,505                        2,661     
+Total gross profit for segments                          104                           1,462                     1,938                        6,188     
+Unallocated corporate items:                                                                                                                            
+Stock-based compensation expense                        (11)                            (12)                      (49)                         (48)     
+Amortization of acquired intangible assets                 1                             (1)                         —                         (66)     
+Contamination related charges                              —                             (4)                         —                        (207)     
+Recoveries from a power outage incident                    —                               —                         —                            7     
+Non-cash economic interest and Other                     (2)                               —                       (2)                            —     
+Total unallocated corporate items                       (12)                            (17)                      (51)                        (314)     
+Consolidated gross profit                                $92                          $1,445                    $1,887                       $5,874     
+Gross margin:                                                                                                                                           
+Flash                                                 (11.9)    %                       35.9    %                  7.1    %                    36.2    %
+HDD                                                     20.7    %                       28.2    %                 24.1    %                    29.4    %
+Total gross margin for segments                          3.9    %                       32.3    %                 15.7    %                    32.9    %
+Consolidated gross margin                                3.4    %                       31.9    %                 15.3    %                    31.3    %
+The Company manages and reports under two reportable segments: flash-based products (“Flash”) and hard disk drives (“HDD”). In the table above, total gross profit for segments and total gross margin for segments are Non-GAAP financial measures, which are also referred to herein as Non-GAAP gross profit and Non-GAAP gross margin, respectively.
+WESTERN DIGITAL CORPORATION
+PRELIMINARY RECONCILIATION OF GAAP TO NON-GAAP FINANCIAL MEASURES
+(in millions; unaudited)
+
+
+                                                                                                                      Three Months Ended                                              Years Ended
+                                                                     June 30,                     March 31,                      July 1,                    June 30,                      July 1,
+                                                                         2023                          2023                         2022                        2023                         2022
+GAAP gross profit                                                    $92                         $286                        $1,445                      $1,887                       $5,874     
+Stock-based compensation expense                                      11                           12                            12                          49                           48     
+Amortization of acquired intangible assets                           (1)                            —                             1                           —                           66     
+Contamination related charges                                          —                            —                             4                           —                          207     
+Recoveries from a power outage incident                                —                            —                             —                           —                          (7)     
+Other                                                                  2                            —                             —                           2                            —     
+Non-GAAP gross profit                                               $104                         $298                        $1,462                      $1,938                       $6,188     
+GAAP operating expenses                                             $742                         $758                          $883                      $3,172                       $3,483     
+Stock-based compensation expense                                    (61)                         (62)                          (65)                       (269)                        (278)     
+Amortization of acquired intangible assets                          (17)                         (39)                          (39)                       (133)                        (155)     
+Employee termination, asset impairment and other charges            (53)                         (40)                          (19)                       (193)                         (43)     
+Strategic review                                                    (27)                         (15)                             —                        (42)                            —     
+Other                                                                (2)                            —                             —                         (3)                          (5)     
+Non-GAAP operating expenses                                         $582                         $602                          $760                      $2,532                       $3,002     
+GAAP operating income (loss)                                      $(650)                       $(472)                          $562                    $(1,285)                       $2,391     
+Gross profit adjustments                                              12                           12                            17                          51                          314     
+Operating expense adjustments                                        160                          156                           123                         640                          481     
+Non-GAAP operating income (loss)                                  $(478)                       $(304)                          $702                      $(594)                       $3,186     
+GAAP interest and other income, net                                $(80)                        $(57)                         $(51)                      $(275)                       $(268)     
+Non-cash economic interest and other                                 (6)                          (6)                          (14)                        (13)                            3     
+Non-GAAP interest and other income, net                            $(86)                        $(63)                         $(65)                      $(288)                       $(265)     
+GAAP income tax expense (benefit)                                  $(15)                          $43                          $210                        $146                         $623     
+Income tax adjustments                                                72                           17                         (140)                          91                        (301)     
+Non-GAAP income tax expense                                          $57                          $60                           $70                        $237                         $322     
+WESTERN DIGITAL CORPORATION
+PRELIMINARY RECONCILIATION OF GAAP TO NON-GAAP FINANCIAL MEASURES
+(in millions, except per share amounts; unaudited)
+
+
+                                                                                                                          Three Months Ended                                              Years Ended
+                                                                           June 30,                     March 31,                    July 1,                    June 30,                      July 1,
+                                                                               2023                          2023                       2022                        2023                         2022
+GAAP net income (loss)                                                  $(715)                       $(572)                        $301                    $(1,706)                       $1,500     
+Stock-based compensation expense                                            72                           74                          77                         318                          326     
+Amortization of acquired intangible assets                                  16                           39                          40                         133                          221     
+Contamination related charges                                                —                            —                           4                           —                          207     
+Recoveries from a power outage incident                                      —                            —                           —                           —                          (7)     
+Employee termination, asset impairment and other charges                    53                           40                          19                         193                           43     
+Strategic review                                                            27                           15                           —                          42                            —     
+Non-cash economic interest and other                                       (2)                          (6)                        (14)                         (8)                            8     
+Income tax adjustments                                                    (72)                         (17)                         140                        (91)                          301     
+Non-GAAP net income (loss)                                               (621)                        (427)                         567                     (1,119)                        2,599     
+Less: cumulative dividends allocated to preferred shareholders              15                            9                           —                          24                            —     
+Non-GAAP net income (loss) attributable to common shareholders          $(636)                       $(436)                        $567                    $(1,143)                       $2,599     
+Diluted income (loss) per common share                                                                                                                                                               
+GAAP                                                                   $(2.27)                      $(1.82)                       $0.95                     $(5.44)                        $4.75     
+Non-GAAP                                                               $(1.98)                      $(1.37)                       $1.78                     $(3.59)                        $8.22     
+Diluted weighted average shares outstanding:                                                                                                                                                         
+GAAP                                                                       321                          319                         318                         318                          316     
+Non-GAAP                                                                   321                          319                         318                         318                          316     
+Cash flows                                                                                                                                                                                           
+Cash flow provided by (used in) operating activities                     $(68)                       $(381)                        $295                      $(408)                       $1,880     
+Purchases of property, plant and equipment, net                          (119)                        (110)                       (278)                       (807)                      (1,107)     
+Activity related to Flash Ventures, net                                   (32)                         (36)                       (114)                          14                         (91)     
+Free cash flow                                                          $(219)                       $(527)                       $(97)                    $(1,201)                         $682     
+To supplement the condensed consolidated financial statements presented in accordance with U.S. generally accepted accounting principles (“GAAP”), the table above sets forth Non-GAAP gross profit; Non-GAAP gross margin; Non-GAAP operating expenses; Non-GAAP operating income and loss; Non-GAAP interest and other income, net; Non-GAAP income tax expense; Non-GAAP net income and loss; Non-GAAP diluted income and loss per common share and free cash flow (“Non-GAAP measures”). These Non-GAAP measures are not in accordance with, or an alternative for, measures prepared in accordance with GAAP and may be different from Non-GAAP measures used by other companies. The company believes the presentation of these Non-GAAP measures, when shown in conjunction with the corresponding GAAP measures, provides useful information to investors for measuring the company’s earnings performance and comparing it against prior periods. Specifically, the company believes these Non-GAAP measures provide useful information to both management and investors as they exclude certain expenses, gains and losses that the company believes are not indicative of its core operating results or because they are consistent with the financial models and estimates published by many analysts who follow the company and its peers. As discussed further below, these Non-GAAP measures exclude, as applicable, stock-based compensation expense, amortization of acquired intangible assets, contamination related charges, recoveries from a power outage incident, employee termination, asset impairment and other charges, expenses related to our strategic review, non-cash economic interest, other adjustments, and income tax adjustments, and the company believes these measures along with the related reconciliations to the GAAP measures provide additional detail and comparability for assessing the company’s results. These Non-GAAP measures are some of the primary indicators management uses for assessing the company’s performance and planning and forecasting future periods. These measures should be considered in addition to results prepared in accordance with GAAP, but should not be considered a substitute for, or superior to, GAAP results.
+As described above, the company excludes the following items from its Non-GAAP measures:
+Stock-based compensation expense. Because of the variety of equity awards used by companies, the varying methodologies for determining stock-based compensation expense, the subjective assumptions involved in those determinations, and the volatility in valuations that can be driven by market conditions outside the company’s control, the company believes excluding stock-based compensation expense enhances the ability of management and investors to understand and assess the underlying performance of its business over time and compare it against the company’s peers, a majority of whom also exclude stock-based compensation expense from their Non-GAAP results.
+Amortization of acquired intangible assets. The company incurs expenses from the amortization of acquired intangible assets over their economic lives. Such charges are significantly impacted by the timing and magnitude of the company’s acquisitions and any related impairment charges.
+Contamination related charges. In February 2022, a contamination of certain materials used in the company’s manufacturing process occurred and affected production operation at the flash-based memory manufacturing facilities in Yokkaichi and Kitakami, Japan, which are operated through the company’s joint business ventures with Kioxia Corporation (collectively, "Flash Ventures"). The contamination resulted in scrapped inventory and rework costs, decontamination and other costs needed to restore the facilities to normal capacity, and under absorption of overhead costs, which are expensed as incurred. These charges are inconsistent in amount and frequency, and the company believes these charges are not part of the ongoing production operation of its business.
+Recoveries from a power outage incident. In June 2019, an unexpected power outage incident occurred at the flash-based memory manufacturing facilities operated through the company’s joint venture with Kioxia Corporation in Yokkaichi, Japan. The power outage incident resulted in costs associated with the repair of damaged tools and the write-off of damaged inventory and unabsorbed manufacturing overhead costs which are expensed as incurred. During fiscal years 2021 and 2022, the company received recoveries for these losses from other parties. The recoveries are inconsistent in amount and frequency, and the company believes they are not part of the ongoing production operation of its business.
+Employee termination, asset impairment and other charges. From time-to-time, in order to realign the company’s operations with anticipated market demand or to achieve cost synergies from the integration of acquisitions, the company may terminate employees and/or restructure its operations. From time-to-time, the company may also incur charges from the impairment of intangible assets and other long-lived assets. In addition, the company may record credits related to gains upon sale of property due to restructuring or reversals of charges recorded in prior periods. These charges or credits are inconsistent in amount and frequency, and the company believes they are not indicative of the underlying performance of its business.
+Strategic review. The company incurred expenses associated with its ongoing review of potential strategic alternatives aimed at further optimizing the long-term value for stockholders. The company believes these charges do not reflect the company’s operating results and that they are not indicative of the underlying performance of its business.
+Non-cash economic interest. The company has excluded non-cash economic interest expense associated with its convertible notes recognized in periods prior to the company’s adoption of the Financial Accounting Standards Board Accounting Standards Update No. 2020-06, “Debt—Debt with Conversion and Other Options (Subtopic 470-20) and Derivatives and Hedging—Contracts in Entity’s Own Equity (Subtopic 815-40): Accounting for Convertible Instruments and Contracts in an Entity’s Own Equity”, which the company adopted at the beginning of its fiscal year ending June 30, 2023. The exclusion of such amounts from prior periods facilitates a comparison of the company's prior period results to the current period presentation.
+Other adjustments. From time-to-time, the company incurs charges or gains that the company believes are not a part of the ongoing operation of its business. The resulting expense or benefit is inconsistent in amount and frequency.
+Income tax adjustments. Income tax adjustments include the difference between income taxes based on a forecasted annual Non-GAAP tax rate and a forecasted annual GAAP tax rate as a result of the timing of certain Non-GAAP pre-tax adjustments. The income tax adjustments also include adjustments to estimates related to the current status of the rules and regulations governing the transition to the Tax Cuts and Jobs Act and the re-measurement of certain unrecognized tax benefits primarily related to tax positions taken in prior quarters, including interest. These adjustments are excluded because the company believes that they are not indicative of the underlying performance of its ongoing business.
+Additionally, free cash flow is defined as cash flows provided (used in) by operating activities less purchases of property, plant and equipment, net, and the activity related to Flash Ventures, net. The company considers free cash flow generated in any period to be a useful indicator of cash that is available for strategic opportunities including, among others, investing in the company’s business, making strategic acquisitions, repaying debt and strengthening the balance sheet.
+___________________
+Contacts:
+Western Digital Corp.
+
+Investor Contact:          Media Contact:             
+T. Peter Andrew            Robin Schultz              
+949.672.9655               408.573.5043               
+peter.andrew@wdc.com       robin.schultz@wdc.com      
+investor@wdc.com                                      
