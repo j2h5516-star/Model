@@ -1,0 +1,505 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — ORCL 2018-06-19
+# 출처: https://www.sec.gov/Archives/edgar/data/1341439/000156459018015818/orcl-8k_20180619.htm
+
+ orcl-ex991_6.htm 
+
+ Exhibit 99.1 
+ 
+<img alt="" src="g201806191846107076826.jpg"> For Immediate Release 
+ 
+ 
+Contact:   Ken Bond                    Deborah Hellinger              
+           Oracle Investor Relations   Oracle Corporate Communications
+           1.650.607.0349              1.212.508.7935                 
+           ken.bond@oracle.com         deborah.hellinger@oracle.com   
+ 
+Q4 FY18 GAAP EPS UP 8% TO $0.82 and NON-GAAP EPS UP 11% TO $0.99
+ Q4 FY18 Total Revenue Up 3% to $11.3 Billion and FY18 Total Revenue Up 6% to $39.8 Billion 
+ REDWOOD SHORES, Calif., June 19, 2018 -- 
+Oracle Corporation (NYSE: ORCL) today announced fiscal 2018 Q4 results and fiscal 2018 full year results. In Q4, Total Revenues were up 3% to $11.3 billion compared to Q4 last year. Q4 Cloud Services and License Support revenues were up 8% to $6.8 billion. Q4 Cloud License and On-Premise License revenues were down 5% to $2.5 billion. 
+ Q4 GAAP Operating Income was up 8% to $4.4 billion, and GAAP Operating Margin was 39%. Q4 Non-GAAP Operating Income was up 6% to $5.3 billion, and non-GAAP Operating Margin was 47%. Q4 GAAP Net Income was $3.4 billion, and non-GAAP Net Income was $4.1 billion. Q4 GAAP Earnings Per Share was up 8% to $0.82, while non-GAAP Earnings Per Share was up 11% to $0.99. 
+ At the end of Q4, short-term deferred revenues were up 2% to $8.4 billion, while Operating Cash Flow on a trailing twelve-month basis was up 9%, or $1.3 billion, to a record $15.4 billion.
+ For the full fiscal year 2018, Total Revenues were up 6% to $39.8 billion compared to fiscal 2017. FY18 Cloud Services and License Support revenues were up 10% to $26.3 billion. FY18 Cloud License and On-Premise License revenues were down 4% to $6.2 billion. 
+ FY18 GAAP Operating Income was up 8% to $13.7 billion, and GAAP Operating Margin was 34%. FY18 Non-GAAP Operating Income was up 9% to $17.6 billion, and non-GAAP Operating Margin was 44%. FY18 GAAP Net Income was $3.8 billion, and non-GAAP Net Income was $13.2 billion. FY18 GAAP Earnings Per Share was $0.90, while Non-GAAP Earnings Per Share was $3.12. 
+ “Last year, I forecast double-digit non-GAAP earnings per share growth for FY18 and we delivered 14% growth this year, largely driven by strong growth in our cloud businesses,” said Oracle CEO, Safra Catz. “Looking ahead to FY19, I expect revenue growth will enable us to deliver double-digit non-GAAP earnings per share growth once again.”
+ “We had a great fourth quarter with total revenues more than $200 million above our constant currency forecast,” said Oracle CEO, Mark Hurd. “Our strategic Fusion ERP and HCM SaaS cloud applications suite revenues grew over 50% in the fourth quarter, and we expect continued strong growth from our Fusion SaaS suites throughout FY19.”
+ “Some of our largest customers have now begun the process of moving their on-premise Oracle databases to the Oracle Cloud,” said Oracle Chairman and CTO, Larry Ellison. “For example, AT&T is moving thousands of databases and tens of thousands of terabytes of data into the Oracle Cloud. We think that these large scale migrations of Oracle database to the cloud will drive our PaaS and IaaS businesses throughout FY19.” 
+ The Board of Directors also declared a quarterly cash dividend of $0.19 per share of outstanding common stock. This dividend will be paid to stockholders of record as of the close of business on July 17, 2018, with a payment date of July 31, 2018.
+
+Q4 Fiscal 2018 Earnings Conference Call and Webcast 
+ Oracle will hold a conference call and webcast today to discuss these results at 2:00 p.m. Pacific. You may listen to the call by dialing (816) 287-5563, Passcode: 425392. To access the live webcast of this event, please visit the Oracle Investor Relations website at http://www.oracle.com/investor. In addition, Oracle’s Q4 results and fiscal 2018 financial tables are available on the Oracle Investor Relations website.
+ A replay of the conference call will also be available by dialing (855) 859-2056 or (404) 537-3406, Pass Code: 6866209.
+ About Oracle 
+ Oracle offers a comprehensive and fully integrated stack of cloud applications and platform services. For more information about Oracle (NYSE: ORCL), visit www.oracle.com or contact Investor Relations at investor_us@oracle.com or (650) 506-4073. 
+ # # #
+ Trademarks 
+ Oracle and Java are registered trademarks of Oracle and/or its affiliates. Other names may be trademarks of their respective owners. 
+
+"Safe Harbor" Statement: Statements in this press release relating to Oracle's future plans, expectations, beliefs, intentions and prospects, including statements regarding our expectations for future growth in revenues, non-GAAP earnings per share and our Fusion SaaS suite of products, and our beliefs that large scale customer cloud migrations will drive our PaaS and IaaS businesses in FY19, are "forward-looking statements" and are subject to material risks and uncertainties. Many factors could affect our current expectations and our actual results, and could cause actual results to differ materially. We presently consider the following to be among the important factors that could cause actual results to differ materially from expectations: (1) Our cloud computing strategy, including our Oracle Cloud SaaS, PaaS, IaaS and data as a service offerings, may not be successful. (2) If we are unable to develop new or sufficiently differentiated products and services, enhance and improve our products and support services in a timely manner or position and price our products and services to meet demand, customers may not buy cloud licenses and on-premise licenses, cloud services or hardware products or purchase or renew support contracts. (3) If the security measures for our products and services are compromised or if our products and services contain significant coding, manufacturing or configuration errors, we may experience reputational harm, legal claims and reduced sales.  (4) Economic, political and market conditions can adversely affect our business, results of operations and financial condition, including our revenue growth and profitability, which in turn could adversely affect our stock price. (5) Our international sales and operations subject us to additional risks that can adversely affect our operating results, including risks relating to foreign currency gains and losses. (6) We have an active acquisition program and our acquisitions may not be successful, may involve unanticipated costs or other integration issues or may disrupt our existing operations. (7) We may fail to achieve our financial forecasts due to such factors as delays or size reductions in transactions, fewer large transactions in a particular quarter, fluctuations in currency exchange rates, delays in delivery of new products or releases or a decline in our renewal rates for support contracts. A detailed discussion of these factors and other risks that affect our business is contained in our U.S. Securities and Exchange Commission (SEC) filings, including our most recent reports on Form 10-K and Form 10-Q, particularly under the heading "Risk Factors." Copies of these filings are available online from the SEC or by contacting Oracle Corporation's Investor Relations Department at (650) 506-4073 or by clicking on SEC Filings on Oracle’s Investor Relations website at http://www.oracle.com/investor. All information set forth in this press release is current as of June 19, 2018. Oracle undertakes no duty to update any statement in light of new information or future events.
+
+ORACLE CORPORATION
+ Q4 FISCAL 2018 FINANCIAL RESULTS 
+ CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS 
+ ($ in millions, except per share data) 
+ 
+ 
+                                                                         Three Months Ended May 31,                           % Increase    % Increase 
+                                                                                                                                            (Decrease) 
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+                                             2018                             % of   2017                              % of   (Decrease)    in Constant
+                                                                          Revenues                                 Revenues      in US $   Currency (1)
+REVENUES                                                                                                                                               
+Cloud services and license support                     $6,770                  60%              $6,258                  58%           8%             6%
+Cloud license and on-premise license                    2,483                  22%               2,626                  24%         (5%)           (6%)
+Hardware                                                1,115                  10%               1,114                  10%           0%           (2%)
+Services                                                  883                   8%                 894                   8%         (1%)           (3%)
+Total revenues                                         11,251                 100%              10,892                 100%           3%             2%
+OPERATING EXPENSES                                                                                                                                     
+Cloud services and license support                        962                   8%                 835                   8%          15%            14%
+Hardware                                                  462                   4%                 440                   4%           5%             3%
+Services                                                  755                   7%                 728                   7%           4%             2%
+Sales and marketing                                     2,324                  20%               2,313                  21%           0%           (1%)
+Research and development                                1,544                  14%               1,609                  15%         (4%)           (4%)
+General and administrative                                308                   3%                 317                   3%         (3%)           (5%)
+Amortization of intangible assets                         415                   4%                 441                   4%         (6%)           (6%)
+Acquisition related and other                              20                   0%                  18                   0%           9%             8%
+Restructuring                                              81                   1%                 118                   1%        (32%)          (34%)
+Total operating expenses                                6,871                  61%               6,819                  63%           1%             0%
+OPERATING INCOME                                        4,380                  39%               4,073                  37%           8%             5%
+Interest expense                                         (547   )             (5%)                (481   )             (4%)          14%            14%
+Non-operating income, net                                 308                   3%                 168                   2%          83%            87%
+INCOME BEFORE PROVISION FOR INCOME TAXES                4,141                  37%               3,760                  35%          10%             8%
+Provision for income taxes                                733                   7%                 529                   5%          39%            39%
+NET INCOME                                             $3,408                  30%              $3,231                  30%           5%             2%
+EARNINGS PER SHARE:                                                                                                                                    
+Basic                                                   $0.84                                    $0.78                                                 
+Diluted                                                 $0.82                                    $0.76                                                 
+WEIGHTED AVERAGE COMMON STOCK OUTSTANDING:                                                                                                             
+Basic                                                   4,046                                    4,132                                                 
+Diluted                                                 4,149                                    4,248                                                 
+ 
+ 
+(1)   We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into United States dollars at the exchange rates in effect on May 31, 2017, which was the last day of our prior fiscal year, rather than the actual exchange rates in effect during the respective periods. Movements in international currencies relative to the United States dollar during the three months ended May 31, 2018 compared with the corresponding prior year period increased our revenues by 1 percentage point, operating expenses by 1 percentage point and operating income by 3 percentage points.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+1
+
+ORACLE CORPORATION 
+ Q4 FISCAL 2018 FINANCIAL RESULTS 
+ RECONCILIATION OF SELECTED GAAP MEASURES TO NON-GAAP MEASURES (1) 
+ ($ in millions, except per share data)
+ 
+ 
+                                                                                                    Three Months Ended May 31,                                                    % Increase (Decrease)          % Increase (Decrease) in   
+                                                                                                                                                                                          in US$                  Constant Currency (2)     
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                            2018                Adj.                   2018                  2017                Adj.                   2017      GAAP             Non-GAAP       GAAP              Non-GAAP
+                                                            GAAP                                   Non-GAAP                  GAAP                                   Non-GAAP                                                                
+TOTAL REVENUES                                           $11,251                  $9                $11,260               $10,892                 $50                $10,942        3%                   3%         2%                    1%
+Cloud services and license support                         6,770                   9                  6,779                 6,258                  50                  6,308        8%                   7%         6%                    5%
+TOTAL OPERATING EXPENSES                                  $6,871               $(909   )             $5,962                $6,819               $(893   )             $5,926        1%                   1%         0%                  (1%)
+Sales and marketing (3)                                    2,324                 (84   )              2,240                 2,313                 (62   )              2,251        0%                   0%       (1%)                  (2%)
+Stock-based compensation (4)                                 309                (309   )                  —                   254                (254   )                  —       22%                    *        22%                     *
+Amortization of intangible assets (5)                        415                (415   )                  —                   441                (441   )                  —      (6%)                    *       (6%)                     *
+Acquisition related and other                                 20                 (20   )                  —                    18                 (18   )                  —        9%                    *         8%                     *
+Restructuring                                                 81                 (81   )                  —                   118                (118   )                  —     (32%)                    *      (34%)                     *
+OPERATING INCOME                                          $4,380                $918                 $5,298                $4,073                $943                 $5,016        8%                   6%         5%                    4%
+OPERATING MARGIN %                                           39%                                        47%                   37%                                        46%   154 bp.              121 bp.    128 bp.               108 bp.
+INCOME TAX EFFECTS (6)                                      $733                $239                   $972                  $529                $412                   $941       39%                   3%        39%                    1%
+NET INCOME                                                $3,408                $679                 $4,087                $3,231                $531                 $3,762        5%                   9%         2%                    7%
+DILUTED EARNINGS PER SHARE                                 $0.82                                      $0.99                 $0.76                                      $0.89        8%                  11%         5%                    9%
+DILUTED WEIGHTED AVERAGE COMMON SHARES OUTSTANDING         4,149                   —                  4,149                 4,248                   —                  4,248      (2%)                 (2%)       (2%)                  (2%)
+ 
+
+ 
+(1)   This presentation includes non-GAAP measures. Our non-GAAP measures are not meant to be considered in isolation or as a substitute for comparable GAAP measures, and should be read only in conjunction with our consolidated financial statements prepared in accordance with GAAP. For a detailed explanation of the adjustments made to comparable GAAP measures, the reasons why management uses these measures, the usefulness of these measures and the material limitations on the usefulness of these measures, please see Appendix A.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ 
+(2)   We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into United States dollars at the exchange rates in effect on May 31, 2017, which was the last day of our prior fiscal year, rather than the actual exchange rates in effect during the respective periods.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ 
+(3)   Non-GAAP adjustments to sales and marketing expenses were as follows:
+---------------------------------------------------------------------------
+ 
+ 
+                                                               Three Months Ended           
+                                                                    May 31,                 
+--------------------------------------------------------------------------------------------
+(in millions)                                      2018                  2017               
+Stock-based compensation (4)                           $(88        )           $(78        )
+Acquired deferred sales commissions amortization       4                       16           
+Total non-GAAP sales and marketing adjustments         $(84        )           $(62        )
+ 
+ 
+(4)   Stock-based compensation was included in the following GAAP operating expense categories:
+-----------------------------------------------------------------------------------------------
+ 
+ 
+                                                     Three Months Ended                                  Three Months Ended               
+                                                        May 31, 2018                                        May 31, 2017                  
+------------------------------------------------------------------------------------------------------------------------------------------
+                                        GAAP           Adj.                Non-GAAP         GAAP           Adj.                Non-GAAP   
+Cloud services and license support       $21           $(21        )       $—                $14           $(14        )       $—         
+Hardware                                   3                  (3   )              —            3                  (3   )              —   
+Services                                  11                 (11   )              —           14                 (14   )              —   
+Research and development                 228                (228   )              —          197                (197   )              —   
+General and administrative                46                 (46   )              —           26                 (26   )              —   
+Subtotal                                 309                (309   )              —          254                (254   )              —   
+Sales and marketing                       88                 (88   )              —           78                 (78   )              —   
+Acquisition related and other              —                   —                  —            2                  (2   )              —   
+Total stock-based compensation          $397           $(397       )       $—               $334           $(334       )       $—         
+ 
+ 
+(5)   Estimated future annual amortization expense related to intangible assets as of May 31, 2018 was as follows:
+------------------------------------------------------------------------------------------------------------------
+ 
+ 
+        Fiscal 2019               $1,605  
+------------------------------------------
+Fiscal 2020                          1,400
+Fiscal 2021                          1,174
+Fiscal 2022                            966
+Fiscal 2023                            613
+Thereafter                             912
+Total intangible assets, net        $6,670
+ 
+ 
+(6)   Income tax effects were calculated reflecting an effective GAAP tax rate of 17.7% and 14.1% in the fourth quarter of fiscal 2018 and 2017, respectively, and an effective non-GAAP tax rate of 19.2% and 20.0% in the fourth quarter of fiscal 2018 and 2017, respectively. The difference between our GAAP and non-GAAP tax rates in the fourth quarter of fiscal 2018 was primarily due to adjustments in our estimates for the one-time effects the U.S. 2017 Tax Cuts and Jobs Act (refer to Appendix A for additional information), net tax effects on stock-based compensation expense and acquisition related items, including the tax effects of amortization of intangible assets. The difference between our GAAP and non-GAAP tax rates in the fourth quarter of fiscal 2017 was primarily due to the net tax effects on stock-based compensation expense and acquisition related items, including the tax effects of amortization of intangible assets.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ 
+*   Not meaningful
+------------------
+
+2
+
+ORACLE CORPORATION
+ FISCAL 2018 YEAR TO DATE FINANCIAL RESULTS 
+ CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS 
+ ($ in millions, except per share data)
+ 
+ 
+                                                                           Year Ended May 31,                            % Increase    % Increase 
+                                                                                                                                       (Decrease) 
+--------------------------------------------------------------------------------------------------------------------------------------------------
+                                             2018                           % of   2017                           % of   (Decrease)    in Constant
+                                                                        Revenues                              Revenues      in US $   Currency (1)
+REVENUES                                                                                                                                          
+Cloud services and license support                    $26,254                66%            $23,800                63%          10%             8%
+Cloud license and on-premise license                    6,190                16%              6,418                17%         (4%)           (5%)
+Hardware                                                3,993                10%              4,152                11%         (4%)           (6%)
+Services                                                3,394                 8%              3,358                 9%           1%           (1%)
+Total revenues                                         39,831               100%             37,728               100%           6%             3%
+OPERATING EXPENSES                                                                                                                                
+Cloud services and license support                      3,612                10%              3,015                 9%          20%            18%
+Hardware                                                1,581                 4%              1,653                 4%         (4%)           (7%)
+Services                                                2,888                 7%              2,801                 7%           3%             1%
+Sales and marketing                                     8,431                21%              8,197                22%           3%             1%
+Research and development                                6,091                15%              6,159                16%         (1%)           (2%)
+General and administrative                              1,289                 3%              1,176                 3%          10%             8%
+Amortization of intangible assets                       1,620                 4%              1,451                 4%          12%            12%
+Acquisition related and other                              52                 0%                103                 0%        (50%)          (50%)
+Restructuring                                             588                 2%                463                 1%          27%            22%
+Total operating expenses                               26,152                66%             25,018                66%           5%             3%
+OPERATING INCOME                                       13,679                34%             12,710                34%           8%             5%
+Interest expense                                       (2,025   )           (5%)             (1,798   )           (5%)          13%            13%
+Non-operating income, net                               1,237                 3%                605                 2%         105%           106%
+INCOME BEFORE PROVISION FOR INCOME TAXES               12,891                32%             11,517                31%          12%             9%
+Provision for income taxes (2)                          9,066                22%              2,182                 6%         315%           315%
+NET INCOME                                             $3,825                10%             $9,335                25%        (59%)          (62%)
+EARNINGS PER SHARE:                                                                                                                               
+Basic                                                   $0.93                                 $2.27                                               
+Diluted                                                 $0.90                                 $2.21                                               
+WEIGHTED AVERAGE COMMON STOCK OUTSTANDING:                                                                                                        
+Basic                                                   4,121                                 4,115                                               
+Diluted                                                 4,238                                 4,217                                               
+ 
+ 
+(1)   We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into United States dollars at the exchange rates in effect on May 31, 2017, which was the last day of our prior fiscal year, rather than the actual exchange rates in effect during the respective periods. Movements in international currencies relative to the United States dollar during the year ended May 31, 2018 compared with the corresponding prior year period increased our revenues by 3 percentage points, operating expenses by 2 percentage points and operating income by 3 percentage points.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+(2)   Provision for income taxes for the year ended May 31, 2018 includes the impact of the U.S. 2017 Tax Cuts and Jobs Act, which was signed into law during our fiscal 2018.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+ 
+ 
+
+
+3
+
+ORACLE CORPORATION 
+ FISCAL 2018 YEAR TO DATE FINANCIAL RESULTS 
+ RECONCILIATION OF SELECTED GAAP MEASURES TO NON-GAAP MEASURES (1) 
+ ($ in millions, except per share data)
+ 
+ 
+                                                                                                         Year Ended May 31,                                                         % Increase (Decrease)          % Increase (Decrease) in   
+                                                                                                                                                                                            in US$                  Constant Currency (2)     
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                             2018         Adj.                           2018                 2017                 Adj.                   2017      GAAP             Non-GAAP       GAAP              Non-GAAP
+                                                             GAAP                                    Non-GAAP                 GAAP                                    Non-GAAP                                                                
+TOTAL REVENUES                                            $39,831         $47                         $39,878              $37,728                 $171                $37,899        6%                   5%         3%                    3%
+Cloud services and license support                         26,254         47                           26,301               23,800                  171                 23,971       10%                  10%         8%                    7%
+TOTAL OPERATING EXPENSES                                  $26,152         $(3,844        )            $22,308              $25,018              $(3,286   )            $21,732        5%                   3%         3%                    1%
+Sales and marketing (3)                                     8,431                 (339   )              8,092                8,197                 (260   )              7,937        3%                   2%         1%                    0%
+Stock-based compensation (4)                                1,245               (1,245   )                  —                1,009               (1,009   )                  —       23%                    *        23%                     *
+Amortization of intangible assets (5)                       1,620               (1,620   )                  —                1,451               (1,451   )                  —       12%                    *        12%                     *
+Acquisition related and other                                  52                  (52   )                  —                  103                 (103   )                  —     (50%)                    *      (50%)                     *
+Restructuring                                                 588                 (588   )                  —                  463                 (463   )                  —       27%                    *        22%                     *
+OPERATING INCOME                                          $13,679         $3,891                      $17,570              $12,710               $3,457                $16,167        8%                   9%         5%                    6%
+OPERATING MARGIN %                                            34%                                         44%                  34%                                         43%    65 bp.              140 bp.     38 bp.               126 bp.
+INCOME TAX EFFECTS (6)                                     $9,066         $(5,528        )             $3,538               $2,182               $1,233                 $3,415      315%                   4%       315%                    1%
+NET INCOME                                                 $3,825         $9,419                      $13,244               $9,335               $2,224                $11,559     (59%)                  15%      (62%)                   12%
+DILUTED EARNINGS PER SHARE                                  $0.90                                       $3.12                $2.21                                       $2.74     (59%)                  14%      (63%)                   11%
+DILUTED WEIGHTED AVERAGE COMMON SHARES OUTSTANDING          4,238                    —                  4,238                4,217                    —                  4,217        1%                   1%         1%                    1%
+ 0
+  
+(1)                                                                   This presentation includes non-GAAP measures. Our non-GAAP measures are not meant to be considered in isolation or as a substitute for comparable GAAP measures, and should be read only in conjunction with our consolidated financial statements prepared in accordance with GAAP. For a detailed explanation of the adjustments made to comparable GAAP measures, the reasons why management uses these measures, the usefulness of these measures and the material limitations on the usefulness of these measures, please see Appendix A.                                                                
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+(2)   We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into United States dollars at the exchange rates in effect on May 31, 2017, which was the last day of our prior fiscal year, rather than the actual exchange rates in effect during the respective periods.
+ 
+ 
+(3)   Non-GAAP adjustments to sales and marketing expenses were as follows:
+---------------------------------------------------------------------------
+ 
+ 
+                                                               Year Ended           
+                                                                May 31,             
+------------------------------------------------------------------------------------
+(in millions)                                      2018              2017           
+Stock-based compensation (4)                           $(361     )       $(306     )
+Acquired deferred sales commissions amortization       22                46         
+Total non-GAAP sales and marketing adjustments         $(339     )       $(260     )
+ 
+ 
+(4)   Stock-based compensation was included in the following GAAP operating expense categories:
+-----------------------------------------------------------------------------------------------
+ 
+ 
+                                                            Year Ended                                                 Year Ended                       
+                                                           May 31, 2018                                               May 31, 2017                      
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+                                            GAAP           Adj.                   Non-GAAP             GAAP           Adj.                   Non-GAAP   
+Cloud services and license support           $82           $(82           )       $—                    $54           $(54           )       $—         
+Hardware                                      10                    (10   )              —               11                    (11   )              —   
+Services                                      52                    (52   )              —               44                    (44   )              —   
+Research and development                     921                   (921   )              —              770                   (770   )              —   
+General and administrative                   180                   (180   )              —              130                   (130   )              —   
+Subtotal                                   1,245                 (1,245   )              —            1,009                 (1,009   )              —   
+Sales and marketing                          361                   (361   )              —              306                   (306   )              —   
+Acquisition related and other                  1                     (1   )              —               35                    (35   )              —   
+Total stock-based compensation            $1,607           $(1,607        )       $—                 $1,350           $(1,350        )       $—         
+ 
+ 
+(5)   Estimated future annual amortization expense related to intangible assets as of May 31, 2018 was as follows:
+------------------------------------------------------------------------------------------------------------------
+ 
+ 
+        Fiscal 2019               $1,605  
+------------------------------------------
+Fiscal 2020                          1,400
+Fiscal 2021                          1,174
+Fiscal 2022                            966
+Fiscal 2023                            613
+Thereafter                             912
+Total intangible assets, net        $6,670
+ 
+ 
+(6)   Income tax effects were calculated reflecting an effective GAAP tax rate of 70.3% and 18.9% in fiscal 2018 and 2017, respectively, and an effective non-GAAP tax rate of 21.1% and 22.8% in fiscal 2018 and 2017, respectively. The difference between our GAAP and non-GAAP tax rates in fiscal 2018 was primarily due to the impact of the U.S. 2017 Tax Cuts and Jobs Act (refer to Appendix A for additional information). The difference between our GAAP and non-GAAP tax rates in fiscal 2017 was primarily due to the net tax effects on stock-based compensation expense and acquisition related items, including the tax effects of amortization of intangible assets.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ 
+*   Not meaningful
+------------------
+ 
+4
+
+ORACLE CORPORATION 
+ FISCAL 2018 FINANCIAL RESULTS 
+ CONDENSED CONSOLIDATED BALANCE SHEETS 
+ ($ in millions) 
+ 
+ 
+                                                     May 31,         May 31,   
+                                                       2018            2017    
+-------------------------------------------------------------------------------
+ASSETS                                                                         
+Current Assets:                                                                
+Cash and cash equivalents                               $21,620         $21,784
+Marketable securities                                    45,641          44,294
+Trade receivables, net                                    5,279           5,300
+Prepaid expenses and other current assets                 3,424           3,137
+Total Current Assets                                     75,964          74,515
+Non-Current Assets:                                                            
+Property, plant and equipment, net                        5,897           5,315
+Intangible assets, net                                    6,670           7,679
+Goodwill, net                                            43,755          43,045
+Deferred tax assets                                       1,491           1,143
+Other non-current assets                                  3,487           3,294
+Total Non-Current Assets                                 61,300          60,476
+TOTAL ASSETS                                           $137,264        $134,991
+LIABILITIES AND EQUITY                                                         
+Current liabilities:                                                           
+Notes payable and other borrowings, current              $4,491          $9,797
+Accounts payable                                            529             599
+Accrued compensation and related benefits                 1,789           1,966
+Deferred revenues                                         8,429           8,233
+Other current liabilities                                 3,957           3,583
+Total Current Liabilities                                19,195          24,178
+Non-Current Liabilities:                                                       
+Notes payable and other borrowings, non-current          56,128          48,112
+Income taxes payable                                     13,422           5,681
+Other non-current liabilities                             2,295           2,774
+Total Non-Current Liabilities                            71,845          56,567
+Equity                                                   46,224          54,246
+TOTAL LIABILITIES AND EQUITY                           $137,264        $134,991
+ 
+
+5
+
+ORACLE CORPORATION 
+ FISCAL 2018 FINANCIAL RESULTS 
+ CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS 
+ ($ in millions) 
+ 
+ 
+                                                                                                    Year Ended May 31,               
+-------------------------------------------------------------------------------------------------------------------------------------
+2018                                                                                                          2017                   
+Cash Flows From Operating Activities:                                                                                                
+Net income                                                                                     $3,825                      $9,335    
+Adjustments to reconcile net income to net cash provided by operating activities:                                                    
+Depreciation                                                                                    1,165                       1,000    
+Amortization of intangible assets                                                               1,620                       1,451    
+Deferred income taxes                                                                            (611     )                  (486   )
+Stock-based compensation                                                                        1,607                       1,350    
+Other, net                                                                                        (26     )                   123    
+Changes in operating assets and liabilities, net of effects from acquisitions:                                                       
+Decrease in trade receivables, net                                                                 29                         147    
+Increase in prepaid expenses and other assets                                                    (276     )                   (24   )
+Decrease in accounts payable and other liabilities                                               (264     )                   (37   )
+Increase in income taxes payable                                                                8,143                         732    
+Increase in deferred revenues                                                                     174                         535    
+Net cash provided by operating activities                                                      15,386                      14,126    
+Cash Flows From Investing Activities:                                                                                                
+Purchases of marketable securities and other investments                                      (25,282     )               (25,867   )
+Proceeds from maturities and sales of marketable securities and other investments              23,117                      17,615    
+Acquisitions, net of cash acquired                                                             (1,724     )               (11,221   )
+Capital expenditures                                                                           (1,736     )                (2,021   )
+Net cash used for investing activities                                                         (5,625     )               (21,494   )
+Cash Flows From Financing Activities:                                                                                                
+Payments for repurchases of common stock                                                      (11,347     )                (3,561   )
+Proceeds from issuances of common stock                                                         2,402                       2,181    
+Shares repurchased for tax withholdings upon vesting of restricted stock-based awards            (506     )                  (283   )
+Payments of dividends to stockholders                                                          (3,140     )                (2,631   )
+Proceeds from borrowings, net of issuance costs                                                12,443                      17,732    
+Repayments of borrowings                                                                       (9,800     )                (4,094   )
+Distributions to noncontrolling interests                                                         (34     )                  (258   )
+Net cash (used for) provided by financing activities                                           (9,982     )                 9,086    
+Effect of exchange rate changes on cash and cash equivalents                                       57                         (86   )
+Net (decrease) increase in cash and cash equivalents                                             (164     )                 1,632    
+Cash and cash equivalents at beginning of period                                               21,784                      20,152    
+Cash and cash equivalents at end of period                                                    $21,620                     $21,784    
+ 
+
+6
+
+ORACLE CORPORATION 
+ FISCAL 2018 FINANCIAL RESULTS 
+ FREE CASH FLOW - TRAILING 4-QUARTERS (1) 
+ ($ in millions) 
+ 
+ 
+                                                                   Fiscal 2017                                                                 Fiscal 2018                                 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Q1                 Q2                 Q3                 Q4                 Q1                 Q2                 Q3                 Q4    
+GAAP Operating Cash Flow                   $13,679            $14,249            $13,453            $14,126            $14,817            $14,581            $15,192            $15,386    
+Capital Expenditures                        (1,042   )         (1,604   )         (1,676   )         (2,021   )         (2,195   )         (2,037   )         (1,883   )         (1,736   )
+Free Cash Flow                             $12,637            $12,645            $11,777            $12,105            $12,622            $12,544            $13,309            $13,650    
+% Growth over prior year                        5%                10%               (7%)               (3%)                 0%               (1%)                13%                13%    
+GAAP Net Income                             $8,986             $8,820             $8,917             $9,335             $9,713             $9,914             $3,650             $3,825    
+Free Cash Flow as a % of Net Income           141%               143%               132%               130%               130%               127%               365%               357%    
+ 
+ 
+(1)   To supplement our statements of cash flows presented on a GAAP basis, we use non-GAAP measures of cash flows on a trailing 4-quarter basis to analyze cash flow generated from operations. We believe free cash flow is also useful as one of the bases for comparing our performance with our competitors. The presentation of non-GAAP free cash flow is not meant to be considered in isolation or as an alternative to net income as an indicator of our performance, or as an alternative to cash flows from operating activities as a measure of liquidity.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+7
+
+ORACLE CORPORATION 
+ FISCAL 2018 FINANCIAL RESULTS 
+ SUPPLEMENTAL ANALYSIS OF GAAP REVENUES (1) 
+ ($ in millions)
+
+ 
+                                                                            Fiscal 2017                                                                        Fiscal 2018                                   
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                   Q1               Q2               Q3               Q4             TOTAL            Q1               Q2               Q3               Q4             TOTAL
+REVENUES BY OFFERINGS                                                                                                                                                                                        
+Cloud services and license support             $5,761           $5,830           $5,951           $6,258           $23,800        $6,418           $6,472           $6,593           $6,770           $26,254
+Cloud license and on-premise license            1,030            1,347            1,414            2,626             6,418           966            1,353            1,388            2,483             6,190
+Hardware                                          996            1,014            1,028            1,114             4,152           943              940              994            1,115             3,993
+Services                                          808              844              812              894             3,358           860              856              796              883             3,394
+Total revenues                                 $8,595           $9,035           $9,205          $10,892           $37,728        $9,187           $9,621           $9,771          $11,251           $39,831
+AS REPORTED REVENUE GROWTH RATES                                                                                                                                                                             
+Cloud services and license support                 9%               9%              10%              10%               10%           11%              11%              11%               8%               10%
+Cloud license and on-premise license            (11%)            (20%)            (16%)             (5%)             (12%)          (6%)               0%             (2%)             (5%)              (4%)
+Hardware                                        (12%)            (10%)             (9%)            (13%)             (11%)          (5%)             (7%)             (3%)               0%              (4%)
+Services                                         (6%)             (2%)               2%               3%              (1%)            6%               1%             (2%)             (1%)                1%
+Total revenues                                     2%               0%               2%               3%                2%            7%               6%               6%               3%                6%
+CONSTANT CURRENCY GROWTH RATES (2)                                                                                                                                                                           
+Cloud services and license support                10%              10%              11%              12%               11%           10%               9%               7%               6%                8%
+Cloud license and on-premise license            (10%)            (19%)            (15%)             (4%)             (11%)          (7%)             (2%)             (6%)             (6%)              (5%)
+Hardware                                        (11%)             (9%)             (9%)            (12%)             (10%)          (6%)             (9%)             (7%)             (2%)              (6%)
+Services                                         (5%)               0%               3%               4%                1%            5%               0%             (6%)             (3%)              (1%)
+Total revenues                                     3%               1%               3%               4%                3%            6%               5%               2%               2%                3%
+CLOUD AND LICENSE REVENUES BY ECOSYSTEM                                                                                                                                                                      
+Applications revenues                          $2,241           $2,335           $2,497           $2,862            $9,935        $2,646           $2,677           $2,722           $3,026           $11,071
+Platform and Infrastructure revenues            4,550            4,842            4,868            6,022            20,283         4,738            5,148            5,259            6,227            21,373
+Total cloud and license revenues               $6,791           $7,177           $7,365           $8,884           $30,218        $7,384           $7,825           $7,981           $9,253           $32,444
+AS REPORTED REVENUE GROWTH RATES                                                                                                                                                                             
+Applications revenues                              6%               3%               9%               7%                6%           18%              15%               9%               6%               11%
+Platform and Infrastructure revenues               5%               2%               2%               5%                3%            4%               6%               8%               3%                5%
+Total cloud and license revenues                   5%               2%               4%               5%                4%            9%               9%               8%               4%                7%
+CONSTANT CURRENCY GROWTH RATES (2)                                                                                                                                                                           
+Applications revenues                              8%               5%               9%               8%                8%           17%              13%               6%               4%               10%
+Platform and Infrastructure revenues               5%               2%               2%               6%                4%            3%               4%               3%               2%                3%
+Total cloud and license revenues                   6%               3%               5%               6%                5%            8%               7%               4%               2%                5%
+GEOGRAPHIC REVENUES                                                                                                                                                                                          
+Americas                                       $4,817           $4,936           $5,219           $6,065           $21,038        $5,173           $5,306           $5,339           $6,269           $22,088
+Europe/Middle East/Africa                       2,413            2,557            2,558            3,102            10,630         2,539            2,802            2,887            3,182            11,410
+Asia Pacific                                    1,365            1,542            1,428            1,725             6,060         1,475            1,513            1,545            1,800             6,333
+Total revenues                                 $8,595           $9,035           $9,205          $10,892           $37,728        $9,187           $9,621           $9,771          $11,251           $39,831
+ 
+ 
+(1)   The sum of the quarterly information presented may vary from the year-to-date information presented due to rounding.
+--------------------------------------------------------------------------------------------------------------------------
+ 
+ 
+(2)   We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into United States dollars at the exchange rates in effect on May 31, 2017 and 2016 for the fiscal 2018 and fiscal 2017 constant currency growth rate calculations presented, respectively, rather than the actual exchange rates in effect during the respective periods.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+8
+
+APPENDIX A
+ 
+ORACLE CORPORATION
+ Q4 FISCAL 2018 FINANCIAL RESULTS
+ EXPLANATION OF NON-GAAP MEASURES
+ 
+To supplement our financial results presented on a GAAP basis, we use the non-GAAP measures indicated in the tables, which exclude certain business combination accounting entries and expenses related to acquisitions, as well as other significant expenses including stock-based compensation, that we believe are helpful in understanding our past financial performance and our future results. Our non-GAAP financial measures are not meant to be considered in isolation or as a substitute for comparable GAAP measures and should be read only in conjunction with our consolidated financial statements prepared in accordance with GAAP. Our management regularly uses our supplemental non-GAAP financial measures internally to understand, manage and evaluate our business and make operating decisions. These non-GAAP measures are among the primary factors management uses in planning for and forecasting future periods. Compensation of our executives is based in part on the performance of our business based on these non-GAAP measures. Our non-GAAP financial measures reflect adjustments based on the following items, as well as the related income tax effects related to each of the below items except for the impact of the U.S. 2017 Tax Cuts and Jobs Act:
+ 
+• Cloud services and license support revenues: Business combination accounting rules require us to account for the fair values of cloud services and license support contracts assumed in connection with our acquisitions. The non-GAAP adjustments to our cloud services and license support  revenues are intended to include, and thus reflect, the full amount of such revenues. We believe the adjustments to these revenues are useful to investors as a measure of the ongoing performance of our business as we generally expect to experience high renewal rates for these contracts at their stated values during the post combination periods. 
+ 
+• Deferred sales commissions amortization: Certain acquired companies capitalized sales commissions associated with subscription agreements and amortized these amounts over the related contractual terms.  Business combination accounting rules generally require us to eliminate these capitalized sales commissions balances as of the acquisition date and our post-combination GAAP sales and marketing expenses generally do not reflect the amortization of these deferred sales commissions balances. The non-GAAP adjustment to increase our sales and marketing expenses is intended to include, and thus reflect, the full amount of amortization related to such balances as though the acquired companies operated independently in the periods presented. We believe this adjustment to sales and marketing expenses is useful to investors as a measure of the ongoing performance of our business. The presentation of this non-GAAP adjustment commenced in the second fiscal quarter of fiscal 2017 as a result of our acquisition of NetSuite.  Such adjustment was not material in prior periods.
+ 
+• Stock-based compensation expenses: We have excluded the effect of stock-based compensation expenses from our non-GAAP operating expenses and net income measures. Although stock-based compensation is a key incentive offered to our employees, and we believe such compensation contributed to the revenues earned during the periods presented and also believe it will contribute to the generation of future period revenues, we continue to evaluate our business performance excluding stock-based compensation expenses. Stock-based compensation expenses will recur in future periods.
+ 
+• Amortization of intangible assets: We have excluded the effect of amortization of intangible assets from our non-GAAP operating expenses and net income measures. Amortization of intangible assets is inconsistent in amount and frequency and is significantly affected by the timing and size of our acquisitions. Investors should note that the use of intangible assets contributed to our revenues earned during the periods presented and will contribute to our future period revenues as well. Amortization of intangible assets will recur in future periods.
+ 
+• Acquisition related and other expenses; and restructuring expenses: We have excluded the effect of acquisition related and other expenses and the effect of restructuring expenses from our non-GAAP operating expenses and net income measures. We incurred significant expenses in connection with our acquisitions and also incurred certain other operating expenses or income, which we generally would not have otherwise incurred in the periods presented as a part of our continuing operations. Acquisition related and other expenses primarily consist of personnel related costs and stock-based compensation expenses for transitional and certain other employees, integration related professional services, certain business combination adjustments including adjustments after the measurement period has ended and certain other operating items, net. Restructuring expenses consist of employee severance and other exit costs. We believe it is useful for investors to understand the effects of these items on our total operating expenses. Although acquisition related and other expenses and restructuring expenses generally diminish over time with respect to past acquisitions and/or strategic initiatives, we generally will incur these expenses in connection with any future acquisitions and/or strategic initiatives.
+ 
+• Impact of the U.S. 2017 Tax Cuts and Jobs Act:  The U.S. 2017 Tax Cuts and Jobs Act (the Act) was signed into law on December 22, 2017. For the three months and year ended May 31, 2018, we recorded a charge of $88 million and $7 billion, respectively, related to our preliminary assessment of the one-time effects of the Act, including the one-time transition tax on certain foreign subsidiary earnings and the remeasurement of net deferred income tax balances affected by the Act. We have excluded the impacts of this charge from our non-GAAP income taxes and net income measures for the three months and the fiscal year ended May 31, 2018. We believe making these adjustments provides insight to our operating performance and comparability to past operating results.
+ 
+
+9
+

@@ -1,0 +1,729 @@
+# 조사가 부탁한 원문 (73차 — 잘못 읽은 값의 원인 확인용) — ORCL 2017-06-21
+# 출처: https://www.sec.gov/Archives/edgar/data/1341439/000119312517209415/d383506d8k.htm
+
+EX-99.1
+
+ Exhibit 99.1 
+ 
+ <img alt="LOGO" src="g383506oracle.jpg"/>
+For Immediate Release 
+ 
+
+Contact:   Ken Bond                    Deborah Hellinger              
+           Oracle Investor Relations   Oracle Corporate Communications
+           1.650.607.0349              1.212.508.7935                 
+           ken.bond@oracle.com         deborah.hellinger@oracle.com   
+ Q4 FY17 GAAP EPS UP 15% TO $0.76 and NON-GAAP EPS UP 10% TO $0.89 
+ Total Cloud Revenues Up 58% to $1.4 Billion, Total Revenue Up 3% to $10.9 Billion 
+ REDWOOD SHORES, Calif., June 21, 2017 — Oracle Corporation (NYSE: ORCL) today announced fiscal 2017 Q4 results and fiscal 2017 full year results. Comparing Q4 2017 to Q4 last year, SaaS (Software as a Service) cloud revenues were up 67% to $964 million, and non-GAAP SaaS revenues were up 75% to $1.0 billion. Cloud PaaS (Platform as a Service) plus IaaS (Infrastructure as a Service) revenues were up 40% to $397 million, and non-GAAP PaaS plus IaaS revenues were up 42% to $403 million. Total cloud revenues were up 58% to $1.4 billion, and non-GAAP total cloud revenues were up 64% to $1.4 billion. Cloud plus on-premise software revenues were up 5% to $8.9 billion, and non-GAAP cloud and on-premise software revenues were up 6% to $8.9 billion. Total revenues were up 3% to $10.9 billion. 
+ Operating Income was up 3% to $4.1 billion, and the operating margin was 37%. Non-GAAP Operating Income was up 5% to $5.0 billion, and the non-GAAP operating margin was 46%. Net Income was $3.2 billion, and non-GAAP Net Income was $3.8 billion. Earnings Per Share was $0.76, while non-GAAP Earnings Per Share was $0.89. Without the impact of the U.S. dollar strengthening compared to foreign currencies, Oracle’s reported GAAP Earnings Per Share would have been 2 cents higher, and non-GAAP Earnings Per Share would have been 1 cent higher. 
+ Short-term deferred revenues were up 8% to $8.2 billion compared with a year ago. Operating cash flow on a trailing twelve-month basis was up 3% to $14.1 billion. 
+ For fiscal 2017, Cloud SaaS revenues were up 61% to $3.2 billion compared to fiscal 2016. Non-GAAP SaaS revenues were up 68% to $3.4 billion. Cloud PaaS and IaaS revenues were up 60% to $1.4 billion for both GAAP and Non-GAAP. Total cloud revenues were up 60% to $4.6 billion. Non-GAAP cloud revenues were up 66% to $4.7 billion. Cloud and on-premise software revenues were up 4% to $30.2 billion. Non-GAAP cloud and on-premise software revenues were up 5% to $30.4 billion. Total Revenues were up 2% to $37.7 billion. Non-GAAP Total Revenues were up 2% to $37.9 billion. 
+ 
+Operating Income was $12.7 billion, and operating margin was 34%. Non-GAAP Operating Income was $16.2 billion and non-GAAP operating margin was 43%. Net Income was $9.3 billion while non-GAAP Net Income was $11.6 billion. Earnings Per Share was $2.21, while Non-GAAP Earnings Per Share was $2.74. Without the impact of the U.S. dollar strengthening compared to foreign currencies, Oracle’s reported GAAP Earnings Per Share would have been 4 cents higher and non-GAAP Earnings Per Share would have been 3 cents higher. 
+ “Our fourth quarter results were very strong as revenue growth and earnings per share both substantially exceeded the high end of guidance,” said Oracle CEO, Safra Catz. “We continue to experience rapid adoption of the Oracle Cloud led by the 75% growth in our SaaS business in Q4. This cloud hyper-growth is expanding our operating margins, and we expect earnings per share growth to accelerate in fiscal 2018.” 
+ “We sold $855 million of new annually recurring cloud revenue (ARR) in Q4, putting us over our $2 billion ARR bookings goal for fiscal year 2017,” said Oracle CEO, Mark Hurd. “We also delivered over $1 billion in quarterly SaaS revenue for the first time. Next year is going to be even better. We expect to sell a lot more than $2 billion in new cloud ARR in fiscal year 2018.” 
+ “AT&T has agreed to migrate thousands of existing Oracle databases containing petabytes of data plus their associated applications workloads to the Oracle Cloud,” said Oracle Chairman and CTO, Larry Ellison. “In the coming year, I expect more of our big customers to migrate their Oracle databases and database applications to the Oracle Cloud. These large-scale migrations will dramatically increase the size of both our PaaS and IaaS cloud businesses.” 
+ The Board of Directors also declared a quarterly cash dividend of $0.19 per share of outstanding common stock. This dividend will be paid to stockholders of record as of the close of business on July 19, 2017, with a payment date of August 2, 2017. 
+ Q4 Fiscal 2017 Earnings Conference Call and Webcast 
+ Oracle will hold a conference call and webcast today to discuss these results at 2:00 p.m. Pacific. You may listen to the call by dialing (816) 287-5563, Passcode: 425392. To access the live webcast of this event, please visit the Oracle Investor Relations website at http://www.oracle.com/investor. In addition, Oracle’s Q4 results and fiscal 2017 financial tables are available on the Oracle Investor Relations website. 
+ 
+A replay of the conference call will also be available by dialing (855) 859-2056 or (404) 537-3406, Pass Code: 34656498. 
+ About Oracle 
+ Oracle offers a comprehensive and fully integrated stack of cloud applications and platform services. For more information about Oracle (NYSE: ORCL), visit www.oracle.com or contact Investor Relations at investor_us@oracle.com or (650) 506-4073. 
+ # # # 
+ Trademarks 
+ Oracle and Java are registered trademarks of Oracle and/or its affiliates. Other names may be trademarks of their respective owners. 
+ “Safe Harbor” Statement: Statements in this press release relating to Oracle’s future plans, expectations, beliefs, intentions and prospects, including statements regarding our future sales and non-GAAP financial results, expectations of future customer migrations to the Oracle Cloud and growth in the size of our PaaS and IaaS cloud business, are “forward-looking statements” and are subject to material risks and uncertainties. Many factors could affect our current expectations and our actual results, and could cause actual results to differ materially. We presently consider the following to be among the important factors that could cause actual results to differ materially from expectations: (1) Our cloud computing strategy, including our Oracle Cloud SaaS, PaaS, IaaS and data as a service offerings, may not be successful. (2) If we are unable to develop new or sufficiently differentiated products and services, or to enhance and improve our products and support services in a timely manner or to position and/or price our products and services to meet market demand, customers may not buy new software licenses, cloud software subscriptions or hardware systems products or purchase or renew support contracts. (3) If the security measures for our products and services are compromised or if our products and services contain significant coding, manufacturing or configuration errors, we may experience reputational harm, legal claims and reduced sales. (4) We may fail to achieve our financial forecasts due to such factors as delays or size reductions in transactions, fewer large transactions in a particular quarter, fluctuations in currency exchange rates, delays in delivery of new products or releases or a decline in our renewal rates for support contracts. (5) Our international sales and operations subject us to additional risks that can adversely affect our operating results, including risks relating to foreign currency gains and losses. (6) Economic, geopolitical and market conditions can adversely affect our business, results of operations and financial condition, including our revenue growth and profitability, which in turn could adversely affect our stock price. (7) We have an active acquisition program and our acquisitions may not be successful, may involve unanticipated costs or other integration issues or may disrupt our existing operations. A detailed discussion of these factors and other risks that affect our business is contained in our SEC filings, including our most recent reports on Form 10-K and Form 10-Q, particularly under the heading “Risk Factors.” Copies of these filings are available online from the SEC or by contacting Oracle Corporation’s Investor Relations Department at (650) 506-4073 or by clicking on SEC Filings on Oracle’s Investor Relations website at http://www.oracle.com/investor. All information set forth in this press release is current as of June 21, 2017. Oracle undertakes no duty to update any statement in light of new information or future events. 
+ 
+ORACLE CORPORATION 
+ Q4 FISCAL 2017 FINANCIAL RESULTS 
+ CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS 
+ ($ in millions, except per share data) 
+ 
+
+                                                                                                                       Three Months Ended May 31,       % Increase          % Increase         
+                                                                                                                                                                            (Decrease)         
+                                                              2017                       % of              2016                       % of              (Decrease)          in Constant        
+                                                                                         Revenues                                     Revenues          in US $             Currency (1)       
+REVENUES                                                                                                                                                                                       
+Cloud software as a service                                               $964                    9%                   $576                    5%                 67%                   69%    
+Cloud platform as a service and infrastructure as a service                397                    4%                    283                    3%                 40%                   42%    
+Total cloud revenues                                                     1,361                   13%                    859                    8%                 58%                   60%    
+New software licenses                                                    2,626                   24%                  2,766                   26%                 (5%   )               (4%   )
+Software license updates and product support                             4,897                   45%                  4,814                   46%                  2%                    3%    
+Total on-premise software revenues                                       7,523                   69%                  7,580                   72%                 (1%   )                0%    
+Total cloud and on-premise software                                      8,884                   82%                  8,439                   80%                  5%                    6%    
+revenues                                                                                                                                                                                       
+Hardware revenues                                                        1,114                   10%                  1,283                   12%                (13%   )              (12%   )
+Services revenues                                                          894                    8%                    872                    8%                  3%                    4%    
+Total revenues                                                          10,892                  100%                 10,594                  100%                  3%                    4%    
+OPERATING EXPENSES                                                                                                                                                                             
+Cloud software as a service                                                355                    3%                    272                    3%                 31%                   32%    
+Cloud platform as a service and infrastructure as a service                214                    2%                    131                    1%                 64%                   65%    
+Software license updates and product support                               266                    3%                    268                    2%                 (1%   )                0%    
+Hardware                                                                   440                    4%                    573                    6%                (23%   )              (22%   )
+Services                                                                   728                    7%                    692                    7%                  5%                    6%    
+Sales and marketing                                                      2,313                   21%                  2,306                   22%                  0%                    1%    
+Research and development                                                 1,609                   15%                  1,534                   14%                  5%                    5%    
+General and administrative                                                 317                    3%                    323                    3%                 (2%   )               (1%   )
+Amortization of intangible assets                                          441                    4%                    355                    3%                 24%                   24%    
+Acquisition related and other                                               18                    0%                      7                    0%                165%                  165%    
+Restructuring                                                              118                    1%                    165                    2%                (29%   )              (26%   )
+Total operating                                                          6,819                   63%                  6,626                   63%                  3%                    4%    
+expenses                                                                                                                                                                                       
+OPERATING                                                                4,073                   37%                  3,968                   37%                  3%                    4%    
+INCOME                                                                                                                                                                                         
+Interest expense                                                          (481   )               (4%   )               (362   )               (3%   )             33%                   33%    
+Non-operating income, net                                                  168                    2%                    126                    1%                 34%                   32%    
+INCOME BEFORE PROVISION FOR INCOME TAXES                                 3,760                   35%                  3,732                   35%                  1%                    3%    
+Provision for income taxes                                                 529                    5%                    918                    8%                (42%   )              (43%   )
+NET INCOME                                                              $3,231                   30%                 $2,814                   27%                 15%                   17%    
+EARNINGS PER SHARE:                                                                                                                                                                            
+Basic                                                                    $0.78                                        $0.68                                                                    
+Diluted                                                                  $0.76                                        $0.66                                                                    
+WEIGHTED AVERAGE COMMON SHARES OUTSTANDING:                                                                                                                                                    
+Basic                                                                    4,132                                        4,147                                                                    
+Diluted                                                                  4,248                                        4,238                                                                    
+ 
+
+(1)                     We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying                   
+        businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into   
+      United States dollars at the exchange rates in effect on May 31, 2016, which was the last day of our prior fiscal year, rather than the actual exchange rates in effect during the respective periods. Movements in international currencies relative to
+      the United States dollar during the three months ended May 31, 2017 compared with the corresponding prior year period decreased our revenues by 1 percentage point, operating expenses by 1 percentage point and operating income by 1 percentage point.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+1 
+ 
+ORACLE CORPORATION 
+ Q4 FISCAL 2017 FINANCIAL RESULTS 
+ RECONCILIATION OF SELECTED GAAP MEASURES TO NON-GAAP MEASURES (1) 
+ ($ in millions, except per share data) 
+ 
+
+                                                                                                                                                               Three Months Ended May 31,   % Increase (Decrease)                          % Increase (Decrease) in                       
+                                                                                                                                                                                            in US $                                        Constant Currency (2)                          
+                                                                         2017                Adj.                   2017                  2016                Adj.                   2016   GAAP                      Non-GAAP             GAAP                         Non-GAAP          
+                                                                         GAAP                                   Non-GAAP                  GAAP                                   Non-GAAP                                                                                                 
+TOTAL REVENUES                                                        $10,892                 $50                $10,942               $10,594                  $2                $10,596            3%                         3%                   4%                           4%      
+TOTAL CLOUD AND ON-PREMISE SOFTWARE                                    $8,884                 $50                 $8,934                $8,439                  $2                 $8,441            5%                         6%                   6%                           7%      
+REVENUES                                                                                                                                                                                                                                                                                  
+TOTAL CLOUD                                                             1,361                  50                  1,411                   859                   1                    860           58%                        64%                  60%                          66%      
+REVENUES                                                                                                                                                                                                                                                                                  
+Cloud software as a service                                               964                  44                  1,008                   576                   1                    577           67%                        75%                  69%                          76%      
+Cloud platform as a service and infrastructure as a service               397                   6                    403                   283                   —                    283           40%                        42%                  42%                          45%      
+New software licenses                                                   2,626                   —                  2,626                 2,766                   —                  2,766           (5%   )                    (5%   )              (4%   )                      (4%   )  
+Software license updates and product support                            4,897                   —                  4,897                 4,814                   1                  4,815            2%                         2%                   3%                           3%      
+TOTAL OPERATING                                                        $6,819               $(893   )             $5,926                $6,626               $(796   )             $5,830            3%                         2%                   4%                           3%      
+EXPENSES                                                                                                                                                                                                                                                                                  
+Cloud software as a service (4)                                           355                  (6   )                349                   272                  (4   )                268           31%                        30%                  32%                          32%      
+Cloud platform as a service and infrastructure as a service (4)           214                  (2   )                212                   131                  (1   )                130           64%                        64%                  65%                          65%      
+Sales and marketing (3)                                                 2,313                 (62   )              2,251                 2,306                 (57   )              2,249            0%                         0%                   1%                           1%      
+Stock-based compensation (4)                                              246                (246   )                  —                   207                (207   )                  —           19%                          *                  19%                            *      
+Amortization of intangible assets (5)                                     441                (441   )                  —                   355                (355   )                  —           24%                          *                  24%                            *      
+Acquisition related and other                                              18                 (18   )                  —                     7                  (7   )                  —          165%                          *                 165%                            *      
+Restructuring                                                             118                (118   )                  —                   165                (165   )                  —          (29%   )                      *                 (26%   )                        *      
+CLOUD SOFTWARE AS A SERVICE                                               63%                                        65%                   53%                                        54%         1,040   bp.                1,176   bp.          1,030   bp.                  1,164   bp 
+MARGIN %                                                                                                                                                                                                                                                                                  
+CLOUD PLATFORM AS A SERVICE                                               46%                                        47%                   54%                                        54%         (783)   bp.                (698)   bp.          (738)   bp.                  (656)   bp.
+AND INFRASTRUCTURE AS A SERVICE MARGIN %                                                                                                                                                                                                                                                  
+OPERATING INCOME                                                       $4,073                $943                 $5,016                $3,968                $798                 $4,766            3%                         5%                   4%                           7%      
+OPERATING MARGIN                                                          37%                                        46%                   37%                                        45%           (7)   bp.         86             bp.   13             bp.           98             bp.
+%                                                                                                                                                                                                                                                                                         
+INCOME TAX EFFECTS                                                       $529                $412                   $941                  $918                $188                 $1,106          (42%   )                   (15%   )             (43%   )                     (14%   )  
+(6)                                                                                                                                                                                                                                                                                       
+NET INCOME                                                             $3,231                $531                 $3,762                $2,814                $610                 $3,424           15%                        10%                  17%                          11%      
+DILUTED EARNINGS PER                                                    $0.76                                      $0.89                 $0.66                                      $0.81           15%                        10%                  17%                          11%      
+SHARE                                                                                                                                                                                                                                                                                     
+DILUTED WEIGHTED AVERAGE                                                4,248                   —                  4,248                 4,238                   —                  4,238            0%                         0%                   0%                           0%      
+COMMON SHARES OUTSTANDING                                                                                                                                                                                                                                                                 
+ 
+
+(1)                      This presentation includes non-GAAP measures. Our non-GAAP measures are not meant to be considered in isolation or as a substitute for comparable GAAP measures, and should be read only in conjunction with our                  
+      consolidated financial statements prepared in accordance with GAAP. For a detailed explanation of the adjustments made to comparable GAAP measures, the reasons why management uses these measures, the usefulness of these measures and the material
+                                                                                             limitations on the usefulness of these measures, please see Appendix A.                                                                                       
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+(2)                   We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying                
+      businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into
+                             United States dollars at the exchange rates in effect on May 31, 2016, which was the last day of our prior fiscal year, rather than the actual exchange rates in effect during the respective periods.                      
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+(3)   Non-GAAP adjustments to sales and marketing expenses were as follows:
+---------------------------------------------------------------------------
+ 
+
+                                                       Three Months Ended                   
+                                                       May 31,                              
+                                                   2017                  2016               
+Stock-based compensation (4)                           $(78        )           $(57        )
+Acquired deferred sales commissions amortization       16                            —      
+Total non-GAAP sales and marketing adjustments         $(62        )           $(57        )
+ 
+
+(4)   Stock-based compensation was included in the following GAAP operating expense categories:
+-----------------------------------------------------------------------------------------------
+ 
+
+                                                                                             Three Months Ended                                  Three Months Ended
+                                                                                                   May 31, 2017                                        May 31, 2016
+                                                                 GAAP           Adj.                Non-GAAP         GAAP           Adj.                Non-GAAP   
+Software license updates and product support                       $6           $(6         )       $—                 $6           $(6         )       $—         
+Hardware                                                            3                  (3   )              —            3                  (3   )              —   
+Services                                                           14                 (14   )              —            7                  (7   )              —   
+Research and development                                          197                (197   )              —          157                (157   )              —   
+General and administrative                                         26                 (26   )              —           34                 (34   )              —   
+Subtotal                                                          246                (246   )              —          207                (207   )              —   
+Cloud software as a service                                         6                  (6   )              —            4                  (4   )              —   
+Cloud platform as a service and infrastructure as a service         2                  (2   )              —            1                  (1   )              —   
+Sales and marketing                                                78                 (78   )              —           57                 (57   )              —   
+Acquisition related and other                                       2                  (2   )              —            —                   —                  —   
+Total stock-based compensation                                   $334           $(334       )       $—               $269           $(269       )       $—         
+ 
+
+(5)   Estimated future annual amortization expense related to intangible assets as of May 31, 2017 was as follows:
+------------------------------------------------------------------------------------------------------------------
+ 
+
+Fiscal 2018                         $1,588
+Fiscal 2019                          1,419
+Fiscal 2020                          1,219
+Fiscal 2021                          1,050
+Fiscal 2022                            947
+Thereafter                           1,456
+Total intangible assets, net        $7,679
+ 
+
+(6)                   Income tax effects were calculated reflecting an effective GAAP tax rate of 14.1% and 24.6% in the fourth quarter of fiscal 2017 and 2016, respectively, and an effective non-GAAP tax rate of 20.0% and 24.4% in the                 
+      fourth quarter of fiscal 2017 and 2016, respectively. The difference between our GAAP and non-GAAP tax rate in the fourth quarter of fiscal 2017 was primarily due to the net tax effects on stock-based compensation expense and acquisition related 
+      items, including the tax effects of amortization of intangible assets. The difference between our GAAP and non-GAAP tax rate in the fourth quarter of fiscal 2016 was primarily due to the net tax effects of acquisition related items, including the
+                                                                                                        tax effects of amortization of intangible assets.                                                                                                   
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+*   Not meaningful
+------------------
+ 
+
+2 
+ 
+ORACLE CORPORATION 
+ FISCAL 2017 YEAR TO DATE FINANCIAL RESULTS 
+ CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS 
+ ($ in millions, except per share data) 
+ 
+
+                                                                                                                               Year Ended May 31,       % Increase          % Increase         
+                                                                                                                                                                            (Decrease)         
+                                                              2017                       % of              2016                       % of              (Decrease)          in Constant        
+                                                                                         Revenues                                     Revenues          in US $             Currency (1)       
+REVENUES                                                                                                                                                                                       
+Cloud software as a service                                             $3,211                    8%                 $2,001                    5%                 61%                   62%    
+Cloud platform as a service and infrastructure as a service              1,360                    4%                    852                    3%                 60%                   62%    
+Total cloud revenues                                                     4,571                   12%                  2,853                    8%                 60%                   62%    
+New software licenses                                                    6,418                   17%                  7,276                   19%                (12%   )              (11%   )
+Software license updates and product support                            19,229                   51%                 18,861                   51%                  2%                    3%    
+Total on-premise software revenues                                      25,647                   68%                 26,137                   70%                 (2%   )               (1%   )
+Total cloud and on-premise software revenues                            30,218                   80%                 28,990                   78%                  4%                    5%    
+Hardware revenues                                                        4,152                   11%                  4,668                   13%                (11%   )              (10%   )
+Services revenues                                                        3,358                    9%                  3,389                    9%                 (1%   )                1%    
+Total revenues                                                          37,728                  100%                 37,047                  100%                  2%                    3%    
+OPERATING EXPENSES                                                                                                                                                                             
+Cloud software as a service                                              1,285                    4%                  1,049                    3%                 22%                   24%    
+Cloud platform as a service and infrastructure as a service                678                    2%                    469                    1%                 45%                   46%    
+Software license updates and product support                             1,052                    3%                  1,146                    3%                 (8%   )               (7%   )
+Hardware                                                                 1,653                    4%                  2,064                    6%                (20%   )              (19%   )
+Services                                                                 2,801                    7%                  2,751                    8%                  2%                    3%    
+Sales and marketing                                                      8,197                   22%                  7,884                   21%                  4%                    5%    
+Research and development                                                 6,159                   16%                  5,787                   16%                  6%                    7%    
+General and administrative                                               1,176                    3%                  1,155                    3%                  2%                    3%    
+Amortization of intangible assets                                        1,451                    4%                  1,638                    4%                (11%   )              (11%   )
+Acquisition related and other                                              103                    0%                     42                    0%                145%                  147%    
+Restructuring                                                              463                    1%                    458                    1%                  1%                    4%    
+Total operating                                                         25,018                   66%                 24,443                   66%                  2%                    3%    
+expenses                                                                                                                                                                                       
+OPERATING                                                               12,710                   34%                 12,604                   34%                  1%                    2%    
+INCOME                                                                                                                                                                                         
+Interest expense                                                        (1,798   )               (5%   )             (1,467   )               (4%   )             23%                   23%    
+Non-operating income, net                                                  605                    2%                    305                    1%                 98%                   96%    
+INCOME BEFORE PROVISION FOR INCOME TAXES                                11,517                   31%                 11,442                   31%                  1%                    2%    
+Provision for income taxes                                               2,182                    6%                  2,541                    7%                (14%   )              (15%   )
+NET INCOME                                                              $9,335                   25%                 $8,901                   24%                  5%                    6%    
+EARNINGS PER SHARE:                                                                                                                                                                            
+Basic                                                                    $2.27                                        $2.11                                                                    
+Diluted                                                                  $2.21                                        $2.07                                                                    
+WEIGHTED AVERAGE COMMON SHARES OUTSTANDING:                                                                                                                                                    
+Basic                                                                    4,115                                        4,221                                                                    
+Diluted                                                                  4,217                                        4,305                                                                    
+ 
+
+(1)                     We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying                   
+        businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into   
+      United States dollars at the exchange rates in effect on May 31, 2016, which was the last day of our prior fiscal year, rather than the actual exchange rates in effect during the respective periods. Movements in international currencies relative to
+          the United States dollar during the year ended May 31, 2017 compared with the corresponding prior year period decreased our revenues by 1 percentage point, operating expenses by 1 percentage point and operating income by 1 percentage point.    
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+3 
+ 
+ORACLE CORPORATION 
+ FISCAL 2017 YEAR TO DATE FINANCIAL RESULTS 
+ RECONCILIATION OF SELECTED GAAP MEASURES TO NON-GAAP MEASURES (1) 
+ ($ in millions, except per share data) 
+ 
+
+                                                                                                                                                                         Year Ended May 31,   % Increase (Decrease)                            % Increase (Decrease) in                        
+                                                                                                                                                                                              in US $                                          Constant Currency (2)                           
+                                                                          2017                 Adj.                   2017                 2016                 Adj.                   2016   GAAP                        Non-GAAP             GAAP                          Non-GAAP          
+                                                                          GAAP                                    Non-GAAP                 GAAP                                    Non-GAAP                                                                                                    
+TOTAL REVENUES                                                         $37,728                 $171                $37,899              $37,047                  $10                $37,057            2%                           2%                   3%                            3%      
+TOTAL CLOUD AND ON-PREMISE SOFTWARE                                    $30,218                 $171                $30,389              $28,990                   $9                $28,999            4%                           5%                   5%                            6%      
+REVENUES                                                                                                                                                                                                                                                                                       
+TOTAL CLOUD                                                              4,571                  170                  4,741                2,853                    7                  2,860           60%                          66%                  62%                           68%      
+REVENUES                                                                                                                                                                                                                                                                                       
+Cloud software as a service                                              3,211                  164                  3,375                2,001                    7                  2,008           61%                          68%                  62%                           70%      
+Cloud platform as a service and infrastructure as a service              1,360                    6                  1,366                  852                    —                    852           60%                          60%                  62%                           63%      
+New software licenses                                                    6,418                    —                  6,418                7,276                    —                  7,276          (12%   )                     (12%   )             (11%   )                      (11%   )  
+Software license updates and product support                            19,229                    1                 19,230               18,861                    2                 18,863            2%                           2%                   3%                            3%      
+TOTAL HARDWARE                                                          $4,152                   $—                 $4,152               $4,668                   $1                 $4,669          (11%   )                     (11%   )             (10%   )                      (10%   )  
+REVENUES                                                                                                                                                                                                                                                                                       
+TOTAL OPERATING EXPENSES                                               $25,018              $(3,286   )            $21,732              $24,443              $(3,172   )            $21,271            2%                           2%                   3%                            3%      
+Cloud software as a service (4)                                          1,285                  (23   )              1,262                1,049                  (17   )              1,032           22%                          22%                  24%                           24%      
+Cloud platform as a service and infrastructure as a service (4)            678                   (5   )                673                  469                   (4   )                465           45%                          45%                  46%                           47%      
+Sales and marketing (3)                                                  8,197                 (260   )              7,937                7,884                 (220   )              7,664            4%                           4%                   5%                            4%      
+Stock-based compensation (4)                                               981                 (981   )                  —                  793                 (793   )                  —           24%                            *                  24%                             *      
+Amortization of intangible assets (5)                                    1,451               (1,451   )                  —                1,638               (1,638   )                  —          (11%   )                        *                 (11%   )                         *      
+Acquisition related and other                                              103                 (103   )                  —                   42                  (42   )                  —          145%                            *                 147%                             *      
+Restructuring                                                              463                 (463   )                  —                  458                 (458   )                  —            1%                            *                   4%                             *      
+CLOUD SOFTWARE AS A SERVICE                                                60%                                         63%                  48%                                         49%         1,247   bp.                  1,407   bp.          1,223   bp.                   1,382   bp.
+MARGIN %                                                                                                                                                                                                                                                                                       
+CLOUD PLATFORM AS A SERVICE                                                50%                                         51%                  45%                                         46%   504           bp.           513            bp.   542            bp.            550            bp.
+AND INFRASTRUCTURE AS A SERVICE MARGIN %                                                                                                                                                                                                                                                       
+OPERATING INCOME                                                       $12,710               $3,457                $16,167              $12,604               $3,182                $15,786            1%                           2%                   2%                            3%      
+OPERATING MARGIN                                                           34%                                         43%                  34%                                         43%           (33   ) bp.         6              bp.            (29   ) bp.          5              bp.
+%                                                                                                                                                                                                                                                                                              
+INCOME TAX EFFECTS                                                      $2,182               $1,233                 $3,415               $2,541                 $846                 $3,387          (14%   )                       1%                 (15%   )                        2%      
+(6)                                                                                                                                                                                                                                                                                            
+NET INCOME                                                              $9,335               $2,224                $11,559               $8,901               $2,336                $11,237            5%                           3%                   6%                            4%      
+DILUTED EARNINGS PER                                                     $2.21                                       $2.74                $2.07                                       $2.61            7%                           5%                   9%                            6%      
+SHARE                                                                                                                                                                                                                                                                                          
+DILUTED WEIGHTED AVERAGE                                                 4,217                    —                  4,217                4,305                    —                  4,305           (2%   )                      (2%   )              (2%   )                       (2%   )  
+COMMON SHARES OUTSTANDING                                                                                                                                                                                                                                                                      
+ 
+
+(1)                      This presentation includes non-GAAP measures. Our non-GAAP measures are not meant to be considered in isolation or as a substitute for comparable GAAP measures, and should be read only in conjunction with our                  
+      consolidated financial statements prepared in accordance with GAAP. For a detailed explanation of the adjustments made to comparable GAAP measures, the reasons why management uses these measures, the usefulness of these measures and the material
+                                                                                             limitations on the usefulness of these measures, please see Appendix A.                                                                                       
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+(2)                   We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying                
+      businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into
+                             United States dollars at the exchange rates in effect on May 31, 2016, which was the last day of our prior fiscal year, rather than the actual exchange rates in effect during the respective periods.                      
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+(3)   Non-GAAP adjustments to sales and marketing expenses were as follows:
+---------------------------------------------------------------------------
+ 
+
+                                                       Year Ended                   
+                                                       May 31,                      
+                                                   2017              2016           
+Stock-based compensation (4)                           $(306     )       $(220     )
+Acquired deferred sales commissions amortization       46                     —     
+Total non-GAAP sales and marketing adjustments         $(260     )       $(220     )
+ 
+
+(4)   Stock-based compensation was included in the following GAAP operating expense categories:
+-----------------------------------------------------------------------------------------------
+ 
+
+                                                                                                Year Ended                                             Year Ended
+                                                                                              May 31, 2017                                           May 31, 2016
+                                                           GAAP           Adj.                 Non-GAAP           GAAP           Adj.                 Non-GAAP   
+Software license updates and product support                $26           $(26         )       $—                  $23           $(23         )       $—         
+Hardware                                                     11                  (11   )              —             12                  (12   )              —   
+Services                                                     44                  (44   )              —             29                  (29   )              —   
+Research and development                                    770                 (770   )              —            609                 (609   )              —   
+General and administrative                                  130                 (130   )              —            120                 (120   )              —   
+Subtotal                                                    981                 (981   )              —            793                 (793   )              —   
+Cloud software as a service                                  23                  (23   )              —             17                  (17   )              —   
+Cloud platform as a service and infrastructure as a           5                   (5   )              —              4                   (4   )              —   
+service                                                                                                                                                          
+Sales and marketing                                         306                 (306   )              —            220                 (220   )              —   
+Acquisition related and other                                35                  (35   )              —              3                   (3   )              —   
+Total stock-based compensation                           $1,350           $(1,350      )       $—               $1,037           $(1,037      )       $—         
+ 
+
+(5)   Estimated future annual amortization expense related to intangible assets as of May 31, 2017 was as follows:
+------------------------------------------------------------------------------------------------------------------
+ 
+
+Fiscal 2018                         $1,588
+Fiscal 2019                          1,419
+Fiscal 2020                          1,219
+Fiscal 2021                          1,050
+Fiscal 2022                            947
+Thereafter                           1,456
+Total intangible assets, net        $7,679
+ 
+
+(6)                     Income tax effects were calculated reflecting an effective GAAP tax rate of 18.9% and 22.2% in fiscal 2017 and 2016, respectively, and an effective non-GAAP tax rate of 22.8% and 23.2% in fiscal 2017 and 2016,                   
+      respectively. The difference between our GAAP and non-GAAP tax rate in fiscal 2017 was primarily due to the net tax effects on stock-based compensation expense and acquisition related items, including the tax effects of amortization of intangible
+                       assets. The difference between our GAAP and non-GAAP tax rate in fiscal 2016 was primarily due to the net tax effects of acquisition related items, including the tax effects of amortization of intangible assets.                  
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+*   Not meaningful
+------------------
+ 
+4 
+ 
+ORACLE CORPORATION 
+ FISCAL 2017 FINANCIAL RESULTS 
+ CONDENSED CONSOLIDATED BALANCE SHEETS 
+ ($ in millions) 
+ 
+
+                                                        May 31,         May 31,
+                                                           2017            2016
+ASSETS                                                                         
+Current Assets:                                                                
+Cash and cash equivalents                               $21,784         $20,152
+Marketable securities                                    44,294          35,973
+Trade receivables, net                                    5,300           5,385
+Inventories                                                 300             212
+Prepaid expenses and other current assets                 2,837           2,591
+Total Current                                            74,515          64,313
+Assets                                                                         
+Non-Current Assets:                                                            
+Property, plant and equipment, net                        5,315           4,000
+Intangible assets, net                                    7,679           4,943
+Goodwill, net                                            43,045          34,590
+Deferred tax assets                                       1,143           1,291
+Other assets                                              3,294           3,043
+Total Non-Current Assets                                 60,476          47,867
+TOTAL ASSETS                                           $134,991        $112,180
+LIABILITIES AND                                                                
+EQUITY                                                                         
+Current                                                                        
+Liabilities:                                                                   
+Notes payable and other borrowings, current              $9,797          $3,750
+Accounts payable                                            599             504
+Accrued compensation and related benefits                 1,966           1,966
+Deferred revenues                                         8,233           7,655
+Other current liabilities                                 3,583           3,333
+Total Current                                            24,178          17,208
+Liabilities                                                                    
+Non-Current Liabilities:                                                       
+Notes payable and other borrowings, non-current          48,112          40,105
+Income taxes payable                                      5,681           4,908
+Other non-current liabilities                             2,774           2,169
+Total Non-Current Liabilities                            56,567          47,182
+Equity                                                   54,246          47,790
+TOTAL LIABILITIES AND                                  $134,991        $112,180
+EQUITY                                                                         
+ 
+5 
+ 
+ORACLE CORPORATION 
+ FISCAL 2017 FINANCIAL RESULTS 
+ CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS 
+ ($ in millions) 
+ 
+
+                                                                                                                   Year Ended May 31,    
+                                                                                        2017                      2016                   
+Cash Flows From Operating Activities:                                                                                                    
+Net income                                                                                         $9,335                      $8,901    
+Adjustments to reconcile net income to net cash provided by operating activities:                                                        
+Depreciation                                                                                        1,000                         871    
+Amortization of intangible assets                                                                   1,451                       1,638    
+Deferred income taxes                                                                                (486   )                    (105   )
+Stock-based compensation                                                                            1,350                       1,037    
+Tax benefits on the vesting of restricted stock-based awards and exercise of stock                    614                         311    
+options                                                                                                                                  
+Other, net                                                                                            123                         143    
+Changes in operating assets and liabilities, net of effects from acquisitions:                                                           
+Decrease in trade receivables, net                                                                    147                         226    
+(Increase) decrease in inventories                                                                    (88   )                      88    
+Decrease (increase) in prepaid expenses and other assets                                               64                         (90   )
+Decrease in accounts payable and other liabilities                                                    (37   )                     (13   )
+Increase in income taxes payable                                                                      118                           2    
+Increase in deferred revenues                                                                         535                         676    
+Net cash provided by                                                                               14,126                      13,685    
+operating activities                                                                                                                     
+Cash Flows From Investing                                                                                                                
+Activities:                                                                                                                              
+Purchases of marketable securities and other investments                                          (25,867   )                 (24,562   )
+Proceeds from maturities and sales of marketable securities and other investments                  17,615                      21,247    
+Acquisitions, net of cash acquired                                                                (11,221   )                    (650   )
+Capital expenditures                                                                               (2,021   )                  (1,189   )
+Net cash used for investing                                                                       (21,494   )                  (5,154   )
+activities                                                                                                                               
+Cash Flows From Financing                                                                                                                
+Activities:                                                                                                                              
+Payments for repurchases of common stock                                                           (3,561   )                 (10,440   )
+Proceeds from issuances of common stock                                                             2,181                       1,425    
+Shares repurchased for tax withholdings upon vesting of restricted stock-based awards                (283   )                     (89   )
+Payments of dividends to stockholders                                                              (2,631   )                  (2,541   )
+Proceeds from borrowings, net of issuance costs                                                    17,732                       3,750    
+Repayments of borrowings                                                                           (4,094   )                  (2,000   )
+Distributions to noncontrolling interests                                                            (258   )                     (85   )
+Net cash provided by (used                                                                          9,086                      (9,980   )
+for) financing activities                                                                                                                
+Effect of exchange rate changes on cash and cash equivalents                                          (86   )                    (115   )
+Net increase (decrease) in cash and cash equivalents                                                1,632                      (1,564   )
+Cash and cash equivalents at beginning of period                                                   20,152                      21,716    
+Cash and cash equivalents at end of period                                                        $21,784                     $20,152    
+ 
+6 
+ 
+ORACLE CORPORATION 
+ FISCAL 2017 FINANCIAL RESULTS 
+ FREE CASH FLOW - TRAILING 4-QUARTERS (1) 
+ ($ in millions) 
+ 
+
+                                                                                                         Fiscal 2016                                                                          Fiscal 2017    
+                                                Q1                    Q2                    Q3                    Q4                 Q1                    Q2                    Q3                    Q4    
+GAAP Operating Cash                        $13,682               $13,113               $14,252               $13,685            $13,679               $14,249               $13,453               $14,126    
+Flow                                                                                                                                                                                                         
+Capital Expenditures                        (1,636   )            (1,606   )            (1,606   )            (1,189   )         (1,042   )            (1,604   )            (1,676   )            (2,021   )
+Free Cash Flow                             $12,046               $11,507               $12,646               $12,496            $12,637               $12,645               $11,777               $12,105    
+% Growth over prior year                      (20%   )              (22%   )               (8%   )               (5%   )             5%                   10%                   (7%   )               (3%   )
+GAAP Net Income                             $9,501                $9,198                $8,844                $8,901             $8,986                $8,820                $8,917                $9,335    
+Free Cash Flow as a % of Net Income           127%                  125%                  143%                  140%               141%                  143%                  132%                  130%    
+ 
+
+(1)                   To supplement our statements of cash flows presented on a GAAP basis, we use non-GAAP measures of cash flows on a trailing 4-quarter basis to analyze cash flow generated from operations. We believe free cash flow is                
+      also useful as one of the bases for comparing our performance with our competitors. The presentation of non-GAAP free cash flow is not meant to be considered in isolation or as an alternative to net income as an indicator of our performance, or as
+                                                                                         an alternative to cash flows from operating activities as a measure of liquidity.                                                                                   
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+7 
+ 
+ORACLE CORPORATION 
+ FISCAL 2017 FINANCIAL RESULTS 
+ SUPPLEMENTAL ANALYSIS OF GAAP REVENUES (1) 
+ ($ in millions) 
+ 
+
+                                                                                                                                                   Fiscal 2016                                                                                            Fiscal 2017    
+                                                                       Q1                   Q2                   Q3                   Q4                 TOTAL                Q1                   Q2                   Q3                   Q4          TOTAL           
+REVENUES                                                                                                                                                                                                                                                                 
+Cloud software as a service                                          $438                 $462                 $526                 $576                $2,001              $657                 $725                 $865                 $964          $3,211          
+Cloud platform as a service and infrastructure as a service           173                  187                  209                  283                   852               312                  328                  324                  397                 1,360    
+Total cloud revenues                                                  611                  649                  735                  859                 2,853               969                1,053                1,189                1,361                 4,571    
+New software licenses                                               1,151                1,677                1,680                2,766                 7,276             1,030                1,347                1,414                2,626                 6,418    
+Software license updates and product support                        4,696                4,683                4,669                4,814                18,861             4,792                4,777                4,762                4,897                19,229    
+Total on-premise software revenues                                  5,847                6,360                6,349                7,580                26,137             5,822                6,124                6,176                7,523                25,647    
+Total cloud and on-premise software revenues                        6,458                7,009                7,084                8,439                28,990             6,791                7,177                7,365                8,884                30,218    
+Total hardware revenues                                             1,128                1,123                1,135                1,283                 4,668               996                1,014                1,028                1,114                 4,152    
+Total services revenues                                               862                  861                  793                  872                 3,389               808                  844                  812                  894                 3,358    
+Total revenues                                                     $8,448               $8,993               $9,012              $10,594               $37,047            $8,595               $9,035               $9,205              $10,892          $37,728         
+AS REPORTED REVENUE GROWTH                                                                                                                                                                                                                                               
+RATES                                                                                                                                                                                                                                                                    
+Cloud software as a service                                           30%                  28%                  42%                  40%                   36%               50%                  57%                  64%                  67%                   61%    
+Cloud platform as a service and infrastructure as a service           25%                  20%                  33%                  71%                   38%               80%                  75%                  55%                  40%                   60%    
+Total cloud revenues                                                  29%                  26%                  40%                  49%                   36%               59%                  62%                  62%                  58%                   60%    
+New software licenses                                                (16%   )             (18%   )             (15%   )             (12%   )              (15%   )          (11%   )             (20%   )             (16%   )              (5%   )              (12%   )
+Software license updates and product support                          (1%   )              (2%   )               0%                   3%                    0%                2%                   2%                   2%                   2%                    2%    
+Total on-premise software revenues                                    (4%   )              (7%   )              (4%   )              (3%   )               (5%   )            0%                  (4%   )              (3%   )              (1%   )               (2%   )
+Total cloud and on-premise software                                   (2%   )              (4%   )              (1%   )               0%                   (2%   )            5%                   2%                   4%                   5%                    4%    
+revenues                                                                                                                                                                                                                                                                 
+Total hardware                                                        (3%   )             (16%   )             (13%   )              (9%   )              (10%   )          (12%   )             (10%   )              (9%   )             (13%   )              (11%   )
+revenues                                                                                                                                                                                                                                                                 
+Total services revenues                                                1%                  (8%   )              (7%   )              (3%   )               (4%   )           (6%   )              (2%   )               2%                   3%                   (1%   )
+Total revenues                                                        (2%   )              (6%   )              (3%   )              (1%   )               (3%   )            2%                   0%                   2%                   3%                    2%    
+CONSTANT CURRENCY                                                                                                                                                                                                                                                        
+GROWTH RATES (2)                                                                                                                                                                                                                                                         
+Cloud software as a service                                           34%                  32%                  45%                  41%                   38%               52%                  59%                  65%                  69%                   62%    
+Cloud platform as a service and infrastructure as a service           32%                  26%                  38%                  74%                   44%               84%                  78%                  57%                  42%                   62%    
+Total cloud revenues                                                  34%                  31%                  44%                  51%                   40%               61%                  64%                  63%                  60%                   62%    
+New software licenses                                                 (9%   )             (12%   )             (11%   )             (10%   )              (11%   )          (10%   )             (19%   )             (15%   )              (4%   )              (11%   )
+Software license updates and product support                           8%                   5%                   5%                   4%                    5%                3%                   3%                   3%                   3%                    3%    
+Total on-premise software revenues                                     4%                   0%                   0%                  (2%   )                0%                1%                  (3%   )              (2%   )               0%                   (1%   )
+Total cloud and on-premise software                                    6%                   2%                   3%                   2%                    3%                6%                   3%                   5%                   6%                    5%    
+revenues                                                                                                                                                                                                                                                                 
+Total hardware revenues                                                6%                 (10%   )              (8%   )              (7%   )               (5%   )          (11%   )              (9%   )              (9%   )             (12%   )              (10%   )
+Total services revenues                                               10%                   0%                  (2%   )              (1%   )                2%               (5%   )               0%                   3%                   4%                    1%    
+Total revenues                                                         7%                   0%                   1%                   0%                    2%                3%                   1%                   3%                   4%                    3%    
+ 
+
+(1)   The sum of the quarterly information presented may vary from the year-to-date information presented due to rounding.
+--------------------------------------------------------------------------------------------------------------------------
+ 
+
+(2)                   We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying                
+      businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into
+       United States dollars at the exchange rates in effect on May 31, 2016 and 2015 for the fiscal 2017 and fiscal 2016 constant currency growth rate calculations presented, respectively, rather than the actual exchange rates in effect during the 
+                                                                                                                      respective periods.                                                                                                                
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+8 
+ 
+ORACLE CORPORATION 
+ FISCAL 2017 FINANCIAL RESULTS 
+ SUPPLEMENTAL GEOGRAPHIC REVENUES ANALYSIS (1) 
+ ($ in millions) 
+ 
+
+                                                                                                                              Fiscal 2016                                                                                      Fiscal 2017    
+                                                       Q1                  Q2                  Q3                  Q4               TOTAL               Q1                  Q2                  Q3                  Q4               TOTAL    
+AMERICAS                                                                                                                                                                                                                                      
+Total cloud and on-premise software revenues       $3,684              $3,927              $3,964              $4,771             $16,346           $3,876              $4,000              $4,280              $5,076             $17,231    
+Total hardware revenues                              $589                $595                $571                $650              $2,404             $526                $510                $511                $542              $2,089    
+AS REPORTED GROWTH                                                                                                                                                                                                                            
+RATES                                                                                                                                                                                                                                         
+Total cloud and on-premise software revenues           2%                 (3%   )             (1%   )             (3%   )             (2%   )           5%                  2%                  8%                  6%                  5%    
+Total hardware revenues                                1%                (17%   )            (17%   )            (14%   )            (12%   )         (11%   )            (14%   )            (11%   )            (17%   )            (13%   )
+CONSTANT CURRENCY GROWTH                                                                                                                                                                                                                      
+RATES (2)                                                                                                                                                                                                                                     
+Total cloud and on-premise software revenues           6%                  0%                  1%                 (2%   )              1%               6%                  2%                  7%                  6%                  5%    
+Total hardware revenues                                6%                (14%   )            (13%   )            (11%   )             (9%   )         (10%   )            (14%   )            (11%   )            (17%   )            (13%   )
+EUROPE / MIDDLE EAST /                                                                                                                                                                                                                        
+AFRICA                                                                                                                                                                                                                                        
+Total cloud and on-premise software revenues       $1,873              $2,066              $2,069              $2,462              $8,471           $1,903              $2,008              $2,019              $2,489              $8,419    
+Total hardware revenues                              $330                $316                $349                $382              $1,377             $275                $294                $300                $352              $1,221    
+AS REPORTED GROWTH                                                                                                                                                                                                                            
+RATES                                                                                                                                                                                                                                         
+Total cloud and on-premise software revenues          (6%   )             (8%   )             (5%   )              4%                 (3%   )           2%                 (3%   )             (2%   )              1%                 (1%   )
+Total hardware revenues                               (2%   )            (17%   )             (8%   )            (10%   )             (9%   )         (17%   )             (7%   )            (14%   )             (8%   )            (11%   )
+CONSTANT CURRENCY GROWTH                                                                                                                                                                                                                      
+RATES (2)                                                                                                                                                                                                                                     
+Total cloud and on-premise software revenues           7%                  3%                  2%                  5%                  4%               7%                  2%                  2%                  5%                  4%    
+Total hardware revenues                               14%                 (6%   )             (1%   )             (8%   )             (1%   )         (13%   )             (2%   )            (10%   )             (4%   )             (7%   )
+ASIA                                                                                                                                                                                                                                          
+PACIFIC                                                                                                                                                                                                                                       
+Total cloud and on-premise software revenues         $901              $1,016              $1,051              $1,206              $4,173           $1,012              $1,169              $1,066              $1,319              $4,568    
+Total hardware revenues                              $209                $212                $215                $251                $887             $195                $210                $217                $220                $842    
+AS REPORTED GROWTH                                                                                                                                                                                                                            
+RATES                                                                                                                                                                                                                                         
+Total cloud and on-premise software revenues          (7%   )             (3%   )              7%                  9%                  2%              12%                 15%                  2%                  9%                  9%    
+Total hardware revenues                              (14%   )            (11%   )             (8%   )              8%                 (7%   )          (7%   )             (1%   )              1%                (12%   )             (5%   )
+CONSTANT CURRENCY GROWTH                                                                                                                                                                                                                      
+RATES (2)                                                                                                                                                                                                                                     
+Total cloud and on-premise software revenues           7%                  6%                 13%                 11%                  9%               8%                 11%                  0%                  9%                  7%    
+Total hardware revenues                               (3%   )             (3%   )             (3%   )              9%                  0%              (9%   )             (3%   )              0%                (12%   )             (6%   )
+TOTAL                                                                                                                                                                                                                                         
+COMPANY                                                                                                                                                                                                                                       
+Total cloud and on-premise software revenues       $6,458              $7,009              $7,084              $8,439             $28,990           $6,791              $7,177              $7,365              $8,884             $30,218    
+Total hardware revenues                            $1,128              $1,123              $1,135              $1,283              $4,668             $996              $1,014              $1,028              $1,114              $4,152    
+AS REPORTED GROWTH                                                                                                                                                                                                                            
+RATES                                                                                                                                                                                                                                         
+Total cloud and on-premise software revenues          (2%   )             (4%   )             (1%   )              0%                 (2%   )           5%                  2%                  4%                  5%                  4%    
+Total hardware revenues                               (3%   )            (16%   )            (13%   )             (9%   )            (10%   )         (12%   )            (10%   )             (9%   )            (13%   )            (11%   )
+CONSTANT CURRENCY GROWTH                                                                                                                                                                                                                      
+RATES (2)                                                                                                                                                                                                                                     
+Total cloud and on-premise software revenues           6%                  2%                  3%                  2%                  3%               6%                  3%                  5%                  6%                  5%    
+Total hardware revenues                                6%                (10%   )             (8%   )             (7%   )             (5%   )         (11%   )             (9%   )             (9%   )            (12%   )            (10%   )
+ 
+
+(1)   The sum of the quarterly information presented may vary from the year-to-date information presented due to rounding.
+--------------------------------------------------------------------------------------------------------------------------
+ 
+
+(2)                   We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying                
+      businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into
+       United States dollars at the exchange rates in effect on May 31, 2016 and 2015 for the fiscal 2017 and fiscal 2016 constant currency growth rate calculations presented, respectively, rather than the actual exchange rates in effect during the 
+                                                                                                                      respective periods.                                                                                                                
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+9 
+ 
+ORACLE CORPORATION 
+ FISCAL 2017 FINANCIAL RESULTS 
+ SUPPLEMENTAL TOTAL CLOUD AND ON-PREMISE SOFTWARE REVENUES ANALYSIS (1) 
+ ($ in millions) 
+ 
+
+                                                                                                                                                   Fiscal 2016                                                                                            Fiscal 2017    
+                                                                       Q1                   Q2                   Q3                   Q4                 TOTAL                Q1                   Q2                   Q3                   Q4                 TOTAL    
+APPLICATIONS                                                                                                                                                                                                                                                             
+REVENUES                                                                                                                                                                                                                                                                 
+Cloud software as a service                                          $438                 $462                 $526                 $576                $2,001              $657                 $725                 $865                 $964                $3,211    
+On-premise software revenues                                        1,668                1,799                1,775                2,102                 7,345             1,584                1,610                1,632                1,898                 6,724    
+Total cloud and on-premise software revenues                       $2,106               $2,261               $2,301               $2,678                $9,346            $2,241               $2,335               $2,497               $2,862                $9,935    
+AS REPORTED GROWTH                                                                                                                                                                                                                                                       
+RATES                                                                                                                                                                                                                                                                    
+Cloud software as a service                                           30%                  28%                  42%                  40%                   36%               50%                  57%                  64%                  67%                   61%    
+On-premise software revenues                                          (2%   )              (6%   )              (7%   )              (7%   )               (5%   )           (5%   )             (11%   )              (8%   )             (10%   )               (8%   )
+Total cloud and on-premise software revenues                           4%                  (1%   )               1%                   1%                    1%                6%                   3%                   9%                   7%                    6%    
+CONSTANT CURRENCY GROWTH                                                                                                                                                                                                                                                 
+RATES (2)                                                                                                                                                                                                                                                                
+Cloud software as a service                                           34%                  32%                  45%                  41%                   38%               52%                  59%                  65%                  69%                   62%    
+On-premise software revenues                                           4%                  (1%   )              (3%   )              (5%   )               (2%   )           (4%   )              (9%   )              (7%   )              (9%   )               (7%   )
+Total cloud and on-premise software revenues                           9%                   5%                   5%                   2%                    5%                8%                   5%                   9%                   8%                    8%    
+PLATFORM AND                                                                                                                                                                                                                                                             
+INFRASTRUCTURE REVENUES                                                                                                                                                                                                                                                  
+Cloud platform as a service and infrastructure as a service          $173                 $187                 $209                 $283                  $852              $312                 $328                 $324                 $397                $1,360    
+On-premise software revenues                                        4,179                4,561                4,574                5,478                18,792             4,238                4,514                4,544                5,625                18,923    
+Total cloud and on-premise software revenues                       $4,352               $4,748               $4,783               $5,761               $19,644            $4,550               $4,842               $4,868               $6,022               $20,283    
+AS REPORTED GROWTH                                                                                                                                                                                                                                                       
+RATES                                                                                                                                                                                                                                                                    
+Cloud platform as a service and infrastructure as a service           25%                  20%                  33%                  71%                   38%               80%                  75%                  55%                  40%                   60%    
+On-premise software revenues                                          (5%   )              (7%   )              (3%   )              (2%   )               (4%   )            1%                  (1%   )              (1%   )               3%                    1%    
+Total cloud and on-premise software revenues                          (4%   )              (6%   )              (2%   )               0%                   (3%   )            5%                   2%                   2%                   5%                    3%    
+CONSTANT CURRENCY GROWTH                                                                                                                                                                                                                                                 
+RATES (2)                                                                                                                                                                                                                                                                
+Cloud platform as a service and infrastructure as a service           32%                  26%                  38%                  74%                   44%               84%                  78%                  57%                  42%                   62%    
+On-premise software revenues                                           3%                   0%                   1%                  (1%   )                1%                2%                  (1%   )               0%                   4%                    1%    
+Total cloud and on-premise software revenues                           4%                   1%                   3%                   2%                    2%                5%                   2%                   2%                   6%                    4%    
+ 
+
+(1)   The sum of the quarterly information presented may vary from the year-to-date information presented due to rounding.
+--------------------------------------------------------------------------------------------------------------------------
+ 
+
+(2)                   We compare the percent change in the results from one period to another period using constant currency disclosure. We present constant currency information to provide a framework for assessing how our underlying                
+      businesses performed excluding the effect of foreign currency rate fluctuations. To present this information, current and comparative prior period results for entities reporting in currencies other than United States dollars are converted into
+       United States dollars at the exchange rates in effect on May 31, 2016 and 2015 for the fiscal 2017 and fiscal 2016 constant currency growth rate calculations presented, respectively, rather than the actual exchange rates in effect during the 
+                                                                                                                      respective periods.                                                                                                                
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+10 
+ 
+APPENDIX A 
+ ORACLE CORPORATION 
+ Q4 FISCAL 2017 FINANCIAL RESULTS 
+ EXPLANATION OF NON-GAAP MEASURES 
+ To supplement our financial results presented on a GAAP basis, we use the non-GAAP measures indicated in the tables, which exclude certain business combination accounting entries and expenses related to acquisitions, as well as other significant expenses including stock-based compensation, that we believe are helpful in understanding our past financial performance and our future results. Our non-GAAP financial measures are not meant to be considered in isolation or as a substitute for comparable GAAP measures and should be read only in conjunction with our consolidated financial statements prepared in accordance with GAAP. Our management regularly uses our supplemental non-GAAP financial measures internally to understand, manage and evaluate our business and make operating decisions. These non-GAAP measures are among the primary factors management uses in planning for and forecasting future periods. Compensation of our executives is based in part on the performance of our business based on these non-GAAP measures. Our non-GAAP financial measures reflect adjustments based on the following items, as well as the related income tax effects: 
+ 
+
+•                      Cloud software as a service, cloud platform as a service and infrastructure as a service, software license updates and product support and hardware deferred revenues: Business combination accounting rules require                  
+     us to account for the fair values of cloud-based service contracts, software license updates and product support contracts and hardware support contracts assumed in connection with our acquisitions. Because these contracts are generally one year in
+    duration, our GAAP revenues generally for the one year period subsequent to our acquisition of a business do not reflect the full amount of revenues on these assumed cloud and support contracts that would have otherwise been recorded by the acquired
+                           entity. The non-GAAP adjustment to our cloud software as a service revenues, cloud platform as a service and infrastructure as a service revenues, software license updates and product support revenues and                      
+      hardware support revenues is intended to include, and thus reflect, the full amount of such revenues. We believe the adjustment to these revenues is useful to investors as a measure of the ongoing performance of our business. We have historically 
+     experienced high renewal rates on our software license updates and product support contracts and our objective is to increase the renewal rates on acquired and new cloud-based service contracts and hardware support contracts; however, we cannot be 
+                                                    certain that our customers will renew our cloud-based contracts, software license updates and product support contracts or our hardware support contracts.                                               
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+•                                                                                                        Deferred sales commissions amortization: Certain acquired companies capitalized sales commissions associated with subscription agreements and amortized these amounts over the related contractual terms. Business                                                                                                    
+                                                                                        combination accounting rules generally require us to eliminate these capitalized sales commissions balances as of the acquisition date and our post-combination GAAP sales and marketing expenses generally do not reflect the amortization of these                                                                                   
+                                                                                                          deferred sales commissions balances. The non-GAAP adjustment to increase our sales and marketing expenses is intended to include, and thus reflect, the full amount of amortization related to such balances as                                                                                                      
+    though the acquired companies operated independently in the periods presented. We believe this adjustment to sales and marketing expenses is useful to investors as a measure of the ongoing performance of our business. The presentation of this non-GAAP adjustment commenced in the second fiscal quarter of fiscal 2017 as a result of our acquisition of NetSuite. Such adjustment was not material in prior periods.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+•                                          Stock-based compensation expenses: We have excluded the effect of stock-based compensation expenses from our non-GAAP operating expenses and net income measures. Although                                      
+    stock-based compensation is a key incentive offered to our employees, and we believe such compensation contributed to the revenues earned during the periods presented and also believe it will contribute to the generation of future period revenues,
+                                                 we continue to evaluate our business performance excluding stock-based compensation expenses. Stock-based compensation expenses will recur in future periods.                                             
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+•                                               Amortization of intangible assets: We have excluded the effect of amortization of intangible assets from our non-GAAP operating expenses and net income measures.                                            
+    Amortization of intangible assets is inconsistent in amount and frequency and is significantly affected by the timing and size of our acquisitions. Investors should note that the use of intangible assets contributed to our revenues earned during the
+                                                           periods presented and will contribute to our future period revenues as well. Amortization of intangible assets will recur in future periods.                                                      
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+•   Acquisition related and other expenses; and restructuring expenses: We have excluded the effect of acquisition related and other expenses and the effect of restructuring expenses from our non-GAAP operating expenses and net income measures. We incurred significant expenses in connection with our acquisitions and also incurred certain other operating expenses or income, which we generally would not
+                                                                                   have otherwise incurred in the periods presented as a part of our continuing operations. Acquisition related and other expenses consist of personnel related costs for transitional employees, other acquired employee related costs, stock-based                                                                                
+                                                                                   compensation expenses (in addition to the stock-based compensation expenses described above), integration related professional services, certain business combination adjustments including adjustments after the measurement period has ended and                                                                               
+                                                                                 certain other operating items, net. Substantially all of the stock-based compensation expenses i
