@@ -252,8 +252,23 @@ def build_files(
         #    고치거나 지어내는 것이 아니라, 오늘 못 물어봤다는 이유로
         #    버리지 않는 것뿐입니다. 이월한 종목은 아래 "이월" 칸과 요약에
         #    남겨 감추지 않습니다(정직화).
+        #
+        #    183차-CR — **반쪽만 받은 날도 같습니다.** 2026-10-07 런 #104:
+        #    AIG 의 8-K 목록 조회가 시간초과(ReadTimeout)로 끊겨 보도자료가
+        #    0건이 됐는데, XBRL 분기 40행은 받아서 "빈 목록"이 아니었습니다.
+        #    그래서 이월이 안 됐고, 40행 전부 **발표일이 비어** 덮였습니다
+        #    (어제 있던 발표일·조정 EPS 가 통째로 사라짐 · H5b 표본 921→918).
+        #    발표일은 측정의 기준 시점이라, 발표일이 하나도 없는 행은 측정에
+        #    못 씁니다. 그래서 "오늘 발표일 0개 · 어제는 있었음"도 오늘 못 받은
+        #    것으로 보고 지난 행을 이어 씁니다.
+        지난행 = (previous or {}).get("eps", {}).get(ticker) or []
+        오늘발표일 = sum(1 for r in rows if r.get("announced_date"))
+        지난발표일 = sum(1 for r in 지난행 if r.get("announced_date"))
+        if (not rows or 오늘발표일 == 0) and 지난발표일 > 0:
+            eps[ticker] = 지난행
+            carried.append(ticker)
+            continue
         if not rows:
-            지난행 = (previous or {}).get("eps", {}).get(ticker) or []
             if 지난행:
                 eps[ticker] = 지난행
                 carried.append(ticker)

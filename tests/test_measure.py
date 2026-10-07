@@ -539,6 +539,24 @@ def test_오늘_못_받은_종목은_지난_값을_이어_쓴다():
     assert len(snap2["eps"]["TEST"]) == 1, "오늘 값이 있는데 지난 값을 썼습니다"
     assert snap2["이월"] == []
 
+    # 183차-CR — 반쪽만 받은 날(분기 행은 있는데 발표일이 하나도 없음)도
+    # 지난 값을 이어 쓴다. 런 #104 AIG: 8-K 목록 시간초과로 발표일 40칸이
+    # 통째로 비어 덮였다.
+    반쪽 = [{**q, "announced_date": None} for q in _fake_quarters()]
+    files4, _ = measure_store.build_files(
+        ["TEST"], {"TEST": _fake_daily(), cfg.BENCHMARK: _fake_daily()}, [],
+        load_quarters=lambda t: 반쪽, previous=지난)
+    snap4 = _snapshot(files4)
+    assert snap4["eps"]["TEST"] == 지난["eps"]["TEST"], "발표일 없는 반쪽 값으로 덮었습니다"
+    assert snap4["이월"] == ["TEST"], snap4["이월"]
+    # 지난 값에도 발표일이 없었다면 오늘 값을 그대로 쓴다 (원래 그런 종목)
+    지난_발표일없음 = {"eps": {"TEST": 반쪽}}
+    files5, _ = measure_store.build_files(
+        ["TEST"], {"TEST": _fake_daily(), cfg.BENCHMARK: _fake_daily()}, [],
+        load_quarters=lambda t: 반쪽[:1], previous=지난_발표일없음)
+    snap5 = _snapshot(files5)
+    assert len(snap5["eps"]["TEST"]) == 1 and snap5["이월"] == [], snap5["이월"]
+
     # 지난 스냅샷을 안 넘기면 예전 동작 그대로
     files3, _ = measure_store.build_files(
         ["TEST"], {"TEST": _fake_daily(), cfg.BENCHMARK: _fake_daily()}, [],
