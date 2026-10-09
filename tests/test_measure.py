@@ -812,6 +812,32 @@ def test_행_출처_표시가_스냅샷까지_살아남는다():
     assert 민.get("구멍메움") is None and 민.get("승격") is None, 민
 
 
+def test_붙은_문서_표시가_수집기에서_스냅샷까지_간다():
+    """(183차-CT) 실적공시·예비발표·8k_항목 표시를 **실제 짝짓기 함수**
+    (merge_quarters → _apply_press_to_row)에서 만들어 스냅샷 행
+    (eps_rows)까지 따라간다. 183차-G·AO 에서 허용 목록 한 칸을 빠뜨려
+    표시가 런에서 0칸으로 찍힌 사고가 두 번 있었다 — 손으로 만든 행이
+    아니라 수집기가 만든 행으로 시작한다."""
+    import sec_fundamentals as sf
+    xbrl = [{"filing_date": "2024-03-30", "period_label": "24/03",
+             "revenue": 640 * M, "op_income": 130 * M, "source": cfg.SRC_APPROX}]
+    press = [{"filing_date": "2024-05-01", "period_label": "24 Q1",
+              "revenue": 640 * M, "op_income": 135 * M, "adj_eps": 0.71,
+              "source": cfg.SRC_DIRECT, "gm_is_gaap": False, "derivation": "",
+              "filing_url": "", "실적공시": True, "예비발표": None,
+              "8k_항목": "2.02,9.01"}]
+    합친행 = sf.merge_quarters(xbrl, press, {})
+    행 = measure_store.eps_rows(합친행)[0]
+    assert 행.get("실적공시") is True, f"실적공시 표시가 사라졌습니다: {sorted(행)}"
+    assert 행.get("8k_항목") == "2.02,9.01", f"8k_항목이 사라졌습니다: {sorted(행)}"
+    assert "예비발표" in 행, f"예비발표 칸이 허용 목록에 없습니다: {sorted(행)}"
+    # 짝이 안 붙은 XBRL 행은 표시가 없다 (지어내지 않는다)
+    빈 = measure_store.eps_rows(sf.merge_quarters(
+        [{"filing_date": "2024-03-30", "revenue": 1.0, "op_income": 1.0,
+          "source": cfg.SRC_APPROX}], [], {}))[0]
+    assert 빈.get("실적공시") is None and 빈.get("8k_항목") is None, 빈
+
+
 if __name__ == "__main__":
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     passed = failed = 0

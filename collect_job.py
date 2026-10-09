@@ -193,6 +193,18 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
         f"(SEC 허용 10) · 접속 시도 {시도} · "
         f"실적문서아님 기억 {음성기억}·적중 {음성적중}"
     )
+    # 183차-CT — 실적 발표가 아닌 8-K 를 몇 건 가렸나 (실행 증명 — 이 줄이
+    # 0 만 찍으면 배선이 끊긴 것입니다. 2.02 칸이 전부 '모름'이면 공시 목록에
+    # 항목 글자가 안 실려 오는 것이니 순서 표시가 일하지 않습니다).
+    progress(
+        "🧾 실적 아닌 8-K — 재게시 거름 "
+        f"{sum(r.get('재게시_거름', 0) or 0 for r in reports)} · 읽은 문서 항목 2.02 "
+        f"{sum(r.get('항목_202', 0) or 0 for r in reports)}·아님 "
+        f"{sum(r.get('항목_202아님', 0) or 0 for r in reports)}·모름 "
+        f"{sum(r.get('항목_모름', 0) or 0 for r in reports)} · 예비발표 "
+        f"{sum(r.get('예비발표', 0) or 0 for r in reports)} · 2.02 아닌 문서가 "
+        f"분기 차지 {sum(r.get('비실적_짝', 0) or 0 for r in reports)}"
+    )
     시간초과 = [r["ticker"] for r in reports if r.get("시간초과")]
     if 시간초과:
         progress(
@@ -230,10 +242,15 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
             with open(옛경로, encoding="utf-8") as f:
                 어제 = (json.load(f) or {}).get("eps")
         새 = json.loads(files[f"{cfg.MEASURE_DIR}/snapshot.json"])["eps"]
-        건강 = data_health.report(새, 어제)
+        # 183차-CT — 발표일 두 자 대조의 바깥 자(야후 발표일). 디스크의
+        # vendor.json 은 어제 것이지만 지난 발표일은 바뀌지 않으므로 충분합니다.
+        건강 = data_health.report(
+            새, 어제, announcements=dataset.load_announcements(),
+            today=datetime.now(timezone.utc).date().isoformat())
         채움 = 건강["채움률"]
         빈칸 = [k for k in data_health.WATCHED_FIELDS
                 if (채움.get(k) or {}).get("찬칸") == 0]
+        두자 = 건강.get("발표일 두 자 대조") or {}
         progress(
             "🩺 건강검진 — "
             + " · ".join(
@@ -242,6 +259,10 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
             + (f" · 어제 대비 바뀐 칸 {건강['어제 대비']['바뀐 칸']}"
                if 건강.get("어제 대비") else " · 어제 수집물 없음")
             + f" · 이상값 매출 {건강['이상값']['revenue']['건수']}칸"
+            + (f" · 발표일 두 자 어긋남 {두자.get('어긋남')}행"
+               f"(이름 {두자.get('이름')}·늦음 {두자.get('늦음')}·"
+               f"승격행 {두자.get('승격행_어긋남')} / 비교 {두자.get('비교')})"
+               if 두자 else " · 발표일 두 자 대조 없음")
             + (f" · ⚠️ 통째로 빈 칸: {', '.join(빈칸)}" if 빈칸 else "")
         )
     except Exception as exc:
@@ -546,12 +567,32 @@ def run(tickers: list[str] | None = None, progress=print) -> int:
                 # (값은 안 쓰고 기록만 한다 — 106차 규칙)
                 "unpaired_press": r.get("unpaired_press", 0),
                 "unpaired_dates": r.get("unpaired_dates") or [],
+                # 183차-CT — 실적 발표가 아닌 8-K 를 가르는 계기들.
+                # ⚠️ 이 목록에 안 넣으면 계기가 **로그에 한 칸도 안 실립니다**
+                #    (183차-AO "만들고 배선을 잊은" 여섯 번째와 같은 자리).
+                #   재게시_거름  사업부 재게시·보충 자료라 거른 건수
+                #   항목_202…   읽은 문서의 8-K 항목이 2.02 인가 (있음·아님·모름)
+                #   예비발표     예비·잠정 발표로 보인 건수
+                #   비실적_짝    2.02 아닌 문서가 (겨룰 정식 발표가 없어) 분기를 차지한 수
+                # 2.02 아닌 문서를 아예 버릴지(2단계)는 이 숫자를 보고 정합니다.
+                "재게시_거름": r.get("재게시_거름", 0),
+                "항목_202": r.get("항목_202", 0),
+                "항목_202아님": r.get("항목_202아님", 0),
+                "항목_모름": r.get("항목_모름", 0),
+                "예비발표": r.get("예비발표", 0),
+                "비실적_짝": r.get("비실적_짝", 0),
                 "note": r.get("note", ""),
             }
             for r in reports
         ],
         # 런 전체의 429 합계 — 종목별 칸을 다 더하지 않아도 한눈에 보이게.
         "sec_429_합계": sum(r.get("sec_429", 0) for r in reports),
+        # 183차-CT — 실적 아닌 8-K 계기의 런 전체 합계 (위 종목별 칸의 합).
+        "비실적_계기_합계": {
+            칸: sum(r.get(칸, 0) or 0 for r in reports)
+            for 칸 in ("재게시_거름", "항목_202", "항목_202아님", "항목_모름",
+                       "예비발표", "비실적_짝")
+        },
     }
     files[f"{cfg.MEASURE_DIR}/robot_log.json"] = json.dumps(log, ensure_ascii=False, indent=1)
 

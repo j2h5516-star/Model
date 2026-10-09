@@ -3540,6 +3540,13 @@ def new_report(ticker: str) -> dict:
         "text_source": "",         # 텍스트를 어디서 얻었나 (보도자료/첨부/본문)
         "first_error": "",         # 첫 예외 (화면 요약용)
         "all_errors": [],          # 그 뒤의 예외들 — 첫 것만 보면 진짜 실패를 놓칩니다
+        # 183차-CT — 실적 발표가 아닌 8-K 를 가르는 계기들
+        "재게시_거름": 0,          # 사업부 재게시·보충 자료라 거른 건수
+        "항목_202": 0,             # 읽은 문서 중 8-K 항목 2.02(실적) 로 낸 것
+        "항목_202아님": 0,         # 항목 목록은 있는데 2.02 가 없는 것
+        "항목_모름": 0,            # 항목 목록이 비었거나 없는 것(6-K 등)
+        "예비발표": 0,             # 예비·잠정 발표로 보이는 것
+        "비실적_짝": 0,            # 2.02 아닌 문서가 (다른 후보가 없어) 분기를 차지한 수
         "unpaired_press": 0,       # 분기와 짝을 못 찾은 8-K 건수
         # 그 8-K 들의 **날짜** (150차-AA). 개수만으로는 "어느 분기가
         # 빠졌나"를 알 수 없습니다 — GS 의 1월 발표가 그래서 안 보였습니다.
@@ -3776,6 +3783,12 @@ def fetch_earnings_8k(
         # 슬라이드 검사와 마찬가지로 EX-99 첨부 길로도 새지 않게 여기서 막습니다.
         if _looks_like_monthly_update(text):
             continue
+        # 사업부 재게시·보충 과거 정보는 실적발표가 아닙니다 (183차-CT, 실물
+        # KHC 2026-10-07 → 가짜 "26 Q3" 행). 위 둘과 같은 이유로 EX-99 길에서
+        # 막습니다. 몇 건 걸렀는지 세어 로봇 기록에 남깁니다(실행 증명).
+        if _looks_like_recast_supplement(text):
+            report["재게시_거름"] = report.get("재게시_거름", 0) + 1
+            continue
         if fpi and not _fpi_results_document(text):
             continue                  # 173차 — 공모·배당·계약 6-K 는 실적 문서가 아님
 
@@ -3857,6 +3870,18 @@ def fetch_earnings_8k(
         if parsed["gaap_eps"] is not None:
             report["gaap_eps_ok"] += 1
 
+        # 183차-CT — 이 8-K 가 **실적 발표 항목(2.02)** 으로 제출됐나, 그리고
+        # 예비(잠정) 발표인가. 짝짓기가 정식 발표를 고르는 순서 표시입니다.
+        # 읽은 문서 중 몇 건이 2.02 였는지 세어 둡니다 — 2.02 아닌 문서를
+        # 아예 버릴지(2단계)는 이 숫자를 보고 정합니다.
+        항목 = _items_of(filing)
+        실적공시 = _results_item_flag(항목)
+        칸 = {True: "항목_202", False: "항목_202아님", None: "항목_모름"}[실적공시]
+        report[칸] = report.get(칸, 0) + 1
+        예비 = True if _looks_like_preliminary(text) else None
+        if 예비:
+            report["예비발표"] = report.get("예비발표", 0) + 1
+
         filing_date = str(filing.filing_date)
         # 183차-Z — 이름을 **어느 문장에서 물었는지** 함께 담아 옵니다.
         # 원문은 값이 하나도 안 읽혔을 때만 보관되므로, 이름만 틀린 행은
@@ -3908,6 +3933,11 @@ def fetch_earnings_8k(
                 "adj_eps_분기열": parsed.get("adj_eps_분기열"),
                 "gaap_eps_분기열": parsed.get("gaap_eps_분기열"),
                 "adjusted_ebitda_분기열": parsed.get("adjusted_ebitda_분기열"),
+                # 183차-CT — 짝짓기 순서 표시 둘과, 되짚어 볼 항목 글자.
+                # ⚠️ 183차-H 의 교훈: 여기 적지 않으면 **조용히 사라집니다.**
+                "실적공시": 실적공시,
+                "예비발표": 예비,
+                "8k_항목": 항목 or None,
             }
         )
 
@@ -4063,6 +4093,155 @@ def _looks_like_monthly_update(text: str) -> bool:
     if not _MONTHLY_UPDATE_RE.search(head):
         return False
     return not _RESULTS_HINTS_RE.search(head)
+
+
+# 정식 실적 발표의 **제목** (183차-CT)
+# ---------------------------------------------------------------------------
+# 위 `_RESULTS_HINTS_RE` 는 쓸 수 없습니다 — "results of operations" 가
+# 들어 있는데, 재게시 자료의 목차에 "Results of Operations by Segment" 가
+# 있기 때문입니다(실물 KHC 2026-10-07). 그래서 **제목에만 나오는 꼴**로
+# 좁힌 자를 따로 둡니다: "Reports Third Quarter …", "… Fourth Quarter 2025
+# Results", "Financial Results for the …".
+_RESULTS_TITLE_RE = re.compile(
+    r"\breports?\s+(?:(?:fiscal\s+)?(?:\d{4}\s+)?(?:first|second|third|fourth|q[1-4]))\b"
+    r"|\b(?:first|second|third|fourth)[-\s]quarter\s+"
+    r"(?:(?:and\s+)?(?:full[-\s]year\s+)?(?:fiscal\s+)?\d{4}\s+)?"
+    r"(?:financial\s+)?(?:results|earnings)\b"
+    r"|\bfinancial\s+results\s+for\s+the\b",
+    re.I,
+)
+
+
+# 재게시 자료(사업부를 다시 나눈 뒤 **지난 숫자를 새 기준으로 다시 적은
+# 보충 자료**)를 실적발표와 가르는 표시 (183차-CT)
+# ---------------------------------------------------------------------------
+# 실물 사고: KHC 2026-10-07 8-K 는 "SUPPLEMENTAL HISTORICAL SEGMENT FINANCIAL
+# INFORMATION" — 3분기에 사업부를 다시 나눴으니 지난 분기 숫자를 새 사업부
+# 기준으로 다시 적어 준 자료입니다. 실적 발표가 아닙니다. 그런데 보도자료
+# 첨부(EX-99) 길로 통과해, 첫 표의 **북미 사업부 2분기** 매출 46.26억과
+# 사업부 영업이익 9.88억이 **"26 Q3" 새 분기 행**이 됐습니다
+# (진짜 3분기 발표는 10월 말 — 야후 10-28).
+#
+# 같은 꼴이 과거 분기 자리도 차지하고 있었습니다 (저장소 원문으로 확인):
+#   KHC 24 Q1  재게시 04-18 이 진짜 발표 05-01 을 밀어냄 → 조정 EPS 빈칸
+#   KMB 25 Q2  재게시 07-25 ↔ 진짜 08-01 → 조정 EPS 자리에 **6.16** (분기는 약 1.9)
+#   DIS 23 Q4  재게시 10-18 ↔ 진짜 11-08 · DIS 21 Q1 02-01 ↔ 02-11
+#   EXPE 20 Q1 · KO 18 Q1 · COHR 19/06 · FDX 26 Q4 …
+# 발표일이 틀리면 창 60거래일의 시작점이 틀립니다(측정 자체가 어긋남).
+#
+# 저장소 원문 3,467건 실측: 앞 900자에 아래 표시가 있는 문서 27건 —
+# **전부** 재게시·보충 자료였고 실적 발표는 0건이었습니다(제목으로 확인).
+# 실적 제목이 함께 있으면(그 자리에서 실적도 함께 발표) 막지 않습니다.
+_RECAST_SUPPLEMENT_RE = re.compile(
+    r"supplemental\s+historical\s+(?:segment\s+)?(?:financial\s+)?information"
+    r"|recast\s+(?:historical\s+|segment\s+|unaudited\s+|business\s+|quarterly\s+"
+    r"|selected\s+)*(?:financial|segment|business|operating)\s+"
+    r"(?:information|data|statements|results|segments)"
+    r"|summary\s+recast\s+segment"
+    r"|segment\s+reporting\s+changes"
+    r"|reclassified\s+(?:operating\s+)?segment\s+(?:data|information|financial)"
+    r"|historical\s+segment\s+(?:financial\s+)?information"
+    r"|unaudited\s+historical\s+(?:summary\s+)?financial\s+information"
+    r"|recasts?\s+segment\s+financials",
+    re.I,
+)
+
+
+def _looks_like_recast_supplement(text: str) -> bool:
+    """제목 자리에 '재게시·보충 과거 정보' 표시가 있고 실적 제목은 없는가."""
+    if not text:
+        return False
+    head = re.sub(r"\s+", " ", text[:900])
+    if not _RECAST_SUPPLEMENT_RE.search(head):
+        return False
+    return not _RESULTS_TITLE_RE.search(head)
+
+
+# 예비 발표(정식 발표 **전에** 내는 잠정치)의 표시 (183차-CT)
+# ---------------------------------------------------------------------------
+# "Provides Preliminary Fourth Quarter Results" 같은 문서는 실적 발표(항목
+# 2.02)이긴 하지만 **정식 발표가 아닙니다.** 숫자가 범위("약 X~Y")이거나
+# 일부뿐이라, 파서가 그중 하나를 집으면 틀린 값이 됩니다. 그런데 분기끝에
+# 더 가까워 짝짓기에서 정식 발표를 이겼습니다 (실물: CLF 23Q1 04-11 ↔
+# 04-24 · LITE 21Q2 01-19 ↔ 02-02 · SHW 18Q4 01-15 ↔ 01-31 · SMCI · BOX …).
+#
+# **버리지 않습니다** — 정식 발표가 없으면 예비 발표라도 그 분기를 씁니다.
+# 둘이 겨룰 때만 정식 발표가 이기게 하는 **순서 표시**입니다.
+#
+# 저장소 원문 실측: 이 표시는 야후 발표일과 다른 날의 문서 111건에 걸렸고,
+# 같은 날(=정식 발표)의 문서는 1,843건 중 3건에만 걸렸습니다. 그 셋 중
+# TRGP("Reports Third Quarter … and Provides Preliminary 2020 … Outlook")는
+# 정식 제목이 따로 있으므로 아래 예외로 풀어 줍니다.
+_PRELIM_QUARTER = r"(?:first|second|third|fourth|q[1-4]|[1-4]q)"
+_PRELIMINARY_RE = re.compile(
+    r"\b(?:provides?|announces?|reports?|issues?|releases?)\s+(?:certain\s+)?"
+    r"(?:selected\s+)?preliminary\b"
+    r"|\bpreliminary\s+(?:unaudited\s+)?(?:" + _PRELIM_QUARTER + r"|fiscal"
+    r"|financial\s+results\b|revenue|net\s+(?:product\s+)?(?:sales|revenues?)"
+    r"|results\s+for)"
+    r"|\bpreviews?\s+(?:its\s+)?" + _PRELIM_QUARTER + r"\b"
+    r"|\bestimated\s+" + _PRELIM_QUARTER + r"[-\s]+quarter\b",
+    re.I,
+)
+
+
+def _looks_like_preliminary(text: str) -> bool:
+    """제목 자리에 '예비·잠정' 표시가 있는 실적 문서인가.
+
+    정식 실적 제목이 **예비라는 말과 떨어져** 따로 있으면 정식 발표로
+    봅니다 — "Reports Third Quarter Results and Provides Preliminary 2020
+    Outlook" 은 정식 발표이고, "Announces Preliminary Fourth Quarter 2020
+    Financial Results" 는 예비 발표입니다(제목 바로 앞에 preliminary).
+    """
+    if not text:
+        return False
+    head = re.sub(r"\s+", " ", text[:600])
+    if not _PRELIMINARY_RE.search(head):
+        return False
+    for match in _RESULTS_TITLE_RE.finditer(head):
+        앞 = head[max(0, match.start() - 40): match.start()].lower()
+        if not any(말 in 앞 for 말 in ("preliminary", "estimated", "preview")):
+            return False
+    return True
+
+
+# 8-K 항목(Item) 2.02 — "Results of Operations and Financial Condition" (183차-CT)
+# ---------------------------------------------------------------------------
+# 미국 규정상 **분기·연간 실적을 공개 발표하면 그 문서를 항목 2.02 로
+# 제출해야 합니다.** 사업부 재게시·인수합병·경영진 교체·투자자의 날
+# 발표 자료·주주 서한은 보통 다른 항목(7.01·8.01·5.02·1.01)으로 냅니다.
+#
+# 이 항목 목록은 SEC 공시 목록(메타데이터)에 이미 실려 오므로 **추가 접속이
+# 없습니다** (edgartools `EntityFiling.items` — 2012년 이후는 정확하다고
+# 도구 설명에 적혀 있습니다. 우리 수집 시작은 2016-09).
+#
+# 쓰는 법 — **버리지 않고 순서만 정합니다** (1단계):
+#   · 같은 분기를 두고 겨룰 때 2.02 문서가 2.02 아닌 문서를 이깁니다.
+#   · 2.02 아닌 문서는 **새 분기 행을 만들지 않습니다**(승격·구멍메움).
+#     뼈대 밖의 새 행은 짝지을 XBRL 이 없어 틀려도 드러나지 않습니다
+#     (KHC 26 Q3 · CRM·MDB·ZS 투자자의 날 · BKR 학회 발표 → 새 분기 행).
+#   · 항목 목록이 비었거나 없으면(6-K 등) **모름** — 아무 쪽으로도 안 밉니다.
+# 2.02 아닌 문서를 아예 버릴지는 로봇 계기(항목_202아님 · 비실적_짝)를
+# 보고 따로 정합니다 — 진짜 발표를 2.02 로 안 낸 회사가 있는지 먼저 잽니다.
+_ITEM_202_RE = re.compile(r"(?<![\d.])2\.02(?!\d)")
+
+
+def _items_of(filing) -> str:
+    """공시 목록에 실린 8-K 항목 글자("2.02,9.01") — 없으면 빈 글자."""
+    try:
+        items = getattr(filing, "items", None)
+    except Exception:
+        return ""
+    if items is None:
+        return ""
+    return str(items).strip()
+
+
+def _results_item_flag(items: str):
+    """항목 2.02 가 있나 — True(있음) · False(목록은 있는데 없음) · None(모름)."""
+    if not items:
+        return None
+    return bool(_ITEM_202_RE.search(items))
 
 
 def _looks_like_earnings(text: str) -> bool:
@@ -5610,6 +5789,10 @@ def _apply_press_to_row(row: dict, press: dict) -> None:
         row["filing_url"] = press["filing_url"]
     if press.get("guidance_text"):
         row["guidance_text"] = press["guidance_text"]
+    # 183차-CT — 이 분기에 붙은 문서가 **어떤 문서였는지** 남깁니다
+    # (실적 항목 2.02 였나 · 예비 발표였나 · 항목 글자). 값은 안 바뀝니다.
+    for _표시 in ("실적공시", "예비발표", "8k_항목"):
+        row[_표시] = press.get(_표시)
     # 발표일 기준 정렬을 위해 8-K 제출일을 따로 남깁니다
     row["announced_date"] = press.get("filing_date", "")
 
@@ -5700,7 +5883,7 @@ def merge_quarters(
         #    차지하는 사고가 있었습니다 (실물: CRDO 26Q3 — 02-09 예비 공지가
         #    이기고 03-02 실적 발표의 EPS $1.07 이 통째로 버려짐, 9차 감사).
         #    이익 숫자(조정EPS·영업이익·조정EBITDA)를 실은 발표가 항상 이깁니다.
-        best_index, best_gap, best_rank, best_early = None, None, None, None
+        best_index, best_key = None, None
         for index, press in enumerate(press_quarters):
             if index in used_press or index in promote_only:
                 continue
@@ -5779,8 +5962,23 @@ def merge_quarters(
                 if not 다음행있음:
                     continue      # 다음 분기가 비었다 — 그 분기의 발표다
 
-            if best_rank is None or (rank, early, gap) < (best_rank, best_early, best_gap):
-                best_index, best_gap, best_rank, best_early = index, gap, rank, early
+            # ⚠️ **정식 실적 발표가 먼저입니다** (183차-CT).
+            #    분기끝과 진짜 발표 사이에 낸 **다른 8-K** 가 거리로 이겨
+            #    분기를 차지했습니다 — 사업부 재게시(KHC·DIS·KMB)·주주 서한
+            #    (AMZN 4월)·투자자의 날·인수합병 발표·예비 발표. 두 자(우리
+            #    발표일 vs 야후 발표일) 대조로 13,250행 중 306행이 3일 넘게
+            #    어긋났고, 원문이 있는 88건은 전부 이런 문서였습니다.
+            #    그래서 거리보다 앞에 두 칸을 둡니다:
+            #      ① 8-K 항목 2.02(실적) 가 **없다고 확인된** 문서는 뒤로
+            #         (모름은 밀지 않음 — 6-K·옛 공시)
+            #      ② 예비(잠정) 발표는 정식 발표 뒤로
+            #    둘 다 **버리는 것이 아니라 순서**입니다. 겨룰 상대가 없으면
+            #    지금처럼 그 문서가 분기를 씁니다.
+            비실적 = 1 if press.get("실적공시") is False else 0
+            예비 = 1 if press.get("예비발표") else 0
+            key = (비실적, 예비, rank, early, gap)
+            if best_key is None or key < best_key:
+                best_index, best_key = index, key
 
         if best_index is None:
             continue
@@ -5788,6 +5986,10 @@ def merge_quarters(
         press = press_quarters[best_index]
         used_press.add(best_index)
         _apply_press_to_row(row, press)
+        if press.get("실적공시") is False and report is not None:
+            # 2.02 아닌 문서가 분기를 차지했다 — 겨룰 정식 발표가 없었다는
+            # 뜻입니다. 2단계(아예 버릴지)를 정할 때 이 수를 봅니다.
+            report["비실적_짝"] = report.get("비실적_짝", 0) + 1
 
     # --- 늦은 발표 흡수 (이중 계상 방지 ①) ---
     # 마지막 XBRL 분기의 발표가 106~120일 뒤에 나온 경우(늦은 연간 보고),
@@ -5802,12 +6004,18 @@ def merge_quarters(
             key=lambda r: _to_date(r["filing_date"]),
         )
         if not last_row.get("announced_date"):
+            # 183차-CT — 정식 발표를 먼저 보고(예비는 뒤로), 2.02 아님이
+            # 확인된 문서는 흡수하지 않습니다(아래 승격과 같은 이유).
             for index in sorted(
-                promote_only, key=lambda i: press_quarters[i].get("filing_date", "")
+                promote_only,
+                key=lambda i: (bool(press_quarters[i].get("예비발표")),
+                               press_quarters[i].get("filing_date", "")),
             ):
                 if index in used_press:
                     continue
                 press = press_quarters[index]
+                if press.get("실적공시") is False:
+                    continue
                 press_date = _to_date(press.get("filing_date", ""))
                 if press_date is None:
                     continue
@@ -5834,13 +6042,24 @@ def merge_quarters(
     #   · 제출일 오름차순으로 돌아 최초 발표가 우선 채택되고
     #   · 이미 승격한 발표와 60일 미만 간격(분기 간격은 ~91일)이면 같은 분기로
     #     보고 건너뜁니다.
+    #
+    # ⚠️ 183차-CT — **2.02 아님이 확인된 8-K 는 새 행을 만들지 않습니다.**
+    #    뼈대 밖의 새 행은 맞춰 볼 XBRL 이 없어 틀려도 드러나지 않습니다.
+    #    실측: 승격 행 24개 중 KHC 26 Q3(사업부 재게시) · CRM·MDB·ZS(투자자의
+    #    날) · BKR(학회 발표) · SPGI(조직 개편 발표) 가 실적이 아닌 문서였습니다.
+    #    그리고 **예비 발표는 정식 발표 뒤에** 봅니다 — 날짜순으로 돌면 먼저 낸
+    #    예비 발표가 승격되고 정식 발표가 "같은 분기의 두 번째"로 버려집니다.
     promoted_dates: list = []
     for index in sorted(
-        range(len(press_quarters)), key=lambda i: press_quarters[i].get("filing_date", "")
+        range(len(press_quarters)),
+        key=lambda i: (bool(press_quarters[i].get("예비발표")),
+                       press_quarters[i].get("filing_date", "")),
     ):
         if index in used_press:
             continue
         press = press_quarters[index]
+        if press.get("실적공시") is False:
+            continue
         press_date = _to_date(press.get("filing_date", ""))
         if press_date is None or press.get("op_income") is None:
             continue
@@ -5885,14 +6104,20 @@ def merge_quarters(
     #
     # ⚠️ 이익 숫자를 실은 발표만 끼웁니다. 예비 매출 공지가 분기를 차지해
     #    진짜 발표를 밀어낸 사고(9차 감사 CRDO 26Q3)의 재발 방지입니다.
+    #
+    # ⚠️ 183차-CT — 승격과 같은 이유로 2.02 아님이 확인된 8-K 는 끼우지
+    #    않고, 예비 발표는 정식 발표 뒤에 봅니다.
     끼운날: list = []
     for index in sorted(
         range(len(press_quarters)),
-        key=lambda i: press_quarters[i].get("filing_date", ""),
+        key=lambda i: (bool(press_quarters[i].get("예비발표")),
+                       press_quarters[i].get("filing_date", "")),
     ):
         if index in used_press:
             continue
         press = press_quarters[index]
+        if press.get("실적공시") is False:
+            continue
         press_date = _to_date(press.get("filing_date", ""))
         if press_date is None:
             continue
