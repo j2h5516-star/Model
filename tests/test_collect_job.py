@@ -730,6 +730,196 @@ def test_실물_IREN_월간_보고와_진짜_실적발표를_가른다():
     assert sf._looks_like_monthly_update(t실) is False, "실물 실적발표를 막았습니다"
 
 
+def test_사업부_재게시_자료는_실적발표로_치지_않는다():
+    """183차-CT — KHC 실물: "SUPPLEMENTAL HISTORICAL SEGMENT FINANCIAL
+    INFORMATION"(사업부를 다시 나눈 뒤 지난 숫자를 새 기준으로 다시 적은
+    자료)이 EX-99 길로 통과해, 북미 사업부의 2분기 매출 46.26억이 **"26 Q3"
+    새 분기 행**이 됐다. 과거에도 KHC 24 Q1 · KMB 25 Q2(조정 EPS 6.16) ·
+    DIS 23 Q4 의 분기 자리를 진짜 발표 대신 차지하고 있었다."""
+    sf = cj.sf
+    import inspect
+    재게시 = ("Exhibit 99.1\n\nSUPPLEMENTAL HISTORICAL SEGMENT FINANCIAL INFORMATION AND "
+           "SUPPLEMENTAL NON-GAAP FINANCIAL INFORMATION\n\nTable of Contents\n"
+           "Introduction 2\nResults of Operations by Segment 2\nNon-GAAP Financial Measures 4")
+    실적 = ("Exhibit 99.1\n\nThe Kraft Heinz Company Reports Second Quarter 2026 Results\n"
+          "Net sales decreased 1.4 percent versus the year-ago period ...")
+    assert sf._looks_like_recast_supplement(재게시) is True
+    # 목차의 "Results of Operations by Segment" 가 실적 제목으로 오인되면 안 된다
+    assert sf._RESULTS_HINTS_RE.search(재게시), "전제 확인: 넓은 자는 목차를 문다"
+    assert not sf._RESULTS_TITLE_RE.search(재게시), "좁은 제목 자가 목차를 물었습니다"
+    assert sf._looks_like_recast_supplement(실적) is False, "진짜 실적발표를 막았습니다"
+    assert sf._looks_like_recast_supplement("") is False
+    for 다른꼴 in ("SEGMENT REPORTING CHANGES This document provides summary recast segment",
+                 "Recast Historical Financial Information to Reflect the Current Region",
+                 "Reclassified Operating Segment Data and Reclassified Data within",
+                 "Unaudited Historical Financial Information The following tables include"):
+        assert sf._looks_like_recast_supplement("Exhibit 99.1 " + 다른꼴) is True, 다른꼴
+    # 실적 제목이 함께 있으면(그 자리에서 실적도 발표) 막지 않는다
+    같이 = 재게시.replace("Table of Contents", "ACME Reports Third Quarter 2026 Results")
+    assert sf._looks_like_recast_supplement(같이) is False
+    # 제목 자리(앞 900자)가 아니라 본문 뒤쪽의 말은 막지 않는다
+    뒤쪽 = 실적 + "x" * 1000 + " supplemental historical segment financial information"
+    assert sf._looks_like_recast_supplement(뒤쪽) is False
+    src = inspect.getsource(sf.fetch_earnings_8k)
+    assert "_looks_like_recast_supplement(text)" in src, "재게시 차단 배선이 없습니다"
+
+
+def test_실물_재게시_원문과_진짜_실적발표를_가른다():
+    """183차-CT — 저장소에 있는 실제 원문으로 확인(픽스처가 아니라 실물)."""
+    import os
+    sf = cj.sf
+    뿌리 = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                      "data", "measure", "raw")
+    재게시 = ("KHC_2026-10-07.txt", "KHC_2024-04-18.txt", "KMB_2025-07-25_부탁.txt",
+           "DIS_2023-10-18.txt", "DIS_2021-02-01.txt", "EXPE_2020-05-18_부탁.txt",
+           "KO_2018-04-04.txt")
+    # 같은 회사들의 **진짜** 실적 발표 (야후 발표일과 같은 날)
+    진짜 = ("KHC_2025-07-30_부탁.txt", "KHC_2025-02-12_부탁.txt")
+    본것 = 0
+    for 이름 in 재게시 + 진짜:
+        길 = os.path.join(뿌리, 이름)
+        if not os.path.exists(길):
+            continue                     # 원문이 없는 환경에서는 건너뜁니다
+        글 = open(길, encoding="utf-8", errors="ignore").read()
+        if 글.startswith("#"):
+            글 = 글.split("\n", 3)[-1]   # 보관 머리말(출처 줄)을 떼고 봅니다
+        기대 = 이름 in 재게시
+        assert sf._looks_like_recast_supplement(글) is 기대, (
+            f"{이름}: {'재게시를 못 걸렀습니다' if 기대 else '진짜 실적발표를 막았습니다'}")
+        본것 += 1
+    if os.path.isdir(뿌리):
+        assert 본것 >= 5, f"실물 원문을 {본것}건밖에 못 봤습니다 — 파일 이름을 확인하세요"
+
+
+def test_예비_발표_표시는_정식_제목이_따로_있으면_달지_않는다():
+    """183차-CT — 예비 발표는 정식 발표 뒤로 미는 **순서 표시**다.
+    TRGP 실물("Reports Third Quarter 2019 … and Provides Preliminary 2020
+    Growth Capital Outlook")은 정식 발표이므로 표시가 붙으면 안 된다."""
+    sf = cj.sf
+    assert sf._looks_like_preliminary(
+        "Exhibit 99.1 Box Announces Preliminary Fiscal Second Quarter 2022 "
+        "Financial Results Preliminary Revenue ...") is True
+    assert sf._looks_like_preliminary(
+        "NEWS RELEASE Cleveland-Cliffs Provides Preliminary First-Quarter 2023 Results") is True
+    assert sf._looks_like_preliminary(
+        "Neurocrine Biosciences Provides Preliminary Fourth Quarter and Full-Year 2021 "
+        "Net Product Sales Results") is True
+    assert sf._looks_like_preliminary(
+        "Targa Resources Corp. Reports Third Quarter 2019 Financial Results and Provides "
+        "Preliminary 2020 Growth Capital Outlook HOUSTON") is False, "정식 발표에 예비 표시"
+    assert sf._looks_like_preliminary(
+        "United States Steel ... results as of and for the periods ended March 31, 2023 "
+        "provided herein are preliminary unaudited results based on current") is False
+    assert sf._looks_like_preliminary(
+        "ACME Reports Second Quarter 2026 Results") is False
+    assert sf._looks_like_preliminary("") is False
+
+
+def test_8K_항목_2_02_표시는_있음_아님_모름_셋으로_가른다():
+    """183차-CT — 항목 목록은 SEC 공시 목록에 실려 오는 글자다("2.02,9.01").
+    없으면 **모름**이지 '아님'이 아니다(6-K·옛 공시를 밀어내면 안 된다)."""
+    sf = cj.sf
+
+    class _공시:
+        def __init__(self, items=None, 없음=False):
+            if not 없음:
+                self.items = items
+
+    assert sf._results_item_flag(sf._items_of(_공시("2.02,9.01"))) is True
+    assert sf._results_item_flag(sf._items_of(_공시("7.01,9.01"))) is False
+    assert sf._results_item_flag(sf._items_of(_공시(""))) is None
+    assert sf._results_item_flag(sf._items_of(_공시(None))) is None
+    assert sf._results_item_flag(sf._items_of(_공시(없음=True))) is None
+    # 숫자 조각이 겹치는 다른 항목을 2.02 로 읽으면 안 된다
+    assert sf._results_item_flag("12.02") is False
+    assert sf._results_item_flag("2.021") is False
+    assert sf._results_item_flag("Item 2.02") is True
+
+
+def test_실적_아닌_8K_표시가_수집_경로를_끝까지_탄다():
+    """183차-CT — **실제로 도는 함수**(fetch_earnings_8k)에서 시작해
+    ① 재게시 자료는 걸러지고 ② 남은 행에 실적공시·예비발표·8k_항목 표시가
+    실리며 ③ 계기가 세어지는지 본다. (183차-H: 손으로 만든 dict 로 시작한
+    시험이 조립 함수를 건너뛰어, 표시가 두 번이나 조용히 사라졌다.)"""
+    import sys
+    import types
+    sf = cj.sf
+    글 = {
+        "A": ("Exhibit 99.1\nACME Reports Second Quarter 2026 Results\nRevenue ...",
+              "2.02,9.01", "2026-08-05"),
+        "B": ("Exhibit 99.1\nSUPPLEMENTAL HISTORICAL SEGMENT FINANCIAL INFORMATION\n"
+              "Introduction ...", "8.01,9.01", "2026-10-07"),
+        "C": ("Exhibit 99.1\nACME Announces Preliminary Third Quarter 2026 Financial "
+              "Results\n...", "2.02,9.01", "2026-10-10"),
+        "D": ("Exhibit 99.1\nACME Hosts Investor Day 2026\n...", "7.01,9.01", "2026-09-17"),
+        "E": ("Exhibit 99.1\nACME Reports Third Quarter 2026 Results\n...", "", "2026-10-28"),
+    }
+
+    class _공시:
+        def __init__(self, 키):
+            self.키 = 키
+            self.accession_no = f"0001-26-0000{ord(키)}"
+            self.filing_date = 글[키][2]
+            self.items = 글[키][1]
+
+    class _회사:
+        def __init__(self, ticker):
+            pass
+
+        def get_filings(self, **_kw):
+            return [_공시(k) for k in ("E", "C", "B", "D", "A")]   # 최신부터
+
+    def 가짜텍스트(ticker, filing, report=None):
+        return 글[filing.키][0], "보도자료", True
+
+    def 가짜파서(text, year_table_priority=False):
+        return {"revenue": 1e9, "op_income": 1e8, "gross_margin_pct": None,
+                "adjusted_ebitda": None, "adj_eps": 0.5, "gaap_eps": 0.4,
+                "source": "직접공시", "gm_is_gaap": False, "derivation": ""}
+
+    가짜edgar = types.ModuleType("edgar")
+    가짜edgar.Company = _회사
+    옛edgar = sys.modules.get("edgar")
+    옛 = (sf._earnings_text_cached, sf._ensure_identity, sf.parse_press_release)
+    sys.modules["edgar"] = 가짜edgar
+    sf._earnings_text_cached = 가짜텍스트
+    sf._ensure_identity = lambda: None
+    sf.parse_press_release = 가짜파서
+    sf.set_collect_budget(None)
+    try:
+        보고 = sf.new_report("ACME")
+        행들 = sf.fetch_earnings_8k("ACME", start_date="2016-09-15", report=보고)
+    finally:
+        sf._earnings_text_cached, sf._ensure_identity, sf.parse_press_release = 옛
+        if 옛edgar is not None:
+            sys.modules["edgar"] = 옛edgar
+        else:
+            sys.modules.pop("edgar", None)
+    날별 = {r["filing_date"]: r for r in 행들}
+    assert "2026-10-07" not in 날별, "재게시 자료가 행이 됐습니다"
+    assert 보고["재게시_거름"] == 1
+    assert 날별["2026-08-05"]["실적공시"] is True
+    assert 날별["2026-08-05"]["8k_항목"] == "2.02,9.01"
+    assert 날별["2026-09-17"]["실적공시"] is False, "투자자의 날(7.01)을 실적으로 표시"
+    assert 날별["2026-10-28"]["실적공시"] is None, "항목 목록이 빈 공시는 모름이어야 합니다"
+    assert 날별["2026-10-28"]["8k_항목"] is None
+    assert 날별["2026-10-10"]["예비발표"] is True
+    assert 날별["2026-08-05"]["예비발표"] is None
+    assert (보고["항목_202"], 보고["항목_202아님"], 보고["항목_모름"]) == (2, 1, 1), 보고
+    assert 보고["예비발표"] == 1
+
+
+def test_실적_아닌_8K_계기가_런_합계와_진행_줄에_실린다():
+    """183차-CT — 종목별 칸은 위 규칙 시험이 지키고, 여기서는 **런 전체 합계**
+    와 진행 줄(실행 증명)이 배선돼 있는지 본다."""
+    import inspect
+    src = inspect.getsource(cj.run)
+    assert '"비실적_계기_합계"' in src, "런 전체 합계가 로그에 없습니다"
+    assert "🧾 실적 아닌 8-K" in src, "진행 줄이 없습니다 — 계기가 돌았는지 로그로 못 봅니다"
+    assert "announcements=dataset.load_announcements()" in src, \
+        "건강검진에 바깥 자 발표일을 안 넘깁니다 — 두 자 대조가 비어 버립니다"
+
+
 def test_SEC_429는_모든_일꾼이_함께_10분_멈춘_뒤_한_번_더_시도한다():
     """170차 — 2026-09-02 런 #66: 20번째 종목부터 378종목이 7분 동안 전부
     429. 429 는 2초 뒤 재시도가 아니라 냉각(10분)이다. 가짜 시계·가짜

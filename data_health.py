@@ -179,11 +179,105 @@ def outliers(eps: dict, fields=("revenue", "op_income")) -> dict:
     return out
 
 
-def report(after: dict, before: dict | None = None) -> dict:
+# 183차-CT — 발표일 두 자 대조의 "같음" 눈금 (일)
+# ---------------------------------------------------------------------------
+# 우리 발표일은 8-K **제출일**이고 야후는 **발표일**입니다. 장 마감 뒤에
+# 발표하고 다음 날 제출하는 회사가 있어 하루 이틀은 원래 어긋납니다.
+# 실측(런 #105 스냅샷): 13,250행 중 12,945행이 ±3일 안이었습니다.
+# 세는 눈금일 뿐 버리는 문턱이 아닙니다(이 파일의 원칙).
+DATE_AGREE_DAYS = 3
+
+
+def date_agreement(eps: dict, announcements: dict | None,
+                   today: str | None = None, limit: int = 8) -> dict | None:
+    """우리 발표일(8-K)이 바깥 자(야후)의 발표일과 어긋나는 행을 셉니다.
+
+    **왜 재나 (183차-CT)** — KHC 의 사업부 재게시 자료(10-07)가 "26 Q3"
+    새 행이 된 것을 계기로 두 자를 맞대 보니, 3일 넘게 어긋난 행이
+    306개였습니다. 원문이 있는 88건은 **전부** 실적 발표가 아닌 8-K
+    (재게시·주주 서한·투자자의 날·인수합병·예비 발표)가 분기 자리를
+    차지한 것이었습니다. 발표일은 창 60거래일의 시작점이라 틀리면
+    측정이 통째로 어긋나는데, 어느 검사에도 안 걸렸습니다 — 값은
+    "말이 되는" 날짜였기 때문입니다. 두 자를 맞대야만 드러납니다.
+
+    가르는 법:
+      · 우리 날짜에서 가장 가까운 야후 날짜가 ±3일 안   → 같음
+      · 승격 행(분기끝 = 발표일, 뼈대 밖)              → 승격행_어긋남
+        (분기끝을 모르므로 이르다·늦다를 가르지 않습니다)
+      · 분기끝 뒤 0~120일의 야후 날짜 중 우리 날짜에 가장 가까운 것과
+        비교해 우리가 앞서면 이름, 뒤면 늦음
+      · 야후 기록이 시작되기 전의 발표 → 자이전 (견줄 수 없음)
+
+    `today` 보다 뒤의 야후 날짜는 **아직 오지 않은 예정일**이라 쓰지
+    않습니다(176차). ⚠️ 값은 하나도 바꾸지 않습니다 — 세기만 합니다.
+    """
+    if not announcements:
+        return None
+    from datetime import date as _date
+
+    def _d(text):
+        try:
+            return _date.fromisoformat(str(text)[:10])
+        except (TypeError, ValueError):
+            return None
+
+    셈 = {"비교": 0, "같음": 0, "이름": 0, "늦음": 0, "승격행_어긋남": 0,
+          "자이전": 0, "창안에없음": 0}
+    예: dict = {"이름": [], "늦음": [], "승격행_어긋남": []}
+    for ticker, rows in (eps or {}).items():
+        날들 = sorted(
+            d for d in (_d(x) for x in (announcements.get(ticker) or []))
+            if d is not None and (not today or d.isoformat() <= today)
+        )
+        if not 날들:
+            continue
+        for r in rows:
+            a, 끝 = _d(r.get("announced_date")), _d(r.get("filing_date"))
+            if a is None or 끝 is None:
+                continue
+            # 야후 첫 기록보다 앞선 발표는 견줄 수 없습니다 — 단, 같음 눈금
+            # 안쪽(하루 먼저 제출 등)은 견줍니다.
+            if (날들[0] - a).days > DATE_AGREE_DAYS:
+                셈["자이전"] += 1
+                continue
+            셈["비교"] += 1
+            가장가까운 = min(날들, key=lambda y: abs((y - a).days))
+            if abs((가장가까운 - a).days) <= DATE_AGREE_DAYS:
+                셈["같음"] += 1
+                continue
+            if 끝 == a:
+                칸, 짝 = "승격행_어긋남", 가장가까운
+            else:
+                후보 = [y for y in 날들 if 0 <= (y - 끝).days <= 120]
+                if not 후보:
+                    셈["창안에없음"] += 1
+                    continue
+                짝 = min(후보, key=lambda y: abs((y - a).days))
+                칸 = "이름" if a < 짝 else "늦음"
+            셈[칸] += 1
+            예[칸].append({"종목": ticker, "분기끝": r.get("filing_date"),
+                          "우리": r.get("announced_date"),
+                          "야후": 짝.isoformat(), "차이일": (a - 짝).days,
+                          "실적공시": r.get("실적공시")})
+    for 칸 in 예:
+        예[칸].sort(key=lambda x: -abs(x["차이일"]))
+        예[칸] = 예[칸][:limit]
+    어긋남 = 셈["이름"] + 셈["늦음"] + 셈["승격행_어긋남"]
+    return {
+        **셈,
+        "어긋남": 어긋남,
+        "어긋남_비율": round(100.0 * 어긋남 / 셈["비교"], 2) if 셈["비교"] else None,
+        "예시": 예,
+    }
+
+
+def report(after: dict, before: dict | None = None,
+           announcements: dict | None = None, today: str | None = None) -> dict:
     """세 검사를 한 덩어리로 — 로봇 기록에 그대로 담깁니다.
 
     before(어제 수집물)가 없으면 '어제 대비' 칸만 비웁니다. 없는 것을
-    지어내지 않습니다.
+    지어내지 않습니다. announcements(바깥 자 발표일)가 없으면 '발표일
+    두 자 대조' 칸을 비웁니다(183차-CT).
     """
     out = {
         "설명": (
@@ -194,4 +288,5 @@ def report(after: dict, before: dict | None = None) -> dict:
         "이상값": outliers(after),
     }
     out["어제 대비"] = changed_cells(before, after) if before else None
+    out["발표일 두 자 대조"] = date_agreement(after, announcements, today=today)
     return out

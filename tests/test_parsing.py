@@ -591,6 +591,134 @@ def test_merge_demotes_press_filed_too_soon_after_quarter_end():
     assert merged3[0]["announced_date"] == "2025-09-09", merged3[0]
 
 
+# ---------------------------------------------------------------------------
+# 183차-CT — 실적 발표가 아닌 8-K 가 분기 자리를 차지한다
+# ---------------------------------------------------------------------------
+# 우리 발표일과 야후 발표일을 맞대 보니 13,250행 중 306행이 3일 넘게
+# 어긋났고, 원문이 있는 88건은 전부 실적 발표가 아닌 8-K(사업부 재게시 ·
+# 주주 서한 · 투자자의 날 · 인수합병 · 예비 발표)가 거리로 이긴 것이었다.
+def test_실적항목_202_발표가_다른_8K보다_먼저다():
+    """실물 KHC 24 Q1 — 재게시 자료(04-18)가 진짜 발표(05-01)를 밀어내
+    조정 EPS 0.71 이 사라졌다. 8-K 항목 2.02(실적)가 확인된 문서가 이긴다."""
+    xbrl = [_xbrl_row("2024-03-30", 100.0)]
+    다른것 = _press_row("2024-04-18", 111.0)
+    다른것.update({"실적공시": False, "8k_항목": "7.01,9.01"})
+    진짜 = _press_row("2024-05-01", 120.0)
+    진짜.update({"adj_eps": 0.71, "실적공시": True, "8k_항목": "2.02,9.01"})
+    보고 = {}
+    merged = sf.merge_quarters(xbrl, [다른것, 진짜], report=보고)
+    assert merged[0]["announced_date"] == "2024-05-01", merged[0]
+    assert merged[0]["adj_eps"] == 0.71
+    # 어떤 문서가 붙었는지 행에 남는다 (스냅샷에서 고침을 확인하는 손잡이)
+    assert merged[0]["실적공시"] is True and merged[0]["8k_항목"] == "2.02,9.01"
+    assert 보고.get("비실적_짝", 0) == 0
+
+    # 모름(항목 목록 없음 — 6-K·옛 공시)은 **밀지 않는다** — 지금처럼 거리로
+    모름 = _press_row("2024-04-18", 111.0)
+    진짜2 = dict(진짜)
+    merged2 = sf.merge_quarters([_xbrl_row("2024-03-30", 100.0)], [모름, 진짜2])
+    assert merged2[0]["announced_date"] == "2024-04-18", "모름을 2.02 아님처럼 밀었습니다"
+
+    # 겨룰 정식 발표가 없으면 2.02 아닌 문서도 그 분기를 쓴다(버리지 않음) —
+    # 대신 계기에 센다 (2단계 '아예 버릴지'의 근거)
+    보고3 = {}
+    merged3 = sf.merge_quarters([_xbrl_row("2024-03-30", 100.0)], [dict(다른것)],
+                                report=보고3)
+    assert merged3[0]["announced_date"] == "2024-04-18"
+    assert 보고3["비실적_짝"] == 1
+
+
+def test_예비_발표는_정식_발표_뒤다():
+    """실물 CLF 23 Q1 — 예비 발표(04-11)가 정식 발표(04-24)보다 분기끝에
+    가까워 이겼다. 예비 발표의 숫자는 범위·일부라 틀린 값이 되기 쉽다."""
+    xbrl = [_xbrl_row("2023-03-31", 100.0)]
+    예비 = _press_row("2023-04-11", 111.0)
+    예비.update({"예비발표": True, "실적공시": True})
+    정식 = _press_row("2023-04-24", 120.0)
+    정식.update({"adj_eps": 0.78, "실적공시": True})
+    merged = sf.merge_quarters(xbrl, [예비, 정식])
+    assert merged[0]["announced_date"] == "2023-04-24", merged[0]
+    assert merged[0]["adj_eps"] == 0.78
+    # 정식 발표가 없으면 예비 발표라도 그 분기를 쓴다
+    merged2 = sf.merge_quarters([_xbrl_row("2023-03-31", 100.0)], [dict(예비)])
+    assert merged2[0]["announced_date"] == "2023-04-11"
+
+
+def test_2_02_아닌_8K는_새_분기_행을_만들지_않는다():
+    """실물 KHC 26 Q3 — 사업부 재게시 자료(10-07)의 첫 표(북미 2분기 매출
+    46.26억)가 뼈대 밖 **새 분기 행**이 됐다. 진짜 3분기 발표는 10월 말.
+    CRM·MDB·ZS 투자자의 날, BKR 학회 발표도 같은 길로 새 행이 됐다."""
+    xbrl = [_xbrl_row("2026-06-27", 100.0)]
+    지난발표 = _press_row("2026-08-05", 104.0)
+    지난발표["실적공시"] = True
+    재게시 = _press_row("2026-10-07", 98.8)
+    재게시["실적공시"] = False
+    merged = sf.merge_quarters(xbrl, [지난발표, 재게시])
+    assert [r.get("announced_date") for r in merged] == ["2026-08-05"], merged
+
+    # 2.02 정식 발표는 그대로 승격된다 — 최신 분기가 사라지면 안 된다
+    진짜 = _press_row("2026-10-28", 120.0)
+    진짜["실적공시"] = True
+    merged2 = sf.merge_quarters([_xbrl_row("2026-06-27", 100.0)],
+                                [dict(지난발표), dict(재게시), 진짜])
+    assert [r.get("announced_date") for r in merged2] == ["2026-08-05", "2026-10-28"]
+    assert merged2[-1].get("승격") is True
+
+    # 예비 발표(10-10)가 먼저 나와도 승격되는 것은 정식 발표(10-28)다
+    예비 = _press_row("2026-10-10", 110.0)
+    예비.update({"실적공시": True, "예비발표": True})
+    merged3 = sf.merge_quarters([_xbrl_row("2026-06-27", 100.0)],
+                                [dict(지난발표), 예비, dict(진짜)])
+    assert [r.get("announced_date") for r in merged3] == ["2026-08-05", "2026-10-28"], \
+        [r.get("announced_date") for r in merged3]
+    # 정식 발표가 없으면 예비 발표라도 승격된다 (최신 분기를 잃지 않음)
+    merged4 = sf.merge_quarters([_xbrl_row("2026-06-27", 100.0)],
+                                [dict(지난발표), dict(예비)])
+    assert [r.get("announced_date") for r in merged4] == ["2026-08-05", "2026-10-10"]
+
+
+def test_2_02_아닌_8K는_뼈대_구멍도_메우지_않는다():
+    """150차-Q 구멍 메우기도 새 행을 만드는 길이라 승격과 같은 문지기를 둔다."""
+    M = 1_000_000
+    xbrl = [
+        {"filing_date": "2024-04-30", "period_label": "24/04",
+         "revenue": 600 * M, "op_income": 100 * M, "source": cfg.SRC_APPROX},
+        {"filing_date": "2024-10-31", "period_label": "24/10",
+         "revenue": 640 * M, "op_income": 110 * M, "source": cfg.SRC_APPROX},
+    ]
+
+    def 보도(날, 실적공시):
+        return {"filing_date": 날, "period_label": "24 Q2", "revenue": 620 * M,
+                "op_income": 105 * M, "adj_eps": 0.5, "source": cfg.SRC_DIRECT,
+                "gm_is_gaap": False, "derivation": "", "filing_url": "",
+                "실적공시": 실적공시}
+
+    아님 = sf.merge_quarters([dict(r) for r in xbrl], [보도("2024-09-03", False)], {})
+    assert not any(r.get("구멍메움") for r in 아님), "2.02 아닌 문서로 구멍을 메웠습니다"
+    맞음 = sf.merge_quarters([dict(r) for r in xbrl], [보도("2024-09-03", True)], {})
+    assert sum(1 for r in 맞음 if r.get("구멍메움")) == 1, "정식 발표로는 메워야 합니다"
+
+
+def test_2_02_아닌_8K는_늦은_발표_흡수에도_쓰지_않는다():
+    """늦은 발표 흡수(이중 계상 방지 ①)도 마지막 분기 행에 문서를 붙이는
+    길이다. 매출이 ±10% 안이라는 것만으로 2.02 아닌 문서(예: 재게시 자료의
+    표)를 그 분기의 발표로 붙이면 발표일이 틀린다 — 승격과 같은 문지기."""
+    def 뼈대():
+        return [_xbrl_row("2025-03-31", 100.0)]          # 매출 500
+
+    아님 = _press_row("2025-07-20", 101.0)               # 111일 뒤 · 매출 505
+    아님["실적공시"] = False
+    merged = sf.merge_quarters(뼈대(), [아님])
+    assert merged[0].get("announced_date") in (None, ""), merged[0]
+    assert len(merged) == 1, "2.02 아닌 문서가 승격으로라도 들어왔습니다"
+
+    맞음 = dict(아님)
+    맞음["실적공시"] = True
+    merged2 = sf.merge_quarters(뼈대(), [맞음])
+    assert merged2[0]["announced_date"] == "2025-07-20", "정식 발표는 흡수돼야 합니다"
+    assert len(merged2) == 1, "흡수돼야 할 발표가 새 행으로 이중 계상됐습니다"
+
+
 def test_sanity_ebitda_rules():
     """조정 EBITDA 검사 — ① $10만 미만은 오파싱 ② EBITDA > 매출이면 매출을 버림.
 
